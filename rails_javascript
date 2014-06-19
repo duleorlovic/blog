@@ -1,0 +1,33 @@
+guide rendering:
+response can be: render, redirect, or head.
+convention over configuration:
+processing #action_name as HTML renders action_name.html template (if there has not been a call to render method). ActionController::Base#render methon can set up template or partial to be rendered as text, json, xml, js (contenti-type) and set the response code (:status => :ok)
+render "edit" #or :edit  will change template beloging to same controller, or render "products/edit" another. It should be explicited with parameter render template: "edit"
+render plain: "OK"
+render xml: @product #automatically calls .to_xml
+render json: @product #no need for .to_json
+render js: "alert();" will set content-type MIME text/javascript
+parameters :content_type => "text/html" or "application/json" "application/xml", "application/rss"
+parameter :layout => 'special_layout' or false
+parameter :location => photo_url(@photo) sets HTTP locatio header
+parameter :status => :ok is 200, :internal_server_error 500
+
+View render method has nothing to do with controller render method. render 'menu' will render _menu.html. render 'product/edit' will search for product/_edit.html. 
+Each partial has local variable with the same name as partial and you can pass an object into it with :object
+<%= render partial: "customer", object: @new_customer %>
+or if it is an instance of Customer model shorthand is
+<%= render @customer %> which will use _customer.html.erb with local object customer
+<%= render @customers || "There is nothing" %> for collections, each class model will render _model.html partial with local objects customer. Also the all @objects are accessible but default local object should be enough. If it is not, then
+<%= render locals: {title: "aa"} %>
+
+
+delovi nekog objekta mogu da se menjaju, show_title.html, edit_title.html koji sadrze <div id='holder-show-title'>, pa onda edit_title.js radi $('#holder-show-title').replaceWith('<%= j render 'edit_title' %>');
+
+ti delovi mogu da idu na isti update, ako se koristi hidden field ali onda mora i renderuje posebno
+
+kada se u .js template poziva render "partial", mora se staviti oznaka, render partial: "partial"
+
+
+ukoliko imate neki event.listener na objekat koji se potpuno zamenio, onda nece raditi. treba postaviti even listener na neki parent i delegirati ga na taj element, npr.
+$('.wrap').on('click','a[data-toggle=collapse]', function() {
+  $(this).siblings('posto na novim objektima nisu vezani event listeneri
