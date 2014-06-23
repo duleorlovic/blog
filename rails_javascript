@@ -12,6 +12,7 @@ parameter :layout => 'special_layout' or false
 parameter :location => photo_url(@photo) sets HTTP locatio header
 parameter :status => :ok is 200, :internal_server_error 500
 
+
 View render method has nothing to do with controller render method. render 'menu' will render _menu.html. render 'product/edit' will search for product/_edit.html. 
 Each partial has local variable with the same name as partial and you can pass an object into it with :object
 <%= render partial: "customer", object: @new_customer %>
@@ -19,6 +20,8 @@ or if it is an instance of Customer model shorthand is
 <%= render @customer %> which will use _customer.html.erb with local object customer
 <%= render @customers || "There is nothing" %> for collections, each class model will render _model.html partial with local objects customer. Also the all @objects are accessible but default local object should be enough. If it is not, then
 <%= render locals: {title: "aa"} %>
+
+We will use this property that render @question, pass as local object question. 
 
 
 delovi nekog objekta mogu da se menjaju, show_title.html, edit_title.html koji sadrze <div id='holder-show-title'>, pa onda edit_title.js radi $('#holder-show-title').replaceWith('<%= j render 'edit_title' %>');
