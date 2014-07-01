@@ -1,27 +1,9 @@
-guide rendering:
-response can be: render, redirect, or head.
-convention over configuration:
-processing #action_name as HTML renders action_name.html template (if there has not been a call to render method). ActionController::Base#render methon can set up template or partial to be rendered as text, json, xml, js (contenti-type) and set the response code (:status => :ok)
-render "edit" #or :edit  will change template beloging to same controller, or render "products/edit" another. It should be explicited with parameter render template: "edit"
-render plain: "OK"
-render xml: @product #automatically calls .to_xml
-render json: @product #no need for .to_json
-render js: "alert();" will set content-type MIME text/javascript
-parameters :content_type => "text/html" or "application/json" "application/xml", "application/rss"
-parameter :layout => 'special_layout' or false
-parameter :location => photo_url(@photo) sets HTTP locatio header
-parameter :status => :ok is 200, :internal_server_error 500
-
-
-View render method has nothing to do with controller render method. render 'menu' will render _menu.html. render 'product/edit' will search for product/_edit.html. 
-Each partial has local variable with the same name as partial and you can pass an object into it with :object
-<%= render partial: "customer", object: @new_customer %>
-or if it is an instance of Customer model shorthand is
-<%= render @customer %> which will use _customer.html.erb with local object customer
-<%= render @customers || "There is nothing" %> for collections, each class model will render _model.html partial with local objects customer. Also the all @objects are accessible but default local object should be enough. If it is not, then
-<%= render locals: {title: "aa"} %>
-
-We will use this property that render @question, pass as local object question. 
+---
+layout: post
+title:  Ruby on rails and Ajax javascript
+date:   2014-07-01 14:06:33
+categories: javascript ruby_on_rails
+---
 
 
 delovi nekog objekta mogu da se menjaju, show_title.html, edit_title.html koji sadrze <div id='holder-show-title'>, pa onda edit_title.js radi $('#holder-show-title').replaceWith('<%= j render 'edit_title' %>');
@@ -63,3 +45,15 @@ we should discard flash object on ajax request otherwise it will show up on next
 we send alert and notice with X-Message-Alert.
 
 flash are rendered usually on change (PUT, PATCH) requests, but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
+
+ds
+
+
+{% highlight ruby %}
+def print_hi(name)
+  puts "Hi, #{name}"
+end
+print_hi('Tom')
+#=> prints 'Hi, Tom' to STDOUT.
+{% endhighlight %}
+
