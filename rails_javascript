@@ -54,3 +54,12 @@ If I used $(document).on('page:load', ready); I will have multiple (identical) e
 
 Since we use remote-true, we should add data: { disable_with: "Adding" } for all links and button that are not idempotent actions (idempotent actions are ones that you can apply them as many times as  you want without worries for example abs(abs(abs(x))) ).
 
+
+flash messages
+http://stackoverflow.com/questions/21032465/rails-doesnt-display-flash-messages-after-ajax-call
+we should discard flash object on ajax request otherwise it will show up on next page reload
+
+
+we send alert and notice with X-Message-Alert.
+
+flash are rendered usually on change (PUT, PATCH) requests, but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
