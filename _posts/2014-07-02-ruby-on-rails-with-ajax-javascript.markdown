@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Ruby on rails and Ajax javascript
-date:   2014-07-01 14:06:33
+date:   2014-07-02
 categories: javascript ruby_on_rails
 ---
 
@@ -46,14 +46,49 @@ we send alert and notice with X-Message-Alert.
 
 flash are rendered usually on change (PUT, PATCH) requests, but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
 
-ds
+You can not bind event on 'load' for new elements, but you can 
+http://stackoverflow.com/questions/6781661/jquery-how-to-call-a-jquery-plugin-function-on-an-element-that-hasnt-yet-been
+
+If you need something like datepicker you can bind on focus
+http://stackoverflow.com/questions/10433154/putting-datepicker-on-dynamically-created-elements-jquery-jqueryui
+
+    $('body').on('focus',".datepicker_recurring_start", function(){
+      $(this).datepicker();
+    });
+
+execute custom function, data-function=select2(),autosize()
+
+when you are using link_to path, data: { disable_with: "Saving"} do <div>..</div> end, this will not work because whole <div>..</div> will be replaced with saving
+
+for before use that element, for example link_to path, data: { before: "a"}
+
+Adding new elements can be done in javascript (without server active) but then the user has to confirm that, ie submit the form.
+You can add remove new elements with ajax, so there is no need for submitting.
+
+We used both forms.
 
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+All data-attributes names should be lower case.
+Use X-Messages for something that is known only on server side, like flash message, custom functions
+
+ajax form success data-replace should be set on form on a submit button
+
+
+
+// Used to add class 'active' to selector
+// example <button data-activate=".popup"></button>
+$(document).on('click','[data-activate]', function(e) {
+  $( $(this).data('activate')).addClass('active');
+  e.preventDefault();
+  LOG && console.log("click a[data-activate]="+$(this).data('activate'));
+});
+// this could be toogle but it is clearer to use activate deactivate
+// Used to remove class 'active' to selector
+// example <button data-deactivate=".popup"></button>
+$(document).on('click','[data-deactivate]', function(e) {
+  $( $(this).data('deactivate')).removeClass('active');
+  if ( $(this).data('prevent-default') != false)
+    e.preventDefault();
+  LOG && console.log("click a[data-deactivate]="+$(this).data('deactivate'));
+});
 
