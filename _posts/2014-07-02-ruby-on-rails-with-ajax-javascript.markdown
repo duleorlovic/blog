@@ -92,3 +92,5 @@ $(document).on('click','[data-deactivate]', function(e) {
   LOG && console.log("click a[data-deactivate]="+$(this).data('deactivate'));
 });
 
+
+debugging javascript can be easilly startet with command `debugger;` even from `format.js` response.
