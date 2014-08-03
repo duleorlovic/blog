@@ -28,6 +28,8 @@ Four options for `render` are:
 1. :location => photo_url(@photo) sets HTTP location header
 1. :status => :ok is 200, (:unprocessable_entity)[http://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option] is 422 
 
+But I found that we can pass a partial also `render partial: 'action_links' so controler will use *_action_links.html*. We can pass the locals also `render partial: 'action_links', locals: { job: @job }`.
+
 Head example is `head :created, location: photo_path(@photo)` and is much clear then `render nothing: true`.
 
 Redirect example is `redirect_to :back`.
@@ -82,8 +84,10 @@ Each partial has local variable with the same name as partial and you can pass a
 
     <%= render @customer %> 
     
-which will use *_customer.html.erb* with local object `customer`. `<%= render @customers || "There is nothing" %>` for collections, each item will be rendered with _customer.html partial with local objects customer. Also the all `@objects` are accessible but default local object should be enough. If it is not, then you can pass with `<%= render @customers, locals: {title: "aa"} %>`. You can change the layout for collection also or use spacer_template beetween each pair `<%= render partial: @customers, spacer_template: 'product_ruler' %>`.
+which will use *_customer.html.erb* with local object `customer`. `<%= render @customers || "There is nothing" %>` for collections, each item will be rendered with _customer.html partial with local objects customer. There is a variable *_counter* in case of collection, for example `customer_counter` that takes values from 0 to COUNT-1. Be carefull because this variable is not defined when you render single item `<%= render @customer %>` so use defined?, for example `<tr <%= customer_counter==0? 'class=first-row': (customer_counter==Customer::PAGINATION_PER_PAGE-1? 'class=last-row':'' )) if defined? customer_counteri %>>`
 
+Also the all `@objects` are accessible but default local object should be enough. If it is not, then you can pass with `<%= render @customers, locals: {title: "aa"} %>`. You can change the layout for collection also or use spacer_template beetween each pair `<%= render partial: @customers, spacer_template: 'product_ruler' %>`.
+It is better to use local variables instead of instance variables in partials, because partials do not belong to the one controller so we need to check is that instance variable is set.
 
 [Sublayout](http://guides.rubyonrails.org/layouts_and_rendering.html#using-nested-layouts) are helpfull is you have different layouts for different controller but it is too complicated with content_for . Better solution is http://railsguides.net/rails-nested-layouts/ . Content_for can be controller specific https://gist.github.com/hiroshi/985457
 
