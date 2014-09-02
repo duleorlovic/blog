@@ -85,6 +85,8 @@ Each partial has local variable with the same name as partial and you can pass a
     
 which will use *_customer.html.erb* with local object `customer`. `<%= render @customers || "There is nothing" %>` for collections, each item will be rendered with _customer.html partial with local objects customer. Also the all `@instance_objects` are accessible but default local object should be enough. If it is not, then you can pass with `<%= render partial: @customers, locals: {title: "aa"} %>` (it needs parameter `partial:` when using `locals`). You can change the layout for collection also or use spacer_template beetween each pair `<%= render partial: @customers, spacer_template: 'product_ruler' %>`.
 
+Also the all `@objects` are accessible but default local object should be enough. If it is not, then you can pass with `<%= render @customers, locals: {title: "aa"} %>`. You can change the layout for collection also or use spacer_template beetween each pair `<%= render partial: @customers, spacer_template: 'product_ruler' %>`.
+It is better to use local variables instead of instance variables in partials, because partials do not belong to the one controller so we need to check is that instance variable is set.
 
 [Nested layouts](http://guides.rubyonrails.org/layouts_and_rendering.html#using-nested-layouts) is one way to provide different layouts for different controller. It is using `content_for :stylesheet` that will be provided in head section. Sublayout, besides those *content_for* is simply calling `<%= render template: "layouts/application" %>` that is replaced with application layout.
 

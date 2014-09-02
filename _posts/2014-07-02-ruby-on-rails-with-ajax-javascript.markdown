@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Ruby on rails and Ajax javascript
-date:   2014-07-02
+date:   2014-07-01 14:06:33
 categories: javascript ruby_on_rails
 ---
 
@@ -94,3 +94,40 @@ $(document).on('click','[data-deactivate]', function(e) {
 
 
 debugging javascript can be easilly startet with command `debugger;` even from `format.js` response.
+za processing controller/edit as JS
++
++* prvo se gleda da li postoji template edit.js
++* ako ne postoji onda bilo koji npr edit.html
++
++ajax:success event dolazi na objekat, ali vazi za sve njegove parents.
++vezati ajas:success za neki objekat unutar partiala, ali koji obavija zadati element sa remote: true (samo pazite npr <td></td> ne bi trebalo obavijati jer to kvari <tr>)
++
++$(document).ready ->
++  $(".wrapper").on("ajax:success", (e, data, status, xhr) ->
++    alert "Success"
++  ).on "ajax:error", (e, xhr, status, error) ->
++    alert "Error"
++
++Ne treba da koristimo .ajaxSuccess zato sto se on kaci samo na document, i treba obratiti paznju da je redosled agumenata razlicit kod success i error.
++
++https://github.com/rails/jquery-ujs/wiki/ajax
++
++Za updejt linkove, npr link_to activate, data: {disable_with: "Activating"} gde ne mora da se ucitava neka edit forma, najbolje je raditi zamenu posle responsa.
++Za menjanje edit i show template treba ih obaviti u div i raditi menjanje.
++Za menjanje parcijalnih delova najbolje koristiti neki data-target i koristiti isti updaejt.
++
++
++Ako se trazi #new as JS a ne postoji new.js, onda ce se renderovati new.html 
+
+
+Custom js functions like select2 or autosize should be defined next to target elements. for example
+
+   <%= f.textarea :content %>
+   <% controller.js_functions << { 'textarea' => 'autosize' } %>
+
+That way it is much clearer. when you load the partial you do not need to worry what it needs to call (like in .js files), scope is much narrower (you will not change all the textarea, because this function is called on children('textarea') of this partial).
+
+When you are rendering back the form that has some _destoyed submodels, you should not display tham again:
+
+<% if f.object._destroy %>
+<% end %>
