@@ -1,10 +1,58 @@
 ---
 layout: post
 title:  Ruby on rails and Ajax javascript
-date:   2014-07-02
+date:   2014-07-01 14:06:33
 categories: javascript ruby_on_rails
 ---
 
+Ajax with Rails
+===
+
+[Rails and javascript](http://edgeguides.rubyonrails.org/working_with_javascript_in_rails.html) can live together but some rules has to be established so we know what is going on. Anytime you can put `debugger;` anywhere in javascript code and it should stop if you have enabled some of js tools in your browser.
+
+There are two approaches when dealing with ajax calls. Server can respond with json so client job is to parse and render the message, or we can respond with html partials.
+
+#Respond with json
+
+When there are not a lot of design changes on pages, and when style of a forms are unified for whole site, you can use *data-* attributes to activate/respond to ajax calls. For example is you 
+
+{% highlight javascript %}
+////////////////////////////////
+// ajax success and error events for links
+////////////////////////////////
+
+
+  $(document).on('ajax:success', 'a[data-function]', function(e, data, status, xhr){
+
+    var intended_function = $(this).data('function');
+    var parameter = $(this).data('parameter');
+    var $new_elem = $(data);
+
+    switch( intended_function ) {
+      // replace closest
+      case "replace":
+       $(e.target).closest(parameter).replaceWith($new_elem); break;
+      // hide closest
+      case "hide":
+        $(e.target).closest(parameter).css('background-color','yellow').fadeOut(400); break;
+      // add before closest
+      case "before":
+        $(e.target).closest(parameter).before($new_elem); break;
+    };
+
+    var $flash_messages = xhr.getResponseHeader('X-Message-Flash');
+    if ($flash_messages)
+      parseXMessageFlash($.parseJSON( $flash_messages ));
+
+    var $js_functions = $.parseJSON(xhr.getResponseHeader('X-Message-JS-Functions'));
+    if ($js_functions)
+      parseXMessageJSFunctions($new_elem, $js_functions );
+    //  e.stopPropagation();
+    //  e.preventDefault();
+    LOG && console.log("ajax:success a[data-function]="+intended_function);
+  });
+
+{% endhighlight %}
 
 delovi nekog objekta mogu da se menjaju, show_title.html, edit_title.html koji sadrze <div id='holder-show-title'>, pa onda edit_title.js radi $('#holder-show-title').replaceWith('<%= j render 'edit_title' %>');
 
@@ -122,6 +170,7 @@ za processing controller/edit as JS
 +
 +
 +Ako se trazi #new as JS a ne postoji new.js, onda ce se renderovati new.html 
+
 pros/cons: if there is an error respond.js you will not notice that in console, but in this approach, it will be shown as console error 
 
 Custom js functions like select2 or autosize should be defined next to target elements. for example
