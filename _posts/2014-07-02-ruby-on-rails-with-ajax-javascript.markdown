@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Ruby on rails and Ajax javascript
-date:   2014-07-01 14:06:33
+date:   2014-07-02
 categories: javascript ruby_on_rails
 ---
 
@@ -74,6 +74,10 @@ Use X-Messages for something that is known only on server side, like flash messa
 ajax form success data-replace should be set on form on a submit button
 
 
+This ajax approach have advantage that rails respond, and javascript will render where the data attribute tels. respond.js does not know on which link it was clicked, and we have to pass additional parameters.
+We do not need id-s for collection of objects. You can have more than one forms for new records (new records does not have id). You do not need to generate some random id-s to target that forms so they could be replaced with show partials.
+Since we are using the same respond.js file for success and error, we need to have if statement there, and use flash.now[:alert]
+Destroy action do not know what to hide, form or show partial.
 
 // Used to add class 'active' to selector
 // example <button data-activate=".popup"></button>
@@ -118,7 +122,7 @@ za processing controller/edit as JS
 +
 +
 +Ako se trazi #new as JS a ne postoji new.js, onda ce se renderovati new.html 
-
+pros/cons: if there is an error respond.js you will not notice that in console, but in this approach, it will be shown as console error 
 
 Custom js functions like select2 or autosize should be defined next to target elements. for example
 
