@@ -6,126 +6,104 @@ categories: javascript ruby_on_rails
 ---
 
 Ajax with Rails
-===
+---
 
-[Rails and javascript](http://edgeguides.rubyonrails.org/working_with_javascript_in_rails.html) can live together but some rules has to be established so we know what is going on. Anytime you can put `debugger;` anywhere in javascript code and it should stop if you have enabled some of js tools in your browser.
+[Rails and javascript](http://edgeguides.rubyonrails.org/working_with_javascript_in_rails.html) can live together but some rules has to be established so you know what is going on. Anytime you can put `debugger;` anywhere in javascript code and it should stop if you have enabled some of js tools in your browser.
 
-There are two approaches when dealing with ajax calls. Server can respond with json so client job is to parse and render the message, or we can respond with html partials.
+There are two approaches when dealing with ajax calls: server responds with final templates and javascript, or server responds with json so client side javascript is responsible for rendering.
 
-#Respond with json
+For CRUD actions, ajax usually simulate get actions for links (new, show, edit), post actions for forms (create, update) and some patch actions for changing the state of item (destroy, activate, pause ...).
 
-When there are not a lot of design changes on pages, and when style of a forms are unified for whole site, you can use *data-* attributes to activate/respond to ajax calls. For example is you 
+For example:
 
-{% highlight javascript %}
-////////////////////////////////
-// ajax success and error events for links
-////////////////////////////////
+    # edit.js.erb
+    $('#question-<%= @question.id %>').replaceWith(" <%= j render partial: 'questions/edit_question', { question: @question } %>");
 
+and
 
-  $(document).on('ajax:success', 'a[data-function]', function(e, data, status, xhr){
+    # update.js.erb
+    $('#question-<%= @question.id %>').replaceWith(" <%= j render partial: 'questions/show_question', { question: @question } %>");
+    
 
-    var intended_function = $(this).data('function');
-    var parameter = $(this).data('parameter');
-    var $new_elem = $(data);
+Do we need for each CRUD action to write this respond.js? No, we can simplify this by rendering respond.html templates and replacing content in javascript. If you need different rendering in index than it is in show action (for example show action has some new buttons etc), than you need to treat them separately, one partial for index and one template for show.
 
-    switch( intended_function ) {
-      // replace closest
-      case "replace":
-       $(e.target).closest(parameter).replaceWith($new_elem); break;
-      // hide closest
-      case "hide":
-        $(e.target).closest(parameter).css('background-color','yellow').fadeOut(400); break;
-      // add before closest
-      case "before":
-        $(e.target).closest(parameter).before($new_elem); break;
-    };
+All data-attributes names should be lower case.
 
-    var $flash_messages = xhr.getResponseHeader('X-Message-Flash');
-    if ($flash_messages)
-      parseXMessageFlash($.parseJSON( $flash_messages ));
+For ajax requests, if there are no coresponding respond.js, rails will fall back for rendering respond.html. We just need to stop layout rendering in this case with this line in controller:
 
-    var $js_functions = $.parseJSON(xhr.getResponseHeader('X-Message-JS-Functions'));
-    if ($js_functions)
-      parseXMessageJSFunctions($new_elem, $js_functions );
-    //  e.stopPropagation();
-    //  e.preventDefault();
-    LOG && console.log("ajax:success a[data-function]="+intended_function);
-  });
-
-{% endhighlight %}
-
-delovi nekog objekta mogu da se menjaju, show_title.html, edit_title.html koji sadrze <div id='holder-show-title'>, pa onda edit_title.js radi $('#holder-show-title').replaceWith('<%= j render 'edit_title' %>');
-
-ti delovi mogu da idu na isti update, ako se koristi hidden field ali onda mora i renderuje posebno
-
-kada se u .js template poziva render "partial", mora se staviti oznaka, render partial: "partial"
+    # app/controllers/surveys_controller.rb
+    layout Proc.new { |controller| false if controller.request.xhr? }
 
 
-ukoliko imate neki event.listener na objekat koji se potpuno zamenio, onda nece raditi. treba postaviti even listener na neki parent i delegirati ga na taj element, npr.
-$('.wrap').on('click','a[data-toggle=collapse]', function() {
-  $(this).siblings('posto na novim objektima nisu vezani event listeneri
+Using this unobtrusive ajax, we do not need ID's for each element since we know what is `e.target` element so we can use `$(e.target).closest('p').replaceWith($new_elem);`.
 
+For errors on form validations we could respond with json and some non successfully error code, for example `format.js { render json: @question.errors, status: :unprocessable_entity }`, but this is approach is more angular oriented.
 
-jquery radi quoting npr https://github.com/jquery/jquery/blob/90b43de21296cf59af7dd37c49c1a9a4f8483f68/src/sizzle/dist/sizzle.js#L95
+Event listeners for new elements
+---
 
-<%= ubacuje &quot; &lt; i stale karakter u html escaping, \n /b ostaju isti
-<%= j javacsript render escapuje /, ', " menja sa \/, \', \"
+If you use javascript code like `$('a[data-activate]').click(...` it will not bind to new elements created by ajax. Instead you should bind to body or another element that stays on page and and use delegation:
 
+    $('body').on('click', 'a[data-activate]', function() {});` 
+    
+If you  bind on `document` element make sure it is called only once, because of turbolinks if you navigate 3 times to that page where you are calling the script, you will have 3 event listeners.
 
-ako definisemo respond_to onda radi format.js bez layouta (ako nadje ili ako ne nadje onda radi respond with html as HTML).
-ako ne definisemo respond_to onda trazi js i mora biti bez novi redova, 
-
-Form errors.
-
-Form use data-model to determine how to wrap error div. We need to find input[name='model']['title'].
-
-I putted all event listiners inside a function ready(), and call that function when $(document).ready(ready);
-If I used $(document).on('page:load', ready); I will have multiple (identical) events attached to same object. That is another reason why we should bind all events to document.
-
-Since we use remote-true, we should add data: { disable_with: "Adding" } for all links and button that are not idempotent actions (idempotent actions are ones that you can apply them as many times as  you want without worries for example abs(abs(abs(x))) ).
-
-
-flash messages
-http://stackoverflow.com/questions/21032465/rails-doesnt-display-flash-messages-after-ajax-call
-we should discard flash object on ajax request otherwise it will show up on next page reload
-
-
-we send alert and notice with X-Message-Alert.
-
-flash are rendered usually on change (PUT, PATCH) requests, but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
-
-You can not bind event on 'load' for new elements, but you can 
-http://stackoverflow.com/questions/6781661/jquery-how-to-call-a-jquery-plugin-function-on-an-element-that-hasnt-yet-been
-
-If you need something like datepicker you can bind on focus
-http://stackoverflow.com/questions/10433154/putting-datepicker-on-dynamically-created-elements-jquery-jqueryui
+If you need something like datepicker you can bind on focus [link](http://stackoverflow.com/questions/10433154/putting-datepicker-on-dynamically-created-elements-jquery-jqueryui)
 
     $('body').on('focus',".datepicker_recurring_start", function(){
       $(this).datepicker();
     });
 
-execute custom function, data-function=select2(),autosize()
+Disable with "Adding..." 
+----
 
-when you are using link_to path, data: { disable_with: "Saving"} do <div>..</div> end, this will not work because whole <div>..</div> will be replaced with saving
+When you work with ajax it is advisable to use rails ujs `data: { disable_with: "Adding..." }` because user can click several times on a link before server responds. This is very important for all buttons/links that are not idempotent actions (idempotent actions are ones that you can apply them as many times as you want without worries, for example abs(abs(abs(x))) ).
 
-for before use that element, for example link_to path, data: { before: "a"}
+When you are using `<%= link_to path, data: { disable_with: "Saving"} do %> <div>..</div> <% end %>`, this will not work because whole `<div>..</div>` will be replaced with `Saving` (without div's). It is better to use `disable_with: "<div>Saving<span class='loading-icon'></span></div>".html_safe`.
 
-Adding new elements can be done in javascript (without server active) but then the user has to confirm that, ie submit the form.
-You can add remove new elements with ajax, so there is no need for submitting.
+Show ajax errors
+---
 
-We used both forms.
+In case of network failure or other errors, ajax links (with `[data-remote]`) do not inform the user. So it is advisable to attach event listener in case of errors (this is not error in form validations or some other response from server, it is a real error usually timeout because server did not respond).
+
+    // error handling just for debugging
+    $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
+      $('#flash-messages').append('Server responds with ' + status + ' ' + error);
+      LOG && console.log("ajax:error [data-remote] " + status+' '+error );
+    });
+      
 
 
-All data-attributes names should be lower case.
-Use X-Messages for something that is known only on server side, like flash message, custom functions
+Flash messages
+---
 
-ajax form success data-replace should be set on form on a submit button
+In case of some form validations error or some successul action we can send flash message to the user. In rails it is just flash[:notice]="Message text", but if we use ajax calls, we should discard flash object otherwise it will show up on next page reload [link](http://stackoverflow.com/questions/21032465/rails-doesnt-display-flash-messages-after-ajax-call). With ajax server can send error and notice message with X-Message-Flash.
+
+    class ApplicationController < ActionController::Base
+      
+      after_filter :flash_to_headers                                       
+      
+      def flash_to_headers                                                 
+        # http://stackoverflow.com/questions/21032465/rails-doesnt-display-flash-messages-after-ajax-call
+        return unless request.xhr?
+        # in ajax requests we return flash as X message                    
+        response.headers['X-Message-Flash'] = flash.to_json unless flash.empty? 
+        # discard flash object otherwise it will show up on next page load 
+        flash.discard 
+      end                                                                  
+    end 
+
+This approach should be coupled with writing respond.js block that do not redirect for example for update/create action `format.js { render :show, status: :ok, location: @survey, content_type: Mime::HTML }` so we have those messages in javascript. Another solution is not to discard flash and use native redirection (the same as for format.html) ie not writing forman.js as use default format.html responses. There is also `flash.now[:notice] = msg` if you want to customize it further, probably on change (PUT, PATCH) requests, but think it twice, because but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
+
+GET INDEX, GET SHOW(:id), GET NEW, GET EDIT(:id), not flash messages, response is template so ajax is ok (format.js == format.html)
+POST CREATE, usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)
+PATCH/PUT UPDATE(:id), usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)
+DELETE DELETE(:id), usually flash message, respond is redirect but in ajax is not fine, second request is stil DELETE in chrome so use `format.js { render nothing: true }` 
 
 
-This ajax approach have advantage that rails respond, and javascript will render where the data attribute tels. respond.js does not know on which link it was clicked, and we have to pass additional parameters.
-We do not need id-s for collection of objects. You can have more than one forms for new records (new records does not have id). You do not need to generate some random id-s to target that forms so they could be replaced with show partials.
-Since we are using the same respond.js file for success and error, we need to have if statement there, and use flash.now[:alert]
-Destroy action do not know what to hide, form or show partial.
+To summarize differences between using rails native format.js files and thiw rails unobtrusive ajax:
+pros: unobtrusive ajax approach knows which link is clicked so it do not require specifix id (but it requres parameter which closest element should be replaced). This is specifically important when we generate forms for new objects (new records does not have id). You do not need to generate some random id-s to target that forms so they could be replaced with show partials.
+
 
 // Used to add class 'active' to selector
 // example <button data-activate=".popup"></button>
@@ -184,3 +162,11 @@ When you are rendering back the form that has some _destoyed submodels, you shou
 
 <% if f.object._destroy %>
 <% end %>
+<%= ubacuje &quot; &lt; i stale karakter u html escaping, \n /b ostaju isti
+<%= j javacsript render escapuje /, ', " menja sa \/, \', \"
+
+Adding new elements can be done in javascript (without server active) but then the user has to confirm that, ie submit the form.
+You can add remove new elements with ajax, so there is no need for submitting.
+
+We used both forms.
+

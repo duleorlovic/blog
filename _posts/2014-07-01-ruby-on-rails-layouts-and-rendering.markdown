@@ -35,14 +35,12 @@ Head example is `head :created, location: photo_path(@photo)` and is much cleare
 
 In Ruby on Rails there are 6 asset tag helpers:
 
-{% highlight html %}
-<%= auto_discovery_link_tag(:rss, {action: "feed"}, {title: "RSS Feed"}) %>
-<%= javascript_include_tag "main", "/photos/columns" %>
-<%= stylesheet_link_tag "main", "photos/columns" %>
-<%= image_tag "icons/delete.gif" %>
-<%= video_tag "movie.ogg" %>
-<%= audio_tag "music/first_song.mp3" %>
-{% endhighlight %}
+    <%= auto_discovery_link_tag(:rss, {action: "feed"}, {title: "RSS Feed"}) %>
+    <%= javascript_include_tag "main", "/photos/columns" %>
+    <%= stylesheet_link_tag "main", "photos/columns" %>
+    <%= image_tag "icons/delete.gif" %>
+    <%= video_tag "movie.ogg" %>
+    <%= audio_tag "music/first_song.mp3" %>
 
 Asset pipeline
 ---
