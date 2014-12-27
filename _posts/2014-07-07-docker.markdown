@@ -1,0 +1,6 @@
+we created it because we want headless selenium testing
+http://elementalselenium.com/tips/38-headless
+
+deis ad flynn are nist popular http://www.centurylinklabs.com/top-10-open-source-docker-developer-tools/
+
+https://www.digitalocean.com/community/tutorials/how-to-install-vagrant-on-a-vps-running-ubuntu-12-04
