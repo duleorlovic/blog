@@ -5,6 +5,8 @@ date:   2014-07-01 14:06:33
 categories: javascript ruby_on_rails
 ---
 
+Do you like one page application ? Do you like Rails ? Here is their child...
+
 Ajax with Rails
 ---
 
@@ -53,6 +55,9 @@ If you need something like datepicker you can bind on focus [link](http://stacko
     $('body').on('focus',".datepicker_recurring_start", function(){
       $(this).datepicker();
     });
+
+
+Order of binded events on the same element is by definition order. If you want to execute on click event **before** other is target that is closer, for example insted of `$(document).on('click','[data-1]',` use `$('body').on('click','[data-1]',`. If you want to execute **after** events that are binded to `$(document).on('click'` than you should wrapp all that in one function and call the code with prefered order.
 
 Disable with "Adding..." 
 ----
@@ -159,6 +164,8 @@ Custom js functions like select2 or autosize should be defined next to target el
 That way it is much clearer. when you load the partial you do not need to worry what it needs to call (like in .js files), scope is much narrower (you will not change all the textarea, because this function is called on children('textarea') of this partial).
 
 When you are rendering back the form that has some _destoyed submodels, you should not display tham again:
+
+dusan@trk-inovacije:~/www/rails/rails_ajax_without_respond_js
 
 <% if f.object._destroy %>
 <% end %>
