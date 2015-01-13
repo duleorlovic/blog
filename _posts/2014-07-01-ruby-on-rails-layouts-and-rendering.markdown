@@ -1,17 +1,16 @@
 ---
 layout: post
 title:  Ruby on Rails Layouts and rendering
-date:   2014-07-01 14:06:33
-categories: layout render ruby_on_rails
+categories: layout render ruby-on-rails
 ---
 
 Short reminder how rails use rendering
 ---
 
 
-[Guide](http://guides.rubyonrails.org/layouts_and_rendering.html) says that response from the server can be: render, redirect, or just head. `ActionController::Base#render` designedly use convention over configuration, that means if we request *products#show as HTML* it will render *app/view/products/show.html.erb* template (if there has not been a call to render something else). *ActionController::Base#render* method can set up **template** and **partial** to be rendered as **text, json, xml, js** (that is content-type) and set the response code (:status => :ok). 
+[Guide](http://guides.rubyonrails.org/layouts_and_rendering.html) says that response from the server can be: render, redirect, or just head. `ActionController::Base#render` designedly use convention over configuration, that means if we request *products#show as HTML* it will render *app/view/products/show.html.erb* template (if there has not been a call to render something else). `ActionController::Base#render` method can set up **template** and **partial** to be rendered as **text, json, xml, js** (that is content-type) and set the **response code** (:status => :ok). 
 
-For example `render "edit" #or :edit`  will change default rendering from *show.html.erb* to *edit.html.erb* (in the same controller). We we can render template from nother controller, for example *carts* controller with command `render "carts/edit"`. It should be explicited with parameter `render template: "edit"`so we know what is going on (it will render edit template not partial). Another examples of *ActionController::Base#render*:
+For example `render "edit" #or :edit`  will change default rendering from *show.html.erb* to *edit.html.erb* (in the same controller). We we can render template from another controller, for example *carts* controller with command `render "carts/edit"`. It should be explicited with parameter `render template: "edit"`so we know what is going on (it will render edit template not partial). Another examples of *ActionController::Base#render*:
 
 {% highlight ruby %}
 render plain: "OK" 
@@ -53,7 +52,7 @@ RAILS_ENV=production rake assets:precompile
 rails s -e production
 {% endhighlight %}
 
-[Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html) hides the first subfolder, for example *app/assets/javascrips/posts.js* will be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js* in development or included in *application-123.js* in production. It should be included in assets pipeline by `//= require posts` or `//= require tree .` (if not they will not be included, but can be accessible in development mode, but not in production mode). If we want to include whole library (with special index file for example *lib/assets/library_name/index.js*) we require just folder name `//= require library_name`.
+[Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html) hides the first subfolder, for example *app/assets/javascrips/posts.js* will be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js* in development or included in *application-123.js* in production. It should be included in assets pipeline by `//= require posts` or `//= require tree .` (if not included, it could be accessible, but only in development mode). If we want to include whole library (with special index file for example *lib/assets/library_name/index.js*) we require just folder name `//= require library_name`.
 
 If we want to use controller specific assets (that is loaded only when that controller responds) we should not use `*= require tree .` in *app/assets/stylesheets/application.css* or *app/assets/javascripts/application.js* . Since we are including another js or css asset (that is not included in application.js/css) we have to add it to assets pipeline, for example in *config/initializers/assets.rb* 
 
@@ -78,22 +77,22 @@ View
 View `render` method has nothing to do with controller `render` method. `<%= render 'menu' %>` will render *_menu.html.erb* partial. `<%= render 'product/edit' %>` will search for product/_edit.html. Partials can be rendered with its own [layout](http://guides.rubyonrails.org/layouts_and_rendering.html#partial-layouts) `<%= render partial: 'menu', layout: 'graybar' %>`
 
 
-Each partial has local variable with the same name as partial and you can pass an object into it with :object `<%= render partial: "customer", object: @new_customer %>` or if it is an instance of Customer model shorthand is `<%= render @customer %>` which will use *_customer.html.erb* with local object `customer`. I do not recomend this short hand, because it is more self-explanatory when full parameters are used.
-
-`<%= render @customers || "There is nothing" %>` for collections, each item will be rendered with *_customer.html* partial with local objects *customer*. Also the all `@instance_objects` are accessible but default local object should be enough. If it is not, then you can pass any variable with locals: `<%= render partial: @customers, locals: {title: "Custom title"} %>` (when using `locals` you need to explicitly put parameter `partial:` ). You can change the layout for collection also or use spacer_template beetween each pair `<%= render partial: @customers, spacer_template: 'product_ruler' %>`.
-
-Also the all `@objects` are accessible but default local object should be enough. If it is not, then you can pass with `<%= render @customers, locals: {title: "aa"} %>`. You can change the layout for collection also or use spacer_template beetween each pair `<%= render partial: @customers, spacer_template: 'product_ruler' %>`.
+Each partial has local variable with the same name as partial and you can pass an object into it with :object `<%= render partial: "customer", object: @new_customer %>` or if it is an instance of Customer model shorthand is `<%= render @customer %>` which will use *_customer.html.erb* with local object `customer`. I do not recomend this shorthand. It is more self-explanatory when full parameters are used.
 
 
 It is prefered to use local variables when passing data to partial (instead of *@instance* variables). This is because partials can be used from different controllers, where some @instance variable is not set. For example, `<%= render partial: 'users/customer', { customer: @customer } %>`. Locals of partial should be explained in a comment block:
 
-    <%# _customer partial uses locals
+    <%# customer partial uses locals
        - customer (required, instance of Customer)
-       - contact_form (true/false, default false)
+       - contact_form (true/false, default true)
      %>
-     <% contact_form ||= false %>
+     <%# (do not use contact_form||=true since it will override contact_form=false %>
+     <%
+       unless defined? contact_form
+         contact_form = true
+       end 
+     %> 
 
-[Nested layouts](http://guides.rubyonrails.org/layouts_and_rendering.html#using-nested-layouts) is one way to provide different layouts for different controller. It is using `content_for :stylesheet` that will be provided in head section. Sublayout, besides those *content_for* is simply calling `<%= render template: "layouts/application" %>` that is replaced with application layout. Better solution is to use [partial's layouts](http://railsguides.net/rails-nested-layouts/).
+In layouts you can use `<body class="<%= params[:controller] %>">` if you have something specific for each controller.
 
-In layouts you can use `<body class="<%= params[:controller] %>">` if you have something specific for each controller, instead writing *content_for* (btw *content_for* can be controller method with this [gist](https://gist.github.com/hiroshi/985457))
-
+*content_for* can be controller method with this [gist](https://gist.github.com/hiroshi/985457)
