@@ -1,7 +1,7 @@
 # Site settings
-title: Duke duleorlovic - Ruby developer
+title: duleorlovic - web developer
 email: dusan.orlovic@trk-inovacije.com
-description: "I am writing here some toughts during my work in Ruby on Rails"
+description: "I am writing here some toughts during my work in Ruby on Rails, Javascript and other"
 #baseurl: "http://duleorlovic.github.io/blog"
 url: "http://duleorlovic.github.io/blog"
 twitter_username: duleorlovic
@@ -9,7 +9,8 @@ github_username:  duleorlovic
 
 # Build settings
 markdown: kramdown
-permalink: pretty
+permalink: none
+highlighter: pygments
 
 exclude:
   - Gemfile
