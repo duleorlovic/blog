@@ -25,7 +25,7 @@ namespace :blog do
     })).process
 
     # Get the origin to which we are going to push the site.
-    origin = `git config --get remote.origin.url`
+    origin = `git config --get remote.github.url`
 
     # Make a temporary directory for the build before production release.
     # This will be torn down once the task is complete.
