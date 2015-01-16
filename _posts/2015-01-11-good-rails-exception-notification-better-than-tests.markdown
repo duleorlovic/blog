@@ -126,7 +126,28 @@ end
 
 And you should create routes for those *page_not_found_path* and *error_page_path* and nice templates as well. I would add two more pages *example-error* and *example-javascript-error* just to have some pages for test if this notification works.
 
-If you are using background jobs like delayed job, then you should add notification there also
+{% highlight ruby %}
+get 'example-error', to: 'pages#example_error'
+get 'example-error-in-javascript', to: 'pages#example_error_in_javascript'
+get 'error-page', to: 'pages#error_page', as: :error_page
+get 'page-not-found', to: 'pages#page_not_found', as: :page_not_found
+get 'notify-javascript-error', to: 'pages#notify_javascript_error', as: :notify_javascript_error
+get 'javascript-required-page', to: 'pages#javascript_required_page', as: :javascript_required_page
+{% endhighlight %}
+
+
+You can see that there is also `javascript-required-page` where people is redirected when js is not enabled. This happens very rare. Put this in layout file, for pages after user login (and search boots not).
+
+
+{% highlight ruby %}
+# app/views/layout/application.html.erb
+<% if params[:controller] == "requests" || params[:controller] == "contacts" %>
+  <noscript>
+    <meta http-equiv="refresh" content="2;url=/javascript-required-page">
+  </noscript>
+<% end %>
+
+you are using background jobs like delayed job, then you should add notification there also
 
 {% highlight ruby %}
 # config/initializers/delay_job.rb
