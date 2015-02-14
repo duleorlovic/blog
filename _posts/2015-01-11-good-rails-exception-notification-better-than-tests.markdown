@@ -6,6 +6,8 @@ categories: ruby-on-rails exception-notification
 
 Do not hide your mistackes, instead, make sure that every bug is noticeable. That way you will learn more and thinks that you did not know (that's why bug occurs).
 
+Bugs that I have meet are something like: user uploaded file with non asci chars, linkedin identity text is missing graduation date, after_create hook on model with devise cause user.save to return true but user.errors is present and user is redirected to update his registration form... You cant write tests for those situations. Better is to have nice notification with all input/session/user data. So please never use rescue block without notification.
+
 Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification). It is rack middleware and configuration is very simple. After adding `gem exception_notification` put this in your config file:
 
 {% highlight ruby %}
@@ -80,7 +82,7 @@ class PagesController < ApplicationController
 end
 {% endhighlight %}
 
-As you can see, you can add additional information using `:data` param. You can also set some nice looking text with custom sections. Look at param `:sections`. You need to write partial (in which you can access to `@data`,`@request`... varibales).
+As you can see, you can add additional information using `:data` param. Only the first argument is required (default your can find [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)). Probably, for less important notification you can change subject with `email_prefix` param. You can also set some nice looking text with custom sections. Look at param `:sections`. You need to write partial (in which you can access to `@data`,`@request`... varibales).
 
 {% highlight ruby %}
 # app/views/exception_notifier/_message.text.erb
@@ -146,6 +148,7 @@ You can see that there is also `javascript-required-page` where people is redire
     <meta http-equiv="refresh" content="2;url=/javascript-required-page">
   </noscript>
 <% end %>
+{% endhighlight %}
 
 you are using background jobs like delayed job, then you should add notification there also
 

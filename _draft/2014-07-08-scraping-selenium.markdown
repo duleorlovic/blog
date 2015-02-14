@@ -4,6 +4,8 @@ title:  Scraping using Selenium
 categories: scraping selenium 
 ---
 
+to exit eval, you just need to write unknown command
+
 
 # scraping craigslists
 #
