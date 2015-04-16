@@ -58,7 +58,7 @@ $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
 });
 {% endhighlight %}
 
-Create route for *notify-javascript-error* and use manual notification [ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception).
+Create route for *notify-javascript-error* and use manual notification [ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception). As you can see, you can add additional information using `:data` param. Only the first argument is required (default your can find [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)).  Probably, for less important notification you can change subject with `email_prefix` param. Manual notification can be simply as one line `ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'), env: request.env, email_prefix: 'just to notify that', data: { current_user: current_user });` or with more data:
 
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
@@ -82,7 +82,7 @@ class PagesController < ApplicationController
 end
 {% endhighlight %}
 
-As you can see, you can add additional information using `:data` param. Only the first argument is required (default your can find [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)). Probably, for less important notification you can change subject with `email_prefix` param. You can also set some nice looking text with custom sections. Look at param `:sections`. You need to write partial (in which you can access to `@data`,`@request`... varibales).
+You can also set some nice looking text with custom sections. Look at param `:sections`. You need to write partial (in which you can access to `@data`,`@request`... varibales).
 
 {% highlight ruby %}
 # app/views/exception_notifier/_message.text.erb
