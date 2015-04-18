@@ -1,3 +1,8 @@
+#
+# You need to set up git remote to github, for example
+#
+# git remote add github git@github.com:duleorlovic/blog.git
+#
 # Rquire jekyll to compile the site.
 require "jekyll"
 require 'tmpdir'
