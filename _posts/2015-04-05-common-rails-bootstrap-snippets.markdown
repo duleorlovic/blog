@@ -15,6 +15,7 @@ rails new myapp
 cd myapp
 git init . && git add . && git commit -m "rails new myapp"
 echo -e "# vim temp files\\n*.swp\\n*.swo" >> .gitignore
+echo -e "# carrierwave upload files\\n/public/uploads" >> .gitignore
 git add . && git commit -m "Customization"
 ~~~
 
@@ -31,7 +32,7 @@ sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "localho
 sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "myapp.com" }' config/environments/production.rb 
 # rails g devise:views && git add . && git commit -m "rails g devise:views"
 git add . && git commit -m "Finishing configuration that devise gem suggests"
-sed -i '/<body>/a \\n<% if current_user %>\n<strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n<a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a><% end %>'  app/views/layouts/application.html.erb 
+sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n  <a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a>\n<% end %>'  app/views/layouts/application.html.erb 
 git add . && git commit -m "Adding login/logout header in layout"
 ~~~
 
@@ -69,11 +70,17 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 ~~~
 
 #### Carrierwave for uploading
+
+You should set up your AWS keys in *~/.bashrc* `export AWS_ACCESS_KEY_ID=123123` and `export AWS_SECRET_ACCESS_KEY=123123`. Bucket should be created as standard USA bucket. You can use single table field for multiple files (field type json) but than you need postgres database, we will keep it simple.
+
 ~~~
 echo -e "gem 'carrierwave'\\ngem 'fog'" >> Gemfile && bundle
 rails generate uploader Document
-rails g migration add_document_to_users document:string
-sed -i '/class User/a \  mount_uploader'  app/models/user_model.rb
+rails g migration add_document_to_companies document:string
+sed -i '/class Company/a \  mount_uploader :document, DocumentUploader'  app/models/company.rb
 rake db:migrate
+git add . && git commit -m "Adding carrierwave gem, document uploader and mount on company"
+
+
 ~~~
 
