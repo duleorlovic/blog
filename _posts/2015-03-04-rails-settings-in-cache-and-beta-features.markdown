@@ -89,8 +89,12 @@ def beta(symbol_of_feature, content = nil)
   # for features on non logged in pages (for example GET homepage) you can override default with url param:
   # ?enable_feature=name_of_feature
   # ?disable_feature=name_of_feature
-  if (MySetting[:live_features].split(',').map(&:strip).include?(symbol_of_feature.to_s) ||
-     (current_user && MySetting[:beta_users].split(',').map(&:strip).include?(current_user.email)) ||
+
+  # to catch emails in this example "asd@asd.asd,\r\ndsa@dsa.dsa"
+  r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)     
+
+  if (MySetting[:live_features].scan(r).include?(symbol_of_feature.to_s) ||
+     (current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
      params[:enable_feature] == symbol_of_feature.to_s) &&
      params[:disable_feature] != symbol_of_feature.to_s
     if content.present?
@@ -111,8 +115,8 @@ To keep track of features I usually write them in seed file
 # db/seeds.rb
 [
   {:name => 'signup_bonuse', :value => '2500', :description => 'This is bonuse for new customers. Set it to 0 if you do not want to give this bonuse'},
-  {:name => 'beta_users', :value => 'asd@asd.asd,admin@asd.asd', :description => 'Comma separated emails of users that can see non live features'},
-  {:name => 'live_features', :value => 'signup_bonuse_feature', :description => 'Comma separated features that all users can use. Note that beta_users can always see all features'},
+  {:name => 'beta_users', :value => 'asd@asd.asd, admin@asd.asd', :description => 'List of emails of users that can see non live features'},
+  {:name => 'live_features', :value => 'signup_bonuse_feature', :description => 'List of features that all users can use. Note that beta_users can always see all features'},
 ].each do |doc| 
   next if MySetting.where( name: doc[:name]).present?
   MySetting[doc[:name]] = doc[:value]

@@ -1,4 +1,6 @@
 
+quick_quote adding linkedn
+
 http://sourcey.com/rails-4-omniauth-using-devise-with-twitter-facebook-and-linkedin/
 
 If you want to override some devise controllers, you should write your own controllers that inherits from devise controllers.

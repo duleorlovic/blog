@@ -16,6 +16,32 @@ cd myapp
 git init . && git add . && git commit -m "rails new myapp"
 echo -e "# vim temp files\\n*.swp\\n*.swo" >> .gitignore
 echo -e "# carrierwave upload files\\n/public/uploads" >> .gitignore
+group :development do
+  gem 'rails-footnotes'
+
+
+  # Console
+  gem 'pry-rails'
+  gem 'hirb-unicode'
+  gem 'awesome_print'
+
+  # Chrome extensions
+  gem 'meta_request', '~> 0.3'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'bullet'
+  gem 'annotate'
+end
+
+group :production do
+  gem 'rails_12factor'
+  gem 'heroku-deflater'
+end
+
+unicorn server!
+
+
+
 git add . && git commit -m "Customization"
 ~~~
 
