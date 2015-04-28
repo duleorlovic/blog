@@ -93,7 +93,7 @@ def beta(symbol_of_feature, content = nil)
   # to catch emails in this example "asd@asd.asd,\r\ndsa@dsa.dsa"
   r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)     
 
-  if (MySetting[:live_features].scan(r).include?(symbol_of_feature.to_s) ||
+  if (MySetting[:live_features].split(/[\s,]+/).include?(symbol_of_feature.to_s) ||
      (current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
      params[:enable_feature] == symbol_of_feature.to_s) &&
      params[:disable_feature] != symbol_of_feature.to_s

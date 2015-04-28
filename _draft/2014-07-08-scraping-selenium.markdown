@@ -1,52 +1,50 @@
----
-layout: post
-title:  Scraping using Selenium
-categories: scraping selenium 
----
-
-to exit eval, you just need to write unknown command
-
-
-# scraping craigslists
+# Scraping tool
 #
-# start VPN tunnel if you are not from supported geolocation (USA)
-# run with ruby ./craigslist_selenium.rb
+# run with: ruby ./snag_selenium.rb
 # or in irb:
-# driver = nil,wait=nil,link=nil,email=nil,all_links=nil,email_element=nil
-# eval File.open('./craigslist_selenium.rb').read
+# driver = nil,wait=nil,id=nil
+# eval File.open('./snag_selenium.rb').read
+#
 
 require "selenium-webdriver"
 # http://selenium.googlecode.com/git/docs/api/rb/Selenium/WebDriver.html
 # http://docs.seleniumhq.org/docs/index.jsp
 require 'csv'
 
-output = CSV.open('data/craigslist.csv', 'wb')
+USER_EMAIL = "dominospizzajobs411@gmail.com"
+USER_PASSWORD = "getsome2**"
+TEST_MODE = false
 
-puts "Finding NEXT link craigslist site"
-next_link = nil
-wait.until do
-  begin
-    next_link = driver.find_element( :css, '.button.next')
-  rescue Selenium::WebDriver::Error::StaleElementReferenceError
-    # this happens with a site where page is replaced in javacript and there could be two buttons
-    puts "old elemenet is no longer attached to the DOM"
-    # when return value is false, it will keep findind
-    false
-  end
-end
+if driver.nil?
+  driver = Selenium::WebDriver.for :firefox
+  #driver.manage.timeouts.implicit_wait = 10 do not use this since it can hang out
+  wait = Selenium::WebDriver::Wait.new(:timeout => 30) # seconds
 
-reply_element = nil
-begin
-  wait.until do
-    reply_element = driver.find_element id: 'replylink'
-  end
-rescue Selenium::WebDriver::Error::TimeOutError
-  # this exception is raised when wait block do not return true
-  puts "\n#{link[:href]} does not have id replylink"
-  no_link_count += 1
-  # continue with next link
-  next
+  driver.navigate.to "https://hiring.snagajob.com/tms/?refid=hbtsignin"
+
+  puts "Signing in..."
+  element = nil
+  wait.until { element = driver.find_element(:name, 'UserName') }
+  element.send_keys USER_EMAIL
+
+  element = driver.find_element(:name, 'Password')
+  element.send_keys USER_PASSWORD
+
+  element.submit
 end
 
 
+puts "Finding profile_search..."
+profile_search = nil
+wait.until { profile_search = driver.find_element(:xpath, '//*[text()[contains(.,"Profile")]]') }
+profile_search.click
 
+
+
+
+
+xpath
+  find id  "//*[@id='my_id']"
+  class "//*a[contains(@class,'my_class')]"
+  text "//*[contains(text(),'ABC')]"
+  parrent "../"
