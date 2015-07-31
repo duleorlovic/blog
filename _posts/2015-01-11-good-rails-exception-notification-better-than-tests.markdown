@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Good rails exception notifier better that tests
+title:  Good rails exception notifier better than tests
 categories: ruby-on-rails exception-notification
 ---
 
@@ -138,7 +138,7 @@ get 'javascript-required-page', to: 'pages#javascript_required_page', as: :javas
 {% endhighlight %}
 
 
-You can see that there is also `javascript-required-page` where people is redirected when js is not enabled. This happens very rare. Put this in layout file, for pages after user login (and search boots not).
+You can see that there is also `javascript-required-page` where people is redirected when js is not enabled. This happens very rare. Put this in layout file, for pages after user login (and search bots not).
 
 
 {% highlight ruby %}
@@ -195,3 +195,6 @@ Delayed::Worker.class_eval do
   alias_method_chain :handle_failed_job, :notification
 end
 {% endhighlight %}
+
+To see log in rake task, you should use `heroku run:detached rake routes` instead of `heroku run rake routes` [link](https://devcenter.heroku.com/articles/one-off-dynos#running-tasks-in-background).
+Exception notifications can be used there also with this [exception_notification-rake](https://github.com/nikhaldi/exception_notification-rake). Just add `gem 'exception_notification-rake'` to *Gemfile* and `ExceptionNotifier::Rake.configure` to *config/secrets.yml*. Also works manual notifications.
