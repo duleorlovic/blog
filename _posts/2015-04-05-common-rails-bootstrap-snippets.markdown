@@ -16,6 +16,7 @@ cd myapp
 git init . && git add . && git commit -m "rails new myapp"
 echo -e "# vim temp files\\n*.swp\\n*.swo" >> .gitignore
 echo -e "# carrierwave upload files\\n/public/uploads" >> .gitignore
+
 group :development do
   gem 'rails-footnotes'
 
