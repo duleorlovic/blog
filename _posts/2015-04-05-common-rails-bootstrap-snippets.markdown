@@ -8,44 +8,32 @@ Paste this code to create some basic starting application *myapp.com* with authe
 
 > give a man a fish and you feed him for a day. teach a man to fish and you feed him for a lifetime
 
+Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the filename).
+
+`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and append *home* after that line (except insert before `i`, this could be `a` append and `c` change matched line)
+
 Initial commit
 
 ~~~
 rails new myapp
 cd myapp
 git init . && git add . && git commit -m "rails new myapp"
-echo -e "# vim temp files\\n*.swp\\n*.swo" >> .gitignore
-echo -e "# carrierwave upload files\\n/public/uploads" >> .gitignore
-group :development do
-  gem 'rails-footnotes'
-
-
-  # Console
-  gem 'pry-rails'
-  gem 'hirb-unicode'
-  gem 'awesome_print'
-
-  # Chrome extensions
-  gem 'meta_request', '~> 0.3'
-  gem 'better_errors'
-  gem 'binding_of_caller'
-  gem 'bullet'
-  gem 'annotate'
-end
-
-group :production do
-  gem 'rails_12factor'
-  gem 'heroku-deflater'
-end
-
-unicorn server!
-
-
-
-git add . && git commit -m "Customization"
 ~~~
 
-#### Devise authentication
+Gitignore & Gemfile defaults
+
+~~~
+echo -e "# vim temp files\\n*.swp\\n*.swo
+# carrierwave upload files\\n/public/uploads" >> .gitignore
+git commit -am "Update .gitignore"
+
+echo -e "\\ngem 'rails_12factor', group: :production" >> Gemfile
+sed -i "/gem 'sqlite3/c gem 'sqlite3', group: :development\
+\ngem 'pg', group: :production" Gemfile
+git commit -am "Use postgresql on production"
+~~~
+
+### User model and Devise authentication
 
 Default [devise](https://github.com/plataformatec/devise) auth. You can use `before_action :authenticate_user!` in controllers that will redirect to `/users/sign_in`. You need to set up emails to actually receive registration email.
 
@@ -53,18 +41,37 @@ Default [devise](https://github.com/plataformatec/devise) auth. You can use `bef
 echo "gem 'devise'" >> Gemfile && bundle
 rails g devise:install && rails g devise user && rake db:migrate
 git add . && git commit -m "rails g devise:install && rails g devise user"
-sed -i '/<body>/a \\n\n<p class="notice"><%= notice %></p>\n<p class="alert"><%= alert %></p>' app/views/layouts/application.html.erb 
+
+sed -i '/<body>/a \\n\n  <p class="notice"><%= notice %></p>\n  <p class="alert"><%= alert %></p>' app/views/layouts/application.html.erb 
 sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
 sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "myapp.com" }' config/environments/production.rb 
-# rails g devise:views && git add . && git commit -m "rails g devise:views"
 git add . && git commit -m "Finishing configuration that devise gem suggests"
+# optional
+# rails g devise:views && git add . && git commit -m "rails g devise:views"
+
 sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n  <a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a>\n<% end %>'  app/views/layouts/application.html.erb 
 git add . && git commit -m "Adding login/logout header in layout"
+
+# go and edit config/initializers/devise.rb
 ~~~
 
-#### Mandrill for sending emails
+### Sample page
 
-It will use two environment variables: `MANDRILL_API_KEY` and `MAIL_INTERCEPTOR_EMAIL` which you should set up in your *~/.bashrc* file with this `export MANDRILL_API_KEY=123123` and `export MAIL_INTERCEPTOR_EMAIL=you@youremail.com`
+~~~
+rails g controller pages index --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
+sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
+git add . && git commit -m "Adding sample index page"
+~~~
+
+### Sending Email: letter opener for development and mandrill for production
+
+~~~
+echo -e 'gem "letter_opener", :group => :development' >> Gemfile
+sed -i '/end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
+bundle && git add . && git commit -m "Letter opener to see emails in browser"
+~~~
+
+We need two environment variables: `MANDRILL_API_KEY` and `MAIL_INTERCEPTOR_EMAIL` which you should set up in your *~/.bashrc* file with this `export MANDRILL_API_KEY=123123` and `export MAIL_INTERCEPTOR_EMAIL=you@youremail.com`
 
 ~~~
 echo "gem 'mandrill_dm'" >> Gemfile && bundle
@@ -94,6 +101,10 @@ rails g scaffold company name:string user:references --no-stylesheets --no-fixtu
 sed -i '/companies/a \  root "companies#index"' config/routes.rb
 rake db:migrate && git add . && git commit -m "rails g scaffold company name:string user:references"
 ~~~
+
+### Twitter bootstrap
+
+Source is http://railscasts.com/episodes/328-twitter-bootstrap-basics
 
 #### Carrierwave for uploading
 
