@@ -30,7 +30,7 @@ git commit -am "Update .gitignore"
 echo -e "\\ngem 'rails_12factor', group: :production" >> Gemfile
 sed -i "/gem 'sqlite3/c gem 'sqlite3', group: :development\
 \ngem 'pg', group: :production" Gemfile
-git commit -am "Use postgresql on production"
+git commit -am "Adding useful gems"
 ~~~
 
 ### User model and Devise authentication
