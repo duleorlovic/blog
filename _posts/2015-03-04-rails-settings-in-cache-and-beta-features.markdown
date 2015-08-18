@@ -88,15 +88,14 @@ def beta(symbol_of_feature, content = nil)
   # some users can see non live features if there are listed in MySettings[:beta_users]
   # for features on non logged in pages (for example GET homepage) you can override default with url param:
   # ?enable_feature=name_of_feature
-  # ?disable_feature=name_of_feature
 
   # to catch emails in this example "asd@asd.asd,\r\ndsa@dsa.dsa"
   r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)     
 
-  if (MySetting[:live_features].split(/[\s,]+/).include?(symbol_of_feature.to_s) ||
+  if MySetting[:live_features].split(/[\s,]+/).include?(symbol_of_feature.to_s) ||
      (current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
-     params[:enable_feature] == symbol_of_feature.to_s) &&
-     params[:disable_feature] != symbol_of_feature.to_s
+     (![nil, "method"].include?(defined?( params)) && params[:enable_feature] == symbol_of_feature.to_s) # in mailer params are not available so check before use it
+
     if content.present?
       content
     else

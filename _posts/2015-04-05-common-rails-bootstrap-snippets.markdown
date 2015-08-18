@@ -4,13 +4,21 @@ title:  Rails bootstrap snippets
 categories: ruby-on-rails devise carrierwave
 ---
 
-Paste this code to create some basic starting application *myapp.com* with authentication and other funny tools.
+Paste this code to create some basic starting application *myapp.com* with 
+authentication and other funny tools.
 
-> give a man a fish and you feed him for a day. teach a man to fish and you feed him for a lifetime
+> give a man a fish and you feed him for a day. teach a man to fish and you feed
+him for a lifetime
 
-Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the filename).
+Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the
+filename). You can use single quotes so you do not need to write `\n`, just
+put `\` before jumping to new line.
 
-`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and append *home* after that line (except insert before `i`, this could be `a` append and `c` change matched line)
+`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
+append *home* after that line (beside insert before `i`, this could be `a`
+append and `c` change matched line)
+Sed has something different regular expressions so follow this [link](http://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)
+
 
 Initial commit
 
@@ -20,17 +28,43 @@ cd myapp
 git init . && git add . && git commit -m "rails new myapp"
 ~~~
 
-Gitignore & Gemfile defaults
+Gitignore 
 
 ~~~
 echo -e "# vim temp files\\n*.swp\\n*.swo
 # carrierwave upload files\\n/public/uploads" >> .gitignore
 git commit -am "Update .gitignore"
+~~~
 
-echo -e "\\ngem 'rails_12factor', group: :production" >> Gemfile
+Gemfile defaults
+
+~~~
 sed -i "/gem 'sqlite3/c gem 'sqlite3', group: :development\
 \ngem 'pg', group: :production" Gemfile
+echo -e "\\ngem 'rails_12factor', group: :production" >> Gemfile
+echo -e "\\ngroup :development do\n\
+  # to detect N+1 sql queries\n\
+  gem 'bullet'\n\
+  # do not show assets in log\n\
+  gem 'quiet_assets'\n\
+  # for using vim inside console, just add to .irbrc\n\
+  # require 'irbtools'\n\
+  #gem 'irbtools'\n\
+  gem 'interactive_editor'\n\
+end\n" >> Gemfile
+
 git commit -am "Adding useful gems"
+~~~
+
+Simplify secrets
+
+~~~
+sed -i "/^development:/c development: &default" config/secrets.yml
+sed -i "/^test:/c test: *default" config/secrets.yml
+
+sed -i '/^development:\|^production:/a \  # Facebook Autentication\
+  facebook_key: <%= ENV["FACEBOOK_KEY"] %>\
+  facebook_secret: <%= ENV["FACEBOOK_SECRET"] %>' config/secrets.yml
 ~~~
 
 ### User model and Devise authentication
@@ -53,6 +87,7 @@ sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %><
 git add . && git commit -m "Adding login/logout header in layout"
 
 # go and edit config/initializers/devise.rb
+# to add facebook login folow https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
 ~~~
 
 ### Sample page
