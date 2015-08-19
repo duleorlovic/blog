@@ -11,8 +11,8 @@ authentication and other funny tools.
 him for a lifetime
 
 Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the
-filename). You can use single quotes so you do not need to write `\n`, just
-put `\` before jumping to new line.
+filename). You can use single quotes so you do not need to write `-e` and `\n`.
+With sed, put `\` before jumping to new line.
 
 `sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
 append *home* after that line (beside insert before `i`, this could be `a`
@@ -31,8 +31,14 @@ git init . && git add . && git commit -m "rails new myapp"
 Gitignore 
 
 ~~~
-echo -e "# vim temp files\\n*.swp\\n*.swo
-# carrierwave upload files\\n/public/uploads" >> .gitignore
+echo -e '# vim temp files
+*.swp
+*.swo
+# carrierwave upload files
+/public/uploads
+# gedit files
+*~
+' >> .gitignore
 git commit -am "Update .gitignore"
 ~~~
 

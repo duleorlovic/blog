@@ -93,7 +93,7 @@ def beta(symbol_of_feature, content = nil)
   r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)     
 
   if MySetting[:live_features].split(/[\s,]+/).include?(symbol_of_feature.to_s) ||
-     (current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
+     (defined?(current_user) && current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
      (![nil, "method"].include?(defined?( params)) && params[:enable_feature] == symbol_of_feature.to_s) # in mailer params are not available so check before use it
 
     if content.present?
