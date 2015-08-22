@@ -1,0 +1,76 @@
+Transform propery
+===
+
+~~~
+div {
+  transform: scale(2,3);
+}
+~~~
+
+2D transforms:
+
+* `translate(50px, 100px)` is 50px right and 100px down
+* `rotate(20deg)` clockwise
+* `scale(2,3)` width 2 times and height 3 times bigger
+* `skewX(20deg)` `skewY(-10deg)` and `skew(20deg,-10deg)`
+* `matrix(6 params)`
+
+another usefull property is `transform-origin: 50% 50% 0` which
+move the base of transform, on x, y and z axis (for 3D).
+
+3D transforms:
+
+* `rotateX(20deg)` around X axis (horizontal)
+* `rotateY(20deg)` around Y axis (vertical)
+* `rotateZ(20deg)` around Z axis (toward user)
+* translate3d scale3d rotate3d
+
+usefull property is `perspective: 400px` is how many pixes is
+3D element placed from the view and `perspective-origin: 10% 10%` bootom
+position on x and y axis.
+
+Transition property
+===
+
+Transition allows that element change property smoothly, over given duration.
+
+~~~
+div {
+  transition: width 2s ease-out 1s;
+  // or
+  transition-property: width;
+  transition-duration: 2s;
+  transition-timing-function: ease-out;
+  transition-delay: 1s;
+}
+~~~
+
+usually we change properties on hover.
+
+Animation property
+===
+
+~~~
+div {
+  animation: example 5s linear 2s infinite alternate;
+  // or
+  animation-name: example;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+
+  animation-fill-mode: forwards;
+}
+
+@keyframes example {
+  0% { width: 10px; }
+  25% { width: 100px; }
+  100% { width: 110px; }
+}
+
+so you don't need user action to animate...
+~~~
+
+https://24ways.org/2010/intro-to-css-3d-transforms/
