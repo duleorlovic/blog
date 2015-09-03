@@ -75,34 +75,36 @@ In all places in my rails application I use this `beta` helper method that uses 
 
 ~~~
 # app/helpers/application_helper.rb
+module ApplicationHelper
 
-def beta(symbol_of_feature, content = nil)
-  # example of usage:
-  # <% if beta :name_of_feature %>
-  #   <div>Something</div>
-  # <% end %>
-  # <%= beta :name_of_feature, render( "something") %>
-  # some_code if beta(:name_of_feature)
-  #
-  # to make feature available to all, add it to MySetting[:live_features]
-  # some users can see non live features if there are listed in MySettings[:beta_users]
-  # for features on non logged in pages (for example GET homepage) you can override default with url param:
-  # ?enable_feature=name_of_feature
+  def beta(symbol_of_feature, content = nil)
+    # example of usage:
+    # <% if beta :name_of_feature %>
+    #   <div>Something</div>
+    # <% end %>
+    # <%= beta :name_of_feature, render( "something") %>
+    # some_code if beta(:name_of_feature)
+    #
+    # to make feature available to all, add it to MySetting[:live_features]
+    # some users can see non live features if there are listed in MySettings[:beta_users]
+    # for features on non logged in pages (for example GET homepage) you can override default with url param:
+    # ?enable_feature=name_of_feature
 
-  # to catch emails in this example "asd@asd.asd,\r\ndsa@dsa.dsa"
-  r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)     
+    # to catch emails in this example "asd@asd.asd,\r\ndsa@dsa.dsa"
+    r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)     
 
-  if MySetting[:live_features].split(/[\s,]+/).include?(symbol_of_feature.to_s) ||
-     (defined?(current_user) && current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
-     (![nil, "method"].include?(defined?( params)) && params[:enable_feature] == symbol_of_feature.to_s) # in mailer params are not available so check before use it
+    if MySetting[:live_features].split(/[\s,]+/).include?(symbol_of_feature.to_s) ||
+       (![nil, "method"].include?(defined?(current_user)) && current_user && MySetting[:beta_users].scan(r).include?(current_user.email)) ||
+       (![nil, "method"].include?(defined?( params)) && params[:enable_feature] == symbol_of_feature.to_s) # in mailer params are not available so check before use it
 
-    if content.present?
-      content
+      if content.present?
+        content
+      else
+        true
+      end
     else
-      true
+      false
     end
-  else
-    false
   end
 end
 ~~~
