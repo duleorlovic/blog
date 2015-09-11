@@ -4,43 +4,47 @@ title:  Good rails exception notifier better than tests
 categories: ruby-on-rails exception-notification
 ---
 
-Do not hide your mistackes, instead, make sure that every bug is noticeable. That way you will learn more and thinks that you did not know (that's why bug occurs).
+Do not hide your mistakes, instead, make sure that every bug is noticeable. That way you will learn more and thinks that you did not know (that's why bug occurs).
 
-Bugs that I have meet are something like: user uploaded file with non asci chars, linkedin identity text is missing graduation date, after_create hook on model with devise cause user.save to return true but user.errors is present and user is redirected to update his registration form... You cant write tests for those situations. Better is to have nice notification with all input/session/user data. So please never use rescue block without notification.
+Bugs that I have meet are something like: user uploaded file with non asci chars, linkedin identity text is missing graduation date, after_create hook on model with devise cause `user.save` to return *true* but *user.errors* is present and user is redirected to update his registration form... You can NOT write tests for those situations. Better is to have nice notification with all input/session/user data. When you implement this, please don't use rescue block without notification.
 
-Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification). It is rack middleware and configuration is very simple. After adding `gem exception_notification` put this in your config file:
+Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification). It is rack middleware and configuration is very simple. After adding `gem 'exception_notification'` to your Gemfile, put this in your config file:
 
 {% highlight ruby %}
 # config/application.rb
-if Rails.application.secrets.exception_recipients.present?
-  Whatever::Application.config.middleware.use ExceptionNotification::Rack,
-    :email => {
-      :email_prefix => "[Whatever] ",
-      :sender_address => %{"notifier" <notifier@example.com>},
-      :exception_recipients => "#{Rails.application.secrets.exception_recipients}".split(','),
-      :delivery_method => :smtp,
-    }
-end
+    if Rails.application.secrets.exception_recipients.present?
+      config.middleware.use ExceptionNotification::Rack,
+        :email => {
+          :email_prefix => "[Whatever] ",
+          :sender_address => %{"notifier" <notifier@example.com>},
+          :exception_recipients => "#{Rails.application.secrets.exception_recipients}".split(','),
+          #:delivery_method => :smtp,
+        }
+    end
 {% endhighlight %}
 
-This will send email for any exception that occurs in production.
+This will send email for any exception if `expception_recipients` are present.
 
+As delivery method you can use *mandill* or very nice *letter_opener* for development.
 Set email receivers in config secrets:
 
 {% highlight yaml %}
 # config/secrets.yml
-# leave this empty if you do not want to enable server error notifications, othervise comma separated emails
-exception_recipients: <%= ENV['EXCEPTION_RECIPIENTS'] %>
-# leave this empty if you do not want to enable javascript error notifications, othervise comma separated emails
-javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
+  # leave this empty if you do not want to enable server error notifications
+  # othervise comma separated emails
+  exception_recipients: <%= ENV['EXCEPTION_RECIPIENTS'] %>
+  # leave this empty if you do not want to enable javascript error notification
+  # othervise comma separated emails
+  javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
 {% endhighlight %}
 
-Second variable is for javascript errors. If there is an error in ajax reponse, or in some of your javascript code, you can send another request to server to send notification. In your javascript file you should have something like this
+Second variable is for javascript errors. If error occurs in ajax reponse, or in some of your javascript code, we will send another request to server to trigger notification. In your main javascript file you should have something like this
 
 {% highlight javascript %}
+<%# app/assets/javascripts/init.js %>
 // catch javascript errors
 window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
-  if (typeof flash_alert == 'function')
+  if (typeof(flash_alert) == 'function')
     flash_alert(errorMsg);
   else
     alert(errorMsg); // we use alert if error occurs in application.js so flash_alert is not defined
@@ -56,21 +60,27 @@ $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
   // notify server for this error
   $.get('/notify-javascript-error', { status: status, error: error });
 });
+
+function flash_alert(msg) {
+  if (msg.length == 0) return;
+  alert(msg);
+}
 {% endhighlight %}
 
-Create route for *notify-javascript-error* and use manual notification [ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception). As you can see, you can add additional information using `:data` param. Only the first argument is required (default your can find [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)).  Probably, for less important notification you can change subject with `email_prefix` param. Manual notification can be simply as one line `ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'), env: request.env, email_prefix: 'just to notify that', data: { current_user: current_user });` or with more data:
+Create route `get 'notify-javascript-error', to: 'pages#notify_javascript_error'` in your *config/routes.rb* and we will use manual notification [ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception). You can pass additional information using `:data` param. Only the first argument is required (default your can find [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)). For less important notification you can change subject with `email_prefix` param. Manual notification can be simply as one line `ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'), env: request.env, email_prefix: 'just to notify that', data: { current_user: current_user });`. Here is what we use for javascript notification:
 
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
-class PagesController < ApplicationController
   def notify_javascript_error
     if Rails.application.secrets.javascript_error_recipients.present?
       ExceptionNotifier.notify_exception(
         Exception.new("javascript error"),
         :env => request.env,
-        # set env to nill if you do not want sections: request and session (backtrace is not shown for manual notification, data section is always shown if exists)
-        :sections => %w(request message),
-        :exception_recipients => "#{Rails.application.secrets.javascript_error_recipients}".split(','), # split method should be applied to string, but this could be nil, so we use "#{nil}"
+        # set env to nil if you do not want sections: request and session
+        # backtrace is not shown for manual notification
+        # data section is always shown if exists
+        #:sections => %w(request message),
+        :exception_recipients => "#{Rails.application.secrets.javascript_error_recipients}".split(','),
         :data => { 
           current_user: current_user,
           params: params,
@@ -79,10 +89,9 @@ class PagesController < ApplicationController
     end
     render nothing: true
   end
-end
 {% endhighlight %}
 
-You can also set some nice looking text with custom sections. Look at param `:sections`. You need to write partial (in which you can access to `@data`,`@request`... varibales).
+You can also set some nice looking text with custom sections (uncomment param `:sections`). You need to write partial in which you can access to `@data`,`@request`... varibales.
 
 {% highlight ruby %}
 # app/views/exception_notifier/_message.text.erb

@@ -11,8 +11,8 @@ require "selenium-webdriver"
 # http://docs.seleniumhq.org/docs/index.jsp
 require 'csv'
 
-USER_EMAIL = "dominospizzajobs411@gmail.com"
-USER_PASSWORD = "getsome2**"
+USER_EMAIL = "asd@asd.asd"
+USER_PASSWORD = "asdasd"
 TEST_MODE = false
 
 if driver.nil?
@@ -42,9 +42,13 @@ profile_search.click
 
 
 
+To parse some text, you can use nokogiri `data = Nokogiri::HTML(html_page)`
+
+[http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)
 
 xpath
   find id  "//*[@id='my_id']"
   class "//*a[contains(@class,'my_class')]"
   text "//*[contains(text(),'ABC')]"
   parrent "../"
+  some child of this ".//"
