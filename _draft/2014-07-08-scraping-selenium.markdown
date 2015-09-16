@@ -45,6 +45,8 @@ profile_search.click
 To parse some text, you can use nokogiri `data = Nokogiri::HTML(html_page)`
 
 [http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)
+Usefull selector 
+http://ejohn.org/blog/xpath-css-selectors/
 
 xpath
   find id  "//*[@id='my_id']"
