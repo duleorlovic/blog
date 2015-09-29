@@ -38,6 +38,8 @@ echo -e '# vim temp files
 /public/uploads
 # gedit files
 *~
+# vagrant files
+.vagrant
 ' >> .gitignore
 git commit -am "Update .gitignore"
 ~~~

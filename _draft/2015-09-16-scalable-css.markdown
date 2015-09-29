@@ -9,3 +9,15 @@ State changes can happen by: class name (js add/remove class), pseudo class (:ho
 
 
 http://work.stevegrossi.com/2014/09/06/how-to-write-css-that-scales/
+
+https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Writing_efficient_CSS#Avoid_the_descendant_selector.21
+
+* *key selector* is the right most part of selector (could be `#id`, `.class`, tag `h1` or universal `[hidden="true"]` category). Avoid plain univarsal and avoid mixing other three categories.
+* avoid descendant selector `table[hidden="true"] td tr`, betters is to use child selector `table[hidden="true"] > td > tr` but event that should be avoided with duplicating attributes `tr[hidden="true"]`
+* rely on inheritance, instead of `#bookmarkMenuItem > .menu-left { list-style-image: url(blah) }` its enough to write `#bookmarkMenuItem { list-style-image: url(bla) }`
+
+
+https://en.bem.info/
+
+* *blocks* are independent page component that contains other blocks or *elements* (can't be used outside of a block). Modifiers defines appearance and behavior
+* instead of `menu-item-visible` (block-element-modifier) write *block-name__elem-name--mod-name* `menu__item--visible`

@@ -4,102 +4,65 @@ title:  Rails through Vagrant to DigitalOcean
 categories: ruby-on-rails vagrant digitalocean
 ---
 
-When a lot of people is going to take a part in development, than Vagrant can help to set up quickly and easy any Rails application.
+When a lot of people are working on the same Rails application, than *Vagrant* 
+could help to set up environment quick and easy.
+Even Vagrant is not recommended for production, it is very usefull for testing
+bootstrap scripts automatically. For production we can simply copy bootstrap
+script and run manually.
+Testing can be done localy using VirtualBox, or remotely on Digital Ocean
+using their API key.
 
-After installing virtualbox and vagrant, you should creat Vagrantfile with command `vagrant init`
-
-Here are my overrides of default configuration
+In your Rails project, you can create *Vagrantfile* with command `vagrant init`
+There you define common configuration and overrides for each provider. 
+Let's start virt VirtualBox provider
 
 ~~~
-# define some inputs... could grep from config
-DATABASE_NAME="database_development" 
-TEST_DATABASE_NAME="database_test" 
-DATABASE_USER="vagrant"
-#TODO pg_hba.conf
-ADDITIONAL_PACKAGES="libmagickwand-dev "
-TARGET_RUBY_VERSION="2.2" # its better to specify since RUBY_VERSION is taken from vagrant
+# Vagrantfile
+  config.vm.hostname = "my_app.example.com"
 
-
-Vagrant.configure(2) do |config|
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
-  config.vm.provider "virtualbox" do |vb|
-    #vb.memory = "2048"
+  config.vm.provider :virtualbox do |vb, override|
+    # list of all machines can be found https://atlas.hashicorp.com/boxes/search
+    override.vm.box = "ubuntu/trusty64"
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    override.vm.network "forwarded_port", guest: 80, host: 3000
+    override.vm.provision :file, source: '~/.secrets_staging.env', destination: '/vagrant/.secrets.env'
+    override.vm.provision :shell, path: 'vagrant/boostrap.sh', keep_color: true
   end
-
-  config.vm.provision "shell", inline: <<-SHELL
-    # Needed for docs generation and database default
-    update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
-    apt-get -y update
-    # install developlment tools
-    apt-get -y install build-essential curl git nodejs #{ADDITIONAL_PACKAGES}
-    # postresql
-    apt-get -y install postgresql postgresql-contrib libpq-dev
-
-    # check if database is not already created
-    if [ `su postgres -c 'psql -l' | grep #{DATABASE_NAME} | wc -l` -eq 0 ]
-      then
-        echo "creating databases: '#{DATABASE_NAME}'"
-        # if non vagrant user want to be able to create database without password, we need to change
-        # md5 to trust in /etc/postgresql/9.1/main/pg_hba.conf
-        sed -i 's/md5/trust/' /etc/postgresql/9.3/main/pg_hba.conf
-        /etc/init.d/postgresql restart
-        su postgres -c "createuser --superuser --createdb #{DATABASE_USER}"
-        su postgres -c "createdb -O #{DATABASE_USER} #{DATABASE_NAME}"
-        su postgres -c "createdb -O #{DATABASE_USER} #{TEST_DATABASE_NAME}"
-    else
-      echo "database '#{DATABASE_NAME}' already created"
-    fi
-
-    # check if rvm is installed
-    if [ "`su -l vagrant -c 'type -t rvm'`" != "function" ]; then
-      echo install rvm, not so usefull in VMbut usefull if you want to set up locally and follow this steps
-      # fix issue with signature https://github.com/wayneeseguin/rvm/issues/3110
-      su -l vagrant -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3'
-      su -l vagrant -c 'curl -sSL https://get.rvm.io | bash -s stable'
-      # it is sucessfully installed in bash_... so no need to source
-      su -l vagrant -c 'rvm use --install --default #{TARGET_RUBY_VERSION}'
-      su -l vagrant -c 'cd /vagrant && gem install bundler'
-    else
-      echo "rvm already installed" 
-    fi
-
-    echo run bundle
-    su -l vagrant -c 'cd /vagrant && bundle'
-    su -l vagrant -c 'cd /vagrant && rake db:create'
-    su -l vagrant -c 'cd /vagrant && rake db:migrate'
-    su -l vagrant -c 'cd /vagrant && rake db:seed'
-    # port need to be changed since rails 4.2 http://stackoverflow.com/questions/26570609/rails-4-2-0-beta2-cant-connect-to-localhost
-    su -l vagrant -c 'cd /vagrant && rails s -d -b 0.0.0.0'
-    echo -e "Rails server started$!.\nYou can kill the server with this command: 'kill -9 \$(cat /vagrant/tmp/pids/server.pid)'"
-  SHELL
-
-end
 ~~~
 
+We will use `~/.secrets_staging.env` file to define all secrets and variables
+like `export RAILS_ENV=production` 
+Virtualbox and Digital ocean provision scripts are running as root user 
+(`vagrant ssh` virtual box use `vagrant` user). Root access is not recomended 
+on production, so its better to create another user `deployer` which will be
+ used for deploying and ssh.
+[Source link](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04)
+To ssh using deployer user on VirtalBox run `ssh -p 2222 deployer@127.0.0.1`
 
-If you want to deploy to DO you can using [vagrant-digitalocean](https://github.com/smdahlen/vagrant-digitalocean):
+To boot machine on digital ocean, you need to register *DIGITAL_OCEAN_TOKEN*
+API key. If you already added ssh key to your account https://cloud.digitalocean.com/settings/security than you can rename it to *Vagrant* or put it's *name* as `provider.ssh_key_name = name` param.
 
 ~~~
-vagrant plugin install vagrant-digitalocean
-vagrant box add digital_ocean https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box
-~~~
-
-and in Vagrantfile, add the following:
-
-~~~
-  config.vm.provider :digital_ocean do |provider,override|
-  override.ssh.private_key_path = "~/.ssh/id_rsa"
+# Vagrantfile
+  config.vm.provider :digital_ocean do |provider, override|
+    override.ssh.private_key_path = '~/.ssh/id_rsa'
     override.vm.box = 'digital_ocean'
     override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
 
-    provider.token = "#{ENV['DO_TOKEN']}"
-    provider.image = "ubuntu-14-04-x64"
-  end
+    override.vm.provision :file, source: '~/.my_app_staging.env', destination: '/vagrant/.secrets.env'
+    override.vm.provision :shell, path: 'vagrant/bootstrap_ruby_on_rails_image.sh', keep_color: true
+    override.vm.synced_folder ".", "/vagrant", type: "rsync",
+      rsync__exclude: [".git/", "tmp/", "log/", "lib/", "docs/", "public/"]
 
-  # add in sheel script
-  useradd -m -d /home/vagrant -s /bin/bash -U vagrant
-  adduser vagrant sudo
-  # %sudo       ALL=(ALL:ALL) NOPASSWD:ALL
+    provider.token = ENV["DIGITAL_OCEAN_TOKEN"]
+    provider.image = 'ruby-on-rails'
+    provider.region = 'nyc2'
+    provider.size = '1gb'
+  end
 ~~~
+
+Before provisioning it, you need to install plugin `vagrant plugin install [vagrant-digitalocean](https://github.com/smdahlen/vagrant-digitalocean)`. To see all images (regions, sizes) available: `vagrant digitalocean-list images $DIGITAL_OCEAN_TOKEN`. At the end run: `vagrant up --provider=digital_ocean`. If you want to resize its memory, you can simply change size and `vagrant rebuild`
+
+We can use [ruby-on-rails](https://www.digitalocean.com/community/tutorials/how-to-use-the-ruby-on-rails-one-click-application-on-digitalocean) image, but its better to start from scratch, plan Ubuntu, and follow best practices.
+
