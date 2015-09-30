@@ -77,9 +77,11 @@ puts Benchmark.measure { Job.active_per_domain_per_tier(domain,1) }
 or you can connect to production database (be carefull).
 
 
-Statistics example
-=====================
+## Statistics graph
 
+When you want to show some statistics during some time (time points in sql is `GENERATE_SERIES`), for example number of deactivated users:
+
+![Time series of deactivated users]({{ site.baseurl }}/assets/deactivated_users.png)
 
 What I have learned is that when you use *series*, never apply *WHERE* since because it will destroy *series*.
 Better is to filter in *ON* statement. Each subsequent joins should be *LEFT OUTER JOIN* so *series* survive.

@@ -51,15 +51,17 @@ API key. If you already added ssh key to your account https://cloud.digitalocean
     override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
 
     override.vm.provision :file, source: '~/.my_app_staging.env', destination: '/vagrant/.secrets.env'
-    override.vm.provision :shell, path: 'vagrant/bootstrap_ruby_on_rails_image.sh', keep_color: true
+  end
+    override.vm.provision :shell, path: 'vagrant/bootstrap.sh', keep_color: true
     override.vm.synced_folder ".", "/vagrant", type: "rsync",
       rsync__exclude: [".git/", "tmp/", "log/", "lib/", "docs/", "public/"]
 
     provider.token = ENV["DIGITAL_OCEAN_TOKEN"]
-    provider.image = 'ruby-on-rails'
+    provider.image = 'ubuntu-14-04-x64'
     provider.region = 'nyc2'
     provider.size = '1gb'
-  end
+    provider.ssh_key_name = `hostname`.strip # this key name is from https://cloud.digitalocean.com/settings/security
+    # and is used for vagrant ssh. default is Vagrant and it will be created if public key is not already there
 ~~~
 
 Before provisioning it, you need to install plugin `vagrant plugin install [vagrant-digitalocean](https://github.com/smdahlen/vagrant-digitalocean)`. To see all images (regions, sizes) available: `vagrant digitalocean-list images $DIGITAL_OCEAN_TOKEN`. At the end run: `vagrant up --provider=digital_ocean`. If you want to resize its memory, you can simply change size and `vagrant rebuild`

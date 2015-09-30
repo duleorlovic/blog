@@ -6,4 +6,4 @@ permalink: /about/
 
 This is my personal blog.
 
-![My image]({{ site.asset_path }}assets/duleorlovic.jpg)
+![My image]({{ site.baseurl }}/assets/duleorlovic.jpg)
