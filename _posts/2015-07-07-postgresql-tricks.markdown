@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Postgresql Tricks
+title:  Postgresql Tricks for Statistics Graphs
 categories: ruby-on-rails postgresql
 ---
 
