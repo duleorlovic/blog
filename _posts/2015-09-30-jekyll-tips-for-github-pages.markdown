@@ -2,6 +2,7 @@
 layout: post
 title:  Jekyll tips for github pages
 categories: jekyll github rakefile
+noToc: false
 ---
 
 After initial jekyll init
@@ -95,3 +96,18 @@ end
 ~~~
 
 
+## Adding Table of Content
+
+
+If you need automatic Toc than use [jekyll-toc-generator](https://github.com/dafi/jekyll-toc-generator). I put [defaults](http://jekyllrb.com/docs/configuration/#front-matter-defaults) to not have a Toc, and enable on post that I want Toc to show.
+
+~~~
+# _config.yml
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      noToc: true
+~~~

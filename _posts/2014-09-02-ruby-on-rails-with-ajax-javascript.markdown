@@ -99,16 +99,17 @@ In case of some form validations error or some successul action we can send flas
 
 This approach should be coupled with writing respond.js block that do not redirect for example for update/create action `format.js { render :show, status: :ok, location: @survey, content_type: Mime::HTML }` so we have those messages in javascript. Another solution is not to discard flash and use native redirection (the same as for format.html) ie not writing forman.js as use default format.html responses. There is also `flash.now[:notice] = msg` if you want to customize it further, probably on change (PUT, PATCH) requests, but think it twice, because but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
 
-GET INDEX, GET SHOW(:id), GET NEW, GET EDIT(:id), not flash messages, response is template so ajax is ok (format.js == format.html)
-POST CREATE, usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)
-PATCH/PUT UPDATE(:id), usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)
-DELETE DELETE(:id), usually flash message, respond is redirect but in ajax is not fine, second request is stil DELETE in chrome so use `format.js { render nothing: true }` 
+* GET INDEX, GET SHOW(:id), GET NEW, GET EDIT(:id), not flash messages, response is template so ajax is ok (format.js == format.html)
+* POST CREATE, usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)
+* PATCH/PUT UPDATE(:id), usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)
+* DELETE DELETE(:id), usually flash message, respond is redirect but in ajax is not fine, second request is stil DELETE in chrome so use `format.js { render nothing: true }` 
 
 
 To summarize differences between using rails native format.js files and thiw rails unobtrusive ajax:
-pros: unobtrusive ajax approach knows which link is clicked so it do not require specifix id (but it requres parameter which closest element should be replaced). This is specifically important when we generate forms for new objects (new records does not have id). You do not need to generate some random id-s to target that forms so they could be replaced with show partials.
+* pros: unobtrusive ajax approach knows which link is clicked so it do not require specifix id (but it requres parameter which closest element should be replaced). This is specifically important when we generate forms for new objects (new records does not have id). You do not need to generate some random id-s to target that forms so they could be replaced with show partials.
 
 
+~~~
 // Used to add class 'active' to selector
 // example <button data-activate=".popup"></button>
 $(document).on('click','[data-activate]', function(e) {
@@ -125,51 +126,22 @@ $(document).on('click','[data-deactivate]', function(e) {
     e.preventDefault();
   LOG && console.log("click a[data-deactivate]="+$(this).data('deactivate'));
 });
+~~~
 
-
-debugging javascript can be easilly startet with command `debugger;` even from `format.js` response.
-za processing controller/edit as JS
-+
-+* prvo se gleda da li postoji template edit.js
-+* ako ne postoji onda bilo koji npr edit.html
-+
-+ajax:success event dolazi na objekat, ali vazi za sve njegove parents.
-+vezati ajas:success za neki objekat unutar partiala, ali koji obavija zadati element sa remote: true (samo pazite npr <td></td> ne bi trebalo obavijati jer to kvari <tr>)
-+
-+$(document).ready ->
-+  $(".wrapper").on("ajax:success", (e, data, status, xhr) ->
-+    alert "Success"
-+  ).on "ajax:error", (e, xhr, status, error) ->
-+    alert "Error"
-+
-+Ne treba da koristimo .ajaxSuccess zato sto se on kaci samo na document, i treba obratiti paznju da je redosled agumenata razlicit kod success i error.
-+
-+https://github.com/rails/jquery-ujs/wiki/ajax
-+
-+Za updejt linkove, npr link_to activate, data: {disable_with: "Activating"} gde ne mora da se ucitava neka edit forma, najbolje je raditi zamenu posle responsa.
-+Za menjanje edit i show template treba ih obaviti u div i raditi menjanje.
-+Za menjanje parcijalnih delova najbolje koristiti neki data-target i koristiti isti updaejt.
-+
-+
-+Ako se trazi #new as JS a ne postoji new.js, onda ce se renderovati new.html 
 
 pros/cons: if there is an error respond.js you will not notice that in console, but in this approach, it will be shown as console error 
 
 Custom js functions like select2 or autosize should be defined next to target elements. for example
 
+~~~
    <%= f.textarea :content %>
    <% controller.js_functions << { 'textarea' => 'autosize' } %>
+~~~
 
 That way it is much clearer. when you load the partial you do not need to worry what it needs to call (like in .js files), scope is much narrower (you will not change all the textarea, because this function is called on children('textarea') of this partial).
 
 When you are rendering back the form that has some _destoyed submodels, you should not display tham again:
 
-dusan@trk-inovacije:~/www/rails/rails_ajax_without_respond_js
-
-<% if f.object._destroy %>
-<% end %>
-<%= ubacuje &quot; &lt; i stale karakter u html escaping, \n /b ostaju isti
-<%= j javacsript render escapuje /, ', " menja sa \/, \', \"
 
 Adding new elements can be done in javascript (without server active) but then the user has to confirm that, ie submit the form.
 You can add remove new elements with ajax, so there is no need for submitting.

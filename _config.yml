@@ -16,3 +16,11 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - Guardfile 
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      noToc: true
