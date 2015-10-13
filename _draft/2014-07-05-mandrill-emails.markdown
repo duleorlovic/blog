@@ -1,6 +1,6 @@
 I prefer Mandrill instead of sendgrid, since sendgrid can not automatically convert html to txt mails. Mandrill has nice API so you do not need background job to send a lot of emails quickly.
 
-To set it on rails, use those changes:
+To set sending just use those changes:
 
 ~~~
 # Gemfile
@@ -52,6 +52,37 @@ end
 
 ~~~
 add a line `config.action_mailer.preview_path = "#{Rails.root}/app/mailer_previews"` to *config/environments/development.rb* and go to [rails/mailers](http://localhost:3000/rails/mailers).
+
+
+# Receiving emails
+
+When you want to receive, use [mandrill-rails](https://github.com/evendis/mandrill-rails).
+
+~~~
+echo '
+# receiving emails and webhooks
+gem "mandrill-rails" ' >> Gemfile
+
+sed 
+resource :inbox, :controller => 'inbox', :only => [:show,:create]
+config/routes.rb
+
+echo 'class InboxController < ApplicationController
+  include Mandrill::Rails::WebHookProcessor
+
+  def handle_inbound(event_payload)
+    # do something with payload
+  end
+end ' > app/controllers/inbox_controller.rb
+~~~
+
+Mandrill:
+
+* create api key for prod and test
+* validate inbound domains for prod and test
+* create routes for validated domains (this will create one webhook)
+* create webhooks 
+* create rules that match api and hooktype and send it to webhook
 
 authentication
 http://www.openspf.org/SPF_Record_Syntax

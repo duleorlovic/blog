@@ -2,8 +2,8 @@
 title: duleorlovic - web developer
 email: dusan.orlovic@trk-inovacije.com
 description: "I am writing here some toughts during my work in Ruby on Rails, Javascript and other"
-asset_path: "http://duleorlovic.github.io/blog/"
-baseurl: '/blog'
+github_url: http://duleorlovic.github.io
+baseurl: /blog
 twitter_username: duleorlovic
 github_username:  duleorlovic
 
@@ -16,3 +16,11 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - Guardfile 
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      noToc: true

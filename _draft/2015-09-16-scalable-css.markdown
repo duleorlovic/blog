@@ -21,3 +21,8 @@ https://en.bem.info/
 
 * *blocks* are independent page component that contains other blocks or *elements* (can't be used outside of a block). Modifiers defines appearance and behavior
 * instead of `menu-item-visible` (block-element-modifier) write *block-name__elem-name--mod-name* `menu__item--visible`
+
+
+# Live reloading in less than a second
+
+[Sharetribe](https://github.com/sharetribe/sharetribe/blob/master/docs/scss-coding-guidelines.md) uses [fast reloading](https://mattbrictson.com/lightning-fast-sass-reloading-in-rails)
