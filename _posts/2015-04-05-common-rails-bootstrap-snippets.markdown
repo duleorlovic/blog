@@ -73,12 +73,12 @@ echo '
 gem "bourbon"
 gem "neat"
 ' >> Gemfile
-git rm app/assets/stylesheets/application.css
 echo '
 @import "bourbon";
 @import "base/base"; // this is http://bitters.bourbon.io/
 @import "neat";
 ' > app/assets/stylesheets/application.scss
+git rm app/assets/stylesheets/application.css
 
 bundle
 gem install bitters
@@ -92,10 +92,10 @@ git add . && git commit -m "Adding bourbon, neat and bitters scss"
 ## Adding flash
 
 ~~~
-sed -i '/<body>/a \\n\n
-<% flash.each do |key, value| -%>
-  <div class="flash-<%= key %>"><%= value %></div>
-% end %>' app/views/layouts/application.html.erb
+sed -i '/<body>/a \
+<% flash.each do |key, value| -%>\
+  <div class="flash-<%= key %>"><%= value %></div>\
+<% end %>' app/views/layouts/application.html.erb
 git add . && git commit -m "Adding flash to layout"
 ~~~
 
