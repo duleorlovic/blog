@@ -1,3 +1,26 @@
+WoW
+===
+
+Before you dive into details, you can try [animate]() (also [wow](https://github.com/matthieua/WOW) to trigger it on scroll):
+
+~~~
+<html>
+  <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js">
+  </script>
+  <script>
+    new WOW().init();
+  </script>
+</head>
+  <body>
+    <div class="animated fadeInRightBig">
+      Content to Reveal Here
+    </div>
+  </body>
+</html>
+~~~
+
 Transform propery
 ===
 

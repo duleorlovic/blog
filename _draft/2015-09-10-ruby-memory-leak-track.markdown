@@ -107,6 +107,8 @@ pp types.sort_by { |klass,num| num }
 ObjectSpace.dump_all( output: File.open("heap.json","w"))"
 ~~~
 
+http://blog.codeship.com/debugging-a-memory-leak-on-heroku/
+
 ## Discourse
 
 * http://samsaffron.com/archive/2013/11/22/demystifying-the-ruby-gc
