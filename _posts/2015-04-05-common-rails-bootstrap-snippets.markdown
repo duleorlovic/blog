@@ -197,12 +197,12 @@ rake db:migrate
 rails generate clearance:routes
 git add . && git commit -m "rails g clearance:install"
 
-sed -i '/<body>/a \\n\n
-<% if signed_in? %>
-  <%= current_user.email %>
-  <%= button_to "Sign out", sign_out_path, method: :delete %>
-<% else %>
-  <%= link_to "Sign in", sign_in_path %>
+sed -i '/<body>/a \\n\
+<% if signed_in? %>\
+  <%= current_user.email %>\
+  <%= button_to "Sign out", sign_out_path, method: :delete %>\
+<% else %>\
+  <%= link_to "Sign in", sign_in_path %>\
 <% end %>' app/views/layouts/application.html.erb
 git add . && git commit -m "Adding sign signout path"
 ~~~
