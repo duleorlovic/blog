@@ -115,10 +115,28 @@ production: *default\n\
 " > config/secrets.yml
 ~~~
 
+# Skip generators
+
+~~~
+sed -i '/Rails::Application/a \
+    config.i18n.enforce_available_locales = true\
+    config.generators do |generate|\
+      generate.helper false\
+      generate.javascript_engine false\
+      generate.request_specs false\
+      generate.routing_specs false\
+      generate.stylesheets false\
+      generate.test_framework :rspec\
+      generate.view_specs false\
+    end\
+    config.action_controller.action_on_unpermitted_parameters = :raise\
+' config/application.rb
+~~~
+
 # Sample page
 
 ~~~
-rails g controller pages index --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
+rails g controller pages index # --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
 sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
 git add . && git commit -m "Adding sample index page"
 ~~~

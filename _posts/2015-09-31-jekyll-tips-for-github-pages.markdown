@@ -5,9 +5,35 @@ categories: jekyll github rakefile
 noToc: false
 ---
 
-After initial jekyll init
+# Installation
 
-## Serve under subfolder
+Here are the steps you can follow to generate myblog
+
+~~~
+gem install jekyll
+jekyll new myblog
+cd myblog
+git init .
+git add .
+git commit -m "Initial jekyll new myblog"
+echo 'source "https://rubygems.org"
+
+gem "jekyll"
+gem "guard"
+gem "guard-livereload"
+' > Gemfile
+echo '# A samle Guardfile
+guard "livereload" do
+  watch(%r{_site/.+})
+end
+' > Guardfile
+bundle
+guard
+~~~
+
+For livereload you need to install Chrome plugin, enable it and activate when you open a page. Or you can use 
+
+# Serve under subfolder
 
 Since github pages serve your project under subfolder `username.github.io/project-name`
 you need to use special [config variable](http://jekyllrb.com/docs/configuration/) `baseurl`.
@@ -15,7 +41,7 @@ Add to your `_config.yml` a line `baseurl: /blog`
 
 To properly serve your assets and link your pages you need to prepend all links with *site.baseurl*. For example in markdown `![My picture]({{ "{{site.baseurl" }}}}/assets/my_picture.png)` or `<link rel="stylesheet" href="{{ "{{site.baseurl" }}}}/assets/css/main.css">` or `<a class="post-link" href="{{ "{{ post.url | prepend: site.baseurl " }} }}">{{ "{{ post.title " }} }}</a>`
 
-## Development environment
+# Development environment
 
 If you need to separate production from development (for example analytics), you can use liquid variable `jekyll.environment` which can be exported or used inline with `JEKYLL_ENV=development jekyll serve --watch`
 
@@ -30,7 +56,7 @@ If you need to separate production from development (for example analytics), you
 </html>
 ~~~
 
-## Automatic deploy using rake
+# Automatic deploy using rake
 
 Rake tasks are perfect for deploying since you need just to type `rake` and it will be live (if you set up properly). This is my Rakefile that builds my blog (stored on bitbucket) and push to github
 
@@ -96,7 +122,7 @@ end
 ~~~
 
 
-## Adding Table of Content
+# Adding Table of Content
 
 
 If you need automatic Toc than use [jekyll-toc-generator](https://github.com/dafi/jekyll-toc-generator). I put [defaults](http://jekyllrb.com/docs/configuration/#front-matter-defaults) to not have a Toc, and enable on post that I want Toc to show.

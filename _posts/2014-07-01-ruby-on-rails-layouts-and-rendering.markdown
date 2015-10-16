@@ -68,7 +68,8 @@ All non js or css files are included automatically (images, text, pdf) along wit
 
     [ Proc.new { |path, fn| fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path)) }, /application.(css|js)$/ ]
 
-Erb for assets is used only for `background-image: url(<%= asset_path 'image.png' %>)}` or asset_data_uri (including data directly into css). Remeber that precompiling assets is done only once. Same hyphenated function exists in sass *assets-path("image.png")*.
+Erb for assets is used only for `background-image: url(<%= asset_path 'image.png' %>)}` or asset_data_uri (including data directly into css). Remeber that precompiling assets is done only once. Same hyphenated function exists in sass *assets-path("image.png")*. There exists variation for *image, font, video, audio, JavaScript* and *stylesheet*, for example `image-url("rails.png")`
+
 You can set dependency between assets using [link](https://github.com/sstephenson/sprockets#the-link-directive) directive.
 
 View
