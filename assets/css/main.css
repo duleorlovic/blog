@@ -46,6 +46,10 @@ a:visited { color: #205caa; }
   min-height: 56px;
   background-color: white;
 }
+.site-header small {
+  float: left;
+  clear: both;
+}
 
 .site-title,
 .site-title:hover,

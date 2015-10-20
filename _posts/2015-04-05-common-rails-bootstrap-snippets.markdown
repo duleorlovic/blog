@@ -13,11 +13,11 @@ him for a lifetime
 
 Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the
 filename). You can use single quotes so you do not need to write `-e` and `\n`.
-With sed, put `\` before jumping to new line.
 
 `sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
 append *home* after that line (beside insert before `i`, this could be `a`
-append and `c` change matched line)
+append and `c` change matched line). Multiple lines need to have `\` at the end of line (*echo* does not need that trailing backslash).
+
 Sed has something different regular expressions so follow this [link](http://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)
 
 
@@ -45,10 +45,9 @@ echo -e '# vim temp files
 git commit -am "Update .gitignore"
 ~~~
 
-# Gemfile development tools
+# Gemfile development & production tools
 
 ~~~
-# some development tools
 echo '
 group :development do
   # to detect N+1 sql queries
@@ -59,13 +58,26 @@ group :development do
   # require "irbtools"
   #gem "irbtools"
   gem "interactive_editor"
-end' >> Gemfile
+end
+
+# adding vendor prefixes to css rules
+gem "autoprefixer-rails"
+
+# sets timezone based on browser timezone for each request
+gem "browser-timezone-rails"
+'>> Gemfile
+
+# echo Time::DATE_FORMATS[:myapp_time] = lambda { |date| date.strftime("%b %e, %Y @ %l:%M %p") } > config/initializers.datetime_formats.rb
+# post.to_s :myapp_time
+
 
 bundle
-git commit -am "Adding useful development gems"
+git commit -am "Adding useful development & production gems"
 ~~~
 
-# Bourbon css mixins
+# Front end frameworks
+
+## Bourbon css mixins
 
 ~~~
 echo '
@@ -89,7 +101,26 @@ cd -
 git add . && git commit -m "Adding bourbon, neat and bitters scss"
 ~~~
 
-## Adding flash
+## Twitter bootstrap
+
+~~~
+echo '
+# twitter boostrap sass https://github.com/twbs/bootstrap-sass
+gem "bootstrap-sass" #, :git => "https://github.com/twbs/bootstrap-sass.git", :branch => "next"
+' >> Gemfile
+bundle
+echo '
+// "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
+@import "bootstrap-sprockets";
+@import "bootstrap";
+' > app/assets/stylesheets/application.scss
+git rm app/assets/stylesheets/application.css
+sed -i '/jquery_ujs/a \
+//= require bootstrap-sprockets' app/assets/javascripts/application.js
+git commit -am "Adding boostrap"
+~~~
+
+# Adding flash
 
 ~~~
 sed -i '/<body>/a \
@@ -235,9 +266,6 @@ sed -i '/companies/a \  root "companies#index"' config/routes.rb
 rake db:migrate && git add . && git commit -m "rails g scaffold company name:string user:references"
 ~~~
 
-# Twitter bootstrap
-
-Source is http://railscasts.com/episodes/328-twitter-bootstrap-basics
 
 # Carrierwave for uploading
 
