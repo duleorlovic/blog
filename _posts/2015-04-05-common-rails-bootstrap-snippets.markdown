@@ -64,12 +64,8 @@ end
 gem "autoprefixer-rails"
 
 # sets timezone based on browser timezone for each request
-gem "browser-timezone-rails"
+# gem "browser-timezone-rails"
 '>> Gemfile
-
-# echo Time::DATE_FORMATS[:myapp_time] = lambda { |date| date.strftime("%b %e, %Y @ %l:%M %p") } > config/initializers.datetime_formats.rb
-# post.to_s :myapp_time
-
 
 bundle
 git commit -am "Adding useful development & production gems"
@@ -198,6 +194,7 @@ echo "gem 'mandrill_dm'" >> Gemfile && bundle
 sed -i '/end$/i \\n  config.action_mailer.delivery_method = :mandrill' config/applications.rb
 
 echo '# mandrill initializer
+require "yaml" # this is needed for Rails secrets
 MandrillDm.configure do |config|
   config.api_key = Rails.application.secrets.mandrill_api_key
 end
