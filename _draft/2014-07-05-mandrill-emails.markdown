@@ -87,6 +87,46 @@ Mandrill:
 authentication
 http://www.openspf.org/SPF_Record_Syntax
 
+Feedback Loop is in a header and some clients enable them http://www.list-unsubscribe.com/
 
-feedback loop is in a header and some clients enable them http://www.list-unsubscribe.com/
 
+# Internal Notification
+
+
+
+~~~
+# app/mailers/application_mailer.rb
+class ApplicationMailer < ActionMailer::Base
+  default from: "support@eatfresheveryday.com"
+  layout 'mailer'
+
+  INTERNAL_EMAIL = Rails.application.secrets.internal_notification_email
+
+  def internal_notification subject, item
+    mail to: INTERNAL_EMAIL,
+      subject: subject,
+      body: "<h1>#{subject}</h1><strong>Details:</strong>"+
+        item.inspect.
+        gsub(', ',",<br>").
+        gsub('{','<br>{<br>').
+        gsub('}','<br>}<br>'),
+      content_type: "text/html"
+  end
+end
+~~~
+
+You can send notification in model with:
+
+~~~
+# app/models/user.rb
+  after_save :send_notification_geocode_failed
+  def send_notification_geocode_failed
+    if address_changed? && !city.present?
+      ApplicationMailer.internal_notification("geocode city is not present #{name}", {
+        name: name,
+        url: Rails.application.routes.url_helpers.menu_url(link),
+        address: address,
+      }).deliver_now
+    end
+  end
+~~~

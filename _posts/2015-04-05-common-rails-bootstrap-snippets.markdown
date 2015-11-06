@@ -54,10 +54,11 @@ group :development do
   gem "bullet"
   # do not show assets in log
   gem "quiet_assets"
-  # for using vim inside console, just add to .irbrc
-  # require "irbtools"
-  #gem "irbtools"
-  gem "interactive_editor"
+  # irbtools includes interactive_editor gem (vim inside irb)
+  # just create ~/.irbrc with 
+  # require 'rubygems'
+  # require 'irbtools'
+  gem 'irbtools' 
 end
 
 # adding vendor prefixes to css rules
