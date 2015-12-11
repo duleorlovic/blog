@@ -1,0 +1,321 @@
+---
+layout: post
+title: Vim
+---
+
+VIM
+===
+
+* install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting plugins:
+
+~~~
+mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+cd ~/.vim/bundle
+git clone git://github.com/tpope/vim-rails.git # example: Rview
+git clone git://github.com/tpope/vim-bundler.git # Bopen
+git clone git://github.com/tpope/vim-fugitive.git # Gblame, Gbrowse
+vim -u NONE -c "helptags vim-fugitive/doc" -c q
+git clone git://github.com/tpope/vim-sensible.git # search before enter
+git clone git://github.com/tpope/vim-cucumber.git # cucumber syntax highlight
+git clone https://github.com/thoughtbot/vim-rspec.git # rspec shortcuts <Leader>tsla
+git clone git://github.com/tpope/vim-endwise.git # auto insert end keyword
+git clone https://github.com/alvan/vim-closetag.git # auto insert closing html tag( follow with > for new line)
+git clone git://github.com/tpope/vim-surround.git # add tag `ysiw<em>` change `cst"` delete `ds"`. `S` in visual
+git clone git://github.com/Townk/vim-autoclose # add closing `) } "`, in visual `<Leader>a(`
+git clone https://github.com/kchmck/vim-coffee-script.git # coffe files
+git clone https://github.com/scrooloose/syntastic.git # syntax check jscs, rubocop
+git clone https://github.com/bling/vim-airline ~/.vim/bundle/vim-airline # nice statusline
+git clone git://github.com/tpope/vim-repeat.git # repeat some plugin commands
+git clone git://github.com/tpope/vim-unimpaired.git # [l ]q [a ]<space>
+git clone https://github.com/ctrlpvim/ctrlp.vim.git # <c-p> <c-j> <c-k> <c-f> <c-b> <c-v>
+# .vimrc  set runtimepath^=~/.vim/bundle/ctrlp.vim
+~~~
+
+Some not used anymore
+
+~~~
+# http://vimawesome.com/plugin/vim-rspec-sad-beautiful-tragic # :RunSpec
+git clone git@github.com:Valloric/YouCompleteMe.git && cd YouCompleteMe && ./install.sh && cd -
+~~~
+
+* **.vimrc** should be copied from  <http://vim.wikia.com/wiki/Example_vimrc> with this addidional lines
+
+~~~
+" override this from http://vim.wikia.com/wiki/Example_vimrc
+set cmdheight=1  " 2 is overly
+set number! " unset number
+
+"custom 
+execute pathogen#infect()
+" to save history between vim session
+set history=1000
+" grep current word
+nnoremap gr :grep <cword> * -I -R --exclude-dir={log,spec,public,features,tmp,vendor,assets,db}<CR>
+" grep yanked word
+nnoremap gy :grep "<c-r>"" * --exclude-dir={log,public,tmp,vendor} -R -I<CR>
+" to clear search - stop highlight press <Ctrl-l> redraws the screen and removes any search highlighting.
+set hlsearch
+" this is for tab completion , to stop cycle press CTRL+E than tab
+set wildmode=longest,list,full
+" search selected text, press // while in visual mode
+vnorem // y/<c-r>"<cr>
+" change paste toggle key to F12 since F11 is maximize
+set pastetoggle=<F12>
+" using leader (default is '\') to save file 
+noremap <Leader>w :w<CR>
+
+" some tips from https://github.com/thoughtbot/dotfiles/blob/master/vimrc
+set autowrite " Automatically write before running commands
+
+" Display extra whitespace
+set list listchars=tab:»·,trail:·,nbsp:·
+
+" Switch between the last two files
+nnoremap <leader><leader> <c-^>
+
+" Get off my lawn
+" For linux shell you can use: CTRL+ p n a e b f
+" or set -o vi, and ESC, than move as usuall: b w e ^ $
+" for chromium use vimium plugin
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
+
+" RSpec.vim mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+" Quicker window movement
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
+
+" closetag.vim should recognize erb files as well
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.html.erb"
+
+" Make it so that a curly brace automatically inserts an indented line
+" https://stackoverflow.com/questions/4768088/automatic-new-line-and-indentation-in-vim-when-inside-braces/4961270#4961270
+inoremap {<CR> {<CR>}<Esc>O<BS><Tab>
+~~~
+
+
+* start explorer
+
+~~~
+" http://modal.us/blog/2013/07/27/back-to-vim-with-nerdtree-nope-netrw/
+" Toggle Vexplore with Ctrl-E
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+map <silent> <C-E> :call ToggleVExplorer()<CR>
+
+" Hit enter in the file browser to open the selected
+" file with :vsplit to the right of the browser.
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+
+" Default to tree mode
+let g:netrw_liststyle=3
+
+" Change directory to the current buffer when opening files.
+" set autochdir
+
+" http://vim.wikia.com/wiki/Saving_a_file
+noremap <Leader>s :update<CR>
+noremap <Leader>q :q<CR>
+"map <Esc><Esc> :w<CR> this move to insert move when I press up down arrows
+
+nmap <c-s> :w<CR>
+vmap <c-s> <Esc><c-s>gv
+imap <c-s> <Esc><c-s>
+
+nmap <F2> :update<CR>
+vmap <F2> <Esc><F2>gv
+" does not work in PASTE mode
+imap <F2> <c-o><F2>
+~~~
+
+## Running ruby in vim and show in separate window
+
+[link](http://vim.wikia.com/wiki/Preview_output_from_interpreter_in_new_window)
+Press `F7` to run selected or all code. Shift + F7 close the window.
+
+~~~
+"save code, run ruby, show output in preview window
+function! Ruby_eval_vsplit() range
+  let src = tempname()
+  let dst = tempname()
+  execute ": " . a:firstline . "," . a:lastline . "w " . src
+  execute ":silent ! ruby " . src . " > " . dst . " 2>&1 "
+  execute ":pclose!"
+  execute ":redraw!"
+  execute ":vsplit"
+  execute "normal \<C-W>l"
+  execute ":e! " . dst
+  execute ":set pvw"
+  execute "normal \<C-W>h"
+endfunction
+vmap <silent> <F7> :call Ruby_eval_vsplit()<CR>
+nmap <silent> <F7> mzggVG<F7>`z
+imap <silent> <F7> <Esc><F7>a
+map <silent> <S-F7> <C-W>l:bw<CR>
+imap <silent> <S-F7> <Esc><S-F7>a
+~~~
+
+## Show ruby return values
+
+Install [seeing_is_believing](https://github.com/JoshCheek/seeing_is_believing) with `gem install seeing_is_believing` and add plugin `cd ~/.vim/bundle && git clone https://github.com/hwartig/vim-seeing-is-believing` and add mappins:
+`F4` mark, `F5` run (not in visual) and `enter` mark and run (not in insert mode)
+
+~~~
+" .vimrc Enable seeing-is-believing mappings only for Ruby
+augroup seeingIsBelievingSettings
+  autocmd!
+
+  autocmd FileType ruby nmap <buffer> <Enter> <Plug>(seeing-is-believing-mark-and-run)
+  autocmd FileType ruby xmap <buffer> <Enter> <Plug>(seeing-is-believing-mark-and-run)
+
+  autocmd FileType ruby nmap <buffer> <F4> <Plug>(seeing-is-believing-mark)
+  autocmd FileType ruby xmap <buffer> <F4> <Plug>(seeing-is-believing-mark)
+  autocmd FileType ruby imap <buffer> <F4> <Plug>(seeing-is-believing-mark)
+
+  autocmd FileType ruby nmap <buffer> <F5> <Plug>(seeing-is-believing-run)
+  autocmd FileType ruby imap <buffer> <F5> <Plug>(seeing-is-believing-run)
+augroup END
+~~~
+
+## Usefull commands
+
+* [quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
+* [tutorial](http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html)
+* `CTRL+B` == `^B`
+
+  * `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
+  * `H` `M` `L` move to the top/middle/bottom of the window
+  * `ciw` hange inner word, `caw` including spaces, `ca]` change all inside brackets including [ ]
+  * `dt ` delete until the space, `df ` delete until the space including space
+  * `va'` visually select all inside ' including '
+  * `cgn` change visually selected text using previous search
+  * `:edit .` (short `:e.`) opens (`:vsp`) splits netrw of folder, `:Explore`(short `:E`) `:Vex` of current editing file
+  * `gv` to select previous selected visual area
+  * `+` and `-` move on the first letter up and down, { and } move on paragraph
+  * `dap}p` switch two paragraph
+  * Repeat last colon command  @:  and @@
+  * :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
+  * `Ctrl+p`  # in insert mode is completing the string
+  * dE # removes to the End of the string
+  * daw removes the inner word
+  * yy
+  * :%s/old/new/gc
+  * mA then 'A jump there (downcase letter a can jump only on current buffer), :marks gives the jump location, '' is jump back, '. jump to last change
+  * :tabe file  open file in new tab, gt switch between tabs
+  * :vsp #1  vertically split window with file #1
+  * :on or Ctrl+W+o #closes all windord except current
+  * :buffers, :b1, :bun closes the buffer
+  * q: shows history of commands
+  * q/ shows history of searches
+  * 5G or :5 goes to the line 5
+  * gg goes top, G goes bottom
+  * g, and g; jump to next/prev change on current buffer
+  * :args app/*/*  to add all files to arg list
+  * :argdo %s/foo/bar/ge | update   replace in all arg
+  * find /home/bruno/old-friends -type f -exec sed -i 's/ugly/beautiful/g' {} \;
+  * CTRL+^ (shift+6) jump to previous buffer  
+  * :set tabstop=2 shiftwidth=2 expandtab # set configuration
+  * retab # this will actually reformat all source
+  * `"+y` copy visual selection to system clipboard, ubuntu should run `sudo apt-get install vim-gtk`
+  * `vit` inner or `vat` outer visual select tag, jump with `o` more on `:help visual-operators` `:help v_it`
+  * :help Ctrl-W_T open current buffer in new tab
+  * `%y+` copy all lines to clipboard
+
+* using vim inside irb or rails console with gem [interactive_editor](https://github.com/jberkel/interactive_editor). Its usefull since you can paste only limited number of chars to irb line. Now you can write your input data in file/ruby code and insert byebug/debuger/pry in rails code, and start hunting for bugs 
+
+* videos
+** https://www.youtube.com/watch?v=5r6yzFEXajQ
+
+## Syntastic checker
+
+[syntastic](https://github.com/scrooloose/syntastic) vim plugin is great to 
+write your code. Just need to install external syntac checkers. `SyntasticInfo` 
+will give you current checkers.
+
+~~~
+" .vimrc
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+set statusline+=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+~~~
+
+* markdown
+
+~~~
+gem install mdl # for markdown
+~~~
+
+* ruby `gem install rubocop`
+
+~~~
+" .vimrc
+let g:syntastic_ruby_checkers = ['rubocop','mri']
+let g:syntastic_eruby_ruby_quiet_messages =
+    \ {'regex': 'possibly useless use of a variable in void context'}
+let g:syntastic_ruby_rubocop_quiet_messages =
+    \ {'regex': [ 
+    \ 'Missing top-level class documentation comment.',
+    \ 'Avoid comma after the last item of an array.',
+    \ 'Avoid comma after the last item of a hash',
+    \ "Prefer single-quoted strings when you don't need string interpolation or special symbols.",
+    \ 'Method has too many lines.',
+    \ ]}
+~~~
+
+* javascript  `npm install -g jscs`
+
+~~~
+// .jscs
+{
+  preset: "airbnb",
+}
+~~~
+
+~~~
+// .jscsrc npm install jscs-angular
+{
+  "plugins": ["jscs-angular"]
+}
+~~~
+
+* json `npm install -g jsonlint` [hack](https://github.com/jaxbot/syntastic-react/issues/4)
+
+~~~
+" .vimrc
+au BufRead,BufNewFile *.json set filetype=json
+let g:syntastic_json_checkers=['jsonlint']
+~~~

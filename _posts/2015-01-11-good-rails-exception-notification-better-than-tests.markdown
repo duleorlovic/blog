@@ -4,22 +4,33 @@ title:  Good rails exception notifier better than tests
 categories: ruby-on-rails exception-notification
 ---
 
-Do not hide your mistakes, instead, make sure that every bug is noticeable. That way you will learn more and thinks that you did not know (that's why bug occurs).
+Do not hide your mistakes, instead, make sure that every bug is noticeable.
+That way you will learn more and thinks that you did not know (that's why bug
+occurs).
 
-Bugs that I have meet are something like: user uploaded file with non asci chars, linkedin identity text is missing graduation date, after_create hook on model with devise cause `user.save` to return *true* but *user.errors* is present and user is redirected to update his registration form... You can NOT write tests for those situations. Better is to have nice notification with all input/session/user data. When you implement this, please don't use rescue block without notification.
+Bugs that I have meet are something like: user uploaded file with non asci
+chars, linkedin identity text is missing graduation date, after_create hook
+on model with devise cause `user.save` to return *true* but *user.errors* is
+present and user is redirected to update his registration form... You can NOT
+write tests for those situations. Better is to have nice notification with all
+input/session/user data. When you implement this, please don't use rescue block
+without notification.
 
-Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification). It is rack middleware and configuration is very simple. After adding `gem 'exception_notification'` to your Gemfile, put this in your config file:
+Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification).
+It is rack middleware and configuration is very simple. After adding `gem 'exception_notification'`
+to your Gemfile, put this in your config file:
 
 {% highlight ruby %}
 # config/application.rb
-    if Rails.application.secrets.exception_recipients.present?
-      config.middleware.use ExceptionNotification::Rack,
-        :email => {
-          :email_prefix => "[Whatever] ",
-          :sender_address => %{"notifier" <notifier@example.com>},
-          :exception_recipients => "#{Rails.application.secrets.exception_recipients}".split(','),
-          #:delivery_method => :smtp,
+    if (receivers = Rails.application.secrets.exception_recipients).present?
+      config.middleware.use(
+        ExceptionNotification::Rack,
+        email: {
+          email_prefix: "[Your App Name] ",
+          sender_address: Rails.application.secrets.mailer_sender,
+          exception_recipients: receivers.split(','),
         }
+      )
     end
 {% endhighlight %}
 
@@ -42,6 +53,12 @@ Second variable is for javascript errors. If error occurs in ajax reponse, or in
 
 {% highlight javascript %}
 <%# app/assets/javascripts/init.js %>
+// redefine console.log when 'console is undefined'
+window.console = window.console || (function(){
+    var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
+    return c;
+})();
+
 // catch javascript errors
 window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
   if (typeof(flash_alert) == 'function')
@@ -72,16 +89,17 @@ Create route `get 'notify-javascript-error', to: 'pages#notify_javascript_error'
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
   def notify_javascript_error
-    if Rails.application.secrets.javascript_error_recipients.present?
+    js_receivers = Rails.application.secrets.javascript_error_recipients
+    if js_receivers.present?
       ExceptionNotifier.notify_exception(
         Exception.new("javascript error"),
-        :env => request.env,
+        env: request.env,
         # set env to nil if you do not want sections: request and session
         # backtrace is not shown for manual notification
         # data section is always shown if exists
-        #:sections => %w(request message),
-        :exception_recipients => "#{Rails.application.secrets.javascript_error_recipients}".split(','),
-        :data => { 
+        # sections: %w(request message),
+        exception_recipients: "#{js_receivers}".split(','),
+        data: {
           current_user: current_user,
           params: params,
         }
@@ -105,43 +123,47 @@ If you want to render error-page and page-not-found with rails you can rescue fr
 
 {% highlight ruby %}
 # app/controllers/application_controller.rb
-class ApplicationController < ActionController::Base
-  # custom 404
   if Rails.application.secrets.exception_recipients.present?
-    # but its advisable to rescue from standard error (not all errors like memory http://robots.thoughtbot.com/rescue-standarderror-not-exception
     rescue_from StandardError do |exception|
-      if [ActiveRecord::RecordNotFound,
+      case exception.class
+      when ActiveRecord::RecordNotFound,
           ActionController::RoutingError,
           ActionController::UnknownController,
-        #  ActionController::UnknownAction,
-          ActionController::MethodNotAllowed].include? exception.class
+          ActionController::MethodNotAllowed
         redirection_path = page_not_found_path
-      elsif [ActionController::InvalidAuthenticityToken].include? exception.class
+      when ActionController::InvalidAuthenticityToken
         redirection_path = new_user_session_path
       else
         redirection_path = error_page_path
       end
-      ExceptionNotifier.notify_exception(exception, env: request.env, data: {current_user: current_user} )
+      ExceptionNotifier.notify_exception(exception,
+                                         env: request.env,
+                                         data: { current_user: current_user }
+                                        )
       Rails.logger.error exception.backtrace.join("\n")
       Rails.logger.error exception.message
+      flash[:alert] = exception.message if exception.message.present?
       respond_to do |format|
-        format.html { redirect_to redirection_path}
-        format.js { render text: "window.location.assign('"+ redirection_path + "');" }
-        format.json { render nothing: true } # sometimes json api calls could raise exception
+        format.html { redirect_to redirection_path }
+        format.js do
+          render text: "window.location.assign('#{redirection_path}');"
+        end
+        format.json { render nothing: true }
+        format.text { render nothing: true }
+        format.csv { render nothing: true }
       end
     end
   end
-end
 {% endhighlight %}
 
 
-And you should create routes for those *page_not_found_path* and *error_page_path* and nice templates as well. I would add two more pages *example-error* and *example-javascript-error* just to have some pages for test if this notification works.
+And you should create routes for those *page_not_found_path* and *error_page_path* and nice templates as well. I would add two more pages *sample-error* and *sample-error-in-javascript* just to have some pages for test if this notification works.
 
 {% highlight ruby %}
-get 'example-error', to: 'pages#example_error'
-get 'example-error-in-javascript', to: 'pages#example_error_in_javascript'
-get 'error-page', to: 'pages#error_page', as: :error_page
-get 'page-not-found', to: 'pages#page_not_found', as: :page_not_found
+get 'sample-error', to: 'pages'
+get 'sample-error-in-javascript', to: 'pages'
+get 'error-page', to: 'pages'
+get 'page-not-found', to: 'pages'
 get 'notify-javascript-error', to: 'pages#notify_javascript_error', as: :notify_javascript_error
 get 'javascript-required-page', to: 'pages#javascript_required_page', as: :javascript_required_page
 {% endhighlight %}

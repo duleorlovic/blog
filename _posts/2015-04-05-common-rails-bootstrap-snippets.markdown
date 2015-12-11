@@ -16,7 +16,7 @@ filename). You can use single quotes so you do not need to write `-e` and `\n`.
 
 `sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
 append *home* after that line (beside insert before `i`, this could be `a`
-append and `c` change matched line). Multiple lines need to have `\` at the end of line (*echo* does not need that trailing backslash).
+append and `c` change matched line). Multiple lines need to have `\` at the end of line (multiline *echo ' ...'* does not need that trailing backslash).
 
 Sed has something different regular expressions so follow this [link](http://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)
 
@@ -41,6 +41,8 @@ echo -e '# vim temp files
 *~
 # vagrant files
 .vagrant
+# byebug
+.byebug_history
 ' >> .gitignore
 git commit -am "Update .gitignore"
 ~~~
@@ -72,7 +74,22 @@ bundle
 git commit -am "Adding useful development & production gems"
 ~~~
 
-# Front end frameworks
+# Front-end
+
+## Adding flash
+
+~~~
+sed -i '/yield/c \
+  <% flash.each do |key, value| -%>\
+    <div class="flash-<%= key %>"><%= value %></div>\
+  <% end %>\
+\
+  <article>\
+    <%= yield %>\
+  </article>\
+' app/views/layouts/application.html.erb
+git add . && git commit -m "Adding flash to layout"
+~~~
 
 ## Bourbon css mixins
 
@@ -117,30 +134,63 @@ sed -i '/jquery_ujs/a \
 git commit -am "Adding boostrap"
 ~~~
 
-# Adding flash
+## Angular
 
 ~~~
-sed -i '/<body>/a \
-<% flash.each do |key, value| -%>\
-  <div class="flash-<%= key %>"><%= value %></div>\
-<% end %>' app/views/layouts/application.html.erb
-git add . && git commit -m "Adding flash to layout"
-~~~
+echo '
+# js package manager
+gem "bower-rails"
+# cache all templates
+gem "angular-rails-templates"
+' >> Gemfile
+bundle
+rails g bower_rails:initialize
+git add . && git commit -m "rails g bower_rails:initialize"
 
+echo '
+Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components")
+Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets","fonts")
+Rails.application.config.assets.precompile << %r(.*.(?:eot|svg|ttf|woff|woff2)$)
+' >> config/initializers/bower_rails.rb
+
+echo '
+asset "angular"
+asset "bootstrap-sass-official"
+# vim: ft-ruby
+' >> Bowerfile
+
+rake bower:install
+
+git rm app/assets/stylesheets/application.css
+echo '
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
+' >> app/assets/stylesheets/application.scss
+
+sed -i '/jquery_ujs/a \
+//= require angular/angular' app/assets/javascripts/application.js
+
+git add . && git commit -am "rake bower:install angular & boostrap"
+~~~
 
 # Simplify secrets
 
 ~~~
-echo -e "# export keys in your .profile file\n\
-development: &default\n\
-  secret_key_base: <%= ENV['SECRET_KEY_BASE'] || '`rake secret`' %>\n\
-  # sending emails\n\
-  mandrill_api_key: <%= ENV['MANDRILL_API_KEY'] %>\n\
-  mail_interceptor_email: <%= ENV['MAIL_INTERCEPTOR_EMAIL'] %>\n\
-\n\
-test: *default\n\
-production: *default\n\
-" > config/secrets.yml
+echo -e '# export keys in your .profile file
+development: &default
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] || "`rake secret`" %>
+  # sending emails
+  mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
+  mail_interceptor_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
+  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "support@example.com" %>
+
+  default_url:
+    host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
+    port: <%= ENV["DEFAULT_URL_PORT"] || 80 %>
+
+test: *default
+production: *default
+' > config/secrets.yml
 ~~~
 
 # Skip generators
@@ -174,8 +224,8 @@ git add . && git commit -m "Adding sample index page"
 ## Common mail settings
 
 ~~~
-sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
-sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "myapp.com" }' config/environments/production.rb 
+#sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
+sed -i '/end$/i \\n  config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys' config/environments/production.rb 
 ~~~
 
 ## Letter opener for development 
@@ -207,7 +257,8 @@ class DevelopmentMailInterceptor
 end
 if Rails.env.development?
   ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor)
-end' > config/initializers/mandrill.rb
+end
+' > config/initializers/mandrill.rb
 
 #sed -i '/\(development:\|test:\|production:\)/a \  mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>\n  mail_interceptop_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>' config/secrets.yml
 git add . && git commit -am "Adding mandrill for sending emails"
@@ -227,12 +278,15 @@ rails generate clearance:routes
 git add . && git commit -m "rails g clearance:install"
 
 sed -i '/<body>/a \\n\
-<% if signed_in? %>\
-  <%= current_user.email %>\
-  <%= button_to "Sign out", sign_out_path, method: :delete %>\
-<% else %>\
-  <%= link_to "Sign in", sign_in_path %>\
-<% end %>' app/views/layouts/application.html.erb
+  <nav>\
+    <% if signed_in? %>\
+      <%= current_user.email %>\
+      <%= button_to "Sign out", sign_out_path, method: :delete %>\
+    <% else %>\
+      <%= link_to "Sign in", sign_in_path %>\
+    <% end %>\
+  </nav>\
+' app/views/layouts/application.html.erb
 git add . && git commit -m "Adding sign signout path"
 ~~~
 
@@ -283,13 +337,24 @@ git add . && git commit -m "Adding carrierwave gem, document uploader and mount 
 # Heroku deploy
 
 ~~~
+export MYAPP_NAME=myapp
 # postgresql on production
-sed -i "/gem 'sqlite3/c gem 'sqlite3', group: :development\
-\ngem 'pg', group: :production" Gemfile
+sed -i "/gem 'sqlite3/c \
+gem 'pg'\
+" Gemfile
+echo '
+# heroku uses this 12 factor gem
+gem "rails_12factor", group: :production
+' >> Gemfile
+bundle
 
-echo -e "\\ngem 'rails_12factor', group: :production" >> Gemfile
+sed -i '/adapter: sqlite3/c \  adapter: postgresql' config/database.yml
+sed -i "/development.sqlite3/c \  database: ${MYAPP_NAME}_dev" config/database.yml
+sed -i "/test.sqlite3/c \  database: ${MYAPP_NAME}_test" config/database.yml
+sed -i "/production.sqlite3/c \  database: ${MYAPP_NAME}_prod" config/database.yml
+
 git commit -am "Heroku uses pg and 12factor gem"
-heroku apps:create example-name
+heroku apps:create $MYAPP_NAME
 git push heroku master --set-upstream
 ~~~
 

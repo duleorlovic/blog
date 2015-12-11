@@ -39,15 +39,14 @@ For location places you need Google Maps Javascript API. This is example usage w
 # app/models/search.rb
 class Search
 
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  extend  ActiveModel::Naming
+  # http://api.rubyonrails.org/classes/ActiveModel/Model.html
+  include ActiveModel::Model
 
   attr_accessor :address, :food
 
-  def initialize( h = {} )
-    @address = h[:address]
-    @food = h[:food]
+  def initialize( attributtes = {} )
+    super
+    @address ||= "New York"
   end
 end
 ~~~

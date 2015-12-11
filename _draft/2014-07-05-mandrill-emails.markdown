@@ -102,31 +102,32 @@ class ApplicationMailer < ActionMailer::Base
 
   INTERNAL_EMAIL = Rails.application.secrets.internal_notification_email
 
-  def internal_notification subject, item
+    def internal_notification(subject, item)
     mail to: INTERNAL_EMAIL,
-      subject: subject,
-      body: "<h1>#{subject}</h1><strong>Details:</strong>"+
-        item.inspect.
-        gsub(', ',",<br>").
-        gsub('{','<br>{<br>').
-        gsub('}','<br>}<br>'),
-      content_type: "text/html"
+         subject: subject,
+         body: "<h1>#{subject}</h1><strong>Details:</strong>" +
+           item.inspect
+             .gsub(', ', ",<br>")
+             .gsub('{', '<br>{<br>')
+             .gsub('}', '<br>}<br>'),
+         content_type: "text/html"
   end
 end
 ~~~
 
-You can send notification in model with:
+You can send notification in model (see that first arg is string, other are joined to hash)
 
 ~~~
 # app/models/user.rb
   after_save :send_notification_geocode_failed
   def send_notification_geocode_failed
     if address_changed? && !city.present?
-      ApplicationMailer.internal_notification("geocode city is not present #{name}", {
+      ApplicationMailer.internal_notification(
+        "geocode city is not present #{name}",
         name: name,
         url: Rails.application.routes.url_helpers.menu_url(link),
         address: address,
-      }).deliver_now
+      ).deliver_now
     end
   end
 ~~~
