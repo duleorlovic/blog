@@ -54,3 +54,55 @@ xpath
   text "//*[contains(text(),'ABC')]"
   parrent "../"
   some child of this ".//"
+
+
+Mechanize session 
+
+~~~
+class ImageService
+
+  attr_reader :name
+  def initialize name
+    @name = name
+  end
+
+  def get_links
+    agent = Mechanize.new
+    page = agent.get 'https://www.google.com/imghp'
+    form = page.form('f')
+    form.q = name
+    page = agent.submit(form)
+
+    # results
+    table = page.search(".//table[@class='images_table']").first
+    results = []
+    table.search('a').each do |a|
+      results.append( {
+        image_url: a.search('img').first.attributes["src"].to_s,
+        site_url: a.attributes["href"].to_s[7..-1], # /url?q=
+      })
+    end
+    results
+  rescue
+    page.body.to_s
+  end
+
+end
+~~~
+
+~~~
+<% if @results.class == Array %>
+  <% results.each do |res| %>
+    <%= res[:image_url] %>
+  <% end %>
+<% else %>
+  <iframe id="FileFrame" src="about:blank"></iframe>
+  <script type="text/javascript">
+var doc = document.getElementById('FileFrame').contentWindow.document;
+doc.open();
+doc.write('<%=raw @results %>');
+doc.close();
+  </script>
+  <%= @links %>
+<% end %>
+~~~

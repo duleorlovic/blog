@@ -26,3 +26,11 @@ https://en.bem.info/
 # Live reloading in less than a second
 
 [Sharetribe](https://github.com/sharetribe/sharetribe/blob/master/docs/scss-coding-guidelines.md) uses [fast reloading](https://mattbrictson.com/lightning-fast-sass-reloading-in-rails)
+
+
+CSS
+ if you have <small> position relative, and apply left -100px, it will still occupy the space where it was
+
+ https://responsivedesign.is/develop/getting-started-with-sass
+
+ You can use mixings 
