@@ -340,6 +340,8 @@ development: &default
 test: *default
 production: *default
 ' > config/secrets.yml
+
+git add . && git commit -m "Simplify secrets"
 ~~~
 
 # Skip generators
@@ -358,6 +360,7 @@ sed -i '/Rails::Application/a \
     end\
     config.action_controller.action_on_unpermitted_parameters = :raise\
 ' config/application.rb
+git add . && git commit -m "Skip generators"
 ~~~
 
 # Sample page
@@ -441,24 +444,7 @@ git add . && git commit -m "Adding sign signout path"
 
 ## Devise gem
 
-More powerfull authorization is with [devise](https://github.com/plataformatec/devise). You can use `before_action :authenticate_user!` in controllers that will redirect to `/users/sign_in`. You need to set up emails to actually receive registration email.
-
-~~~
-echo "gem 'devise'" >> Gemfile && bundle
-rails g devise:install && rails g devise user && rake db:migrate
-git add . && git commit -m "rails g devise:install && rails g devise user"
-
-git add . && git commit -m "Finishing configuration that devise gem suggests"
-# optional
-# rails g devise:views && git add . && git commit -m "rails g devise:views"
-
-sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n  <a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a>\n<% end %>'  app/views/layouts/application.html.erb 
-git add . && git commit -m "Adding login/logout header in layout"
-
-# go and edit config/initializers/devise.rb
-# to add facebook login folow https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
-~~~
-
+See blog post
 
 # Company scaffold with skipped unused files
 ~~~

@@ -23,7 +23,6 @@ git clone https://github.com/thoughtbot/vim-rspec.git # rspec shortcuts <Leader>
 git clone git://github.com/tpope/vim-endwise.git # auto insert end keyword
 git clone https://github.com/alvan/vim-closetag.git # auto insert closing html tag( follow with > for new line)
 git clone git://github.com/tpope/vim-surround.git # add tag `ysiw<em>` change `cst"` delete `ds"`. `S` in visual
-git clone git://github.com/Townk/vim-autoclose # add closing `) } "`, in visual `<Leader>a(`
 git clone https://github.com/kchmck/vim-coffee-script.git # coffe files
 git clone https://github.com/scrooloose/syntastic.git # syntax check jscs, rubocop
 git clone https://github.com/bling/vim-airline ~/.vim/bundle/vim-airline # nice statusline
@@ -31,6 +30,7 @@ git clone git://github.com/tpope/vim-repeat.git # repeat some plugin commands
 git clone git://github.com/tpope/vim-unimpaired.git # [l ]q [a ]<space>
 git clone https://github.com/ctrlpvim/ctrlp.vim.git # <c-p> <c-j> <c-k> <c-f> <c-b> <c-v>
 # .vimrc  set runtimepath^=~/.vim/bundle/ctrlp.vim
+# update with for b in `ls`;do echo $b;cd $b; git pull; cd -;done
 ~~~
 
 Some not used anymore
@@ -38,6 +38,8 @@ Some not used anymore
 ~~~
 # http://vimawesome.com/plugin/vim-rspec-sad-beautiful-tragic # :RunSpec
 git clone git@github.com:Valloric/YouCompleteMe.git && cd YouCompleteMe && ./install.sh && cd -
+# annoying O char waiting next input
+git clone git://github.com/Townk/vim-autoclose # add closing `) } "`, in visual `<Leader>a(`
 ~~~
 
 * **.vimrc** should be copied from  <http://vim.wikia.com/wiki/Example_vimrc> with this addidional lines
@@ -292,7 +294,6 @@ let g:syntastic_ruby_rubocop_quiet_messages =
     \ 'Avoid comma after the last item of an array.',
     \ 'Avoid comma after the last item of a hash',
     \ "Prefer single-quoted strings when you don't need string interpolation or special symbols.",
-    \ 'Method has too many lines.',
     \ ]}
 ~~~
 

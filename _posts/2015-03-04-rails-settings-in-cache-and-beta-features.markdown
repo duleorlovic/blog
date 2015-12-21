@@ -53,12 +53,9 @@ class MySetting < ActiveRecord::Base
 
     def get_without_cache(key)
       my_setting = find_by_name(key)
-      if my_setting
-        my_setting.value
-      else
-        # to return empty string in case of unknown key
-        ""
-      end
+      return my_setting.value if my_setting
+      # to return nil in case of unknown key
+      nil
     end
 
     private
@@ -146,9 +143,10 @@ To keep track of features I usually write them in seed file
                  ' Note that beta_users can always see all features'
   },
 ].each do |doc|
-  MySetting.where(doc).first_or_create do |my_setting|
-    puts "MySetting #{my_setting.name}"
-  end
+  next if MySetting.find_by name: doc[:name]
+  MySetting[doc[:name]] = doc[:value]
+  MySetting.find_by(name: doc[:name]).update_attribute(:description, doc[:description])
+  puts "MySetting #{doc[:name]} seeded."
 end
 ~~~
 
