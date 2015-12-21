@@ -26,14 +26,26 @@ Angular expressions can't have conditionals and loops, but have filters.
 
 # Builtin $properties:
 
-For form name *myForm* we can check `myForm.$valid` for all fields that we put validation with `required` property on input elements (form should have `novalidate` attribute to prevent browser default behavior). Also fields have internal properties: `$dirty` (user has interacted), `$valid`, `$invalid` and`$pristine` (has not interacted with field yet). For example add red text for two possible errors
+For form name *myForm* we can check `myForm.$valid` for all fields that we put
+validation with `required` property on input elements (form can have `novalidate`
+attribute to prevent browser default behavior, or we can use `ng-required="true"`). Also fields have internal
+properties: `$dirty` (user has interacted), `$valid`, `$invalid` and`$pristine`
+(has not interacted with field yet). 
+You can use `ng-messages` instead of `ng-show`
 
 ~~~
-<input type="email" name="email" ng-model="email" required>
-<span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
-  <span ng-show="myForm.email.$error.required">Email is required.</span>
-  <span ng-show="myForm.email.$error.email">Invalid email address.</span>
-</span>
+<form name="myForm">
+  <input type="email" name="email" ng-model="email" required>
+  <div ng-messages="registration.email.$error">
+    <div ng-messages-include src="default-messages"></div>
+  </div>
+  <div ng-messages="vm.serverErrors.registrationForm.email">
+    <div>{{ vm.serverErrors.registrationForm.email.join(', ') }}</div>
+  </div>
+</form>
+<script type="text/ng-template" id="default-messages">
+  <div ng-message="required">This field is required</div>
+</script>
 ~~~
 
 `$scope.$watch('email', function() { $scope.test(); })` can be used to rerun validation check.
@@ -272,36 +284,27 @@ It is used with directive `<ng-view></ng-view>` which is replaced with given tem
 
 * `$rootScope` has not parent and was created directly from `Scope()` class (not through `$.new` method). It is used for event handling `$.broadcast()` (down) and `$.emit()` (up in the scope hierarchy).
 
-# Test
 
-* unit testing controllers: usually initial values (no business logic) and copuling UI actions to services
-* unit testing services: correct business logic
-* unit test directive: inject `$compile`, manually call `$digest()` for that scope.
+ng-token-auth [issue](https://github.com/lynndylanhurley/ng-token-auth/pull/196) with protractor, so use 0.0.29-beta1
 
-https://docs.angularjs.org/tutorial/step_05#test
-During test we use angular `inject` and `module`.
-When we inject `_flash_` , Angular knows that service `flash` should be injected (_ are ignored_)
+# share error messages
 
 ~~~
-# spec/javascripts/controllers/MyController_spec.coffee
-describe("MyController", function() {
-  var httpBackend, scope, ctrl;
-  beforeEach(module('MyController'));
-  beforeEach(inject(function($httpBackend, $scope, $controller){
-    httpBackend = $httpBackend;
-    scope = $scope;
-    ctrl = $controller('MyController', {$scope: scope});
-  }));
-
-  it("should load phones.json", function(){
-    httpBackend.expectGET('phones.json').respond([{name: 'A1'}]);
-    expect(scope.phones).toBeUndefined();`
-    httpBackend.flush();
-    expect(scope.phones).toEqual([{name: 'A1'}]);
-  });
-});
+<div ng-messages="myForm.myField.$error" ng-messages-include="my-messages">
+  <div ng-message="required">Custom error required</div>
+</div>
+<script type="text/ng-template" id="my-messages">
+  <div ng-message="required">This field is required</div>
+  <div ng-message="email">This field must be an email</div>
+</script>
 ~~~
+
+# use `controller as vm` in view and `var vm = this` in controller so you don't need to inject `$scope` (we need `$scope` when we want to access something in promise `catch = -> $scope.vm.profileForm = "a"`)
+
+# in directives you need to prefix `$root` to access rootScope, for example `$root.user`
 
 By [Angular conventions](https://github.com/mgechev/angularjs-style-guide), lowerCamelCase is used for factory names that won't be new'ed.
 
 Check some [awesome links](https://github.com/gianarb/awesome-angularjs)
+
+# Testing

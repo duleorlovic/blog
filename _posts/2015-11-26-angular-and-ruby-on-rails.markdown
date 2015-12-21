@@ -45,16 +45,6 @@ Response status codes:
   * *Forbidden 403*
   * *Unprocessable Entity 422*
 
-In angular we use `ng-messages="nameOfForm.nameOfField.$errors"` for client side errors. But for server errors we use separated object.
-Serve can response in errors in two forms: per field `resp.data.errors = { email: ['not valid'], password: ['is to short'] }` or global per form `resp.errors = ['invalid credentials']`.
-We use `$scope.vm.serverErrors = { loginForm: errors.join(',') }` or `$scope.vm.serverErrors = { registrationForm: resp.data.errors }`.
-Note that client side `ng-message="nameOfForm"` but for server we use custom object `serverErrors`.
-
-We can use shared template for error messages. Note that each error need to be inside `<div>`
-
-~~~
-~~~
-
 # REST
 
 Just to note that [REST api](https://en.wikipedia.org/wiki/Representational_state_transfer) means: Statelessness (no data between requests), Resource identification per request (update only one row, get could have more rows), Representational state transfer (returned representation JSON is enough to identify and manipulate row).
@@ -88,10 +78,31 @@ Tutorial videos (first are free) [egghead](https://egghead.io/technologies/angul
 * [flapper-news](https://github.com/duleorlovic/flapper-news) [thinkster](https://thinkster.io/angular-rails) [angular-devise](https://github.com/cloudspace/angular_devise)
 * [lunch_hub](https://github.com/jasonswett/lunch_hub) [post](https://www.airpair.com/ruby-on-rails/posts/authentication-with-angularjs-and-ruby-on-rails)
   [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth), grunt
-* [todo-rails4-angularjs](https://github.com/mkwiatkowski/todo-rails4-angularjs) [shellycloud](https://shellycloud.com/blog/2013/10/how-to-integrate-angularjs-with-rails-4) turbolinks,
+* [todo-rails4-angularjs](https://github.com/mkwiatkowski/todo-rails4-angularjs) [shellycloud](https://shellycloud.com/blog/2013/10/how-to-integrate-angularjs-with-rails-4) turbolinks, html auth
 * [receta](https://github.com/davetron5000/receta) [angular-rails](http://angular-rails.com/) CRUD (no auth), TDD, angular-flash
+* [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) [devise-token-auth-demo](https://github.com/lynndylanhurley/devise_token_auth_demo) devise-token-auth `cd ng-token-auth/test && bower install` update `config/default.yml` so `API_URL='//devise-token-auth-demo.dev:3000'` and run `gulp dev` and go to http://localhost:7777/. In another window `cd devise_token_auth_demo && bundle && rails s`
 
 [ng-token-auth](https://github.com/search?utf8=%E2%9C%93&q=ng-token-auth&type=Code&ref=searchresults) is used more than [angular-rails]https://github.com/lynndylanhurley/ng-token-auth.git/) is used more than angular-rails. On server use gem [devise_token_auth](https://github.com/lynndylanhurley/devise_token_auth), run application with `gulp dev` and run [demo server](https://github.com/lynndylanhurley/devise_token_auth_demo.git).
+
+Bootstrap
+
+~~~
+rails new my_app
+cd my_app
+echo '# user auth with devise and ng-token-auth
+gem "devise_token_auth"
+gem "omniauth"
+' >> Gemfile
+bundle
+rails g devise_token_auth:install User auth
+rake db:migrate
+git add . && git commit -m "rails g devise_token_auth:install User auth"
+
+yo gulp-angular
+
+# change dist to ../public
+
+~~~
 
 https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec
 
