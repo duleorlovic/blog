@@ -2,6 +2,15 @@
 title: Angular Testing
 ---
 
+# Jasmine
+
+[Jasmine](http://jasmine.github.io/1.3/introduction.html) have similar syntax to rspec. `describe` `it` (prefix with x to disable suite or specifix spec). `spyOn(foo, 'setBar')` is a spy (test double is defined with `foo={setBar: function(v) {}};` that can track calls and arguments with this two matchers `expect(foo.setBar).toHaveBeenCalled();` and `expect(foo.setBar).toHaveBeenCalledWith(123)`. Chain spy with `spyOn(foo, 'getBar').andCallThrough();` to actually delegate to implementation. Chain spy with `spyOn(foo, 'getBar').andReturn(745);` so all calls to `foo.getBar` will return 745 (similar to `.andCallFake(function(){});`). To create a mock with multiple spies with one command, use `tape = jasmine.createSpyObj('tape', ['play','pause']);`.
+
+# Protractor
+
+If you want to [debug](https://github.com/angular/protractor/blob/master/docs/debugging.md)
+puts `browser.debugger()` and call with `protractor debug debugging/failureConf.js`
+
 [video](https://www.youtube.com/watch?v=iP0Vl-vU3XM) TDD helps to write proper tests (so tests don't have bugs). Tests helps to maintain and refactor code. Also is easier to understand code if test titles are properly constructed. It's very helpfull is to do test code review in person (pair programming). RTMF (readable, trustworthy, maintainable, fast).
 
 One big mistake is to use mocking too much. Difference between mock object and stub is that mock is verified,

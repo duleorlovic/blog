@@ -1,10 +1,10 @@
 ---
 layout: post
 title: Angular 1.x and Ruby on Rails
-categories: angular testing rails
+tags: angular testing rails
 ---
 
-# Rails
+# Rails as asset pipeline
 
 I like to have Rails doing all javascript assets so I choose [angular-rails-templates](https://github.com/pitr/angular-rails-templates) to cache all templates and [bower-rails](https://github.com/rharriso/bower-rails) gem to install all scripts under vendor folder (nice [tutorial](http://angular-rails.com/bootstrap.html)). When angular requests templates, it needs url of that file. Since rails uses asset pipeline we need to use erb `templateUrl: '<%= asset_path 'template' %>'` (when we store assets on CDN, than we need to allow CORS since angular is loaded on our domain). Other solution is [angular-rails-templates](https://github.com/pitr/angular-rails-templates) gem which create angular cache for all templates that found in `app/assets/javascript/templates` (if you want to place templates outside of that folder watch this [issue](https://github.com/pitr/angular-rails-templates/issues/107)). Keep in mind that you need latest gem version (1.4 does not work).
 
@@ -23,15 +23,6 @@ There is a angular factory for resource [angularjs-rails-resource](https://githu
 * object definition {...} braces can be ommited, name/value pairs could be on new lines (if object is only argument than parentheses can be ommited)
 * No need to write return command
 * [try coffeescript](http://coffeescript.org/) and convertor [js2coffe](http://js2.coffee/)
-
-# Jasmine
-
-[Jasmine](http://jasmine.github.io/1.3/introduction.html) have similar syntax to rspec. `describe` `it` (prefix with x to disable suite or specifix spec). `spyOn(foo, 'setBar')` is a spy (test double is defined with `foo={setBar: function(v) {}};` that can track calls and arguments with this two matchers `expect(foo.setBar).toHaveBeenCalled();` and `expect(foo.setBar).toHaveBeenCalledWith(123)`. Chain spy with `spyOn(foo, 'getBar').andCallThrough();` to actually delegate to implementation. Chain spy with `spyOn(foo, 'getBar').andReturn(745);` so all calls to `foo.getBar` will return 745 (similar to `.andCallFake(function(){});`). To create a mock with multiple spies with one command, use `tape = jasmine.createSpyObj('tape', ['play','pause']);`.
-
-# Protractor
-
-If you want to [debug](https://github.com/angular/protractor/blob/master/docs/debugging.md)
-puts `browser.debugger()` and call with `protractor debug debugging/failureConf.js`
 
 # JSON
 
@@ -84,7 +75,7 @@ Tutorial videos (first are free) [egghead](https://egghead.io/technologies/angul
 
 [ng-token-auth](https://github.com/search?utf8=%E2%9C%93&q=ng-token-auth&type=Code&ref=searchresults) is used more than [angular-rails]https://github.com/lynndylanhurley/ng-token-auth.git/) is used more than angular-rails. On server use gem [devise_token_auth](https://github.com/lynndylanhurley/devise_token_auth), run application with `gulp dev` and run [demo server](https://github.com/lynndylanhurley/devise_token_auth_demo.git).
 
-Bootstrap
+# Start from scratch using yeoman angular-gulp
 
 ~~~
 rails new my_app
@@ -98,6 +89,7 @@ rails g devise_token_auth:install User auth
 rake db:migrate
 git add . && git commit -m "rails g devise_token_auth:install User auth"
 
+mkdir client && cd $_
 yo gulp-angular
 
 # change dist to ../public

@@ -1,11 +1,13 @@
+---
+layout: post
+title: Devise Oauth And Angular
+tags: angular devise oauth
+noToc: false
+---
+
 # Devise
 
-[Devise](https://github.com/plataformatec/devise)
-Basic example application with devise default signup/login views.
-
-You can use `before_action :authenticate_user!` in controllers that will redirect to `/users/sign_in`. You need to set up emails to actually receive registration email.
-
-
+Basic example application with [Devise](https://github.com/plataformatec/devise) default signup/login views.
 
 ~~~
 echo "gem 'devise'" >> Gemfile
@@ -16,15 +18,18 @@ rails g devise User
 git add . && git commit -m "rails g devise user"
 # optional
 # rails g devise:views && git add . && git commit -m "rails g devise:views"
-# sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n  <a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a>\n<% end %>'  app/views/layouts/application.html.erb 
-# git add . && git commit -m "Adding login/logout header in layout"
+sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n  <a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a>\n<% end %>'  app/views/layouts/application.html.erb 
+git add . && git commit -m "Adding login/logout header in layout"
 ~~~
 
 Read *config/initializers/devise.rb* about default configuration.
 
-## Oauth
+You can use `before_action :authenticate_user!` in controllers that will redirect to `/users/sign_in`. You need to set up emails to actually receive registration email.
 
-Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to add facebook, google authentication.
+
+# Devise and Oauth
+
+Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to add facebook and google authentication. It's easy.
 
 ~~~
 echo -e "\n\
@@ -58,6 +63,7 @@ sed -i '/test:/i \
 sed -i '/<body>/a \
 <%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>\
 ' app/views/layouts/application.html.erb
+
 echo 'class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
   # data is in request.env["omniauth.auth"]
@@ -94,9 +100,9 @@ sed -i '/end/i \
     user\
   end\
 ' app/models/user.rb
+
 vi app/models/user.rb # add :omniauthable
 # no need for , :omniauth_providers => [:facebook]
-
 
 sed -i '/devise_for/c \
   devise_for :users,\
@@ -110,21 +116,21 @@ If you need multiple identities per account than create separate table for ident
 
 # Facebook app
 
-Create app. By default fb app is in development mode and can only be used by app admins, developers and testers.
+Create app on [developers.facebook.com](developers.facebook.com). By default fb app is in development mode and can only be used by app admins, developers and testers.
 
 Add Contact Email on https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/
 and toggle switch on https://developers.facebook.com/apps/FACEBOOK_APP_ID/review-status/
 
-Add https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced *Valid OAuth redirect URIs* for all sites like: `http://www.lvh.me:3001/` and `http://localhost:3004`
+Add https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced *Valid OAuth redirect URIs* user full url like: `http://localhost.dev:3003/auth/facebook/callback` and for https also `https://localhost.dev:3003/auth/facebook/callback`
 
 More on blog facebook share buttons.
  
 # Google console
 
-Create a project in google console and enable Google+ API. Create OAuth 2.0 client ID (or edit exists one clicking on its name) and set *Authorized redirect URIs* to all urls that will be used, like `http://devise-token-auth-demo.dev/omniauth/google_oauth2/callback` `http://www.lvh.me:3001/users/auth/google_oauth2/callback` and don't forget to save.
-Also fill the *Authorized JavaScript origins* with domains and port like `http://localhost:3004`.
+Create a project in google console and enable *Google+ API*. Create *OAuth 2.0 client ID* (or edit exists one clicking on its name) and set *Authorized redirect URIs* to all urls that will be used, like `http://localhost.dev/omniauth/google_oauth2/callback`, also for https `https://localhost.dev/omniauth/google_oauth2/callback` and don't forget to save.
+Also fill the *Authorized JavaScript origins* with domains and port like `http://localhost.dev`.
 
-# Angular
+# Angular ng-token-auth demo
 
 Angular [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) is used with [devise-token-auth](https://github.com/lynndylanhurley/devise_token_auth).
 Run [client](https://github.com/lynndylanhurley/ng-token-auth#development) with:
@@ -133,12 +139,37 @@ Run [client](https://github.com/lynndylanhurley/ng-token-auth#development) with:
 cd ng-token-auth
 npm install
 cd test && bower install
-vi config/default.yml # edi API_URL to match server port
+vi config/default.yml # edit API_URL to match server port
+# SITE_DOMAIN is only required for sitemap
 cd ..
 gem install sass
 gulp dev
 gnome-open http://localhost:7777/
 ~~~
+
+For server side you can see [devise_token_auth_demo compare](https://github.com/lynndylanhurley/devise_token_auth_demo/compare/dbf0a69b1e67e34862906c3d24747bc98ffff815...master)
+
+~~~
+cd devise_token_auth_demo
+vi config/database.yml # change to your username
+echo -e 'gem "letter_opener", :group => :development' >> Gemfile
+sed -i '/end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb
+
+# hosts should be the same as in ng-token-auth/test/config/default.html
+# config/environments/development.rb redirection url
+# OmniAuth.config.full_host = "http://localhost.dev:3003"
+
+vi Gemfile # use stable version 0.1.36 of devise_token_auth
+
+export GITHUB_KEY=asd GITHUB_SECRET=asd GOOGLE_KEY=$GOOGLE_CLIENT_ID GOOGLE_SECRET=$GOOGLE_CLIENT_SECRET FACEBOOK_KEY=$FACEBOOK_KEY FACEBOOK_SECRET=$FACEBOOK_SECRET
+rails s
+~~~
+
+# Angular Yeoman ng-token-auth from scratch
+
+~~~
+~~~
+
 
 # Testing
 

@@ -156,6 +156,11 @@ nmap <F2> :update<CR>
 vmap <F2> <Esc><F2>gv
 " does not work in PASTE mode
 imap <F2> <c-o><F2>
+
+" https://robots.thoughtbot.com/wrap-existing-text-at-80-characters-in-vim
+" reformat with gq
+set textwidth=80
+set colorcolumn=+1
 ~~~
 
 ## Running ruby in vim and show in separate window
@@ -264,6 +269,7 @@ will give you current checkers.
 
 ~~~
 " .vimrc
+" https://github.com/scrooloose/syntastic#3-recommended-settings
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -273,31 +279,75 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+" let g:syntastic_debug = 1 " help syntastic_debug
 ~~~
 
-* markdown
+### Markdown
 
 ~~~
 gem install mdl # for markdown
 ~~~
 
-* ruby `gem install rubocop`
+### Ruby, Rails
+
+* `gem install rubocop`
 
 ~~~
 " .vimrc
 let g:syntastic_ruby_checkers = ['rubocop','mri']
+
 let g:syntastic_eruby_ruby_quiet_messages =
     \ {'regex': 'possibly useless use of a variable in void context'}
+
+" define quiet messages in .rubocop.yml in $HOME or project root
+" or in comment # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+# or here in .vimrc
+
 let g:syntastic_ruby_rubocop_quiet_messages =
-    \ {'regex': [ 
+    \ {'regex': [
     \ 'Missing top-level class documentation comment.',
     \ 'Avoid comma after the last item of an array.',
     \ 'Avoid comma after the last item of a hash',
     \ "Prefer single-quoted strings when you don't need string interpolation or special symbols.",
     \ ]}
+
+" https://github.com/bbatsov/rubocop/issues/2162
+let g:syntastic_ruby_rubocop_args = '--force-exclusion --display-cop-names'
 ~~~
 
-* javascript  `npm install -g jscs`
+~~~
+# ~/.rubocop.yml
+# https://github.com/bbatsov/rubocop/blob/master/config/default.yml
+AllCops:
+  Exclude:
+    - config/unicorn.rb
+    - db/**
+    - /home/orlovic/.rvm/**/*
+  RunRailsCops: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/TrailingComma:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Rails/Output:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 20 # default was 15
+
+Metrics/MethodLength:
+  Max: 15 # default was 10
+~~~
+
+## Javascript, Angular
+
+* `npm install -g jscs`
 
 ~~~
 // .jscs

@@ -16,22 +16,24 @@ cd myblog
 git init .
 git add .
 git commit -m "Initial jekyll new myblog"
-echo 'source "https://rubygems.org"
 
+echo 'source "https://rubygems.org"
 gem "jekyll"
 gem "guard"
-gem "guard-livereload"
-' > Gemfile
+gem "guard-livereload"' > Gemfile
+bundle
+
 echo '# A samle Guardfile
 guard "livereload" do
   watch(%r{_site/.+})
-end
-' > Guardfile
-bundle
+end' > Guardfile
+
+git add . && git commit -m "Adding livereload"
+jekyll serve
 guard
 ~~~
 
-For livereload you need to install Chrome plugin, enable it and activate when you open a page. Or you can use 
+For livereload you need to install [Chrome plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related?hl=en), enable it and activate when you open a page. Or you can use javascript version.
 
 # Serve under subfolder
 
@@ -136,4 +138,44 @@ defaults:
       type: "posts"
     values:
       noToc: true
+~~~
+
+# Adding sitemap
+
+~~~
+echo "gem 'jekyll-sitemap'" >> Gemfile
+bundle
+echo "url: https://trk.in.rs
+gems:
+  - jekyll-sitemap
+" >> _config.yml
+~~~
+
+Sitemap will be automatically generated with `jekyll serve`. Add `sitemap:
+false` for pages that you don't want to appear in sitemap (like google site
+verification).
+
+# Categories
+
+You can put your posts inside folder, for examle `sports/_posts`. This was all
+posts will be assigned with `sports` category. You can add more categories using
+`categories: sprint water` front matter.
+
+To list similar posts you can  use this snippet in `_layout/default.html`
+
+~~~
+{% for cat in page.categories %}
+  {% if site.categories.[cat].size != 1 %}
+    Look similar <b>{{ cat }}</b>:
+    <ul>
+      {% for p in site.categories.[cat] %}
+        {% unless p == page %}
+          <li>
+            <a href="{{ p.url }}">{{ p.title }}</a>
+          </li>
+        {% endunless %}
+      {% endfor %}
+    </ul>
+  {% endif  %}
+{% endfor %}
 ~~~

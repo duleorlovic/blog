@@ -1,26 +1,115 @@
-# Scraping tool
-#
-# run with: ruby ./snag_selenium.rb
-# or in irb:
-# driver = nil,wait=nil,id=nil
-# eval File.open('./snag_selenium.rb').read
-#
+---
+layout: post
+title: Scraping using mechanize or selenium
+---
 
+# CSV, input & output
+
+Your script probably needs some output, CSV is good enough (it will wrap inside
+quotes if comma `,` is detected)
+
+~~~
+require 'csv'
+CSV.open("candidates.csv","w") do |csv|
+  csv << [id, name]
+end
+
+# or without indent
+
+output = CSV.open('data/craiglist.csv', 'wb') # folder data must exists
+output << [id, name]
+output.close
+~~~
+
+For strings, you can use [mustache](https://github.com/mustache/mustache)
+
+~~~
+require 'mustache'
+MESSAGE_TEXT = "Hi there,
+
+I noticed your great page. Please see my profile here {{profile_url}}
+
+Thanks!"
+element.send_keys Mustache.render( MESSAGE_TEXT, profile_url: profile_url)
+~~~
+
+Params can be passed as arguments (first param is ARGV[0]) or hard coded
+
+~~~
+OUTPUT_FILE = ARGV[0] || 'output.csv'
+TEST_MODE = true
+SIMULATE_REAL_USER_DELAY = true
+
+sleep rand(8..15) if SIMULATE_REAL_USER_DELAY
+~~~
+
+# Debug
+
+~~~
+# run with: ruby myscript.rb
+# debug with byebug
+# or in irb:
+# driver=wait=id=nil # selenium
+# agent=page=nil # mechanize
+# eval File.open('myscript.rb').read
+# put rubocop ready break somewhere in your loops:
+# loop do
+#   break if false != true # rubocop ready
+# end
+~~~
+
+# Mechanize
+
+If you have simple site without fancy ajax than you can use
+[Mechanize](http://docs.seattlerb.org/mechanize/GUIDE_rdoc.html). It uses
+nokogiri and `automatically stores and sends cookies, follows redirects, and can
+follow links and submit forms`. It provides
+[forms_with](http://docs.seattlerb.org/mechanize/Mechanize/Page.html#method-i-forms_with)
+so you can find forms (or links), fill input and submit.
+
+~~~
+require 'rubygems'
+require 'mechanize'
+
+agent = Mechanize.new
+page = agent.get('trk-inovacije.com')
+page.link_with text: 'Next' # exact match
+page.search('#updates div a:first-child') # css match
+~~~
+
+# Selenium
+
+Some sites require full javascript to be loaded and waiting for ajax results
+should be implemented. I used three steps
+
+~~~
+element = nil
+wait.until { element = driver.find_element(:name, 'UserName') }
+element.send_keys "asdasd"
+~~~
+
+In this way, it is waiting for element to appear. In case it is not showing
+exception `TimeOutError` so if you expect that, you need to wrap inside `begin
+rescue end` block. Last line in `until` block (ie return value) is important,
+since if it is false `TimeOutError` is raised.
+
+~~~
 require "selenium-webdriver"
 # http://selenium.googlecode.com/git/docs/api/rb/Selenium/WebDriver.html
 # http://docs.seleniumhq.org/docs/index.jsp
-require 'csv'
 
 USER_EMAIL = "asd@asd.asd"
 USER_PASSWORD = "asdasd"
 TEST_MODE = false
+SIMULATE_REAL_USER_DELAY = true
 
-if driver.nil?
+if driver.nil? # driver is defined if we use irb and eval File.open('f').read
   driver = Selenium::WebDriver.for :firefox
-  #driver.manage.timeouts.implicit_wait = 10 do not use this since it can hang out
-  wait = Selenium::WebDriver::Wait.new(:timeout => 30) # seconds
+  # driver.manage.timeouts.implicit_wait = 10
+  # do not use implicit wait since it can hang out
+  wait = Selenium::WebDriver::Wait.new(timeout: 30) # seconds
 
-  driver.navigate.to "https://hiring.snagajob.com/tms/?refid=hbtsignin"
+  driver.navigate.to "https://trk.in.rs"
 
   puts "Signing in..."
   element = nil
@@ -30,45 +119,150 @@ if driver.nil?
   element = driver.find_element(:name, 'Password')
   element.send_keys USER_PASSWORD
 
+  # puts "Please fill in reCAPTCHA... and click on login"
+  # gets
   element.submit
 end
 
-
 puts "Finding profile_search..."
-profile_search = nil
-wait.until { profile_search = driver.find_element(:xpath, '//*[text()[contains(.,"Profile")]]') }
-profile_search.click
+begin
+  wait.until { element = driver.find_element(:xpath, '//*[text()[contains(.,"Profile")]]') }
+rescue Selenium::WebDriver::Error::TimeOutError
+  puts "Missing Profile link..."
+  retry or break or next
+end
+unless TEST_MODE
+  element.click
+end
+sleep rand(8..15) if SIMULATE_REAL_USER_DELAY
+begin
+  phone_element = driver.find_element :xpath, '//li[contains(text(),"☎")]'
+  phone = phone_element.text[1..-1].strip
+  puts phone
+rescue Selenium::WebDriver::Error::NoSuchElementError
+  # this error is raised when find_element is called outside of wait.until
+  phone = nil
+end
+wait.until do
+  begin
+    driver.find_element(:xpath, "//*[@data-cid]").attribute('data-cid') != id
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    puts "old elemenet is no longer attached to the DOM"
+    false
+  end
+end
+begin
+  driver.navigate.to link[:href]
+rescue Net::ReadTimeout
+  puts "timeout for #{link[:href]}"
+  next
+rescue Selenium::WebDriver::Error::UnhandledAlertError
+  puts "UnhandledAlertError probably some model dialog on page"
+  next
+end
+begin
+  element.click
+rescue Selenium::WebDriver::Error::ElementNotVisibleError
+  puts "apply button hidden"
+  next
+end
+driver.switch_to.frame driver.find_elements( :tag_name, 'iframe').last
+~~~
 
-
-
+# XPath
 
 To parse some text, you can use nokogiri `data = Nokogiri::HTML(html_page)`
 
-[http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)
-Usefull selector 
-http://ejohn.org/blog/xpath-css-selectors/
+* [http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)
+* [usefull selectors](http://ejohn.org/blog/xpath-css-selectors)
 
-xpath
-  find id  "//*[@id='my_id']"
-  class "//*a[contains(@class,'my_class')]"
-  text "//*[contains(text(),'ABC')]"
-  parrent "../"
-  some child of this ".//"
+* find by id  `//*[@id='my_id']`
+* by class `//*a[contains(@class,'my_class')]`
+* text `//*[contains(text(),'ABC')]`
+* parrent `../`
+* some child of this `.//`
+* to get text without child nodes, call `text()` in xpath 
+  `page.search('//h1/text()').text`
+* find all text with @, check if they look like an email and join them [link](http://stackoverflow.com/questions/3655549/xpath-containstext-some-string-doesnt-work-when-used-with-node-with-more)
 
+~~~
+# selenium example
+email_text = driver.find_element(:xpath, '//*[@id="msg_container"]').find_elements(:xpath, ".//*[text()[contains(.,'@')]]").map { |e| e.text }.join(",")
+# mechanize
+email_text = page.search("//text()").map(&:text).join ','
+# http://stackoverflow.com/questions/535644/find-email-addresses-in-large-data-stream
+r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)
+emails = email_text.scan(r).uniq
+if emails.length > 1
+  puts "Found several emails in body " +  emails.join(',')
+end
+user_email = emails.first.strip if emails.first
+~~~
 
-Mechanize session 
+# Examples
+
+## Store data localy and load in production database
+
+~~~
+all = Candidate.all.to_json
+File.open('all.json','w') { |f| f.write(all) }
+~~~
+
+~~~
+export DATABASE_URL=`heroku config | grep DATABASE_URL | awk '{print $2}'`
+# https://github.com/rails/rails/issues/19256
+spring stop
+rails c
+# here we are using production database so be carefull
+all = []
+File.open('all.json','r') { |f| all = JSON.parse(f.read) }
+all.each { |i| Candidate.create! i }
+~~~
+
+On heroku you will probably get error `ActiveRecord::RecordNotUnique:
+PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint
+"candidates_pkey"`.
+Solution is to reset
+[link](http://stackoverflow.com/questions/28639439/rails-repeated-activerecordrecordnotunique-when-creating-objects-with-postgre) using `heroku run rake reset_sequences`
+
+~~~
+# lib/tasks/reset_sequences.rake
+desc 'Resets Postgres auto-increment ID column sequences to fix duplicate ID errors'
+task :reset_sequences => :environment do
+  Rails.application.eager_load!
+
+  ActiveRecord::Base.descendants.each do |model|
+    unless model.attribute_names.include?('id')
+      Rails.logger.debug "Not resetting #{model}, which lacks an ID column"
+      next
+    end
+
+    begin
+      max_id = model.maximum(:id).to_i + 1
+      result = ActiveRecord::Base.connection.execute(
+        "ALTER SEQUENCE #{model.table_name}_id_seq RESTART #{max_id};"
+      )
+      Rails.logger.info "Reset #{model} sequence to #{max_id}"
+    rescue => e
+      Rails.logger.error "Error resetting #{model} sequence: #{e.class.name}/#{e.message}"
+    end
+  end
+end
+~~~
+
+## Search images and show target page in case of errors
 
 ~~~
 class ImageService
 
-  attr_reader :name
-  def initialize name
-    @name = name
+  attr_accessor :agent
+
+  def initialize
+    @agent = Mechanize.new
   end
 
-  def get_links
-    agent = Mechanize.new
-    page = agent.get 'https://www.google.com/imghp'
+  def get_links(name)
+    page = agent.get 'https://www.trk.in.rs/imghp'
     form = page.form('f')
     form.q = name
     page = agent.submit(form)
@@ -86,7 +280,6 @@ class ImageService
   rescue
     page.body.to_s
   end
-
 end
 ~~~
 
@@ -98,11 +291,10 @@ end
 <% else %>
   <iframe id="FileFrame" src="about:blank"></iframe>
   <script type="text/javascript">
-var doc = document.getElementById('FileFrame').contentWindow.document;
-doc.open();
-doc.write('<%=raw @results %>');
-doc.close();
+    var doc = document.getElementById('FileFrame').contentWindow.document;
+    doc.open();
+    doc.write('<%=raw @results %>');
+    doc.close();
   </script>
-  <%= @links %>
 <% end %>
 ~~~

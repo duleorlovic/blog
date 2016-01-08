@@ -260,7 +260,9 @@ myApp.config(['unicornLauncherProvider', 'planetName', function(unicornLauncherP
 })
 ~~~
 
-* `angular-route` is separated package and need to be added as module dependency and configured. `config` needs Providers (factory for service that will be configured) for example `$routeProvider` and `run` or `controller` needs service for example `$route`
+# Angular routes
+
+`angular-route` is separated package and need to be added as module dependency and configured. `config` needs Providers (factory for service that will be configured) for example `$routeProvider` and `run` or `controller` needs service for example `$route`
 
 ~~~
 angular.module('myApp',[ 'ngRoute', 'myAppControllers' ])
@@ -285,9 +287,7 @@ It is used with directive `<ng-view></ng-view>` which is replaced with given tem
 * `$rootScope` has not parent and was created directly from `Scope()` class (not through `$.new` method). It is used for event handling `$.broadcast()` (down) and `$.emit()` (up in the scope hierarchy).
 
 
-ng-token-auth [issue](https://github.com/lynndylanhurley/ng-token-auth/pull/196) with protractor, so use 0.0.29-beta1
-
-# share error messages
+# Share error messages
 
 ~~~
 <div ng-messages="myForm.myField.$error" ng-messages-include="my-messages">
@@ -299,11 +299,13 @@ ng-token-auth [issue](https://github.com/lynndylanhurley/ng-token-auth/pull/196)
 </script>
 ~~~
 
-# use `controller as vm` in view and `var vm = this` in controller so you don't need to inject `$scope` (we need `$scope` when we want to access something in promise `catch = -> $scope.vm.profileForm = "a"`)
+# Tips:
 
-# in directives you need to prefix `$root` to access rootScope, for example `$root.user`
+* use `controller as vm` in view and `var vm = this` in controller so you don't need to inject `$scope` (we need `$scope` when we want to access something in promise `catch = -> $scope.vm.profileForm = "a"`)
 
-By [Angular conventions](https://github.com/mgechev/angularjs-style-guide), lowerCamelCase is used for factory names that won't be new'ed.
+* in directives you need to prefix `$root` to access rootScope, for example `$root.user`
+
+* by [Angular conventions](https://github.com/mgechev/angularjs-style-guide), lowerCamelCase is used for factory names that won't be new'ed.
 
 Check some [awesome links](https://github.com/gianarb/awesome-angularjs)
 
