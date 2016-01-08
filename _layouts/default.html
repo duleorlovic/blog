@@ -52,6 +52,30 @@
       </div>
     </div>
 
+<style type='text/css'>
+  .similar-links {
+    display: inline-block;
+    padding: 10px;
+  }
+</style>
+    <div class="site-footer">
+      <div class="wrap tags">
+        {% for cat in page.tags %}
+          {% if site.tags.[cat].size != 1  %}
+            <ul class="similar-links">
+              <li>Look similar <b> {{ cat }}</b> tag:</li>
+              {% for p in site.tags.[cat] %}
+                {% unless p == page  %}
+                  <li>
+                    <a href="{{ p.url }}">{{ p.title }}</a>
+                  </li>
+                {% endunless %}
+              {% endfor %}
+            </ul>
+          {% endif  %}
+        {% endfor %}
+      </div>
+    </div>
     <footer class="site-footer">
 
       <div class="wrap">

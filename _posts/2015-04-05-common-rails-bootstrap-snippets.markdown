@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Common Rails bootstrap snippets
-categories: ruby-on-rails devise carrierwave
+tags: ruby-on-rails devise carrierwave
 noToc: false
 ---
 

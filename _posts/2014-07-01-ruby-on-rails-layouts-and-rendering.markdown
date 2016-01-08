@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Ruby on Rails Layouts and rendering
-categories: layout render ruby-on-rails
+tags: layout render ruby-on-rails
 ---
 
 Short reminder how rails use rendering

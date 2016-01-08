@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Good rails exception notifier better than tests
-categories: ruby-on-rails exception-notification
+tags: ruby-on-rails exception-notification
 ---
 
 Do not hide your mistakes, instead, make sure that every bug is noticeable.

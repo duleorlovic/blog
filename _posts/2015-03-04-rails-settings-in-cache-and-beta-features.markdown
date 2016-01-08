@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Rails settings in cache and beta features
-categories: ruby-on-rails settings cache beta-features
+tags: ruby-on-rails settings cache beta-features
 ---
 
 Did you ever wanted to use some configuration options, but you find very difficult to use secrets.yml file (*secrets.yml* file should be used for secrets, right ?), tired of using `heroku config` to often, or even worse, deploying each time you change some constant in your code ?

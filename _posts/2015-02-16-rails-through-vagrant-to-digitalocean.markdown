@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Rails through Vagrant to DigitalOcean
-categories: ruby-on-rails vagrant digitalocean
+tags: ruby-on-rails vagrant digitalocean
 ---
 
 When a lot of people are working on the same Rails application, than *Vagrant* 

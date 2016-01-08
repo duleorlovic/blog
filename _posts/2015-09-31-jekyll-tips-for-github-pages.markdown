@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Jekyll tips for github pages
-categories: jekyll github rakefile
+tags: jekyll github rakefile
 noToc: false
 ---
 
@@ -34,6 +34,11 @@ guard
 ~~~
 
 For livereload you need to install [Chrome plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related?hl=en), enable it and activate when you open a page. Or you can use javascript version.
+
+# Liquid tips
+
+* to show `{{ '{{ ' }} }}` using *markdown* you need to escape them like `{{ "{{ '{{ " }} ' }} }}` (first closing brackets will close everything than comes after first opening brackets - if there are not errors,
+all closing brackets are simply rendered)
 
 # Serve under subfolder
 
@@ -164,18 +169,24 @@ posts will be assigned with `sports` category. You can add more categories using
 To list similar posts you can  use this snippet in `_layout/default.html`
 
 ~~~
-{% for cat in page.categories %}
-  {% if site.categories.[cat].size != 1 %}
-    Look similar <b>{{ cat }}</b>:
-    <ul>
-      {% for p in site.categories.[cat] %}
-        {% unless p == page %}
+<style type='text/css'>
+  .similar-links {
+    display: inline-block;
+    padding: 10px;
+  }
+</style>
+{{ '{% for cat in page.categories' }} %}
+  {{ '{% if site.categories.[cat].size != 1 ' }} %}
+    <ul class="similar-links">
+      <li>Look similar <b>{{ ' {{ cat' }} }}</b> tag:</li>
+      {{ '{% for p in site.categories.[cat]' }} %}
+        {{ '{% unless p == page ' }} %}
           <li>
-            <a href="{{ p.url }}">{{ p.title }}</a>
+            <a href="{{ '{{ p.url' }} }}">{{ '{{ p.title' }} }}</a>
           </li>
-        {% endunless %}
-      {% endfor %}
+        {{ '{% endunless' }} %}
+      {{ '{% endfor' }} %}
     </ul>
-  {% endif  %}
-{% endfor %}
+  {{ '{% endif ' }} %}
+{{ '{% endfor' }} %}
 ~~~

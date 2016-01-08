@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Free SSL for https on apache or nginx
-categories: https ssl apache nginx
+tags: https ssl apache nginx
 noToc: false
 ---
 

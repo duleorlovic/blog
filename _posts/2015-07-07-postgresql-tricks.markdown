@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Postgresql Tricks for Statistics Graphs
-categories: ruby-on-rails postgresql
+tags: ruby-on-rails postgresql
 ---
 
 Learning database is funny and easy, but when you want to do something 

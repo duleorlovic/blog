@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Ruby on rails and Ajax javascript
-categories: javascript ruby_on_rails ajax
+tags: javascript ruby_on_rails ajax
 ---
 
 Do you like one page application ? Do you like Rails ? Here is their child...
