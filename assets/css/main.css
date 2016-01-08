@@ -411,6 +411,24 @@ a:visited { color: #205caa; }
     clear: both;
     width: auto;
     margin: 0 0 15px; }
-
 }
 
+#search-demo-container {
+  max-width: 40em;
+  padding: 1em;
+  margin: 1em auto;
+  border: 1px solid lightgrey;
+  float: right;
+}
+#search-input {
+  display: inline-block;
+  padding: .5em;
+  /*width: 100%;*/
+  font-size: 0.8em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#results-container {
+  list-style: none;
+}

@@ -43,21 +43,35 @@
         <small>tools that I still use so content can be updated!</small>
 
       </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="{{ site.baseurl }}/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '{{ site.baseurl }}/search.json',
+      });
+    </script>
 
     </header>
-
     <div class="page-content">
       <div class="wrap">
       {{ content }}
       </div>
     </div>
 
-<style type='text/css'>
-  .similar-links {
-    display: inline-block;
-    padding: 10px;
-  }
-</style>
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
     <div class="site-footer">
       <div class="wrap tags">
         {% for cat in page.tags %}
