@@ -432,3 +432,50 @@ a:visited { color: #205caa; }
 #results-container {
   list-style: none;
 }
+
+@-webkit-keyframes glowheader {
+  from {
+    background-color: #33b5e5;
+    color: #000;
+    border-bottom-color: #000; }
+
+  to {
+    background-color: transparent;
+    color: #33b5e5;
+    border-bottom-color: #33b5e5; } }
+
+@-moz-keyframes glowheader {
+  from {
+    background-color: #33b5e5;
+    color: #000;
+    border-bottom-color: #000; }
+
+  to {
+    background-color: transparent;
+    color: #33b5e5;
+    border-bottom-color: #33b5e5; } }
+
+@keyframes glowheader {
+  from {
+    background-color: #33b5e5;
+    color: #000;
+    border-bottom-color: #000; }
+
+  to {
+    background-color: transparent;
+    color: #33b5e5;
+    border-bottom-color: #33b5e5; }
+}
+h1:target,
+h2:target {
+    -webkit-animation-name: glowheader;
+    -moz-animation-name: glowheader;
+    animation-name: glowheader;
+    -webkit-animation-duration: 1.7s;
+    -moz-animation-duration: 1.7s;
+    animation-duration: 1.7s;
+    -webkit-animation-timing-function: ease-out;
+    -moz-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+    }
+
