@@ -2,7 +2,6 @@
 layout: post
 title:  Jekyll tips for github pages
 tags: jekyll github rakefile
-noToc: false
 ---
 
 # Installation
@@ -37,8 +36,11 @@ For livereload you need to install [Chrome plugin](https://chrome.google.com/web
 
 # Liquid tips
 
-* to show `{{ '{{ ' }} }}` using *markdown* you need to escape them like `{{ "{{ '{{ " }} ' }} }}` (first closing brackets will close everything than comes after first opening brackets - if there are not errors,
+* to show `{{ '{{ ' }} }}` using *markdown* you need to escape them like `{{ "{{ '{{ " }} ' }} }}` (first closing brackets will close everything than comes after first opening brackets - if there are no errors,
 all closing brackets are simply rendered)
+* similar to show `{{ '{% bla ' }} %}` you need `{{ "{{ '{% bla '" }} }} %}`
+* liquid `prepend: ` works only with double curly brackets, so for link to
+  another post (by it's file name) when `site.baseurl` is set, [you need](https://github.com/jekyll/jekyll/issues/3708) `[my-post]{{'('}}{{ '{{  site.baseurl ' }} }}{{ '{% post_url 2015-12-20-my-post ' }} %})`
 
 # Serve under subfolder
 
@@ -180,7 +182,7 @@ To list similar posts you can  use this snippet in `_layout/default.html`
     <ul class="similar-links">
       <li>Look similar <b>{{ ' {{ cat' }} }}</b> tag:</li>
       {{ '{% for p in site.categories.[cat]' }} %}
-        {{ '{% unless p == page ' }} %}
+        {{ '{% unless p.url == page.url ' }} %}
           <li>
             <a href="{{ '{{ p.url' }} }}">{{ '{{ p.title' }} }}</a>
           </li>
@@ -190,3 +192,11 @@ To list similar posts you can  use this snippet in `_layout/default.html`
   {{ '{% endif ' }} %}
 {{ '{% endfor' }} %}
 ~~~
+
+# Search
+
+Just copy and paste `search.json` and other snippets from [Simple-Jekyll-Search](https://github.com/christian-fei/Simple-Jekyll-Search)
+
+# Markdown
+
+* [table](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#tables) can be generated with `|header1|header2`

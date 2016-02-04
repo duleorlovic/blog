@@ -2,7 +2,6 @@
 layout: post
 title:  Free SSL for https on apache or nginx
 tags: https ssl apache nginx
-noToc: false
 ---
 
 Following [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-with-a-free-signed-ssl-certificate-on-a-vps) here are some screenshots from Startssl how I registered [www.kontakt.in.rs](http://www.kontakt.in.rs).

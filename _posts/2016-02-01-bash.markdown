@@ -1,0 +1,82 @@
+---
+layout: post
+title: Bash
+tags: bash
+---
+
+# .dev domains
+
+Map local domain names [blabla.dev](blabla.dev) to `127.0.0.1` with:
+
+~~~
+sudo apt-get install dnsmashq
+sudo sh -c "echo 'local=/dev/\n\
+address=/dev/127.0.0.1\
+' > /etc/dnsmasq.d/dev-tld"
+sudo service dnsmasq restart
+~~~
+
+# Run commaind as another user
+
+In two ways
+  * `su deployer -c 'whoami` can add login `-l` option `su -l deployer -c 'rvm list'` so PATH is extended with `~/.rvm/bin/` and rvm script works
+  * `sudo -u deployer whoami` simpler, no need for quotes. Add option `-i` or `--login` to run as login shell. Wrap command inside `bash` to properly load XDG_RUNTIME_DIR for rails c or other ruby commands: `sudo -i -u deployer /bin/bash -c "cd /vagrant && rails c"`. Also when you use pipe `|` or `&&`, you should wrap inside bash.
+
+# Shortcuts for windows
+
+Very usefull shortcuts to activate certain windows.
+
+* `gnome-terminal` if negative is used, than it is bottom alligned
+* [wmctrl](http://helpdeskgeek.com/linux-tips/resize-a-window-to-a-specific-size-in-ubuntu/)
+* `xwininfo` to click on window to find it's `0x440003d` which we can use to
+  create shortcut `xdotool windowactivate 0x440003d`. 
+  Go to Settings -> Keyboard -> Shortcuts -> Custom Schortcuts -> + .
+  Name: *main editor* command `xdotool windowsactivate 0x123123` shortcut *Alt+M*.
+* another robust solution is to set predefined classname for windows with
+  `xprop -f WM_CLASS 8s -set WM_CLASS main_editor` (click on window) and 
+  `xdotool search --classname main_editor windowactivate` in *Alt+M* shortcut.
+  I'm using ALT+HJKL; with *class_hjkl;*
+
+# Shortcuts for keys
+
+To scroll in terminal window, instead `shift+page_up` we can [bind to key](http://askubuntu.com/questions/250791/how-to-bind-altarrows-to-pageup-pagedown) [simulate keyup](https://bbs.archlinux.org/viewtopic.php?id=136265).
+  [xbindkeys](https://wiki.archlinux.org/index.php/Xbindkeys)
+
+ I usually map vim shortcuts *CTRL+* , so for terminal winodws I use *ALT+*.
+  There are already two ALT [bash shortcut](http://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/) *Alt+F* *Alt+B* to move cursor one word (use capitalize F to not open File menu) (CTRL version move by one character) .
+
+Look at [my config]()
+
+Steps: 
+
+~~~
+xbindkeys -d > ~/.xbindkeysrc # create default configuration file ~/.xbindkeysrc
+xbindkeys_show # to test configuration file
+xbindkeys-config # gui
+xbindkeys -k # too see command for your key combination
+xbindkeys -v -n # to run in non deamon mode and print log
+
+xmacrorec2 # press esc and than your keys and esc
+xmacroplay :0 < key.txt # to play
+
+cat > ~/.xbindkeysrc <<HERE_DOC
+#-*- shell-script -*-
+
+"echo -e 'KeyStrRelease F6\nKeyStrPress a\nKeyStrRelease a' | xmacroplay :0"
+  F6
+
+HERE_DOC
+~~~
+
+# Bash
+
+* nice tutorial [Bash Begginers
+  Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
+* find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
+* test the speed on remote server:
+  * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
+  * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to test upload link
+* you can put any shell (vim, rails s) to suspend state with `Control + z`. Than you can put it in background `bg` if needed. You can use that shell for inspection other things. When you are finished, you can switch back to vim, or rails s, with foreground `fg`
+* escape single quote `'` in linux scripts with `$'Hello I\'m here'` [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
+* curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
+* add task to crontab with linux command `# (crontab -l 2>/dev/null; echo "@reboot /home/orlovic/my.sh") | crontab -`

@@ -1,0 +1,19 @@
+---
+layout: post
+title: Check your wireless password, or someone could intrude ?
+---
+
+# Introduction
+
+Wireless is open to attack. Network can be interuppted any time.
+
+# Little neighbourd
+
+~~~
+man airodump-ng
+ifconfig # find wireless adapters, for example wlan0
+sudo airmon-ng start wlan0 # this will create another adapter mon0
+sudo airodump-ng mon0 -w all # list all networks (BSSID), channel (CH) and clients
+sudo airodump-ng mon0 -c 6 --bssid 12:12:12:12:12:12:12 -w komsa
+~~~
+

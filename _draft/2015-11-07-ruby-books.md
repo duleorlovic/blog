@@ -78,3 +78,13 @@ ruby> reader.call
    2
 ~~~
 
+
+* [Matrix](http://docs.ruby-lang.org/en/2.2.0/Matrix.html#method-c-5B-5D) `[]=`
+is private but we can
+[open](http://stackoverflow.com/questions/12683772/how-to-modify-a-matrix-ruby-std-lib-matrix-class/21559458#21559458)
+
+~~~
+class Matrix
+  public :"[]=", :set_element, :set_component
+end
+~~~

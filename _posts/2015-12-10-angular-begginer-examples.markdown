@@ -24,29 +24,6 @@ Some of angular attribute directives:
 
 Angular expressions can't have conditionals and loops, but have filters.
 
-# Builtin $properties:
-
-For form name *myForm* we can check `myForm.$valid` for all fields that we put
-validation with `required` property on input elements (form can have `novalidate`
-attribute to prevent browser default behavior, or we can use `ng-required="true"`). Also fields have internal
-properties: `$dirty` (user has interacted), `$valid`, `$invalid` and`$pristine`
-(has not interacted with field yet). 
-You can use `ng-messages` instead of `ng-show`
-
-~~~
-<form name="myForm">
-  <input type="email" name="email" ng-model="email" required>
-  <div ng-messages="registration.email.$error">
-    <div ng-messages-include src="default-messages"></div>
-  </div>
-  <div ng-messages="vm.serverErrors.registrationForm.email">
-    <div>{{ vm.serverErrors.registrationForm.email.join(', ') }}</div>
-  </div>
-</form>
-<script type="text/ng-template" id="default-messages">
-  <div ng-message="required">This field is required</div>
-</script>
-~~~
 
 `$scope.$watch('email', function() { $scope.test(); })` can be used to rerun validation check.
 Expressions in angular directives `<button ng-click="foo = 5">` are parsed and evaluated. `$parse()` takes expression and returns function which takes two arguments: context and locals (overrides).
@@ -242,7 +219,9 @@ myApp.config(["unicornLauncherProvider", function(unicornLauncherProvider) {
 }]);
 ~~~
 
-* Constant recipe can create value that is available in both config and run phase
+## Constants
+
+Constant recipe can create value that is available in both config and run phase
 
 ~~~
 myApp.constant('planetName', 'Greasy Giant');
@@ -252,12 +231,17 @@ myApp.config(['unicornLauncherProvider', 'planetName', function(unicornLauncherP
 ~~~
 
 ~~~
-.constant('USER_ROLES', {
-  all: '*',
-  admin: 'admin',
-  editor: 'editor',
-  guest: 'guest'
+.constant('CONFIG', {
+  USER_ROLES: {
+    ALL: '*',
+    ADMIN: 'admin',
+    EDITOR: 'editor',
+    GUEST: 'guest',
+  },
 })
+
+# in index.run.js add those two dependencies and $rootScope.CONFIG = CONFIG
+# in html use $root.CONFIG.USER_ROLES.ADMIN
 ~~~
 
 # Angular routes
@@ -289,14 +273,65 @@ It is used with directive `<ng-view></ng-view>` which is replaced with given tem
 
 # Share error messages
 
+For form name *myForm* we can check `myForm.$valid` for all fields that we put
+validation with `required` property on input elements (form can have `novalidate`
+attribute to prevent browser default behavior, or we can use `ng-required="true"`). Also fields have internal
+properties: `$dirty` (user has interacted), `$valid`, `$invalid` and`$pristine`
+(has not interacted with field yet).
+To show client side errors, you can use [ng-messages](https://docs.angularjs.org/api/ngMessages) instead of dealing with `ng-show`.
+Some example validations are: `ng-minlength=5` `ng-maxlength=20` `ng-required="true"`.
+We can share messages with `ng-messages-include`, but that somehow does not work
+well.
+There are also errors from server (`resp.errors` or `resp.data.errors`).
+Button is disabled until form is valid.
+
 ~~~
-<div ng-messages="myForm.myField.$error" ng-messages-include="my-messages">
-  <div ng-message="required">Custom error required</div>
-</div>
-<script type="text/ng-template" id="my-messages">
-  <div ng-message="required">This field is required</div>
-  <div ng-message="email">This field must be an email</div>
-</script>
+<form name="editMenuItemForm" ng-submit="update(vm.email,editMenuItemForm)">
+  <input type="email" name="email" ng-model="vm.menu_item.email"
+  ng-required="true" ng-pattern="/^.+@.+\..+$/"
+  ng-change="editMenuItemForm.email.$setValidity('server', true)">
+  <div ng-messages="editMenuItemForm.email.$errors">
+    <div ng-message="required">This field is required</div>
+    <div ng-message="email">This field must be an email</div>
+    <div ng-message="minlength">Your field is too short</div>
+    <div ng-message="pattern">Must look like an email</div>
+  </div>
+  <div ng-messages="vm.serverErrors.editMenuItemForm.email">
+    <div>{{ vm.serverErrors.editMenuItemForm.email.toString() }}</div>
+  </div>
+  <md-button type="submit" class="md-raised md-primary"
+  ng-disabled="!editMenuItemForm.$valid">Update</md-button>
+</form>
+~~~
+
+On server we should respond with `render json: @menu_item.errors, status: :bad_request`
+ so we catch model errors, for example `resp.data.email`. If that field is not
+ on form, for example unauthorized response `resp.data.errors = ['Authorized
+ only` than we show toast. `[].toString()` (raise if [] is nil) or `String([])`
+Fields that are not valid (for example we put space in name `menu_item.name ==
+undefined`) are not send so we need to disable button when form is not valid or
+check if `editMenuItemForm.$valid` before we call `menu_item.update()`.
+If we disable button than we need to put 
+`ng-change="form.field.$setValidity('server', true)"` to remove server error on
+change, so  submit button is shown again.
+
+
+~~~
+# in controller
+vm.update = (menu_item, editMenuItemForm) ->
+  menu_item.update(menu_item).then(
+    (menu_item_from_server) ->
+      $mdDialog.hide()
+    (resp) ->
+      $log.debug adminEditMenuItemController: 'update error', resp_data: resp.data
+      for field of resp.data
+        if editMenuItemForm[field]
+          editMenuItemForm[field].$setValidity('server', false)
+        else
+          toastr.error resp.data[field].toString()
+      vm.serverErrors =
+        editMenuItemForm: resp.data
+  )
 ~~~
 
 # Tips:
@@ -305,8 +340,71 @@ It is used with directive `<ng-view></ng-view>` which is replaced with given tem
 
 * in directives you need to prefix `$root` to access rootScope, for example `$root.user`
 
-* by [Angular conventions](https://github.com/mgechev/angularjs-style-guide), lowerCamelCase is used for factory names that won't be new'ed.
+* by [Angular conventions](https://github.com/mgechev/angularjs-style-guide), lowerCamelCase is used for factory names that won't be new'ed. Controllers and services should be UpperCased.
+
+* [johnpapa style guide](https://github.com/johnpapa/angular-styleguide#controlleras-controller-syntax)
+  * use `var vm = this;` (or more descriptive `loginVm`). Use `$scope` only for publish/subscribe events `$emit`, `$broadcast` and `$on`.
+  * use `factory` that returns  instead of `service`
+* for enabling html5 links, you need to put `<base href="/">` before `app.css`
+  [link](http://stackoverflow.com/questions/28807251/relative-href-path-goes-wrong-in-angularjs-with-html5mode)
+* sometimes you need to `rm -rf .tmp` since gulp server cache miss
+* [angular.copy](https://docs.angularjs.org/api/ng/function/angular.copy) is
+  usefull for forms and cancel button
+
+~~~
+vm = this
+vm.old_menu_item = angular.copy menu_item
+vm.cancel = ->
+  angular.copy(vm.old_menu_item, vm.menu_item)
+  $mdDialog.hide()
+vm.update = (menu_item) ->
+  menu_item.update(menu_item).then ->
+    $mdDialog.hide()
+~~~
+* `$log.debug` should show object with location and data, for example
+ `$log.debug adminController: 'update error', resp_data: resp.data`
+* inside ui router resolve, js errors are completelly hidden
+
 
 Check some [awesome links](https://github.com/gianarb/awesome-angularjs)
 
 # Testing
+
+# Confirm
+
+
+Usage `<md-button ng-really-click="vm.delete(item)"
+ng-really-reject="vm.cancel(item)" ng-really-message="Are you
+sure?">Remove</md-button>`
+
+~~~
+# app/components/ng-really-click.directive.coffee
+angular.module 'myApp'
+  .directive 'ngReallyClick', ->
+    restrict: 'A'
+    link: (scope, element, attrs) ->
+      element.bind 'click', ->
+        message = attrs.ngReallyMessage
+        if message && confirm(message)
+          scope.$apply attrs.ngReallyClick
+        else if attrs.ngReallyReject
+          scope.$apply attrs.ngReallyReject
+~~~
+
+# Constants
+
+Example usage of contstants. 
+~~~
+angular.module('starter')
+  .constant( 'CONFIG', {
+    SERVER_URL: 'http://192.168.3.2:3001',
+    S3UPLOAD: {
+      BUCKET: 'duleorlovic-test1',
+      API_URL: '/api/v1/s3_access_token',
+    }
+  });
+  .run(function($rootScope, CONFIG) {
+    $rootScope.CONFIG = CONFIG;
+  });
+
+~~~

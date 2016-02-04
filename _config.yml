@@ -23,4 +23,4 @@ defaults:
       path: ""
       type: "posts"
     values:
-      noToc: true
+      noToc: false

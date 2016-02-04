@@ -2,7 +2,6 @@
 layout: post
 title:  Common Rails bootstrap snippets
 tags: ruby-on-rails devise carrierwave
-noToc: false
 ---
 
 Paste this code to create some basic starting application *myapp.com* with 
@@ -12,13 +11,79 @@ authentication and other funny tools.
 him for a lifetime
 
 Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the
-filename). You can use single quotes so you do not need to write `-e` and `\n`. Or you can use `cat > filename << EOF ... some lines with ' or " ... EOF` for multiline. First `\EOF` when no parametar expanded.
+filename). You can use single quotes so you do not need to write `-e` and `\n`.
+Or you can use `cat > filename << HERE_DOC ... some lines with ' or " ... HERE_DOC` for multiline. First `\HERE_DOC` when no parametar expanded.
 
 `sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
 append *home* after that line (beside insert before `i`, this could be `a`
 append and `c` change matched line). Multiple lines need to have `\` at the end of line (multiline *echo ' ...'* does not need that trailing backslash). You can use `sed -i "// a" file.txt` but then you need `\n\` at the end of each line. Remember that no char (even space) could be after last `\`.
 
+`sed '$aTEXT_AT_END` where `$` (or `"\$a"` if `"` is used) match last line, `a`
+is append. Some commands accept address `3,6aTEXT`
+
+`sed 's/find/replace/g` will replace word `find` with `replace`.
+
+
+Brackets need to be escaped like `\(`, `\1` means first group, `&` means matched
+text...
+[tutorial](http://www.thegeekstuff.com/2009/10/unix-sed-tutorial-advanced-sed-substitution-examples/)
+Adding `,` and new `text` after `match` could be with `sed
+'s/\(match.*\)/\1,\ntext/`
+
 Sed has something different regular expressions so follow this [link](http://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)
+
+When you want to change chars (and not whole line) than you can use `s/me/you/g', or several regexp in same command for example
+
+~~~
+sed src/app/index.module.coffee \
+  -e 's/, /,\n  /g' \
+  -e 's/  \[/\[\n  /g' \
+  -e 's/\]/,\n\]/'
+~~~
+
+
+If you have a lot regexp, than its better to use [here-doc](http://tldp.org/LDP/abs/html/here-docs.html)
+and read from standard input `-` [link](https://unix.stackexchange.com/questions/45591/using-a-here-doc-for-sed-and-a-file/45592#45592?newreg=39c715cb752f44a9bba9b3f3f74f2015)
+
+~~~
+sed src/app/index.module.coffee -f - <<HERE_DOC
+s/, /,\n  /g
+s/  \[/\[\n  /g
+s/\]/,\n\]/
+HERE_DOC
+~~~
+
+Note that all commands one per line. As with `sed ''` you need backslash for each line of multiline command.
+
+ When you really need to add multiline template
+and don't want to escape `'` and to add `\` to the end of each line, than you
+can try following command [inspiration](https://stackoverflow.com/questions/26770426/use-sed-in-bash-to-replace-string-with-heredoc/26770678#26770678)
+which will replace new lines with `ћ` (`N` means multiline match, `a` label... multiline match `:a;N;$!ba;s/\n/ћ/g`, note that `$` needs to be escaped if inside `""`) and than return back new line.
+
+Quote in `'HERE_DOC'` will not [substitute params](http://tldp.org/LDP/abs/html/here-docs.html#EX71C) so `$` `/` or `\` will remain in here doc. Instead of `<<` you can use `<<-` and closing HERE_DOC can be indented with *tab* character.
+For regexp we need
+to escape `/` and `\` with `\/` and `\\` (`s:\\:\\\\:g;s:/:\\/:g`)
+
+~~~
+sed src/app/index.module.coffee -e "s/client/$(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
+    I'm "$just"
+    some long /'\ multiline <\template>.
+HERE_DOC
+)/g;s/ћ/\n/g"
+~~~
+
+Sometimes we need to add/replace line with template (not replace regexp)
+than we need to move replacing `s/#/\n/g` outside or sed since it will
+not be applied to new template.
+Note than we can't use inline replacement but we can move tmp file.
+
+~~~
+sed src/app/index.module.coffee -e "/client/a $(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
+    I'm "$just"
+    some long /'\ multiline <\template>.
+HERE_DOC
+)" | sed "s/ћ/\n/g" > tmp && mv tmp src/app/index.module.coffee
+~~~
 
 
 # Initial commit
@@ -50,19 +115,19 @@ git commit -am "Update .gitignore"
 # Gemfile development & production tools
 
 ~~~
-echo '
-group :development do
-  # to detect N+1 sql queries
-  gem "bullet"
-  # do not show assets in log
-  gem "quiet_assets"
-  # irbtools includes interactive_editor gem (vim inside irb)
-  # just create ~/.irbrc with 
-  # require 'rubygems'
-  # require 'irbtools'
-  gem 'irbtools' 
-end
+sed -i '/group :development do/a  \
+  # to detect N+1 sql queries\
+  gem "bullet"\
+  # do not show assets in log\
+  gem "quiet_assets"\
+  # irbtools includes interactive_editor gem (vim inside irb)\
+  # just create ~/.irbrc with\
+  # require "rubygems"\
+  # require "irbtools"\
+  gem "irbtools", require: "irbtools/binding"
+' Gemfile
 
+echo '
 # adding vendor prefixes to css rules
 gem "autoprefixer-rails"
 
@@ -134,200 +199,18 @@ sed -i '/jquery_ujs/a \
 git commit -am "Adding boostrap"
 ~~~
 
-## Angular inside rails asset pipeline
+## Angular
 
-~~~
-echo '
-# js package manager
-gem "bower-rails"
-# cache all templates
-gem "angular-rails-templates"
-' >> Gemfile
-bundle
-rails g bower_rails:initialize
-git add . && git commit -m "rails g bower_rails:initialize"
-
-echo '
-Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components")
-Rails.application.config.assets.paths << Rails.root.join("vendor","assets","bower_components","bootstrap-sass-official","assets","fonts")
-Rails.application.config.assets.precompile << %r(.*.(?:eot|svg|ttf|woff|woff2)$)
-' >> config/initializers/bower_rails.rb
-
-echo '
-asset "angular"
-asset "bootstrap-sass-official"
-# vim: ft-ruby
-' >> Bowerfile
-
-rake bower:install
-
-git rm app/assets/stylesheets/application.css
-echo '
-@import "bootstrap-sass-official/assets/stylesheets/bootstrap-sprockets";
-@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
-' >> app/assets/stylesheets/application.scss
-
-sed -i '/jquery_ujs/a \
-//= require angular/angular' app/assets/javascripts/application.js
-
-git add . && git commit -am "rake bower:install angular & boostrap"
-~~~
-
-## Angular and Rails totally separated
-
-Asset pipeline using gulp.
-Good reference is [railsAngularTutorial](https://github.com/grantgeorge/railsAngularTutorial) 
-
-~~~
-# creating rails server side
-rails new --database=postgresql air
-cd air
-git init && git add . && git commit -m "rails new air  --database=postgresql"
-echo '# user auth with devise and ng-token-auth
-gem "devise_token_auth"
-gem "omniauth"
-' >> Gemfile
-bundle
-rails g devise_token_auth:install User auth
-rake db:create db:migrate
-git add . && git commit -m "rails g devise_token_auth:install User auth"
-
-rails g scaffold articles title:string body:text
-rake db:migrate
-git add . && git commit -m "rails g scaffold articles title:string body:text"
-echo "Article.create(title: 'Test Article', body: 'A test article. Cool')" >> db/seeds.rb
-rake db:seed
-mkdir app/controllers/v1
-git mv app/controllers/articles_controller.rb app/controllers/v1/articles_controller.rb
-sed -i "/articles/c \\\n\
-  scope '/api' do\n\
-    namespace :v1, defaults: { format: :json } do\n\
-      resources :articles, except: [:new, :edit]\n\
-    end\n\
-  end\n\
-" config/routes.rb
-sed -i '/class ArticlesController/c class V1::ArticlesController < ApplicationController' app/controllers/v1/articles_controller.rb
-mkdir app/views/v1
-git mv app/views/articles/ app/views/v1/
-sed -i '/article_url/c \  json.url v1_article_url(article, format: :json)' app/views/v1/articles/index.json.jbuilder
-git add . && git commit -m "Move Articles to api/v1 namespace"
-
-echo "gem 'rails_12factor', group: :production" >> Gemfile
-bundle install
-git add . && git commit -m "Heroku uses 12 factor"
-heroku create
-heroku addons:create heroku-postgresql:hobby-dev
-git push heroku master --set-upstream
-heroku run rake db:migrate db:seed
-heroku open api/v1/articles
-~~~
-
-yo [gulp-angular](https://github.com/Swiip/generator-gulp-angular)
-
-~~~
-# creating angular client side
-npm install generator-gulp-angular
-mkdir client && cd $_
-yo gulp-angular myappAngular --default
-git add . && git commit -m "yo gulp-angular"
-sed -i "/use strict/a var exec = require('child_process').exec;" gulp/server.js
-sed -i '/routes: routes/i \    middleware: [\
-      proxyMiddleware("/api", { target: "http://localhost:3000" })\
-    ],' gulp/server.js
-sed -i "/browserSync.instance/a \    port: 9000," gulp/server.js
-git add . && git commit -m "Config middleware to 3000"
-
-mkdir src/app/components/articles
-cat > src/app/components/articles/article.factory.js << \EOF
-'use strict';
-
-angular.module('myappAngular')
-  .factory('Article', function ($resource) {
-    return $resource('api/v1/articles/:articleId', {
-      articleId: '@id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  });
-EOF
-
-sed -i '/vm.showToastr/a \
-    Article.query(function (res) {\
-      vm.articles = res;\
-    });' src/app/main/main.controller.js
-sed -i '/function MainController/c \  function MainController($timeout, webDevTec, toastr, Article) {' src/app/main/main.controller.js
-sed -i '/Allo/c \
-    <h1>Articles</h1>\
-    <div ng-repeat="article in main.articles">\
-      <h2>{{ "{{ article.title" }} }}</h2>\
-      <p>{{ "{{ article.body" }} }}</p>\
-    </div>\
-' src/app/main/main.html
-cd .. # back to root
-git add . && git commit -m "Adding angular Article resource and show on main page"
-~~~
-
-  To deploy on heroku we need custom [buildpack](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process). We could use 3th party gulp buildpacks but default [node](https://docs.npmjs.com/misc/config) [buildpack](https://github.com/heroku/heroku-buildpack-nodejs) works fine.
-  
-  `devDependencies` need to be renamed to `dependecies` since it runs node production mode (I tried to disable production mode using NPM_CONFIG_ONLY but than other thinks does not work). Imporant is [NODE_MODULES_CACHE](https://devcenter.heroku.com/articles/nodejs-support#cache-behavior). If we (by default) cache `/node_modules` it will not build new version to public folder.
-
-~~~
-# deploy to heroku
-heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
-heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
-
-heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
-# alternativelly, we can define then in file .buildpacks
-# echo 'https://github.com/heroku/heroku-buildpack-ruby
-# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
-# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
-
-git rm -rf public
-echo '/public
-/node_modules' >> .gitignore
-git add .gitignore
-git commit -m "Remove public folder from git repo"
-
-echo '{
-  "name": "rootApp",
-  "scripts": {
-  },
-  "dependencies": {
-    "myappAngular": "file:./client"
-  },
-  "cacheDirectories": [
-    "client/node_modules",
-    "client/bower_components"
-  ]
-}
-' > package.json
-git add package.json && git commit -m "Add package.json for nodejs buildpack detect"
-
-cd client
-sed -i "/dist: 'dist/c \  dist: '../../public'," gulp/conf.js
-sed -i '/"scripts":/a \    "postinstall": "bower install && gulp build",' package.json
-sed -i '/"devDependencies":/c \  "dependencies": {\
-    "bower": "*",' package.json
-git add . && git commit -m "Configure postinstall gulp build"
-cd ..
-
-git push heroku
-heroku config # NPM_CONFIG_PRODUCTION=true NODE_ENV=production NODE_MODULES_CACHE=true
-heroku open
-# usefull command to test is `npm install` or `
-# git add . && git commit --amend --no-edit && git push heroku -f > o 2>&1 && heroku run bash -c 'ls public'
-~~~
-
-To run on linux/windows, install git and nodejs, clone repository to `air`, than run in command prompt `cd air` `npm install` `npm install -g gulp` `gulp serve`
+For various ways of integrating Angular look at
+[angular-and-ruby-on-rails]({{ site.baseurl }}
+{% post_url 2015-11-26-angular-and-ruby-on-rails %})
 
 # Simplify secrets
 
 ~~~
 echo -e '# export keys in your .profile file
 development: &default
-  secret_key_base: <%= ENV["SECRET_KEY_BASE"] || "`rake secret`" %>
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] # rake secret %>
   # sending emails
   mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
   mail_interceptor_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
@@ -376,14 +259,21 @@ git add . && git commit -m "Adding sample index page"
 ## Common mail settings
 
 ~~~
-#sed -i '/end$/i \\n  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
-sed -i '/end$/i \\n  config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys' config/application.rb
+#sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
+sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys' config/application.rb
+
+# devise
+sed -i '/mailer_sender/c \  config.mailer_sender =
+Rails.application.secrets.default_mailer_sender' config/initializers/devise.rb
 ~~~
 
 ## Letter opener for development 
+
 ~~~
-echo -e 'gem "letter_opener", :group => :development' >> Gemfile
-sed -i '/end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
+sed -i '/group :development do/a  \
+  # open emails in browser\
+  gem "letter_opener"' Gemfile
+sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
 bundle && git add . && git commit -m "Letter opener to see emails in browser"
 ~~~
 
@@ -393,8 +283,9 @@ We need two environment variables: `MANDRILL_API_KEY` and `MAIL_INTERCEPTOR_EMAI
  in your *~/.bashrc* file with this `export MANDRILL_API_KEY=123123` and `export MAIL_INTERCEPTOR_EMAIL=you@youremail.com`
 
 ~~~
-echo "gem 'mandrill_dm'" >> Gemfile && bundle
-sed -i '/end$/i \\n  config.action_mailer.delivery_method = :mandrill' config/applications.rb
+echo '# sending emails
+gem "mandrill_dm"' >> Gemfile && bundle
+sed -i '/^  end$/i \\n    config.action_mailer.delivery_method = :mandrill' config/application.rb
 
 echo '# mandrill initializer
 require "yaml" # this is needed for Rails secrets
@@ -444,7 +335,8 @@ git add . && git commit -m "Adding sign signout path"
 
 ## Devise gem
 
-See blog post
+See blog post [devise-oauth-angular]({{ site.baseurl }}
+{% post_url 2015-12-20-devise-oauth-angular %})
 
 # Company scaffold with skipped unused files
 ~~~

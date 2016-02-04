@@ -171,18 +171,27 @@ driver.switch_to.frame driver.find_elements( :tag_name, 'iframe').last
 
 # XPath
 
-To parse some text, you can use nokogiri `data = Nokogiri::HTML(html_page)`
+You can check in [developer
+tools](http://stackoverflow.com/questions/22571267/how-to-verify-an-xpath-expression-in-chrome-developers-tool-or-firefoxs-firebug)
+with `$x('//*[po-my-button]')` in console, or with *CTRL+f* search in elements
+panel.
+In ruby you can parse some text with nokogiri `data = Nokogiri::HTML(html_page)`
 
 * [http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)
 * [usefull selectors](http://ejohn.org/blog/xpath-css-selectors)
 
-* find by id  `//*[@id='my_id']`
+* find by id  `//*[@id='my_id']` (note that it needs quotes inside
+  squarebrackets
 * by class `//*a[contains(@class,'my_class')]`
 * text `//*[contains(text(),'ABC')]`
 * parrent `../`
 * some child of this `.//`
 * to get text without child nodes, call `text()` in xpath 
   `page.search('//h1/text()').text`
+* get [input by
+  label](http://stackoverflow.com/questions/34712495/protractor-select-a-form-element-using-label)
+  `var input = element(by.xpath("//label[. = '" + labelName +
+  "']/following-sibling::input"));`
 * find all text with @, check if they look like an email and join them [link](http://stackoverflow.com/questions/3655549/xpath-containstext-some-string-doesnt-work-when-used-with-node-with-more)
 
 ~~~

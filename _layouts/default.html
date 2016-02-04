@@ -7,6 +7,7 @@
       <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
       <meta name="viewport" content="width=device-width">
       <meta name="description" content="{{ site.description }}">
+      <link rel="shortcut icon" type="image/png" href="{{ site.baseurl }}/assets/favicon.png"/>
 
       <!-- Custom CSS -->
       <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/main.css">
@@ -78,10 +79,10 @@
           {% if site.tags.[cat].size != 1  %}
             <ul class="similar-links">
               <li>Look similar <b> {{ cat }}</b> tag:</li>
-              {% for p in site.tags.[cat] %}
-                {% unless p == page  %}
+              {% for p in site.tags[cat] %}
+                {% unless p.url == page.url  %}
                   <li>
-                    <a href="{{ p.url }}">{{ p.title }}</a>
+                    <a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a>
                   </li>
                 {% endunless %}
               {% endfor %}
