@@ -7,6 +7,13 @@ title: Check your wireless password, or someone could intrude ?
 
 Wireless is open to attack. Network can be interuppted any time.
 
+# Hardware
+
+
+~~~
+lspci -m
+~~~
+
 # Little neighbourd
 
 ~~~
