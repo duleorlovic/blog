@@ -88,3 +88,29 @@ class Matrix
   public :"[]=", :set_element, :set_component
 end
 ~~~
+
+[puts
+debugger](https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html)
+* print callstack `puts caller`
+* `p method(:my_method).source_location` to find method implementation
+* if `method` is implemented, we can unbind from kernel and rebind to request object
+
+~~~
+method = Kernel.instance_method(:method)
+p method.bind(request).call(:headers).source_location
+~~~
+
+* to list all methods that are called from `render`
+
+~~~
+def index
+  @users = User.all
+  tp = TracePoint.new(:call) do |x|
+    p x
+  end
+  tp.enable
+  render 'index'
+ensure
+  tp.disable
+end
+~~~

@@ -191,9 +191,10 @@ git add . && git commit -m "yo gulp-angular with coffescrip and Material"
 sed -i gulp/server.js -f - <<HERE_DOC
 /use strict/a var exec = require('child_process').exec;
 /function browserSyncInit(baseDir, browser) {/c \
-function browserSyncInit(baseDir, browser, port, open) {\n\
+function browserSyncInit(baseDir, browser, port, open, livereload) {\n\
   port = port === undefined ? '3000' : port;\n\
-  open = open === undefined ? false : open;
+  open = open === undefined ? false : open;\n\
+  var snippetOptions = livereload === true ? {} : { rule: { match: /xxx/ } };
 
 /routes: routes/i \    middleware: [\n\
       proxyMiddleware(["/api","/omniauth"], { target: "http://localhost:"+port }),\n\
@@ -203,13 +204,14 @@ function browserSyncInit(baseDir, browser, port, open) {\n\
     ui: {\n\
       port: 8080,\n\
     },\n\
-    open: open,
+    open: open,\n\
+    snippetOptions: snippetOptions,
 s/task('serve'/task('serve_original'/
 HERE_DOC
 cat >> gulp/server.js <<'HERE_DOC'
 gulp.task('serve', ['watch'], function () {
   // http://stackoverflow.com/questions/28538918/pass-parameter-to-gulp-task
-  var port, open, i;
+  var port, open, livereload, i;
   i = process.argv.indexOf("-p");
   if (i>-1) {
     port = process.argv[i+1];
@@ -220,7 +222,12 @@ gulp.task('serve', ['watch'], function () {
     open = true;
     console.log("Find parameter -o");
   }
-  browserSyncInit([path.join(conf.paths.tmp, '/serve'), conf.paths.src], undefined, port, open);
+  i = process.argv.indexOf("-l");
+  if (i>-1) {
+    livereload = true;
+    console.log("Find parameter -l");
+  }
+  browserSyncInit([path.join(conf.paths.tmp, '/serve'), conf.paths.src], undefined, port, open, livereload);
 
 gulp.task('rails', function() {
   exec("rails server");

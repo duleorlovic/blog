@@ -25,8 +25,10 @@ Some of angular attribute directives:
 Angular expressions can't have conditionals and loops, but have filters.
 
 
-`$scope.$watch('email', function() { $scope.test(); })` can be used to rerun validation check.
-Expressions in angular directives `<button ng-click="foo = 5">` are parsed and evaluated. `$parse()` takes expression and returns function which takes two arguments: context and locals (overrides).
+`$scope.$watch('email', function() { $scope.test(); })` can be used to rerun
+validation check.  Expressions in angular directives `<button ng-click="foo =
+5">` are parsed and evaluated. `$parse()` takes expression and returns function
+which takes two arguments: context and locals (overrides).
 
 ~~~
 $scope.foo = 3;
@@ -39,9 +41,17 @@ $scope.$eval(‘foo = 5’);
 $scope.foo; // returns 5
 ~~~
 
-You can check if some property `bar` on `foo` is not null: `$parse('bar.baz.quux')(foo)` will return undefined instead of throwing an exception.
+You can check if some property `bar` on `foo` is not null:
+`$parse('bar.baz.quux')(foo)` will return undefined instead of throwing an
+exception.
 
-* you can manually trigger digest with `.$apply("foo = 5")` (it calls `.$digest()` on the root scope which propagates down to every child scope).
+You can manually trigger digest with `$scope.$apply("foo = 5")` it calls
+`$rootScope.$digest()` which propagates down to every child scope
+[link](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$apply).
+With ControllerAs syntax, you need to inject `$scope` and can not use
+expression, but just empty `$scope.$apply()`. You can not call `$apply` in
+callbacks for `ng-mouseover` `ng-click`. It is usable in non angular callbacks
+`document.getElementById('b').addEventListener 'mouseover'`.
 
 # Filters: {{ " {{ data | filter:options" }} }}
 
@@ -125,6 +135,7 @@ angular.module('myApp')
 
 ## Services for creating objects: Value, Factory, Service, Provider, Constant
 
+* [egghead learn when to use a service, factory, or provider](https://egghead.io/playlists/learn-when-to-use-a-service-factory-or-provider-e2507e4b)
 * Value recipe, can't have other dependencies
 
 ~~~
@@ -393,7 +404,8 @@ angular.module 'myApp'
 
 # Constants
 
-Example usage of contstants. 
+Example usage of contstants.
+
 ~~~
 angular.module('starter')
   .constant( 'CONFIG', {
@@ -406,5 +418,48 @@ angular.module('starter')
   .run(function($rootScope, CONFIG) {
     $rootScope.CONFIG = CONFIG;
   });
+~~~
+
+# UI View
+
+[ui-router](https://github.com/angular-ui/ui-router) is nice but documentation 
+is not so simple, so here are examples:
+
+* [stateParams](https://github.com/angular-ui/ui-router/wiki/URL-Routing#stateparams-service)
+  can be defined with `:contactId` or `{contactId}`
+* query params are defined like `?contactId`
+* navigating with
+  [ui-sref](https://github.com/angular-ui/ui-router/wiki/Quick-Reference#ui-sref)
+  `ui-sref="stateName(param: value)"`
+* if you want to completely change the template with edit template, than wrap it
+
+~~~
+# show.html
+<ui-view>
+  My name is {{ name }}
+</ui-view>
+
+# edit.html
+<form>
+  <input name="name">
+</form>
+
+# my.router.coffee
+angular.module 'my'
+.config ($stateProvider) ->
+  $stateProvider
+    .state 'myAccount',
+      url: '/my-account'
+      templateUrl: 'show.html'
+      controller: 'MyController'
+      controllerAs: 'vm'
+      resolve:
+        myAccountInitialData: (myAccountInitialData) ->
+          myAccountInitialData()
+
+    .state 'myAccount.edit',
+      url: '/edit'
+      templateUrl: 'edit.html'
+      # no need to resolve here since this is inside MyController
 
 ~~~

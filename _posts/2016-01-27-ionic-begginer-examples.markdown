@@ -110,7 +110,8 @@ Host GPU**.
 You can see android device logs with grep (key with space does not work)
 
 ~~~
-adb -d logcat | grep 'Web Console'
+adb -d logcat | grep 'Web Console' # -d is for device only
+adb logcat | grep 'chromium\|Web Console' # new androids use chromium
 adb install -r platforms/android/build/outputs/apk/android-debug.apk
 ~~~
 
@@ -160,7 +161,7 @@ ionic state save
 * ui-router can add `resolve: { auth: function($auth) { return
   $auth.validateUser() } }`, it will hang if user is not logged in. In ionic
   screens are nested states so it will be blank page. Better is to use
-  completelly different state and resole auth on abstract tabs.
+  completelly different state and resolve auth on abstract tabs
 * ui-router for subpages should be on same level as page, since we render them
   on whole `<ion-nav-view>`
 * [rack-cors](https://github.com/cyu/rack-cors) use all actions `[:get, :post,
