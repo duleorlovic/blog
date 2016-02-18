@@ -3,7 +3,8 @@ title: duleorlovic - web developer
 email: dusan.orlovic@trk-inovacije.com
 description: "I am writing here some toughts during my work in Ruby on Rails, Javascript and other"
 github_url: http://duleorlovic.github.io
-baseurl: /blog
+# baseurl is needed for github pages
+# baseurl: /blog
 twitter_username: duleorlovic
 github_username:  duleorlovic
 

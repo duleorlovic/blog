@@ -37,7 +37,10 @@ Very usefull shortcuts to activate certain windows.
   `xdotool search --classname main_editor windowactivate` in *Alt+M* shortcut.
   I'm using ALT+HJKL; with *class_hjkl;*
 
-# Shortcuts for keys
+Look at my
+[window_shortcuts](https://github.com/duleorlovic/config/blob/master/bashrc/window_shortcuts.sh)
+
+# Shortcuts for key mappings
 
 To scroll in terminal window, instead `shift+page_up` we can [bind to key](http://askubuntu.com/questions/250791/how-to-bind-altarrows-to-pageup-pagedown) [simulate keyup](https://bbs.archlinux.org/viewtopic.php?id=136265).
   [xbindkeys](https://wiki.archlinux.org/index.php/Xbindkeys)
@@ -45,28 +48,9 @@ To scroll in terminal window, instead `shift+page_up` we can [bind to key](http:
  I usually map vim shortcuts *CTRL+* , so for terminal winodws I use *ALT+*.
   There are already two ALT [bash shortcut](http://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/) *Alt+F* *Alt+B* to move cursor one word (use capitalize F to not open File menu) (CTRL version move by one character) .
 
-Look at [my config]()
+Look my
+[xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
 
-Steps: 
-
-~~~
-xbindkeys -d > ~/.xbindkeysrc # create default configuration file ~/.xbindkeysrc
-xbindkeys_show # to test configuration file
-xbindkeys-config # gui
-xbindkeys -k # too see command for your key combination
-xbindkeys -v -n # to run in non deamon mode and print log
-
-xmacrorec2 # press esc and than your keys and esc
-xmacroplay :0 < key.txt # to play
-
-cat > ~/.xbindkeysrc <<HERE_DOC
-#-*- shell-script -*-
-
-"echo -e 'KeyStrRelease F6\nKeyStrPress a\nKeyStrRelease a' | xmacroplay :0"
-  F6
-
-HERE_DOC
-~~~
 
 # Bash
 
