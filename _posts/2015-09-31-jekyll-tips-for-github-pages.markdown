@@ -46,7 +46,8 @@ all closing brackets are simply rendered)
 
 Since github pages serve your project under subfolder `username.github.io/project-name`
 you need to use special [config variable](http://jekyllrb.com/docs/configuration/) `baseurl`.
-Add to your `_config.yml` a line `baseurl: /blog`
+Add to your `_config.yml` a line `baseurl: /blog`. This is not needed if you use
+custom domain like [blog.trk.in.rs](blog.trk.in.rs)
 
 To properly serve your assets and link your pages you need to prepend all links with *site.baseurl*. For example in markdown `![My picture]({{ "{{site.baseurl" }}}}/assets/my_picture.png)` or `<link rel="stylesheet" href="{{ "{{site.baseurl" }}}}/assets/css/main.css">` or `<a class="post-link" href="{{ "{{ post.url | prepend: site.baseurl " }} }}">{{ "{{ post.title " }} }}</a>`
 
