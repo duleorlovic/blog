@@ -219,4 +219,8 @@ Examples
 
 * to see all keys of `myObj` you can use `Object.keys(myObj)`
 * alert object with `alert(JSON.stringify(myObj))`
+* if you want to break array each than you can use
+  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break than you can use [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break))
 
+* [bower](http://bower.io) `bower list` `bower install packageName` `bower
+  uninstall packageName`

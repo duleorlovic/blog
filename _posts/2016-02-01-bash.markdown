@@ -64,6 +64,7 @@ Look my
 * escape single quote `'` in linux scripts with `$'Hello I\'m here'` [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo "@reboot /home/orlovic/my.sh") | crontab -`
+* repeat last command with sudo `sudo !!`
 
 * DDNS
   * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
