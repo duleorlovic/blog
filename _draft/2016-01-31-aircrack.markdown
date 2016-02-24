@@ -9,10 +9,17 @@ Wireless is open to attack. Network can be interuppted any time.
 
 # Hardware
 
-
 ~~~
 lspci -m
 ~~~
+
+Best is supported some of [this](http://www.wirelesshack.org/top-kali-linux-compatible-usb-adapters-dongles-2015.html)
+
+* AR9271
+* RT3070
+* RT3572
+* RTL8187L
+
 
 # Little neighbourd
 
