@@ -16,16 +16,6 @@ It is easier to follow callstack if we don't use anonymous function. On other ha
 There is a angular factory for resource [angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource). For example application search [saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
 
 
-# Coffeescript
-
-* no need `;` at the end of line
-* block {...} is replaced with `->` and proper indend (two spaces) or could be inline
-* parantheses (...) in one line can be ommited, in multiple lines they need
-* object definition {...} braces can be ommited, name/value pairs could be on new lines (if object is only argument than parentheses can be ommited)
-* No need to write return command. Since last line is returning, put empty
-  `return` in angular constructor functions
-* [try coffeescript](http://coffeescript.org/) and convertor [js2coffe](http://js2.coffee/)
-
 # JSON
 
 Response status codes:

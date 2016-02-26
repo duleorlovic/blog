@@ -224,3 +224,31 @@ Examples
 
 * [bower](http://bower.io) `bower list` `bower install packageName` `bower
   uninstall packageName`
+
+
+# Coffeescript
+
+* [try coffeescript](http://coffeescript.org/) and convertor
+  [js2coffe](http://js2.coffee/)
+* no need `;` at the end of line
+* block {...} is replaced with `->` and proper indend (two spaces) or could be
+  inline
+* parantheses (...) in one line can be ommited, in multiple lines they need
+* object definition {...} braces can be ommited, name/value pairs could be on
+  new lines (if object is only argument than parentheses can be ommited)
+* No need to write return command. Since last line is returning, put empty
+  `return` in angular constructor functions
+* [loops](http://coffeescript.org/#loops) are simiral to ruby, and it's
+  better than angular `forEach` since we can `break` from the loop
+* [fat arrow =>](http://coffeescript.org/#fat-arrow) allow to `this` in callback
+  functions
+
+  ~~~
+  Account = (customer, cart) ->
+    @customer = customer
+    @cart = cart
+
+    $('.shopping_cart').on 'click', (event) =>
+      @customer.purchase @cart
+  ~~~
+
