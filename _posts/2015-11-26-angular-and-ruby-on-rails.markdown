@@ -16,16 +16,6 @@ It is easier to follow callstack if we don't use anonymous function. On other ha
 There is a angular factory for resource [angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource). For example application search [saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
 
 
-# Coffeescript
-
-* no need `;` at the end of line
-* block {...} is replaced with `->` and proper indend (two spaces) or could be inline
-* parantheses (...) in one line can be ommited, in multiple lines they need
-* object definition {...} braces can be ommited, name/value pairs could be on new lines (if object is only argument than parentheses can be ommited)
-* No need to write return command. Since last line is returning, put empty
-  `return` in angular constructor functions
-* [try coffeescript](http://coffeescript.org/) and convertor [js2coffe](http://js2.coffee/)
-
 # JSON
 
 Response status codes:
@@ -83,15 +73,31 @@ Tutorial videos (first are free) [egghead](https://egghead.io/technologies/angul
 
 # Example apps for Angular Rails:
 
-* [RADD](https://github.com/jesalg/RADD): custom session with devise, api docs are generated [rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation)
-* [flapper-news](https://github.com/duleorlovic/flapper-news) [thinkster](https://thinkster.io/angular-rails) [angular-devise](https://github.com/cloudspace/angular_devise)
-* [lunch_hub](https://github.com/jasonswett/lunch_hub) [post](https://www.airpair.com/ruby-on-rails/posts/authentication-with-angularjs-and-ruby-on-rails)
+* [RADD](https://github.com/jesalg/RADD): custom session with devise, api docs
+  are generated
+  [rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation)
+* [flapper-news](https://github.com/duleorlovic/flapper-news)
+  [thinkster](https://thinkster.io/angular-rails)
+  [angular-devise](https://github.com/cloudspace/angular_devise)
+* [lunch_hub](https://github.com/jasonswett/lunch_hub)
+  [post](https://www.airpair.com/ruby-on-rails/posts/authentication-with-angularjs-and-ruby-on-rails)
   [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth), grunt
-* [todo-rails4-angularjs](https://github.com/mkwiatkowski/todo-rails4-angularjs) [shellycloud](https://shellycloud.com/blog/2013/10/how-to-integrate-angularjs-with-rails-4) turbolinks, html auth
-* [receta](https://github.com/davetron5000/receta) [angular-rails](http://angular-rails.com/) CRUD (no auth), TDD, angular-flash
-* [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) [devise-token-auth-demo](https://github.com/lynndylanhurley/devise_token_auth_demo) devise-token-auth `cd ng-token-auth/test && bower install` update `config/default.yml` so `API_URL='//devise-token-auth-demo.dev:3000'` and run `gulp dev` and go to http://localhost:7777/. In another window `cd devise_token_auth_demo && bundle && rails s`
-
-[ng-token-auth](https://github.com/search?utf8=%E2%9C%93&q=ng-token-auth&type=Code&ref=searchresults) is used more than [angular-rails]https://github.com/lynndylanhurley/ng-token-auth.git/) is used more than angular-rails. On server use gem [devise_token_auth](https://github.com/lynndylanhurley/devise_token_auth), run application with `gulp dev` and run [demo server](https://github.com/lynndylanhurley/devise_token_auth_demo.git).
+* [todo-rails4-angularjs](https://github.com/mkwiatkowski/todo-rails4-angularjs)
+  [shellycloud](https://shellycloud.com/blog/2013/10/how-to-integrate-angularjs-with-rails-4)
+  turbolinks, html auth
+* [receta](https://github.com/davetron5000/receta)
+  [angular-rails](http://angular-rails.com/) CRUD (no auth), TDD, angular-flash
+* [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth)
+  [devise-token-auth-demo](https://github.com/lynndylanhurley/devise_token_auth_demo)
+  devise-token-auth `cd ng-token-auth/test && bower install` update
+  `config/default.yml` so `API_URL='//devise-token-auth-demo.dev:3000'` and run
+  `gulp dev` and go to [localhost:7777](http://localhost:7777). In another
+  window `cd devise_token_auth_demo && bundle && rails s`.
+  [ng-token-auth](https://github.com/search?utf8=%E2%9C%93&q=ng-token-auth&type=Code&ref=searchresults)
+  is used ~2.5K times. On server use gem
+  [devise_token_auth](https://github.com/lynndylanhurley/devise_token_auth), run
+  application with `gulp dev` and run [demo
+  server](https://github.com/lynndylanhurley/devise_token_auth_demo.git).
 
 * for start from scratch using ng-token-auth look at
 
@@ -189,11 +195,11 @@ yo gulp-angular myappAngular # don't --default
 git add . && git commit -m "yo gulp-angular with coffescrip and Material"
 # config proxy for /api and /omniauth, add params -p and -o
 sed -i gulp/server.js -f - <<HERE_DOC
-/use strict/a var exec = require('child_process').exec;
 /function browserSyncInit(baseDir, browser) {/c \
-function browserSyncInit(baseDir, browser, port, open) {\n\
+function browserSyncInit(baseDir, browser, port, open, livereload) {\n\
   port = port === undefined ? '3000' : port;\n\
-  open = open === undefined ? false : open;
+  open = open === undefined ? false : open;\n\
+  var snippetOptions = livereload === true ? {} : { rule: { match: /xxx/ } };
 
 /routes: routes/i \    middleware: [\n\
       proxyMiddleware(["/api","/omniauth"], { target: "http://localhost:"+port }),\n\
@@ -203,13 +209,14 @@ function browserSyncInit(baseDir, browser, port, open) {\n\
     ui: {\n\
       port: 8080,\n\
     },\n\
-    open: open,
+    open: open,\n\
+    snippetOptions: snippetOptions,
 s/task('serve'/task('serve_original'/
 HERE_DOC
 cat >> gulp/server.js <<'HERE_DOC'
 gulp.task('serve', ['watch'], function () {
   // http://stackoverflow.com/questions/28538918/pass-parameter-to-gulp-task
-  var port, open, i;
+  var port, open, livereload, i;
   i = process.argv.indexOf("-p");
   if (i>-1) {
     port = process.argv[i+1];
@@ -220,12 +227,13 @@ gulp.task('serve', ['watch'], function () {
     open = true;
     console.log("Find parameter -o");
   }
-  browserSyncInit([path.join(conf.paths.tmp, '/serve'), conf.paths.src], undefined, port, open);
-
-gulp.task('rails', function() {
-  exec("rails server");
+  i = process.argv.indexOf("-l");
+  if (i>-1) {
+    livereload = true;
+    console.log("Find parameter -l");
+  }
+  browserSyncInit([path.join(conf.paths.tmp, '/serve'), conf.paths.src], undefined, port, open, livereload);
 });
-gulp.task('serve:rails', ['rails', 'serve']);
 HERE_DOC
 git add . && git commit -m "Config middleware to 3000 or -p param"
 

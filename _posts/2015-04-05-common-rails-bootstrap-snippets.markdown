@@ -18,11 +18,21 @@ Or you can use `cat > filename << HERE_DOC ... some lines with ' or " ... HERE_D
 append *home* after that line (beside insert before `i`, this could be `a`
 append and `c` change matched line). Multiple lines need to have `\` at the end of line (multiline *echo ' ...'* does not need that trailing backslash). You can use `sed -i "// a" file.txt` but then you need `\n\` at the end of each line. Remember that no char (even space) could be after last `\`.
 
-`sed '$aTEXT_AT_END` where `$` (or `"\$a"` if `"` is used) match last line, `a`
-is append. Some commands accept address `3,6aTEXT`
+Most common usage is to add before some line, for example line begins with
+`test`. If you need really need `'` for example `'a'` than you can replace it
+with `'"'a'"'`. If you need `\"` than put `\\"` so backslash survive bash
+command.
+
+~~~
+sed -i config/secrets.yml -e '/^test:/i \
+  # aws s3\
+  aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>'
+~~~
+
+You can append on line numbers `3,6aTEXT` or at the last line `sed
+'$aTEXT_AT_END` (last line is `$` or `"\$"` if `"` is used)
 
 `sed 's/find/replace/g` will replace word `find` with `replace`.
-
 
 Brackets need to be escaped like `\(`, `\1` means first group, `&` means matched
 text...
@@ -139,20 +149,71 @@ bundle
 git commit -am "Adding useful development & production gems"
 ~~~
 
+~~~
+# initial scale on mobile devices
+sed -i app/views/layouts/application.html.erb -e '/title/a \
+  <meta name="viewport" content="width=device-width, initial-scale=1">'
+
+# allow development access from remote
+sed -i config/environments/development.rb -e '/^end/i \
+  # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
+  config.web_console.whiny_requests = false'
+~~~
+
 # Front-end
 
-## Adding flash
+## Adding flash (both from server and client)
+
+You can use [text-center](http://getbootstrap.com/css/#type-alignment) bootstrap
+helper (ie `text-align: center;`). Also the collors 
 
 ~~~
-sed -i '/yield/c \
-  <% flash.each do |key, value| -%>\
-    <div class="flash-<%= key %>"><%= value %></div>\
-  <% end %>\
+sed -i app/views/layouts/application.html.erb -e '/yield/c \
+  <div class="text-center">\
+    <span class="notice text-success" id="notice"></span>\
+    <span class="alert text-danger" id="alert"></span>\
+  </div>\
+  <script>\
+    <%=raw "flash_notice('"'#{j notice}'"');" if notice %>\
+    <%=raw "flash_notice('"'#{j alert}'"');" if alert %>\
+  </script>\
 \
   <article>\
     <%= yield %>\
-  </article>\
-' app/views/layouts/application.html.erb
+  </article>'
+
+cat > app/assets/javascripts/main.js.erb << 'HERE_DOC'
+var FLASH_LETTER_STEP = 5;
+var FLASH_DURATION = 5000;
+function flash_appear($element, message, i) {
+  if (i == undefined)
+    i = 0;
+  $element.text(message.substring(0,i));
+  setTimeout(function(){ 
+    if (i<message.length)
+      flash_appear($element,message,i+1);
+  }, FLASH_LETTER_STEP);
+}
+function flash_dissapear($element, message, i) {
+  if (message == undefined)
+    message = $element.text();
+  if (i == undefined)
+    i = message.length-1;
+  $element.text(message.substring(0,i));
+  setTimeout(function(){ 
+    if (i>0)
+      flash_dissapear($element,message,i-1);
+  }, FLASH_LETTER_STEP);
+}
+function flash_alert(message) {
+  flash_appear($('#alert'),message);
+  setTimeout(function(){ flash_dissapear($('#alert')); }, FLASH_DURATION);
+}
+function flash_notice(message) {
+  flash_appear($('#notice'),message);
+  setTimeout(function(){ flash_dissapear($('#notice')); }, FLASH_DURATION);
+}
+HERE_DOC
 git add . && git commit -m "Adding flash to layout"
 ~~~
 
@@ -193,6 +254,7 @@ echo '
 @import "bootstrap-sprockets";
 @import "bootstrap";
 ' > app/assets/stylesheets/application.scss
+git add app/assets/stylesheets/application.scss
 git rm app/assets/stylesheets/application.css
 sed -i '/jquery_ujs/a \
 //= require bootstrap-sprockets' app/assets/javascripts/application.js
@@ -210,7 +272,7 @@ For various ways of integrating Angular look at
 ~~~
 echo -e '# export keys in your .profile file
 development: &default
-  secret_key_base: <%= ENV["SECRET_KEY_BASE"] # rake secret %>
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
   # sending emails
   mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
   mail_interceptor_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
@@ -348,17 +410,111 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 
 # Carrierwave for uploading
 
-You should set up your AWS keys in *~/.bashrc* `export AWS_ACCESS_KEY_ID=123123` and `export AWS_SECRET_ACCESS_KEY=123123`. Bucket should be created as standard USA bucket. You can use single table field for multiple files (field type json) but than you need postgres database, we will keep it simple.
+## Store on server
 
 ~~~
-echo -e "gem 'carrierwave'\\ngem 'fog'" >> Gemfile && bundle
+cat >> Gemfile << HERE_DOC
+gem 'carrierwave'
+gem 'fog'
+HERE_DOC
+bundle
 rails generate uploader Document
+# we need just one field type string to store file url
 rails g migration add_document_to_companies document:string
-sed -i '/class Company/a \  mount_uploader :document, DocumentUploader'  app/models/company.rb
 rake db:migrate
+sed -i '/class Company/a \  mount_uploader :document, DocumentUploader'  app/models/company.rb
 git add . && git commit -m "Adding carrierwave gem, document uploader and mount on company"
+~~~
 
+Replace `f.text_field :document` with `f.file_field :document` in your form. In
+view you can use `company.document.url`.
+You can use single table field for multiple files (field type json) but
+than you need postgres database.
 
+## Store on AWS S3
+
+For [Amazon
+S3](https://github.com/carrierwaveuploader/carrierwave#using-amazon-s3) you need
+to set up your AWS keys in *~/.bashrc* `export AWS_ACCESS_KEY_ID=123123` and
+`export AWS_SECRET_ACCESS_KEY=123123`. Bucket should be created as standard USA
+bucket.
+
+~~~
+cat > config/initializers/carrierwave.rb << 'HERE_DOC'
+# https://github.com/jnicklas/carrierwave#using-amazon-s3
+CarrierWave.configure do |config|
+  config.fog_credentials = {
+    :provider               => 'AWS',
+    :aws_access_key_id      => Rails.application.secrets.aws_access_key_id,
+    :aws_secret_access_key  => Rails.application.secrets.aws_secret_access_key,
+    :region                 => Rails.application.secrets.aws_region # us-east-1
+  }
+  config.fog_directory  = Rails.application.secrets.aws_bucket_name
+end
+HERE_DOC
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # aws s3\
+  aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>\
+  aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>\
+  aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>\
+  aws_region: <%= ENV["AWS_REGION"] || "us-east-1" %>\n'
+
+sed -i app/uploaders/document_uploader.rb -e '/storage :file/r \
+  # storage :file\
+  storage :fog'
+
+git add . && git commit -m "Configure AWS S3"
+~~~
+
+## Store directly on AWS S3 and upload the key to the server
+
+You can put the `direct_upload_form_for` on any page, let's use show:
+
+~~~
+cat >> Gemfile << HERE_DOC
+# direct upload to S3
+gem 'carrierwave_direct'
+HERE_DOC
+bundle
+
+sed -i app/uploaders/document_uploader.rb -e '/DocumentUploader/a \
+  include CarrierWaveDirect::Uploader'
+
+sed -i app/uploaders/document_uploader.rb -e '/store_dir/c \
+  # we do not use store_dir because of dirrect carrierwave\
+  def store_dir_origin'
+
+cat >> app/views/companies/show.html.erb << 'HERE_DOC'
+<%= direct_upload_form_for @uploader do |f| %>
+  <%= f.file_field :document %>
+  <%= f.submit %>
+<% end %>
+HERE_DOC
+
+sed -i app/controllers/companies_controller.rb -e '/def show/a \
+   # @uploader = @company.document # do not use old since key will remain\
+   @uploader = DocumentUploader.new\
+   # default key is /uploads/<unique_guid>/foo.png\
+   # you can change, but use ONLY ONE folder ie "1/2/a.txt" -> "2/a.txt"\
+   # it always adds prefix "uploads" so it does not need to be written\
+   @uploader.key = "uploads/#{@company.id}-#{request.ip}/${filename}"\
+   @uploader.success_action_redirect = company_url(@company)\
+   if params[:key]\
+     @company.document.key = params[:key]\
+     @company.save!\
+     # we need to reload since old key is there\
+     @company = Company.find(@company.id)\
+     # or to redirect\
+     redirect_to company_path(@company)\
+   end\
+   # you can call @company.remove_document! to remove from aws, but please\
+   # reload after that with @company = Company.find(@company.id)'
+
+sed -i config/initializers/carrierwave.rb -e '/^end/i \
+  # max_file_size is not originally on carrierwave, but is added on CWDirect\
+  # if file is greater than allowed than error is from Amazon EntityTooLarge\
+  config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
 ~~~
 
 # Heroku deploy

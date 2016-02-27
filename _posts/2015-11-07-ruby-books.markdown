@@ -139,7 +139,6 @@ but `M` is a class or module since it has nested items.
 Proc are objects that can be called (executed) `p = proc { puts 1 };p.call`
 
 Variables and scope
-
 Ruby define scope of variable using its name, precisely, first char:
 
   * `$` global `$FIRST_NAME` available on every scope
@@ -224,3 +223,28 @@ end
 * `defined? a` is operator that can say if variable is defined.
 * `ruby -e 'p Kernel.private_instance_methods.sort'` prints all usefull script
   commands (require, load, raise)
+* `puts caller` to print callstack
+* `p method(:my_method).source_location` to find method implementation
+* if `method` is overwritten in some class, we can unbind from kernel and
+  rebind to request object
+  [link](https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html)
+
+  ~~~
+  method = Kernel.instance_method(:method)
+  p method.bind(request).call(:headers).source_location
+  ~~~
+
+* to list all methods that are called from `render`
+
+  ~~~
+  def index
+    @users = User.all
+    tp = TracePoint.new(:call) do |x|
+      p x
+    end
+    tp.enable
+    render 'index'
+  ensure
+    tp.disable
+  end
+  ~~~

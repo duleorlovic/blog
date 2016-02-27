@@ -3,10 +3,14 @@ layout: post
 title: Vim
 ---
 
-VIM
-===
+# My Vimrc
 
-* install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting plugins:
+Good starting poing for **.vimrc** is  <http://vim.wikia.com/wiki/Example_vimrc>
+You can find my <https://github.com/duleorlovic/config/blob/master/.vimrc>
+
+# Plugins
+
+Install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting plugins:
 
 ~~~
 mkdir -p ~/.vim/autoload ~/.vim/bundle && \
@@ -41,96 +45,6 @@ git clone git@github.com:Valloric/YouCompleteMe.git && cd YouCompleteMe && ./ins
 # annoying O char waiting next input
 git clone git://github.com/Townk/vim-autoclose # add closing `) } "`, in visual `<Leader>a(`
 ~~~
-
-* **.vimrc** should be copied from  <http://vim.wikia.com/wiki/Example_vimrc> with this addidional lines
-
-~~~
-" override this from http://vim.wikia.com/wiki/Example_vimrc
-set cmdheight=1  " 2 is overly
-set number! " unset number
-
-"custom 
-execute pathogen#infect()
-" to save history between vim session
-set history=1000
-" grep current word
-nnoremap gr :grep <cword> * -I -R --exclude-dir={log,spec,public,features,tmp,vendor,assets,db}<CR>
-" grep yanked word
-nnoremap gy :grep "<c-r>"" * --exclude-dir={log,public,tmp,vendor} -R -I<CR>
-" to clear search - stop highlight press <Ctrl-l> redraws the screen and removes any search highlighting.
-set hlsearch
-" this is for tab completion , to stop cycle press CTRL+E than tab
-set wildmode=longest,list,full
-" search selected text, press // while in visual mode
-vnorem // y/<c-r>"<cr>
-" change paste toggle key to F12 since F11 is maximize
-set pastetoggle=<F12>
-" using leader (default is '\') to save file 
-noremap <Leader>w :w<CR>
-
-" some tips from https://github.com/thoughtbot/dotfiles/blob/master/vimrc
-set autowrite " Automatically write before running commands
-
-" Display extra whitespace
-set list listchars=tab:»·,trail:·,nbsp:·
-
-" Switch between the last two files
-nnoremap <leader><leader> <c-^>
-
-" Get off my lawn
-" For linux shell you can use: CTRL+ p n a e b f
-" or set -o vi, and ESC, than move as usuall: b w e ^ $
-" for chromium use vimium plugin
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
-
-" RSpec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-
-" Quicker window movement
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-
-" closetag.vim should recognize erb files as well
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.html.erb"
-
-" Make it so that a curly brace automatically inserts an indented line
-" https://stackoverflow.com/questions/4768088/automatic-new-line-and-indentation-in-vim-when-inside-braces/4961270#4961270
-inoremap {<CR> {<CR>}<Esc>O<BS><Tab>
-
-" http://vim.wikia.com/wiki/Saving_a_file
-noremap <Leader>s :update<CR>
-noremap <Leader>q :q<CR>
-"map <Esc><Esc> :w<CR> this move to insert move when I press up down arrows
-
-nmap <c-s> :w<CR>
-vmap <c-s> <Esc><c-s>gv
-imap <c-s> <Esc><c-s>
-
-nmap <F2> :update<CR>
-vmap <F2> <Esc><F2>gv
-" does not work in PASTE mode
-imap <F2> <c-o><F2>
-
-" https://robots.thoughtbot.com/wrap-existing-text-at-80-characters-in-vim
-" reformat with gq
-set textwidth=80
-set colorcolumn=+1
-
-" ctrlp
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_working_path_mode = 'wa' " check working directory with :pwd, or change with :cd (global) :lcd (window local)
-" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard'] " this has problem with unknown .git/
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-~~~
-
 
 * start explorer Netrw
 
@@ -178,7 +92,7 @@ Inside netrw:
 * `R` rename file/directory under cursor
 * `D` delete file/directory under cursor
 
-## Running ruby in vim and show in separate window
+# Running ruby in vim and show in separate window
 
 [link](http://vim.wikia.com/wiki/Preview_output_from_interpreter_in_new_window)
 Press `F7` to run selected or all code. Shift + F7 close the window.
@@ -205,7 +119,7 @@ map <silent> <S-F7> <C-W>l:bw<CR>
 imap <silent> <S-F7> <Esc><S-F7>a
 ~~~
 
-## Show ruby return values
+# Show ruby return values on each line in vim
 
 Install [seeing_is_believing](https://github.com/JoshCheek/seeing_is_believing) with `gem install seeing_is_believing` and add plugin `cd ~/.vim/bundle && git clone https://github.com/hwartig/vim-seeing-is-believing` and add mappins:
 `F4` mark, `F5` run (not in visual) and `enter` mark and run (not in insert mode)
@@ -227,168 +141,82 @@ augroup seeingIsBelievingSettings
 augroup END
 ~~~
 
-## Usefull commands
+# Usefull commands
 
 * [quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
 * [tutorial](http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html)
 * `CTRL+B` == `^B`
-
-  * `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
-  * `H` `M` `L` move to the top/middle/bottom of the window
-  * `ciw` hange inner word, `caw` including spaces, `ca]` change all inside brackets including [ ]
-  * `dt ` delete until the space, `df ` delete until the space including space
-  * `va'` visually select all inside ' including '
-  * `cgn` change visually selected text using previous search
-  * `:edit .` (short `:e.`) opens (`:vsp`) splits netrw of folder,
-    `:Explore`(short `:E`) `:Vex` of current editing file, `%` create new file
-    in current directory
-  * `gv` to select previous selected visual area
-  * `+` and `-` move on the first letter up and down, { and } move on paragraph
-  * `dap}p` switch two paragraph
-  * Repeat last colon command  @:  and @@
-  * :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
-  * `Ctrl+p`  # in insert mode is completing the string
-  * dE # removes to the End of the string
-  * daw removes the inner word
-  * yy
-  * :%s/old/new/gc
-  * mA then 'A jump there (downcase letter a can jump only on current buffer), :marks gives the jump location, '' is jump back, '. jump to last change
-  * :tabe file  open file in new tab, gt switch between tabs
-  * :vsp #1  vertically split window with file #1
-  * :on or Ctrl+W+o #closes all windord except current
-  * :buffers, :b1, :bun closes the buffer
-  * q: shows history of commands
-  * q/ shows history of searches
-  * 5G or :5 goes to the line 5
-  * gg goes top, G goes bottom
-  * g, and g; jump to next/prev change on current buffer
-  * :args app/*/*  to add all files to arg list
-  * :argdo %s/foo/bar/ge | update   replace in all arg
-  * find /home/bruno/old-friends -type f -exec sed -i 's/ugly/beautiful/g' {} \;
-  * CTRL+^ (shift+6) jump to previous buffer  
-  * :set tabstop=2 shiftwidth=2 expandtab # set configuration
-  * retab # this will actually reformat all source
-  * `"+y` copy visual selection to system clipboard, ubuntu should run `sudo apt-get install vim-gtk`
-  * `vit` inner or `vat` outer visual select tag, jump with `o` more on `:help visual-operators` `:help v_it`
-  * :help Ctrl-W_T open current buffer in new tab
-  * `%y+` copy all lines to clipboard
-  * `:nnoremap _ f_x~` find next _, remove and uppercase
-    [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
-    for moving underscore to CamelCase
-  * `gq` in visual mode will format text to 80 char lines
+* `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
+* `H` `M` `L` move to the top/middle/bottom of the window
+* `ciw` hange inner word, `caw` including spaces, `ca]` change all inside brackets including [ ]
+* `dt ` delete until the space, `df ` delete until the space including space
+* `va'` visually select all inside ' including '
+* `cgn` change visually selected text using previous search
+* `:edit .` (short `:e.`) opens (`:vsp`) splits netrw of folder,
+  `:Explore`(short `:E`) `:Vex` of current editing file, `%` create new file
+  in current directory
+* `gv` to select previous selected visual area
+* `+` and `-` move on the first letter up and down, { and } move on paragraph
+* `dap}p` switch two paragraph
+* Repeat last colon command  @:  and @@
+* :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
+* `Ctrl+p`  # in insert mode is completing the string
+* dE # removes to the End of the string
+* daw removes the inner word
+* yy
+* :%s/old/new/gc
+* mA then 'A jump there (downcase letter a can jump only on current buffer), :marks gives the jump location, '' is jump back, '. jump to last change
+* :tabe file  open file in new tab, gt switch between tabs
+* :vsp #1  vertically split window with file #1
+* :on or Ctrl+W+o #closes all windord except current
+* :buffers, :b1, :bun closes the buffer
+* q: shows history of commands
+* q/ shows history of searches
+* 5G or :5 goes to the line 5
+* gg goes top, G goes bottom
+* g, and g; jump to next/prev change on current buffer
+* :args app/*/*  to add all files to arg list
+* :argdo %s/foo/bar/ge | update   replace in all arg
+* find /home/bruno/old-friends -type f -exec sed -i 's/ugly/beautiful/g' {} \;
+* CTRL+^ (shift+6) jump to previous buffer  
+* :set tabstop=2 shiftwidth=2 expandtab # set configuration
+* retab # this will actually reformat all source
+* `"+y` copy visual selection to system clipboard, ubuntu should run `sudo apt-get install vim-gtk`
+* `vit` inner or `vat` outer visual select tag, jump with `o` more on `:help visual-operators` `:help v_it`
+* :help Ctrl-W_T open current buffer in new tab
+* `%y+` copy all lines to clipboard
+* `:nnoremap _ f_x~` find next _, remove and uppercase
+  [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
+  for moving underscore to CamelCase
+* `gq` in visual mode will format text to 80 char lines (good for markdown)
 
 * using vim inside irb or rails console with gem [interactive_editor](https://github.com/jberkel/interactive_editor). Its usefull since you can paste only limited number of chars to irb line. Now you can write your input data in file/ruby code and insert byebug/debuger/pry in rails code, and start hunting for bugs 
 
 * videos
-** https://www.youtube.com/watch?v=5r6yzFEXajQ
+* <https://www.youtube.com/watch?v=5r6yzFEXajQ>
 
-## Syntastic checker
+# Syntastic checker
 
-[syntastic](https://github.com/scrooloose/syntastic) vim plugin is great to 
-write your code. Just need to install external syntac checkers. `SyntasticInfo` 
-will give you current checkers.
+[syntastic](https://github.com/scrooloose/syntastic) vim plugin is great to
+write your code. Just need to install external syntac checkers and they will be
+eabled. `SyntasticInfo` can give you current checkers.
 
-~~~
-" .vimrc
-" https://github.com/scrooloose/syntastic#3-recommended-settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-set statusline+=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+Here is my configuration for syntastic and vim
+<https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim>
+You need to install this tools:
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_loc_list_height = 2
+* Markdown `gem install mdl`
+* Ruby, Rails `gem install rubocop`. Define quiet messages in
+  [.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
+  in $HOME or project root, or inline in comment `# rubocop:disable
+  Metrics/AbcSize, Metrics/MethodLength` or in `syntastic.vim`
+  [g:syntastic_eruby_ruby_quiet_message]()
+* Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
+* json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)
 
-" let g:syntastic_debug = 1 " help syntastic_debug
-~~~
-
-### Markdown
-
-~~~
-gem install mdl # for markdown
-~~~
-
-### Ruby, Rails
-
-* `gem install rubocop`
-
-~~~
-" .vimrc
-let g:syntastic_ruby_checkers = ['rubocop','mri']
-
-let g:syntastic_eruby_ruby_quiet_messages =
-    \ {'regex': 'possibly useless use of a variable in void context'}
-
-" define quiet messages in .rubocop.yml in $HOME or project root
-" or in comment # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-# or here in .vimrc
-
-let g:syntastic_ruby_rubocop_quiet_messages =
-    \ {'regex': [
-    \ 'Missing top-level class documentation comment.',
-    \ 'Avoid comma after the last item of an array.',
-    \ 'Avoid comma after the last item of a hash',
-    \ "Prefer single-quoted strings when you don't need string interpolation or special symbols.",
-    \ ]}
-
-" https://github.com/bbatsov/rubocop/issues/2162
-let g:syntastic_ruby_rubocop_args = '--force-exclusion --display-cop-names'
-~~~
-
-~~~
-# ~/.rubocop.yml
-# https://github.com/bbatsov/rubocop/blob/master/config/default.yml
-AllCops:
-  Exclude:
-    - config/unicorn.rb
-    - db/**
-    - /home/orlovic/.rvm/**/*
-  RunRailsCops: true
-
-Style/Documentation:
-  Enabled: false
-
-Style/TrailingComma:
-  Enabled: false
-
-Style/StringLiterals:
-  Enabled: false
-
-Rails/Output:
-  Enabled: false
-
-Metrics/AbcSize:
-  Max: 20 # default was 15
-
-Metrics/MethodLength:
-  Max: 15 # default was 10
-~~~
-
-## Javascript, Angular
-
-* `npm install -g jscs`
-
-~~~
-// .jscs
-{
-  preset: "airbnb",
-}
-~~~
-
-~~~
-// .jscsrc npm install jscs-angular
-{
-  "plugins": ["jscs-angular"]
-}
-~~~
-
-* json `npm install -g jsonlint` [hack](https://github.com/jaxbot/syntastic-react/issues/4)
-
-~~~
-" .vimrc
-au BufRead,BufNewFile *.json set filetype=json
-let g:syntastic_json_checkers=['jsonlint']
-~~~
+  ~~~
+  " .vimrc
+  au BufRead,BufNewFile *.json set filetype=json
+  let g:syntastic_json_checkers=['jsonlint']
+  ~~~
+* coffeescript `npm install -g coffeelint`

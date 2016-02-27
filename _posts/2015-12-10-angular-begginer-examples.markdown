@@ -12,12 +12,17 @@ Some of angular attribute directives:
   usually defined in routes for specific template
 * `ng-repeat="product in store.products"` iteration of this element (you can 
   use also `ng-if="$even"`, or `$index` variables)
-* `ng-show="product.CanPurchase", ng-hide="expession"`, `ng-disabled="mySwitch"` to show/hide/disable element
-* `<img ng-src="{{ "{{ product.image" }}}}">` to prevent browser to load empty src, this is only place where directive use {{ "{{" }} }}
+* `ng-show="product.CanPurchase"`,`ng-hide="expession"`, `ng-disabled="mySwitch"`
+  to show/hide/disable element. In contrast, `ng-if` adds new scope or totally
+  removes DOM element.
+* `<img ng-src="{{ "{{ product.image" }}}}">` to prevent browser to load empty
+  src, this is only place where directive use {{ "{{" }} }}
 * `ng-click=" tab = 2 "` to run a code on click
-* `ng-class="{ active: tab === 1 }"` set class to key when value is true (good to have `ng-init="tab = 0"`)
+* `ng-class="{ active: tab === 1 }"` set class to key when value is true (good
+  to have `ng-init="tab = 0"`)
 * `ng-model="review.terms"` bind value of current input element to variable
-* `ng-bind="review.terms"` bind innerHTML of this element to the variable (can be expression)
+* `ng-bind="review.terms"` bind innerHTML of this element to the variable (can
+  be expression)
 * `ng-submit="reviewCtrl.addReview(product)"` call function on submit
 * `ng-include="'product-title.html'"` include template
 * `ng-view` is placeholder where routes inject templates
@@ -25,8 +30,16 @@ Some of angular attribute directives:
 Angular expressions can't have conditionals and loops, but have filters.
 
 
-`$scope.$watch('email', function() { $scope.test(); })` can be used to rerun validation check.
-Expressions in angular directives `<button ng-click="foo = 5">` are parsed and evaluated. `$parse()` takes expression and returns function which takes two arguments: context and locals (overrides).
+`$scope.$watch('email', function() { $scope.test(); })` can be used to rerun
+validation check.
+[watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) first argument
+(string or function) is evalued on each digest and second argument (callback
+listener) is called when a returning value of first argument is changed (for
+array, use length).
+
+Expressions in angular directives `<button ng-click="foo = 5">` are parsed and
+evaluated. `$parse()` takes expression and returns function which takes two
+arguments: context and locals (overrides).
 
 ~~~
 $scope.foo = 3;
@@ -39,9 +52,18 @@ $scope.$eval(‘foo = 5’);
 $scope.foo; // returns 5
 ~~~
 
-You can check if some property `bar` on `foo` is not null: `$parse('bar.baz.quux')(foo)` will return undefined instead of throwing an exception.
+You can check if some property `bar` on `foo` is not null:
+`$parse('bar.baz.quux')(foo)` will return undefined instead of throwing an
+exception.
 
-* you can manually trigger digest with `.$apply("foo = 5")` (it calls `.$digest()` on the root scope which propagates down to every child scope).
+You can manually trigger digest with `$scope.$apply("foo = 5")` it calls
+`$rootScope.$digest()` which propagates down to every child scope
+[link](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$apply).
+With ControllerAs syntax, you need to inject `$scope` and can not use
+expression, but just empty `$scope.$apply()`. You can not call `$apply` in
+callbacks for `ng-mouseover` `ng-click` since digest is in progress. It is
+usable in non angular callbacks `document.getElementById('b').addEventListener
+'mouseover'`.
 
 # Filters: {{ " {{ data | filter:options" }} }}
 
@@ -125,146 +147,108 @@ angular.module('myApp')
 
 ## Services for creating objects: Value, Factory, Service, Provider, Constant
 
+* [egghead learn when to use a service, factory, or provider](https://egghead.io/playlists/learn-when-to-use-a-service-factory-or-provider-e2507e4b)
 * Value recipe, can't have other dependencies
 
-~~~
-var myApp = angular.module('myApp', []);
-myApp.value('clientId', 'a12345654321x');
-~~~
+  ~~~
+  var myApp = angular.module('myApp', []);
+  myApp.value('clientId', 'a12345654321x');
+  ~~~
 
-* Factory recipe use other services, is a function and lazy initialized. It returns object.
+* Factory recipe use other services, is a function and lazy initialized. It
+  returns object
 
-~~~
-myApp.factory('apiToken', ['clientId', function apiTokenFactory(clientId) {
-  var encrypt = function(data1, data2) {
-    // NSA-proof encryption algorithm:
-    return (data1 + ':' + data2).toUpperCase();
-  };
-
-  var secret = window.localStorage.getItem('myApp.secret');
-  var apiToken = encrypt(clientId, secret);
-
-  return apiToken;
-}]);
-# factory
-angular.module('myApp',['myServices']);
-angular.module('myServices')
-.factory('sport', function() { 
-  return {
-    title: "Kayak"
-  }
-});
-# factory that use ngResource provider
-angular.module('myServices',['ngResource'])
-  .factory('Phone', ['$resource', function($resource) {
-    return $resource('phones/:phoneId', { phoneId: "@id", format: 'json' }, {
-      query: {method: 'GET', params: { phoneId: 'phones' }, isArray: true },
-      save:  { method: 'PUT' },
-      create: { method: 'POST' }
-    });
-  }]);
-~~~
-
-* new service can be added with `.factory` which returns `new SomeFun(arg)` or with `.service` function. Service methods are defined as properties of `this`. Service just use $injector to create new instance of service's contructor function.
-
-~~~
-function factory(name, factoryFn) { 
-    return provider(name, { $get: factoryFn }); 
-}
-
-function service(name, constructor) {
-    return factory(name, ['$injector', function($injector) {
-      return $injector.instantiate(constructor);
+  ~~~
+  # factory
+  angular.module('myApp',['myServices']);
+  angular.module('myServices')
+  .factory('sport', function() { 
+    return {
+      title: "Kayak"
+    }
+  });
+  # factory that use ngResource provider
+  angular.module('myServices',['ngResource'])
+    .factory('Phone', ['$resource', function($resource) {
+      return $resource('phones/:phoneId', { phoneId: "@id", format: 'json' }, {
+        query: {method: 'GET', params: { phoneId: 'phones' }, isArray: true },
+        save:  { method: 'PUT' },
+        create: { method: 'POST' }
+      });
     }]);
-}
-~~~
+  ~~~
 
-~~~
-function UnicornLauncher(apiToken) {
+* service can be added with `.factory` which returns `new SomeFun(arg)`, but
+  it's shorter with `.service` function. Service methods are defined as
+  properties of `this`.  Service just use $injector to create new instance of
+  service's contructor function.
 
-  this.launchedCount = 0;
-  this.launch = function() {
-    this.launchedCount++;
+  ~~~
+  function UnicornLauncher(apiToken) {
+
+    this.launchedCount = 0;
+    this.launch = function() {
+      this.launchedCount++;
+    }
   }
-}
-myApp.factory('unicornLauncher', ["apiToken", function(apiToken) {
-  return new UnicornLauncher(apiToken);
-}]);
-// or
-myApp.service('unicornLauncher', ["apiToken", UnicornLauncher]);
-~~~
+  myApp.factory('unicornLauncher', ["apiToken", function(apiToken) {
+    return new UnicornLauncher(apiToken);
+  }]);
+  // or
+  myApp.service('unicornLauncher', ["apiToken", UnicornLauncher]);
+  ~~~
 
 Factory has more flexibility since they can return functions which can be `new`ed.
+
+
+* Provider is broader factory, it returns object with a `$get` method that is a
+  factory function.  Provider can be configured. For provider name
+  `unicornLauncher` angular registers `unicornLauncher` and
+  `unicornLauncherProvider` injectables.
+
+  ~~~
+  myApp.provider('unicornLauncher', function UnicornLauncherProvider_name_not_important() {
+    var useTinfoilShielding = false;
+
+    this.useTinfoilShielding = function(value) {
+      useTinfoilShielding = !!value;
+    };
+
+    this.$get = ["apiToken", function unicornLauncherFactory(apiToken) {
+      return new UnicornLauncher(apiToken, useTinfoilShielding);
+    }];
+  });
+
+  myApp.config(["unicornLauncherProvider", function(unicornLauncherProvider) {
+    unicornLauncherProvider.useTinfoilShielding(true);
+  }]);
+  ~~~
 
 * [$resource](https://docs.angularjs.org/api/ngResource/service/$resource) by default `save` is POST, so we need to change for rails PUT, and add `create`. Factories need to return object. That object is bindable in all places where we use `Phone` factory.
   It can be used like `$scope.phone = Phone.get({ phoneId: $routeParams.phoneId }); $scope.phones = Phone.query();`
 
-* Provider is custom type with a `$get` method that is a factory function. Provider can be configured. For provider name `unicornLauncher` angular registers `unicornLauncher` and `unicornLauncherProvider` injectables.
+* Constant recipe can create value that is available in both config and run
+  phase. Best example is to hard code values.
 
-~~~
-myApp.provider('unicornLauncher', function UnicornLauncherProvider_name_not_important() {
-  var useTinfoilShielding = false;
-
-  this.useTinfoilShielding = function(value) {
-    useTinfoilShielding = !!value;
-  };
-
-  this.$get = ["apiToken", function unicornLauncherFactory(apiToken) {
-    return new UnicornLauncher(apiToken, useTinfoilShielding);
-  }];
-});
-
-myApp.config(["unicornLauncherProvider", function(unicornLauncherProvider) {
-  unicornLauncherProvider.useTinfoilShielding(true);
-}]);
-~~~
-
-## Constants
-
-Constant recipe can create value that is available in both config and run phase
-
-~~~
-myApp.constant('planetName', 'Greasy Giant');
-myApp.config(['unicornLauncherProvider', 'planetName', function(unicornLauncherProvider, planetName) {
-  unicornLauncherProvider.useTinfoilShielding(true);
-}]);
-~~~
-
-~~~
-.constant('CONFIG', {
-  USER_ROLES: {
-    ALL: '*',
-    ADMIN: 'admin',
-    EDITOR: 'editor',
-    GUEST: 'guest',
-  },
-})
-
-# in index.run.js add those two dependencies and $rootScope.CONFIG = CONFIG
-# in html use $root.CONFIG.USER_ROLES.ADMIN
-~~~
-
-# Angular routes
-
-`angular-route` is separated package and need to be added as module dependency and configured. `config` needs Providers (factory for service that will be configured) for example `$routeProvider` and `run` or `controller` needs service for example `$route`
-
-~~~
-angular.module('myApp',[ 'ngRoute', 'myAppControllers' ])
-.config(function($routeProvider, $locationProvider){
-  $routeProvider
-  .when('/phones/:id', {
-    templateUrl: 'details.html',
-    controller: 'PhoneDetailCtrl',
-  })
-  .when('/phones', {
-    templateUrl: 'list.html',
-    controller: 'PhoneListCtrl',
-  })
-  .otherwise({redirectTo: '/phones'});
-});
-~~~
-
-It is used with directive `<ng-view></ng-view>` which is replaced with given template.
+  ~~~
+  angular.module('starter')
+    .constant( 'CONFIG', {
+      SERVER_URL: 'http://192.168.3.2:3001',
+      S3UPLOAD: {
+        BUCKET: 'duleorlovic-test1',
+        API_URL: '/api/v1/s3_access_token',
+      },
+      USER_ROLES: {
+        ADMIN: 'admin',
+        EDITOR: 'editor',
+        GUEST: 'guest',
+      },
+    });
+    .run(['CONFIG','$rootScope',function(CONFIG, $rootScope) { 
+      // in html use $root.CONFIG.USER_ROLES.ADMIN
+      $rootScope.CONFIG = CONFIG
+    }])
+  ~~~
 
 # RootScope
 
@@ -274,16 +258,16 @@ It is used with directive `<ng-view></ng-view>` which is replaced with given tem
 # Share error messages
 
 For form name *myForm* we can check `myForm.$valid` for all fields that we put
-validation with `required` property on input elements (form can have `novalidate`
-attribute to prevent browser default behavior, or we can use `ng-required="true"`). Also fields have internal
-properties: `$dirty` (user has interacted), `$valid`, `$invalid` and`$pristine`
-(has not interacted with field yet).
-To show client side errors, you can use [ng-messages](https://docs.angularjs.org/api/ngMessages) instead of dealing with `ng-show`.
-Some example validations are: `ng-minlength=5` `ng-maxlength=20` `ng-required="true"`.
-We can share messages with `ng-messages-include`, but that somehow does not work
-well.
-There are also errors from server (`resp.errors` or `resp.data.errors`).
-Button is disabled until form is valid.
+validation with `required` property on input elements (form can have
+`novalidate` attribute to prevent browser default behavior, or we can use
+`ng-required="true"`). Also fields have internal properties: `$dirty` (user has
+interacted), `$valid`, `$invalid` and`$pristine` (has not interacted with field
+yet).  To show client side errors, you can use
+[ng-messages](https://docs.angularjs.org/api/ngMessages) instead of dealing with
+`ng-show`.  Some example validations are: `ng-minlength=5` `ng-maxlength=20`
+`ng-required="true"`.  We can share messages with `ng-messages-include`, but
+that somehow does not work well.  There are also errors from server
+(`resp.errors` or `resp.data.errors`).  Button is disabled until form is valid.
 
 ~~~
 <form name="editMenuItemForm" ng-submit="update(vm.email,editMenuItemForm)">
@@ -391,20 +375,76 @@ angular.module 'myApp'
           scope.$apply attrs.ngReallyReject
 ~~~
 
-# Constants
+# UI View, Angular route, ui-router
 
-Example usage of contstants. 
-~~~
-angular.module('starter')
-  .constant( 'CONFIG', {
-    SERVER_URL: 'http://192.168.3.2:3001',
-    S3UPLOAD: {
-      BUCKET: 'duleorlovic-test1',
-      API_URL: '/api/v1/s3_access_token',
-    }
-  });
-  .run(function($rootScope, CONFIG) {
-    $rootScope.CONFIG = CONFIG;
-  });
+`angular-route` is separated package and need to be added as module dependency
+and configured. `config` needs Providers (factory for service that will be
+configured) for example `$routeProvider` and `run` or `controller` needs service
+for example `$route`
 
 ~~~
+angular.module('myApp',[ 'ngRoute', 'myAppControllers' ])
+.config(function($routeProvider, $locationProvider){
+  $routeProvider
+  .when('/phones/:id', {
+    templateUrl: 'details.html',
+    controller: 'PhoneDetailCtrl',
+  })
+  .when('/phones', {
+    templateUrl: 'list.html',
+    controller: 'PhoneListCtrl',
+  })
+  .otherwise({redirectTo: '/phones'});
+});
+~~~
+
+It is used with directive `<ng-view></ng-view>` which is replaced with given
+template.
+
+
+[ui-router](https://github.com/angular-ui/ui-router) is nice but documentation 
+is not so simple, so here are examples:
+
+* [stateParams](https://github.com/angular-ui/ui-router/wiki/URL-Routing#stateparams-service)
+  can be defined with `:contactId` or `{contactId}`
+* query params are defined like `?contactId`
+* navigating with
+  [ui-sref](https://github.com/angular-ui/ui-router/wiki/Quick-Reference#ui-sref)
+  `ui-sref="admin.menu_items({staurantId: restaurant.id})"`
+* if you want to completely change the template with edit template, than wrap it
+
+~~~
+# show.html
+<ui-view>
+  My name is {{ name }}
+</ui-view>
+
+# edit.html
+<form>
+  <input name="name">
+</form>
+
+# my.router.coffee
+angular.module 'my'
+.config ($stateProvider) ->
+  $stateProvider
+    .state 'myAccount',
+      url: '/my-account'
+      templateUrl: 'show.html'
+      controller: 'MyController'
+      controllerAs: 'vm'
+      resolve:
+        myAccountInitialData: (myAccountInitialData) ->
+          myAccountInitialData()
+
+    .state 'myAccount.edit',
+      url: '/edit'
+      templateUrl: 'edit.html'
+      # no need to resolve here since this is inside MyController
+~~~
+
+# Batarang
+
+[egghead batarang](https://egghead.io/lessons/angularjs-angularjs-batarang).
+Just select element and in console type `$scope.vm.name = 'dule';$scope.apply()`
+

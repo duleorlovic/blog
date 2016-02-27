@@ -201,3 +201,8 @@ Just copy and paste `search.json` and other snippets from [Simple-Jekyll-Search]
 # Markdown
 
 * [table](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#tables) can be generated with `|header1|header2`
+* url can be written like
+`<http://projektor.trk.in.rs>`
+(`http://` at the beggining is
+mandatory) instead of writting it twice
+`[http://projektor.trk.in.rs](http://projektor.trk.in.rs)`
