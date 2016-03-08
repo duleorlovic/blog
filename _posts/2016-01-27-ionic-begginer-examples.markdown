@@ -119,7 +119,8 @@ Some version of node have problem starting emulator, so you can start manually
 `emulator @n4 &`
 
 Generate
-[icons](http://ionicframework.com/blog/automating-icons-and-splash-screens/)
+[icons](http://ionicframework.com/blog/automating-icons-and-splash-screens/) with `ionic resources`
+
 # Installing Android ADB
 
 For `INSTALL_FAILED_OLDER_SDK` you need to lower sdk version requirement.
@@ -157,6 +158,29 @@ adb install -r platforms/android/build/outputs/apk/android-debug.apk
 
 * Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES], Fix remove old
   application.
+
+# Deploy production
+
+If you don't have a key, you should generate and always use that. If app is
+already installed on a phone with different keys, user can not update it (he
+needs to remove the app and than install again).
+
+~~~
+keytool -genkey -v -keystore ~/config/keys/my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+~~~
+
+You should remove all unnecessary stuff for [publishing](http://ionicframework.com/docs/guide/publishing.html).
+
+~~~
+cordova build --release android
+# this will generate platforms/android/build/outputs/apk/android-release-unsigned.apk
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ~/config/keys/my-release-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk alias_name # this change the file inline
+zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk my_app.apk
+~~~
+
+You can use
+[ionic_publish](https://github.com/duleorlovic/config/blob/master/my_bashrc.sh)
+my bash function.
 
 
 # Old browsers
@@ -286,3 +310,8 @@ Or the best approach is to store all login state redirections in run
 ~~~
 
 ~~~
+
+Run MAC with those `-x -v -f acpi=off PCIRootUID=1 GraphicsEnabler=No `
+[link](http://www.tonymacx86.com/snow-leopard-desktop-support/65465-experiencing-kernel-panic-initial-boot.html)
+
+
