@@ -71,16 +71,38 @@ Access:
 
 * public methods can be called by anyone, all methods are public by default
   (except `initialize` which is private)
-* protected methods can be invoked by anyone, but only within context of methods
-  of defining class or its subclasses `a=A.new;a.protected_method` does not work
-  if the call is outside of instance methods, but we can extend the class and
-  than call it `class B<A;def
-  call_protected_method(a);a.protected_method;protected_method;end;end`
-  `B.new.call_protected_method(a)`
-* private methods can be called only for that object of defining class or
-  subclasses. `a.private_method` does not work, only exception is for
-  private writter methods `self.value=1` that can we called within context. It
-  works inside any method `class B<A;def p;priv_math;end;end`
+* protected methods can be invoked by anyone (explicit receiver), but only
+  within context of methods of defining class or its subclasses (at calling time
+  self is from same class hierarchy) `a=A.new;a.protected_method` does not work
+  if the call is outside of instance-method for A, but we can extend the class
+  and than call it `class B<A;def call_protected_method_for_a_and_self(a);
+  a.protected_method;protected_method;end;end`
+  `B.new.call_protected_method_for_a_and_self(a)`. Protected is like private but
+  caller (self) and receiver object are from same class inheritance.
+* private methods can be called only for that object in defining class or
+  subclasses. Can not be called with explicit receiver: `a.private_method` does
+  not work, only exception is that you can call private writter method with
+  explicit receiver as long as the receiver is exactly the self `self.value=1`.
+  So private methods can be called inside any method of descendand class `class
+  B<A;def p;private_method_from_A;end;end`. Note that top-level methods are
+  private instance method of Object class. Thats why thay can be easily called
+  in bareword style (no explicit receiver).
+
+
+Methods:
+
+* top-level methods (outside of any definition block) are private to all objects
+* instance-method in class `class C;def m;self;end;end;` self is instance of C
+* instance-method in module `module M;def m;end;end;` self is object extended by
+  M or instance of class that mixes in M
+* singleton method on specific object `def obj.m;self;end` self is that obj
+* class definition `class C;puts self;def self.class_method;self;end;end` self
+  in both class definition (singleton on class object) and class method is class
+  object
+* module definition is the same as class definition
+
+When you call `some_method` it is called on current self `self.some_method`.
+Only place where you need self is assignment `self.some_identifier = 1`.
 
 `load "filename.rb"` includes that resource every time method is executed (like
 copy paste code), but `require` only once and only when needed. `ruby -e 'puts
@@ -116,20 +138,43 @@ but `M` is a class or module since it has nested items.
 
 Proc are objects that can be called (executed) `p = proc { puts 1 };p.call`
 
+Variables and scope
 Ruby define scope of variable using its name, precisely, first char:
 
-  * `$` global `$FIRST_NAME`
+  * `$` global `$FIRST_NAME` available on every scope
   * `@` instance `@first_name`
-  * `[a-z]|_` local `first_name`
+  * `[a-z]|_` local `first_name` in every definition block: proc, loop, def ...
+    end, class ... end, module ... end, and is reset on each call
   * `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and
     `self` which is global maintaned by interpreter). Constant can be changed
     (with warning) so you can include one file several times. Object that
-    constant reffers can be changed freely.
+    constant reffers can be changed freely. Constant has global reachability
+    when you know the chain of nested definition `C::M::X`, aboslute path is
+    `::String`
+  * `@@` class variable `@@class_variable` are shared only between class and all
+    instances of that class. Instance variable for class object are not
+    available in instances of class so can not be shared between instances :(
+    also globals and constants can be changed everywhere so that's bad too.
+    It can be used in class definition, class methods and instance methods. It
+    is shared with all ancestor classes so better is to store data at class
+    object instance and create attr_accessor for that.
 
-`defined?` is operator that can say if variable is defined. Global are
-accessible everywhere, local only inside proc, loop, def ... end, class ... end,
-module ... end. But procedure local objects share the same scope with parent.
-That way we can create something similar to closures to simulate classes.
+Every method call create its own local scope. Roby does some preprocessing
+compile time where it recognizes all local variables (class @@x instance @x and
+global $x are recognized by their appearance)
+
+~~~
+if false
+  x = 1
+end
+puts x # x is created but not assigned
+puts y # Fatal error: y is unknown
+~~~
+
+In recursion, self is the same but
+scope is generated each time. But procedure local objects share the same scope
+with parent. That way we can create something similar to closures to simulate
+classes.
 
 ~~~
 ruby> def box
@@ -164,8 +209,7 @@ class Matrix
 end
 ~~~
 
-* `echo "puts RbConfig::CONFIG['sitedir']" | ruby - | xargs ls -R` will show all
-  C extensions (.so files). Use `CONFIG["site_ruby"]` to list libraries.
+#loops
 
 # Keywords
 
@@ -173,6 +217,12 @@ end
 * `ruby -e "class C;end;puts C.ancestors" # [C, Object, Kernel, BasicObject]`
   shows mixed in modules `Kernel` and superclases
 * `C.public_method_defined? 'my_method'` to chech if method is defined
+* `echo "puts RbConfig::CONFIG['sitedir']" | ruby - | xargs ls -R` will show all
+  C extensions (.so files). Use `CONFIG["site_ruby"]` to list libraries.
+* global variables `$0` filename, `$:` or `$LOAD_PATH` paths, `$$` processID
+* `defined? a` is operator that can say if variable is defined.
+* `ruby -e 'p Kernel.private_instance_methods.sort'` prints all usefull script
+  commands (require, load, raise)
 * `puts caller` to print callstack
 * `p method(:my_method).source_location` to find method implementation
 * if `method` is overwritten in some class, we can unbind from kernel and
