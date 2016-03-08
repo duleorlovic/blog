@@ -188,7 +188,7 @@ I use `$log` for logging objects, for example `$log.debug loginController: 'subm
 
 ~~~
 # than creating angular client side
-npm install generator-gulp-angular
+npm install -g yo generator-gulp-angular
 mkdir client && cd $_
 yo gulp-angular myappAngular # don't --default
 # choose coffe cript and Angular material

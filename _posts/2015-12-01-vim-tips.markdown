@@ -34,6 +34,7 @@ git clone git://github.com/tpope/vim-repeat.git # repeat some plugin commands
 git clone https://github.com/tpope/vim-unimpaired.git # [l ]q [a ]<space>
 git clone https://github.com/ctrlpvim/ctrlp.vim.git # <c-p> <c-j> <c-k> <c-f> <c-b> <c-v>
 git clone https://github.com/othree/html5.vim # html5 indent correct
+git clone git://github.com/digitaltoad/vim-pug.git # jade syntax highlight
 # update with for b in `ls`;do echo $b;cd $b; git pull; cd -;done
 ~~~
 
