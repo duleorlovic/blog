@@ -15,6 +15,21 @@ It is easier to follow callstack if we don't use anonymous function. On other ha
 
 There is a angular factory for resource [angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource). For example application search [saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
 
+~~~
+# src/app/resources/notify.interceptor.coffee
+angular.module 'menucards.resources'
+  .factory 'notifyInterceptor', (toastr, $q) ->
+    afterResponseError: (rejection, resourceConstructor, context) ->
+      message = JSON.stringify rejection.data
+      toastr.error message
+      $q.reject(rejection)
+# 
+angular.module 'menucards.resources'
+  .factory 'Cart', (railsResourceFactory, railsSerializer, CONFIG, notifyInterceptor) ->
+    railsResourceFactory
+      interceptors: [notifyInterceptor]
+~~~
+
 
 # JSON
 
@@ -335,50 +350,8 @@ heroku open
 # git add . && git commit --amend --no-edit && git push heroku -f > o 2>&1 && heroku run bash -c 'ls public'
 ~~~
 
-To run on linux/windows, install git and nodejs, clone repository to `air`, than run in command prompt `cd air` `npm install` `npm install -g gulp` `gulp serve`
+To run on linux/windows, install git (Use Git from the Windows Command Prompt)
+and nodejs.  Run in windows command line cmd: `npm install -g gulp` and `npm
+install` and `gulp serve`
 
-
-https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec
-
-https://scotch.io/tutorials/token-based-authentication-for-angularjs-and-laravel-apps
-Task://www.sitepoint.com/implementing-authentication-angular-applications/
-
-http://tylermcginnis.com/angularjs-factory-vs-service-vs-provider/
-
-https://www.youtube.com/watch?v=A494WFSi6HU
-://www.sitepoint.com/implementing-authentication-angular-applications/
-
-https://www.youtube.com/watch?v=q8ausBZTrxU
-https://www.youtube.com/watch?v=SvL_aZt3zyU
-https://www.youtube.com/watch?v=qTNGtpfxPtg
-
-
-rails generate teaspoon:install --coffee
-
-~~~
-# spec/javascripts/spec_helper.coffee
-#= require support/bind-poly
-#= require application
-#= require angular-mocks/angular-mocks
-~~~
-
-~~~
-# Bowerfile
-asset "angular-mocks"
-~~~
-
-
-rails generate teaspoon:install --coffee
-
-~~~
-# spec/javascripts/spec_helper.coffee
-#= require support/bind-poly
-#= require application
-#= require angular-mocks/angular-mocks
-~~~
-
-~~~
-# Bowerfile
-asset "angular-mocks"
-~~~
-
+If you want to completely split front end code, than use some [Gulp tasks]({% post_url 2016-03-02-gulp-tasks %})

@@ -37,6 +37,8 @@ Very usefull shortcuts to activate certain windows.
   `xdotool search --classname main_editor windowactivate` in *Alt+M* shortcut.
   I'm using ALT+HJKL; with *class_hjkl;*
 
+![mapping hjkl keys to activate window]({{ site.baseurl }}/assets/posts/mapping hjkl keys to activate window.png)
+![mapping workspace keys to hjkl]({{ site.baseurl }}/assets/posts/mapping_workspace_keys_to_hjkl.png 'mapping workspace keys to hjkl')
 Look at my
 [window_shortcuts](https://github.com/duleorlovic/config/blob/master/bashrc/window_shortcuts.sh)
 
@@ -68,3 +70,7 @@ Look my
 
 * DDNS
   * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
+* copy all files from folder (including hidden) `cp folder/. /some-other/ -r` Note .` after folder.
+* function and [default
+  parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
+  with `:-` syntax, example `echo first param is $(1:-not defined)`

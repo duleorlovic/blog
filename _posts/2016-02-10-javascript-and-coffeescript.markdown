@@ -225,6 +225,9 @@ Examples
 * [bower](http://bower.io) `bower list` `bower install packageName` `bower
   uninstall packageName`
 
+* to search file in google developer tools you can open console window (with
+  ESC) than on three dots, open dropdown menu and find *Search*
+
 
 # Coffeescript
 
@@ -239,7 +242,26 @@ Examples
 * No need to write return command. Since last line is returning, put empty
   `return` in angular constructor functions
 * [loops](http://coffeescript.org/#loops) are simiral to ruby, and it's
-  better than angular `forEach` since we can `break` from the loop
+  better than angular `forEach` since we can `break` from the loop. For example
+  find by objectId in array carts:
+
+  ~~~
+  service.findOrCreateCartForRestaurant = (restaurant) ->
+    resultCart = null
+    for cart in service.carts
+      if cart.restaurantId == restaurant.id
+        resultCart = cart
+        break
+    if !resultCart
+      resultCart =
+        restaurantId: restaurant.id
+        restaurantName: restaurant.name
+        total: 0
+        cartItems: []
+      service.carts.push resultCart
+    resultCart
+  ~~~
+
 * [fat arrow =>](http://coffeescript.org/#fat-arrow) allow to `this` in callback
   functions
 

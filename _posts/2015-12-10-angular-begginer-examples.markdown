@@ -401,6 +401,7 @@ angular.module('myApp',[ 'ngRoute', 'myAppControllers' ])
 It is used with directive `<ng-view></ng-view>` which is replaced with given
 template.
 
+# UI Router
 
 [ui-router](https://github.com/angular-ui/ui-router) is nice but documentation 
 is not so simple, so here are examples:
@@ -443,8 +444,58 @@ angular.module 'my'
       # no need to resolve here since this is inside MyController
 ~~~
 
+When you need double click to go to nested state, you are probably coverting
+that state with some other state
+[stackoverflow](http://stackoverflow.com/questions/25548798/angular-ui-router-having-to-click-twice-for-view-to-update-as-expected-with-d)
+So watch out the route resolution.
+
+* resolve initialData before new state is activated
+  [link](http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx)
+
+  ~~~
+  # src/app/my_account/myAccountInitialData.coffee
+  # http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx
+angular.module 'menucardsAngular'
+  .factory "myAccountInitialData", (Restaurant, $auth, $q) ->
+    ->
+      user =  $auth.validateUser()
+      $q.all([user]).then (results) ->
+        restaurant = Restaurant.query({}, { id: results[0].restaurant_id })
+        $q.all([restaurant]).then ( results ) ->
+          restaurant: results[0]
+
+  # src/app/my_account/myAccount.controller.coffee
+  angular.module 'menucardsAngular'
+    .controller 'MyAccountController', (myAccountInitialData, $log) ->
+      'ngInject'
+      $log.debug "MyAccountController"
+      vm = this
+      vm.restaurant = myAccountInitialData.restaurant
+      return
+
+  # src/app/my_account/myAccount.router.coffee
+  angular.module 'menucardsAngular'
+    .config ($stateProvider) ->
+      'ngInject'
+      $stateProvider
+        .state 'myAccount',
+          url: '/my-account'
+          templateUrl: 'app/my_account/myAccount.html'
+          controller: 'MyAccountController'
+          controllerAs: 'vm'
+          resolve:
+            myAccountInitialData: (myAccountInitialData) ->
+              myAccountInitialData()
+  ~~~
+
 # Batarang
 
 [egghead batarang](https://egghead.io/lessons/angularjs-angularjs-batarang).
 Just select element and in console type `$scope.vm.name = 'dule';$scope.apply()`
+
+Usually I define module `angular.module 'name', []` only in one place
+*src/app/index.module.coffee*
+
+Since some old deleted templates could remove stuff, I run with `gulp clean &&
+gulp serve --api localhost:3001 -l`
 

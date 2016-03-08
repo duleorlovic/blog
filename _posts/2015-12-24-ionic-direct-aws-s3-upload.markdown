@@ -8,44 +8,9 @@ This is interesting topic since we need to delve with angular and aws specifics.
 
 # AWS Bucket
 
-* create a bucket in USA **vide-uploading-demo**
+* create a bucket in USA **video-uploading-demo**
 * create user and download credentials
-* go to the user page and create inline
-  [policy](http://blogs.aws.amazon.com/security/post/Tx3VRSWZ6B3SHAV/Writing-IAM-Policies-How-to-grant-access-to-an-Amazon-S3-bucket)
-  for *Programmatic read and write permissions*
-  with name for example **full_access_to_video_uploading_demo** . Keep in mind that
-  underscore _ is not equal hyphen - .
-
-Carrierwave and paperclip need something more than put, get and delete, so I added `s3:*` below `"s3:DeleteObject"`.
-
-~~~
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::video-uploading-demo"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:DeleteObject",
-                "s3:*"
-            ],
-            "Resource": [
-                "arn:aws:s3:::video-uploading-demo/*"
-            ]
-        }
-    ]
-}
-~~~
+* go to the user page and create [inline policy]({% post_url 2016-02-29-amazon-aws-s3 %}) to give access to the bucket **video-uploading-demo**
 
 # Record image
 
