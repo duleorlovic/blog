@@ -4,49 +4,73 @@ title:  Postgresql Tricks for Statistics Graphs
 tags: ruby-on-rails postgresql
 ---
 
-Learning database is funny and easy, but when you want to do something 
+Learning database is funny and easy, but when you want to do something more
 complicated than `SELECT * FROM products` than you need to read documentation.
 
-If you want something more specific from *products* you need to use [7.2. Table Expressions](http://www.postgresql.org/docs/9.4/static/queries-table-expressions.html)
+If you want something more specific data from `products` table you need to use
+[7.2. Table
+Expressions](http://www.postgresql.org/docs/9.4/static/queries-table-expressions.html)
 that is:
 
-* `FROM products p INNER JOIN sales s ON p.id = s.product_id` where *p* and *s* are aliases.
-* after processing *FROM* clause, thie new virtual table is checked against search
-conditions *WHERE*, for example: `WHERE s.date > CURRENT_DATE - INTERVAL '4 weeks'`
-This filtering is done *before* processing with *GROUP BY* and *HAVING*
-* `GROUP BY product_id, p.name, p.price, p.cost` 
-and `HAVING sum(p.price * s.units) > 5000;`. If you group by primary key column than you can 
-*SELECT* any column, but if you group by non primary than you need some 
-[9.20. Aggregate Functions](http://www.postgresql.org/docs/9.4/static/functions-aggregate.html)
-since those columns can be merged.
+* `FROM products p INNER JOIN sales s ON p.id = s.product_id` where *p* and *s*
+  are aliases.
+* after processing *FROM* clause, thie new virtual table is checked against
+  search conditions *WHERE*, for example: `WHERE s.date > CURRENT_DATE -
+  INTERVAL '4 weeks'` This filtering is done *before* processing with *GROUP BY*
+  and *HAVING*
+* `GROUP BY product_id, p.name, p.price, p.cost` and `HAVING sum(p.price *
+  s.units) > 5000;`. If you group by primary key column than you can *SELECT*
+  any column, but if you group by non primary than you need some [9.20.
+  Aggregate
+  Functions](http://www.postgresql.org/docs/9.4/static/functions-aggregate.html)
+  since those columns can be merged.
 
-I found very interesting paragraph in [tutorial for aggregate functions](http://www.postgresql.org/docs/devel/static/tutorial-agg.html).
+I found very interesting paragraph in [tutorial for aggregate
+functions](http://www.postgresql.org/docs/devel/static/tutorial-agg.html).
 
->  It is important to understand the interaction between aggregates and SQL's WHERE and HAVING clauses. The fundamental difference between WHERE and HAVING is this: WHERE selects input rows before groups and aggregates are computed (thus, it controls which rows go into the aggregate computation), whereas HAVING selects group rows after groups and aggregates are computed. Thus, the WHERE clause must not contain aggregate functions; it makes no sense to try to use an aggregate to determine which rows will be inputs to the aggregates. On the other hand, the HAVING clause always contains aggregate functions. (Strictly speaking, you are allowed to write a HAVING clause that doesn't use aggregates, but it's seldom useful. The same condition could be used more efficiently at the WHERE stage.)
+>  It is important to understand the interaction between aggregates and SQL's
+>  WHERE and HAVING clauses. The fundamental difference between WHERE and HAVING
+>  is this: WHERE selects input rows before groups and aggregates are computed
+>  (thus, it controls which rows go into the aggregate computation), whereas
+>  HAVING selects group rows after groups and aggregates are computed. Thus, the
+>  WHERE clause must not contain aggregate functions; it makes no sense to try
+>  to use an aggregate to determine which rows will be inputs to the aggregates.
+>  On the other hand, the HAVING clause always contains aggregate functions.
+>  (Strictly speaking, you are allowed to write a HAVING clause that doesn't use
+>  aggregates, but it's seldom useful. The same condition could be used more
+>  efficiently at the WHERE stage.)
 >
-> ... This is more efficient than adding the restriction to HAVING, because we avoid doing the grouping and aggregate calculations for all rows that fail the WHERE check.
+> ... This is more efficient than adding the restriction to HAVING, because we
+> avoid doing the grouping and aggregate calculations for all rows that fail the
+> WHERE check.
 
-Next step is to learn something about [9.8. Data Type Formatting Functions](http://www.postgresql.org/docs/9.4/static/functions-formatting.html)
+Next step is to learn something about [9.8. Data Type Formatting
+Functions](http://www.postgresql.org/docs/9.4/static/functions-formatting.html)
 which you can use in grouping.
 
 Some tips:
 
-* if you want to avoid *Division by zero* you can use `CASE count(column_name) = 0 WHEN 0 THEN 1 ELSE count(column_name) END`.
-Another way is to use `COALESCE(NULLIF(column_name,0), 1)` . `NULLIF` is used to show nil, as division by nil is nil.
+* if you want to avoid *Division by zero* you can use `CASE count(column_name) =
+  0 WHEN 0 THEN 1 ELSE count(column_name) END`.  Another way is to use
+  `COALESCE(NULLIF(column_name,0), 1)` . `NULLIF` is used to show nil, as
+  division by nil is nil.
 
 Practical example in Ruby on Rails
 ============
 
 
-Complex queries can we written inside *database view*
-but that is not easy to maintain since you need migration file for each change. 
-Also *database view* is created in migration, so we don't have it with `rake db:setup`.
-You can get it with `rake db:migrate:reset` but this sometimes doesn't work if we used *ActiveRecord* in migration files
-and certainly later added some validations which (of-course) are not satisfied in the past (and this can be solved with
+Complex queries can be written inside *database view* but that is not easy to
+maintain since you need migration file for each change.  Also *database view* is
+created in migration, so we don't have it with `rake db:setup`.  You can get it
+with `rake db:migrate:reset` but this sometimes doesn't work if we used
+*ActiveRecord* in migration files and we later add some validations
+which (of-course) are not satisfied in the past (and this can be solved with
 `class Product<ActiveRecord::Base;end` in migration files).
 
-It's much easier to write long SQL query and use [F.15. hstore](http://www.postgresql.org/docs/devel/static/hstore.html) functions
-to simplify representations. You need to install hstore extension [link](https://gist.github.com/terryjray/3296171) for test and develop db:
+It's much easier to write long SQL query and use [F.15.
+hstore](http://www.postgresql.org/docs/devel/static/hstore.html) functions to
+simplify representations. You need to install hstore extension
+[link](https://gist.github.com/terryjray/3296171) for test and develop db:
 
 ~~~
 sudo psql -d myapp_development -U orlovic
@@ -245,4 +269,39 @@ render 'stats_line_graph'
   legendHolder.innerHTML = myNewChart.generateLegend();
 </script>
 ~~~
+
+# Theory
+
+<https://www.toptal.com/postgresql>
+Postgresql is better than NoSql because of:
+
+  * transactionality at system level
+  * aggregation functions
+  * joins across different tables
+
+NoSql has advantage of scaling (horizontal, a lot of new fields) and that you
+can store semistructured data (social networks)
+
+For full text search in Postgresql, you can use `@@` match operator `SELECT *
+FROM posts WHERE tsvector(title || ‘ ‘ || content) @@
+plainto_tsquery(‘query-string’);`
+
+High availability is implemented with redudant servers *hot standby* that copy
+data and accept only read only queries (only master can write data), and *warm
+standby* servers that only follow the changes made to primary server (does not
+accept queries) and wait to be promoted to primary server in case of master
+failure.
+
+<https://www.toptal.com/sql/interview-questions>
+
+* `UNION` (`UNION ALL`) merges two structurally compatible tables into single
+  table (with duplication)
+* `INNER JOIN` (`LEFT OUTER` `FULL` `CROSS`) returns rows that match both
+  tables (all rows from left table and matched rows from right, either left or
+  right ie union, cartesian product each by each row)
+* `SELECT count(*) WHERE cid <> '123'` will not count when cid is NULL
+* `is null` is proper way to check if `null = null` or `cid = null`
+* `WHERE cid NOT IN (SELECT wcid FROM t WHERE wcid IS NOT null)` we need to
+  check if null is in table since `NOT IN` will return empty set
+
 
