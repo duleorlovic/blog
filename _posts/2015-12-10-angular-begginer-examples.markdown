@@ -36,6 +36,19 @@ validation check.
 (string or function) is evalued on each digest and second argument (callback
 listener) is called when a returning value of first argument is changed (for
 array, use length).
+To use with `controllerAs` syntax you need to use bind
+
+~~~
+app.controller('Ctrl', function ($scope) {
+  this.name = 'name';
+
+  $scope.$watch(angular.bind(function () {
+    return this.title
+  }), function (oldVal, newVal) {
+
+  });
+});
+~~~
 
 Expressions in angular directives `<button ng-click="foo = 5">` are parsed and
 evaluated. `$parse()` takes expression and returns function which takes two
@@ -119,31 +132,33 @@ angular.module('myFilters',[])
 
 It can be used like `{{ "{{ phone.available | checkmark" }} }}`
 
-* two types of directives: element directive (UI widget) `<product-title></product-title>`
-  or attribute directive (mixins like tooltip) `<div product-title></div>`.
+* two types of directives: element directive (UI widget)
+  `<product-title></product-title>` or attribute directive (mixins like tooltip)
+  `<div product-title></div>`.
 
-~~~
-angular.module('myApp')
-  .directive('productTitle', function(){
-    return {
-      restict: 'E', // 'E' element, 'A' attribute (default), 'C' class
-      templateUrl: 'product-title.html',
+  ~~~
+  angular.module('myApp')
+    .directive('productTitle', function(){
+      return {
+        restict: 'E', // 'E' element, 'A' attribute (default), 'C' class
+        templateUrl: 'product-title.html',
+  
+        controller: function() {},
+        controllerAs: 'panel',
+      };
+    });
+    .directive('enter', function(scope, element, attrs){}
+      // default is 'A' so no need to write return {  link: function(){}
+      return function(scope,element, attrs) {
+        element.bind("mouseenter", function() {
+          scope.$apply(attrs.enter); # this will call argument string, ie some controller method
+        });
+      };
+    });
+  ~~~
 
-      controller: function() {},
-      controllerAs: 'panel',
-    };
-  });
-  .directive('enter', function(scope, element, attrs){}
-    // default is 'A' so no need to write return {  link: function(){}
-    return function(scope,element, attrs) {
-      element.bind("mouseenter", function() {
-        scope.$apply(attrs.enter); # this will call argument string, ie some controller method
-      });
-    };
-  });
-~~~
-
-* directives has `transclusion()` to create new scope
+  * directives has `transclusion()` to create new scope
+  * `controllerAs: 'vm'` have some problems (but works as `vm1`)
 
 ## Services for creating objects: Value, Factory, Service, Provider, Constant
 
@@ -228,7 +243,8 @@ Factory has more flexibility since they can return functions which can be `new`e
   It can be used like `$scope.phone = Phone.get({ phoneId: $routeParams.phoneId }); $scope.phones = Phone.query();`
 
 * Constant recipe can create value that is available in both config and run
-  phase. Best example is to hard code values.
+  phase. Don't use for example DEFAULT image_url since is better to do that in
+  backend on one place
 
   ~~~
   angular.module('starter')
@@ -270,8 +286,8 @@ that somehow does not work well.  There are also errors from server
 (`resp.errors` or `resp.data.errors`).  Button is disabled until form is valid.
 
 ~~~
-<form name="editMenuItemForm" ng-submit="update(vm.email,editMenuItemForm)">
-  <input type="email" name="email" ng-model="vm.menu_item.email"
+<form name="editMenuItemForm" ng-submit="vm.update(vm.email,editMenuItemForm)">
+  <input type="email" name="email" ng-model="vm.menuItem.email"
   ng-required="true" ng-pattern="/^.+@.+\..+$/"
   ng-change="editMenuItemForm.email.$setValidity('server', true)">
   <div ng-messages="editMenuItemForm.email.$errors">
@@ -283,27 +299,38 @@ that somehow does not work well.  There are also errors from server
   <div ng-messages="vm.serverErrors.editMenuItemForm.email">
     <div>{{ vm.serverErrors.editMenuItemForm.email.toString() }}</div>
   </div>
+
   <md-button type="submit" class="md-raised md-primary"
   ng-disabled="!editMenuItemForm.$valid">Update</md-button>
 </form>
 ~~~
 
-On server we should respond with `render json: @menu_item.errors, status: :bad_request`
- so we catch model errors, for example `resp.data.email`. If that field is not
- on form, for example unauthorized response `resp.data.errors = ['Authorized
- only` than we show toast. `[].toString()` (raise if [] is nil) or `String([])`
-Fields that are not valid (for example we put space in name `menu_item.name ==
-undefined`) are not send so we need to disable button when form is not valid or
-check if `editMenuItemForm.$valid` before we call `menu_item.update()`.
-If we disable button than we need to put 
+This works also for nested attributes, just need to reference them with
+`editMenuItemForm["menu_item_options.price"]` (snake case is rails style) and
+create one in controller `vm.menuItem.menu_item_options_attributes = [{}] unless
+vm.menuItem.id` and reference with
+`input(ng-model='vm.menuItem.menu_item_options_attributes[0].price'`
+
+This has problem with destroy button and serverside validation since ng-message
+is visible only when you focus that input (probably digest is perfomed only on
+submit)
+
+On server we should respond with `render json: @menu_item.errors, status:
+:bad_request` so we catch model errors, for example `resp.data.email`. If that
+field is not on form, for example unauthorized response `resp.data.errors =
+['Authorized only` than we show toast. `[].toString()` (raise if [] is nil) or
+`String([])` Fields that are not valid (for example we put space in name
+`menuItem.name == undefined`) are not send so we need to disable button when
+form is not valid or check if `editMenuItemForm.$valid` before we call
+`menuItem.update()`.  If we disable button than we need to put
 `ng-change="form.field.$setValidity('server', true)"` to remove server error on
 change, so  submit button is shown again.
 
 
 ~~~
 # in controller
-vm.update = (menu_item, editMenuItemForm) ->
-  menu_item.update(menu_item).then(
+vm.update = (menuItem, editMenuItemForm) ->
+  menuItem.update(menuItem).then(
     (menu_item_from_server) ->
       $mdDialog.hide()
     (resp) ->
@@ -320,11 +347,16 @@ vm.update = (menu_item, editMenuItemForm) ->
 
 # Tips:
 
-* use `controller as vm` in view and `var vm = this` in controller so you don't need to inject `$scope` (we need `$scope` when we want to access something in promise `catch = -> $scope.vm.profileForm = "a"`)
+* use `controller as vm` in view and `var vm = this` in controller so you don't
+  need to inject `$scope` (we need `$scope` when we want to access something in
+  promise `catch = -> $scope.vm.profileForm = "a"`)
 
-* in directives you need to prefix `$root` to access rootScope, for example `$root.user`
+* in directives you need to prefix `$root` to access rootScope, for example
+  `$root.user`
 
-* by [Angular conventions](https://github.com/mgechev/angularjs-style-guide), lowerCamelCase is used for factory names that won't be new'ed. Controllers and services should be UpperCased.
+* by [Angular conventions](https://github.com/mgechev/angularjs-style-guide),
+  lowerCamelCase is used for factory names that won't be new'ed. Controllers and
+  services should be UpperCased.
 
 * [johnpapa style guide](https://github.com/johnpapa/angular-styleguide#controlleras-controller-syntax)
   * use `var vm = this;` (or more descriptive `loginVm`). Use `$scope` only for publish/subscribe events `$emit`, `$broadcast` and `$on`.
@@ -333,18 +365,16 @@ vm.update = (menu_item, editMenuItemForm) ->
   [link](http://stackoverflow.com/questions/28807251/relative-href-path-goes-wrong-in-angularjs-with-html5mode)
 * sometimes you need to `rm -rf .tmp` since gulp server cache miss
 * [angular.copy](https://docs.angularjs.org/api/ng/function/angular.copy) is
-  usefull for forms and cancel button
+  usefull for forms and cancel button. Note that object is disconnected, so if
+  you store a list of all items, you need to angular.copy back to original.
 
-~~~
-vm = this
-vm.old_menu_item = angular.copy menu_item
-vm.cancel = ->
-  angular.copy(vm.old_menu_item, vm.menu_item)
-  $mdDialog.hide()
-vm.update = (menu_item) ->
-  menu_item.update(menu_item).then ->
-    $mdDialog.hide()
-~~~
+  ~~~
+  ~~~
+
+  Also when you receive an array from server `MyService.locations =
+  locationsFromServer` will assign new pointer, but old `vm.locations =
+  MyService.locations` will still point to old array.
+
 * `$log.debug` should show object with location and data, for example
  `$log.debug adminController: 'update error', resp_data: resp.data`
 * inside ui router resolve, js errors are completelly hidden
@@ -447,7 +477,7 @@ angular.module 'my'
 When you need double click to go to nested state, you are probably coverting
 that state with some other state
 [stackoverflow](http://stackoverflow.com/questions/25548798/angular-ui-router-having-to-click-twice-for-view-to-update-as-expected-with-d)
-So watch out the route resolution.
+route resolution problem.
 
 * resolve initialData before new state is activated
   [link](http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx)
@@ -499,3 +529,33 @@ Usually I define module `angular.module 'name', []` only in one place
 Since some old deleted templates could remove stuff, I run with `gulp clean &&
 gulp serve --api localhost:3001 -l`
 
+# Interval for automatic updates
+
+~~~
+Order.query({status: 'active'}, {restaurantId: user.restaurant_id}).then (orders) ->
+  vm.orders = orders
+
+vm.youngerThan = new Date
+# could be that order happens after previous query on server and before current time, not likely
+# more likely is that order happened before query on server but after current time
+# so it will show up twice, that's why we check if alredy there
+$interval(
+  ->
+    Order.query({status: 'active', youngerThan: vm.youngerThan}, {restaurantId: user.restaurant_id}).then (orders) ->
+      for order in orders.reverse
+        vm.orders.unshift(order) if vm.orders[0] && vm.orders[0].id != order.id
+    vm.youngerThan = new Date
+  15000)
+~~~
+
+# Tips
+
+* you can have another ng-click inside ng-click (ie button inside button) and
+  you can stop propagation with `ng-click="vm.edit();
+  $event.stopPropagation();"`
+* don't know why someone would use `ng-repeat="o in vm.objects tack by o.id`
+  since DOM is updated always, even `o.title` is changed.
+  [link](http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
+  only usage is that directive link function is not called until we add new
+  items or updateId [look console log](http://jsfiddle.net/6k834fzx/). If we
+  update title Link function will not be called although DOM will be updated.

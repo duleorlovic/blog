@@ -10,6 +10,7 @@ You can find my <https://github.com/duleorlovic/config/blob/master/.vimrc>
 
 # Plugins
 
+
 Install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting plugins:
 
 ~~~
@@ -18,73 +19,30 @@ curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
 cd ~/.vim/bundle
 git clone git://github.com/tpope/vim-rails.git # example: Rview
-git clone git://github.com/tpope/vim-bundler.git # Bopen
-git clone git://github.com/tpope/vim-fugitive.git # Gblame, Gbrowse
-vim -u NONE -c "helptags vim-fugitive/doc" -c q
-git clone git://github.com/tpope/vim-sensible.git # search before enter
-git clone git://github.com/tpope/vim-cucumber.git # cucumber syntax highlight
-git clone https://github.com/thoughtbot/vim-rspec.git # rspec shortcuts <Leader>tsla
-git clone git://github.com/tpope/vim-endwise.git # auto insert end keyword
-git clone https://github.com/alvan/vim-closetag.git # auto insert closing html tag( follow with > for new line)
-git clone git://github.com/tpope/vim-surround.git # add tag `ysiw<em>` change `cst"` delete `ds"`. `S` in visual
-git clone https://github.com/kchmck/vim-coffee-script.git # coffe files
-git clone https://github.com/scrooloose/syntastic.git # syntax check jscs, rubocop
-git clone https://github.com/bling/vim-airline ~/.vim/bundle/vim-airline # nice statusline
-git clone git://github.com/tpope/vim-repeat.git # repeat some plugin commands
-git clone https://github.com/tpope/vim-unimpaired.git # [l ]q [a ]<space>
-git clone https://github.com/ctrlpvim/ctrlp.vim.git # <c-p> <c-j> <c-k> <c-f> <c-b> <c-v>
-git clone https://github.com/othree/html5.vim # html5 indent correct
-git clone git://github.com/digitaltoad/vim-pug.git # jade syntax highlight
-# update with for b in `ls`;do echo $b;cd $b; git pull; cd -;done
 ~~~
+
+You can find [my list of
+plugins](https://github.com/duleorlovic/config/blob/master/vim/update_vim_bundle.sh#L8)
 
 Some not used anymore
 
-~~~
-# http://vimawesome.com/plugin/vim-rspec-sad-beautiful-tragic # :RunSpec
-git clone git@github.com:Valloric/YouCompleteMe.git && cd YouCompleteMe && ./install.sh && cd -
-# annoying O char waiting next input
-git clone git://github.com/Townk/vim-autoclose # add closing `) } "`, in visual `<Leader>a(`
-~~~
+* You complete me: its too much visualisation
 
-* start explorer Netrw
+  ~~~
+  # http://vimawesome.com/plugin/vim-rspec-sad-beautiful-tragic # :RunSpec
+  git clone git@github.com:Valloric/YouCompleteMe.git && cd YouCompleteMe && ./install.sh && cd -
+  ~~~
 
-~~~
-" http://modal.us/blog/2013/07/27/back-to-vim-with-nerdtree-nope-netrw/
-" Toggle Vexplore with Ctrl-E
-function! ToggleVExplorer()
-  if exists("t:expl_buf_num")
-      let expl_win_num = bufwinnr(t:expl_buf_num)
-      if expl_win_num != -1
-          let cur_win_nr = winnr()
-          exec expl_win_num . 'wincmd w'
-          close
-          exec cur_win_nr . 'wincmd w'
-          unlet t:expl_buf_num
-      else
-          unlet t:expl_buf_num
-      endif
-  else
-      exec '1wincmd w'
-      Vexplore
-      let t:expl_buf_num = bufnr("%")
-  endif
-endfunction
-map <silent> <C-E> :call ToggleVExplorer()<CR>
+* [vim-markdown](https://github.com/plasticboy/vim-markdown): issue with syntax highlight for * inside code block
 
-" Hit enter in the file browser to open the selected
-" file with :vsplit to the right of the browser.
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
+* [vim-autoclose](https://github.com/Townk/vim-autoclose): annoying O char waiting next input
 
-" Default to tree mode
-let g:netrw_liststyle=3
 
-" Change directory to the current buffer when opening files.
-" set autochdir
-" maybe is easier within netrw just press c  help :netrw-c
-" that's better than 'cd ../path' which change in all tabs
-~~~
+# Netrw
+
+[start explorer](https://github.com/duleorlovic/config/blob/master/vim/netrw.vim).
+To change current folder just press c on folder line `help :netrw-c`.
+That's better than `cd ../path` which change in all tabs
 
 Inside netrw:
 
@@ -211,7 +169,7 @@ You need to install this tools:
   [.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
   in $HOME or project root, or inline in comment `# rubocop:disable
   Metrics/AbcSize, Metrics/MethodLength` or in `syntastic.vim`
-  [g:syntastic_eruby_ruby_quiet_message]()
+  [g:syntastic_eruby_ruby_quiet_message](https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21)
 * Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
 * json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)
 

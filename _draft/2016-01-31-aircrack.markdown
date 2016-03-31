@@ -20,14 +20,31 @@ Best is supported some of [this](http://www.wirelesshack.org/top-kali-linux-comp
 * RT3572
 * RTL8187L
 
+You can check also [aircrack
+compatibility drivers](http://www.aircrack-ng.org/doku.php?id=compatibility_drivers)
 
-# Little neighbourd
+# Installation
 
 ~~~
+sudo su
+apt-get install aircrack-ng reaver
 man airodump-ng
 ifconfig # find wireless adapters, for example wlan0
-sudo airmon-ng start wlan0 # this will create another adapter mon0
-sudo airodump-ng mon0 -w all # list all networks (BSSID), channel (CH) and clients
-sudo airodump-ng mon0 -c 6 --bssid 12:12:12:12:12:12:12 -w komsa
+
+airmon-ng check
+airmon-ng check kill
+airmon-ng
+airmon-ng start wlan0 # this will create another adapter mon0
+airodump-ng mon0 -w all # list all networks (BSSID), channel (CH) and clients
+airodump-ng mon0 -c 6 --bssid 12:12:12:12:12:12:12 -w komsa
 ~~~
 
+# Wifite
+
+<https://github.com/derv82/wifite>
+
+~~~
+wget https://raw.github.com/derv82/wifite/master/wifite.py
+chmod +x wifite.py
+sudo ./wifite.py
+~~~

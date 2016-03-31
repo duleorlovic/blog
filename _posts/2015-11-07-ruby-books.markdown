@@ -139,17 +139,31 @@ but `M` is a class or module since it has nested items.
 Proc are objects that can be called (executed) `p = proc { puts 1 };p.call`
 
 Variables and scope
+
 Ruby define scope of variable using its name, precisely, first char:
 
   * `$` global `$FIRST_NAME` available on every scope
   * `@` instance `@first_name`
-  * `[a-z]|_` local `first_name` in every definition block: proc, loop, def ...
-    end, class ... end, module ... end, and is reset on each call
+  * `[a-z]|_` local `first_name` in every definition block: proc, loop, def end,
+    class end, module end, and is reset on each call. Local variable is very
+    scoped (you can not access in another nested method)
+
+    ~~~
+    a = 1
+    def p
+      puts a
+    end
+    p # NameError: undefined local variable 'a'
+    ~~~
+
+    but you can access from closue definitions such: `define_method`, `proc` or
+    `lambda` or plain old `begin end` block, 
+
   * `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and
     `self` which is global maintaned by interpreter). Constant can be changed
     (with warning) so you can include one file several times. Object that
     constant reffers can be changed freely. Constant has global reachability
-    when you know the chain of nested definition `C::M::X`, aboslute path is
+    when you know the chain of nested definition `C::M::X`, absolute path is
     `::String`
   * `@@` class variable `@@class_variable` are shared only between class and all
     instances of that class. Instance variable for class object are not
@@ -203,11 +217,24 @@ ruby> reader.call
 is private but we can
 [open](http://stackoverflow.com/questions/12683772/how-to-modify-a-matrix-ruby-std-lib-matrix-class/21559458#21559458)
 
-~~~
-class Matrix
-  public :"[]=", :set_element, :set_component
-end
-~~~
+  ~~~
+  class Matrix
+    public :"[]=", :set_element, :set_component
+  end
+  ~~~
+
+* params can be exploded
+
+  ~~~
+  def initialize(name:, address:)
+    @name = name
+    @address = address
+  end
+  ~~~
+
+* `(1..10).tap {|x| puts x.inspect}.to_a` is used to perfom operation on
+  intermediate results of operations. It returns object `x`. Usually used with
+  initialization of objects: `Class.new(name: name).tap do |c| ... end`
 
 #loops
 
@@ -248,3 +275,8 @@ end
     tp.disable
   end
   ~~~
+
+* `{}` and `do end` have [different
+  precedence](https://github.com/bbatsov/rubocop/issues/1520) so when rubocop
+  alerts for `Style/Lambda: Use the `lambda` method for multi-line lambdas` you
+  need parenthesis for example `scope :active, (lambda do ... end)`

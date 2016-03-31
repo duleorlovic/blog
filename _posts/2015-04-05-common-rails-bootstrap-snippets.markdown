@@ -276,7 +276,7 @@ development: &default
   # sending emails
   mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
   mail_interceptor_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
-  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "support@example.com" %>
+  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
 
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
@@ -543,4 +543,20 @@ git push heroku master --set-upstream
 ~~~
 
 On heroku add *Papertrail* add-on and go to the [https://papertrailapp.com/events](https://papertrailapp.com/events) and search for "Started GET" , save and create email alert.
+
+# Rails tips
+
+* default value for column could be before save so it is callend only on
+  updating record. Another solution is `after_initialize :default_values` but
+  that is also called when you read object. Another approach is to put in rails
+  migration but than you need another migration if you want to change value. So
+  my suggestion is:
+
+  ~~~
+  before_save :default_values
+  private
+  def default_values
+    self.logo ||= Rails.application.secrets.default_restaurant_logo
+  end
+  ~~~
 

@@ -120,20 +120,32 @@ sed -i '/devise_for/c \
 ' config/routes.rb
 ~~~
 
-If you need multiple identities per account than create separate table for identity.
+If you need multiple identities per account than create separate table for
+identity.
 
 # Facebook app
 
-1. Create app on [developers.facebook.com](developers.facebook.com). By default fb app is in development mode and can only be used by app admins, developers and testers.
+1. Create app on [developers.facebook.com](developers.facebook.com). By default
+   fb app is in development mode and can only be used by app admins, developers
+   and testers.
 
-1. Add Contact Email on https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/
-and toggle switch on https://developers.facebook.com/apps/FACEBOOK_APP_ID/review-status/
+1. Add Contact Email on
+   https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/ and toggle
+   switch on https://developers.facebook.com/apps/FACEBOOK_APP_ID/review-status/
 
-1. Add https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced *Valid OAuth redirect URIs* user full url like: `http://localhost.dev:3003/auth/facebook/callback`, `http://localhost:9000/omniauth/facebook/callback` and for https also `https://localhost.dev:3003/auth/facebook/callback`
+1. Add https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced
+   *Valid OAuth redirect URIs* for all links that are redirected. You can find
+   the link on facebook error page url
+   `www.facebook.com/dialog/oauth?client_id=...&redirect_uri=...`. You can add
+   just domain (`/omniauth/facebook/callback` is not needed)
+   Note that this are server url (not frontend url):
+   `http://localhost.dev:3003`,
+   `http://localhost:9000` and for https also
+   `https://localhost.dev:3003`
 
 Changes are visible immediatelly.
 More on blog facebook share buttons.
- 
+
 # Google console
 
 Create a project in google console and enable *Google+ API*. Create *OAuth 2.0 client ID* (or edit exists one clicking on its name) and set *Authorized redirect URIs* to all urls that will be used, like `http://localhost.dev/omniauth/google_oauth2/callback` or `http://localhost:9000/omniauth/google_oauth2/callback` and also for https `https://localhost.dev/omniauth/google_oauth2/callback` and don't forget to save.
@@ -431,9 +443,14 @@ HERE_DOC
 ~~~
 
 When you want to override default initial behavior, for example create another
-table that will hold identities, you need to override a lot of things [#23](https://github.com/lynndylanhurley/devise_token_auth/issues/23) [#453](https://github.com/lynndylanhurley/devise_token_auth/pull/453)
-Another approach (plan B) is to put your business logic in another model
-let say, `participant` thas has many `users`. This has a problem of assigning oauth account to the current email-user participant (we need to pass current email-user token to oauth session so we know that we can connect those two users to the same participant). Also adds new unnecessary model.
+table that will hold identities, you need to override a lot of things
+[#23](https://github.com/lynndylanhurley/devise_token_auth/issues/23)
+[#453](https://github.com/lynndylanhurley/devise_token_auth/pull/453) Another
+approach (plan B) is to put your business logic in another model let say,
+`participant` thas has many `users`. This has a problem of assigning oauth
+account to the current email-user participant (we need to pass current
+email-user token to oauth session so we know that we can connect those two users
+to the same participant). Also adds new unnecessary model.
 
 Easiest solution is to add uniqueness to email field and rescue with signing in.
 Then we just repeat whole proccess from `omniauth_success` from
@@ -554,6 +571,8 @@ module Users
 end
 HERE_DOC
 ~~~
+
+Problem with `ng-token` is that is returns user object with snake `user.first_name` instead of camelCase `user.firstName` as it is for Rails Resources
 
 # Testing
 

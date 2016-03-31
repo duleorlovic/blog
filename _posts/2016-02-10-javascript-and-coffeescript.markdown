@@ -236,7 +236,10 @@ Examples
 * no need `;` at the end of line
 * block {...} is replaced with `->` and proper indend (two spaces) or could be
   inline
-* parantheses (...) in one line can be ommited, in multiple lines they need
+* parantheses (arg) in one line can be ommited (when there are some arguments),
+  in multiple lines they are required.  Note that () are required when you want to call
+  function without arguments (otherwise it will just return reference to the
+  function)
 * object definition {...} braces can be ommited, name/value pairs could be on
   new lines (if object is only argument than parentheses can be ommited)
 * No need to write return command. Since last line is returning, put empty
@@ -262,6 +265,9 @@ Examples
     resultCart
   ~~~
 
+  Another solution is to use `resultCart = $filter('filter')(service.carts,
+  (cart) -> { cart.id == restaurant.id })`
+
 * [fat arrow =>](http://coffeescript.org/#fat-arrow) allow to `this` in callback
   functions
 
@@ -274,3 +280,27 @@ Examples
       @customer.purchase @cart
   ~~~
 
+* excellent reference for
+  [coffeescript-cookbook](https://coffeescript-cookbook.github.io/chapters/arrays/filtering-arrays)
+
+# Jade
+
+Very nice tool, like coffescript. You can convert all html files with:
+
+~~~
+npm install -g html2jade
+html2jade *.html --bodyless --donotencode --noattrcomma --noemptypipe
+# --bodyless          do not output enveloping html and body tags
+# --donotencode       do not html encode characters (useful for templates)
+# --noattrcomma       omit attribute separating commas
+# --noemptypipe       omit lines with only pipe ('|') printable character
+rm *.html
+~~~
+
+* arguments could be in new line, but strings need `\`
+
+  ~~~
+  md-button(ng-really-click='vm.delete()'
+  ng-really-message='Are you sure to \
+  remove this option?')
+  ~~~

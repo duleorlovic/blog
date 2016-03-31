@@ -174,3 +174,11 @@ Map with markers
     });
 </script>
 ~~~
+
+* static map with custom icon (must be http:// not https://)
+
+  ~~~
+  img(border='0', ng-src='//maps.googleapis.com/maps/api/staticmap?center=\
+    {{ location.latitude }},{{ location.longitude }} \
+    &size=100x100&markers=icon:http://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png|{{ location.latitude }},{{ location.longitude }}')
+  ~~~

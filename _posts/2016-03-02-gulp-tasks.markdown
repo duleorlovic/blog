@@ -9,7 +9,8 @@ tags: gulp
 You can deploy frontend code on any static web host, like AWS S3. You just need
 to add *deploy* task that is using [gulp-awspublish](https://www.npmjs.com/package/gulp-awspublish) `npm install --save-dev gulp-awspublish` .
 
-It have some problems when bucket is from eu-central-1
+It has some problems when bucket is from eu-central-1 and contains dots, so read
+[aws s3]({% post_url 2016-02-29-amazon-aws-s3 %})
 
 ~~~
 // gulp/build.js
@@ -17,6 +18,7 @@ var awspublish = require('gulp-awspublish');
 
 gulp.task('deploy', ['build'], function() {
   console.log("AWS_BUCKET_NAME=" + process.env.AWS_BUCKET_NAME);
+  console.log("AWS_REGION=" + process.env.AWS_REGION);
   console.log("AWS_ACCESS_KEY_ID=" + process.env.AWS_ACCESS_KEY_ID);
   console.log("AWS_SECRET_ACCESS_KEY=" + process.env.AWS_SECRET_ACCESS_KEY);
   if (!process.env.AWS_BUCKET_NAME || !process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
@@ -27,6 +29,7 @@ gulp.task('deploy', ['build'], function() {
   // create a new publisher using S3 options
   // http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property
   var publisher = awspublish.create({
+    region: process.env.AWS_REGION,
     params: {
       Bucket: process.env.AWS_BUCKET_NAME
     },
@@ -56,6 +59,9 @@ gulp serve --api localhost:3000
 gulp deploy --api production
 ~~~
 
+You need to stop eventual gulp serve for localhost, when you want to deploy for
+production.
+
 ~~~
 // gulp/script.js
 var replace = require('gulp-replace');
@@ -81,3 +87,4 @@ angular.module('myappAngular')
   .constant 'CONFIG',
     API_URL: STAGING_SERVER_URL + '/api/v1'
 ~~~
+

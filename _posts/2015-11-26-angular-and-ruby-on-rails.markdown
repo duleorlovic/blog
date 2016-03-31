@@ -63,7 +63,8 @@ Response status codes:
 
 Just to note that [REST api](https://en.wikipedia.org/wiki/Representational_state_transfer) means: Statelessness (no data between requests), Resource identification per request (update only one row, get could have more rows), Representational state transfer (returned representation JSON is enough to identify and manipulate row).
 
-Once API is exposed, you should not modify it, except for critical bugfixes. Use namespace
+Once API is exposed, you should not modify it, except for critical bugfixes. Use
+namespace
 
 ~~~
 namespace :api, default: { format: :json } do
@@ -73,7 +74,9 @@ namespace :api, default: { format: :json } do
 end
 ~~~
 
-You can use plugin [POSTMAN](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en) to send API requests.
+You can use plugin
+[POSTMAN](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
+to send API requests.
 
 Curl commands:
 

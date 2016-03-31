@@ -57,8 +57,9 @@ git init . && git add . && git commit -m "ionic start"
 
 ionic platform add android
 cordova plugin add ionic-plugin-keyboard # this is default plugin
+# prefer ionic CLI to cordova CLI because is adds to package.json
 ionic plugin add cordova-plugin-camera
-ionic state save
+ionic state save # others pull the code, sync with `ionic state restore`
 ionic upload
 git add . && git commit -m "ionic add android && ionic upload"
 ionic share some@email.com
@@ -315,3 +316,44 @@ Run MAC with those `-x -v -f acpi=off PCIRootUID=1 GraphicsEnabler=No `
 [link](http://www.tonymacx86.com/snow-leopard-desktop-support/65465-experiencing-kernel-panic-initial-boot.html)
 
 
+# Jade
+
+Adding jade with: `npm install gulp-jade --save-dev`. Than
+
+~~~
+# here we will store html
+echo www/templates >> .gitignore
+sed -i ionic.project -e '/gulpSartupTasks/a "jade",'
+~~~
+
+~~~
+# gulpfile.js
+var jade = require('gulp-jade');
+
+var paths = {
+  sass: ['./scss/**/*.scss'],
+  jade: ['./www/**/*.jade']
+};
+
+gulp.task('default', ['sass', 'jade']);
+
+gulp.task('jade', function (done) {
+  return gulp.src(paths.jade)
+    .pipe(jade())
+    .pipe(gulp.dest('www/templates/'));
+});
+gulp.task('watch', function() {
+  gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.jade, ['jade']);
+});
+~~~
+
+<http://yeghishe.github.io/2015/08/13/my-gulp-files-ionic-app.html>
+
+# Tips
+
+* to find ionic version run in browser and type in console `ionic.version` (or
+  grep `bower.json` file). `ionic -v` will give you ionic CLI version which is
+  not related to ionic version
+* to clean files that are inside www but git ignored, you can `git clean -xdf
+  www` but you need to `npm install && bower install`

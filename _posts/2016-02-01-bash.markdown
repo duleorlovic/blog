@@ -44,18 +44,61 @@ Look at my
 
 # Shortcuts for key mappings
 
-To scroll in terminal window, instead `shift+page_up` we can [bind to key](http://askubuntu.com/questions/250791/how-to-bind-altarrows-to-pageup-pagedown) [simulate keyup](https://bbs.archlinux.org/viewtopic.php?id=136265).
-  [xbindkeys](https://wiki.archlinux.org/index.php/Xbindkeys)
+To scroll in terminal window, instead `shift+page_up` we can [bind to
+key](http://askubuntu.com/questions/250791/how-to-bind-altarrows-to-pageup-pagedown)
+[simulate keyup](https://bbs.archlinux.org/viewtopic.php?id=136265).
+[xbindkeys](https://wiki.archlinux.org/index.php/Xbindkeys) I usually map vim
+shortcuts *CTRL+* , so for terminal winodws I use *ALT+*.  Do not override
+already two ALT [bash
+shortcut](http://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/)
+*Alt+F* *Alt+B* to move cursor one word (use capitalize F to not open File menu
+or disable in *Edit* -> *Keyboard Shortcuts*) (CTRL version move by one
+character) . I also map *ctrl+k* to scroll up since it's natural (I don't mind
+that I don't have cut shortcut, I just use `#`). I tried to use `bind` command
+but that outputs, so multiple scroll looks like one scroll.
 
- I usually map vim shortcuts *CTRL+* , so for terminal winodws I use *ALT+*.
-  There are already two ALT [bash shortcut](http://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/) *Alt+F* *Alt+B* to move cursor one word (use capitalize F to not open File menu) (CTRL version move by one character) .
+Here are all bash CTRL shortcuts:
+
+* ctrl+a (+e) : move cursor to begging (end) of line
+* ctrl+b (+f) : move cursor by one char to left (right)
+* ctrl+h (+d) : delete char left to the cursor-backspace (under the cursor)
+* ctrl+w : delete word before the cursor
+* ctrl+i : tab completion
+* ctrl+j : enter
+* ctrl+k (+u) [+y]: cut chars until the end of the line (before the cursor
+  position) [yank cutted text]
+* ctrl+p (+n) : go to previous (next) command
+* ctrl+r : search
+* ctrl+c (+z) : kill current process (send to background, use `fg` to restore)
+* ctrl+l : clear window, but I remaped to copy current line to clipboard
+
+Here are some *Edit* -> *Keyboard Shortcuts*:
+
+* shoft+ctrl+t : open in new tab
+* alt+1 : switch between tabs
+
+To copy line, you need to select with mouse and use *ctrl+shift+c*
+(*ctrl+shift+v* to pase). Or with `xsel` you can bind to ctrl+l:
+
+~~~
+# .bashrc
+bind '"\C-l": "\C-e\C-u xsel --clipboard <<"EOF"\n\C-y\nEOF\n\C-y"'
+~~~
+
+In vim you can paste primary selection (just select, middle mouse, shift insert)
+with `"*p`. Clipboard selection (copy, paste) with  and `"+p`
+
+Only place where I sometimes need arrow keys is google chrome suggestions in
+address bar, but than I use Tab.
 
 Look my
 [xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
 
 
-# Bash
+# Scrips and commands
 
+* input params `$1`
+* exit from script with `exit 1`
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
 * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
@@ -67,10 +110,24 @@ Look my
 * curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo "@reboot /home/orlovic/my.sh") | crontab -`
 * repeat last command with sudo `sudo !!`
-
 * DDNS
   * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
 * copy all files from folder (including hidden) `cp folder/. /some-other/ -r` Note .` after folder.
 * function and [default
   parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
   with `:-` syntax, example `echo first param is $(1:-not defined)`
+* preserve env variables with sudo `sudo -E ruby some_script.rb`, but `rvmsudo
+  ruby some_script.rb` works better
+* `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
+  to go to copy mode.
+* `ps aux | grep process_name` will return always the grep process because it
+  match. But you can use regex so it is not matched `ps aux | grep
+  [p]rocess_name`
+* you can pipe output of some command to file `c >> a.log`, and in other shell
+  `tailf a.log` but output will be
+  [buffered](http://stackoverflow.com/questions/9752291/bash-output-stream-write-to-a-file)
+  So you need to `sudo apt-get install expect-dev` and run with `unbuffer c >>
+  a.log`
+* edit long commands in bash `set -o vi` and than press Esc, and v (visual).
+  Don't recomment to put in bashrc since it will disable bash shortcuts like:
+  ctrp+p, bind, ....

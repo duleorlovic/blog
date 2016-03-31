@@ -8,16 +8,24 @@ This is interesting topic since we need to delve with angular and aws specifics.
 
 # AWS Bucket
 
-* create a bucket in USA **video-uploading-demo**
-* create user and download credentials
-* go to the user page and create [inline policy]({% post_url 2016-02-29-amazon-aws-s3 %}) to give access to the bucket **video-uploading-demo**
+* create a bucket **video-uploading-demo**. You can choose any region. But
+  choose one word (without dots) because of *Insecure connection* error
+* go to the [IAM page](https://console.aws.amazon.com/iam/home) to create user,
+  save credentials and create [inline policy](
+  {% post_url  2016-02-29-amazon-aws-s3 %}) to give access to the bucket
+  **video-uploading-demo**
+* I'm not sure about [step 2](https://github.com/asafdav/ng-s3upload) (grant
+  put/delete and Upload/Delete permissions) since
+  above inline policy works fine for me
+* add CORS `<AllowedMethod>POST</AllowedMethod><AllowedHeader>*</AllowedHeader>` to Bucket -> Properties ->
+  Permissions -> Add Cors configuration [more info](
+  {% post_url 2016-02-29-amazon-aws-s3 %})
 
 # Record image
 
 Read docs on
 [cordova-plugin-camera](https://github.com/apache/cordova-plugin-camera) rather
 than on [ngCordova camera](http://ngcordova.com/docs/plugins/camera/).
-
 
 ~~~
 bower install ngCordova --save-dev

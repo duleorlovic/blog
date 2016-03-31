@@ -3,7 +3,73 @@ layout: post
 title: Raspberry Pi security server
 ---
 
-# Install
+# RPi
 
-Start with [NOOBS](https://www.raspberrypi.org/downloads/noobs/) to create SD
-card. Run `sudo raspi-config` to change Boot Options to `B1 Consolle Autologin`.
+On my board PCB says: `Raspberry Pi (c)2011.12` so [it
+is](http://www.raspberry-projects.com/pi/pi-hardware/raspberry-pi-pcb-versions)
+Model B Revision 2.0 (512MB).
+[Pinouts](http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto)
+
+
+Start with [NOOBS](https://www.raspberrypi.org/downloads/noobs/) (which is based
+on Raspbian) to create SD card. Run `sudo raspi-config` to change Boot Options
+to `B1 Consolle Autologin`. This is important since we will run script from
+bash_profile.
+
+Find ip address with `nmap 192.168.0.-`. Connect from your desktop `ssh
+pi@192.168.0.11` and run: `host google.com`.
+
+If something is not working than check
+`/etc/network/interfaces` and `/etc/dhcpcd.conf` (you can manually get dns with
+`sudo dhclient eth0`)
+
+## Set up static IP address
+
+Edit `/etc/network/interfaces`
+
+Copy ssh keys with `ssh-copy-id pi@192.168.0.11`.
+
+# Ruby
+
+[rvm](https://rvm.io/rvm/install)
+
+~~~
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash
+rvm install 2.3.0
+~~~
+
+This takes too much time, so you can revert to
+
+~~~
+sudo apt-get install ruby ruby1.9.1-dev libssl-dev
+sudo gem install pi_piper
+~~~
+
+# PiPiper
+
+In irb
+
+~~~
+rvmsudo irb
+require 'pi_piper'
+pin = PiPiper::Pin.new(pin: 17, direction: :in)
+pin.read
+# if you want to open pin port again, you need to release
+# https://github.com/jwhitehorn/pi_piper/issues/30
+File.open("/sys/class/gpio/unexport", "w") { |f| f.write("#{pin.pin}") }
+~~~
+
+# Startup run
+
+Add to your `.bash_profile` this line:
+
+~~~
+source $HOME/securiPi/start.sh
+~~~
+
+We use prefix `rvm` so `rvmsudo` pass that env variable to
+[child](https://github.com/rvm/rvm/blob/master/bin/rvmsudo#L84) and unbuffer so
+we can read long and not wait buffer to fill in. For this command we need to
+`sudo apt-get install expect-dev`.
+
