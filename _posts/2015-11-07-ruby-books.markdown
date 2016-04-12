@@ -156,7 +156,7 @@ Ruby define scope of variable using its name, precisely, first char:
     p # NameError: undefined local variable 'a'
     ~~~
 
-    but you can access from closue definitions such: `define_method`, `proc` or
+    but you can access from closure definitions such: `define_method`, `proc` or
     `lambda` or plain old `begin end` block, 
 
   * `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and

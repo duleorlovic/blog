@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Javascript tips
+title: Javascript theory
 tags: javascript
 ---
 
@@ -33,7 +33,7 @@ alert(objectRef.testNumber);
 `prototype` property is on functions only. Prototype is an object.
 Function by default have Object.prototype prototype object.
 We can add properties to prototype object even after we create object.
-Function is constructor function whan we use it to create new objects and they
+Function is constructor function when we use it to create new objects and they
 are UpperCased. Object, Array, Date are function constructors.
 The default prototype for the Object constructor has a null prototype.
 
@@ -50,7 +50,7 @@ People.prototype.age = 30;
 Man.prototype.say = function() { return this.name + " (" + this.age +
   ") drive " + this.car;
 };
-alert(p.say());
+alert(p.say()); // dule (30) drive renault
 ~~~
 
 ## Identifier resolution, execution contexts and scope chains
@@ -83,24 +83,24 @@ You can see the source code of a method with `objB['a']`
 
 When function is called it enters an execution context:
 
-* first is "Activation" object is created with `arguments` property
-* *scope chain* (list of objects) from last to first:
+1. first is "Activation" object is created with `arguments` property
+1. *scope chain* (list of objects) from last to first:
   * global object
   * Activation object for inner functions
   * `y` if `y` is object for execution of `x()` in `var x;with(y){
     x=function(){}; }`
-* variable instantiation to "Variable" object
+1. variable instantiation to "Variable" object
   * function's formal parameters with name and value if value is provided
   * inner function definitions are creating **function objects** with inner
     function name as key
   * named properties for all local variables, just key, value is not yet defined
-* value is assigned to *this* keyword
+1. value is assigned to *this* keyword
 
 ## Identifier Resolution
 
-* it starts from first object in the scope chain (it is Activation/Variable)
-* it also check it's prototype chain
-* go to the next object from scope chain, until global object
+1. it starts from first object in the scope chain (it is Activation/Variable)
+1. it also check it's prototype chain
+1. go to the next object from scope chain, until global object
 
 Functions are objects and are created:
 
@@ -156,6 +156,7 @@ Examples
   DhtmlObject.prototype.doMouseOver = function(event, element) {
     // doMouseOver body
   }
+  ~~~
 
 * Encapsulating related functionality. Crete execution context by executing a
   function expression in-line and return function (or object)
@@ -215,92 +216,65 @@ Examples
     // method body
   };
   ~~~
-  
 
-* to see all keys of `myObj` you can use `Object.keys(myObj)`
-* alert object with `alert(JSON.stringify(myObj))`
-* if you want to break array each than you can use
-  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break than you can use [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break))
+# Difference ES6 and ES5
 
-* [bower](http://bower.io) `bower list` `bower install packageName` `bower
-  uninstall packageName`
+This [post](http://kamranahmed.info/blog/2016/04/04/es6-in-depth/) explains what
+is new in ES6 (Ecma Script 2015). Almost all those features already exists in
+coffee script [nice reply](https://gist.github.com/benjie/d0e39fbe8a61bc30ed93).
+It's good that no need to write `function` keyword.
 
-* to search file in google developer tools you can open console window (with
-  ESC) than on three dots, open dropdown menu and find *Search*
-
-
-# Coffeescript
-
-* [try coffeescript](http://coffeescript.org/) and convertor
-  [js2coffe](http://js2.coffee/)
-* no need `;` at the end of line
-* block {...} is replaced with `->` and proper indend (two spaces) or could be
-  inline
-* parantheses (arg) in one line can be ommited (when there are some arguments),
-  in multiple lines they are required.  Note that () are required when you want to call
-  function without arguments (otherwise it will just return reference to the
-  function)
-* object definition {...} braces can be ommited, name/value pairs could be on
-  new lines (if object is only argument than parentheses can be ommited)
-* No need to write return command. Since last line is returning, put empty
-  `return` in angular constructor functions
-* [loops](http://coffeescript.org/#loops) are simiral to ruby, and it's
-  better than angular `forEach` since we can `break` from the loop. For example
-  find by objectId in array carts:
+* `use strict` mode by default (by this
+  [info](http://arcturo.github.io/library/coffeescript/07_the_bad_parts.html)
+  you should use in development but not on production
+* `let myVar; const myConst;` has block scope like inside `if () { let myVar=1; }`
+* template literals with backticks (coffe version on `"Hellp #{name}"`)
 
   ~~~
-  service.findOrCreateCartForRestaurant = (restaurant) ->
-    resultCart = null
-    for cart in service.carts
-      if cart.restaurantId == restaurant.id
-        resultCart = cart
-        break
-    if !resultCart
-      resultCart =
-        restaurantId: restaurant.id
-        restaurantName: restaurant.name
-        total: 0
-        cartItems: []
-      service.carts.push resultCart
-    resultCart
+  var name = "Duke";
+  console.log(`Hello ${name}`);
   ~~~
 
-  Another solution is to use `resultCart = $filter('filter')(service.carts,
-  (cart) -> { cart.id == restaurant.id })`
-
-* [fat arrow =>](http://coffeescript.org/#fat-arrow) allow to `this` in callback
-  functions
+* arroy functions are on abbreviated syntax for anonymouse functions (coffee fat
+  arrow instead of slim arrow `->`, binds to the outer `this`)
 
   ~~~
-  Account = (customer, cart) ->
-    @customer = customer
-    @cart = cart
-
-    $('.shopping_cart').on 'click', (event) =>
-      @customer.purchase @cart
+  var sayHello = (name) => `Hello ${name}!`;
+  var sayCiao = (name) => {
+    return `Ciao ${name}!`;
+  }
   ~~~
 
-* excellent reference for
-  [coffeescript-cookbook](https://coffeescript-cookbook.github.io/chapters/arrays/filtering-arrays)
-
-# Jade
-
-Very nice tool, like coffescript. You can convert all html files with:
-
-~~~
-npm install -g html2jade
-html2jade *.html --bodyless --donotencode --noattrcomma --noemptypipe
-# --bodyless          do not output enveloping html and body tags
-# --donotencode       do not html encode characters (useful for templates)
-# --noattrcomma       omit attribute separating commas
-# --noemptypipe       omit lines with only pipe ('|') printable character
-rm *.html
-~~~
-
-* arguments could be in new line, but strings need `\`
+* destructuring with default values and renaming (also in coffescript
+  `[_, month, date = 1] = ...`)
 
   ~~~
-  md-button(ng-really-click='vm.delete()'
-  ng-really-message='Are you sure to \
-  remove this option?')
+  var [, month, date = 1] = '2010-10-11'.split('-')
+  var {name, age, gender:sex = 'male'} = { name: 'Duke', age: '33', gender: 'male' }
   ~~~
+
+* `for(i=0;i<cars.loeght;i++) {}` is not concise `cars.forEach(myFunction)` is
+  concise but can not break out of the loop. `for...of` is concise and can break
+  `for(let car of cars) { }` (coffee script has `.each`)
+* default parameter values `function g(a=2){}` (the same for coffeescript)
+* spread operator `...` in `function a(...items){}` (coffee calls this splats
+  `a(items...)`)
+* extend classes `class Employee extends Person {}` so we don't need to write
+  `Employee.prototype = new Person`
+* new data structure called `Map` and `WeakMap` (keys are objects, not plain
+  values like number, string or symbol)
+
+  ~~~
+  var map = new Map();
+  map.set('year', '123');
+  map.get('year'); // '123'
+  ~~~
+
+* new data structure called `Set` and `WeakSet`
+* new string functions
+  `'asd'.startsWith('a');'asd'.endsWith('a');'asd'.includes('as');'a'.repeat(3);`
+* new array functions `Array.from([1,2,3], x => x + x)`
+ and `Array.find( user => user.age > 15)` same as `Array.findIndex` but returns
+ object instead of index
+* modules `import User from 'user';`
+

@@ -12,11 +12,15 @@ him for a lifetime
 
 Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the
 filename). You can use single quotes so you do not need to write `-e` and `\n`.
-Or you can use `cat > filename << HERE_DOC ... some lines with ' or " ... HERE_DOC` for multiline. First `\HERE_DOC` when no parametar expanded.
+Or you can use `cat > filename << HERE_DOC ... some lines with ' or " ...
+HERE_DOC` for multiline. First `\HERE_DOC` when no parametar expanded.
 
 `sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
 append *home* after that line (beside insert before `i`, this could be `a`
-append and `c` change matched line). Multiple lines need to have `\` at the end of line (multiline *echo ' ...'* does not need that trailing backslash). You can use `sed -i "// a" file.txt` but then you need `\n\` at the end of each line. Remember that no char (even space) could be after last `\`.
+append and `c` change matched line). Multiple lines need to have `\` at the end
+of line (multiline *echo ' ...'* does not need that trailing backslash). You can
+use `sed -i "// a" file.txt` but then you need `\n\` at the end of each line.
+Remember that no char (even space) could be after last `\`.
 
 Most common usage is to add before some line, for example line begins with
 `test`. If you need really need `'` for example `'a'` than you can replace it
@@ -222,7 +226,8 @@ git add . && git commit -m "Adding flash to layout"
 ~~~
 echo '
 # css mixin library http://bourbon.io/
-gem "bourbon"
+gem "bourbon", '~> 5.0.0.beta' # bourbon 5 is requred by bitters 1.3
+# https://github.com/thoughtbot/bitters/issues/235
 gem "neat"
 ' >> Gemfile
 echo '
@@ -261,6 +266,17 @@ sed -i '/jquery_ujs/a \
 git commit -am "Adding boostrap"
 ~~~
 
+## Slim
+
+~~~
+sed -i Gemfile -e '/group :development do/a  \
+  # slim templating\
+  gem "slim-rails"'
+
+gem install html2slim
+erb2slim app/views/leads/index.html.erb
+~~~
+
 ## Angular
 
 For various ways of integrating Angular look at
@@ -270,11 +286,15 @@ For various ways of integrating Angular look at
 # Simplify secrets
 
 ~~~
-echo -e '# export keys in your .profile file
+cat > config/secrets.yml << HERE_DOC
+# export keys in your .profile file
 development: &default
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
+
   # sending emails
-  mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
+  smtp_username: <%= ENV["SMTP_USERNAME"] %>
+  smtp_password: <%= ENV["SMTP_PASSWORD"] %>
+
   mail_interceptor_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
   default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
 
@@ -284,52 +304,31 @@ development: &default
 
 test: *default
 production: *default
-' > config/secrets.yml
+HERE_DOC
 
 git add . && git commit -m "Simplify secrets"
 ~~~
 
-# Skip generators
-
-~~~
-sed -i '/Rails::Application/a \
-    config.i18n.enforce_available_locales = true\
-    config.generators do |generate|\
-      generate.helper false\
-      generate.javascript_engine false\
-      generate.request_specs false\
-      generate.routing_specs false\
-      generate.stylesheets false\
-      generate.test_framework :rspec\
-      generate.view_specs false\
-    end\
-    config.action_controller.action_on_unpermitted_parameters = :raise\
-' config/application.rb
-git add . && git commit -m "Skip generators"
-~~~
-
-# Sample page
-
-~~~
-rails g controller pages index # --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
-sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
-git add . && git commit -m "Adding sample index page"
-~~~
-
-# Sending Email
-
-## Common mail settings
+# Common mail settings
 
 ~~~
 #sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
-sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys' config/application.rb
-
-# devise
-sed -i '/mailer_sender/c \  config.mailer_sender =
-Rails.application.secrets.default_mailer_sender' config/initializers/devise.rb
+sed -i config/application.rb -e '/  end$/i \
+  config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys'
 ~~~
 
-## Letter opener for development 
+## Devise gem
+
+See blog post [devise-oauth-angular]({{ site.baseurl }}
+{% post_url 2015-12-20-devise-oauth-angular %})
+
+~~~
+# devise
+sed -i config/initializers/devise.rb -e '/mailer_sender/c \
+  config.mailer_sender = Rails.application.secrets.default_mailer_sender'
+~~~
+
+## Letter opener for development
 
 ~~~
 sed -i '/group :development do/a  \
@@ -369,6 +368,33 @@ end
 git add . && git commit -am "Adding mandrill for sending emails"
 ~~~
 
+# Skip generators
+
+~~~
+sed -i '/Rails::Application/a \
+    config.i18n.enforce_available_locales = true\
+    config.generators do |generate|\
+      generate.helper false\
+      generate.javascript_engine false\
+      generate.request_specs false\
+      generate.routing_specs false\
+      generate.stylesheets false\
+      generate.test_framework :rspec\
+      generate.view_specs false\
+    end\
+    config.action_controller.action_on_unpermitted_parameters = :raise\
+' config/application.rb
+git add . && git commit -m "Skip generators"
+~~~
+
+# Sample page
+
+~~~
+rails g controller pages index # --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
+sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
+git add . && git commit -m "Adding sample index page"
+~~~
+
 # Authentication
 
 ## Cleareance gem
@@ -395,10 +421,6 @@ sed -i '/<body>/a \\n\
 git add . && git commit -m "Adding sign signout path"
 ~~~
 
-## Devise gem
-
-See blog post [devise-oauth-angular]({{ site.baseurl }}
-{% post_url 2015-12-20-devise-oauth-angular %})
 
 # Company scaffold with skipped unused files
 ~~~
@@ -560,3 +582,35 @@ On heroku add *Papertrail* add-on and go to the [https://papertrailapp.com/event
   end
   ~~~
 
+* if you want indempotent seed data you should have some identifier for wich you
+  can run `where(id: id).first_or_create do...end` (for user
+  `first_or_initialize` since we can't create without password, but we don't
+  store password). `do ... end` is perfoment only if item is not found.
+
+  ~~~
+  # db/seeds.rb
+  # deterministic data
+  [
+    {:name => "Admin/Office"}
+  ].each do |doc|
+    job_type = JobType.where(doc).first_or_create do
+      puts "JobType #{doc[:name]}" 
+    end
+
+  # deterministic and random data
+  NUMBER_OF_FAKE_USERS = 5
+  (
+    [
+      { email: 'asd@asd.asd', password: 'asdasd', role: User.roles[:manager] },
+    ] +
+    Array.new(NUMBER_OF_FAKE_USERS).map do
+      { email: Faker::Internet.email, password: Faker::Internet.password }
+    end
+  ).each do |doc|
+    User.where(doc.slice(:email)).first_or_initialize do |user|
+      user.password = doc[:password]
+      user.save!
+      puts "User #{user.email}"
+    end
+  end
+  ~~~

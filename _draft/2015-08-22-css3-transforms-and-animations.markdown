@@ -21,7 +21,7 @@ Before you dive into details, you can try [animate]() (also [wow](https://github
 </html>
 ~~~
 
-Transform propery
+Transform property
 ===
 
 ~~~
@@ -98,9 +98,10 @@ so you don't need user action to animate...
 
 # Angular
 
-Include `ngAnimate` and white css for `ng-enter` and `ng-enter-active` [old
+Include `ngAnimate` and for `ngRepeat` use `ng-enter` and `ng-enter-active` [old
 doc](https://code.angularjs.org/1.2.22/docs/api/ngAnimate/service/$animate). We
-could just also wath: leave, move, enabled.
+could just also watch `ng-leave`, `ng-move` with ngRepeat, `ng-add` and
+`ng-remove` with ngClass, `ng-hide` with ngShow.
 
 There is nice [ng-fx](https://github.com/AngularClass/ng-fx)
 [egghead](https://egghead.io/lessons/angularjs-introduction-to-ngfx-for-angular-animations)
@@ -108,6 +109,6 @@ so you can use their animations. To install just run `bower instal ng-fx --save`
 and include `ngFx` in your module file. Just add some of [the
 supported](https://github.com/AngularClass/ng-fx/blob/master/animationList.txt)
 animations like `div(ng-repeat="item in items" class="fx-zoom-left fx-speed-500
-fx-ease-sine fx-stagger-10")`
+fx-ease-sin fx-stagger-10")`
 
 https://24ways.org/2010/intro-to-css-3d-transforms/

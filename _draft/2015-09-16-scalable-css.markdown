@@ -57,5 +57,6 @@ https://en.bem.info/
 occupy the space where it was
 * to move element to the right but keep inside parent element you need to mark
   parent as `position: relative` and than use `position: absolute; right: 10px`
+* use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
 
  https://responsivedesign.is/develop/getting-started-with-sass

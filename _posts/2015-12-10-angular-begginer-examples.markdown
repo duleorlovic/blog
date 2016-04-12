@@ -557,5 +557,5 @@ $interval(
   since DOM is updated always, even `o.title` is changed.
   [link](http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/)
   only usage is that directive link function is not called until we add new
-  items or updateId [look console log](http://jsfiddle.net/6k834fzx/). If we
+  items or updateId [look console log](http://jsfiddle.net/6k834fzx/4). If we
   update title Link function will not be called although DOM will be updated.

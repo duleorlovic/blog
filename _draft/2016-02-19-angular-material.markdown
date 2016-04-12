@@ -22,6 +22,12 @@ tags: css angular
   md-autofocus="!vm.menuItem.name">`. It works only on `$mdDialog`,
   `$mdBottomSheet` and `$mdSidenav`
 
+* [md-select](https://material.angularjs.org/latest/api/directive/mdSelect) and
+  `md-option` should have values inside quotes like
+  `md-option(ng-value="'delivery_only'")`
+  
+  * use `$scope.$watch 'vm.restaurantCart.pickUp'` instead of `ng-click` since
+    value is not yet updated in `ng-click` hook
 
 # Animations
 

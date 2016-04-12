@@ -42,7 +42,8 @@ Some not used anymore
 
 [start explorer](https://github.com/duleorlovic/config/blob/master/vim/netrw.vim).
 To change current folder just press c on folder line `help :netrw-c`.
-That's better than `cd ../path` which change in all tabs
+That's better than `cd ../path` which change in all tabs. It will not affect
+already opened windows, so it should be done on the first window in the tab.
 
 Inside netrw:
 
@@ -80,8 +81,11 @@ imap <silent> <S-F7> <Esc><S-F7>a
 
 # Show ruby return values on each line in vim
 
-Install [seeing_is_believing](https://github.com/JoshCheek/seeing_is_believing) with `gem install seeing_is_believing` and add plugin `cd ~/.vim/bundle && git clone https://github.com/hwartig/vim-seeing-is-believing` and add mappins:
-`F4` mark, `F5` run (not in visual) and `enter` mark and run (not in insert mode)
+Install [seeing_is_believing](https://github.com/JoshCheek/seeing_is_believing)
+with `gem install seeing_is_believing --version 3.0.0.beta.7` and add plugin `cd
+~/.vim/bundle && git clone https://github.com/hwartig/vim-seeing-is-believing`
+and add mappins: `F4` mark, `F5` run (not in visual) and `enter` mark and run
+(not in insert mode)
 
 ~~~
 " .vimrc Enable seeing-is-believing mappings only for Ruby

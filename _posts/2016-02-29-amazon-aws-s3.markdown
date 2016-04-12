@@ -168,8 +168,44 @@ To check your DNS you can use linux command `host`:
 
 # aws-sdk
 
-Gem
+You can use aws-sdk for simple uploading
+<https://github.com/duleorlovic/securiPi/blob/master/s3.rb>
 
+# Elastic Beanstalk
+
+Using EB client you need to add permissions for AWSElasticBeanstalkFullAccess
+for AWS keys in your env
+
+~~~
+sudo pip install awsebcli
+eb init
+eb create myapp-env
+eb setenv SECRET_KEY_BASE=`rake secret`
+eb printenv
+eb logs
+eb deploy
+eb open
+~~~
+
+Rails sqlite database can't be shared between instances (event when we just
+deploy the code). Adding database is one click. Just use proper env var names:
+
+~~~
+# config/database.yml
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
+~~~
+
+# Admin access
+
+You can create users and attach AdministratorAccess (Resource *) and create
+password so they can login in on app url like: `https://123123.signin.aws.amazon.com/console`.
 
 # Errors
 

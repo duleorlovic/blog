@@ -29,7 +29,10 @@ development:
   mail_interceptop_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
 ~~~
 
-When you need to preview a lot of emails, its faster to use letter_opener gem. Just put in your Gemfile under development `gem "letter_opener"` and in *config/environments/development.rb* `config.action_mailer.delivery_method = :letter_opener`. Works even for ajax requests.
+When you need to preview a lot of emails, its faster to use letter_opener gem.
+Just put in your Gemfile under development `gem "letter_opener"` and in
+*config/environments/development.rb* `config.action_mailer.delivery_method =
+:letter_opener`. Works even for ajax requests.
 
 For easier styling, you should use *roadie* gem, put in Gemfile
 
@@ -39,7 +42,8 @@ gem 'roadie'
 gem 'roadie-rails'
 ~~~
 
-To preview emails create *app/mailer_previews/application_mailer_preview.rb* with content
+To preview emails create *app/mailer_previews/application_mailer_preview.rb*
+with content
 
 ~~~
 class ApplicationMailerPreview < ActionMailer::Preview
@@ -51,7 +55,9 @@ class ApplicationMailerPreview < ActionMailer::Preview
 end
 
 ~~~
-add a line `config.action_mailer.preview_path = "#{Rails.root}/app/mailer_previews"` to *config/environments/development.rb* and go to [rails/mailers](http://localhost:3000/rails/mailers).
+add a line `config.action_mailer.preview_path =
+"#{Rails.root}/app/mailer_previews"` to *config/environments/development.rb* and
+go to [rails/mailers](http://localhost:3000/rails/mailers).
 
 
 # Receiving emails

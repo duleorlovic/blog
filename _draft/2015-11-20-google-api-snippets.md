@@ -122,6 +122,7 @@ Map with markers
   end
 ~~~
 
+When creating a map, you need to provide zoom option.
 
 ~~~
 <%# app/views/home/search.html.erb %>

@@ -14,16 +14,28 @@ bundle
 rails generate devise:install
 git add . && git commit -m "rails g devise:install"
 rails g devise User
+rake db:migrate
 git add . && git commit -m "rails g devise user"
+
 # optional
 # rails g devise:views && git add . && git commit -m "rails g devise:views"
-sed -i '/<body>/a \\n<% if current_user %>\n  <strong><%= current_user.email %></strong> <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\n<% else %>\n  <a href="<%= new_user_registration_path %>">Sign up</a> <a href="<%= new_user_session_path %>">Log in</a>\n<% end %>'  app/views/layouts/application.html.erb 
+sed -i app/views/layouts/application.html.erb -e '/<body>/a \
+  <% if current_user %>\
+    <strong><%= current_user.email %></strong>\
+    <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\
+  <% else %>\
+    <a href="<%= new_user_registration_path %>">Sign up</a>\
+    <a href="<%= new_user_session_path %>">Log in</a>\
+  <% end %>'
 git add . && git commit -m "Adding login/logout header in layout"
 ~~~
 
 Read *config/initializers/devise.rb* about default configuration.
 
-You can use `before_action :authenticate_user!` in controllers that will redirect to `/users/sign_in`. You need to [set up emails](http://duleorlovic.github.io/blog/2015/04/05/common-rails-bootstrap-snippets/#tocAnchor-1-13) to actually receive registration email.
+You can use `before_action :authenticate_user!` in controllers that will
+redirect to `/users/sign_in`. You need to [set up
+emails]({{ site.baseurl }}{% post_url 2015-04-05-common-rails-bootstrap-snippets %})
+to actually receive registration email.
 
 
 # Devise and Omniauth
@@ -36,8 +48,6 @@ gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2', '0.2.5'
 gem "omniauth-oauth2", '1.2.0' # skip_jwt issue
 # Could not find a valid mapping for path "/omniauth/google_oauth2/callback"
-
-
 HERE_DOC
 bundle
 rails g migration AddOmniauthToUsers provider:index uid:index
@@ -68,33 +78,15 @@ sed -i config/secrets.yml -e '/test:/i \
 Customization:
 
 ~~~
-sed -i '/<body>/a \
-<%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>\
-' app/views/layouts/application.html.erb
+sed -i app/views/layouts/application.html.erb -e '/<body>/a \
+<%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>'
 
-echo 'class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
-  # data is in request.env["omniauth.auth"]
-  [:facebook, :google_oauth2, :twitter ].each do |provider| # yaho_oauth2
-    define_method provider do
-      @user = User.from_omniauth(request.env["omniauth.auth"])
-
-      if @user.persisted?
-        sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
-        set_flash_message(:notice, :success, :kind => provider) if is_navigational_format?
-      else
-        session["devise.facebook_data"] = request.env["omniauth.auth"]
-        redirect_to new_user_registration_url
-      end
-    end
-  end
-end ' > app/controllers/omniauth_callbacks_controller.rb
-
-sed -i '/end/i \
+sed -i app/models/user.rb -e '/end/i \
+\
   def self.from_omniauth(auth)\
-    user = where(email: auth.info.email).first\
+    user = find_by(email: auth.info.email)\
     return user if user\
-    user = where(provider: auth.provider, uid: auth.uid).first\
+    user = find_by(provider: auth.provider, uid: auth.uid)\
     return user if user\
     # create new user with some password\
     user = User.create!(\
@@ -103,21 +95,40 @@ sed -i '/end/i \
       provider: auth.provider,\
       uid: auth.uid,\
     )\
-    # user.name = auth.info.name   # assuming the user model has a name\
+    # user.name = auth.info.name # assuming the user model has a name\
     # user.image = auth.info.image # assuming the user model has an image\
     user\
-  end\
-' app/models/user.rb
+  end'
 
 vi app/models/user.rb # add :omniauthable
 # no need for , :omniauth_providers => [:facebook]
 
-sed -i '/devise_for/c \
+sed -i config/routes.rb -e '/devise_for/c \
   devise_for :users,\
-    controllers: {\
-      omniauth_callbacks: "omniauth_callbacks",\
-    }\
-' config/routes.rb
+             controllers: {\
+               omniauth_callbacks: "omniauth_callbacks",\
+             }'
+
+cat > app/controllers/omniauth_callbacks_controller.rb << HERE_DOC
+class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
+  # data is in request.env["omniauth.auth"]
+  [:facebook, :google_oauth2, :twitter].each do |provider| # yaho_oauth2
+    define_method provider do
+      @user = User.from_omniauth(request.env["omniauth.auth"])
+
+      if @user.persisted?
+        sign_in_and_redirect @user, event: :authentication
+        # this will throw if @user is not activated
+        set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
+      else
+        session["devise.facebook_data"] = request.env["omniauth.auth"]
+        redirect_to new_user_registration_url
+      end
+    end
+  end
+end
+HERE_DOC
 ~~~
 
 If you need multiple identities per account than create separate table for
@@ -148,10 +159,18 @@ More on blog facebook share buttons.
 
 # Google console
 
-Create a project in google console and enable *Google+ API*. Create *OAuth 2.0 client ID* (or edit exists one clicking on its name) and set *Authorized redirect URIs* to all urls that will be used, like `http://localhost.dev/omniauth/google_oauth2/callback` or `http://localhost:9000/omniauth/google_oauth2/callback` and also for https `https://localhost.dev/omniauth/google_oauth2/callback` and don't forget to save.
-Also fill the *Authorized JavaScript origins* with domains and port like `http://localhost.dev`.
+Create a project in google console and enable *Google+ API*. Create *OAuth 2.0
+client ID* (or edit exists one clicking on its name) and set *Authorized
+redirect URIs* to all urls that will be used, like
 
-*Changes needs 5 min to propagate*
+* `http://localhost:3000/users/auth/google_oauth2/callback` this is default
+  `devise_for :users`
+* `http://localhost:9000/omniauth/google_oauth2/callback` and also for https
+* `https://localhost.dev/omniauth/google_oauth2/callback` 
+* also fill the *Authorized JavaScript origins* with domains and port like
+`http://localhost.dev`.
+
+Dont forget to save **Changes needs 5 min to propagate**
 
 # Angular ng-token-auth demo
 
@@ -540,13 +559,18 @@ sed -i config/application.rb -e '/  end/i \
 # Resend confirmation email on login
 
 When user has not confirmed email and `config.allow_unconfirmed_access_for =
-3.days` has expired, and when he login there will be `Failed to login because A
-confirmation email was sent to your account at asd@asd.asd. You must follow the
-instructions in the email before your account can be activated`. We can resend
-confirmation in this failed login attempt (don't resend email in case
-`allow_unconfirmed_access_for` is not set or zero and you automatically log in
-user after registration). You can also check if confirmation is send more than 
-1.day ago and update `@resource.confirmation_sent_at = Time.now.utc`
+3.days` has expired, and when he login there will be an error:
+
+> Failed to login because A confirmation email was sent to your account at
+> asd@asd.asd. You must follow the instructions in the email before your account
+> can be activated
+
+We can resend confirmation in this failed login attempt (don't resend email in
+case `allow_unconfirmed_access_for` is not set or zero and you automatically log
+in user after registration). You can also check if confirmation is send more
+than 1.day ago and update `@resource.confirmation_sent_at = Time.now.utc -
+Devise.allow_unconfirmed_access_for` (this substraction is needed because
+someone can try to login right after confirmation email is send).
 
 ~~~
 # config/routes.rb
