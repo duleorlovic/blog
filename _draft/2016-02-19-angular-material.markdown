@@ -29,6 +29,26 @@ tags: css angular
   * use `$scope.$watch 'vm.restaurantCart.pickUp'` instead of `ng-click` since
     value is not yet updated in `ng-click` hook
 
-# Animations
+* [md-chips](https://github.com/angular/material/issues/2829) does not work with
+  `ng-repeat`. You need to use md-chips api like
 
-* 
+  ~~~
+  <md-chips ng-model="ctrl.items" readonly="true">
+    <md-chip-template>
+        {{$chip.name}}
+    </md-chip-template>
+  </md-chips>
+  ~~~
+
+* if `ng-messages` are shown before you interact with input, solution is to
+  update angular-material. Check the version with `cat
+  bower_components/angular-material/.bower.json | node_modules/json/lib/json.js
+  version` (install json with `npm install json`). Update by changing
+  `bower.json` file, replace the number with start `"angular-material": "*",`
+  and run `bower update`
+
+* [md-scroll-shrink](https://material.angularjs.org/latest/api/directive/mdToolbar)
+  on md-toolbar does not work always, so use this
+  [fix](http://codepen.io/mikkokam/pen/PqpZoN) to add outher wrapper
+
+# Animations

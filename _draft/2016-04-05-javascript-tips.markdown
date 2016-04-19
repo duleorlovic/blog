@@ -106,6 +106,18 @@ function checkIfInView($element, options){
       @customer.purchase @cart
   ~~~
 
+* multiline text without or with new lines
+
+  ~~~
+  s = "This is
+    very long line"
+  q =
+    """
+    This is
+    very long line
+    """
+  ~~~
+
 * excellent reference for
   [coffeescript-cookbook](https://coffeescript-cookbook.github.io/chapters/arrays/filtering-arrays)
 

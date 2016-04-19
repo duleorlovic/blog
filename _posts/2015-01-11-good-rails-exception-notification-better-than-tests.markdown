@@ -49,17 +49,22 @@ Set email receivers in config secrets:
   javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
 {% endhighlight %}
 
-Second variable is for javascript errors. If error occurs in ajax reponse, or in some of your javascript code, we will send another request to server to trigger notification. In your main javascript file you should have something like this
+Second variable is for javascript errors. If error occurs in ajax reponse, or
+in some of your javascript code, we will send another request to server to
+trigger notification. In your main javascript file you should have something
+like this
 
 {% highlight javascript %}
-<%# app/assets/javascripts/init.js %>
-// redefine console.log when 'console is undefined'
+// app/assets/javascripts/exception_notification.js
+
+// Ensures there will be no 'console is undefined' errors
+// http://stackoverflow.com/questions/9725111/internet-explorer-console-is-not-defined-error
 window.console = window.console || (function(){
     var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
     return c;
 })();
 
-// catch javascript errors
+// catch javascript errors with https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror
 window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
   if (typeof(flash_alert) == 'function')
     flash_alert(errorMsg);
@@ -67,11 +72,24 @@ window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
     alert(errorMsg); // we use alert if error occurs in application.js so flash_alert is not defined
 
   // notify server for this error
-  $.get('/notify-javascript-error', { errorMsg: errorMsg, url: url, lineNumber: lineNumber, column: column, errorObj: errorObj});
+  $.get('/notify-javascript-error', { errorMsg: errorMsg, url: url, lineNumber: lineNumber, column: column, stack: errorObj.stack, errorObj: errorObj});
 }
+
+// another approach is with error event listener
+// window.addEventListener('error', function (e) {
+//     var stack = e.error.stack;
+//     var message = e.error.toString();
+//     if (stack) {
+//         message += '\n' + stack;
+//     }
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('POST', '/log', true);
+//     xhr.send(message);
+// });
+
 // ajax error handling
 $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
-  //disable eventual popups so user can see the message
+  // disable eventual popups so user can see the message
   $('.active').removeClass('active');
   flash_alert("Please refresh the page. Server responds with: \"" +status+ " " + error + "\".");
   // notify server for this error
@@ -84,7 +102,18 @@ function flash_alert(msg) {
 }
 {% endhighlight %}
 
-Create route `get 'notify-javascript-error', to: 'pages#notify_javascript_error'` in your *config/routes.rb* and we will use manual notification [ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception). You can pass additional information using `:data` param. Only the first argument is required (default your can find [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)). For less important notification you can change subject with `email_prefix` param. Manual notification can be simply as one line `ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'), env: request.env, email_prefix: 'just to notify that', data: { current_user: current_user });`. Here is what we use for javascript notification:
+Create route `get 'notify-javascript-error', to:
+'pages#notify_javascript_error'` in your *config/routes.rb* and we will use
+manual notification
+[ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception).
+You can pass additional information using `:data` param. Only the first
+argument is required (default your can find
+[here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)).
+For less important notification you can change subject with `email_prefix`
+param. Manual notification can be simply as one line
+`ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'),
+env: request.env, email_prefix: 'just to notify that', data: { current_user:
+current_user });`. Here is what we use for javascript notification:
 
 {% highlight ruby %}
 # app/controllers/pages_controller.rb

@@ -405,7 +405,7 @@ angular.module 'myApp'
           scope.$apply attrs.ngReallyReject
 ~~~
 
-# UI View, Angular route, ui-router
+# UI View, Angular route
 
 `angular-route` is separated package and need to be added as module dependency
 and configured. `config` needs Providers (factory for service that will be
@@ -516,6 +516,23 @@ angular.module 'menucardsAngular'
           resolve:
             myAccountInitialData: (myAccountInitialData) ->
               myAccountInitialData()
+  ~~~
+
+* if you need to do some jQuery on state change (not only when controller loads,
+  but when we change states inside current controller) you can listen to events
+  on `$scope` (this scope is destroyed when controller is destroyed)
+
+  ~~~
+  $scope.$on '$stateChangeStart', (e, toState, toParams, fromState, fromParams) ->
+    $scope.sectionName = toParams.sectionName
+    if toState.name == 'menu'
+      $timeout ->
+        new scrollItem 'cart'
+    return
+  # this is when user lands on menu page
+  $timeout ->
+    if $('#cart').first()
+      new scrollItem 'cart'
   ~~~
 
 # Batarang

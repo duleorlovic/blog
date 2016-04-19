@@ -183,3 +183,11 @@ When creating a map, you need to provide zoom option.
     {{ location.latitude }},{{ location.longitude }} \
     &size=100x100&markers=icon:http://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png|{{ location.latitude }},{{ location.longitude }}')
   ~~~
+
+# Youtube
+
+[yt](https://github.com/Fullscreen/yt) gem access [youtube
+api](https://developers.google.com/youtube/). Creators <http://fullscreen.github.io/yt/>. Private or non existing video url raise exceptions so you need to `rescue Yt::Errors::NoItems, Yt::Errors::RequestError`
+
+
+

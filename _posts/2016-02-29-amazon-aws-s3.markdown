@@ -184,6 +184,7 @@ eb setenv SECRET_KEY_BASE=`rake secret`
 eb printenv
 eb logs
 eb deploy
+eb status
 eb open
 ~~~
 

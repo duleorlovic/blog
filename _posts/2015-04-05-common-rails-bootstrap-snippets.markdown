@@ -87,28 +87,43 @@ HERE_DOC
 ~~~
 
 Sometimes we need to add/replace line with template (not replace regexp)
-than we need to move replacing `s/#/\n/g` outside or sed since it will
+than we need to move replacing `s/#/\n/g` outside of sed since it will
 not be applied to new template.
 Note than we can't use inline replacement but we can move tmp file.
 
 ~~~
-sed src/app/index.module.coffee -e "/client/a $(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
+sed src/app/index.module.coffee -e "/PLACEHOLDER/a $(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
     I'm "$just"
     some long /'\ multiline <\template>.
 HERE_DOC
 )" | sed "s/ћ/\n/g" > tmp && mv tmp src/app/index.module.coffee
 ~~~
 
+Here is another solution which replace the PLACEHOLDER line
+[link](https://stackoverflow.com/questions/26770426/use-sed-in-bash-to-replace-string-with-heredoc/26770678#26770678)
+
+~~~
+cat > /tmp/template <<\HEREDOC
+    I'm "$just"
+    some long /'\ multiline <\template>.
+HERE_DOC
+sed -i myfile.rb -e '/PLACEHOLDER/ {
+  r /tmp/template
+  d
+}'
+rm /tmp/template
+~~~
+
 
 # Initial commit
 
 ~~~
-rails new myapp
+rails new myapp --database=postgresql
 cd myapp
-git init . && git add . && git commit -m "rails new myapp"
+git init . && git add . && git commit -m "rails new myapp --database=postgresql"
 ~~~
 
-# Gitignore 
+# Gitignore
 
 ~~~
 echo -e '# vim temp files
@@ -129,7 +144,8 @@ git commit -am "Update .gitignore"
 # Gemfile development & production tools
 
 ~~~
-sed -i '/group :development do/a  \
+set -i Gemfile -e '2d' # remove unneccessary empty line
+sed -i Gemfile -e '/group :development do/a  \
   # to detect N+1 sql queries\
   gem "bullet"\
   # do not show assets in log\
@@ -138,19 +154,29 @@ sed -i '/group :development do/a  \
   # just create ~/.irbrc with\
   # require "rubygems"\
   # require "irbtools"\
-  gem "irbtools", require: "irbtools/binding"
-' Gemfile
+  gem "irbtools", require: "irbtools/binding"\
+\
+  # automatic reload\
+  gem "guard-livereload", "~> 2.5", require: false\
+  gem "rack-livereload"'
 
-echo '
+cat >> Gemfile << HERE_DOC
 # adding vendor prefixes to css rules
 gem "autoprefixer-rails"
 
 # sets timezone based on browser timezone for each request
 # gem "browser-timezone-rails"
-'>> Gemfile
+HERE_DOC
 
 bundle
-git commit -am "Adding useful development & production gems"
+guard init livereload
+sed -i config/environments/development.rb -e '/^end/i \
+  # livereload\
+  config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
+  # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
+  config.web_console.whiny_requests = false'
+
+git add . && git commit -m "Adding useful development & production gems"
 ~~~
 
 ~~~
@@ -158,13 +184,97 @@ git commit -am "Adding useful development & production gems"
 sed -i app/views/layouts/application.html.erb -e '/title/a \
   <meta name="viewport" content="width=device-width, initial-scale=1">'
 
-# allow development access from remote
-sed -i config/environments/development.rb -e '/^end/i \
-  # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
-  config.web_console.whiny_requests = false'
+~~~
+
+# Sample page
+
+~~~
+rails g controller pages index --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
+sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
+git add . && git commit -m "Adding sample index page"
 ~~~
 
 # Front-end
+
+## Twitter bootstrap
+
+~~~
+cat >> Gemfile << HERE_DOC
+# twitter boostrap sass https://github.com/twbs/bootstrap-sass
+# gem "bootstrap-sass" #, :git => "https://github.com/twbs/bootstrap-sass.git", :branch => "next"
+# scaffolding generators and layout with rails generate bootstrap:install
+gem 'bootstrap-generators', '~> 3.3.4'
+HERE_DOC
+bundle
+
+# cat > app/assets/stylesheets/application.scss << HERE_DOC
+# // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
+# @import "bootstrap-sprockets";
+# @import "bootstrap";
+# HERE_DOC
+
+rails generate bootstrap:install --force # this will overwrite application.html.erb and
+# generate lib/templates and stylesheets/boostrapp-generatora/variables.scss
+
+cat > app/assets/stylesheets/application.scss << HERE_DOC
+@import "bootstrap-generators";
+HERE_DOC
+
+git add app/assets/stylesheets/application.scss
+git rm app/assets/stylesheets/application.css
+
+
+# sed -i app/assets/javascripts/application.js -e '/jquery_ujs/a \
+# //= require bootstrap-sprockets' # this is not needed since previous command
+# will insert //= require bootstrap
+
+# cat >> app/assets/stylesheets/application.scss << HERE_DOC
+# // fixed navbar needs padding http://getbootstrap.com/components/#navbar-fixed-top
+# body {
+#   padding-top: 60px;
+# }
+# HERE_DOC
+
+git add . && git commit -m "Adding boostrap"
+~~~
+
+~~~
+# add devise links
+cat > /tmp/template <<\HERE_DOC
+        </ul>
+        <ul class="nav navbar-nav">
+          <% if current_user %>
+            <li class="<%= 'active' if %(forms questions).include? params[:controller] %>">
+              <%= link_to "My Forms", forms_path %>
+            </li>
+          <% end %>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <% if current_user %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %> <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a></li>
+              </ul>
+          <% else %>
+            <li><a href="<%= new_user_registration_path %>">Sign up</a></li>
+            <li><a href="<%= new_user_session_path %>">Log in</a></li>
+            <li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %></li>
+            <li><%= link_to "Sign in with Google", user_omniauth_authorize_path(:google_oauth2) %></li>
+          <% end %>
+        </ul>
+HERE_DOC
+
+sed -i app/views/layouts/application.html.erb -e '/<.ul>/ {
+  r /tmp/template
+  d
+}'
+~~~
+
 
 ## Adding flash (both from server and client)
 
@@ -244,26 +354,6 @@ sed -i '/grid-settings/c @import "grid-settings";' base/_base.scss
 cd -
 
 git add . && git commit -m "Adding bourbon, neat and bitters scss"
-~~~
-
-## Twitter bootstrap
-
-~~~
-echo '
-# twitter boostrap sass https://github.com/twbs/bootstrap-sass
-gem "bootstrap-sass" #, :git => "https://github.com/twbs/bootstrap-sass.git", :branch => "next"
-' >> Gemfile
-bundle
-echo '
-// "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
-@import "bootstrap-sprockets";
-@import "bootstrap";
-' > app/assets/stylesheets/application.scss
-git add app/assets/stylesheets/application.scss
-git rm app/assets/stylesheets/application.css
-sed -i '/jquery_ujs/a \
-//= require bootstrap-sprockets' app/assets/javascripts/application.js
-git commit -am "Adding boostrap"
 ~~~
 
 ## Slim
@@ -387,13 +477,6 @@ sed -i '/Rails::Application/a \
 git add . && git commit -m "Skip generators"
 ~~~
 
-# Sample page
-
-~~~
-rails g controller pages index # --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
-sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
-git add . && git commit -m "Adding sample index page"
-~~~
 
 # Authentication
 
@@ -566,51 +649,3 @@ git push heroku master --set-upstream
 
 On heroku add *Papertrail* add-on and go to the [https://papertrailapp.com/events](https://papertrailapp.com/events) and search for "Started GET" , save and create email alert.
 
-# Rails tips
-
-* default value for column could be before save so it is callend only on
-  updating record. Another solution is `after_initialize :default_values` but
-  that is also called when you read object. Another approach is to put in rails
-  migration but than you need another migration if you want to change value. So
-  my suggestion is:
-
-  ~~~
-  before_save :default_values
-  private
-  def default_values
-    self.logo ||= Rails.application.secrets.default_restaurant_logo
-  end
-  ~~~
-
-* if you want indempotent seed data you should have some identifier for wich you
-  can run `where(id: id).first_or_create do...end` (for user
-  `first_or_initialize` since we can't create without password, but we don't
-  store password). `do ... end` is perfoment only if item is not found.
-
-  ~~~
-  # db/seeds.rb
-  # deterministic data
-  [
-    {:name => "Admin/Office"}
-  ].each do |doc|
-    job_type = JobType.where(doc).first_or_create do
-      puts "JobType #{doc[:name]}" 
-    end
-
-  # deterministic and random data
-  NUMBER_OF_FAKE_USERS = 5
-  (
-    [
-      { email: 'asd@asd.asd', password: 'asdasd', role: User.roles[:manager] },
-    ] +
-    Array.new(NUMBER_OF_FAKE_USERS).map do
-      { email: Faker::Internet.email, password: Faker::Internet.password }
-    end
-  ).each do |doc|
-    User.where(doc.slice(:email)).first_or_initialize do |user|
-      user.password = doc[:password]
-      user.save!
-      puts "User #{user.email}"
-    end
-  end
-  ~~~

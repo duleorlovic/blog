@@ -58,5 +58,7 @@ occupy the space where it was
 * to move element to the right but keep inside parent element you need to mark
   parent as `position: relative` and than use `position: absolute; right: 10px`
 * use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
+* use relative units instead of absolute
+  <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 { font-size: 20vh;}`
 
  https://responsivedesign.is/develop/getting-started-with-sass

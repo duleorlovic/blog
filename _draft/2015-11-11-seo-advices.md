@@ -96,3 +96,26 @@ gunzip public/sitemap.xml.gz
 heroku run sitemap:refresh
 ~~~
 
+# Schema.org
+
+You can follow <http://schema.org/docs/gs.html> to add microdata in your markup
+like: `<div itemscope><h1 itemprop="name">Duke</h1></div>`
+
+You can add head tags for facebook [open graph protocol](http://ogp.me/). In
+Rails it will be like:
+
+~~~
+/ haml
+- content_for :head do
+  %meta{property: "og:type",        content: "article"}
+  %meta{property: "og:title",       content: "MySite | #{@post.title}"}
+  %meta{property: "og:image",       content: share_image_url(@post)}
+  %meta{property: "og:description", content: @post.description}
+  %meta{property: "og:url",         content: post_url(@post.id)}
+  %meta{property: "og:site_name",   content: "MySite"}
+  %meta{name: "twitter:card",       content: "photo"}
+  %meta{name: "twitter:site",       content:"@mysite"}
+  %meta{name: "twitter:title",      content: "MySite | #{@post.title}"}
+  %meta{name: "twitter:image",      content: share_image_url(@post)}
+  %meta{name: "twitter:url",        content: post_url(@post.id)}
+~~~

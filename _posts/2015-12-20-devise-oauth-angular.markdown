@@ -136,7 +136,7 @@ identity.
 
 # Facebook app
 
-1. Create app on [developers.facebook.com](developers.facebook.com). By default
+1. Create app on [developers.facebook.com](http://developers.facebook.com). By default
    fb app is in development mode and can only be used by app admins, developers
    and testers.
 
