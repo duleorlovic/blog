@@ -290,14 +290,12 @@ that somehow does not work well.  There are also errors from server
   <input type="email" name="email" ng-model="vm.menuItem.email"
   ng-required="true" ng-pattern="/^.+@.+\..+$/"
   ng-change="editMenuItemForm.email.$setValidity('server', true)">
-  <div ng-messages="editMenuItemForm.email.$errors">
+  <div ng-messages="editMenuItemForm.email.$error">
     <div ng-message="required">This field is required</div>
     <div ng-message="email">This field must be an email</div>
     <div ng-message="minlength">Your field is too short</div>
     <div ng-message="pattern">Must look like an email</div>
-  </div>
-  <div ng-messages="vm.serverErrors.editMenuItemForm.email">
-    <div>{{ vm.serverErrors.editMenuItemForm.email.toString() }}</div>
+    <div ng-message="server">{{ String(vm.serverErrors.editMenuItemForm.email) }}</div>
   </div>
 
   <md-button type="submit" class="md-raised md-primary"
@@ -444,40 +442,40 @@ is not so simple, so here are examples:
   `ui-sref="admin.menu_items({staurantId: restaurant.id})"`
 * if you want to completely change the template with edit template, than wrap it
 
-~~~
-# show.html
-<ui-view>
-  My name is {{ name }}
-</ui-view>
+  ~~~
+  # show.html
+  <ui-view>
+    My name is {{ name }}
+  </ui-view>
 
-# edit.html
-<form>
-  <input name="name">
-</form>
+  # edit.html
+  <form>
+    <input name="name">
+  </form>
 
-# my.router.coffee
-angular.module 'my'
-.config ($stateProvider) ->
-  $stateProvider
-    .state 'myAccount',
-      url: '/my-account'
-      templateUrl: 'show.html'
-      controller: 'MyController'
-      controllerAs: 'vm'
-      resolve:
-        myAccountInitialData: (myAccountInitialData) ->
-          myAccountInitialData()
+  # my.router.coffee
+  angular.module 'my'
+  .config ($stateProvider) ->
+    $stateProvider
+      .state 'myAccount',
+        url: '/my-account'
+        templateUrl: 'show.html'
+        controller: 'MyController'
+        controllerAs: 'vm'
+        resolve:
+          myAccountInitialData: (myAccountInitialData) ->
+            myAccountInitialData()
 
-    .state 'myAccount.edit',
-      url: '/edit'
-      templateUrl: 'edit.html'
-      # no need to resolve here since this is inside MyController
-~~~
+      .state 'myAccount.edit',
+        url: '/edit'
+        templateUrl: 'edit.html'
+        # no need to resolve here since this is inside MyController
+  ~~~
 
-When you need double click to go to nested state, you are probably coverting
-that state with some other state
-[stackoverflow](http://stackoverflow.com/questions/25548798/angular-ui-router-having-to-click-twice-for-view-to-update-as-expected-with-d)
-route resolution problem.
+*  When you need double click to go to nested state, you are probably coverting
+  that state with some other state
+  [stackoverflow](http://stackoverflow.com/questions/25548798/angular-ui-router-having-to-click-twice-for-view-to-update-as-expected-with-d)
+  route resolution problem.
 
 * resolve initialData before new state is activated
   [link](http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx)
@@ -534,6 +532,10 @@ angular.module 'menucardsAngular'
     if $('#cart').first()
       new scrollItem 'cart'
   ~~~
+
+* [multiple
+  views](https://github.com/angular-ui/ui-router/wiki/Multiple-Named-Views) you
+  can not have two different active state, so it will toggle
 
 # Batarang
 

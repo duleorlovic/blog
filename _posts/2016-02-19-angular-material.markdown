@@ -51,4 +51,23 @@ tags: css angular
   on md-toolbar does not work always, so use this
   [fix](http://codepen.io/mikkokam/pen/PqpZoN) to add outher wrapper
 
+* issue when validation message is not shown can be fixed with:
+  [1](https://github.com/angular/material/issues/5837)
+
+  ~~~
+  md-input-container.md-input-invalid ng-message {
+    opacity: 1 !important;
+  }
+  ~~~
+  
+  or in js by adding two attributes
+  [2](https://github.com/angular/material/issues/6767) (animation stop working)
+
+  ~~~
+  md-messages md-auto-hide="false" ng-if="myForm.myField.$touched"
+  ~~~
+
+  Problematic validations are also shown if your use `ng-if` instead of
+  `ng-show`
+
 # Animations

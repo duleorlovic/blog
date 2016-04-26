@@ -83,9 +83,186 @@ Some usefull validations
 ~~~
 validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
 validates :email, format: { with: User.email_regexp, allow_blank: true }
-
 validates :email, uniqueness: { scope: :user_id }
+~~~
 
+# Order
+
+~~~
+default_scope { order('created_at DESC') }
+~~~
+
+
+# Format date
+
+Write datetime in specific format
+
+~~~
+# config/initializers/mytime_formats.rb
+# puts user.updated_at.to_s :myapp_time
+# puts Time.now.to_s :myapp_time
+# puts Date.today.to_time :myapp_time # Date object need to be type casted to Time
+# puts Time.now.to_date :myapp_date # Time object to Date if we want myapp_date
+Time::DATE_FORMATS[:myapp_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
+Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
+Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
+~~~
+
+# Multiline render js response
+
+Write long string in multiple lines with `%()`, for example:
+
+~~~
+format.js do
+  render js: %(
+    $('##{key}').replaceWith('#{view_context.j view_context.render partial: 'product_table', locals: { products: Product.send( key).all, product_type_string: key.to_s}} ');
+    jQuery(".best_in_place").best_in_place();
+    )
+end
+~~~
+
+# Autosize
+
+Textarea should be [autosized](http://www.jacklmoore.com/autosize/) (download
+`autosize.js` from `dist/` folder). Put below your textarea for ajax responses
+and put in your main.js file on jQuery load.
+
+~~~
+<%# app/views/forms/_form.html.erb %>
+<%= f.text_area :title %>
+<%= javascript_tag "autosize($('textarea'))" if request.xhr? %>
+
+// app/assets/javascripts/main.js.erb
+$(function() {
+  autosize($('textarea'));
+});
+~~~
+
+# Upload file
+
+Since default file button does not look nice we just hide it (android has some
+probles when it is hidden, so we just move it), and use label to trigger it and
+`on change` we submit the form. Note that we use `id` because we could have more
+than one form on a page.
+
+~~~
+<%# _suppression_list.html.erb %>
+  <div class="pull-right">
+    <%= form_tag import_suppression_path(suppression_list), multipart:true, class: 'pull-right' do %>
+      <span data-chosen-filename></span> &nbsp;
+      <%= label_tag :file, 'Upload CSV', for: "upload-file-#{suppression_list.id}", style: 'display:inline' %>
+      <%= file_field_tag :file, id: "upload-file-#{suppression_list.id}", 'data-upload-file': true, style: 'position:absolute; top: -1000px' %>
+    <% end %>
+  </div>
+~~~
+
+~~~
+# javascripts/leads.coffee
+$(document).on 'change', '[data-upload-file]', (e) ->
+  console.log("upload csv")
+  e.preventDefault()
+  file = this.files[0]
+  allowedExtensions = /^(text\/csv)$/
+  $(this).closest('form').find("[data-chosen-filename]").text this.value
+  if (this.files.length == 0 )
+    alert("Please chose one csv file")
+    return
+  if(! allowedExtensions.test(file.type))
+    alert("File type is not allowed")
+    return
+  $(this).closest('form').submit()
+~~~
+
+# Postgres
+
+* if you want to add or remove reference in migration `rails g migration
+  add_user_to_leads user:references` than you can write
+
+  ~~~
+  class AddUserToLeads < ActiveRecord::Migration
+    def change
+      add_reference :leads, :contact, index: true, foreign_key: true
+    end
+  end
+  ~~~
+
+* if you want to add unique index on some columns (to see validation error
+  instead of database esception, should also be in rails `validates :email,
+  uniqueness: { scope: :user_id }`
+
+  ~~~
+  class AddUniqContacts < ActiveRecord::Migration
+    def change
+      add_index :contacts, [:email, :user_id], unique: true
+    end
+  end
+  ~~~
+
+* adding array of any type and hstore is easy, just add default value `[]` and
+`''` (breaks for `{}`). You can create hstore extension in migration. If you
+need arrays of hstore you can create json array
+
+  ~~~
+  class CreatePhones < ActiveRecord::Migration
+    def change
+      execute "create extension hstore"
+      create_table :phones do |t|
+        t.string :my_array, array: true, default: []
+        t.hstore :my_hash, default: ''
+        t.json :my_array_of_hash, array: true, default: []
+      end
+    end
+  end
+  ~~~
+
+  You can enable hstore [link](https://gist.github.com/terryjray/3296171) `sudo
+  psql -d Scuddle_app_development -U orlovic` and `CREATE EXTENSION hstore;` or
+  in one command: `sudo su postgres -c "psql Scuddle_app_test -c 'CREATE
+  EXTENSION hstore;'"`. You should do this also for *test* and *development*
+  database. If you don't know database name you can use [rails
+  runner](http://guides.rubyonrails.org/command_line.html#rails-runner)
+
+  ~~~
+  sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations["production"]["database"]'` -c 'CREATE EXTENSION hstore;'"
+  ~~~
+
+  If you need to run `rake db:migrate:reset` to rerun all migration to check if
+db/schema is in sync, than the best way is to alter user to have superuser
+privil `sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH
+SUPERUSER;'"` where orlovic is database username (you can see those usernames -
+roles using pqadmin visual program)
+[link](https://github.com/diogob/activerecord-postgres-hstore/issues/99).
+
+* dump database from production for local inspection, you can download from
+heroku dump file and import in database
+
+  ~~~
+  RAILS_ENV=production rake db:create
+  chmod a+r a.dump
+  sudo su postgres -c 'pg_restore -d Scuddle_app_development --clean --no-acl --no-owner -h localhost a.dump'
+  ~~~
+
+* you should explicitly add timestamps with `t.timestamps`
+
+# Mailer
+
+Usefull is to have internal notification
+
+~~~
+# config/secrets.yml
+development: &default
+  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "support@example.com" %>
+  internal_notification_email: <%= ENV["INTERNAL_NOTIFICATION_EMAIL"] || "internal@example.com" %>
+~~~
+
+~~~
+# mailers/application_mailer.rb
+
+~~~
+
+~~~
+ApplicationMailer.internal_notification('SmsService', send: args)
+                 .deliver_now
 ~~~
 
 # Tips
@@ -140,72 +317,11 @@ validates :email, uniqueness: { scope: :user_id }
   end
   ~~~
 
-* if you want to add or remove reference in migration `rails g migration
-  add_user_to_leads user:references` than you can write
-
-  ~~~
-  class AddUserToLeads < ActiveRecord::Migration
-    def change
-      add_reference :leads, :contact, index: true, foreign_key: true
-    end
-  end
-  ~~~
-
-* if you want to add unique index on some columns (to see validation error
-  instead of database esception, should also be in rails `validates :email,
-  uniqueness: { scope: :user_id }`
-
-  ~~~
-  class AddUniqContacts < ActiveRecord::Migration
-    def change
-      add_index :contacts, [:email, :user_id], unique: true
-    end
-  end
-  ~~~
-
-# Format date
-
-Write datetime in specific format
-
-~~~
-# config/initializers/mytime_formats.rb
-# puts user.updated_at.to_s :myapp_time
-# puts Time.now.to_s :myapp_time
-# puts Date.today.to_time :myapp_time # Date object need to be type casted to Time
-# puts Time.now.to_date :myapp_date # Time object to Date if we want myapp_date
-Time::DATE_FORMATS[:myapp_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
-Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
-Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
-~~~
-
-# Multiline render js response
-
-Write long string in multiple lines with `%()`, for example:
-
-~~~
-format.js do
-  render js: %(
-    $('##{key}').replaceWith('#{view_context.j view_context.render partial: 'product_table', locals: { products: Product.send( key).all, product_type_string: key.to_s}} ');
-    jQuery(".best_in_place").best_in_place();
-    )
-end
-~~~
-
-# Autosize
-
-Textarea should be [autosized](http://www.jacklmoore.com/autosize/) (download
-`autosize.js` from `dist/` folder). Put below your textarea for ajax responses
-and put in your main.js file on jQuery load.
-
-~~~
-<%# app/views/forms/_form.html.erb %>
-<%= f.text_area :title %>
-<%= javascript_tag "autosize($('textarea'))" if request.xhr? %>
-
-// app/assets/javascripts/main.js.erb
-$(function() {
-  autosize($('textarea'));
-});
-~~~
-
 * parse url to get where user come from `URI.parse(request.referrer).host`
+* prefer using `@post.destroy` instead of `@post.delete` because it is propagate
+* `spring stop` in many cases:
+  * when you export some ENV and use tham in `config/secrets.yml` but can't see in `rails c`
+* render
+  [json](http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html)
+  can be customized with `render json: @phones.as_json(only: [:id], expect:
+  [:created_at], include: :posts)`

@@ -1,19 +1,19 @@
 ---
 layout: post
-title: Javascript tips
+title: Javascript & coffeescript tips
 ---
 
 * to see all keys of `myObj` you can use `Object.keys(myObj)`
 * alert object with `alert(JSON.stringify(myObj))`
-* if you want to break array each than you can use
-  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break than you can use [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break))
-
-* [bower](http://bower.io) `bower list` `bower install packageName` `bower
-  uninstall packageName`
+* if you want to break array `forEach` method when you find el, you can use
+  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break)
 
 * to search file in google developer tools you can open console window (with
   ESC) than on three dots, open dropdown menu and find *Search*
+* to remote item `myObject` from array `myArray.splice
+  myArray.indexOf(myObject),1 `
 
+~~~
 function checkIfInView($element, options){
   // Not in view so use https://developer.mozilla.org/en-US/docs/Web/API/Element.scrollIntoView
   // use options parameter to force scrolling even element is visible on current view
@@ -49,6 +49,7 @@ function checkIfInView($element, options){
     }
   }
 }
+~~~
 
 
 # Coffeescript
