@@ -31,3 +31,11 @@ sed -i bower.json -e '/angular-material/c\
 bower update angular-material --save
 ~~~
 
+# Gulp
+
+* if you have error `'watch' errored after Error: watch
+  /home/orlovic/rails/menucards-frontend/src/ ENOSPC
+  ` solution is to run `echo fs.inotify.max_user_watches=524288 | sudo tee -a
+  /etc/sysctl.conf && sudo sysctl -p`
+  [link](http://stackoverflow.com/questions/16748737/grunt-watch-error-waiting-fatal-error-watch-enospc)
+
