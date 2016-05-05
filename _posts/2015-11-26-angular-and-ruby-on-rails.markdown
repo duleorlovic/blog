@@ -7,13 +7,35 @@ npToc: false
 
 # Rails as asset pipeline
 
-I like to have Rails doing all javascript assets so I choose [angular-rails-templates](https://github.com/pitr/angular-rails-templates) to cache all templates and [bower-rails](https://github.com/rharriso/bower-rails) gem to install all scripts under vendor folder (nice [tutorial](http://angular-rails.com/bootstrap.html)). When angular requests templates, it needs url of that file. Since rails uses asset pipeline we need to use erb `templateUrl: '<%= asset_path 'template' %>'` (when we store assets on CDN, than we need to allow CORS since angular is loaded on our domain). Other solution is [angular-rails-templates](https://github.com/pitr/angular-rails-templates) gem which create angular cache for all templates that found in `app/assets/javascript/templates` (if you want to place templates outside of that folder watch this [issue](https://github.com/pitr/angular-rails-templates/issues/107)). Keep in mind that you need latest gem version (1.4 does not work).
+I like to have Rails doing all javascript assets so I choose
+[angular-rails-templates](https://github.com/pitr/angular-rails-templates) to
+cache all templates and [bower-rails](https://github.com/rharriso/bower-rails)
+gem to install all scripts under vendor folder (nice
+[tutorial](http://angular-rails.com/bootstrap.html)). When angular requests
+templates, it needs url of that file. Since rails uses asset pipeline we need to
+use erb `templateUrl: '<%= asset_path 'template' %>'` (when we store assets on
+CDN, than we need to allow CORS since angular is loaded on our domain). Other
+solution is
+[angular-rails-templates](https://github.com/pitr/angular-rails-templates) gem
+which create angular cache for all templates that found in
+`app/assets/javascript/templates` (if you want to place templates outside of
+that folder watch this
+[issue](https://github.com/pitr/angular-rails-templates/issues/107)). Keep in
+mind that you need latest gem version (1.4 does not work).
 
-Since rails use minification, we need to write angular dependency inject arguments inside '' like `'$scope'` so they survive minification that happens to javascript. Those arguments are all except last one which is a function in `app.controller("MyController",['$scope',...,myController])`
+Since rails use minification, we need to write angular dependency inject
+arguments inside '' like `'$scope'` so they survive minification that happens to
+javascript. Those arguments are all except last one which is a function in
+`app.controller("MyController",['$scope',...,myController])`
 
-It is easier to follow callstack if we don't use anonymous function. On other hand it's difficult to keep sync injection params with actual definition params, so I use [ng-annotate](https://github.com/kikonen/ngannotate-rails).
+It is easier to follow callstack if we don't use anonymous function. On other
+hand it's difficult to keep sync injection params with actual definition params,
+so I use [ng-annotate](https://github.com/kikonen/ngannotate-rails).
 
-There is a angular factory for resource [angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource). For example application search [saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
+There is a angular factory for resource
+[angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource).
+For example application search
+[saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
 
 ~~~
 # src/app/resources/notify.interceptor.coffee
@@ -61,7 +83,11 @@ Response status codes:
 
 # REST
 
-Just to note that [REST api](https://en.wikipedia.org/wiki/Representational_state_transfer) means: Statelessness (no data between requests), Resource identification per request (update only one row, get could have more rows), Representational state transfer (returned representation JSON is enough to identify and manipulate row).
+Just to note that [REST
+api](https://en.wikipedia.org/wiki/Representational_state_transfer) means:
+Statelessness (no data between requests), Resource identification per request
+(update only one row, get could have more rows), Representational state transfer
+(returned representation JSON is enough to identify and manipulate row).
 
 Once API is exposed, you should not modify it, except for critical bugfixes. Use
 namespace
@@ -116,6 +142,8 @@ Tutorial videos (first are free) [egghead](https://egghead.io/technologies/angul
   [devise_token_auth](https://github.com/lynndylanhurley/devise_token_auth), run
   application with `gulp dev` and run [demo
   server](https://github.com/lynndylanhurley/devise_token_auth_demo.git).
+* [angularonrails.com](https://www.angularonrails.com/ruby-on-rails-angularjs-single-page-application/)
+* [telegram.org](https://web.telegram.org/#/login) encrypted json
 
 * for start from scratch using ng-token-auth look at
 

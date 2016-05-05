@@ -40,3 +40,12 @@ cat  bower_components/angular-material/.bower.json | node_modules/json/lib/json.
 # install json with npm install json
 ~~~
 
+# Gulp
+
+* if you have error `'watch' errored after Error: watch
+  /home/orlovic/rails/menucards-frontend/src/ ENOSPC
+  ` solution is to run `echo fs.inotify.max_user_watches=524288 | sudo tee -a
+  /etc/sysctl.conf && sudo sysctl -p`
+  [link](http://stackoverflow.com/questions/16748737/grunt-watch-error-waiting-fatal-error-watch-enospc)
+
+
