@@ -14,20 +14,29 @@ To rebuild Gemfile.lock you can run `bundle update`
 
 # Bower
 
-[bower](http://bower.io) `bower list` `bower install packageName` `bower
-uninstall packageName`. Adding new package will be saved in `bower.json` if you
+[bower](http://bower.io)  Adding new package will be saved in `bower.json` if you
 add option `--save` or `--save-dev`
 
 ~~~
+bower list
+bower install packageName
+bower uninstall packageName
 bower install ng-token-auth --save
 ~~~
 
-You can update
+You can update to the latest version by changing bower.json
 
 ~~~
 # use latest angular material
 sed -i bower.json -e '/angular-material/c\
     "angular-material": "*",'
 bower update angular-material --save
+~~~
+
+Check installed version of some package, for example `angular-material`
+
+~~~
+cat  bower_components/angular-material/.bower.json | node_modules/json/lib/json.js version
+# install json with npm install json
 ~~~
 

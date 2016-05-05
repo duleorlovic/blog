@@ -190,11 +190,113 @@ sed -i app/views/layouts/application.html.erb -e '/title/a \
 
 ~~~
 rails g controller pages index --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
+echo '<button class="btn btn-primary">
+  <i class="fa fa-camera-retro" aria-hidden="true"></i> fa-camera-retro</i>
+</button>
+' >> app/views/pages/index.html.erb
 sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
 git add . && git commit -m "Adding sample index page"
 ~~~
 
 # Front-end
+
+## Bower
+
+I would not add node_modules to git as suggested <https://coderwall.com/p/6bmygq/heroku-rails-bower>
+
+You need to use two build packs. Follow this
+[commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
+It works for latest node and npm version. Just old bower version `~1.2` gives me
+error `error Path must be a string. Received ...` so make sure you use latest
+bower. Look how you can add bootstrap.
+
+~~~
+# do not name your package as bower or other existing package
+npm init -y # to create package.json, -y to accept defaults
+npm install bower --save
+sed -i package.json -e '/scripts/a \
+    "postinstall": "./node_modules/bower/bin/bower install",'
+yes '' | bower init # to create bower.json, 'yes' is to choose default options
+echo '{
+  "directory": "vendor/assets/bower_components"
+}' > .bowerrc
+echo '
+# npm and bower packages
+node_modules
+vendor/assets/bower_components' >> .gitignore
+cat >> config/initializers/assets.rb << HERE_DOC
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+HERE_DOC
+git add . && git commit -m "Adding bower"
+
+heroku create myapp-with-bower
+heroku addons:create heroku-postgresql:hobby-dev
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+heroku buildpacks # should return  1.nodejs  2.ruby (latest will run process)
+# alternativelly, we can define then in file .buildpacks
+# echo 'https://github.com/heroku/heroku-buildpack-ruby
+# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
+# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+git push heroku master --set-upstream
+~~~
+
+Example adding bootstrap:
+
+~~~
+bower install bootstrap --save
+sed -i app/assets/stylesheets/application.css -e '/require_tree/i \
+ *= require bootstrap/dist/css/bootstrap'
+sed -i app/assets/javascripts/application.js -e '/require_tree/i\
+//= require bootstrap/dist/js/bootstrap'
+
+git commit -am "Adding bootstrap"
+~~~
+
+Adding css and js files is working fine. There is a problem when some image/font files are hardcoded in css files.
+Hopefully there is scss verion of your library and you can override some
+variables. When filename is fixed and you can not include digest sha
+than you need to deploy files without fingerprint. With help of
+[non-stupid-digest-assets](https://github.com/alexspeller/non-stupid-digest-assets)
+gem you can add non digest version. First your assets should be seen
+(precompiled) with sprockets than they will be again copied without digest.
+
+Sprockets `require` concatenates after sass compilation. So it's advices to use
+`@import` sass command instead of `require`. `@import` will work also in
+`application.css` but variable definition won't (like `$var: 1;`), so we need
+to move `css -> scss`.
+
+Here is example adding [fontawesome](http://fontawesome.io/examples/)
+
+~~~
+bower install fontawesome --save
+mv app/assets/stylesheets/application.css app/assets/stylesheets/application.scss
+cat >> app/assets/stylesheets/application.scss << \HERE_DOC
+$fa-font-path: 'font-awesome/fonts';
+@import 'font-awesome/scss/font-awesome';
+HERE_DOC
+cat >> Gemfile << HERE_DOC
+gem "non-stupid-digest-assets"
+HERE_DOC
+
+cat >> config/initializers/assets.rb << \HERE_DOC
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
+HERE_DOC
+
+cat >> config/initializers/non_digest_assets.rb << \HERE_DOC
+NonStupidDigestAssets.whitelist += [
+  /\.(?:svg|eot|woff|ttf)$/
+]
+HERE_DOC
+~~~
+
+You can test with:
+
+~~~
+RAILS_ENV=production rake db:setup db:migrate
+RAILS_ENV=production rake assets:precompile -v
+RAILS_SERVE_STATIC_FILES=true rails s -e production
+~~~
 
 ## Twitter bootstrap
 

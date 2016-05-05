@@ -302,9 +302,18 @@ cd .. # back to root
 git add . && git commit -m "Adding angular Article resource and show on main page"
 ~~~
 
-  To deploy on heroku we need custom [buildpack](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process). We could use 3th party gulp buildpacks but default [node](https://docs.npmjs.com/misc/config) [buildpack](https://github.com/heroku/heroku-buildpack-nodejs) works fine.
+  To deploy on heroku we need custom
+  [buildpack](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process).
+  We could use 3th party gulp buildpacks but default
+  [node](https://docs.npmjs.com/misc/config)
+  [buildpack](https://github.com/heroku/heroku-buildpack-nodejs) works fine.
   
-  `devDependencies` need to be renamed to `dependecies` since it runs node production mode (I tried to disable production mode using NPM_CONFIG_ONLY but than other thinks does not work). Imporant is [NODE_MODULES_CACHE](https://devcenter.heroku.com/articles/nodejs-support#cache-behavior). If we (by default) cache `/node_modules` it will not build new version to public folder.
+  `devDependencies` need to be renamed to `dependecies` since it runs node
+  production mode (I tried to disable production mode using NPM_CONFIG_ONLY but
+  than other thinks does not work). Imporant is
+  [NODE_MODULES_CACHE](https://devcenter.heroku.com/articles/nodejs-support#cache-behavior).
+  If we (by default) cache `/node_modules` it will not build new version to
+  public folder.
 
 ~~~
 # deploy to heroku
