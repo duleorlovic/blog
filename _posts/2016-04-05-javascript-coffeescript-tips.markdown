@@ -136,13 +136,15 @@ html2jade *.html --bodyless --donotencode --noattrcomma --noemptypipe
 rm *.html
 ~~~
 
-* arguments could be in new line, but strings need `\`
+* arguments could be in new line, but strings need `\`. comments are not allowed
+  inside ()
 
   ~~~
+  // comment should be outside of (arguments)
   md-button(ng-really-click='vm.delete()'
   ng-really-message='Are you sure to \
   remove this option?')
   ~~~
 
-  I prefer not to indent attributes event they suggest to [indent
+  I prefer not to indent attributes even they suggest to [indent
   them](http://jade-lang.com/reference/attributes/)
