@@ -60,14 +60,17 @@ function checkIfInView($element, options){
 * block {...} is replaced with `->` and proper indend (two spaces) or could be
   inline
 * parantheses (arg) in one line can be ommited (when there are some arguments),
-  in multiple lines they are required.  Note that () are required when you want to call
-  function without arguments (otherwise it will just return reference to the
-  function)
+  in multiple lines they are required. Don't mix inline and multiline, since it
+  will resolve to two arguments (with type object). Don't know how to break long
+  inline arguments to two line. At least first arg should be in new line, others
+  can be on the same line or in separate line.
+* `()` are required when you want to call function without arguments
+  (otherwise it will just return reference to the function)
 * object definition {...} braces can be ommited, name/value pairs could be on
   new lines (if object is only argument than parentheses can be ommited)
 * No need to write return command. Since last line is returning, put empty
   `return` in angular constructor functions
-* conditional ternary operator in `? : ` can be used with `if then else`
+* conditional ternary (triple) operator in `? : ` can be used with `if then else`
 * [loops](http://coffeescript.org/#loops) are simiral to ruby, and it's
   better than angular `forEach` since we can `break` from the loop. For example
   find by objectId in array carts:

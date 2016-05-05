@@ -19,7 +19,7 @@ tags: css angular
 
 * [md-autofocus](https://material.angularjs.org/1.0.4/api/directive/mdAutofocus)
   is nice tool to save users clicks, just add to attribude like `<input
-  md-autofocus="!vm.menuItem.name">`. It works only on `$mdDialog`,
+  md-autofocus="!vm.menuItem.name">`. It works ONLY on `$mdDialog`,
   `$mdBottomSheet` and `$mdSidenav`
 
 * [md-select](https://material.angularjs.org/latest/api/directive/mdSelect) and
@@ -41,9 +41,7 @@ tags: css angular
   ~~~
 
 * if `ng-messages` are shown before you interact with input, solution is to
-  update angular-material. Check the version with `cat
-  bower_components/angular-material/.bower.json | node_modules/json/lib/json.js
-  version` (install json with `npm install json`). Update by changing
+  update angular-material by changing
   `bower.json` file, replace the number with start `"angular-material": "*",`
   and run `bower update`
 
@@ -69,5 +67,22 @@ tags: css angular
 
   Problematic validations are also shown if your use `ng-if` instead of
   `ng-show`
+
+* [mdDialog](https://material.angularjs.org/latest/api/directive/mdDialog) works
+  fine (you can put `form` element inside `md-dialog`). You can open and wait
+  for results to resolve
+
+  ~~~
+  $mdDialog.show
+    controller: 'VerifyOrderController'
+    controllerAs: 'vm'
+    templateUrl: 'app/menu/verifyOrder.html'
+    locals:
+      restaurant: vm.restaurant
+  .then(
+    (resp) ->
+    (cancel) ->
+  )
+  ~~~
 
 # Animations

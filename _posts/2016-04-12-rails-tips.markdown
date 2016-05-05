@@ -34,11 +34,12 @@ end
   answer - target answer
 
   we hard code "answers_attributes[]" because
-  when we use fields_for :answer, than when we use ajax twice we got twice
+  when we use fields_for :answer, than when we use ajax `new` twice we got two
   question[answers_attributes][0][]
   question[answers_attributes][0][]
   and only latest will be considered
-  probably because uniq number is reset for each fields_for (id is passed with hidden field)
+  probably because uniq number is reset for each fields_for
+  (here id is passed with hidden field)
 %>
 <%= question_form.fields_for "answers_attributes[]", answer do |ff| %>
   <div class="field">
@@ -84,6 +85,24 @@ Some usefull validations
 validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
 validates :email, format: { with: User.email_regexp, allow_blank: true }
 validates :email, uniqueness: { scope: :user_id }
+~~~
+
+# Hooks
+
+Default value for column could be in migration but than you need another
+migration if you want to change value. If we put on `after_initialize
+:default_values` than it is called also when you read object. If you have
+`validates :logo` than you can not put on `before_save :default_logo` since
+validation will fails before that. We need before validation:
+
+~~~
+before_validation :default_values, on: :create
+
+private
+
+def default_values
+  self.logo ||= Rails.application.secrets.default_restaurant_logo
+end
 ~~~
 
 # Order
@@ -269,20 +288,6 @@ ApplicationMailer.internal_notification('SmsService', send: args)
 
 * [sprockets](https://github.com/rails/sprockets) are using for compiling assets
   (`//= require_tree .`)
-
-* default value for column could be before save so it is callend only on
-  updating record. Another solution is `after_initialize :default_values` but
-  that is also called when you read object. Another approach is to put in rails
-  migration but than you need another migration if you want to change value. So
-  my suggestion is:
-
-  ~~~
-  before_save :default_values
-  private
-  def default_values
-    self.logo ||= Rails.application.secrets.default_restaurant_logo
-  end
-  ~~~
 
 * if you want indempotent seed data you should have some identifier for wich you
   can run `where(id: id).first_or_create do...end` (for user
