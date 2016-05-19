@@ -4,6 +4,8 @@ title:  Postgresql Tricks for Statistics Graphs
 tags: ruby-on-rails postgresql
 ---
 
+# Introduction
+
 Learning database is funny and easy, but when you want to do something more
 complicated than `SELECT * FROM products` than you need to read documentation.
 
@@ -54,10 +56,57 @@ Some tips:
   0 WHEN 0 THEN 1 ELSE count(column_name) END`.  Another way is to use
   `COALESCE(NULLIF(column_name,0), 1)` . `NULLIF` is used to show nil, as
   division by nil is nil.
+* `FROM WHERE field IN ('a','b')` is the same as `field = 'a' OR field =
+  'b'`
+
+# Some interview questions
+
+<https://www.toptal.com/postgresql>
+Postgresql is better than NoSql because of:
+
+  * transactionality at system level
+  * aggregation functions
+  * joins across different tables
+
+NoSql has advantage of scaling (horizontal, a lot of new fields) and that you
+can store semistructured data (social networks)
+
+For full text search in Postgresql, you can use `@@` match operator `SELECT *
+FROM posts WHERE tsvector(title || ‘ ‘ || content) @@
+plainto_tsquery(‘query-string’);`
+
+High availability is implemented with redudant servers *hot standby* that copy
+data and accept only read only queries (only master can write data), and *warm
+standby* servers that only follow the changes made to primary server (does not
+accept queries) and wait to be promoted to primary server in case of master
+failure.
+
+<https://www.toptal.com/sql/interview-questions>
+
+* `UNION` (`UNION ALL`) merges two structurally compatible tables into single
+  table (with duplication)
+* `INNER JOIN` (`LEFT OUTER` `FULL` `CROSS`) returns rows that match both
+  tables (all rows from left table and matched rows from right, either left or
+  right ie union, cartesian product each by each row)
+* `SELECT count(*) WHERE cid <> '123'` will not count when cid is NULL
+* `is null` is proper way to check if `null = null` or `cid = null`
+* `WHERE cid NOT IN (SELECT wcid FROM t WHERE wcid IS NOT null)` we need to
+  check if null is in table since `NOT IN` will return empty set
+
+# Time Date
+
+* there are [4
+  types](http://www.postgresql.org/docs/9.1/static/datatype-datetime.html):
+  *timestamp, date, time* and *interval*. When you define value use single
+  quotes: `DATE '2016-05-22'`. For intervals you need to set unit `INTERVAL '1
+  WEEK'`
+* for all types there is `CURRENT_DATE, CURRENT_TIME`
+* [functions](http://www.postgresql.org/docs/9.1/static/functions-datetime.html)
+  allows you to:
+  * extract weekday `EXTRACT(DOW FROM TIMESTAMP '2016')`
 
 Practical example in Ruby on Rails
 ============
-
 
 Complex queries can be written inside *database view* but that is not easy to
 maintain since you need migration file for each change.  Also *database view* is
@@ -269,39 +318,4 @@ render 'stats_line_graph'
   legendHolder.innerHTML = myNewChart.generateLegend();
 </script>
 ~~~
-
-# Theory
-
-<https://www.toptal.com/postgresql>
-Postgresql is better than NoSql because of:
-
-  * transactionality at system level
-  * aggregation functions
-  * joins across different tables
-
-NoSql has advantage of scaling (horizontal, a lot of new fields) and that you
-can store semistructured data (social networks)
-
-For full text search in Postgresql, you can use `@@` match operator `SELECT *
-FROM posts WHERE tsvector(title || ‘ ‘ || content) @@
-plainto_tsquery(‘query-string’);`
-
-High availability is implemented with redudant servers *hot standby* that copy
-data and accept only read only queries (only master can write data), and *warm
-standby* servers that only follow the changes made to primary server (does not
-accept queries) and wait to be promoted to primary server in case of master
-failure.
-
-<https://www.toptal.com/sql/interview-questions>
-
-* `UNION` (`UNION ALL`) merges two structurally compatible tables into single
-  table (with duplication)
-* `INNER JOIN` (`LEFT OUTER` `FULL` `CROSS`) returns rows that match both
-  tables (all rows from left table and matched rows from right, either left or
-  right ie union, cartesian product each by each row)
-* `SELECT count(*) WHERE cid <> '123'` will not count when cid is NULL
-* `is null` is proper way to check if `null = null` or `cid = null`
-* `WHERE cid NOT IN (SELECT wcid FROM t WHERE wcid IS NOT null)` we need to
-  check if null is in table since `NOT IN` will return empty set
-
 

@@ -27,6 +27,20 @@ title: CSS and HTML tips
   will occupy only character and it will be disconnected from 1-2, but connected
   2-3. This margin-like separation will also be presented if `label { display:
   inline-block; }`. It seems that space is important only with inline elements.
+* if you need to render divs horizontaly (`float: left`) you need parent to have
+  `width = number_of_items * (item_width+2*item_border_width)` I calculate that
+  in javascript
+
+  ~~~
+  <script>
+    $(function() {
+      $('.slots-preview').width($('.slots-preview-item').first().outerWidth() * <%= scheduler.number_of_free_slots.count %>);
+    });
+  </script>
+  ~~~
+
+  You can add scrollbar by wrapping it `.outer { overflow-x: scroll }`
+  [link](http://stackoverflow.com/questions/9672176/prevent-floated-divs-from-wrapping-to-new-line)
 
  # Examples
 

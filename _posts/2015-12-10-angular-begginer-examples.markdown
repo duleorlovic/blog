@@ -28,6 +28,8 @@ Some of angular attribute directives:
 * `ng-view` is placeholder where routes inject templates
 
 Angular expressions can't have conditionals and loops, but have filters.
+Note that angular expressions don't have access to `window` only `scope` so no
+help from `parseInt()`, `String()` and similar.
 
 
 `$scope.$watch('email', function() { $scope.test(); })` can be used to rerun
@@ -295,7 +297,7 @@ that somehow does not work well.  There are also errors from server
     <div ng-message="email">This field must be an email</div>
     <div ng-message="minlength">Your field is too short</div>
     <div ng-message="pattern">Must look like an email</div>
-    <div ng-message="server">{{ String(vm.serverErrors.editMenuItemForm.email) }}</div>
+    <div ng-message="server">{{ vm.serverErrors.editMenuItemForm.email.toString() }}</div>
   </div>
 
   <md-button type="submit" class="md-raised md-primary"
@@ -316,9 +318,18 @@ submit)
 On server we should respond with `render json: @menu_item.errors, status:
 :bad_request` so we catch model errors, for example `resp.data.email`. If that
 field is not on form, for example unauthorized response `resp.data.errors =
-['Authorized only` than we show toast. `[].toString()` (raise if [] is nil) or
-`String([])` Fields that are not valid (for example we put space in name
-`menuItem.name == undefined`) are not send so we need to disable button when
+['Authorized only']` than we show toast. If you need to show toast but don't
+know if `resp.data` is object or array than you can use `toastr.error
+JSON.stringify resp.data`. It should be object and you need to know the key.
+
+For arrays you can use two methods: `s.toString()` and `String(s)`.
+`[].toString()` works fine but will raise if instead of `[]` is nil. So I prefer
+to use `String(...)` in controllers `String(null)=="null"`. Please not that
+`String` is `window` function so it is not available in angular expressions ie
+for `ng-message` but there we are sure that value is not nill.
+
+Fields that are not valid (for example we put space in name
+`menuItem.name == undefined`) are not sent so we need to disable button when
 form is not valid or check if `editMenuItemForm.$valid` before we call
 `menuItem.update()`.  If we disable button than we need to put
 `ng-change="form.field.$setValidity('server', true)"` to remove server error on
@@ -337,7 +348,7 @@ vm.update = (menuItem, editMenuItemForm) ->
         if editMenuItemForm[field]
           editMenuItemForm[field].$setValidity('server', false)
         else
-          toastr.error resp.data[field].toString()
+          toastr.error String resp.data[field]
       vm.serverErrors =
         editMenuItemForm: resp.data
   )
@@ -348,6 +359,9 @@ vm.update = (menuItem, editMenuItemForm) ->
 * use `controller as vm` in view and `var vm = this` in controller so you don't
   need to inject `$scope` (we need `$scope` when we want to access something in
   promise `catch = -> $scope.vm.profileForm = "a"`)
+* in [$q service](https://docs.angularjs.org/api/ng/service/$q) for promise
+  object we can call `then(successCallback, errorCallback, notifyCallback)` but
+  also `finally(callback, notifyCallback)` for clean up.
 
 * in directives you need to prefix `$root` to access rootScope, for example
   `$root.user`
@@ -355,6 +369,9 @@ vm.update = (menuItem, editMenuItemForm) ->
 * by [Angular conventions](https://github.com/mgechev/angularjs-style-guide),
   lowerCamelCase is used for factory names that won't be new'ed. Controllers and
   services should be UpperCased.
+
+  Filenames are lowerCamerCase, but folders are underscored
+  `src/app/menu_items/menuItems.jade`. Template always match controller name
 
 * [johnpapa style guide](https://github.com/johnpapa/angular-styleguide#controlleras-controller-syntax)
   * use `var vm = this;` (or more descriptive `loginVm`). Use `$scope` only for publish/subscribe events `$emit`, `$broadcast` and `$on`.
@@ -440,6 +457,7 @@ is not so simple, so here are examples:
 * navigating with
   [ui-sref](https://github.com/angular-ui/ui-router/wiki/Quick-Reference#ui-sref)
   `ui-sref="admin.menu_items({staurantId: restaurant.id})"`
+* [ui-sref-active](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.directive:ui-sref-active) to add class on navigational links that are active
 * if you want to completely change the template with edit template, than wrap it
 
   ~~~
@@ -565,6 +583,22 @@ $interval(
         vm.orders.unshift(order) if vm.orders[0] && vm.orders[0].id != order.id
     vm.youngerThan = new Date
   15000)
+~~~
+
+# Pagination
+
+You can use
+[angular-paginate-anything](https://github.com/begriffs/angular-paginate-anything)
+to show pagination links on your page. On server you can use [kaminari with
+some before
+filter](http://www.tejusparikh.com/2014/pagination-in-angular-js.html) or
+[clean_pagination](https://github.com/begriffs/clean_pagination) which I prefer.
+It is very easy to start. For angular-rails-resource I need to use [$timeout hack](https://github.com/begriffs/angular-paginate-anything/issues/95)
+
+~~~
+$scope.$on 'pagination:loadPage', (event, status, config) ->
+  $timeout ->
+    vm.users = vm.usersObject.map (userObject) -> new User userObject
 ~~~
 
 # Tips

@@ -51,6 +51,15 @@ function checkIfInView($element, options){
 }
 ~~~
 
+* `!!variable` will return false only for `0, null, "", undefined, NaN` NaN=Not
+  a number
+* to check if some property is defined on a object (method or variable), you can
+  use `in` for example `a = {b:1}; 'b' in a // returns true`
+* get last element of array `array.slice(-1);`
+* replaceAll is the same as `/g` example `"asdasd".replace(/s/g,"***")`
+* merging arrays is better to append `array1.push.apply(array1, array2)` than to
+  create new `array1.concat(array2)`
+* instead of `parseInt('10')` you can use `+'10'` to type cast string to number
 
 # Coffeescript
 

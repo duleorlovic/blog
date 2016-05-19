@@ -1,0 +1,7 @@
+ssh-add -L # list all current keys
+http://stackoverflow.com/questions/4565700/specify-private-ssh-key-to-use-when-executing-shell-command-with-or-without-ruby
+ssh-agent bash -c 'ssh-add -L' # The agent has no identities.
+ssh-agent bash -c 'ssh-add /home/orlovic/.ssh/id_rsa_nikolaob; git clone https://git.heroku.com/hidden-earth-11078.git'
+# when we downloading from heroku, we also need to sign in with `heroku login`
+# with the same account that has this key and have access to the app
+

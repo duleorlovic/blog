@@ -80,8 +80,8 @@ Than you need robots txt to point to that url.
 
 Check your sitemap on [google
 webmaster tools](https://www.google.com/webmasters/tools/home?hl=en)
-Also validate your "#{Rails.application.secrets.aws_bucket_name}"\
- ".s3.amazonaws.com/"
+Also validate your
+`"#{Rails.application.secrets.aws_bucket_name}.s3.amazonaws.com/"`
 
 If you have more domains on same server than you need to iterate for each
 `default_host` and to call `SitemapGenerator::Sitemap.ping_search_engines`

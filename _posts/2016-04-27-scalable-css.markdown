@@ -24,7 +24,7 @@ tags: css
   inside same file.
 * theme: how module or layout might look
 
-# BEM Block __Element --Modifier
+# BEM: Block __Element - -Modifier
 
 [bem.info](https://en.bem.info/) & [getbem](http://getbem.com/introduction/) is
 a way to write classes with `--` and `__` so instead of `menu-item-visible`
@@ -33,9 +33,9 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 * *blocks* are independent page component that contains other blocks or
   *elements*
 * elements can't be used outside of a block and they start with
-  ` __ `
+  `__`
 * *modifiers* defines appearance and behavior on block or elements and
-  start with `--` (or ` _ `). They always prefixed with parend block/element
+  start with `--` (or `_`). They always prefixed with parent block/element
   name, so instead of `button active` we write `button button-active` 3 reasons
   for that: single level specificity, `item button active` don't know if
   `item--active` or `button--active` and we clearly see that it is modifier and

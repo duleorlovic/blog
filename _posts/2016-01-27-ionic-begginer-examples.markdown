@@ -349,6 +349,7 @@ gulp.task('watch', function() {
 ~~~
 
 <http://yeghishe.github.io/2015/08/13/my-gulp-files-ionic-app.html>
+<https://github.com/pluralsight/guides/blob/master/published/front-end-javascript/ionic-framework-a-definitive-10-000-word-guide/article.md>
 
 # Tips
 

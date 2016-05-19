@@ -1,3 +1,7 @@
+Antipaterns
+
+<http://code.tutsplus.com/articles/antipatterns-basics-rails-tests--cms-26011>
+
 Resources:
 
 * http://railscasts.com/episodes/275-how-i-test

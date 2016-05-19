@@ -10,110 +10,6 @@ authentication and other funny tools.
 > give a man a fish and you feed him for a day. teach a man to fish and you feed
 him for a lifetime
 
-Hint: `echo -e "\n" >> filename` will add new line (that's why `-e` to the
-filename). You can use single quotes so you do not need to write `-e` and `\n`.
-Or you can use `cat > filename << HERE_DOC ... some lines with ' or " ...
-HERE_DOC` for multiline. First `\HERE_DOC` when no parametar expanded.
-
-`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
-append *home* after that line (beside insert before `i`, this could be `a`
-append and `c` change matched line). Multiple lines need to have `\` at the end
-of line (multiline *echo ' ...'* does not need that trailing backslash). You can
-use `sed -i "// a" file.txt` but then you need `\n\` at the end of each line.
-Remember that no char (even space) could be after last `\`.
-
-Most common usage is to add before some line, for example line begins with
-`test`. If you need really need `'` for example `'a'` than you can replace it
-with `'"'a'"'`. If you need `\"` than put `\\"` so backslash survive bash
-command.
-
-~~~
-sed -i config/secrets.yml -e '/^test:/i \
-  # aws s3\
-  aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>'
-~~~
-
-You can append on line numbers `3,6aTEXT` or at the last line `sed
-'$aTEXT_AT_END` (last line is `$` or `"\$"` if `"` is used)
-
-`sed 's/find/replace/g` will replace word `find` with `replace`.
-
-Brackets need to be escaped like `\(`, `\1` means first group, `&` means matched
-text...
-[tutorial](http://www.thegeekstuff.com/2009/10/unix-sed-tutorial-advanced-sed-substitution-examples/)
-Adding `,` and new `text` after `match` could be with `sed
-'s/\(match.*\)/\1,\ntext/`
-
-Sed has something different regular expressions so follow this [link](http://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)
-
-When you want to change chars (and not whole line) than you can use `s/me/you/g', or several regexp in same command for example
-
-~~~
-sed src/app/index.module.coffee \
-  -e 's/, /,\n  /g' \
-  -e 's/  \[/\[\n  /g' \
-  -e 's/\]/,\n\]/'
-~~~
-
-
-If you have a lot regexp, than its better to use [here-doc](http://tldp.org/LDP/abs/html/here-docs.html)
-and read from standard input `-` [link](https://unix.stackexchange.com/questions/45591/using-a-here-doc-for-sed-and-a-file/45592#45592?newreg=39c715cb752f44a9bba9b3f3f74f2015)
-
-~~~
-sed src/app/index.module.coffee -f - <<HERE_DOC
-s/, /,\n  /g
-s/  \[/\[\n  /g
-s/\]/,\n\]/
-HERE_DOC
-~~~
-
-Note that all commands one per line. As with `sed ''` you need backslash for each line of multiline command.
-
- When you really need to add multiline template
-and don't want to escape `'` and to add `\` to the end of each line, than you
-can try following command [inspiration](https://stackoverflow.com/questions/26770426/use-sed-in-bash-to-replace-string-with-heredoc/26770678#26770678)
-which will replace new lines with `ћ` (`N` means multiline match, `a` label... multiline match `:a;N;$!ba;s/\n/ћ/g`, note that `$` needs to be escaped if inside `""`) and than return back new line.
-
-Quote in `'HERE_DOC'` will not [substitute params](http://tldp.org/LDP/abs/html/here-docs.html#EX71C) so `$` `/` or `\` will remain in here doc. Instead of `<<` you can use `<<-` and closing HERE_DOC can be indented with *tab* character.
-For regexp we need
-to escape `/` and `\` with `\/` and `\\` (`s:\\:\\\\:g;s:/:\\/:g`)
-
-~~~
-sed src/app/index.module.coffee -e "s/client/$(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
-    I'm "$just"
-    some long /'\ multiline <\template>.
-HERE_DOC
-)/g;s/ћ/\n/g"
-~~~
-
-Sometimes we need to add/replace line with template (not replace regexp)
-than we need to move replacing `s/#/\n/g` outside of sed since it will
-not be applied to new template.
-Note than we can't use inline replacement but we can move tmp file.
-
-~~~
-sed src/app/index.module.coffee -e "/PLACEHOLDER/a $(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
-    I'm "$just"
-    some long /'\ multiline <\template>.
-HERE_DOC
-)" | sed "s/ћ/\n/g" > tmp && mv tmp src/app/index.module.coffee
-~~~
-
-Here is another solution which replace the PLACEHOLDER line
-[link](https://stackoverflow.com/questions/26770426/use-sed-in-bash-to-replace-string-with-heredoc/26770678#26770678)
-
-~~~
-cat > /tmp/template <<\HEREDOC
-    I'm "$just"
-    some long /'\ multiline <\template>.
-HERE_DOC
-sed -i myfile.rb -e '/PLACEHOLDER/ {
-  r /tmp/template
-  d
-}'
-rm /tmp/template
-~~~
-
 
 # Initial commit
 
@@ -126,7 +22,8 @@ git init . && git add . && git commit -m "rails new myapp --database=postgresql"
 # Gitignore
 
 ~~~
-echo -e '# vim temp files
+cat >> .gitignore << 'HERE_DOC'
+# vim temp files
 *.swp
 *.swo
 # carrierwave upload files
@@ -137,14 +34,14 @@ echo -e '# vim temp files
 .vagrant
 # byebug
 .byebug_history
-' >> .gitignore
+HERE_DOC
 git commit -am "Update .gitignore"
 ~~~
 
 # Gemfile development & production tools
 
 ~~~
-set -i Gemfile -e '2d' # remove unneccessary empty line
+rubocop --auto-correct # to correct some files if LineLength max is 115
 sed -i Gemfile -e '/group :development do/a  \
   # to detect N+1 sql queries\
   gem "bullet"\
@@ -202,7 +99,7 @@ git add . && git commit -m "Adding sample index page"
 
 ## Bower
 
-I would not add node_modules to git as suggested <https://coderwall.com/p/6bmygq/heroku-rails-bower>
+I would not add node_modules to git as it was suggested <https://coderwall.com/p/6bmygq/heroku-rails-bower>
 
 You need to use two build packs. Follow this
 [commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
@@ -475,7 +372,7 @@ For various ways of integrating Angular look at
 [angular-and-ruby-on-rails]({{ site.baseurl }}
 {% post_url 2015-11-26-angular-and-ruby-on-rails %})
 
-# Simplify secrets
+# Simplify secrets and add smtp credentials
 
 ~~~
 cat > config/secrets.yml << HERE_DOC
@@ -487,7 +384,6 @@ development: &default
   smtp_username: <%= ENV["SMTP_USERNAME"] %>
   smtp_password: <%= ENV["SMTP_PASSWORD"] %>
 
-  mail_interceptor_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>
   default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
 
   default_url:
@@ -501,18 +397,32 @@ HERE_DOC
 git add . && git commit -m "Simplify secrets"
 ~~~
 
-# Common mail settings
+# Basic mail settings
+
+We can generate application mailer with: 
+
+~~~
+rails generate mailer UserMailer hello
+git add . && git commit -am "rails generate mailer UserMailer hello"
+~~~
+
+Change default from address:
+
+~~~
+sed -i app/mailers/application_mailer.rb -e '/default/c \
+  default from: Rails.application.secrets.default_mailer_sender'
+~~~
+
+Set default url option, that is domain for `root_url`:
 
 ~~~
 #sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
 sed -i config/application.rb -e '/  end$/i \
-  config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys'
+    config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys'
 ~~~
 
-## Devise gem
-
-See blog post [devise-oauth-angular]({{ site.baseurl }}
-{% post_url 2015-12-20-devise-oauth-angular %})
+For [devise]({{ site.baseurl }}{% post_url 2015-12-20-devise-oauth-angular %})
+you need to set default sender:
 
 ~~~
 # devise
@@ -520,7 +430,7 @@ sed -i config/initializers/devise.rb -e '/mailer_sender/c \
   config.mailer_sender = Rails.application.secrets.default_mailer_sender'
 ~~~
 
-## Letter opener for development
+For local development use Letter opener:
 
 ~~~
 sed -i '/group :development do/a  \
@@ -528,37 +438,12 @@ sed -i '/group :development do/a  \
   gem "letter_opener"' Gemfile
 sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
 bundle && git add . && git commit -m "Letter opener to see emails in browser"
+rails runner UserMailer.hello.deliver
 ~~~
 
-## Mandrill for production and local interceptor
-
-We need two environment variables: `MANDRILL_API_KEY` and `MAIL_INTERCEPTOR_EMAIL` which you should set up
- in your *~/.bashrc* file with this `export MANDRILL_API_KEY=123123` and `export MAIL_INTERCEPTOR_EMAIL=you@youremail.com`
-
-~~~
-echo '# sending emails
-gem "mandrill_dm"' >> Gemfile && bundle
-sed -i '/^  end$/i \\n    config.action_mailer.delivery_method = :mandrill' config/application.rb
-
-echo '# mandrill initializer
-require "yaml" # this is needed for Rails secrets
-MandrillDm.configure do |config|
-  config.api_key = Rails.application.secrets.mandrill_api_key
-end
-class DevelopmentMailInterceptor
-  def self.delivering_email(message)
-    message.subject = "#{message.to} #{message.subject}"
-    message.to = Rails.application.secrets.mail_interceptor_email
-  end
-end
-if Rails.env.development?
-  ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor)
-end
-' > config/initializers/mandrill.rb
-
-#sed -i '/\(development:\|test:\|production:\)/a \  mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>\n  mail_interceptop_email: <%= ENV["MAIL_INTERCEPTOR_EMAIL"] %>' config/secrets.yml
-git add . && git commit -am "Adding mandrill for sending emails"
-~~~
+For production see
+[send and receive emails in rails]({{ site.baseurl }}
+{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
 
 # Skip generators
 
@@ -749,5 +634,11 @@ heroku addons:create heroku-postgresql:hobby-dev
 git push heroku master --set-upstream
 ~~~
 
-On heroku add *Papertrail* add-on and go to the [https://papertrailapp.com/events](https://papertrailapp.com/events) and search for "Started GET" , save and create email alert.
+On heroku add *Papertrail* add-on and go to the
+[https://papertrailapp.com/events](https://papertrailapp.com/events) and search
+for "Started GET" , save and create email alert or [add internal
+notification]({{ site.baseurl }}
+{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
+
+
 

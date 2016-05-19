@@ -32,26 +32,89 @@ It is easier to follow callstack if we don't use anonymous function. On other
 hand it's difficult to keep sync injection params with actual definition params,
 so I use [ng-annotate](https://github.com/kikonen/ngannotate-rails).
 
+# railsResourceFactory
+
 There is a angular factory for resource
 [angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource).
-For example application search
+You can search applications for it's usage
 [saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
+I use interceptor for loader. Also show toast if flag is set like
+`cart.showToastOnError = true; cart.delete()`. For some resource I show toast
+for all errors by adding `interceptors: [notifyInterceptor]`
 
 ~~~
-# src/app/resources/notify.interceptor.coffee
-angular.module 'menucards.resources'
+# src/app/resource/myResourceFactory.interceptor.coffee
+angular.module 'myapp.resources'
+  # https://github.com/FineLinePrototyping/angularjs-rails-resource/blob/master/vendor/assets/javascripts/angularjs/rails/resource/resource.js#L860
+  .factory 'myResourceFactory', (RailsResource, saveIndicatorInterceptor) ->
+    (config) ->
+      Resource = () ->
+        Resource.__super__.constructor.apply(this, arguments)
+        return
+      RailsResource.extendTo Resource
+      config["interceptors"] ||= []
+      config["interceptors"].push saveIndicatorInterceptor
+      Resource.configure config
+      Resource
+  .factory 'saveIndicatorInterceptor', ($rootScope, $q, toastr) ->
+    beforeRequest: (httpConfig, resourceConstructor, context) ->
+      $rootScope.isLoading = true
+      httpConfig
+    afterResponse: (result, resourceConstructor, context) ->
+      $rootScope.isLoading = false
+      result
+    afterResponseError: (rejection, resourceConstructor, context) ->
+      $rootScope.isLoading = false
+      if context.showToastOnError
+        if rejection.data.error
+          message = rejection.data.error
+        else
+          message = JSON.stringify rejection.data
+        toastr.error message
+      $q.reject rejection
+  # https://github.com/FineLinePrototyping/angularjs-rails-resource#example-interceptor
   .factory 'notifyInterceptor', (toastr, $q) ->
     afterResponseError: (rejection, resourceConstructor, context) ->
       message = JSON.stringify rejection.data
       toastr.error message
-      $q.reject(rejection)
-# 
-angular.module 'menucards.resources'
-  .factory 'Cart', (railsResourceFactory, railsSerializer, CONFIG, notifyInterceptor) ->
-    railsResourceFactory
+      $q.reject rejection
+~~~
+
+So I use `myResourceFactory` as base for all my resources.
+
+~~~
+angular.module 'myapp.resources'
+  .factory 'Restaurant', (myResourceFactory, railsSerializer, CONFIG) ->
+    myResourceFactory
+      url: (context) ->
+        # https://github.com/FineLinePrototyping/angularjs-rails-resource/issues/141
+        # https://github.com/FineLinePrototyping/angularjs-rails-resource#resource-urls
+        if context && context.id
+          CONFIG.API_URL + '/restaurants/'+context.id
+        else if context && context.userId
+          CONFIG.API_URL + '/users/'+context.userId+'/restaurants'
+        else if context && context.link
+          CONFIG.API_URL + '/restaurants/'+context.link+'/by-link'
+        else
+          CONFIG.API_URL + '/restaurants'
+      name: 'restaurant'
+      serializer: railsSerializer( ->
+        this.resource 'menuSections', 'MenuSection'
+      )
       interceptors: [notifyInterceptor]
 ~~~
 
+If you need to add property to resorce object (to have custom url) you should
+use finally to clean up that resource for later `.save()`
+
+~~~
+    vm.signInAs = (user) ->
+      user.signInAs = true
+      user.save().then (resp) ->
+        toastr.info "Authenticated as #{user.firstName}. Please refresh"
+      .finally ->
+        user.signInAs = false
+~~~
 
 # JSON
 
@@ -80,6 +143,8 @@ Response status codes:
     head :unauthorized
   end
 ~~~
+
+
 
 # REST
 

@@ -195,4 +195,7 @@ Don't forget to remove temporary dns in hosts
 sudo sed -i '/www.kontakt.in.rs/c #127.0.0.1\twww.kontakt.in.rs' /etc/hosts
 ~~~
 
-On ubuntu, you can rename `ssl.crt` to `ssl.p12` and double click will show you details of certificate
+On ubuntu, you can rename `ssl.crt` to `ssl.crt.p12` (or ssl.crt.key) and double click will show you
+details of certificate.
+
+For heroku you can follow <https://gist.github.com/meskyanichi/3354578>

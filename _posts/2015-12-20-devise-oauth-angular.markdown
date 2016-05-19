@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Devise Oauth And Angular
+title: From simple Devise to Oauth on Angular
 tags: angular devise oauth
 ---
 
@@ -596,7 +596,38 @@ end
 HERE_DOC
 ~~~
 
-Problem with `ng-token` is that is returns user object with snake `user.first_name` instead of camelCase `user.firstName` as it is for Rails Resources
+Problem with `ng-token` is that is returns user object with snake
+`user.first_name` instead of camelCase `user.firstName` as it is for Rails
+Resources
+
+# Admin sign in as another user
+
+If admin wants to become some other user he can use `sign_in(:user, @user, {
+:bypass => true })`.  With ng-token is similar
+
+~~~
+def sign_in_as
+  @resource = @user
+  # copy original code
+  # https://github.com/lynndylanhurley/devise_token_auth/blob/master/app/controllers/devise_token_auth/sessions_controller.rb#L33
+  # create client id
+  @client_id = SecureRandom.urlsafe_base64(nil, false)
+  @token     = SecureRandom.urlsafe_base64(nil, false)
+
+  @resource.tokens[@client_id] = {
+    token: BCrypt::Password.create(@token),
+    expiry: (Time.zone.now + DeviseTokenAuth.token_lifespan).to_i
+  }
+  @resource.save
+
+  sign_in(:user, @resource, store: false, bypass: false)
+  render json: @user
+end
+~~~
+
+just note that user need to be `user.active_for_authentication?`. In seed you
+need to have `user.skip_confirmation!` since you will not be able to log in as.
+
 
 # Testing
 
