@@ -92,8 +92,9 @@ git add tmp/.gitignore -f
 
 
 ~~~
-git add -p # e
+git add -p # e to open editor
 git -m vip # one word does not need ""
+git reflog # when you want to undo some commands
 ~~~
 
 

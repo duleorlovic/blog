@@ -1,0 +1,36 @@
+---
+title: Neo4j and Rails
+---
+
+# Commands
+
+* delete all nodes for `>2.3.0`
+
+  ~~~
+  MATCH (n) DETACH DELETE n
+  ~~~
+
+# Neo4jrb
+
+* [declared-relationships](https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Declared-Relationships)
+  is used to create relations automatically: `has_many :in, :posts`
+  * `has_one` should be used with singular `has_many` plurals
+  * first parameter can be `:in`, `:out`, `:both`
+  * second set the association name (that is expected `:model_class` and
+    association name = relationship `:type`)
+  * `:type` override association name in neo4js
+  * `:model_class` is NODE model on other end of association
+  * `:rel_class` is REL model
+  * `:origin` name of association in reciprocal model (so you don't need to
+    write twice, often used in `:in` relations)
+
+* when comment is destroyed than you can not get it's post, it is better to get
+  it's post before 
+
+  ~~~
+    def destroy
+    post = @comment.post
+    @comment.destroy
+    redirect_to post_path post
+  end
+  ~~~
