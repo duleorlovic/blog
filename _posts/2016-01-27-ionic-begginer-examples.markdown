@@ -159,6 +159,8 @@ adb install -r platforms/android/build/outputs/apk/android-debug.apk
 
 * Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES], Fix remove old
   application.
+* Failure [INSTALL_FAILED_ALREADY_EXISTS]
+  * use `-r` but before apk `adb install -r my.apk`
 
 # Deploy production
 

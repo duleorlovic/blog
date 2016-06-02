@@ -131,3 +131,4 @@ Look my
 * edit long commands in bash `set -o vi` and than press Esc, and v (visual).
   Don't recomment to put in bashrc since it will disable bash shortcuts like:
   ctrp+p, bind, ....
+* `mount` `sudo fdisk -l` `sudo blkid` `cat /etc/fstab`
