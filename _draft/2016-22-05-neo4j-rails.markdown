@@ -34,3 +34,11 @@ title: Neo4j and Rails
     redirect_to post_path post
   end
   ~~~
+
+# Links
+
+* http://neo4jrb.io/ and differences with sql http://neo4j.com/product/
+* http://neo4jrb.readthedocs.io/en/7.0.x/
+* youtube series https://www.youtube.com/watch?v=n0P0pOP34Mw
+* http://neo4j.com/developer/get-started/
+* https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood

@@ -120,3 +120,14 @@ sed -i myfile.rb -e '/PLACEHOLDER/ {
 rm /tmp/template
 ~~~
 
+# Grep
+
+Just a few command options with grep
+
+* `grep -o 111` will output only matched parts (not whole possible big lines)
+* you can test your grep regex by running some command `grep "asd <<"` in linux
+  shell and type the lines manually. Exit with Ctrl+d
+* grep only specific file type is with `grep asd --include \*.yml`
+* if you want to output only matching group than it is better to use `sed`
+  * `sed -n 's/^.*[^0-9]\([0-9][0-9]*\).*/\1/p'` get only numbers
+  * echo "asd123" | sed -n 's/asd/asd/p'`

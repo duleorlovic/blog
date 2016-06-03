@@ -42,13 +42,32 @@ title: CSS and HTML tips
   You can add scrollbar by wrapping it `.outer { overflow-x: scroll }`
   [link](http://stackoverflow.com/questions/9672176/prevent-floated-divs-from-wrapping-to-new-line)
 
- # Examples
+# Examples
 
- * nice radio and checkbox
-   <http://codepen.io/BrianSassaman/pen/iLrpC?editors=1100>
+* nice radio and checkbox <http://codepen.io/BrianSassaman/pen/iLrpC?editors=1100>
+
+* to see cursor position just run this code in console (it works with bootstrap
+  title)
+
+  ~~~
+  document.onmousemove = function(e){
+  var x = e.pageX;
+  var y = e.pageY;
+  e.target.title = "X is "+x+" and Y is "+y;
+  };
+  }
+  ~~~
 
 # SCSS
 
-* you can set default value of variable `$my-var: 123 !default;`. This ahs no
+* you can set default value of variable `$my-var: 123 !default;`. This has no
   effect if variable is already defined.
 * <https://responsivedesign.is/develop/getting-started-with-sass>
+
+* chrome 39 for android use different color for toolbar, just add `<meta
+  name="theme-color" content="#db5945">`
+
+
+# Head meta tags
+
+* here is a list of used tags [HEAD](https://github.com/joshbuchea/HEAD)

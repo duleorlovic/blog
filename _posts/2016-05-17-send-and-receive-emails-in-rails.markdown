@@ -30,6 +30,12 @@ providers](http://socialcompare.com/en/comparison/transactional-emailing-provide
   HERE_DOC
   ~~~
 
+  Another way is to use API
+
+  ~~~
+
+  ~~~
+
 * Mandrill is better than Sendgrid, since Sendgrid can not automatically convert
   html to txt mails. Also mandrill has nice API so you do not need background
   job to send a lot of emails quickly. To setup sending using API just run:

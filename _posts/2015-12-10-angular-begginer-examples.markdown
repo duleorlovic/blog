@@ -270,7 +270,9 @@ Factory has more flexibility since they can return functions which can be `new`e
 
 # RootScope
 
-* `$rootScope` has not parent and was created directly from `Scope()` class (not through `$.new` method). It is used for event handling `$.broadcast()` (down) and `$.emit()` (up in the scope hierarchy).
+* `$rootScope` has not parent and was created directly from `Scope()` class (not
+  through `$.new` method). It is used for event handling `$.broadcast()` (down
+  to child scopes) and `$.emit()` (up in the scope hierarchy).
 
 
 # Share error messages
@@ -390,8 +392,17 @@ vm.update = (menuItem, editMenuItemForm) ->
   locationsFromServer` will assign new pointer, but old `vm.locations =
   MyService.locations` will still point to old array.
 
-* `$log.debug` should show object with location and data, for example
- `$log.debug adminController: 'update error', resp_data: resp.data`
+* [$log](https://docs.angularjs.org/api/ng/service/$log) can show object with
+  source location, for example `$log.debug adminController: 'update error',
+  resp_data: resp.data`. It is angular service which you can disable in
+  production 
+
+  ~~~
+  angular.module 'my-module'
+    .config($logProvider) ->
+      $logProvider.debugEnabled = false
+  ~~~
+
 * inside ui router resolve, js errors are completelly hidden
 
 
@@ -612,3 +623,22 @@ $scope.$on 'pagination:loadPage', (event, status, config) ->
   only usage is that directive link function is not called until we add new
   items or updateId [look console log](http://jsfiddle.net/6k834fzx/4). If we
   update title Link function will not be called although DOM will be updated.
+* allow cors on server so options request is resolved
+
+  ~~~
+  # cors
+  echo "gem 'rack-cors', require: 'rack/cors'" >> Gemfile
+  sed -i config/application.rb -e '/  end/i \
+      config.middleware.insert_before 0, "Rack::Cors" do\
+        allow do\
+          origins "*"\
+          resource "*",\
+            headers: :any,\
+            methods: :any,\
+            expose: ["access-token", "expiry", "token-type", "uid", "client"]\
+        end\
+      end'
+  sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
+    # protect_from_forgery with: :exception\
+    protect_from_forgery with: :null_session'
+  ~~~

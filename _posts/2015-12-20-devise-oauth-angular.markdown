@@ -65,7 +65,7 @@ sed -i config/initializers/devise.rb -e '/APP_ID/a \
 # skip_jwt only needed for omniauth > 1.2.2
 # https://github.com/zquestz/omniauth-google-oauth2/issues/197
 
-sed -i config/secrets.yml -e '/test:/i \
+sed -i config/secrets.yml -e '/^test:/i \
   # Facebook Autentication\
   facebook_key: <%= ENV["FACEBOOK_KEY"] %>\
   facebook_secret: <%= ENV["FACEBOOK_SECRET"] %>\
@@ -88,13 +88,14 @@ sed -i app/models/user.rb -e '/end/i \
     return user if user\
     user = find_by(provider: auth.provider, uid: auth.uid)\
     return user if user\
-    # create new user with some password\
+    # create new user with some password
     user = User.create!(\
       email: auth.info.email,\
       password: Devise.friendly_token[0, 20],\
       provider: auth.provider,\
       uid: auth.uid,\
     )\
+    user.skip_confirmation! # this will just add confirmed_at = Time.now\
     # user.name = auth.info.name # assuming the user model has a name\
     # user.image = auth.info.image # assuming the user model has an image\
     user\
@@ -161,7 +162,8 @@ More on blog facebook share buttons.
 
 Create a project in google console and enable *Google+ API*. Create *OAuth 2.0
 client ID* (or edit exists one clicking on its name) and set *Authorized
-redirect URIs* to all urls that will be used, like
+redirect URIs* to all urls that will be used (not just domain like for facebook,
+we need whole url path), like
 
 * `http://localhost:3000/users/auth/google_oauth2/callback` this is default
   `devise_for :users`

@@ -8,10 +8,14 @@
   ~~~
 
 * login `mysql -u root -p`
-* create user
+* select database `USE mysql`
+* create user in mysql database
 
   ~~~
+  mysql -u root mysql -p
   CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
   GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
   FLUSH PRIVILEGES;
   ~~~
+
+* import dump with `mysql -u newuser -p dbname < web001db.sql`

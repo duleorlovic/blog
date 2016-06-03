@@ -256,5 +256,11 @@ Delayed::Worker.class_eval do
 end
 {% endhighlight %}
 
-To see log in rake task, you should use `heroku run:detached rake routes` instead of `heroku run rake routes` [link](https://devcenter.heroku.com/articles/one-off-dynos#running-tasks-in-background).
-Exception notifications can be used there also with this [exception_notification-rake](https://github.com/nikhaldi/exception_notification-rake). Just add `gem 'exception_notification-rake'` to *Gemfile* and `ExceptionNotifier::Rake.configure` to *config/secrets.yml*. Also works manual notifications.
+To see log in rake task, you should use `heroku run:detached rake routes`
+instead of `heroku run rake routes`
+[link](https://devcenter.heroku.com/articles/one-off-dynos#running-tasks-in-background).
+Exception notifications can be used there also with this
+[exception_notification-rake](https://github.com/nikhaldi/exception_notification-rake).
+Just add `gem 'exception_notification-rake'` to *Gemfile* and
+`ExceptionNotifier::Rake.configure` to *config/secrets.yml*. Also works manual
+notifications.

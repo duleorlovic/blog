@@ -123,10 +123,11 @@ augroup END
 * `dap}p` switch two paragraph
 * Repeat last colon command  @:  and @@
 * :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
+* grep end of the word `/usan\>` help with `:h /\>`
 * `Ctrl+p`  # in insert mode is completing the string
 * dE # removes to the End of the string
 * daw removes the inner word
-* yy
+t yy
 * :%s/old/new/gc
 * mA then 'A jump there (downcase letter a can jump only on current buffer), :marks gives the jump location, '' is jump back, '. jump to last change
 * :tabe file  open file in new tab, gt switch between tabs
@@ -170,11 +171,20 @@ Here is my configuration for syntastic and vim
 You need to install this tools:
 
 * Markdown `gem install mdl`
-* Ruby, Rails `gem install rubocop`. Define quiet messages in
-  [.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
-  in $HOME or project root, or inline in comment `# rubocop:disable
-  Metrics/AbcSize, Metrics/MethodLength` or in `syntastic.vim`
-  [g:syntastic_eruby_ruby_quiet_message](https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21)
+* Ruby, Rails `gem install rubocop`. To define quiet messges you can write in
+  * [.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
+    in $HOME or project root. To disable all write `.rubocop.yml`:
+
+  ~~~
+  AllCops:
+    Exclude:
+      - '**/*'
+  ~~~
+
+  * inline in comment `# rubocop:disable Metrics/AbcSize,
+    Metrics/MethodLength`
+  * define in `syntastic.vim`
+    [g:syntastic_eruby_ruby_quiet_message](https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21)
 * Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
 * json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)
 

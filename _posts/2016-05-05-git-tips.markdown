@@ -98,3 +98,9 @@ git reflog # when you want to undo some commands
 ~~~
 
 
+If you want to skip history and download latest code and change author you can
+
+~~~
+git clone --depth=1 your-repo-url
+git commit --amend --author "New Author Name <email@address.com>" --no-edit
+~~~

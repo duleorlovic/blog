@@ -56,11 +56,14 @@ To change which api should be used, I use param `--api` like
 ~~~
 gulp serve --api production
 gulp serve --api localhost:3000
-gulp deploy --api production
+gulp clean && gulp deploy --api production
 ~~~
 
-You need to stop eventual gulp serve for localhost, when you want to deploy for
-production.
+Note that you need to stop eventual gulp serve for localhost, when you want to
+deploy for production.
+
+First install `gulp-if` with `npm install gulp-if --save-dev`. Than add to
+`gulp/script.js`
 
 ~~~
 // gulp/script.js
@@ -73,7 +76,7 @@ if (argv.api == 'production') {
 } else if (argv.api) {
   serverUrl = '"http://' + argv.api + '"';
 }
-// add below function buildScripts() like
+// inside `function buildScripts()` insert as first pipe, below return
     .pipe(gulpif(!!serverUrl,replace(/API_URL: \w*SERVER_URL/g, 'API_URL: ' + serverUrl)))
 ~~~
 

@@ -187,7 +187,71 @@ When creating a map, you need to provide zoom option.
 # Youtube
 
 [yt](https://github.com/Fullscreen/yt) gem access [youtube
-api](https://developers.google.com/youtube/). Creators <http://fullscreen.github.io/yt/>. Private or non existing video url raise exceptions so you need to `rescue Yt::Errors::NoItems, Yt::Errors::RequestError`
+api](https://developers.google.com/youtube/). Creators
+<http://fullscreen.github.io/yt/>. Private or non existing video url raise
+exceptions so you need to `rescue Yt::Errors::NoItems,
+Yt::Errors::RequestError`. Video could be public but not accessible (because of
+deactived account).
 
+# Gmail API
 
+https://pramodbshinde.wordpress.com/2014/12/07/gmail-api-in-ruby-on-rails-a-piece-of-cake/
+http://stackoverflow.com/questions/26005675/sending-html-email-using-gmail-api-in-ruby
+https://developers.google.com/gmail/api/guides/sending
+https://developers.google.com/api-client-library/ruby/apis/gmail/v1
+
+# Geolocating
+
+Here are the steps that I usually do for geolocating users:
+
+  * try to get lat/long pair from browser
+  * user free service <http://www.geoplugin.com/webservices/json>
+  * ask user for address and geocode it on client [Google Maps Javascript
+    API](https://developers.google.com/maps/documentation/javascript/geocoding)
+    Geocoding Service
+  * ask user for address and geocode on server [Google Maps Geocoding
+    API](https://developers.google.com/maps/documentation/geocoding/intro)
+
+## Get Brower location
+
+## Get Geoplugin location
+
+Here is example in angular using their
+[json](http://www.geoplugin.com/webservices/json) service. 
+You can buy cheap [ssl](http://www.geoplugin.com/webservices/ssl) packet and use `https://ssl.geoplugin.net/json.gp?k=...` endpoint.
+
+~~~
+    this.getGeoPluginLocation = ->
+      deferred = $q.defer()
+      # $http has a problem with Access-Control-Allow-Origin since request is
+      # OPTIONS instead of GET method
+      # $http.get('http://www.geoplugin.net/json.gp?jsoncallback=?').then (response) ->
+      $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?').then (response) ->
+        userLocationData.latLng.lat = parseFloat response.geoplugin_latitude
+        userLocationData.latLng.lng = parseFloat response.geoplugin_longitude
+        userLocationData.address = response.geoplugin_city + " " + response.geoplugin_countryName
+        deferred.resolve()
+      return deferred.promise
+~~~
+
+[Google Maps Geolocation
+API](https://developers.google.com/maps/documentation/geolocation/intro#wifi_access_point_object)
+can use wifi or tower ids to give you latLng.
+
+# Gcm google could messaging
+
+Enable **Google Cloud Messaging for Android** API and save your **Project
+Number**. It is not Project ID, but it is just 12 numbers like 123123. You can
+find it on [dashboard](https://console.cloud.google.com/home/dashboard) or in
+[settings](https://console.developers.google.com/iam-admin/settings/project).
+
+You can install Chrome extension to register a client [google chrome exmplae gcm
+notifications](https://github.com/GoogleChrome/chrome-app-samples/tree/master/samples/gcm-notifications)
+
+[pushwoosh
+extension](https://chrome.google.com/webstore/detail/pushwoosh-gcm-notificatio/ndeeiaalfemhaahglpildclkgilgnfce/related?hl=en)
+can register but it can not receive messages.
+
+There is nice explanation how to create notification on your site
+<https://developers.google.com/web/updates/2015/03/push-notifications-on-the-open-web?hl=en>
 

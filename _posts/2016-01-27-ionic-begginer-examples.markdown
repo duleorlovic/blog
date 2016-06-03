@@ -120,7 +120,10 @@ Some version of node have problem starting emulator, so you can start manually
 `emulator @n4 &`
 
 Generate
-[icons](http://ionicframework.com/blog/automating-icons-and-splash-screens/) with `ionic resources`
+[icons](http://ionicframework.com/blog/automating-icons-and-splash-screens/)
+with `ionic resources`. If you update icons than you should run with option
+`--ignore-cache` so it does not use cached tmp files `ionic resources
+--ignore-cache` (maybe size is too big).
 
 # Installing Android ADB
 
@@ -155,12 +158,24 @@ You can see android device logs with grep (key with space does not work)
 adb -d logcat | grep 'Web Console' # -d is for device only
 adb logcat | grep 'chromium\|Web Console' # new androids use chromium
 adb install -r platforms/android/build/outputs/apk/android-debug.apk
+# adb help will show you that -r means replace
+
+adb -s emulator-5556 install my-app.apk # if you have two emulators you can
+# specify which emulator
+adb -d install my-app.apk # directs to only connected usb device
+
+telnet localhost 5554
+  geo fix 19 45 # to fix gps location, first is longitude than latitude
 ~~~
 
-* Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES], Fix remove old
-  application.
-* Failure [INSTALL_FAILED_ALREADY_EXISTS]
-  * use `-r` but before apk `adb install -r my.apk`
+* Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES] or
+  [INSTALL_FAILED_UPDATE_INCOMPATIBLE] [INSTALL_FAILED_ALREADY_EXISTS]
+  * try to remove old application.
+
+  ~~~
+  ~/Android/Sdk/build-tools/21.1.2/aapt dump badging my-app-debug.apk  | grep package # to find package name
+  adb uninstall package-name # or my helper ionic_find_package_name
+  ~~~
 
 # Deploy production
 

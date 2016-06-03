@@ -72,35 +72,38 @@ you can make it public. Edit bucket policy to
 
 You bucket needs to have the SAME NAME AS YOUR DOMAIN `some.domain.com` or you
 need to use Amazon DNS Route 53.
-For default region *US Standard* you can add CNAME record with value
+For default region *US Standard (us-east-1)* you can add CNAME record with value
 `some.domain.com.s3.amazonaws.com` on your domain provider page.
-If bucket is from different region than you need to use full CNAME
-**bucket-name**.s3-website[-.]**region**.amazonaws.com .  List of regions you
-can find [website
-endpoints](http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html)
+
+But if bucket is from different region than you need to use full **Endpoint**
+for CNAME
+
+**bucket-name**.s3-website[-.]**region**.amazonaws.com
+
+List of regions you
+can find on [website
+endpoints](http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html).
 For frankfurt would be `some.domain.com.s3-website.eu-central-1.amazonaws.com`
+For southeast region is `ap-southeast-1`.
 You should find your value in Properties of you bucket -> Endpoint.
 Your bucket-name can not be different than your domain name!
-[link](http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html)
+[virtual hosting](http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html),
+[regions and endpoints](http://docs.aws.amazon.com/general/latest/gr/rande.html)
 
 # Access files
 
-Files can we accessed in two ways. One is to go on properties and find link
-<https://s3.eu-central-1.amazonaws.com/duleorlovic-test-eu-central-1/icon-menu.png>
-In this way (bucketname subfolder) you can access any file with both http and
-https protocol. You can also access the file when you enable website hosting.
+Files can we accessed in three ways.
 
-# Https and website
-
-Another way to access files is to use **Endpoint** 
-<http://duleorlovic-test-eu-central-1.s3-website.eu-central-1.amazonaws.com/icon-menu.png>
-or short without region, just bucket.s3.amazonaws.com:
-<http://duleorlovic-test-eu-central-1.s3.amazonaws.com/icon-menu.png>
-
-But you can access your public site on S3 Endpont only with http (non SSL)
-protocol.
-
-For HTTPS you need Cloud Front and Route 53 service
+1. first is to go on properties of the file and find *link*
+   <https://s3.eu-central-1.amazonaws.com/duleorlovic-test-eu-central-1/icon-menu.png>
+1. second way is to use short version without region just
+`bucket-name`.s3.amazonaws.com/`filename`
+   <https://duleorlovic-test-eu-central-1.s3.amazonaws.com/icon-menu.png>
+1. third is to enable website hosting so you can use *Endpoint* and append fileName
+   <http://duleorlovic-test-eu-central-1.s3-website.eu-central-1.amazonaws.com/icon-menu.png>
+  * note that url contains `website-` so website needs to be enabled
+  * note that this way you can not access using SSL https protocol
+  * for HTTPS you need Cloud Front and Route 53 service
 [link](http://knightlab.northwestern.edu/2015/05/21/implementing-ssl-on-amazon-s3-static-websites/)
 or <https://www.cloudflare.com/> . You can set up naked domain, just add `CNAME`
 with name `@` (or you `domain.com`) and value `Endpoint`.

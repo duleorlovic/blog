@@ -3,15 +3,11 @@ layout: post
 title: Javascript & coffeescript tips
 ---
 
-* to see all keys of `myObj` you can use `Object.keys(myObj)`
-* alert object with `alert(JSON.stringify(myObj))`
-* if you want to break array `forEach` method when you find el, you can use
-  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break)
+# Scroll into view of element
 
-* to search file in google developer tools you can open console window (with
-  ESC) than on three dots, open dropdown menu and find *Search*
-* to remote item `myObject` from array `myArray.splice
-  myArray.indexOf(myObject),1 `
+Sometimes you need to scroll the page to show some notification on top, or to
+display element from the bottom of the page. We can use
+[scrollIntoView](https://developer.mozilla.org/en/docs/Web/API/Element/scrollIntoView)
 
 ~~~
 function checkIfInView($element, options){
@@ -51,6 +47,186 @@ function checkIfInView($element, options){
 }
 ~~~
 
+# Always on page, floating elements
+
+There is nice plugin [stickyjs](http://stickyjs.com/) but for simple scroll you
+can use this
+[answer](http://stackoverflow.com/questions/2177983/how-to-make-div-follow-scrolling-smoothly-with-jquery)
+First version is enought if you do not need to scroll big elements. Note that
+calculation of `originalTop` could be wrong if there are some not images and
+their parent does not have fixed height.
+
+~~~
+// app/assets/javascripts/follow-scroll-smoothly.js
+// call with `follow_scroll_smoothly('.navbar');
+function follow_scroll_smoothly(elementSelector) {
+  var element = $(elementSelector);
+  var originalTop = element.offset().top;
+  console.log("follow_scroll_smoothly originalTop=" + originalTop);
+
+  // Space between element and top of screen (when scrolling)
+  var topMargin = 5;
+
+  // Should probably be set in CSS; but here just for emphasis
+  element.css('position', 'relative');
+
+  $(window).on('scroll', function(event) {
+    // get the vertical position of scrollbar
+    var scrollTop = $(window).scrollTop();
+
+    var newTop = scrollTop < originalTop ? 0 : scrollTop - originalTop + topMargin;
+
+    element.stop(false, false).animate({
+        top: newTop,
+    }, 300);
+    console.log("follow_scroll_smoothly scrollTop=" + scrollTop + " newTop=" + newTop);
+  });
+}
+~~~
+
+If target element is big enought to go beyond the bottom line of the page, you
+need to stop scroll untill user see the bottom.
+Note that we use
+[outerHeight](http://api.jquery.com/outerheight/) to include element padding and
+margin.
+There are two approaches. First is symetric which do not scroll if current view
+is inside element. Scroll only when user see's top or bottom or does not see
+element.
+
+* Symretic rules are:
+  * if I scroll down and I see bottom and top is about to hide
+    * if I see whole element than follow with top of the element
+    * if I don't see whole element than follow with bottom
+  * if I scroll up and I see top and bottom is about to hide
+    * if I see whole element than follow with bottom of the element
+    * if I don't see whole element than follow with top
+  * if I don't see both top and bottom and I can not see element (it happens
+    when user press `Home` and `End` keys) probably element is smaller than
+    window height
+    * if it scroll up than follow bottom
+    * if it scroll down than follow top
+
+<iframe width="100%" height="300" src="//jsfiddle.net/duleorlovic/ffbnr62f/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+~~~
+function follow_scroll_smoothly(elementSelector, footerSelector) {
+  var element = $(elementSelector);
+  var elementHeight = element.outerHeight();
+  var windowHeight = $(window).height();
+  var documentHeight = $(document).height();
+  var headerMinimumTop = element.offset().top;
+  var footerMaximumTop = documentHeight;
+  if (footerSelector && $(footerSelector).length) {
+    footerMaximumTop = documentHeight - $(footerSelector).outerHeight();
+  }
+  console.log("follow_scroll_smoothly headerMinimumTop=" + headerMinimumTop);
+
+  // Space between element and top/bottom of screen (when scrolling)
+  var topMargin = 5;
+  var bottomMargin = 15;
+
+  // Should probably be set in CSS; but here just for emphasis
+  element.css('position', 'relative');
+
+  function checkRangeRelativeTop(relativeTop) {
+    var result = relativeTop;
+    if (result < 0) {
+      // can not go above initial position
+      result = 0;
+    } else if (result > footerMaximumTop - elementHeight - headerMinimumTop) {
+      // can not go bewond footer
+      result = footerMaximumTop - elementHeight - headerMinimumTop;
+    }
+    return result;
+  }
+
+  function stickTop(scrollTop) {
+    var newRelativeTop = checkRangeRelativeTop(scrollTop - headerMinimumTop + topMargin);
+    element.stop(false, false).animate({
+        top: newRelativeTop,
+    }, 300);
+    $('#debug').prepend('<br>stickTop ' + newRelativeTop);
+  }
+  function stickBottom(scrollTop) {
+    // we don't use animate bottom since it is relative to element, we use top
+    var newRelativeTop = checkRangeRelativeTop(scrollTop - headerMinimumTop + windowHeight - elementHeight - bottomMargin);
+
+    element.stop(false, false).animate({
+        top: newRelativeTop,
+    }, 300);
+    $('#debug').prepend('<br>stickBottom ' + newRelativeTop);
+  }
+  var lastScrollTop = 0;
+  $(window).on('scroll', function(event) {
+    // get the vertical position of scrollbar
+    var scrollTop = $(window).scrollTop();
+    var scrollDownDirection = scrollTop > lastScrollTop;
+    lastScrollTop = scrollTop;
+    var elementTop = element.offset().top
+    var elementBottom = elementTop + elementHeight;
+    var weSeeBottom = windowHeight + scrollTop > elementBottom && scrollTop < elementBottom;
+    var weSeeTop = windowHeight + scrollTop > elementTop && scrollTop < elementTop;
+    $('#info').html(JSON.stringify(
+      {
+        windowHeight: windowHeight,
+        headerMinimumTop: headerMinimumTop,
+        elementHeight: elementHeight,
+        elementTop: elementTop,
+        footerMaximumTop: footerMaximumTop,
+        // scrollTop: scrollTop,
+        // weSeeBottom: weSeeBottom,
+        // weSeeTop: weSeeTop,
+        // scrollDownDirection: scrollDownDirection,
+      }
+    ));
+
+    if (scrollDownDirection && weSeeBottom && !weSeeTop)
+    {
+      if (windowHeight > elementHeight) {
+        // we see whole element
+        stickTop(scrollTop);
+      } else {
+        // we don't whole element because top is out of page
+        stickBottom(scrollTop);
+      }
+    }
+    else if (!scrollDownDirection && !weSeeBottom && weSeeTop)
+    {
+      if (windowHeight > elementHeight) {
+        stickBottom(scrollTop);
+      } else {
+        stickTop(scrollTop);
+      }
+    }
+    else if (!weSeeBottom && !weSeeTop && (elementBottom < scrollTop || elementTop > scrollTop + windowHeight))
+    {
+      if (scrollDownDirection) {
+        stickTop(scrollTop);
+      } else {
+        stickBottom(scrollTop);
+      }
+    }
+  });
+}
+~~~
+
+Another approach is to keep top as much as he can (until bottom reaches bottom).
+When element is bigget than page, user needs to scrol down to the bottom to see
+bottom of the element.
+
+<iframe width="100%" height="300" src="//jsfiddle.net/duleorlovic/ffbnr62f/8/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+# Tips
+
+* to see all keys of `myObj` you can use `Object.keys(myObj)`
+* alert object with `alert(JSON.stringify(myObj))`
+* if you want to break array `forEach` method when you find el, you can use
+  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break)
+
+* to search file in google developer tools you can open console window (with
+  ESC) than on three dots, open dropdown menu and find *Search*
+* to remove item `myObject` from array `myArray.splice
+  myArray.indexOf(myObject),1 `
 * `!!variable` will return false only for `0, null, "", undefined, NaN` NaN=Not
   a number
 * to check if some property is defined on a object (method or variable), you can

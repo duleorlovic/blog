@@ -66,9 +66,15 @@ If you need to separate production from development (for example analytics), you
 </html>
 ~~~
 
-# Automatic deploy using rake
+# Automatic deploy to gh-pages using rake
 
 Rake tasks are perfect for deploying since you need just to type `rake` and it will be live (if you set up properly). This is my Rakefile that builds my blog (stored on bitbucket) and push to github
+
+~~~
+git remote add origin git@bitbucket.org:duleorlovic/trk.in.rs.git
+git remote add github git@github.com:duleorlovic/trk.in.rs.git
+echo "www.trk.in.rs" > CNAME
+~~~
 
 ~~~
 # Rakefile

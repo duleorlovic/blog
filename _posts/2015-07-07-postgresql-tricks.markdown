@@ -103,7 +103,13 @@ failure.
 * for all types there is `CURRENT_DATE, CURRENT_TIME`
 * [functions](http://www.postgresql.org/docs/9.1/static/functions-datetime.html)
   allows you to:
+  * create next day `DATE '2001-02-01' + INTERVAL '1 DAY'`
   * extract weekday `EXTRACT(DOW FROM TIMESTAMP '2016')`
+  * check overlaps `(start1, end1) OVERLAPS (start2, end2)`
+* typecast can be done: `INTERVAL '1 WEEK'` or `'1 WEEK'::INTERVAL`
+* to use columns (like `$1` or name `a.b`) you can use
+  * string concatenation  `(a.b || ' MINUTES')::INTERVAL`
+  * multiplication `a.b * INTERVAL '1 MINUTES'` (much nicer)
 
 Practical example in Ruby on Rails
 ============

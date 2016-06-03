@@ -44,7 +44,13 @@ In Ruby on Rails there are 6 asset tag helpers:
 Asset pipeline
 ---
 
-All asset files should be inside of `app/assets`, `lib/assets` or `vendor/assets` and they are served with sprockets gem hereof three features: fingerprint, minification and precompilation of sass and coffeescript. That features are not used in development mode, but you can serve production version it if you enable `config.serve_static_assets` in *config/environments.production.rb*, add `secret_key_base` in *config/secrets.yml* and then this commands:
+All asset files should be inside of `app/assets`, `lib/assets` or
+`vendor/assets` and they are served with sprockets gem hereof three features:
+fingerprint, minification and precompilation of sass and coffeescript. That
+features are not used in development mode, but you can serve production version
+it if you enable `config.serve_static_assets` in
+*config/environments.production.rb*, add `secret_key_base` in
+*config/secrets.yml* and then this commands:
 
 {% highlight ruby %}
 RAILS_ENV=production rake db:setup

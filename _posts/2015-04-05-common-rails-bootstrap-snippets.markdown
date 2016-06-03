@@ -103,9 +103,14 @@ I would not add node_modules to git as it was suggested <https://coderwall.com/p
 
 You need to use two build packs. Follow this
 [commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
-It works for latest node and npm version. Just old bower version `~1.2` gives me
-error `error Path must be a string. Received ...` so make sure you use latest
-bower. Look how you can add bootstrap.
+It works for latest node and npm version. Older version could give errors:
+
+* bower version `~1.2` gives me error `error Path must be a string. Received
+   ...` so make sure you use latest bower.
+
+It works find with assets from gems.
+
+Look how you can add bootstrap.
 
 ~~~
 # do not name your package as bower or other existing package
@@ -123,6 +128,7 @@ node_modules
 vendor/assets/bower_components' >> .gitignore
 cat >> config/initializers/assets.rb << HERE_DOC
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
 HERE_DOC
 git add . && git commit -m "Adding bower"
 
@@ -378,7 +384,7 @@ For various ways of integrating Angular look at
 cat > config/secrets.yml << HERE_DOC
 # export keys in your .profile file
 development: &default
-  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] || 'some_secret' %>
 
   # sending emails
   smtp_username: <%= ENV["SMTP_USERNAME"] %>
@@ -390,8 +396,10 @@ development: &default
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
     port: <%= ENV["DEFAULT_URL_PORT"] || 80 %>
 
-test: *default
-production: *default
+test: << *default
+production:
+  <<: *default
+  monitor_mode: true
 HERE_DOC
 
 git add . && git commit -m "Simplify secrets"
@@ -550,6 +558,7 @@ sed -i config/secrets.yml -e '/^test:/i \
   aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>\
   aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>\
   aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>\
+  # region is important for all non us-east-1 regions\
   aws_region: <%= ENV["AWS_REGION"] || "us-east-1" %>\n'
 
 sed -i app/uploaders/document_uploader.rb -e '/storage :file/r \
@@ -613,25 +622,28 @@ sed -i config/initializers/carrierwave.rb -e '/^end/i \
 
 ~~~
 export MYAPP_NAME=air
-# postgresql on production
-sed -i "/gem 'sqlite3/c \
-gem 'pg'\
-" Gemfile
+# # postgresql on production
+# sed -i Gemfile -e "/gem 'sqlite3/c \
+# gem 'pg'"
+# sed -i '/adapter: sqlite3/c \  adapter: postgresql' config/database.yml
+# sed -i "/development.sqlite3/c \  database: ${MYAPP_NAME}_dev" config/database.yml
+# sed -i "/test.sqlite3/c \  database: ${MYAPP_NAME}_test" config/database.yml
+# sed -i "/production.sqlite3/c \  database: ${MYAPP_NAME}_prod" config/database.yml
+
 echo '
 # heroku uses this 12 factor gem
 gem "rails_12factor", group: :production
 ' >> Gemfile
 bundle
 
-sed -i '/adapter: sqlite3/c \  adapter: postgresql' config/database.yml
-sed -i "/development.sqlite3/c \  database: ${MYAPP_NAME}_dev" config/database.yml
-sed -i "/test.sqlite3/c \  database: ${MYAPP_NAME}_test" config/database.yml
-sed -i "/production.sqlite3/c \  database: ${MYAPP_NAME}_prod" config/database.yml
-
 git commit -am "Heroku uses pg and 12factor gem"
 heroku apps:create $MYAPP_NAME
 heroku addons:create heroku-postgresql:hobby-dev
 git push heroku master --set-upstream
+# if you receive an error An error occurred while installing Ruby ruby-2.2.4
+# just try again
+git push heroku master --set-upstream
+heroku open
 ~~~
 
 On heroku add *Papertrail* add-on and go to the

@@ -280,3 +280,6 @@ is private but we can
   precedence](https://github.com/bbatsov/rubocop/issues/1520) so when rubocop
   alerts for `Style/Lambda: Use the `lambda` method for multi-line lambdas` you
   need parenthesis for example `scope :active, (lambda do ... end)`
+* you should memoize with `return @current_isp if defined? @current_isp` instead
+  of `@current_isp ||= blabla; return @current_isp` since it handles `false`
+  value as well (it will not rerun the check if @current_isp = false)

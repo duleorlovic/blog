@@ -256,7 +256,6 @@ roles using pqadmin visual program)
 heroku dump file and import in database
 
   ~~~
-  RAILS_ENV=production rake db:create
   chmod a+r a.dump
   sudo su postgres -c 'pg_restore -d Scuddle_app_development --clean --no-acl --no-owner -h localhost a.dump'
   ~~~
@@ -283,6 +282,43 @@ development: &default
 ApplicationMailer.internal_notification('SmsService', send: args)
                  .deliver_now
 ~~~
+
+# Turbolinks
+
+With turbolinks rails acts as single page application. So if you want to do
+something on every page and on first load than you need to bind on two events:
+
+~~~
+$(document).on('ready page:load', function(){
+  console.log("document on ready page:load");
+  /* Activating Best In Place */
+  jQuery(".best_in_place").best_in_place();
+  autosize($('textarea'));
+});
+~~~
+
+The best approach is unobtrusive javascript
+
+~~~
+// Used to toggle class 'active' to selector
+// example <button data-toggle-active=".popup"></button>
+$(document).on('click','[data-toggle-active]', function(e) {
+  $( $(this).data('toggle-active')).toggleClass('active');
+  e.preventDefault();
+  console.log("click [data-toggle-active]="+$(this).data('toggle-active'));
+});
+~~~
+
+# Timezones
+
+
+Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
+tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
+rails s returns default time zone `Time.zone # CEST Europe`. You can use users
+timezone with
+[browser-timezone-rails](https://github.com/kbaum/browser-timezone-rails).
+`Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
+why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
 
 # Tips
 
@@ -334,3 +370,24 @@ ApplicationMailer.internal_notification('SmsService', send: args)
   [json](http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html)
   can be customized with `render json: @phones.as_json(only: [:id], expect:
   [:created_at], include: :posts)`
+* run rails in production mode:
+
+  ~~~
+  RAILS_ENV=production rake db:create
+  rake assets:precompile RAILS_ENV=production
+  export RAILS_SERVE_STATIC_FILES=true
+  # export DO_NOT_USE_CANONICAL_HOST=true
+  # export JAVASCRIPT_ERROR_RECIPIENTS=duleorlovic@gmx.com
+  # remove eventual config.action_controller.asset_host = asdasd
+  rails s -b 0.0.0.0 -e production
+  ~~~
+* load databe from `db/schema.rb` (instead of `rake db:migrate`) is with `rake
+  db:schema:load`.
+* run at port 80 `sudo service apache2 stop` and `rvmsudo rails s -p 80`. Note
+  that db user will to *root* instead of *orlovic* so you need to hardcode it in
+  *config/database.yml*. Rember to `-b 0.0.0.0` if you access from outside.
+  When you are using `local.trk.in.rs` you can set local ip *192.168.0.4* as
+  Redirection (301 or 302) (but not as Forwarding since that does not work for
+  some api requests from android).
+* Rails.logger is stdout and every controller, model and view has `logger`
+  method which you can use like `logger.debug my_var`
