@@ -8,24 +8,37 @@ Do not hide your mistakes, instead, make sure that every bug is noticeable.
 That way you will learn more and thinks that you did not know (that's why bug
 occurs).
 
-Bugs that I have meet are something like: user uploaded file with non asci
-chars, linkedin identity text is missing graduation date, after_create hook
+Bugs that I had seen are something like: user uploaded file with non asci
+chars, linkedin identity text is missing graduation_date, after_create hook
 on model with devise cause `user.save` to return *true* but *user.errors* is
 present and user is redirected to update his registration form... You can NOT
 write tests for those situations. Better is to have nice notification with all
 input/session/user data. When you implement this, please don't use rescue block
 without notification.
 
-Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification).
-It is rack middleware and configuration is very simple. After adding `gem 'exception_notification'`
-to your Gemfile, put this in your config file:
+Excellent gem for notification is
+[exception_notification](https://github.com/smartinez87/exception_notification).
+It is rack middleware and configuration is very simple. After adding to your
+Gemfile
+
+~~~
+cat >> Gemfile <<HERE_DOC
+# error notification to EXCEPTION_RECIPIENTS emails
+gem 'exception_notification'
+HERE_DOC
+bundle
+~~~
+
+put this in your config file:
 
 {% highlight ruby %}
 # config/application.rb
     if (receivers = Rails.application.secrets.exception_recipients).present?
       config.middleware.use(
         ExceptionNotification::Rack,
+        ignore_crawlers: %w{Googlebot bingbot linkdexbot},
         email: {
+          deliver_with: :deliver, # only for rails < 4.2.1
           email_prefix: "[Your App Name] ",
           sender_address: Rails.application.secrets.mailer_sender,
           exception_recipients: receivers.split(','),
@@ -35,6 +48,9 @@ to your Gemfile, put this in your config file:
 {% endhighlight %}
 
 This will send email for any exception if `expception_recipients` are present.
+[Ignore
+Crawlers](https://github.com/smartinez87/exception_notification/blob/master/lib/exception_notification/rack.rb#L52)
+if matched HTTP_USER_AGENT.
 
 As delivery method you can use *mandill* or very nice *letter_opener* for development.
 Set email receivers in config secrets:
@@ -117,6 +133,20 @@ current_user });`. Here is what we use for javascript notification:
 
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
+  def sample_error
+    this_line_should_raise_error
+  end
+
+  def sample_error_in_javascript
+    render layout: true, text: %(
+      Here is some javascript error
+      <script>
+        console.log('calling manual_js_error');
+        manual_js_error
+      </script>
+    )
+  end
+
   def notify_javascript_error
     js_receivers = Rails.application.secrets.javascript_error_recipients
     if js_receivers.present?

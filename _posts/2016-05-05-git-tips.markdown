@@ -8,35 +8,48 @@ layout: post
 Add and commit in one command alias
 
     git config --global alias.add-commit '!git add -A && git commit'
-  
-track remote branch if we did not have this branch already
+
+checkout remote branch and track it
 
     git checkout -t origin/branch
-    
+
 Push branch and track
 
     git push bitbucket development:development
-  
-Getting existing git branches to track remote branches:  
+
+Getting existing git branches to track remote branches:
 
     git branch --set-upstream gh-pages-bitbucket bitbucket/gh-pages 
-    
+
 Git log
 
-    git log --reverse --ancestry-path commit1^..commit2 # show commits that are descendant of commit1 AND ancestors of commit2, in the same time
+    # show commits that are descendant of commit1 AND ancestors of commit2, in the same time
+    git log --reverse --ancestry-path commit1^..commit2
     git log $(git merge-base HEAD branch)..branch  # show commits only on branch
-    
+
 Git stash only unstaged changes
 
     git stash --keep-index
-    
+
 Git checkout previous branch
 
     git checkout -
-  
+
 See all the changed code
 
     git log -p
+
+Also with adding
+
+    git add -p # e to open editor
+
+When you want to undo some commands
+
+    git reflog
+
+For work in progress you can use wip
+
+    git -m wip # one word does not need ""
 
 Show file at specific revision
 
@@ -45,22 +58,23 @@ Show file at specific revision
 Find bug using bisect on specific folder or file
 
      git bisect start -- app/controllers/registration_controller.rb
-    
+
 Rebase branches
 
      git pull --rebase # pull remote changes and rebase you local commits
      git rebase master # call this while you are on some feature branch
 
-Push to all remote repositories
+If you need to push to two remote repositories, you can do it in one command
 
     git remote add all git@github.com:duleorlovic/tips.git
     git remote set-url  --add all git@heroku.com:duleorlovic_tips.git
     git push all master --set-upstream
     git push
-     
+
 Versioning [SEMVER](http://semver.org/)
 
-If there is two accounts on bitbucket or github with different keys use `.ssh/config` file and put:
+If there is two accounts on bitbucket or github with different keys use
+`.ssh/config` file and put:
 
     Host newbitbucket.org
       Hostname bitbucket.org
@@ -71,18 +85,21 @@ If there is two accounts on bitbucket or github with different keys use `.ssh/co
       IdentityFile ~/.ssh/id_rsa
 
 To see which username (-T) and wich key (-v) is using:
-    
+
     ssh -T git@bitbucket.org
     ssh -v git@secure.bitbucket.org
-    
-If you want, you can generate id_rsa_secure with password, so it will asked each time you use git command.
-Heroku uses keys from `~/.netrc` which is created when you type `heroku login` (once is setup, it stays forever)
 
-If you want to ignore/reignore some files that are tracked (gitignore does not work on tracked files)
+If you want, you can generate id_rsa_secure with password, so it will asked each
+time you use git command.  Heroku uses keys from `~/.netrc` which is created
+when you type `heroku login` (once is setup, it stays forever)
+
+If you want to ignore/reignore some files that are tracked (gitignore does not
+work on tracked files)
 
     git update-index --[no]-assume-unchanged <file>
 
-If you want to add folder to git structure but include all its content (like `backup` or `tmp` folder) you can do with three commands
+If you want to add folder to git structure but include all its content (like
+`backup` or `tmp` folder) you can do with three steps
 
 ~~~
 mkdir tmp
@@ -91,16 +108,17 @@ git add tmp/.gitignore -f
 ~~~
 
 
-~~~
-git add -p # e to open editor
-git -m vip # one word does not need ""
-git reflog # when you want to undo some commands
-~~~
-
-
 If you want to skip history and download latest code and change author you can
 
 ~~~
 git clone --depth=1 your-repo-url
 git commit --amend --author "New Author Name <email@address.com>" --no-edit
+~~~
+
+Set author localy
+
+~~~
+git config user.email myemail@asd.asd
+git config user.name my-name
+git commit --amend --reset-author
 ~~~

@@ -280,6 +280,29 @@ sed -i app/views/layouts/application.html.erb -e '/<.ul>/ {
 }'
 ~~~
 
+Here is an example adding style for specific media for alert
+
+~~~
+// app/assets/stylesheets/common.scss
+@import "bootstrap-variables";
+
+.hidden-left {
+  position: absolute;
+  left: -1000px;
+}
+
+@media(min-width:$screen-sm){
+  .alert {
+    position: absolute;
+    top: 8px;
+    padding: 8px;
+    padding-right: 30px; // close sign
+    z-index: 9999;
+    left: 480px; // enought to see nav buttons
+  }
+}
+~~~
+
 
 ## Adding flash (both from server and client)
 
@@ -618,7 +641,33 @@ sed -i config/initializers/carrierwave.rb -e '/^end/i \
   config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
 ~~~
 
-# Heroku deploy
+# Production Heroku deploy
+
+You can follow [heroku article](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server)
+
+~~~
+cat >> Procfile <<HERE_DOC
+web: bundle exec puma -C config/puma.rb
+HERE_DOC
+
+cat >> config/puma.rb <<HERE_DOC
+workers Integer(ENV['WEB_CONCURRENCY'] || 2)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
+threads threads_count, threads_count
+
+preload_app!
+
+rackup      DefaultRackup
+port        ENV['PORT']     || 3000
+environment ENV['RACK_ENV'] || 'development'
+
+on_worker_boot do
+  # Worker specific setup for Rails 4.1+
+  # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
+  ActiveRecord::Base.establish_connection
+end
+HERE_DOC
+~~~
 
 ~~~
 export MYAPP_NAME=air
@@ -651,6 +700,3 @@ On heroku add *Papertrail* add-on and go to the
 for "Started GET" , save and create email alert or [add internal
 notification]({{ site.baseurl }}
 {% post_url 2016-05-17-send-and-receive-emails-in-rails %})
-
-
-

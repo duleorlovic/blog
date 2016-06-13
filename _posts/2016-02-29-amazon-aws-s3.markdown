@@ -46,36 +46,20 @@ added `s3:*` below `"s3:DeleteObject"`.
 }
 ~~~
 
+# Website hosting
 
-# Mark bucket public
-
-You can deploy frontend code to S3
+You can use your `some.domain.com` to point to your bucket
 [guide](https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html)
-you can make it public. Edit bucket policy to
+This is simple as adding one CNAME record.
 
-~~~
-{
-  "Version":"2012-10-17",
-  "Statement":[{
-  "Sid":"AddPerm",
-        "Effect":"Allow",
-    "Principal": "*",
-      "Action":["s3:GetObject"],
-      "Resource":["arn:aws:s3:::menucards-staging/*"
-      ]
-    }
-  ]
-}
-~~~
-
-# Add CNAME so your domain name point to your bucket
-
-You bucket needs to have the SAME NAME AS YOUR DOMAIN `some.domain.com` or you
-need to use Amazon DNS Route 53.
+Your bucket needs to have the SAME NAME AS YOUR DOMAIN `some.domain.com` or you
+need to use Amazon DNS Route 53. Also if you want to serve from root domain
+`domain.com` than you must use DNS Route 53.
 For default region *US Standard (us-east-1)* you can add CNAME record with value
 `some.domain.com.s3.amazonaws.com` on your domain provider page.
 
-But if bucket is from different region than you need to use full **Endpoint**
+But if bucket is from different region than from CNAME you need to use full
+**Endpoint** which you can find in Properties of you bucket -> Endpoint.
 for CNAME
 
 **bucket-name**.s3-website[-.]**region**.amazonaws.com
@@ -85,21 +69,63 @@ can find on [website
 endpoints](http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html).
 For frankfurt would be `some.domain.com.s3-website.eu-central-1.amazonaws.com`
 For southeast region is `ap-southeast-1`.
-You should find your value in Properties of you bucket -> Endpoint.
 Your bucket-name can not be different than your domain name!
 [virtual hosting](http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html),
 [regions and endpoints](http://docs.aws.amazon.com/general/latest/gr/rande.html)
+
+## Mark bucket public
+
+You can deploy frontend code to S3 but you need to make it public. Edit bucket
+policy to
+
+~~~
+{
+  "Version":"2012-10-17",
+  "Statement":[{
+  "Sid":"AddPerm",
+        "Effect":"Allow",
+    "Principal": "*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::projektor.trk.in.rs/*"
+      ]
+    }
+  ]
+}
+~~~
+
+## SSL on AWS Cloudfront
+
+You can request certificate [AWS Certificate
+Manager](https://console.aws.amazon.com/acm/). It will send email to the
+`administrator@trk.in.rs` with the link to approve. Administrator of domain can
+just click on the link to approve it.
+
+Once you have approved certificate you can use it on [cloud
+front](https://console.aws.amazon.com/cloudfront/) distribution. Some
+[notes](http://docs.aws.amazon.com/gettingstarted/latest/swh/getting-started-create-cfdist.html).
+
+* it could 15 mins for distribution to become deployed
+* when selecting *Origin Domain Name* do not select option from dropdown since
+  it does not contain region (it will work only for us-east-1 buckets). You need
+  to use bucket Endpoint here
+* update your DNS record so CNAME is something like
+  d1ub4fmsp3scvp.cloudfront.net
+
 
 # Access files
 
 Files can we accessed in three ways.
 
-1. first is to go on properties of the file and find *link*
-   <https://s3.eu-central-1.amazonaws.com/duleorlovic-test-eu-central-1/icon-menu.png>
-1. second way is to use short version without region just
-`bucket-name`.s3.amazonaws.com/`filename`
+1. **bucket_name as path**.
+   *s3`[-.]region`.amazonaws.com/`bucket-name`/`file-name`*. Go to the properties
+   of the file and find *link*, for example:
+   <https://s3.eu-central-1.amazonaws.com/duleorlovic-test-eu-central-1/icon-menu.png>.
+   You will notice that for us-east-1 region, link does not contain region part,
+   only <https://s3.amazonaws.com/duleorlovic-test-us-east-1/favicon.ico>
+1. **bucket_name as subdomain**.`bucket-name`.s3.amazonaws.com/`filename`. This
+   is shorter since this url does not contain region
    <https://duleorlovic-test-eu-central-1.s3.amazonaws.com/icon-menu.png>
-1. third is to enable website hosting so you can use *Endpoint* and append fileName
+1. enable **website hosting** so you can use *Endpoint* and append fileName
    <http://duleorlovic-test-eu-central-1.s3-website.eu-central-1.amazonaws.com/icon-menu.png>
   * note that url contains `website-` so website needs to be enabled
   * note that this way you can not access using SSL https protocol

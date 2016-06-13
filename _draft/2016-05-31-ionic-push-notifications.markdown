@@ -228,3 +228,14 @@ angular.module('starter')
 
 * new version is https://github.com/phonegap/phonegap-plugin-push
 
+# Android Emulator
+
+I found that genymotion works fine. Just install [google play
+services](https://github.com/codepath/android_guides/wiki/Genymotion-2.0-Emulators-with-Google-Play-support)
+It works for me on Android 5.1. After drag and drop those two files, you need to
+logs in and open Google+ which will trigger update of Google play services.
+You can use same login on all emulators.
+If genymotion emulator dissapears, run `adb kill-server` to clean connections.
+
+For first message you need to wait minute or two. But than it works instantly.
+
