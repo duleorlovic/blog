@@ -68,7 +68,11 @@ If you need to separate production from development (for example analytics), you
 
 # Automatic deploy to gh-pages using rake
 
-Rake tasks are perfect for deploying since you need just to type `rake` and it will be live (if you set up properly). This is my Rakefile that builds my blog (stored on bitbucket) and push to github
+Rake tasks are perfect for deploying since you need just to type `rake` and it
+will be live (if you set up properly). This is my Rakefile that builds my blog
+(stored on bitbucket) and push to github.
+This is nice since I do not want to share history (all commits from the
+beggining). On github, you can find only one commit "Site updated at ..."
 
 ~~~
 git remote add origin git@bitbucket.org:duleorlovic/trk.in.rs.git

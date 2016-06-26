@@ -135,6 +135,17 @@ HERE_DOC
 If you need multiple identities per account than create separate table for
 identity.
 
+Note this situations:
+
+* user changed email address (lost password for old one) and updated on
+  facebook profile. He should be able to add new email address, not just to
+  change old one. Maybe he used the same password which he can not recover. If
+  user can recover password only using original email than they are blocked.
+  Hackerrank has a button to "Add another email".
+  So we should check if his facebook email address was updated and add add that
+  email to our database as well.
+
+
 # Facebook app
 
 1. Create app on [developers.facebook.com](http://developers.facebook.com). By default

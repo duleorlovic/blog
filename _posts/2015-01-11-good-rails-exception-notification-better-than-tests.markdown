@@ -18,8 +18,18 @@ without notification.
 
 Excellent gem for notification is
 [exception_notification](https://github.com/smartinez87/exception_notification).
-It is rack middleware and configuration is very simple. After adding `gem
-'exception_notification'` to your Gemfile, put this in your config file:
+It is rack middleware and configuration is very simple. After adding to your
+Gemfile
+
+~~~
+cat >> Gemfile <<HERE_DOC
+# error notification to EXCEPTION_RECIPIENTS emails
+gem 'exception_notification'
+HERE_DOC
+bundle
+~~~
+
+put this in your config file:
 
 {% highlight ruby %}
 # config/application.rb
@@ -37,8 +47,7 @@ It is rack middleware and configuration is very simple. After adding `gem
 
 This will send email for any exception if `expception_recipients` are present.
 
-As delivery method you can use *mandill* or very nice *letter_opener* for
-development.
+As delivery method you can use *mandrill* or very nice *letter_opener* for development.
 Set email receivers in config secrets:
 
 {% highlight yaml %}
@@ -203,9 +212,7 @@ get 'javascript-required-page', to: 'pages#javascript_required_page', as: :javas
 {% endhighlight %}
 
 
-You can see that there is also `javascript-required-page` where people is
-redirected when js is not enabled. This happens very rare. Put this in layout
-file, for pages after user login (and search bots not).
+You can see that there is also `javascript-required-page` where people is redirected when js is not enabled. This happens very rare. Put this in layout file, for pages after user login (and search bots not).
 
 
 {% highlight ruby %}
@@ -271,7 +278,6 @@ Exception notifications can be used there also with this
 Just add `gem 'exception_notification-rake'` to *Gemfile* and
 `ExceptionNotifier::Rake.configure` to *config/secrets.yml*. Also works manual
 notifications.
-
 # Custom Error
 
 If you need custom exception than you can try with

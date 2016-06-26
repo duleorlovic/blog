@@ -4,7 +4,7 @@
   sudo /etc/init.d/mysql stop
   sudo mysqld --skip-grant-tables &
   mysql -u root mysql
-  UPDATE user SET Password=PASSWORD('YOURNEWPASSWORD') WHERE User='root'; FLUSH PRIVILEGES; exit;
+  UPDATE user SET Password=PASSWORD('asdasd') WHERE User='root'; FLUSH PRIVILEGES; exit;
   ~~~
 
 * login `mysql -u root -p`

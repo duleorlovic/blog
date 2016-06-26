@@ -22,6 +22,10 @@ title: CSS and HTML tips
   element
   [link](http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements).
   You need to make the label a block level element for it to work.
+* for block elemenent with `margin: auto` (bootstrap
+  [center-block](http://getbootstrap.com/css/#helper-classes-center) helper)
+  does not have efect unless the element has the width (because it can not
+  calculate margins). For text you can use `text-center`
 * space inside a element is important. for example `<label>1</label><label> 2
   </label><label> 3 </label>` with `label { background: blue;}` this background
   will occupy only character and it will be disconnected from 1-2, but connected
@@ -41,6 +45,8 @@ title: CSS and HTML tips
 
   You can add scrollbar by wrapping it `.outer { overflow-x: scroll }`
   [link](http://stackoverflow.com/questions/9672176/prevent-floated-divs-from-wrapping-to-new-line)
+* textarea (rails `f.text_area`) has constant size, so if you want bigger you
+  can set `rows="30"` or use [autosize](http://www.jacklmoore.com/autosize/)
 
 # Examples
 
