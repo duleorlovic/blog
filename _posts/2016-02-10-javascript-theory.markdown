@@ -230,7 +230,8 @@ Examples
 This [post](http://kamranahmed.info/blog/2016/04/04/es6-in-depth/) explains what
 is new in ES6 (Ecma Script 2015). Almost all those features already exists in
 coffee script [nice reply](https://gist.github.com/benjie/d0e39fbe8a61bc30ed93).
-It's good that no need to write `function` keyword.
+It's good that no need to write `function` keyword. Also nice table of
+[es6-features](http://es6-features.org/)
 
 * `use strict` mode by default (by this
   [info](http://arcturo.github.io/library/coffeescript/07_the_bad_parts.html)
@@ -243,7 +244,7 @@ It's good that no need to write `function` keyword.
   console.log(`Hello ${name}`);
   ~~~
 
-* arroy functions are on abbreviated syntax for anonymouse functions (coffee fat
+* array functions are on abbreviated syntax for anonymouse functions (coffee fat
   arrow instead of slim arrow `->`, binds to the outer `this`)
 
   ~~~

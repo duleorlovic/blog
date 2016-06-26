@@ -12,7 +12,11 @@ Model B Revision 2.0 (512MB).
 
 
 Start with [NOOBS](https://www.raspberrypi.org/downloads/noobs/) (which is based
-on Raspbian) to create SD card. Run `sudo raspi-config` to change Boot Options
+on Raspbian) to create SD card.
+[Instructions](https://www.raspberrypi.org/documentation/installation/noobs.md)
+says to run `gparted` and format as FAT32. Just extract zip to the card.
+
+Run `sudo raspi-config` to change Boot Options
 to `B1 Consolle Autologin`. This is important since we will run script from
 bash_profile.
 
@@ -73,3 +77,12 @@ We use prefix `rvm` so `rvmsudo` pass that env variable to
 we can read long and not wait buffer to fill in. For this command we need to
 `sudo apt-get install expect-dev`.
 
+# Disk errors
+
+If you get `Unable to mount root fs on unknown-block` that meens SD card is
+corrupted. Try to recover with the following command. Find your root partition
+using `gnome-disks`
+
+~~~
+sudo fsck.ext4 -fy /dev/sdc7
+~~~

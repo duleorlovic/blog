@@ -219,7 +219,7 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 * adding array of any type and hstore is easy, just add default value `[]` and
 `''` (breaks for `{}`). You can create hstore extension in migration. If you
-need arrays of hstore you can create json array
+need arrays of hstore than you need to go for json or json array.
 
   ~~~
   class CreatePhones < ActiveRecord::Migration
@@ -228,7 +228,8 @@ need arrays of hstore you can create json array
       create_table :phones do |t|
         t.string :my_array, array: true, default: []
         t.hstore :my_hash, default: ''
-        t.json :my_array_of_hash, array: true, default: []
+        t.json :my_json, default: []
+        t.json :my_array_of_json, array: true, default: []
       end
     end
   end
@@ -389,5 +390,16 @@ why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
   When you are using `local.trk.in.rs` you can set local ip *192.168.0.4* as
   Redirection (301 or 302) (but not as Forwarding since that does not work for
   some api requests from android).
-* Rails.logger is stdout and every controller, model and view has `logger`
+* `Rails.logger` is stdout and every controller, model and view has `logger`
   method which you can use like `logger.debug my_var`
+* use include for n+1 query and joinswhen you don't need associated models. Both
+  are using INNER JOIN
+  * `Comment.all(include: :user, conditions: { users: { admin: true}})` will
+    load also the user model
+  * `User.all(joins: :comments, select: "users.*, count(comments.id) as
+    comments_count", group: "users.id")` you can output just specific value
+* `some_2d_array.each_with_index do |(col1, col2),index|` when you need
+  [decomposition
+  array](http://docs.ruby-lang.org/en/2.1.0/syntax/assignment_rdoc.html#label-Array+Decomposition)
+  to some variables, you can use parenthesis.
+* fake objects could be generated with `OpenStruct.new name: 'Dule'`

@@ -16,9 +16,10 @@ write tests for those situations. Better is to have nice notification with all
 input/session/user data. When you implement this, please don't use rescue block
 without notification.
 
-Excellent gem for notification is [exception_notification](https://github.com/smartinez87/exception_notification).
-It is rack middleware and configuration is very simple. After adding `gem 'exception_notification'`
-to your Gemfile, put this in your config file:
+Excellent gem for notification is
+[exception_notification](https://github.com/smartinez87/exception_notification).
+It is rack middleware and configuration is very simple. After adding `gem
+'exception_notification'` to your Gemfile, put this in your config file:
 
 {% highlight ruby %}
 # config/application.rb
@@ -36,7 +37,8 @@ to your Gemfile, put this in your config file:
 
 This will send email for any exception if `expception_recipients` are present.
 
-As delivery method you can use *mandill* or very nice *letter_opener* for development.
+As delivery method you can use *mandill* or very nice *letter_opener* for
+development.
 Set email receivers in config secrets:
 
 {% highlight yaml %}
@@ -138,7 +140,9 @@ current_user });`. Here is what we use for javascript notification:
   end
 {% endhighlight %}
 
-You can also set some nice looking text with custom sections (uncomment param `:sections`). You need to write partial in which you can access to `@data`,`@request`... varibales.
+You can also set some nice looking text with custom sections (uncomment param
+`:sections`). You need to write partial in which you can access to
+`@data`,`@request`... varibales.
 
 {% highlight ruby %}
 # app/views/exception_notifier/_message.text.erb
@@ -148,7 +152,8 @@ Javascript error params
 HTTP_USER_AGENT=<%= @request.env["HTTP_USER_AGENT"] %>
 {% endhighlight %}
 
-If you want to render error-page and page-not-found with rails you can rescue from all StandardError exceptions.
+If you want to render error-page and page-not-found with rails you can rescue
+from all StandardError exceptions.
 
 {% highlight ruby %}
 # app/controllers/application_controller.rb
@@ -198,7 +203,9 @@ get 'javascript-required-page', to: 'pages#javascript_required_page', as: :javas
 {% endhighlight %}
 
 
-You can see that there is also `javascript-required-page` where people is redirected when js is not enabled. This happens very rare. Put this in layout file, for pages after user login (and search bots not).
+You can see that there is also `javascript-required-page` where people is
+redirected when js is not enabled. This happens very rare. Put this in layout
+file, for pages after user login (and search bots not).
 
 
 {% highlight ruby %}
@@ -264,3 +271,21 @@ Exception notifications can be used there also with this
 Just add `gem 'exception_notification-rake'` to *Gemfile* and
 `ExceptionNotifier::Rake.configure` to *config/secrets.yml*. Also works manual
 notifications.
+
+# Custom Error
+
+If you need custom exception than you can try with
+
+~~~
+# raise CustomException.new bla: 'bla'
+class CustomException < StandardError
+  def initialize(data)
+    @data = data
+  end
+end
+~~~
+
+# Deliver later
+
+If you use ActiveJob than you can try to deliver later but there are some issues
+<https://github.com/smartinez87/exception_notification/issues/319>

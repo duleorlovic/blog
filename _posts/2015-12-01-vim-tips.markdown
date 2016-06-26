@@ -185,6 +185,8 @@ You need to install this tools:
     Metrics/MethodLength`
   * define in `syntastic.vim`
     [g:syntastic_eruby_ruby_quiet_message](https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21)
+  * fix `possibly useless use of a constant in void context` is with `.to_s`
+
 * Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
 * json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)
 

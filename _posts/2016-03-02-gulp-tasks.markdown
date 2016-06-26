@@ -62,7 +62,7 @@ gulp clean && gulp deploy --api production
 Note that you need to stop eventual gulp serve for localhost, when you want to
 deploy for production.
 
-First install `gulp-if` with `npm install gulp-if --save-dev`. Than add to
+First install `gulp-if` with `npm install yargs gulp-if --save-dev`. Than add to
 `gulp/script.js`
 
 ~~~
