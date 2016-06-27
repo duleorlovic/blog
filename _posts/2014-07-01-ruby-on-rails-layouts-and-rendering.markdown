@@ -70,7 +70,8 @@ and include them in a view or layout file
     <%= javascript_include_tag params[:controller] %>
     <%= stylesheet_link_tag params[:controller] %>
 
-All non js or css files are included automatically (images, text, pdf) along with applications.js and application.css by the default matcher for compiling:
+All non js or css files are included automatically (images, text, pdf) along
+with applications.js and application.css by the default matcher for compiling:
 
     [ Proc.new { |path, fn| fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path)) }, /application.(css|js)$/ ]
 

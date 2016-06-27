@@ -64,6 +64,9 @@ title: CSS and HTML tips
   }
   ~~~
 
+* hide something but still occupy space you can use `visibility: hidden` and
+  `visibility: visible`
+
 # SCSS
 
 * you can set default value of variable `$my-var: 123 !default;`. This has no
@@ -77,3 +80,17 @@ title: CSS and HTML tips
 # Head meta tags
 
 * here is a list of used tags [HEAD](https://github.com/joshbuchea/HEAD)
+
+# Css helper classes
+
+~~~
+// add some space below
+.m-b-10 {
+  margin-bottom: 10px;
+}
+
+// similar to pull-right just without float
+.text-align-right {
+  text-align: right;
+}
+~~~

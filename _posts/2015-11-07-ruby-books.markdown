@@ -283,3 +283,10 @@ is private but we can
 * you should memoize with `return @current_isp if defined? @current_isp` instead
   of `@current_isp ||= blabla; return @current_isp` since it handles `false`
   value as well (it will not rerun the check if @current_isp = false)
+* when you iterate over some hashes you can assign variables with `name:`
+
+  ~~~
+  [{name: 'Duke', value: 1},].each do |name:, value:|
+    puts name, value
+  end
+  ~~~

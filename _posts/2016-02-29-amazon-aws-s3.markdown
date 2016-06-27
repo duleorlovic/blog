@@ -180,10 +180,12 @@ to the provided example:
         <AllowedMethod>POST</AllowedMethod>
         <MaxAgeSeconds>3000</MaxAgeSeconds>
         <AllowedHeader>*</AllowedHeader>
-        <AllowedHeader>Authorization</AllowedHeader>
     </CORSRule>
 </CORSConfiguration>
 ~~~
+
+This error also occurs when we mismatch bucket_name or region. To test if bucket
+is working, follow the link from the error.
 
 
 # Tools

@@ -40,9 +40,9 @@ put this in your config file:
         email: {
           deliver_with: :deliver, # only for rails < 4.2.1
           email_prefix: "[Your App Name] ",
-          sender_address: Rails.application.secrets.mailer_sender,
+          sender_address: Rails.application.secrets.default_mailer_sender,
           exception_recipients: receivers.split(','),
-        }
+        },
       )
     end
 {% endhighlight %}

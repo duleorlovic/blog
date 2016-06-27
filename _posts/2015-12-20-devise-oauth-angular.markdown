@@ -185,6 +185,11 @@ we need whole url path), like
 
 Dont forget to save **Changes needs 5 min to propagate**
 
+# Twitter app
+
+On <https://apps.twitter.com/> you can create application.
+`app/{{APP_ID}}/keys` will give you TWITTER_API_KEY and TWITTER_API_SECRET
+
 # Angular ng-token-auth demo
 
 Angular [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) is used with [devise-token-auth](https://github.com/lynndylanhurley/devise_token_auth).

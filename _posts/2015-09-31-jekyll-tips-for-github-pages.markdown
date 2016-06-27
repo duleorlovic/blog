@@ -206,7 +206,13 @@ To list similar posts you can  use this snippet in `_layout/default.html`
 
 # Search
 
-Just copy and paste `search.json` and other snippets from [Simple-Jekyll-Search](https://github.com/christian-fei/Simple-Jekyll-Search)
+Just copy and paste `search.json` and other snippets from
+[Simple-Jekyll-Search](https://github.com/christian-fei/Simple-Jekyll-Search)
+
+# 404
+
+For gh-pages, you just need `404.html` at root for server to use it when it does
+not find the page.
 
 # Markdown
 

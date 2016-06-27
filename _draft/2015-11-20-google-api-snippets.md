@@ -255,3 +255,43 @@ can register but it can not receive messages.
 There is nice explanation how to create notification on your site
 <https://developers.google.com/web/updates/2015/03/push-notifications-on-the-open-web?hl=en>
 
+# Youtube
+
+## Youtube video in popup modal
+
+It is simple iframe similar to [this
+solution](http://jsfiddle.net/jeremykenedy/h8daS/1/) just with stop video after
+modal is closed with Esc
+
+~~~
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div>
+          <iframe width="100%" height="350" src=""></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <a href="#" class="btn btn-default" data-toggle="modal" data-target="#videoModal" data-theVideo="http://www.youtube.com/embed/loFtozxZG0s" >VIDEO</a>
+
+<script>
+$('[data-theVideo]').click(function () {
+  var theModal = $(this).data( "target" ),
+  videoSRC = $(this).attr( "data-theVideo" ), 
+  videoSRCauto = videoSRC+"?autoplay=1" ;
+  $(theModal+' iframe').attr('src', videoSRCauto);
+  $(theModal+' button.close').click(function () {
+      $(theModal+' iframe').attr('src', videoSRC);
+  });
+});
+
+$('#videoModal').on('hidden.bs.modal', function() {
+  $(this).find('iframe').attr('src', null);
+});
+</script>
+~~~

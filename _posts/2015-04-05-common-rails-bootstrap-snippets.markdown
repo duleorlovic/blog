@@ -4,8 +4,10 @@ title:  Common Rails bootstrap snippets
 tags: ruby-on-rails devise carrierwave
 ---
 
-Paste this code to create some basic starting application *myapp.com* with 
-authentication and other funny tools.
+Paste this code to create some basic starting application *myapp.com* with
+authentication and other funny tools. I extensively use [echo sed grep]({{
+site.baseurl }} {% post_url 2016-05-18-echo-and-sed-command-line-editing %})
+commands here.
 
 > give a man a fish and you feed him for a day. teach a man to fish and you feed
 him for a lifetime
@@ -108,9 +110,8 @@ It works for latest node and npm version. Older version could give errors:
 * bower version `~1.2` gives me error `error Path must be a string. Received
    ...` so make sure you use latest bower.
 
-It works find with assets from gems.
-
-Look how you can add bootstrap.
+Old approach with assets from gems still works, no worry.
+First, we need to initialize bower.
 
 ~~~
 # do not name your package as bower or other existing package
@@ -201,7 +202,7 @@ RAILS_ENV=production rake assets:precompile -v
 RAILS_SERVE_STATIC_FILES=true rails s -e production
 ~~~
 
-## Twitter bootstrap
+## Twitter bootstrap Gem
 
 ~~~
 cat >> Gemfile << HERE_DOC
@@ -303,6 +304,33 @@ Here is an example adding style for specific media for alert
 }
 ~~~
 
+Still, default rails form build will render `field_with_errors` on label and
+input wrap, so if you need to change for bootstrap error classes.
+Note that with Bootstrap 3, you have to change `control-group` to `form-group`,
+add `form-control` to `<input>` elements, `help-inline` to `help-block`, and
+`warning` to `has-warning`.
+The easiest approach is with **bootstrap form**.
+
+## Bootstrap form
+
+
+[bootstrap form](https://github.com/bootstrap-ruby/rails-bootstrap-forms) gem
+(not old [bootstrap_forms](https://github.com/sethvargo/bootstrap_forms)). Just
+add two lines
+
+~~~
+cat >> Gemfile << HERE_DOC
+# adding bootstrap_form_for
+gem 'bootstrap_form'
+HERE_DOC
+
+sed -i app/assets/stylesheets/application.scss -e '1i\
+/*\
+ *= require rails_bootstrap_forms\
+ */'
+~~~
+
+and use your `bootstrap_form_for`
 
 ## Adding flash (both from server and client)
 
@@ -639,6 +667,56 @@ sed -i config/initializers/carrierwave.rb -e '/^end/i \
   # max_file_size is not originally on carrierwave, but is added on CWDirect\
   # if file is greater than allowed than error is from Amazon EntityTooLarge\
   config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
+~~~
+
+## Uploading using jQuery-File-Upload
+
+[jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload) 
+is much cleaner way of uploading
+[heroku tutorial](https://devcenter.heroku.com/articles/direct-to-s3-image-uploads-in-rails)
+that uses
+[PresignedPost](http://docs.aws.amazon.com/sdkforruby/api/Aws/S3/PresignedPost.html)
+
+~~~
+cat >> Gemfile << HERE_DOC
+# direct S3 uploading
+gem 'aws-sdk', '~> 2'
+HERE_DOC
+
+cat >> config/initializers/aws.rb << HERE_DOC
+Aws.config.update({
+  region: Rails.application.secrets.aws_region,
+  credentials: Aws::Credentials.new(
+    Rails.application.secrets.aws_access_key_id,
+    Rails.application.secrets.aws_secret_access_key
+  ),
+})
+
+S3_BUCKET = Aws::S3::Resource.new.bucket(
+  Rails.application.secrets.aws_bucket_name
+)
+HERE_DOC
+~~~
+
+~~~
+# in controller
+before_action :set_s3_direct_post, only: [:new, :edit, :create, :update]
+
+def set_s3_direct_post
+  @s3_direct_post = S3_BUCKET.presigned_post(
+    key: "uploads/#{SecureRandom.uuid}/${filename}",
+    success_action_status: '201', # Aws will respond with XML
+    acl: 'public-read'
+  )
+end
+~~~
+
+You can save one or many urls in `documents` field (type text) and use
+`serialize :documents, Array` but if you have more logic:
+
+~~~
+rails g model document name key documentable:references{polymorphic}
+
 ~~~
 
 # Production Heroku deploy

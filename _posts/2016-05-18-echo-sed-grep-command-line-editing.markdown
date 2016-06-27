@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Echo and Sed command line editing
-tags: echo sed edit command-line
+title: Echo Sed Grep command line editing
+tags: echo sed grep edit command-line
 ---
 
 # Echo
@@ -39,8 +39,16 @@ sed -i config/secrets.yml -e '/^test:/i \
   aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>'
 ~~~
 
-You can append on line numbers `3,6aTEXT` or at the last line `sed
-'$aTEXT_AT_END` (last line is `$` or `"\$"` if `"` is used)
+Instead of search, you can append on line numbers `3,6aTEXT` or at the last line
+`sed '$aTEXT_AT_END` (last line is `$` or `"\$"` if `"` is used) or at first
+line
+
+~~~
+sed -i app/assets/stylesheets/application.scss -e '1i\
+/*\
+ *= require rails_bootstrap_forms\
+ */'
+~~~
 
 `sed 's/find/replace/g` will replace word `find` with `replace`.
 
@@ -124,10 +132,15 @@ rm /tmp/template
 
 Just a few command options with grep
 
+* `grep pattern filename` so if you omit filename than standard input will be
+  used, which is nice to test your big regex, for example `asd <<` (exit with
+  Ctrl+d)
+  * `grep "asd <<"`
 * `grep -o 111` will output only matched parts (not whole possible big lines)
-* you can test your grep regex by running some command `grep "asd <<"` in linux
-  shell and type the lines manually. Exit with Ctrl+d
-* grep only specific file type is with `grep asd --include \*.yml`
+* `grep -l asd` output only filenames
+* grep only specific file type is with `grep asd --include \*.yml` or with a
+  find command
+  * `find . -name *.yml -exec grep asd {} \;`
 * if you want to output only matching group than it is better to use `sed`
   * `sed -n 's/^.*[^0-9]\([0-9][0-9]*\).*/\1/p'` get only numbers
-  * echo "asd123" | sed -n 's/asd/asd/p'`
+  * `echo "asd123" | sed -n 's/asd/***/p'` replace asd with ***

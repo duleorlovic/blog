@@ -6,12 +6,24 @@ tags: ruby-on-rails settings cache beta-features
 
 Did you ever wanted to use some configuration options, but you find very difficult to use secrets.yml file (*secrets.yml* file should be used for secrets, right ?), tired of using `heroku config` to often, or even worse, deploying each time you change some constant in your code ?
 
-Here is a nice solution how to use *Rails.cache* to quickly change some params without need to restart rails application. Its Rails 3 ready. Some credits go to [catarse_settings](https://github.com/catarse/catarse_settings_db/blob/master/app/models/catarse_settings_db/setting.rb). So here is my beta features code that is accessible for *admin* user:
+Here is a nice solution how to use *Rails.cache* to quickly change some params
+without need to restart rails application. Its Rails 3 ready. Some credits go
+to
+[catarse_settings](https://github.com/catarse/catarse_settings_db/blob/master/app/models/catarse_settings_db/setting.rb).
+
+For Heroku, you need addon
+[MemCachier](https://devcenter.heroku.com/articles/memcachier) since FileStore
+is not shared between dynos (rails console is separate dyno).
+[rask-cache](https://devcenter.heroku.com/articles/rack-cache-memcached-rails31)
+is even better. It is not needed if you have activeAdmin page for updating
+settings.
+So here is my beta features code that is accessible for *admin* user:
 
 ~~~
 # app/models/my_setting.rb
+# frozen_string_literal: true
 class MySetting < ActiveRecord::Base
-  validates_presence_of :name
+  validates :name, presence: true
 
   # Migration file:
   # rails g migration CreateMySettings name value:text description:text
@@ -27,8 +39,9 @@ class MySetting < ActiveRecord::Base
   # end
 
   # Never update values directly, use MySetting[:foo]='one,two'
+  # You can update using rails console or in your custom methods
   # Return value is always string.
-  # For unknown key, empty string is returned
+  # For unknown key, nil is returned
   # Integers are OK in format "123" so .to_i can be safelly performed
   # (all money value should be in cents)
 
@@ -139,13 +152,21 @@ To keep track of features I usually write them in seed file
   {
     name: 'live_features',
     value: 'phone_confirmation_feature',
-    description: 'List of features that all users can use.'+
+    description: 'List of features that all users can use.'\
                  ' Note that beta_users can always see all features'
+  },
+  {
+    name: 'embed_video_url_for_popup_on_home_page',
+    value: 'https://www.youtube.com/embed/cQr4ua3dxiM',
+    description: 'Url for video in modal, should be embed, something like' \
+                 ' https://www.youtube.com/embed/{{video_id}}'
   },
 ].each do |doc|
   next if MySetting.find_by name: doc[:name]
   MySetting[doc[:name]] = doc[:value]
-  MySetting.find_by(name: doc[:name]).update_attribute(:description, doc[:description])
+  MySetting
+    .find_by(name: doc[:name])
+    .update_attribute(:description, doc[:description])
   puts "MySetting #{doc[:name]} seeded."
 end
 ~~~
@@ -171,7 +192,30 @@ rails g administrate:dashboard MySetting
       MySetting[resource_params[:name]] = resource_params[:value]
     end
     def destroy
-      super
       MySetting[requested_resource.name] = ""
+      super
     end
+~~~
+
+# ActiveAdmin
+
+~~~
+# app/admin/my_setting.rb
+ActiveAdmin.register MySetting do
+  permit_params :name, :value, :description
+  controller do
+    def update
+      super
+      MySetting[resource.name] = resource.value
+    end
+    def create
+      super
+      MySetting[resource.name] = resource.value
+    end
+    def destroy
+      MySetting[resource.name] = ""
+      super
+    end
+  end
+end
 ~~~

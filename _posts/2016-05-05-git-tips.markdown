@@ -101,24 +101,24 @@ work on tracked files)
 If you want to add folder to git structure but include all its content (like
 `backup` or `tmp` folder) you can do with three steps
 
-~~~
-mkdir tmp
-echo '*' > tmp/.gitignore
-git add tmp/.gitignore -f
-~~~
+    mkdir tmp
+    echo '*' > tmp/.gitignore
+    git add tmp/.gitignore -f
 
 
 If you want to skip history and download latest code and change author you can
 
-~~~
-git clone --depth=1 your-repo-url
-git commit --amend --author "New Author Name <email@address.com>" --no-edit
-~~~
+    git clone --depth=1 your-repo-url
+    git commit --amend --author "New Author Name <email@address.com>" --no-edit
 
 Set author localy
 
-~~~
-git config user.email myemail@asd.asd
-git config user.name my-name
-git commit --amend --reset-author
-~~~
+    git config user.email myemail@asd.asd
+    git config user.name my-name
+    git commit --amend --reset-author
+
+Apply patch
+
+    git diff > patchfile
+    patch -p1 < patchfile
+
