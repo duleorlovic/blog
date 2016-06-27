@@ -36,7 +36,14 @@ put this in your config file:
     if (receivers = Rails.application.secrets.exception_recipients).present?
       config.middleware.use(
         ExceptionNotification::Rack,
+        ignore_exceptions: %w{ActiveRecord::RecordNotFound
+                              AbstractController::ActionNotFound
+                              ActionController::RoutingError
+                              ActionController::UnknownFormat
+                              },
+        ignore_crawlers: %w{Googlebot bingbot linkdexbot},
         email: {
+          deliver_with: :deliver, # only for rails < 4.2.1
           email_prefix: "[Your App Name] ",
           sender_address: Rails.application.secrets.default_mailer_sender,
           exception_recipients: receivers.split(','),

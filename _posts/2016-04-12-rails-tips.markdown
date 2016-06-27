@@ -616,6 +616,7 @@ suggestions for code organization I use mostly:
     end
   end
   ~~~
+
 # Tips
 
 * [sprockets](https://github.com/rails/sprockets) are using for compiling assets
@@ -639,6 +640,7 @@ suggestions for code organization I use mostly:
   # remove eventual config.action_controller.asset_host = asdasd
   rails s -b 0.0.0.0 -e production
   ~~~
+
 * load databe from `db/schema.rb` (instead of `rake db:migrate`) is with `rake
   db:schema:load`.
 * run at port 80 `sudo service apache2 stop` and `rvmsudo rails s -p 80`. Note
@@ -723,4 +725,61 @@ suggestions for code organization I use mostly:
     def page_title(title)
       content_for(:page_title) { title }
     end
+  ~~~
+
+* `inverse_of` is needed when you have validation errors for
+  `accepts_nested_attributes_for`
+
+* for clone with associations you can use dup or clone but easiest way to with
+  new (build is deprecated) json except. If you use method `as_json.exept "id"`
+  than pass string arguments (or splat array `(*%(id))`), if it is param
+  `as_json except: [:id]` than you can use symbols. Please note that `as_json`
+  returns has with string keys so if you merge something you should use string
+  `chat.as_json(except: [:id]).merge("sport_id" => view.sport.id)`
+
+  ~~~
+  # http://stackoverflow.com/questions/5976684/cloning-a-record-in-rails-is-it-possible-to-clone-associations-and-deep-copy
+  def clone_with_associations
+    # except bookmarks since we do not need them
+    # copy all fields and belongs_to associations
+    new_job = self.user.jobs.new self.as_json except: * %(id created_at first_published_at)
+    new_job.job_title = "(Copy) " + new_job.job_title
+    # if status is active put paused
+    new_job.status = :paused if new_job.active?
+    # copy location, ie create new one
+    if self.location
+      new_job.location_name = self.location.address
+    end
+    # cloning images
+    # todo with fog
+    # cloning questions with answers
+    self.questions.each do |question|
+      new_question = new_job.questions.new question.as_json except: * %(id created_at)
+      question.answers.each do |answer|
+        new_answer = new_question.answers.new answer.as_json except: * %(id created_at)
+      end
+    end
+    new_job
+  end
+
+  # job is not saved so you need to call
+  # new_job = @job.clone_with_associations
+  # new_job.save!
+  ~~~
+
+* if you put `byebug` inside `User.first_or_initialize` than you will see empty
+  for `User.all`
+* dump and restore postgresql database
+
+  ~~~
+  pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
+  # pg_dump PlayCityServer_development > dump
+  ~~~
+
+  ~~~
+  rake db:drop
+  rake db:create
+  psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
+  ~~~
+
 
