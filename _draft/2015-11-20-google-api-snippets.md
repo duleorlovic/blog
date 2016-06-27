@@ -295,3 +295,14 @@ $('#videoModal').on('hidden.bs.modal', function() {
 });
 </script>
 ~~~
+
+# Google pdf preview
+
+If you want to preview pdf or image file, you can use Google 
+
+~~~
+$('#viewerBox').attr('src','https://docs.google.com/viewer?embedded=true&url=<%= application.resume.media.url %>' );
+~~~
+
+
+or you can use directly [pdf.js](http://mozilla.github.io/pdf.js/getting_started/)

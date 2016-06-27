@@ -41,7 +41,7 @@ put this in your config file:
                               ActionController::RoutingError
                               ActionController::UnknownFormat
                               },
-        ignore_crawlers: %w{Googlebot bingbot linkdexbot},
+        ignore_crawlers: %w{Googlebot bingbot linkdexbot Baiduspider YandexBot},
         email: {
           deliver_with: :deliver, # only for rails < 4.2.1
           email_prefix: "[Your App Name] ",
