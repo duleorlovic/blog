@@ -35,7 +35,7 @@ end
 
   we hard code "answers_attributes[]" because
   when we use fields_for :answer, than when we use ajax `new` twice we got two
-  :!
+  question[answers_attributes][0][]
   question[answers_attributes][0][]
   and only latest will be considered
   probably because uniq number is reset for each fields_for
@@ -104,10 +104,6 @@ def default_values
   self.logo ||= Rails.application.secrets.default_restaurant_logo
 end
 ~~~
-
-Note that in sql `NULL` is not the same as `false` since `where(col: nil)` is
-not the same as `where.not(col: true)` (this will not show records that have
-`col IS NULL`).
 
 # Order
 
@@ -223,7 +219,7 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 * adding array of any type and hstore is easy, just add default value `[]` and
 `''` (breaks for `{}`). You can create hstore extension in migration. If you
-need arrays of hstore you can create json array
+need arrays of hstore than you need to go for json or json array.
 
   ~~~
   class CreatePhones < ActiveRecord::Migration
@@ -232,7 +228,8 @@ need arrays of hstore you can create json array
       create_table :phones do |t|
         t.string :my_array, array: true, default: []
         t.hstore :my_hash, default: ''
-        t.json :my_array_of_hash, array: true, default: []
+        t.json :my_json, default: []
+        t.json :my_array_of_json, array: true, default: []
       end
     end
   end
@@ -619,7 +616,6 @@ suggestions for code organization I use mostly:
     end
   end
   ~~~
-
 # Tips
 
 * [sprockets](https://github.com/rails/sprockets) are using for compiling assets
@@ -651,10 +647,21 @@ suggestions for code organization I use mostly:
   When you are using `local.trk.in.rs` you can set local ip *192.168.0.4* as
   Redirection (301 or 302) (but not as Forwarding since that does not work for
   some api requests from android).
-* Rails.logger is stdout and every controller, model and view has `logger`
+* `Rails.logger` is stdout and every controller, model and view has `logger`
   method which you can use like `logger.debug my_var`
 * if you want to join some fields with `,` but do not know if they all exists,
   you can `[phone1, phone2].keep_if(&:present?).join(', ')`
+* use include for n+1 query and joinswhen you don't need associated models. Both
+  are using INNER JOIN
+  * `Comment.all(include: :user, conditions: { users: { admin: true}})` will
+    load also the user model
+  * `User.all(joins: :comments, select: "users.*, count(comments.id) as
+    comments_count", group: "users.id")` you can output just specific value
+* `some_2d_array.each_with_index do |(col1, col2),index|` when you need
+  [decomposition
+  array](http://docs.ruby-lang.org/en/2.1.0/syntax/assignment_rdoc.html#label-Array+Decomposition)
+  to some variables, you can use parenthesis.
+* fake objects could be generated with `OpenStruct.new name: 'Dule'`
 * long output of a command (for example segmentation fault) can be catched with
   `rails s 2>&1 | less -R`
 * use different layout and template based on different params is easy using
@@ -716,63 +723,4 @@ suggestions for code organization I use mostly:
     def page_title(title)
       content_for(:page_title) { title }
     end
-
-  # app/views/layouts/application.html.erb
-    <title><%= content_for?(:page_title) ? yield(:page_title) : 'My Site' %></title>
-  ~~~~
-
-* `inverse_of` is needed when you have validation errors for
-  `accepts_nested_attributes_for`
-
-* for clone with associations you can use dup or clone but easiest way to with
-  new (build is deprecated) json except. If you use method `as_json.exept "id"`
-  than pass string arguments (or splat array `(*%(id))`), if it is param
-  `as_json except: [:id]` than you can use symbols. Please note that `as_json`
-  returns has with string keys so if you merge something you should use string
-  `chat.as_json(except: [:id]).merge("sport_id" => view.sport.id)`
-
-  ~~~
-  # http://stackoverflow.com/questions/5976684/cloning-a-record-in-rails-is-it-possible-to-clone-associations-and-deep-copy
-  def clone_with_associations
-    # except bookmarks since we do not need them
-    # copy all fields and belongs_to associations
-    new_job = self.user.jobs.new self.as_json except: * %(id created_at first_published_at)
-    new_job.job_title = "(Copy) " + new_job.job_title
-    # if status is active put paused
-    new_job.status = :paused if new_job.active?
-    # copy location, ie create new one
-    if self.location
-      new_job.location_name = self.location.address
-    end
-    # cloning images
-    # todo with fog
-    # cloning questions with answers
-    self.questions.each do |question|
-      new_question = new_job.questions.new question.as_json except: * %(id created_at)
-      question.answers.each do |answer|
-        new_answer = new_question.answers.new answer.as_json except: * %(id created_at)
-      end
-    end
-    new_job
-  end
-
-  # job is not saved so you need to call
-  # new_job = @job.clone_with_associations
-  # new_job.save!
-  ~~~
-
-* if you put `byebug` inside `User.first_or_initialize` than you will see empty
-  for `User.all`
-* dump and restore postgresql database
-
-  ~~~
-  pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
-  # pg_dump PlayCityServer_development > dump
-  ~~~
-
-  ~~~
-  rake db:drop
-  rake db:create
-  psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
-  ~~~
 

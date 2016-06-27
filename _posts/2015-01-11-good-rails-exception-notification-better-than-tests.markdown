@@ -8,8 +8,8 @@ Do not hide your mistakes, instead, make sure that every bug is noticeable.
 That way you will learn more and thinks that you did not know (that's why bug
 occurs).
 
-Bugs that I had seen are something like: user uploaded file with non asci
-chars, linkedin identity text is missing graduation_date, after_create hook
+Bugs that I have meet are something like: user uploaded file with non asci
+chars, linkedin identity text is missing graduation date, after_create hook
 on model with devise cause `user.save` to return *true* but *user.errors* is
 present and user is redirected to update his registration form... You can NOT
 write tests for those situations. Better is to have nice notification with all
@@ -36,9 +36,7 @@ put this in your config file:
     if (receivers = Rails.application.secrets.exception_recipients).present?
       config.middleware.use(
         ExceptionNotification::Rack,
-        ignore_crawlers: %w{Googlebot bingbot linkdexbot},
         email: {
-          deliver_with: :deliver, # only for rails < 4.2.1
           email_prefix: "[Your App Name] ",
           sender_address: Rails.application.secrets.default_mailer_sender,
           exception_recipients: receivers.split(','),
@@ -48,11 +46,8 @@ put this in your config file:
 {% endhighlight %}
 
 This will send email for any exception if `expception_recipients` are present.
-[Ignore
-Crawlers](https://github.com/smartinez87/exception_notification/blob/master/lib/exception_notification/rack.rb#L52)
-if matched HTTP_USER_AGENT.
 
-As delivery method you can use *mandill* or very nice *letter_opener* for development.
+As delivery method you can use *mandrill* or very nice *letter_opener* for development.
 Set email receivers in config secrets:
 
 {% highlight yaml %}
@@ -133,20 +128,6 @@ current_user });`. Here is what we use for javascript notification:
 
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
-  def sample_error
-    this_line_should_raise_error
-  end
-
-  def sample_error_in_javascript
-    render layout: true, text: %(
-      Here is some javascript error
-      <script>
-        console.log('calling manual_js_error');
-        manual_js_error
-      </script>
-    )
-  end
-
   def notify_javascript_error
     js_receivers = Rails.application.secrets.javascript_error_recipients
     if js_receivers.present?
@@ -168,7 +149,9 @@ current_user });`. Here is what we use for javascript notification:
   end
 {% endhighlight %}
 
-You can also set some nice looking text with custom sections (uncomment param `:sections`). You need to write partial in which you can access to `@data`,`@request`... varibales.
+You can also set some nice looking text with custom sections (uncomment param
+`:sections`). You need to write partial in which you can access to
+`@data`,`@request`... varibales.
 
 {% highlight ruby %}
 # app/views/exception_notifier/_message.text.erb
@@ -178,7 +161,8 @@ Javascript error params
 HTTP_USER_AGENT=<%= @request.env["HTTP_USER_AGENT"] %>
 {% endhighlight %}
 
-If you want to render error-page and page-not-found with rails you can rescue from all StandardError exceptions.
+If you want to render error-page and page-not-found with rails you can rescue
+from all StandardError exceptions.
 
 {% highlight ruby %}
 # app/controllers/application_controller.rb
@@ -294,3 +278,20 @@ Exception notifications can be used there also with this
 Just add `gem 'exception_notification-rake'` to *Gemfile* and
 `ExceptionNotifier::Rake.configure` to *config/secrets.yml*. Also works manual
 notifications.
+# Custom Error
+
+If you need custom exception than you can try with
+
+~~~
+# raise CustomException.new bla: 'bla'
+class CustomException < StandardError
+  def initialize(data)
+    @data = data
+  end
+end
+~~~
+
+# Deliver later
+
+If you use ActiveJob than you can try to deliver later but there are some issues
+<https://github.com/smartinez87/exception_notification/issues/319>

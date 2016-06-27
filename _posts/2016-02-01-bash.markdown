@@ -131,4 +131,12 @@ Look my
 * edit long commands in bash `set -o vi` and than press Esc, and v (visual).
   Don't recomment to put in bashrc since it will disable bash shortcuts like:
   ctrp+p, bind, ....
-* `mount` `sudo fdisk -l` `sudo blkid` `cat /etc/fstab`
+* `mount` `sudo fdisk -l` `sudo blkid` `sudo vi /etc/fstab` add line
+
+  ~~~
+  # /ets/fstab
+  UUID=428c1c5c-7ef4-480a-aa3b-1b62c3feab98 /mnt/moj_ssd    ext4    defaults  0  2
+  ~~~
+
+  run `sudo chown -R orlovic.orlovic /mnt/moj_ssd/` this is needed only one
+  time.
