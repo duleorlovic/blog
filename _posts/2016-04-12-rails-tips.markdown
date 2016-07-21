@@ -257,8 +257,10 @@ roles using pqadmin visual program)
 heroku dump file and import in database
 
   ~~~
-  chmod a+r a.dump
-  sudo su postgres -c 'pg_restore -d Scuddle_app_development --clean --no-acl --no-owner -h localhost a.dump'
+  export DUMP_FILE=a.dump
+  export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
+  chmod a+r $DUMP_FILE
+  sudo su postgres -c 'pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE'
   ~~~
 
 * you should explicitly add timestamps with `t.timestamps`

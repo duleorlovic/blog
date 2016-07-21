@@ -48,6 +48,7 @@ title: CSS and HTML tips
 * textarea (rails `f.text_area`) has constant size, so if you want bigger you
   can set `rows="30"` or use [autosize](http://www.jacklmoore.com/autosize/)
 
+
 # Examples
 
 * nice radio and checkbox <http://codepen.io/BrianSassaman/pen/iLrpC?editors=1100>
