@@ -5,8 +5,8 @@ tags: ruby-on-rails devise carrierwave
 ---
 
 Paste this code to create some basic starting application *myapp.com* with
-authentication and other funny tools. I extensively use [echo sed grep]({{
-site.baseurl }} {% post_url 2016-05-18-echo-and-sed-command-line-editing %})
+authentication and other funny tools. I extensively use [echo sed grep](
+{{ site.baseurl }} {% post_url 2016-05-18-echo-sed-grep-command-line-editing %})
 commands here.
 
 > give a man a fish and you feed him for a day. teach a man to fish and you feed
@@ -501,8 +501,7 @@ rails runner UserMailer.hello.deliver
 ~~~
 
 For production see
-[send and receive emails in rails]({{ site.baseurl }}
-{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
+[send and receive emails in rails]({{ site.baseurl }}{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
 
 # Skip generators
 
@@ -776,5 +775,4 @@ heroku open
 On heroku add *Papertrail* add-on and go to the
 [https://papertrailapp.com/events](https://papertrailapp.com/events) and search
 for "Started GET" , save and create email alert or [add internal
-notification]({{ site.baseurl }}
-{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
+notification]({{ site.baseurl }}{% post_url 2016-05-17-send-and-receive-emails-in-rails %})

@@ -262,6 +262,14 @@ heroku dump file and import in database
   ~~~
 
 * you should explicitly add timestamps with `t.timestamps`
+* upgrade from 9.3 to 9.4
+  [link](https://gist.github.com/dideler/60c9ce184198666e5ab4)
+
+  ~~~
+  sudo pg_dropcluster 9.4 main --stop
+  sudo pg_upgradecluster 9.3 main
+  sudo pg_dropcluster 9.3 main
+  ~~~
 
 # Mailer
 
