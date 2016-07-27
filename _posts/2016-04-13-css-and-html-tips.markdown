@@ -13,6 +13,11 @@ title: CSS and HTML tips
   occupy the space where it was. It is better to use `position: absolute`
 * to move element to the right but keep inside parent element you need to mark
   parent as `position: relative` and than use `position: absolute; right: 10px`
+* align element at bottom use position relative/absolute pair, for parrent
+  `position: relative` (does not have any effects) and for child: `position:
+  absolute;bottom: 10px;`
+* use `vertical-align: baseline` for image to be on same bootom as other
+  elements
 * use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
 * use relative units instead of absolute
   <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 { font-size: 20vh;}`
@@ -46,7 +51,8 @@ title: CSS and HTML tips
   You can add scrollbar by wrapping it `.outer { overflow-x: scroll }`
   [link](http://stackoverflow.com/questions/9672176/prevent-floated-divs-from-wrapping-to-new-line)
 * textarea (rails `f.text_area`) has constant size, so if you want bigger you
-  can set `rows="30"` or use [autosize](http://www.jacklmoore.com/autosize/)
+  can set `rows="30"` (and `cols="150"`) or use
+  [autosize](http://www.jacklmoore.com/autosize/)
 
 
 # Examples
