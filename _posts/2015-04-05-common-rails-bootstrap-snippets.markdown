@@ -441,8 +441,10 @@ development: &default
   smtp_username: <%= ENV["SMTP_USERNAME"] %>
   smtp_password: <%= ENV["SMTP_PASSWORD"] %>
 
+  # for all outgoing emails
   default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
 
+  # default_url is required for links in email body
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
     port: <%= ENV["DEFAULT_URL_PORT"] || 80 %>

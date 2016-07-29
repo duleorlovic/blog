@@ -122,3 +122,6 @@ Apply patch
     git diff > patchfile
     patch -p1 < patchfile
 
+Count files in staging
+
+    git diff --cached --numstat | wc -l

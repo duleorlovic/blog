@@ -18,8 +18,11 @@ without notification.
 
 Excellent gem for notification is
 [exception_notification](https://github.com/smartinez87/exception_notification).
-It is rack middleware and configuration is very simple. After adding to your
-Gemfile
+It is rack middleware and configuration is very simple.
+
+# Basic installation
+
+After adding to your Gemfile
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -42,6 +45,7 @@ put this in your config file:
                               ActionController::UnknownFormat
                               },
         ignore_crawlers: %w{Googlebot bingbot linkdexbot Baiduspider YandexBot},
+        ignore_if: -> (env, exception) { ["Agent-007"].include? env["HTTP_ACCEPT"] },
         email: {
           deliver_with: :deliver, # only for rails < 4.2.1
           email_prefix: "[Your App Name] ",
@@ -59,82 +63,61 @@ Set email receivers in config secrets:
 
 {% highlight yaml %}
 # config/secrets.yml
+  # for all outgoing emails
+  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
+
   # leave this empty if you do not want to enable server error notifications
   # othervise comma separated emails
   exception_recipients: <%= ENV['EXCEPTION_RECIPIENTS'] %>
-  # leave this empty if you do not want to enable javascript error notification
-  # othervise comma separated emails
-  javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
 {% endhighlight %}
 
-Second variable is for javascript errors. If error occurs in ajax reponse, or
-in some of your javascript code, we will send another request to server to
-trigger notification. In your main javascript file you should have something
-like this
+# Javascript notification and example error pages
 
-{% highlight javascript %}
-// app/assets/javascripts/exception_notification.js
+I would add two pages *sample-error* and *sample-error-in-javascript* just
+to have some pages for test if this notification works. First create routes
 
-// Ensures there will be no 'console is undefined' errors
-// http://stackoverflow.com/questions/9725111/internet-explorer-console-is-not-defined-error
-window.console = window.console || (function(){
-    var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
-    return c;
-})();
-
-// catch javascript errors with https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror
-window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
-  if (typeof(flash_alert) == 'function')
-    flash_alert(errorMsg);
-  else
-    alert(errorMsg); // we use alert if error occurs in application.js so flash_alert is not defined
-
-  // notify server for this error
-  $.get('/notify-javascript-error', { errorMsg: errorMsg, url: url, lineNumber: lineNumber, column: column, stack: errorObj.stack, errorObj: errorObj});
-}
-
-// another approach is with error event listener
-// window.addEventListener('error', function (e) {
-//     var stack = e.error.stack;
-//     var message = e.error.toString();
-//     if (stack) {
-//         message += '\n' + stack;
-//     }
-//     var xhr = new XMLHttpRequest();
-//     xhr.open('POST', '/log', true);
-//     xhr.send(message);
-// });
-
-// ajax error handling
-$(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
-  // disable eventual popups so user can see the message
-  $('.active').removeClass('active');
-  flash_alert("Please refresh the page. Server responds with: \"" +status+ " " + error + "\".");
-  // notify server for this error
-  $.get('/notify-javascript-error', { status: status, error: error });
-});
-
-function flash_alert(msg) {
-  if (msg.length == 0) return;
-  alert(msg);
-}
+{% highlight ruby %}
+# config/routes.rb
+get 'sample-error', to: 'pages'
+get 'sample-error-in-javascript', to: 'pages'
+get 'notify-javascript-error', to: 'pages#notify_javascript_error'
 {% endhighlight %}
 
-Create route `get 'notify-javascript-error', to:
-'pages#notify_javascript_error'` in your *config/routes.rb* and we will use
-manual notification
+than controller method that we will use for manual notification
 [ExceptionNotifier.notify_exception](https://github.com/smartinez87/exception_notification#manually-notify-of-exception).
-You can pass additional information using `:data` param. Only the first
-argument is required (default your can find
+You can pass additional information using `:data` param. Only the first argument
+is required (default values you can find
 [here](https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162)).
 For less important notification you can change subject with `email_prefix`
 param. Manual notification can be simply as one line
 `ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'),
 env: request.env, email_prefix: 'just to notify that', data: { current_user:
-current_user });`. Here is what we use for javascript notification:
+current_user });`.
+Here is what I use:
 
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
+
+  def sample_error
+    fail "This is sample_error on server"
+  end
+
+  def sample_error_in_javascript
+    render layout: true, text: %(
+      Calling manual_js_error_now
+      <script>
+        function manual_js_error_now_function() {
+          manual_js_error_now
+        }
+        console.log('calling manual_js_error_now');
+        manual_js_error_now_function();
+        // you can also trigger error on window.onload = function() { manual_js_error_onload }
+      </script>
+      <br>
+      <button onclick="trigger_js_error_on_click">Trigger error on click</button>
+    )
+  end
+
   def notify_javascript_error
     js_receivers = Rails.application.secrets.javascript_error_recipients
     if js_receivers.present?
@@ -156,6 +139,116 @@ current_user });`. Here is what we use for javascript notification:
   end
 {% endhighlight %}
 
+If error occurs in ajax reponse, or in some of your javascript code, we will
+send another request to server to trigger javascript notification.
+You can send notifications using formspree service.
+There is non jQuery fallback but loaded jQuery is preferred.
+You should create separate file that will be loaded in `<head>` and before
+application.js so it is loaded before any other js code.
+
+{% highlight javascript %}
+// app/assets/javascripts/exception_notification.js
+
+// This should be loaded in <head> and separatelly from application.js
+// notification will not work if some error exist in this file
+function exception_notification(data) {
+  if (window.jQuery) {
+    console.log("notify server about exception");
+    $.get('/notify-javascript-error', data);
+  } else {
+    console.log("notify server about exception using non jQuery functions");
+    var xhr = new XMLHttpRequest();
+    // http://stackoverflow.com/questions/5505085/flatten-a-javascript-object-to-pass-as-querystring
+    function toQueryString(obj) {
+      var parts = [];
+      for (var i in obj) {
+          if (obj.hasOwnProperty(i)) {
+              parts.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
+          }
+      }
+      return parts.join("&");
+    }
+    xhr.open('GET', '/notify-javascript-error?' + toQueryString(data));
+    xhr.send();
+  }
+  // or use formspree service with your email
+  // $.ajax({
+  //   url: "https://formspree.io/your@gmail.com", 
+  //   method: "POST",
+  //   data: data,
+  //   dataType: "json"
+  // });
+}
+
+// https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror
+// https://blog.getsentry.com/2016/01/04/client-javascript-reporting-window-onerror.html
+window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
+  if (errorMsg && sessionStorage) {
+    var errorMsgs = JSON.parse(sessionStorage.getItem("errorMsgs") || "[]");
+    if (errorMsgs.indexOf(errorMsg) != -1) {
+      console.log("Ignore already notified error for this session and tab");
+      return;
+    } else {
+      sessionStorage.setItem("errorMsgs", JSON.stringify(errorMsgs + [errorMsg]));
+    }
+  }
+
+  flash_alert(errorMsg);
+
+  var data = { errorMsg: errorMsg, url: url, lineNumber: lineNumber, column: column, stack: errorObj.stack, errorObj: errorObj };
+  exception_notification(data);
+}
+
+// another approach is with error event listener
+// window.addEventListener('error', function (e) {
+//     var stack = e.error.stack;
+//     var message = e.error.toString();
+//     if (stack) {
+//         message += '\n' + stack;
+//     }
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('POST', '/log', true);
+//     xhr.send(message);
+// });
+
+// ajax error handling
+// $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
+//   flash_alert("Please refresh the page. Server responds with: \"" +status+ " " + error + "\".");
+//   exception_notification({ status: status, error: error });
+// });
+
+function flash_alert(msg) {
+  if (msg.length == 0) return;
+  // disable eventual popups so user can see the message
+  // $('.active').removeClass('active');
+  // alert(msg);
+  console.log(msg);
+}
+
+// Ensures there will be no 'console is undefined' errors
+// http://stackoverflow.com/questions/9725111/internet-explorer-console-is-not-defined-error
+window.console = window.console || (function(){
+    var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
+    return c;
+})();
+{% endhighlight %}
+
+* if your javascript asset `application.js` is not included in `<head>` than you
+  need to include this exception notification so it is available before
+  any other js code:
+
+  ~~~
+  # app/views/layouts/application.html.erb
+    <head>
+      <%= javascript_include_tag :exception_notification %>
+    </head>
+
+  # config/initializers/assets.rb
+  Rails.application.config.assets.precompile += %w( exception_notification.js )
+  ~~~
+
+# Custom Templates
+
 You can also set some nice looking text with custom sections (uncomment param
 `:sections`). You need to write partial in which you can access to
 `@data`,`@request`... varibales.
@@ -167,6 +260,17 @@ Javascript error params
 <br>
 HTTP_USER_AGENT=<%= @request.env["HTTP_USER_AGENT"] %>
 {% endhighlight %}
+
+Do not forget to define javascript receivers
+
+{% highlight yaml %}
+# config/secrets.yml
+  # leave this empty if you do not want to enable javascript error notification
+  # othervise comma separated emails
+  javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
+{% endhighlight %}
+
+# Render custom error pages
 
 If you want to render error-page and page-not-found with rails you can rescue
 from all StandardError exceptions.
@@ -206,21 +310,18 @@ from all StandardError exceptions.
   end
 {% endhighlight %}
 
-
-And you should create routes for those *page_not_found_path* and *error_page_path* and nice templates as well. I would add two more pages *sample-error* and *sample-error-in-javascript* just to have some pages for test if this notification works.
+And you should create routes for those *page_not_found_path* and *error_page_path* and nice templates as well.
 
 {% highlight ruby %}
-get 'sample-error', to: 'pages'
-get 'sample-error-in-javascript', to: 'pages'
+# config/routes.rb
 get 'error-page', to: 'pages'
 get 'page-not-found', to: 'pages'
-get 'notify-javascript-error', to: 'pages#notify_javascript_error', as: :notify_javascript_error
 get 'javascript-required-page', to: 'pages#javascript_required_page', as: :javascript_required_page
 {% endhighlight %}
 
-
-You can see that there is also `javascript-required-page` where people is redirected when js is not enabled. This happens very rare. Put this in layout file, for pages after user login (and search bots not).
-
+Javascript required page is not needed since all browser use javascript
+nowadays. But if you really want to show that notification use this in layout
+file, for pages after user logs in (and search bots does not).
 
 {% highlight ruby %}
 # app/views/layout/application.html.erb
@@ -231,7 +332,11 @@ You can see that there is also `javascript-required-page` where people is redire
 <% end %>
 {% endhighlight %}
 
-you are using background jobs like delayed job, then you should add notification there also
+
+# Notificaiton in background jobs
+
+If you are using background jobs like delayed job, then you should add
+notification there also
 
 {% highlight ruby %}
 # config/initializers/delay_job.rb
