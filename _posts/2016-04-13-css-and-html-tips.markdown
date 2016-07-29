@@ -101,3 +101,36 @@ title: CSS and HTML tips
   text-align: right;
 }
 ~~~
+
+# Bootstrap
+
+Bootstrap `container` has fixed width for big devices.
+~~~
+# when it is max-width than it is Non-Mobile First Method
+# so we use le (less or equal then)
+# (min-width is Mobile First and we use hide-ge-)
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+  .hide-le-lg {
+    display: none;
+  }
+}
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+  .hide-le-md {
+    display: none;
+  }
+}
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+  .hide-le-sm {
+    display: none;
+  }
+}
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+  .hide-le-xs {
+    display: none;
+  }
+}
+~~~

@@ -221,5 +221,8 @@ not find the page.
 * url can be written like `<http://projektor.trk.in.rs>` (`http://` at the
   beggining is mandatory) instead of writting it twice
   `[http://projektor.trk.in.rs](http://projektor.trk.in.rs)`
-* internal link to post is with `{{ '{%' }} %}` like `[My page]({{ '{% 2016-03-02-my-page.markdown' }} %})`
+* internal link to post is with `{{ '{%' }} %}` like
+  `[My page]({{ '{% 2016-03-02-my-page.markdown' }} %})`
 * images `![alt text]({{ site.base_url }}/assets/path_to_image "Title text")`
+* strikethrough (words crossed) can be used with `<s>Example</s>` or
+  `<del>Example</del>` (with kramdown not shortcut works like `-- ~~`)

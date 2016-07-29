@@ -322,7 +322,16 @@ html2jade *.html --bodyless --donotencode --noattrcomma --noemptypipe
 # --noattrcomma       omit attribute separating commas
 # --noemptypipe       omit lines with only pipe ('|') printable character
 rm *.html
+
+# version for all files in subdirectories
+find . -name '*.html' -exec html2jade {} --bodyless --donotencode --noattrcomma --noemptypipe \;
+find . -name '*.html' -exec  rm {} \;
 ~~~
+
+Please check if format is good. At least this command will ignore <body> tag so
+you need to build that (index.html) separately. Usually index.html needs to be
+at specific location so I leave it in html format, and all other move to
+`jade_build` folder.
 
 * arguments could be in new line, but strings need `\`. comments are not allowed
   inside ()

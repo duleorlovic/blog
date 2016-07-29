@@ -623,22 +623,3 @@ $scope.$on 'pagination:loadPage', (event, status, config) ->
   only usage is that directive link function is not called until we add new
   items or updateId [look console log](http://jsfiddle.net/6k834fzx/4). If we
   update title Link function will not be called although DOM will be updated.
-* allow cors on server so options request is resolved
-
-  ~~~
-  # cors
-  echo "gem 'rack-cors', require: 'rack/cors'" >> Gemfile
-  sed -i config/application.rb -e '/  end/i \
-      config.middleware.insert_before 0, "Rack::Cors" do\
-        allow do\
-          origins "*"\
-          resource "*",\
-            headers: :any,\
-            methods: :any,\
-            expose: ["access-token", "expiry", "token-type", "uid", "client"]\
-        end\
-      end'
-  sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
-    # protect_from_forgery with: :exception\
-    protect_from_forgery with: :null_session'
-  ~~~

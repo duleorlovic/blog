@@ -91,3 +91,5 @@ angular.module('myappAngular')
     API_URL: STAGING_SERVER_URL + '/api/v1'
 ~~~
 
+Adding coffeescript and jade example you can find on [ionic
+page]({{site.baseurl}}{% post_url 2016-01-27-ionic-begginer-examples %})

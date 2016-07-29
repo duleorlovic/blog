@@ -793,3 +793,6 @@ suggestions for code organization I use mostly:
   ~~~
 
 
+* for `gon` gem you should `include_gon` before other javascript files. Note
+  that `if gon` will still raise error if `gon` is not called in controller (so
+  `gon` is undefined)

@@ -101,7 +101,10 @@ Look my
 * exit from script with `exit 1`
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
-* find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
+* find 
+  * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
+  * find all html files `find . -name '*.html'`. Note that `find . -name *.html`
+    will not work since wildcard will be changed to html file in current folder.
 * test the speed on remote server:
   * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
   * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to test upload link

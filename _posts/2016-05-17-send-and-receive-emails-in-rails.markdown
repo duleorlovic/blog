@@ -9,6 +9,24 @@ tags: rails emails
 There is nice table of [main
 providers](http://socialcompare.com/en/comparison/transactional-emailing-providers-mailjet-sendgrid-critsend)
 
+* Gmail smtp is the most easiest way to start
+
+  ~~~
+  # config/application.rb
+    config.action_mailer.smtp_settings = {
+        address: "smtp.gmail.com",
+        port: 587,
+        domain: "gmail.com",
+        authentication: "plain",
+        enable_starttls_auto: true,
+        user_name: Rails.application.secrets.gmail_email,
+        password: Rails.application.secrets.gmail_password
+    }
+
+  # config/secrets.yml
+  ~~~
+
+
 * Sendgrid is simple to start on heroku. Just add new add-on free plan with
   commands `heroku addons:create sendgrid` and that will set up env keys.
   `heroku config` you can find the keys and copy them to `heroku config:set

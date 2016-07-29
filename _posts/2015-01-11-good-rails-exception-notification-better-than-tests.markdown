@@ -57,8 +57,16 @@ put this in your config file:
 {% endhighlight %}
 
 This will send email for any exception if `expception_recipients` are present.
+As delivery method you can use very nice *letter_opener* for development.
 
-As delivery method you can use *mandrill* or very nice *letter_opener* for development.
+You can test if it properly ignore by setting curl headers
+
+~~~
+curl http://localhost:3000/sample-error # this should open letter opener
+curl http://localhost:3000/sample-error -A 'Googlebot' # this is ignored
+curl http://localhost:3000/sample-error -H 'Accept: Agent-007' # this is ignored
+~~~
+
 Set email receivers in config secrets:
 
 {% highlight yaml %}
@@ -122,7 +130,7 @@ Here is what I use:
     js_receivers = Rails.application.secrets.javascript_error_recipients
     if js_receivers.present?
       ExceptionNotifier.notify_exception(
-        Exception.new("javascript error"),
+        Exception.new(params[:errorMsg]),
         env: request.env,
         # set env to nil if you do not want sections: request and session
         # backtrace is not shown for manual notification
@@ -132,7 +140,7 @@ Here is what I use:
         data: {
           current_user: current_user,
           params: params,
-        }
+        },
       )
     end
     render nothing: true
@@ -140,7 +148,10 @@ Here is what I use:
 {% endhighlight %}
 
 If error occurs in ajax reponse, or in some of your javascript code, we will
-send another request to server to trigger javascript notification.
+send another request to server to trigger javascript notification. Note that you
+can log with `console.error("Some error message")` (in console it will look like
+exception) but no notification will be sent.
+
 You can send notifications using formspree service.
 There is non jQuery fallback but loaded jQuery is preferred.
 You should create separate file that will be loaded in `<head>` and before
@@ -247,10 +258,21 @@ window.console = window.console || (function(){
   Rails.application.config.assets.precompile += %w( exception_notification.js )
   ~~~
 
+Do not forget to define javascript receivers
+
+{% highlight yaml %}
+# config/secrets.yml
+  # leave this empty if you do not want to enable javascript error notification
+  # othervise comma separated emails
+  javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
+{% endhighlight %}
+
 # Custom Templates
 
-You can also set some nice looking text with custom sections (uncomment param
-`:sections`). You need to write partial in which you can access to
+You can also set some nice looking text with [custom
+sections](https://github.com/smartinez87/exception_notification#sections). You
+can set sections in manual notification or inside settings->email.  You need to
+write text partial (html is not supported) in which you can access to
 `@data`,`@request`... varibales.
 
 {% highlight ruby %}
@@ -259,15 +281,6 @@ Javascript error params
 <%=raw @data[:params].inspect %>
 <br>
 HTTP_USER_AGENT=<%= @request.env["HTTP_USER_AGENT"] %>
-{% endhighlight %}
-
-Do not forget to define javascript receivers
-
-{% highlight yaml %}
-# config/secrets.yml
-  # leave this empty if you do not want to enable javascript error notification
-  # othervise comma separated emails
-  javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
 {% endhighlight %}
 
 # Render custom error pages

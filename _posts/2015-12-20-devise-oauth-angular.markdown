@@ -549,30 +549,16 @@ Also override session and password controller to use
 and email users can use oauth login without rescue exceptions (only first time)
 
 
-# Ionic authentication
+Some links for Ionic authentication:
 
-Ionic does not like ipCookies [#222](https://github.com/lynndylanhurley/ng-token-auth/issues/222) [#90](https://github.com/lynndylanhurley/ng-token-auth/issues/90)
-[ionic-rails-sample](https://github.com/jwako/ionic_rails_sample)
-[ionic
+* Ionic does not like ipCookies [#222](https://github.com/lynndylanhurley/ng-token-auth/issues/222) [#90](https://github.com/lynndylanhurley/ng-token-auth/issues/90)
+* [ionic-rails-sample](https://github.com/jwako/ionic_rails_sample)
+* [ionic
 ng-token-auth](https://github.com/search?q=ionic+ng-token-auth&ref=reposearch&type=Code&utf8=%E2%9C%93)
-[ionic rails](https://github.com/search?utf8=%E2%9C%93&q=ionic+rails)
+* [ionic rails](https://github.com/search?utf8=%E2%9C%93&q=ionic+rails)
 
+# Devise-angular
 
-~~~
-# cors
-echo "gem 'rack-cors', require: 'rack/cors'" >> Gemfile
-sed -i config/application.rb -e '/  end/i \
-    config.middleware.insert_before 0, "Rack::Cors" do\
-      allow do\
-        origins "*"\
-        resource "*",\
-          headers: :any,\
-          methods: :any,\
-          expose: ["access-token", "expiry", "token-type", "uid", "client"]\
-      end\
-    end'
-
-~~~
 
 # Resend confirmation email on login
 

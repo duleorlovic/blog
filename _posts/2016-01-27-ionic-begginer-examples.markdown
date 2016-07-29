@@ -3,7 +3,7 @@ layout: post
 tags: ionic
 ---
 
-# Start from blank
+# Setup
 
 ## Android SDK
 
@@ -45,7 +45,7 @@ adb kill-server
 adb devices
 ~~~
 
-## Ionic
+## Download Ionic
 
 Download ionic and cordova
 
@@ -69,7 +69,9 @@ ionic emulate -lcs # to run in emulator with live reload and logs
 ionic run --target 123123 # to run on device, find device name with adb devices
 ~~~
 
-### Setup sass
+## Sass
+
+Note that sass is already in  gulpfile.
 
 ~~~
 ionic setup sass
@@ -87,13 +89,14 @@ git rm www/css -r
 git add . && git commit -m "ionic setup sass"
 ~~~
 
-### Setup coffee script
+## Coffeescript
 
 ~~~
 cat >> .gitignore << HERE_DOC
 # coffee script files are all appended to one file
 www/js/_coffeescript_build.js
 HERE_DOC
+sed -i ionic.project -e '/gulpSartupTasks/a "coffee",'
 sed -i gulpfile.js -e '/var sass/a \
 var coffee = require("gulp-coffee");'
 sed -i gulpfile.js -e '/var paths/a \
@@ -118,10 +121,51 @@ git add . && git commit -m "Enable coffee script"
 touch www/js/_coffeescript_build.js # just to not raise file not found error
 ~~~
 
-Note that it does not work nice on first run `ionic serve` , you need to update
-some coffee file to get pipe to reload.
+<del>Note that it does not work nice on first run `ionic serve` , you need to
+update some coffee file to get pipe to reload.</del> Note that we added coffee
+to ionic.project gulpStartupTasks, but sometimes browser cache will prevent some
+changes to show up, so try to reload the page.
+
+## Jade
+
+Adding jade with: `npm install gulp-jade --save-dev`. Than
+
+~~~
+cat >> .gitignore << HERE_DOC
+# here we will build html from jade
+www/jade_build
+HERE_DOC
+sed -i ionic.project -e '/gulpSartupTasks/a "jade",'
+sed -i gulpfile.js -e '/var sass/a \
+var jade = require("gulp-jade");'
+sed -i gulpfile.js -e '/var paths/a \
+  jade: ["./www/**/*.jade"],'
+sed -i gulpfile.js -e '/gulp.task..watch/a \
+  gulp.watch(paths.jade, ["jade"]),'
+cat >> gulpfile.js << 'HERE_DOC'
+gulp.task('jade', function (done) {
+  return gulp.src(paths.jade)
+    .pipe(jade())
+    .pipe(gulp.dest('www/jade_build/'));
+});
+HERE_DOC
+git commit -am "Enable jade"
+# gulpfile.js
+gulp.task('default', ['sass', 'jade']);
+~~~
+
+You can convert [all html files to jade]({{ site.baseurl }}
+{% post_url 2016-04-05-javascript-coffeescript-tips %} #tocAnchor-1-5) but please
+check them. `index.html` should be in html format since that path `www` is
+fixed.
+
+Also note that template path should be prefixed with `jade_build` in your router
+file.
 
 # Adding tabs templates
+
+This patch was generated with `git diff > patchfile` and can be applied with
+`patch -p1 < patchfile`
 
 ~~~
 diff --git a/mobileApp/www/index.html b/mobileApp/www/index.html
@@ -566,7 +610,14 @@ angular.module 'starter'
         $scope.signal = db
 ~~~
 
-# Auth
+# Devise authentication
+
+For backend you should [enable CORS]({{site.baseurl}}
+{% post_url 2015-11-26-angular-and-ruby-on-rails %}#tocAnchor-1-8)
+
+[angular_devise]({{site.baseurl}}{% post_url 2015-12-20-devise-oauth-angular %})
+gem works nice.
+Just follow README.
 
 [ng-token-auth#validateUser](https://github.com/lynndylanhurley/ng-token-auth#authvalidateuser)
 is called on page load so user does not need to log in again.
@@ -574,7 +625,7 @@ is called on page load so user does not need to log in again.
 Token can be save to localStorage to work on device and emulator.
 I've not succeed to have working auth in browser for ionic.
 
-# if something is not working, wipe `node_modules` and run `npm install`
+if something is not working, wipe `node_modules` and run `npm install`
 
 LocalStorage (or ng-token-auth) does not work with `emulator -l` livereload, so
 don't use `-l`.
@@ -595,44 +646,13 @@ Better is to
 Or the best approach is to store all login state redirections in run
 
 ~~~
-
 ~~~
+
+# Compile for iPhone
 
 Run MAC with those `-x -v -f acpi=off PCIRootUID=1 GraphicsEnabler=No `
 [link](http://www.tonymacx86.com/snow-leopard-desktop-support/65465-experiencing-kernel-panic-initial-boot.html)
 
-
-# Jade
-
-Adding jade with: `npm install gulp-jade --save-dev`. Than
-
-~~~
-# here we will store html
-echo www/templates >> .gitignore
-sed -i ionic.project -e '/gulpSartupTasks/a "jade",'
-~~~
-
-~~~
-# gulpfile.js
-var jade = require('gulp-jade');
-
-var paths = {
-  sass: ['./scss/**/*.scss'],
-  jade: ['./www/**/*.jade']
-};
-
-gulp.task('default', ['sass', 'jade']);
-
-gulp.task('jade', function (done) {
-  return gulp.src(paths.jade)
-    .pipe(jade())
-    .pipe(gulp.dest('www/templates/'));
-});
-gulp.task('watch', function() {
-  gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.jade, ['jade']);
-});
-~~~
 
 <http://yeghishe.github.io/2015/08/13/my-gulp-files-ionic-app.html>
 <https://github.com/pluralsight/guides/blob/master/published/front-end-javascript/ionic-framework-a-definitive-10-000-word-guide/article.md>
