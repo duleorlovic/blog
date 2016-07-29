@@ -102,7 +102,20 @@ title: CSS and HTML tips
 }
 ~~~
 
-# Bootstrap
+# Bootstrap Media queries
+
+With Bootstrap you can use their predefined media queries with `min-width`
+(mobile first), for example
+
+~~~
+@media(min-width:$screen-sm){
+  .alert {
+    position: absolute;
+    bottom: 0px;
+    right: 20px;
+  }
+}
+~~~
 
 Bootstrap `container` has fixed width for big devices.
 ~~~
@@ -134,3 +147,15 @@ Bootstrap `container` has fixed width for big devices.
   }
 }
 ~~~
+
+
+* submit button outside of a form is
+  [possible](http://stackoverflow.com/questions/7020659/submit-form-using-a-button-outside-the-form-tag)
+
+  ~~~
+  <form id="myform" method="get" action="something.php">
+  <input type="text" name="name" />
+  </form>
+
+  <input type="submit" form="myform" />
+  ~~~
