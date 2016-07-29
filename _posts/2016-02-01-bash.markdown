@@ -99,6 +99,28 @@ Look my
 
 * input params `$1`
 * exit from script with `exit 1`
+* function and [default
+  parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
+  with `:-` syntax, example `echo first param is $(1:-not defined)`
+* loops and expressions example
+
+  ~~~
+  attempts="0"
+  while [ $attempts -lt 10 ] || [ -z "$window_id" ]
+  do
+    echo $attempts
+    sleep 1
+    window_id=`wmctrl -l | grep $url | awk '{print $1}' | tail -n1`
+    attempts=$[$attempts+1]
+  done
+  echo move and mark window_id=$window_id
+  ~~~
+
+* with [comparison operators](http://tldp.org/LDP/abs/html/comparison-ops.html)
+  you should use quotes since something could not be defined `if [ -n "$a" ]`
+
+* call function with `$(function_name)` and print variable with `$variable_name`
+  (without brackets)
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
 * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
@@ -113,9 +135,6 @@ Look my
 * DDNS
   * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
 * copy all files from folder (including hidden) `cp folder/. /some-other/ -r` Note .` after folder.
-* function and [default
-  parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
-  with `:-` syntax, example `echo first param is $(1:-not defined)`
 * preserve env variables with sudo `sudo -E ruby some_script.rb`, but `rvmsudo
   ruby some_script.rb` works better
 * `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]

@@ -290,3 +290,25 @@ is private but we can
     puts name, value
   end
   ~~~
+* big multiline strings can be concatenated from lines similar to HERE_DOC.
+  `%q()`is without interpolation, uppercase `%Q()` (or empty) is with
+  interpolation. Indent is important since lines are joined with `\n`
+
+  ~~~
+  my_str = %(
+  This is multiline
+  1 + 1 is #{1+1}
+  )
+  ~~~
+
+  You can also write as strings but without new line `\n`
+
+  ~~~
+  string = "this is a \
+            long string"
+  string = "this is also one "\
+           "long string"
+  ~~~
+
+* to send some data as json you can do it `user.templates.map {|t| t.slice :id,
+  :name}.to_json`
