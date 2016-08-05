@@ -36,8 +36,36 @@ so I use [ng-annotate](https://github.com/kikonen/ngannotate-rails).
 
 There is a angular factory for resource
 [angularjs-rails-resource](https://github.com/FineLinePrototyping/angularjs-rails-resource).
-You can search applications for it's usage
+
+~~~
+bower install angularjs-rails-resource --save
+# resolve with latest angular, it works find with 1.5.3
+~~~
+
+You can start from [EXAMPLES](https://github.com/FineLinePrototyping/angularjs-rails-resource/blob/master/EXAMPLES.md) and search applications for it's usage
 [saveIndicatorInterceptor](https://github.com/search?q=saveIndicatorInterceptor&type=Code&utf8=%E2%9C%93)
+
+Here is simple example for ionic
+
+~~~
+# www/js/app.js
+angular.module 'starter', ['ionic', 'rails']
+
+# www/index.html
+    <!-- Rails Resource
+    https://github.com/FineLinePrototyping/angularjs-rails-resource -->
+    <script src="lib/angularjs-rails-resource/angularjs-rails-resource.min.js"></script>
+
+# www/js/resources/locationTiken.resource.coffee
+angular.module 'starter'
+  .factory 'LocationTicket', (railsResourceFactory, CONSTANT) ->
+    railsResourceFactory
+      url: CONSTANT.SERVER_URL + '/location_tickets'
+      name: 'location_ticket'
+
+# www/js/locationTicke/locationTicket.controller.coffee
+~~~
+
 I use interceptor for loader. Also show toast if flag is set like
 `cart.showToastOnError = true; cart.delete()`. For some resource I show toast
 for all errors by adding `interceptors: [notifyInterceptor]`
@@ -303,7 +331,7 @@ npm install -g yo generator-gulp-angular
 mkdir client && cd $_
 yo gulp-angular myappAngular # don't --default
 # choose coffe cript and Angular material
-git add . && git commit -m "yo gulp-angular with coffescrip and Material"
+git add . && git commit -m "yo gulp-angular with coffeescript and Material"
 # config proxy for /api and /omniauth, add params -p and -o
 sed -i gulp/server.js -f - <<HERE_DOC
 /function browserSyncInit(baseDir, browser) {/c \
@@ -379,6 +407,7 @@ angular.module('myappAngular')
   });
 EOF
 
+echo note that this works for javascript not for coffeescript
 sed -i '/vm.showToastr/a \
     Article.query(function (res) {\
       vm.articles = res;\
@@ -474,10 +503,20 @@ sed -i config/application.rb -e '/^  end/i \
     config.middleware.insert_before 0, "Rack::Cors" do\
       allow do\
         origins "*"\
-        resource "*",\
+        resource(\
+          "*",\
           headers: :any,\
           methods: :any,\
-          expose: ["access-token", "expiry", "token-type", "uid", "client"]\
+          expose: [\
+            "access-token",\
+            "expiry",\
+            "token-type",\
+            "uid",\
+            "client",\
+            "Content-Range", # clean_pagination\
+            "Accept-Ranges", # clean_pagination\
+          ],\
+        )\
       end\
     end'
 

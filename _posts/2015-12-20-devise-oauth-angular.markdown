@@ -22,7 +22,7 @@ git add . && git commit -m "rails g devise user"
 sed -i app/views/layouts/application.html.erb -e '/<body>/a \
   <% if current_user %>\
     <strong><%= current_user.email %></strong>\
-    <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out<a>\
+    <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a>\
   <% else %>\
     <a href="<%= new_user_registration_path %>">Sign up</a>\
     <a href="<%= new_user_session_path %>">Log in</a>\
@@ -190,9 +190,12 @@ Dont forget to save **Changes needs 5 min to propagate**
 On <https://apps.twitter.com/> you can create application.
 `app/{{APP_ID}}/keys` will give you TWITTER_API_KEY and TWITTER_API_SECRET
 
-# Angular ng-token-auth demo
+# Angular ng-token-auth demo example
 
-Angular [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) is used with [devise-token-auth](https://github.com/lynndylanhurley/devise_token_auth).
+Angular [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) is
+used with
+[devise-token-auth](https://github.com/lynndylanhurley/devise_token_auth).
+
 Run [client](https://github.com/lynndylanhurley/ng-token-auth#development) with:
 
 ~~~
@@ -207,7 +210,8 @@ gulp dev
 gnome-open http://localhost:7777/
 ~~~
 
-For server side you can see [devise_token_auth_demo compare](https://github.com/lynndylanhurley/devise_token_auth_demo/compare/dbf0a69b1e67e34862906c3d24747bc98ffff815...master)
+For server side you can see [devise_token_auth_demo
+compare](https://github.com/lynndylanhurley/devise_token_auth_demo/compare/dbf0a69b1e67e34862906c3d24747bc98ffff815...master)
 
 ~~~
 cd devise_token_auth_demo
@@ -225,6 +229,22 @@ rails s
 
 # Angular and ng-token-auth from scratch with Yeoman
 
+When use signin, he get `access-token` in Response Header. Than he uses that
+`access-token` for next request (Request Header), and for it he gets new
+`access-token` in response [Token Header
+Format](https://github.com/lynndylanhurley/devise_token_auth#token-header-format)
+
+IMPORTANT:
+
+Mount path is important. `mount_devise_token_auth_for 'User', at: '/auth'` so if
+you access `api/v1` and `api/v2/...` it will send headers. If you mount under
+`api/v1/auth` than headers will not be send for `api/v2/articles`
+
+Rails 4.2.5 use uppercase header names (Access-Token), but that does not affect
+the app. Also the method you fetch the resource does not matter, it could be
+$http, angular-rails-resource... headers will be send with ng-token-auth
+
+
 ~~~
 rails new my_app
 cd my_app
@@ -241,8 +261,7 @@ git add . && git commit -m "rails g devise_token_auth:install User auth"
 rails g devise:install
 git add . && git commit -m "rails g devise:install"
 
-# change route from auth to api/v1/auth
-sed -i config/routes.rb -e 's:\bauth\b:api/v1/auth:'
+# leave original route auth for mount_devise_token_auth_for
 
 # config/environments/development.rb
 # OmniAuth.config.full_host = "http://localhost:9000/" # this is url for google callback, not needed since it will read from request
@@ -317,7 +336,7 @@ sed -i src/app/index.config.coffee \
 -e 's/config (/config ($authProvider, /' \
 -e '$a\
     $authProvider.configure\
-      apiUrl: "api/v1"\
+      apiUrl: "/"\
       authProviderPaths:\
         google:   "/auth/google_oauth2"\
         facebook: "/auth/facebook"'
@@ -557,7 +576,45 @@ Some links for Ionic authentication:
 ng-token-auth](https://github.com/search?q=ionic+ng-token-auth&ref=reposearch&type=Code&utf8=%E2%9C%93)
 * [ionic rails](https://github.com/search?utf8=%E2%9C%93&q=ionic+rails)
 
-# Devise-angular
+# Angular-devise
+
+IMPORTANT:
+
+For angular-devise path could be default `users/sign_in.json` (no need to place
+it on the root).
+In order to send headers and cookies, you need to add
+[$httpProvider.defaults.withCredentials =
+true](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials) to the `index.config.coffee`.
+
+If protect_from_forgery is enabled, you need to pass `XSRF-TOKEN` token as
+cookie, and it will be returned later. We read from cookie, not from header.
+
+Rails responds 4 times, and last cookie is used.
+
+~~~
+# app/controllers/application_controller.rb
+
+  protect_from_forgery with: :null_session
+
+  # http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on
+  after_filter :set_csrf_cookie_for_ng
+
+  def set_csrf_cookie_for_ng
+    cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
+  end
+
+protected
+
+  def verified_request?
+    super || valid_authenticity_token?(session, cookies['XSRF-TOKEN'])
+  end
+~~~
+
+Here is example login controller for ionic
+
+~~~
+bower install --save angular-devise
+~~~
 
 
 # Resend confirmation email on login
@@ -631,7 +688,3 @@ end
 
 just note that user need to be `user.active_for_authentication?`. In seed you
 need to have `user.skip_confirmation!` since you will not be able to log in as.
-
-
-# Testing
-

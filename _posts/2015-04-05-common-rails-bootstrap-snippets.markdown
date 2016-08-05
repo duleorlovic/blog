@@ -82,7 +82,6 @@ git add . && git commit -m "Adding useful development & production gems"
 # initial scale on mobile devices
 sed -i app/views/layouts/application.html.erb -e '/title/a \
   <meta name="viewport" content="width=device-width, initial-scale=1">'
-
 ~~~
 
 # Sample page

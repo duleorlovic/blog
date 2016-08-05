@@ -100,6 +100,14 @@ title: CSS and HTML tips
 .text-align-right {
   text-align: right;
 }
+
+.hide-first-child:first-child .hide-first-target {
+  display: none;
+}
+
+.hide-last-child:last-child .hide-last-target {
+  display: none;
+}
 ~~~
 
 # Bootstrap Media queries

@@ -347,7 +347,7 @@ timezone with
 `Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
 why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
 
-# Seeds
+# Seed
 
 If you want indempotent seeds data you should have some identifier (for example
 `id`) for wich you can run `where(id: id).first_or_create! do...end`.
@@ -375,6 +375,7 @@ Use `faker` gem to generate example strings:
     # you do not need to call save! here
     puts "JobType #{doc[:name]}" 
   end
+end if Rails.env.development?
 
 # deterministic and random data
 NUMBER_OF_FAKE_USERS = 5

@@ -104,6 +104,7 @@ sed -i gulpfile.js -e '/var paths/a \
 sed -i gulpfile.js -e '/gulp.task..watch/a \
   gulp.watch(paths.coffee, ["coffee"]),'
 cat >> gulpfile.js << 'HERE_DOC'
+
 gulp.task('coffee', function(done) {
   gulp.src(paths.coffee)
   .pipe(coffee({bare: true}).on('error', gutil.log))
@@ -143,6 +144,7 @@ sed -i gulpfile.js -e '/var paths/a \
 sed -i gulpfile.js -e '/gulp.task..watch/a \
   gulp.watch(paths.jade, ["jade"]),'
 cat >> gulpfile.js << 'HERE_DOC'
+
 gulp.task('jade', function (done) {
   return gulp.src(paths.jade)
     .pipe(jade())
@@ -161,6 +163,63 @@ fixed.
 
 Also note that template path should be prefixed with `jade_build` in your router
 file.
+
+# Adding CONSTANT for SERVER_URL
+
+You probably need to change api url from command line, since ionic does not pass
+arguments to gulp command, we need to use env variables (note that they must be
+prefix - before actual command).
+
+~~~
+SERVER_URL=my-domain.dev:3001 ionic serve 
+~~~
+
+
+~~~
+cat >> www/js/app.constant.coffee << HERE_DOC
+PRODUCTION_SERVER_URL = 'https://www.trk.in.rs'
+STAGING_SERVER_URL = 'http://trk.herokuapp.com'
+LOCAL_SERVER_URL = 'http://mylocationsubdomain.my-domain.dev:3001'
+angular.module 'starter'
+  .constant 'CONSTANT',
+    SERVER_URL: STAGING_SERVER_URL
+HERE_DOC
+
+npm install gulp-if gulp-replace --save-dev
+sed -i gulpfile.js -e '/shelljs/a \
+var replace = require("gulp-replace");\
+var gulpif = require("gulp-if");\
+\
+var serverUrl = false; // default is what is defined in constants.coffee\
+if (process.env.SERVER_URL == "production") {\
+  serverUrl = "PRODUCTION_SERVER_URL";\
+  console.log("Using production PRODUCTION_SERVER_URL");\
+} else if (process.env.SERVER_URL) {\
+  serverUrl = "\\\"http://" + process.env.SERVER_URL + "\\\"";\
+  console.log("Using SERVER_URL=" + process.env.SERVER_URL);\
+} else {\
+  console.log("Using default SERVER_URL");\
+}'
+
+sed -i gulpfile.js -e '/gulp.src(paths.coffee/a \
+  .pipe(gulpif(!!serverUrl, replace(/SERVER_URL: \\w*SERVER_URL/g, "SERVER_URL: " + serverUrl)))'
+~~~
+
+# Adding other packages, for example RailsResource
+
+When you add using `bower install angularjs-rails-resource --save` you need also to include it in `www/index.html` (it can be before or after app.js) and you need to declare dependency in `www/app.js`
+
+~~~
+    <!-- Rails Resource
+    https://github.com/FineLinePrototyping/angularjs-rails-resource -->
+    <script src="lib/angularjs-rails-resource/angularjs-rails-resource.js.min"></script>
+~~~
+
+Start using it with factory
+
+~~~
+cat >> www/js
+~~~
 
 # Adding tabs templates
 
