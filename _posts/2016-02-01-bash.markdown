@@ -91,6 +91,14 @@ with `"*p`. Clipboard selection (copy, paste) with  and `"+p`
 Only place where I sometimes need arrow keys is google chrome suggestions in
 address bar, but than I use Tab.
 
+Starting chrome with [command line
+switch](http://peter.sh/experiments/chromium-command-line-switches/)
+`chromium-browser --auto-open-devtools-for-tabs` does work only on
+google-chrome.
+
+Intresting [devtools-cheatcheet](http://anti-code.com/devtools-cheatsheet/)
+(search by filename Ctrl+O, search all sources Ctrl+Shift+F).
+
 Look my
 [xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
 
@@ -127,6 +135,8 @@ Look my
   * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
   * find all html files `find . -name '*.html'`. Note that `find . -name *.html`
     will not work since wildcard will be changed to html file in current folder.
+  * `filter files based on their size: `find . -size -212c` show only small than
+    212 bytes
 * test the speed on remote server:
   * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
   * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to test upload link

@@ -524,13 +524,24 @@ rake update_subdomain:my_user[]
 rake update_subdomain:my_user[new_subdomain]
 ~~~
 
-# Share cookies on multiple subdomains
+# Sessions and share cookies on multiple subdomains
 
 If you use [sharing-cookies-across-subdomains-with-rails-3](http://makandracards.com/makandra/31381-sharing-cookies-across-subdomains-with-rails-3) or [what-does-rails-3-session-store-domain-all-really-do](http://stackoverflow.com/questions/4060333/what-does-rails-3-session-store-domain-all-really-do)
+
+~~~
+# config/initializers/session_store.rb
+Rails.application.config.session_store :cookie_store, key: '_myapp_session',
+domain: :all, expire_after: 60.minutes
+~~~
+
 you need to know that some domains like `herokuapp.com` belongs to [Public
 Suffix List](https://devcenter.heroku.com/articles/cookies-and-herokuapp-com) so
 browser will prevent setting cookie for them (because someone can use
 attacker.herokuapp.com to read cookies from myapp.herokuapp.com).
+
+Cookie are send on each request. Cookies usually does not expire, but you can
+set `expire_after: 60.minutes`. They are send again when you refresh close &
+open window.
 
 # Text syntax on buttons and messages
 
@@ -644,14 +655,86 @@ suggestions for code organization I use mostly:
   end
   ~~~
 
+# Unsubscribe links
+
+~~~
+# app/views/layouts/_email_footer.html.erb
+<p>
+  <%= link_to "Unsubscribe", link_for_unsubscribe(user, controller.mapping_to_unsubscribe_group(controller.action_name)) %> from this type of email.
+</p>
+<p>
+  <%= link_to "Manage", settings_user_url(user) %> which emails you receive.
+</p>
+
+# app/controllers/application_mail.rb
+  def mapping_to_unsubscribe_group method_name
+    group = ApplicationHelper::UNSUBSCRIBE_MAPPING_METHOD_TO_GROUP[method_name.to_s]
+    if group.nil?
+      puts "!!!!! No group found for method_name=#{method_name.to_s}"
+      ExceptionNotifier.notify_exception(Exception.new("just to notify that there is no group for method_name #{method_name}") )
+    end
+    group
+  end
+
+# app/helpers/application_helper.rb
+  UNSUBSCRIBE_MAPPING_METHOD_TO_GROUP = {
+    "first_application_instructions" => "tips_and_help_emails_jobseeker",
+    "application_in_review_instructions" => "tips_and_help_emails_jobseeker",
+    "new_candidate_email" => "new_candidate_or_applicant",
+    }
+  def link_for_unsubscribe user, unsubscribe_group
+    referral_token_and_unsubscribe_group = user.referral_token + unsubscribe_group.to_s
+    unsubscribe_url key: Base64.encode64(referral_token_and_unsubscribe_group)
+  end
+
+# config/routes.rb
+  get 'unsubscribe', to: 'welcome#unsubscribe'
+
+# app/controllers/welome_controller.rb
+  # GET /unsubscribe
+  def unsubscribe
+    referral_token_and_unsubscribe_group = Base64.decode64 params[:key] 
+    referral_token = referral_token_and_unsubscribe_group[0..User::REFERRAL_TOKEN_LENGTH-1]
+    @unsubscribe_group = referral_token_and_unsubscribe_group[User::REFERRAL_TOKEN_LENGTH..-1]
+    if current_user
+      if current_user.referral_token == referral_token
+        @user = current_user
+        @user.unsubscribe[ @unsubscribe_group] = "true"
+        @user.save!
+      else
+        redirect_to root_path, alert: "This key is for different user, please log out"
+      end
+    else
+      if @user = User.find_by( referral_token: referral_token)
+        # we found the user
+        @user.unsubscribe[ @unsubscribe_group] = "true"
+        @user.save!
+      else
+        flash[:alert] = "Can't find user by this key. You need to signin in order to unsubscribe"
+        redirect_to new_user_session_path and return
+      end
+    end
+  end
+
+# db/migrate/_add_unsubscribe_to_user.rb
+class AddUnsubscribeToUser < ActiveRecord::Migration
+  def change
+    add_column :users, :unsubscribe, :hstore, default: {}
+  end
+end
+~~~
+
 # Tips
 
 * [sprockets](https://github.com/rails/sprockets) are using for compiling assets
   (`//= require_tree .`)
 * parse url to get where user come from `URI.parse(request.referrer).host`
-* prefer using `@post.destroy` instead of `@post.delete` because it is propagate
+* always use `@post.destroy` instead of `@post.delete` because it propagates
+  to all `has_many :comments, dependent: :destroy` (also need to define this
+  dependent param)
 * `spring stop` in many cases:
-  * when you export some ENV and use tham in `config/secrets.yml` but can't see in `rails c`
+  * when you export some ENV and use them in `config/secrets.yml` but can't see
+    in `rails c`
 * render
   [json](http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html)
   can be customized with `render json: @phones.as_json(only: [:id], expect:
@@ -808,6 +891,13 @@ suggestions for code organization I use mostly:
   rake db:create
   psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
   ~~~
+  
+  To disable sql log in rails logger put this in initializer file:
+
+  ~~~
+  # config/initializers/silent_sql_log.rb
+  ActiveRecord::Base.logger.level = Logger::INFO
+  ~~~
 
 
 * for `gon` gem you should `include_gon` before other javascript files. Note
@@ -847,3 +937,33 @@ suggestions for code organization I use mostly:
   If you accidentaly use `belongs_to :templates` (pluralized) than error is
   `undefined method `relation_delegate_class' for Templates:Module`
 
+* use helpers outside of a view
+  * if it is standard base helper, than just call it
+
+  ~~~
+  ActionController::Base.helpers.pluralize(count, 'mystring')
+  Rails.application.routes.url_helpers.jobs_url
+  ~~~
+
+  * you can include all
+
+  ~~~
+  include ActionView::Helpers::TextHelper
+  include Rails.application.routes.url_helpers
+  ~~~
+
+  * or you can delegate it
+
+  ~~~
+    delegate :url_helpers, to: 'Rails.application.routes'
+
+    # call with `url_helpers.jobs_url` in you class
+  ~~~
+
+
+* do not name your model with `Template` since there is module `Template`
+  somewhere.
+* request object contains a lot of data:
+  * `request.xhr?` is it ajax
+  * `request.ip` `request.referrer` `request.remote_ip`
+  * `request.env["HTTP_USER_AGENT"]`

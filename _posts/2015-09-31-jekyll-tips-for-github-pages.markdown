@@ -224,5 +224,6 @@ not find the page.
 * internal link to post is with `{{ '{%' }} %}` like
   `[My page]({{ '{% 2016-03-02-my-page.markdown' }} %})`
 * images `![alt text]({{ site.base_url }}/assets/path_to_image "Title text")`
-* strikethrough (words crossed) can be used with `<s>Example</s>` or
-  `<del>Example</del>` (with kramdown not shortcut works like `-- ~~`)
+* strikethrough (words crossed, deleted, removed text) can be used with
+  `<s>Example</s>` or `<del>Example</del>` (with kramdown no shortcut works
+  like `-- ~~`)

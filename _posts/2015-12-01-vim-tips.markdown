@@ -154,6 +154,12 @@ t yy
   for moving underscore to CamelCase
 * `gq` in visual mode will format text to 80 char lines (good for markdown)
 * `ctrl+w+f` is the same as `gf` but opens in new vertical split window
+* `:set nowrapscan` is usefull when you want to stop search when you hit bottom
+  of a file. With `gg` you can jump to begging. `:set wrapscan` when you want to
+  back to wrapped search
+* clear highlights until nex search `:noh`, to clear completely `set nohlsearch`
+  or toggle `nnoremap <F3> :set hlsearch!<CR>`
+  [link](http://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting)
 
 * using vim inside irb or rails console with gem [interactive_editor](https://github.com/jberkel/interactive_editor). Its usefull since you can paste only limited number of chars to irb line. Now you can write your input data in file/ruby code and insert byebug/debuger/pry in rails code, and start hunting for bugs 
 

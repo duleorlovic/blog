@@ -39,16 +39,18 @@ put this in your config file:
     if (receivers = Rails.application.secrets.exception_recipients).present?
       config.middleware.use(
         ExceptionNotification::Rack,
-        ignore_exceptions: %w{ActiveRecord::RecordNotFound
+        ignore_exceptions: %w(ActiveRecord::RecordNotFound
                               AbstractController::ActionNotFound
                               ActionController::RoutingError
                               ActionController::UnknownFormat
-                              },
-        ignore_crawlers: %w{Googlebot bingbot linkdexbot Baiduspider YandexBot},
-        ignore_if: -> (env, exception) { ["Agent-007"].include? env["HTTP_ACCEPT"] },
+                              ),
+        # USER_AGENT strings
+        ignore_crawlers: %w(Googlebot bingbot linkdexbot Baiduspider YandexBot
+                            panscient.com),
+        ignore_if: -> (env, _exception) { ["Agent-007"].include? env["HTTP_ACCEPT"] },
         email: {
           deliver_with: :deliver, # only for rails < 4.2.1
-          email_prefix: "[Your App Name] ",
+          email_prefix: "[Playcity] ",
           sender_address: Rails.application.secrets.default_mailer_sender,
           exception_recipients: receivers.split(','),
         },
@@ -107,7 +109,7 @@ Here is what I use:
 # app/controllers/pages_controller.rb
 
   def sample_error
-    fail "This is sample_error on server"
+    raise "This is sample_error on server"
   end
 
   def sample_error_in_javascript

@@ -190,7 +190,17 @@ Dont forget to save **Changes needs 5 min to propagate**
 On <https://apps.twitter.com/> you can create application.
 `app/{{APP_ID}}/keys` will give you TWITTER_API_KEY and TWITTER_API_SECRET
 
-# Angular ng-token-auth demo example
+# Angular authentication
+
+I tried two approaches for authentication
+
+* [angular_devise](https://github.com/cloudspace/angular_devise)
+* [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth)
+
+For demo usage checkout my repository
+[angular-devise-ng-token-auth](https://github.com/duleorlovic/angular-devise-ng-token-auth)
+
+## ng-token-auth demo example
 
 Angular [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth) is
 used with
@@ -227,7 +237,7 @@ export GITHUB_KEY=asd GITHUB_SECRET=asd GOOGLE_KEY=$GOOGLE_CLIENT_ID GOOGLE_SECR
 rails s
 ~~~
 
-# Angular and ng-token-auth from scratch with Yeoman
+## ng-token-auth from scratch with Yeoman
 
 When use signin, he get `access-token` in Response Header. Than he uses that
 `access-token` for next request (Request Header), and for it he gets new
@@ -576,31 +586,72 @@ Some links for Ionic authentication:
 ng-token-auth](https://github.com/search?q=ionic+ng-token-auth&ref=reposearch&type=Code&utf8=%E2%9C%93)
 * [ionic rails](https://github.com/search?utf8=%E2%9C%93&q=ionic+rails)
 
-# Angular-devise
+## Angular-devise
 
 IMPORTANT:
 
-For angular-devise path could be default `users/sign_in.json` (no need to place
+For angular_devise, path could be default `users/sign_in.json` (no need to place
 it on the root).
 In order to send headers and cookies, you need to add
 [$httpProvider.defaults.withCredentials =
 true](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials) to the `index.config.coffee`.
 
 If protect_from_forgery is enabled, you need to pass `XSRF-TOKEN` token as
-cookie, and it will be returned later. We read from cookie, not from header.
+cookie, and it will be returned later. We will read from that cookie (not from
+hiddent input fields as rails does).
 
-Rails responds 4 times, and last cookie is used.
+Sometime rails responds multiple times, and last cookie is used.
+
+<del>Note that `Set-Cookie` is only of GET request</del> Set-cookie could be
+missing if you use `protect_from_forgery with: :null_session`. Best way is to
+always rise exception, so you know when xsrf happens.
+
+Note that cookies are stored per domain. In ajax, if you request two different
+domains a.dev and b.dev, they will receive different sessions cookies (in
+rails for example `session[:customer_id]` will show different values)
+Chrome Developer Tools hides cookies for other domains...
+I do not know how to clear cookies for other domain since I can not see them in
+Developer Tools Resources...
+So it is imporant to have same AuthProvider loginPath and logoutPath (login
+at a.dev and logout at b.dev will not work).
+
+Protect from forgery is for all requests except HEAD and GET
+[link](http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection/ClassMethods.html).
+[link2](http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html)
+
+It is important if you `Set-Cookie` on before OR after action. If it is
+`after_action` than if request is not authorized (`before_action
+:authenticate_user!`) than that after_action will not be done, so NO XSRF-TOKEN
+will be set. So better is to use `before_action`.
+
+`request.xhr?` is strange. It returns nil for angular requests. Also, when there
+are not cookies and login POST is sent, it passes `before_action
+:set_csrf_cookie_for_ng, if: -> { request.xhr? }` but `puts request.xhr?
+'XHR=true' : 'XHR=nil'` shows nil.
+
+Example application
+[angular-devise-ng-token-auth](https://github.com/duleorlovic/angular-devise-ng-token-auth)
 
 ~~~
 # app/controllers/application_controller.rb
 
-  protect_from_forgery with: :null_session
+  protect_from_forgery with: :exception
 
   # http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on
-  after_filter :set_csrf_cookie_for_ng
+  after_action :set_csrf_cookie_for_ng # , if: -> { request.xhr? }
 
   def set_csrf_cookie_for_ng
     cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
+  end
+
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    respond_to do |format|
+      format.html { raise exception }
+      format.json do
+        set_csrf_cookie_for_ng
+        render json: { error: 'Invalid authenticity token' }, status: :unprocessable_entity
+      end
+    end
   end
 
 protected
@@ -614,6 +665,151 @@ Here is example login controller for ionic
 
 ~~~
 bower install --save angular-devise
+
+# www/index.html
+    <!-- Devise https://github.com/cloudspace/angular_devise -->
+    <script src="lib/AngularDevise/lib/devise-min.js"></script>
+
+# www/js/app.js
+angular.module('starter', ['ionic', 'Devise'])
+
+# www/js/app.config.cofee
+angular.module 'starter'
+  .config (AuthProvider, $httpProvider, CONSTANT, AuthInterceptProvider) ->
+    AuthProvider.loginPath CONSTANT.SERVER_URL + '/users/sign_in.json'
+    AuthProvider.logoutPath CONSTANT.SERVER_URL + '/users/sign_out.json'
+    $httpProvider.defaults.withCredentials = true
+    $httpProvider.interceptors.unshift 'csrfInterceptor'
+    AuthInterceptProvider.interceptAuth true
+    console.log 'config'
+
+# www/js/interceptors/csrf.interceptor.coffee
+# http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on
+angular.module 'myappAngular'
+  .factory 'csrfInterceptor', ($q, $injector) ->
+    responseError: (rejection) ->
+      if rejection.status == 422 &&
+      rejection.data.error == 'Invalid authenticity token'
+        deferred = $q.defer()
+
+        successCallback = (resp) ->
+          deferred.resolve(resp)
+        errorCallback = (resp) ->
+          deferred.reject(resp)
+
+        $http = $http || $injector.get('$http')
+        $http(rejection.config).then(successCallback, errorCallback)
+        return deferred.promise
+
+      $q.reject(rejection)
+
+# www/js/login/login.jade
+ion-view(view-title="Sign In")
+  ion-content
+    .list
+      form(ng-submit='vm.handleSubmitLogin(vm.login)')
+        label.item.item-input.item-stacked-label
+          span.input-label Username
+          input(type="text" placeholder="Your username"
+          ng-model="vm.login.email")
+        label.item.item-input.item-stacked-label
+          span.input-label Password
+          input(type="password" placeholder="Your password"
+          ng-model="vm.login.password")
+        .padding
+          button.button.button-block.button-positive Sign In
+
+# www/js/login/login.controller.coffee
+angular.module 'starter'
+  .controller 'LoginController', (Auth, $state) ->
+    vm = this
+    vm.login =
+      email: 'asd@asd.asd'
+      password: 'asdfasdf'
+
+    init = ->
+      Auth.currentUser().then(
+        (user) ->
+          console.log user
+          $state.go 'tab.dashboard'
+        (error) ->
+          console.log error
+      )
+
+    vm.handleSubmitLogin = (login) ->
+      Auth.login(login).then(
+        (user) ->
+          console.log user
+          $state.go 'tab.dashboard'
+        (error) ->
+          console.log error
+      )
+
+    init()
+    return
+
+
+# www/js/app.router.coffee
+angular.module 'starter'
+  .config ($stateProvider, $urlRouterProvider) ->
+    $stateProvider
+      .state 'login',
+        url: '/login'
+        templateUrl: 'jade_build/js/login/login.html'
+        controller: 'LoginController'
+        controllerAs: 'vm'
+      .state 'tab',
+        url: '/tab'
+        abstract: true
+        templateUrl: 'jade_build/js/tabs/tabs.html'
+        controller: 'TabsController'
+      .state 'tab.dashboard',
+        url: '/dashboard'
+        views:
+          'tab-dashboard':
+            templateUrl: 'jade_build/js/dashboard/dashboard.html'
+            controller: 'DashboardController'
+            controllerAs: 'vm'
+      .state 'tab.account',
+        url: '/account'
+        views:
+          'tab-account':
+            templateUrl: 'jade_build/js/account/account.html'
+            controller: 'AccountController'
+            controllerAs: 'vm'
+
+    $urlRouterProvider.otherwise '/login'
+
+# www/js/app.run.coffee
+angular.module 'starter'
+  .run ($rootScope, NotifyService, $state) ->
+    $rootScope.$on 'devise:login', (event, currentUser) ->
+      console.log 'devise:login'
+
+    $rootScope.$on 'devise:new-session', (event, currentUser) ->
+      console.log 'devise:new-session user logs in with Auth.login'
+
+    $rootScope.$on 'devise:unauthorized', (event, xhr, deferred) ->
+      NotifyService.toast "Unauthorized. Please log in again"
+      $state.go 'login'
+
+    return
+
+# www/js/tabs/tabs.controller.coffee
+angular.module 'starter'
+  .controller 'TabsController', (Auth, $state, $rootScope) ->
+    init = ->
+      Auth.currentUser().then(
+        (user) ->
+          $rootScope.user = user
+        (error) ->
+          console.log error
+          $state.go 'login'
+      )
+    init()
+    console.log 'TabsController'
+    return
+
 ~~~
 
 
@@ -688,3 +884,17 @@ end
 
 just note that user need to be `user.active_for_authentication?`. In seed you
 need to have `user.skip_confirmation!` since you will not be able to log in as.
+
+# Serialization
+
+Devise will show only id, email, create_at and updated_at. To add more fields
+override user as_json
+
+~~~
+# app/models/user.rb
+  def as_json(options={})
+    r = super(options)
+    r["domains"] = 'trk.in.rs'
+    r
+  end
+~~~

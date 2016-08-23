@@ -236,6 +236,15 @@ bottom of the element.
 * merging arrays is better to append `array1.push.apply(array1, array2)` than to
   create new `array1.concat(array2)`
 * instead of `parseInt('10')` you can use `+'10'` to type cast string to number
+* `jQuery.data()` is different than plain javascript `this.dataset` because
+  javascript always returns string `this.dataset.a // "[1]"` but jQuery use
+  JSON.parse and returns string in case it is not valid json `$(this).data('a')
+  // [1]`.
+* if variable point to the same array or object, than it will be the same
+  `a=[1];b=a;a==b//true`. But if it different object (event with same data)
+  variables will not have the same value. `a=[1];b=[1];a==b//false` or
+  `{a:1}=={a:1}//false`. Comparing arrays or objects should be done one by one
+  [link](http://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript)
 
 # Coffeescript
 
@@ -300,6 +309,8 @@ bottom of the element.
   ~~~
   s = "This is
     very long line"
+  p = "this-long-url\
+      -joined-without-space"
   q =
     """
     This is

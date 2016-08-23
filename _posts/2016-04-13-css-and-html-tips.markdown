@@ -29,8 +29,9 @@ title: CSS and HTML tips
   You need to make the label a block level element for it to work.
 * for block elemenent with `margin: auto` (bootstrap
   [center-block](http://getbootstrap.com/css/#helper-classes-center) helper)
-  does not have efect unless the element has the width (because it can not
-  calculate margins). For text you can use `text-center`
+  does not have effect unless the element has the width (because it can not
+  calculate margins). For text you can use `text-center` `text-right` helper
+  classes for to align text right.
 * space inside a element is important. for example `<label>1</label><label> 2
   </label><label> 3 </label>` with `label { background: blue;}` this background
   will occupy only character and it will be disconnected from 1-2, but connected

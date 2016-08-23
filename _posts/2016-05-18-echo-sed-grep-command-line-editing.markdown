@@ -9,7 +9,8 @@ tags: echo sed grep edit command-line
 `echo -e "\n" >> filename` will add new line (that's why `-e` to the
 filename). You can use single quotes so you do not need to write `-e` and `\n`
 in multiline text but you need to escape other `'`. The best was to write
-multiline text is with `cat > filename << HERE_DOC ... some lines with ' or " ...
+multiline text is with `cat > filename << HERE_DOC ... some lines with ' or "
+...
 HERE_DOC`. First `\HERE_DOC` or `'HERE_DOC'` when no parametar expanded.
 Remember to use double `<<` not single `<` redirection.
 
@@ -130,7 +131,7 @@ rm /tmp/template
 
 # Grep
 
-Just a few command options with grep
+Just a few command line options with grep
 
 * `grep pattern filename` so if you omit filename than standard input will be
   used, which is nice to test your big regex, for example `asd <<` (exit with
@@ -144,3 +145,18 @@ Just a few command options with grep
 * if you want to output only matching group than it is better to use `sed`
   * `sed -n 's/^.*[^0-9]\([0-9][0-9]*\).*/\1/p'` get only numbers
   * `echo "asd123" | sed -n 's/asd/***/p'` replace asd with ***
+
+Regex:
+
+* OR is with `(|)`. Just you need to escape: `\(asd\|qwe\)`
+* find lines that contains asd but not qwe
+
+In vim:
+
+* [vim pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html) search
+  inside buffer
+* if you type `\` from vim command line, than you need to escape it. In shell
+  `grep 'asd\|qwe' .` is  `grep 'asd\\|qwe'` in vim
+* note that `'regex'` is not the same as `"regex"` in terms of escaping so
+  * `'\(asd\\|qwe\)'` is the same as `"\\(asd\\\|qwe\\)"`
+

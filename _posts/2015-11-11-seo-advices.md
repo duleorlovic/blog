@@ -31,6 +31,12 @@ Test your site on
 * enable gzip compresion, optimize image, eliminate render-blocking javascript
   and css, leverage browser caching, minify css, to have small page size
   (<320Kb) and load under one second
+  * [google web
+  fonts](https://fonts.googleapis.com/css?family=Montserrat|Open+Sans) are
+  cached only for one day (each day, it is downloaded again). For
+  different browsers it uses diffent files: woff2, svg ... Download fonts using
+  [this heroku app](https://google-webfonts-helper.herokuapp.com/fonts)
+
 * add favicon
 * custom 404 error page
 * add language `<html lang="en">`

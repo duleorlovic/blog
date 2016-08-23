@@ -66,6 +66,9 @@ angular.module 'starter'
 # www/js/locationTicke/locationTicket.controller.coffee
 ~~~
 
+Note that   url` could be a function that will be evaluated at runtime (usefull
+if you need to change api url depending on which user is logged in).
+
 I use interceptor for loader. Also show toast if flag is set like
 `cart.showToastOnError = true; cart.delete()`. For some resource I show toast
 for all errors by adding `interceptors: [notifyInterceptor]`
@@ -144,71 +147,9 @@ use finally to clean up that resource for later `.save()`
         user.signInAs = false
 ~~~
 
-# JSON
-
-Response status codes:
-
-* *OK 200* (for GET), *Created 201* (successful POST), *No Content 204* (success update or delete `head :no_content`).
-* errors give us more info but for sensitive info we could send only `head :not_found` but its better to send the reason:
-  * *See Other 303* when session create email does not exists
-  * *Bad Request 400*  `if ! @user.update() render json: @user.errors, status: :bad_request`
-  * *Unauthorized 401*
-  * *Forbidden 403*
-  * *Not Found 404*
-  * *Unprocessable Entity 422*
-
-~~~
-# app/controllers/application_controller.rb
-  rescue_from ActiveRecord::RecordNotFound do
-    head :not_found
-  end
-
-  rescue_from ActionController::ParameterMissing do
-    head :bad_request
-  end
-
-  rescue_from Pundit::NotAuthorizedError do
-    head :unauthorized
-  end
-~~~
-
-
-
-# REST
-
-Just to note that [REST
-api](https://en.wikipedia.org/wiki/Representational_state_transfer) means:
-Statelessness (no data between requests), Resource identification per request
-(update only one row, get could have more rows), Representational state transfer
-(returned representation JSON is enough to identify and manipulate row).
-
-Once API is exposed, you should not modify it, except for critical bugfixes. Use
-namespace
-
-~~~
-namespace :api, default: { format: :json } do
-  namespace :v1 do
-    resources :expenses, only: [:index, :create, :update, :destroy]
-  end
-end
-~~~
-
-You can use plugin
-[POSTMAN](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
-to send API requests.
-
-Curl commands:
-
-~~~
-export U=http://localhost:3000/api/v1/
-curl ${U}/expenses
-curl ${U}/expenses -I # or --head show only header
-curl ${U}/expenses -H 'Authorization: Token token="c576f0136149a2e2d9127b3901015545"'
-~~~
+# Example apps for Angular Rails:
 
 Tutorial videos (first are free) [egghead](https://egghead.io/technologies/angularjs?order=ASC)
-
-# Example apps for Angular Rails:
 
 * [RADD](https://github.com/jesalg/RADD): custom session with devise, api docs
   are generated
@@ -522,11 +463,21 @@ sed -i config/application.rb -e '/^  end/i \
 
 ~~~
 
-If your controller is protected from CSRF attack than use null session in that
-case:
+If your controller is protected from CSRF attack (it contains
+protect_from_forgery) than use null session instead of exception:
 
 ~~~
 sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
   # protect_from_forgery with: :exception\
   protect_from_forgery with: :null_session'
 ~~~
+
+
+# Angular httpProvider can't send json patch request
+
+Can't set `'Content-Type': 'application/json'` for angular `$http(method:
+'PATCH')`. I tried with both inline `header` and config
+`$httpProvider.defaults.headers.patch = 'Content-Type': 'application/json'`but
+not luck. It is always http request.
+
+UPDATE: it can send, but url needs to be `.json`

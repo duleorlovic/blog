@@ -443,7 +443,8 @@ development: &default
   # for all outgoing emails
   default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
 
-  # default_url is required for links in email body
+  # default_url is required for links in email body or in links in controller
+  # when url host is not available (for example rails console)
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
     port: <%= ENV["DEFAULT_URL_PORT"] || 80 %>
@@ -478,7 +479,12 @@ Set default url option, that is domain for `root_url`:
 ~~~
 #sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
 sed -i config/application.rb -e '/  end$/i \
-    config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys'
+    # for link urls in emails
+    config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys\
+    # for link urls in rails console
+    config.after_initialize do\
+      Rails.application.routes.default_url_options = Rails.application.config.action_mailer.default_url_options\
+    end'
 ~~~
 
 For [devise]({{ site.baseurl }}{% post_url 2015-12-20-devise-oauth-angular %})

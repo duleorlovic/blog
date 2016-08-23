@@ -82,12 +82,19 @@ usable in non angular callbacks `document.getElementById('b').addEventListener
 
 # Filters: {{ " {{ data | filter:options" }} }}
 
-* strings `{{ "{{ 'Some string' | date:'MM/dd/yyy @ h:mma'"}} }}` can also be `currency, lowecase, uppercase`
-* iterators `ng-repeat="product in store.products | filter: search | orderBy: '-price' | limitTo: -5 "` use only products that match value of search (any property of product that match search string) order by desc price and show last 5. If we want to filter only product.name than bind input to `search.name` so search becomes object, for example `ng-model="search.name"`.
+* strings `{{ "{{ 'Some string' | date:'MM/dd/yyy @ h:mma'"}} }}` can also be
+  `currency, lowecase, uppercase`
+* iterators `ng-repeat="product in store.products | filter: search | orderBy:
+  '-price' | limitTo: -5 "` use only products that match value of search (any
+  property of product that match search string) order by desc price and show
+  last 5. If we want to filter only product.name than bind input to
+  `search.name` so search becomes object, for example `ng-model="search.name"`.
 
-View can use directives, filters. Controller and services can depend on some providers.
+View can use directives, filters. Controller and services can depend on some
+providers.
 
-* all objects are joined using [dependency injection](https://docs.angularjs.org/guide/di)
+* all objects are joined using [dependency
+  injection](https://docs.angularjs.org/guide/di)
   for [specialized objects](https://docs.angularjs.org/guide/providers) 
   (controllers, directives, filters, animations) or custom service. There are 5
   types of recipe for creating object with injector: Provider (is the main one,
@@ -215,7 +222,8 @@ It can be used like `{{ "{{ phone.available | checkmark" }} }}`
   myApp.service('unicornLauncher', ["apiToken", UnicornLauncher]);
   ~~~
 
-Factory has more flexibility since they can return functions which can be `new`ed.
+Factory has more flexibility since they can return functions which can be
+`new`ed.
 
 
 * Provider is broader factory, it returns object with a `$get` method that is a
@@ -241,8 +249,12 @@ Factory has more flexibility since they can return functions which can be `new`e
   }]);
   ~~~
 
-* [$resource](https://docs.angularjs.org/api/ngResource/service/$resource) by default `save` is POST, so we need to change for rails PUT, and add `create`. Factories need to return object. That object is bindable in all places where we use `Phone` factory.
-  It can be used like `$scope.phone = Phone.get({ phoneId: $routeParams.phoneId }); $scope.phones = Phone.query();`
+* [$resource](https://docs.angularjs.org/api/ngResource/service/$resource) by
+  default `save` is POST, so we need to change for rails PUT, and add `create`.
+  Factories need to return object. That object is bindable in all places where
+  we use `Phone` factory.
+  It can be used like `$scope.phone = Phone.get({ phoneId: $routeParams.phoneId
+  }); $scope.phones = Phone.query();`
 
 * Constant recipe can create value that is available in both config and run
   phase. Don't use for example DEFAULT image_url since is better to do that in
@@ -273,6 +285,9 @@ Factory has more flexibility since they can return functions which can be `new`e
 * `$rootScope` has not parent and was created directly from `Scope()` class (not
   through `$.new` method). It is used for event handling `$.broadcast()` (down
   to child scopes) and `$.emit()` (up in the scope hierarchy).
+* you can also use for something that does not change often, like
+  `$rootScope.user = user`. In templates you can just write `{{ user.email }}`
+  and it will find `user` at root scope (can't use `{{ vm.user }}`).
 
 
 # Share error messages
@@ -356,15 +371,42 @@ vm.update = (menuItem, editMenuItemForm) ->
   )
 ~~~
 
+# $q service
+
+In [$q service](https://docs.angularjs.org/api/ng/service/$q) for promise object
+we can call `then(successCallback, errorCallback, notifyCallback)` but also
+`finally(callback, notifyCallback)` for clean up.
+
+Here is example of Customer service
+
+~~~
+# www/js/services/customerAuth.service.coffee
+angular.module 'starter'
+  .service 'CustomerAuth', ($http, CONSTANT, $q) ->
+    service = this
+    service.sessionId = null
+
+    service.login = (customer_login) ->
+      $q(
+        (resolve, reject) ->
+          $http.post(
+            CONSTANT.SERVER_URL + '/customer/sessions.json'
+            customer_session: customer_login
+          ).then(
+            (response) ->
+              resolve response
+            (response) ->
+              reject response
+          )
+      )
+~~~
+
+
 # Tips:
 
 * use `controller as vm` in view and `var vm = this` in controller so you don't
   need to inject `$scope` (we need `$scope` when we want to access something in
   promise `catch = -> $scope.vm.profileForm = "a"`)
-* in [$q service](https://docs.angularjs.org/api/ng/service/$q) for promise
-  object we can call `then(successCallback, errorCallback, notifyCallback)` but
-  also `finally(callback, notifyCallback)` for clean up.
-
 * in directives you need to prefix `$root` to access rootScope, for example
   `$root.user`
 
@@ -372,7 +414,7 @@ vm.update = (menuItem, editMenuItemForm) ->
   lowerCamelCase is used for factory names that won't be new'ed. Controllers and
   services should be UpperCased.
 
-  Filenames are lowerCamerCase, but folders are underscored
+  Filenames are lowerCamerCase, but folders are underscored or dashed
   `src/app/menu_items/menuItems.jade`. Template always match controller name
 
 * [johnpapa style guide](https://github.com/johnpapa/angular-styleguide#controlleras-controller-syntax)
@@ -412,7 +454,6 @@ Check some [awesome links](https://github.com/gianarb/awesome-angularjs)
 
 # Confirm
 
-
 Usage `<md-button ng-really-click="vm.delete(item)"
 ng-really-reject="vm.cancel(item)" ng-really-message="Are you
 sure?">Remove</md-button>`
@@ -429,6 +470,90 @@ angular.module 'myApp'
           scope.$apply attrs.ngReallyClick
         else if attrs.ngReallyReject
           scope.$apply attrs.ngReallyReject
+~~~
+
+# Data disable with Processing...
+
+Similar to rails `data-disable-with="Processing..."` here is directive.
+Angular ignores `data-` from `data-disable-with`.
+Similar to
+[angular-autodisable](https://github.com/kirstein/angular-autodisable)
+
+~~~
+# www/js/directives/disableWith.directive.coffee
+# TODO disable button and resubmit the form with ng-submit
+# TODO listen for finally and remove $boradcast/$on
+
+angular.module 'starter'
+  .directive 'disableWith', ->
+    restrict: 'A'
+    link: (scope, element, attrs) ->
+      element.bind 'click', ->
+        element.html attrs.disableWith
+        if attrs.ngClick
+          # click can be disabled
+          element.attr 'disabled', true
+        else
+          # form will not be submited if we disable button
+
+      oldName = element.html()
+      scope.$on 'disableWith:resolved', ->
+        element.html oldName
+        element.attr 'disabled', false
+
+
+# www/js/app.config.coffee
+angular.module 'starter'
+  .config ($httpProvider) ->
+    $httpProvider.interceptors.unshift 'disableWithInterceptor'
+
+# www/js/interceptors/
+angular.module 'starter'
+  .factory 'disableWithInterceptor', ($q, $rootScope) ->
+    response: (response) ->
+      $rootScope.$broadcast 'disableWith:resolved'
+      response
+    responseError: (response) ->
+      $rootScope.$broadcast 'disableWith:resolved'
+      $q.reject response
+
+<button data-disable-with="Processing...">Click</button>
+~~~
+
+If you get circular dependency error like `Uncaught Error: [$injector:cdep]
+Circular dependency found: $state <- unauthorizedInterceptor <- $http <-
+$templateFactory <- $view <- $state`, than use `$injector` and `$state =
+$injector.get '$state' like in the following example.
+
+Redirect to login state on every `unauthorized` response
+
+~~~
+# www/js/interceptors/unauthorized.interceptor.coffee
+angular.module 'starter'
+  .factory 'unauthorizedInterceptor', ($q, $injector) ->
+    responseError: (rejection) ->
+      if rejection.status == 401
+        $state = $injector.get('$state')
+        $state.go 'login'
+      $q.reject rejection
+
+# www/js/app.config.coffee
+angular.module 'starter'
+  .config ($httpProvider) ->
+    $httpProvider.interceptors.unshift 'unauthorizedInterceptor'
+~~~
+
+Interceptor that will set `data.error` in case there is network error
+
+~~~
+angular.module 'starter'
+  .factory 'connectionInterceptor', ($q, NotifyService) ->
+    responseError: (rejection) ->
+      if rejection.status <= 0 # server offline
+        unless rejection.data && rejection.data.error
+          rejection.data =
+            error: 'There is a problem with connection'
+      $q.reject rejection
 ~~~
 
 # UI View, Angular route
@@ -512,6 +637,8 @@ is not so simple, so here are examples:
   ~~~
   # src/app/my_account/myAccountInitialData.coffee
   # http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx
+  # https://promisesaplus.com/#point-41 the promise resolution procedue, ie
+  # onFulfilled returns promise, when it is fulfilled than fullfill parent
 angular.module 'menucardsAngular'
   .factory "myAccountInitialData", (Restaurant, $auth, $q) ->
     ->

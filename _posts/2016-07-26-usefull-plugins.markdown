@@ -39,8 +39,12 @@ text on click
 
     * `keepOrder` does not work for preselected items
 
-  * calendar date and time picker
-[pickdate](http://amsul.ca/pickadate.js/)
+* calendar date and time picker
+  * [pickdate](http://amsul.ca/pickadate.js/)
+  * [jquery ui datepicker](https://jqueryui.com/datepicker/)
+    Error on chrome if you use `type=date`
+    [link](http://stackoverflow.com/questions/16890376/chrome-type-date-and-jquery-ui-date-picker-clashing)
+    so use `type=text`
 * image file upload drag and drop crop
   * [jquery.fileapi](http://rubaxa.github.io/jquery.fileapi/) supports
     webcam, crop, dragndrop

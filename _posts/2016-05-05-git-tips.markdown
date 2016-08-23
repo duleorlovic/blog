@@ -55,6 +55,10 @@ Show file at specific revision
 
     git show HEAD~4:index.html
 
+Find difference of current file with some point
+
+    git diff 123123123 -- index.html
+
 Find bug using bisect on specific folder or file
 
      git bisect start -- app/controllers/registration_controller.rb
