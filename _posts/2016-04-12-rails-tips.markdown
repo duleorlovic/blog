@@ -232,7 +232,8 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 * adding array of any type and hstore is easy, just add default value `[]` and
 `''` (breaks for `{}`). You can create hstore extension in migration. If you
-need arrays of hstore than you need to go for json or json array.
+need arrays of hstore than you need to go for json or jsonb (better optimization
+only pq 9.4) or json/jsonb array.
 
   ~~~
   class CreatePhones < ActiveRecord::Migration
@@ -241,8 +242,8 @@ need arrays of hstore than you need to go for json or json array.
       create_table :phones do |t|
         t.string :my_array, array: true, default: []
         t.hstore :my_hash, default: ''
-        t.json :my_json, default: []
-        t.json :my_array_of_json, array: true, default: []
+        t.jsonb :my_json, default: []
+        t.jsonb :my_array_of_json, array: true, default: []
       end
     end
   end
