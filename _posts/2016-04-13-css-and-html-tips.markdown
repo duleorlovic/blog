@@ -75,11 +75,24 @@ title: CSS and HTML tips
 * hide something but still occupy space you can use `visibility: hidden` and
   `visibility: visible`
 
-# SCSS
+# SCSS Sass
 
 * you can set default value of variable `$my-var: 123 !default;`. This has no
   effect if variable is already defined.
 * <https://responsivedesign.is/develop/getting-started-with-sass>
+* you can select `this` using `&`
+
+  ~~~
+  .a:hover {
+    background: blue;
+  }
+  // is the same as
+  .a {
+    &:hover {
+      background: blue;
+    }
+  }
+  ~~~
 
 * chrome 39 for android use different color for toolbar, just add `<meta
   name="theme-color" content="#db5945">`
@@ -101,6 +114,16 @@ title: CSS and HTML tips
 .text-align-right {
   text-align: right;
 }
+~~~
+
+~~~
+// Here is example to show hide buttons that are not allowed for first or last
+//
+// <ol class="hide-first-child hide-last-child">
+//   <!-- iterate over li -->
+//   <li class="hide-first-target"><i class="fa fa-arrow-up"></li>
+//   <li class="hide-last-target"><i class="fa fa-arrow-down"></li>
+// </ol>
 
 .hide-first-child:first-child .hide-first-target {
   display: none;
@@ -108,6 +131,46 @@ title: CSS and HTML tips
 
 .hide-last-child:last-child .hide-last-target {
   display: none;
+}
+
+// if you need to nest two show hide (you have another ul inside li)
+.hide-first-child:first-child {
+  .hide-first-target {
+    display: none;
+  }
+  .hide-first-child {
+    .hide-first-target {
+      display: initial;
+    }
+    &:first-child {
+      .hide-first-target {
+        display: none;
+      }
+    }
+  }
+}
+
+.hide-last-child:last-child {
+  .hide-last-target {
+    display: none;
+  }
+  .hide-last-child {
+    .hide-last-target {
+      display: initial;
+    }
+    &:last-child {
+      .hide-last-target {
+        display: none;
+      }
+    }
+  }
+}
+~~~
+
+~~~
+// show on hover
+.show-on-hover {
+  visibility: visible
 }
 ~~~
 
@@ -168,3 +231,11 @@ Bootstrap `container` has fixed width for big devices.
 
   <input type="submit" form="myform" />
   ~~~
+
+* if you need two css files, than write two `<link rel="stylesheet"
+  type="text/css" href="1.css" />` . Do not use `@import url("2.css")` in
+  `1.css` since it will prevent downloading files in parallel (2.css is
+  downloaded only after 1.css). Only [user of
+  @import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) is when you
+  provide media queries as parameter and load only for specific screen. Note
+  that sass preprocessor scss `@import` will include inline the code.

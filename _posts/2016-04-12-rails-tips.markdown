@@ -77,6 +77,10 @@ $('#answers').append('<%= output %>');
   end
 ~~~
 
+You can try
+[cocoon](https://github.com/nathanvda/cocoon) gem and use
+`link_to_add_association`
+
 # Validations
 
 Some usefull validations
@@ -316,6 +320,7 @@ With turbolinks rails acts as single page application. So if you want to do
 something on every page and on first load than you need to bind on two events:
 
 ~~~
+// app/assets/javascripts/read_page_load.js
 $(document).on('ready page:load', function(){
   console.log("document on ready page:load");
   /* Activating Best In Place */
@@ -543,6 +548,10 @@ Cookie are send on each request. Cookies usually does not expire, but you can
 set `expire_after: 60.minutes`. They are send again when you refresh close &
 open window.
 
+Note that flash messages are also for each domain. So if you redirect from one
+domain to another, you can not use flash messages. Old flash message will be
+shown when user come back to previous domain (on which request flash was set).
+
 # Text syntax on buttons and messages
 
 * labels on buttons, titles,...
@@ -556,16 +565,54 @@ From
 [7-ways-to-decompose-fat-activerecord-models](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/)
 suggestions for code organization I use mostly:
 
-* service objects
+## Service objects
 
   ~~~
-  # app/services/match_leads.rb
-  def MatchLeads
-    def initialize(leads)
-      @leads = leads
+  # app/services/match_posts.rb
+  def MatchPosts
+    def initialize(posts)
+      @posts = posts
     end
 
     def perform
+    end
+  end
+  ~~~
+
+  or more complex with exception rescue.
+
+  ~~~
+  # app/services/process.rb
+  class Process
+    class Result
+      attr_accessor :success, :reason
+      def initialize(success, reason)
+        @success = success
+        @reason = reason
+      end
+
+      def success?
+        success
+      end
+    end
+
+    class ProcessException < Exception
+    end
+
+    def initialize(h)
+      @user = h[:user]
+    end
+
+    def process(posts)
+      do_something posts
+    rescue ProcessException => msg
+      Result.new false, msg
+    end
+
+    private
+
+    def do_something(posts)
+      raise ProcessException, "Empty posts" unless posts.present?
     end
   end
   ~~~
@@ -728,6 +775,10 @@ end
 
 * [sprockets](https://github.com/rails/sprockets) are using for compiling assets
   (`//= require_tree .`)
+  * you can use assset path helpers in scss, instead of `<%= asset_url
+    'logo.png' %>` as it was underscored in erb, use hyphenated in sass
+    `asset-url("logo.png")`. But in recent Rails 4, you can use normal
+    `url("logo.png")`
 * parse url to get where user come from `URI.parse(request.referrer).host`
 * always use `@post.destroy` instead of `@post.delete` because it propagates
   to all `has_many :comments, dependent: :destroy` (also need to define this
@@ -763,12 +814,23 @@ end
   method which you can use like `logger.debug my_var`
 * if you want to join some fields with `,` but do not know if they all exists,
   you can `[phone1, phone2].keep_if(&:present?).join(', ')`
-* use include for n+1 query and joinswhen you don't need associated models. Both
-  are using INNER JOIN
+* use include for n+1 query (bullet) and joins when you don't need associated
+  models. Both are using INNER JOIN
   * `Comment.all(include: :user, conditions: { users: { admin: true}})` will
     load also the user model
   * `User.all(joins: :comments, select: "users.*, count(comments.id) as
     comments_count", group: "users.id")` you can output just specific value
+* [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
+  problem is solved with `includes(:associated_table)` wich is actually LEFT
+  OUTER JOINS, `joins(:associated_table)` is INNER JOIN. If model has_many
+  :associated_table then `joins` will return multiple values because of multi
+  values of :associated_table per item, or none is :associated_table does not
+  exists for current item. `includes` will return the same number of items, with
+  association objectloaded in memory. nested joins `includes(jobs: [:user])`.
+  `Message.joins(:job).where(user: d,job: a.jobs)`. If you want to filter with
+  raw SQL like: `.where('jobs.title ILIKE "%duke%"')` you need to use join, if
+  you want to files using hash `.where(jobs: { title: })` you can use includes
+
 * `some_2d_array.each_with_index do |(col1, col2),index|` when you need
   [decomposition
   array](http://docs.ruby-lang.org/en/2.1.0/syntax/assignment_rdoc.html#label-Array+Decomposition)
@@ -905,7 +967,7 @@ end
   `gon` is undefined)
 
 * [has_and_belongs_to_many](http://guides.rubyonrails.org/association_basics.html#the-has-and-belongs-to-many-association)
-  can be generated with `rails g migration create_campaigns_templates
+  (habtm) can be generated with `rails g migration create_campaigns_templates
   campaign:references template:references` and add `id: false` as
   [suggested](http://guides.rubyonrails.org/association_basics.html#updating-the-schema)
 
@@ -926,7 +988,7 @@ end
   ustom order then you should create the model and use `has_many :templates,
   through: campaign_templates, order: 'campaign_templates.created_at ASC'`
   Note that here we user singular first part so model name looks better
-  
+
   ~~~
   class CampaignTemplate < ActiveRecord::Base
     belongs_to :campaign
@@ -967,3 +1029,49 @@ end
   * `request.xhr?` is it ajax
   * `request.ip` `request.referrer` `request.remote_ip`
   * `request.env["HTTP_USER_AGENT"]`
+
+* Heroku problems:
+* `undefined method `url_options' for #<Module:` maybe problem with
+  [puma](https://gist.github.com/IAMRYO/e8bee5a8e6710ad4b970)
+
+* rails router
+  * you can mount namespace under different path
+
+  ~~~
+  namespace :admin, path: 'aadmin' do
+    get '/', to: 'admin#index'
+  end
+  ~~~
+
+* export csv
+
+  ~~~
+  # app/models/user.rb
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << %w(Name Email Sports)
+      all.each do |user|
+        csv << [user.name, user.email, user.sports.map(&:name).join(', ')]
+      end
+    end
+  end
+
+  # app/controllers/users_controller.rb
+    respond_to do |format|
+      format.html
+      format.csv { send_data @users.to_csv }
+    end
+
+  # app/views/index.html.erb
+  <%= link_to "Export csv", users_path(sport: params[:sport], format: :csv) %>
+  ~~~
+
+* [acts_as_lists](https://github.com/swanandp/acts_as_list) is nice gem, you
+  just need to `rails g migration add_priority_to_comment priority:integer`,
+  add a line in model `acts_as_list scope: :post, column: :priority` and to use
+  that priority in associations `has_many :comments, -> { order priority: :asc
+  }, dependent: :destroy`
+* to get weekday from `ActiveSupport::TimeWithZone` use
+  [link](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html)
+  `weekday = t.to_a[6]`
+

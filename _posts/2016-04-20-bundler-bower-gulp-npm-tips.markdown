@@ -14,8 +14,20 @@ To rebuild Gemfile.lock you can run `bundle update`
 
 # Bower
 
-[bower](http://bower.io)  Adding new package will be saved in `bower.json` if you
+[bower](http://bower.io)  Adding new package will be saved in `bower.json` if
+you
 add option `--save` or `--save-dev`
+
+You can add github repos, just replace version with github url with `#v3.0.x`
+
+~~~
+{
+  "_filename": "bower.json",
+  "dependencies": {
+    "angular-autodisable": "https://github.com/duleorlovic/angular-autodisable"
+  }
+}
+~~~
 
 ~~~
 bower list

@@ -478,47 +478,10 @@ Similar to rails `data-disable-with="Processing..."` here is directive.
 Angular ignores `data-` from `data-disable-with`.
 Similar to
 [angular-autodisable](https://github.com/kirstein/angular-autodisable)
+There was some problem with JQlite and find with `[type=submit]` so use [my
+fork](https://github.com/duleorlovic/angular-autodisable)
 
-~~~
-# www/js/directives/disableWith.directive.coffee
-# TODO disable button and resubmit the form with ng-submit
-# TODO listen for finally and remove $boradcast/$on
-
-angular.module 'starter'
-  .directive 'disableWith', ->
-    restrict: 'A'
-    link: (scope, element, attrs) ->
-      element.bind 'click', ->
-        element.html attrs.disableWith
-        if attrs.ngClick
-          # click can be disabled
-          element.attr 'disabled', true
-        else
-          # form will not be submited if we disable button
-
-      oldName = element.html()
-      scope.$on 'disableWith:resolved', ->
-        element.html oldName
-        element.attr 'disabled', false
-
-
-# www/js/app.config.coffee
-angular.module 'starter'
-  .config ($httpProvider) ->
-    $httpProvider.interceptors.unshift 'disableWithInterceptor'
-
-# www/js/interceptors/
-angular.module 'starter'
-  .factory 'disableWithInterceptor', ($q, $rootScope) ->
-    response: (response) ->
-      $rootScope.$broadcast 'disableWith:resolved'
-      response
-    responseError: (response) ->
-      $rootScope.$broadcast 'disableWith:resolved'
-      $q.reject response
-
-<button data-disable-with="Processing...">Click</button>
-~~~
+# Errors
 
 If you get circular dependency error like `Uncaught Error: [$injector:cdep]
 Circular dependency found: $state <- unauthorizedInterceptor <- $http <-

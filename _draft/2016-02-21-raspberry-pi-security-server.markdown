@@ -79,9 +79,11 @@ we can read long and not wait buffer to fill in. For this command we need to
 
 # Disk errors
 
-If you get `Unable to mount root fs on unknown-block` that meens SD card is
-corrupted. Try to recover with the following command. Find your root partition
-using `gnome-disks`
+If you get `Kernel panic - not syncing: VFS: Unable to mount root fs on
+unknown-block` that meens SD card is corrupted. Try to recover with the `fsck`
+command on your ubuntu machine. Find your root partition of your sd card  using
+`gnome-disks`. Click on root Partition 7, and than on STOP icon to unmount it.
+Than run in console (it could take 10 minutes):
 
 ~~~
 sudo fsck.ext4 -fy /dev/sdc7

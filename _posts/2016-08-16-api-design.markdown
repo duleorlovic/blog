@@ -71,7 +71,7 @@ HTTP body can contain json data.
 
 * success
   * *200 OK* (for GET)
-  * *210 Created* (successful POST)
+  * *201 Created* (successful POST)
   * *204 No Content* (success update or delete `head :no_content`)
   * *202 Accepted* Accepted but is being processed async
 * errors give us more info but for sensitive info we could send only `head
@@ -87,7 +87,8 @@ HTTP body can contain json data.
     this data
   * *404 Not Found* url is not valid router or resource does not exist
   * *410 Gone* data has been deleted, deactivated ...
-  * *422 Unprocessable Entity* change password form but current password is bad
+  * *422 Unprocessable Entity* change password form but current password is bad,
+    or form validation errors
 * server
   * `500 Internal Server Error` unexpected happened on server side
   * `503 Service Unavailable` api is overloaded or in maintenance mode

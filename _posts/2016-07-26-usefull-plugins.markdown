@@ -20,10 +20,11 @@ text on click
   [http://digitalbush.com/projects/masked-input-plugin/](http://digitalbush.com/projects/masked-input-plugin/)
   * [selectize](http://brianreavis.github.io/selectize.js/) and
   [selectize-rails](https://github.com/manuelvanrijn/selectize-rails)
-  * [multiSelect](http://loudev.com/) nice way to select multiple items from
+  * [multiselect](http://loudev.com/) nice way to select multiple items from
     opened select box. If you show in popup with different data, then call
     `select.multiSelect('refresh');` after you initialize multiSelect.
-    * if you want to keep order, than you can use this
+    * if you want to keep order `keepOrder` option shows nice order, but
+      submitting the form do not preserve order. You can use this
       [solution](http://stackoverflow.com/a/22271944/287166)
       [issue](https://github.com/lou/multi-select/issues/184)
 
@@ -37,7 +38,18 @@ text on click
     });
     ~~~
 
-    * `keepOrder` does not work for preselected items
+    * `keepOrder` does not work for preselected items, solution could be to
+      manually select (not already select: selected):
+
+    ~~~
+    $.each(selectedTemplateIds, function(index, template_id) {
+      select.multiSelect('select', [String(template_id)]);
+    });
+    ~~~
+
+* number input field [spinner](https://github.com/vsn4ik/jquery.spinner)
+* toggle checkbox [draggable
+  switch](http://www.bootstrap-switch.org/examples.html)
 
 * calendar date and time picker
   * [pickdate](http://amsul.ca/pickadate.js/)
@@ -50,6 +62,8 @@ text on click
     webcam, crop, dragndrop
   * [jQuery-File-Upload](https://blueimp.github.io/jQuery-File-Upload/)
   * [browser-camera](https://davidwalsh.name/browser-camera) html5 getUserMedia
+* rich text editor wyswyg
+  * [quill](https://quilljs.com/)
 
 # Graphs
 
@@ -60,6 +74,7 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 [people](http://www.findtheconversation.com/concept-map/#population)
 [parallel](http://exposedata.com/parallel/) and the best is
 [grafana](http://play.grafana.org/)
+* [d3 for charts](http://plottablejs.org/examples/)
 
 # Chrome plugins and firefox extensions
 
@@ -102,3 +117,17 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 * [gentelella](https://github.com/puikinsh/gentelella)
 [preview](https://colorlib.com/polygon/gentelella/index.html) [rails
 version](https://github.com/iogbole/gentelella_on_rails)
+
+# Chrome developer tools
+
+* [network tab filter
+  request](https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/resource-loading#filter-requests)
+  will filter by filename containg the string `posts`. But it also supports
+  keywords with autosuggestions. Examples: `domain:*.com`, `larger-than:1K`, 
+* to clear autofill suggestions you can use keyboard shortcut. First select
+  suggestion with UP or Down arrows than press Shift + Delete
+  [answer](https://support.google.com/chrome/answer/142893?p=settings_autofill&rd=1)
+
+# Nice design and ui tools
+
+* [granim.js](https://sarcadass.github.io/granim.js/examples.html)

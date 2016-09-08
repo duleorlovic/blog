@@ -75,6 +75,14 @@ sed -i config/environments/development.rb -e '/^end/i \
   # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
   config.web_console.whiny_requests = false'
 
+cat > config/initializers/bullet.rb << HERE_DOC
+if defined? Bullet
+  Bullet.enable = true
+  Bullet.alert = true
+  Bullet.rails_logger = true
+end
+HERE_DOC
+
 git add . && git commit -m "Adding useful development & production gems"
 ~~~
 
@@ -727,9 +735,17 @@ rails g model document name key documentable:references{polymorphic}
 
 # Production Heroku deploy
 
+Since you need to run separate command for background jobs, you need to write
+`Procfile`. By default heroku will run with WEBRICK, so it is advisable to use
+puma.
 You can follow [heroku article](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server)
 
 ~~~
+cat >> Gemfile <<HERE_DOC
+gem 'puma'
+HERE_DOC
+bundle
+
 cat >> Procfile <<HERE_DOC
 web: bundle exec puma -C config/puma.rb
 HERE_DOC
@@ -777,9 +793,15 @@ git push heroku master --set-upstream
 # just try again
 git push heroku master --set-upstream
 heroku open
+heroku run rake db:setup
 ~~~
 
 On heroku add *Papertrail* add-on and go to the
 [https://papertrailapp.com/events](https://papertrailapp.com/events) and search
 for "Started GET" , save and create email alert or [add internal
 notification]({{ site.baseurl }}{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
+
+For custom domain just add on settings your domain name and create CNAME record
+for `www` with value `myapp.herokuapp.com`. If you need to match all subdomains,
+you can put *Domain Name* `*.kontakt.in.rs` and CNAME record for `*` with same
+value `myapp.herokuapp.com`.

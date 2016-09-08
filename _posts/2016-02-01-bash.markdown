@@ -172,3 +172,7 @@ Look my
 
   run `sudo chown -R orlovic.orlovic /mnt/moj_ssd/` this is needed only one
   time.
+* if you need to answer yes and there is no `-y` parameter, you can use `echo
+  -en "\n\n\n" | command` . Or you can install
+  [yes](https://en.wikipedia.org/wiki/Yes_%28Unix%29) command which outputs
+  `y\n` in a infinite loop

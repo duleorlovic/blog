@@ -75,6 +75,8 @@ ionic share some@email.com
 ionic serve # to see it in browser
 ionic emulate -lcs # to run in emulator with live reload and logs
 ionic run --target 123123 # to run on device, find device name with adb devices
+# note that `run` will not rebuild, it will just install latest configured apk
+# note that it will rebuild and use env vars if `-l` parameter is used
 ionic serve --nobrowser # it will not open new browser, so you can use existing
 ~~~
 
@@ -187,8 +189,6 @@ prefix - before actual command).
 ~~~
 SERVER_URL=my-domain.dev:3001 ionic serve 
 SERVER_URL=production ionic emulate
-# note that ionic run will not rebuild, it will just install latest configured
-# apk
 ~~~
 
 
@@ -515,6 +515,42 @@ with `ionic resources`. If you update icons than you should run with option
 `--ignore-cache` so it does not use cached tmp files `ionic resources
 --ignore-cache` (maybe size is too big).
 
+# IonicModal
+
+Nice feature is to put forms inside
+[$ionicModal](http://ionicframework.com/docs/api/service/$ionicModal/)
+You should clear data when modal is canceled
+
+~~~
+# www/js/login/login.controller.coffee
+    vm.
+    $ionicModal.fromTemplateUrl(
+      'jade_build/js/login/resetPassword.html'
+      scope: $scope
+    ).then (modal) ->
+      vm.resetPasswordModal = modal
+
+    # clear modal fields when user cancel modal
+    $scope.$on 'modal.hidden', ->
+      vm.usernameOrMobileNo = ''
+
+# www/js/login/resetPassword.jade
+ion-modal-view
+  ion-header-bar.bar.bar-header.bar-positive
+    h1.title Reset Password
+    button.button.button-clear.button-primary(ng-click="vm.resetPasswordModal.hide()") Cancel
+  ion-content
+    form(ng-submit='vm.resetPassword(vm.usernameOrMobileNo)' ng-autodisable
+      ng-autodisable-class="processing")
+      label.item.item-input.item-stacked-label
+        span.input-label Username Or Mobile Number
+        input(type="text" placeholder="Enter your username or mobile number"
+        ng-init="vm.usernameOrMobileNo=''"
+        ng-model="vm.usernameOrMobileNo")
+      .padding
+        button.button.button-block.button-positive(type="submit") Submit
+~~~
+
 # Common errors
 
 For `INSTALL_FAILED_OLDER_SDK` you need to lower sdk version requirement.
@@ -537,9 +573,7 @@ Solution is to remove old application.
   adb uninstall package-name # or my helper ionic_find_package_name
   ~~~
 
-
-
-# VirtualBox and Android Emulator
+## VirtualBox and Android Emulator
 
 If you want to emulate and get this error
 
@@ -552,6 +586,10 @@ it's because VirtualBox is running and using kvm. You can edit emulator
 `tools/android --avd` to use some other than x86, for example `armeabi-v7a`. Then they can work in the same time `ionic serve --target myArmeabiDevice` [l](http://stackoverflow.com/questions/16168799/android-emulator-and-virtualbox-cannot-run-at-same-time).
 But *Intel Atom (x86)* is much faster. Also enable *Emulation Options:* *Use
 Host GPU*.
+
+## Adb devices offline
+
+If your phone is `offline`, try to shut down and turn on again.
 
 # Debug with ADB
 

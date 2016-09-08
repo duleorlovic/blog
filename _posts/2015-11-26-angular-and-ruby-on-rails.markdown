@@ -481,3 +481,5 @@ Can't set `'Content-Type': 'application/json'` for angular `$http(method:
 not luck. It is always http request.
 
 UPDATE: it can send, but url needs to be `.json`
+Do not use `patch` because old browsers (if you use ionic, that means old
+phones).

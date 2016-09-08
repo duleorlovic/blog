@@ -35,7 +35,12 @@ Test your site on
   fonts](https://fonts.googleapis.com/css?family=Montserrat|Open+Sans) are
   cached only for one day (each day, it is downloaded again). For
   different browsers it uses diffent files: woff2, svg ... Download fonts using
-  [this heroku app](https://google-webfonts-helper.herokuapp.com/fonts)
+  [this heroku app](https://google-webfonts-helper.herokuapp.com/fonts). Change
+  folder prefix to `poppins/`, and extract downloaded fonts (without folder) to
+  `app/assets/fonts/poppins` so you can see the file
+  `app/assets/fonts/poppins/poppins-v1-latin-regular.svg`. Copy/paste the
+  content to some `app/assets/stylesheets/popins.scss` file and include in
+  `applications.scss` with `@import 'popins';`
 
 * add favicon
 * custom 404 error page

@@ -312,3 +312,9 @@ is private but we can
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
+* return multiple values from method, you can use arrays and `a, b = method` but
+  it is better to create new class for result.
+* if your service needs a lot of validation, raise exceptions to return message.
+  Look at [rails tips service example]({{ site.baseurl }}
+  {% post_url 2016-04-12-rails-tips %}).
+
