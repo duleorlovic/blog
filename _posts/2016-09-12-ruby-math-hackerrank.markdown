@@ -1,0 +1,423 @@
+---
+layout: post
+title: Ruby Math Hackerrank
+---
+
+# Install
+
+Install vim plugin [seeing-is-believing]({{ site.baseurl }}
+{% post_url 2015-12-01-vim-tips %}#tocAnchor-1-5) and write Gemfile
+
+~~~
+# Gemfile
+source 'https://rubygems.org'
+
+ruby '2.2.3'
+
+# for instant output of commands
+gem 'seeing_is_believing'
+
+# irbtools includes interactive_editor (vim inside irb)
+# just create ~/.irbrc with
+# require 'rubygems'
+# require 'irbtools'
+gem 'irbtools'
+
+# debugging
+gem 'byebug'
+
+# simple test assertions
+gem 'minitest'
+~~~
+
+# Links
+
+Math and algorith tasks
+
+* https://www.hackerrank.com
+* https://projecteuler.net/
+* http://www.beatmycode.com/
+* http://codility.com/programmers/
+
+Codility Solutions
+
+* https://github.com/GNakayama/codility/tree/master/src/python and blog
+  http://blog.nkbits.com/
+* http://codesays.com/ http://codesays.com/solutions-to-training-by-codility/ 
+* http://www.martinkysel.com/codility-solutions/
+
+# Example code
+
+~~~
+# 0_short_palindrome.rb
+# https://www.hackerrank.com/challenges/short-palindrome
+# string s of n lowecase letters s_i 0<=i<n
+# (a, b, c, d)
+# s_a = s_b chars at a and d are the same
+# s_b = s_c
+# 0<=a<b<c<d<n
+# INPUT: string s
+# 1<= |s| < 10^6
+# OUTPUT: number of (a, b, c, d) tuples, use moduo 10^9 + 7
+
+def solution(s)
+end
+
+require 'minitest/autorun'
+class Test < Minitest::Test
+  def test_sample
+    s = 'kkkkkkz'
+    assert_equal solution(s), 15
+  end
+end
+~~~
+
+# Counting of elements
+
+[tutorial](https://codility.com/media/train/2-CountingElements.pdf)
+if we need to check if some elements exists, we can create counting array in
+O(N) time and query in constant time
+
+~~~
+a = [0, 3, 1, 3]
+counting = [0]*(a.max+1)
+a.each { |e| counting[e]+=1 }
+counting # =>  [1, 1, 0, 2]
+counting[2] == 0 # true in constant time
+~~~
+
+# Prefix sums
+
+[tutorial](https://codility.com/media/train/3-PrefixSums.pdf) In O(N) time we
+can calculate p_1, ...p_n, where p_k= a_0+a_1+...+a_(k-1). Note that p_k does
+not use a_k, and p_0 == 0 Than we can calculate sum of any slice (x,y) in
+constant time instead of O(y-x) (that is usually needed for query several
+results).  Slice is could be defined on 1..n (index starts from 1 and include
+bounds), slice(x,y) = prefix_sum[y] - prefix_sum[x-1] slice(a_0,a_0) =
+slice(1,1) = prefix_sum[1]-prefix_sum[0] slice(a_1,a_3) = slice(2,4) =
+prefix_sum[4]-prefix_sum[1]
+
+~~~
+a = [1, 4, 0, 4, 2]
+prefix_sum = [0] * (a.length+1)
+a.each_with_index do |e,i|
+  prefix_sum[i+1] = prefix_sum[i] + e
+end
+# slice a_1 + a_2 + a_3
+prefix_sum[3+1]-prefix_sum[1] # => 8
+~~~
+
+# Counting sort O(n+m)
+
+~~~
+a=[4,2,0,2,3]
+c=[0] * (a.max+1)
+a.each_with_index do |e,i|
+  c[e] += 1
+end
+s=[]
+i=0
+c.each_with_index do |n,v| # => [1, 0, 2, 1, 1]
+  n.times do
+    s[i] = v
+    i+=1
+  end
+end
+s # => [0, 2, 2, 3, 4]
+~~~
+
+# Merge sort O(n*log(n))
+
+~~~
+a=[4,2,0,2,3]
+
+def sort(a)
+
+  if a.length == 1
+    return a # => [4], [2], [0], [2], [3]
+  else
+    middle = a.length/2
+    a[0..middle-1] # => [4, 2], [4], [0], [2]
+    a[middle..-1] # => [0, 2, 3], [2], [2, 3], [3]
+    left = sort(a[0..middle-1]) # => [4], [2, 4], [0], [2]
+    right = sort(a[middle..-1]) # => [2], [3], [2, 3], [0, 2, 3]
+    i = 0
+    j = 0
+    r = []
+    while ! left[i].nil? || ! right[j].nil?
+      if ! left[i].nil? && (right[j].nil? || left[i] <= right[j])
+        r << left[i] # => [2, 4], [2], [0], [0, 2], [0, 2, 2, 3, 4]
+        i += 1
+      else
+        r << right[j] # => [2], [2, 3], [0, 2], [0, 2, 3], [0], [0, 2, 2], [0, 2, 2, 3]
+        j += 1
+      end
+    end
+    return r # => [2, 4], [2, 3], [0, 2, 3], [0, 2, 2, 3, 4]
+  end
+end
+sort(a) # => [0, 2, 2, 3, 4]
+~~~
+
+* leader (value on more than half elements) is the same when we remove pair of
+  different items
+* maximum slice is a slice (a_p..a_q) with max sum, can be computed in 
+
+  ~~~
+  # max_slice O(n^2)
+  a=[5,-7,3,5,-2,4,-1]
+  res = 0
+  a.each_with_index do |p,i|
+    sum = 0
+    a[i..-1].each do |q|
+      sum += q
+      res = [res,sum].max
+    end
+  end
+  res # => 10
+  ~~~
+
+* positive ending sum slice is wrapped with negative elements (or bounds
+  first/last) because we can always choose empty slice (sum is 0) we can deduce
+  that positive_ending_sum = max(0, positive_ending_sum_prev + a)
+
+  ~~~
+  # max_slice O(n)
+  a=[5,-7,3,5,-2,4,-1]
+
+  res = 0
+  positive_ending_sum = 0
+  a.each do |p| # => [5, -7, 3, 5, -2, 4, -1]
+    positive_ending_sum = [0, positive_ending_sum+ p].max # => 5, 0, 3, 8, 6, 10, 9
+    res = [res,positive_ending_sum].max # => 5, 5, 5, 8, 8, 10, 10
+  end
+  res # => 10
+  ~~~
+
+# Prime Numbers
+
+* count number of divisors of N is O(sqrt(N)) since every divisor a has symetric
+  divisor b, n = a*b
+
+  ~~~
+  n = 30
+  i = 1
+  result = 0
+  while i * i < n
+    result += 2 if n % i == 0
+    i += 1 
+  end
+  result += 1 if i * i == n
+  ~~~
+
+* finding all primes less than N is in O(N*log(log(N))) Sieve of Eratosthenes.
+  We mark all multiplies of prime (starting from prime*prime since i*prime will
+  be marked with prime divisor of i), that is n/2 + n/3+ n/5 ... = n*log(log(n)
+
+  ~~~
+  n = 10
+  a = [true]*(n+1)
+  a[0] = a[1] = false # => false
+  i=2
+  while i*i <= n
+    if a[i]
+      prime = i # => 2, 3
+      temp = prime * prime
+      while temp <= n
+        a[temp] = false
+        temp += prime
+      end
+      i += 1
+    end
+  end
+  a.each_with_index { |e,i| puts i if e }
+  ~~~
+
+* factorization is to find prime numbers and its order. We can create fixed F
+  where F[i] is smallest prime that divides i, ie F[12] = 2, F[6] = 2, F[2] = 0.
+  If we already have that F, than we can factorize in O(log(n)) time
+
+  ~~~
+  n = 12
+  f = [0]*(n+1)
+  i=2
+  while i*i <= n
+    if f[i] == 0
+      prime = i
+      temp = prime * prime
+      while temp <= n
+        f[temp] = prime if f[temp] == 0
+        temp += prime
+      end
+    end
+    i += 1
+  end
+  f # => [0, 0, 0, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2]
+
+  def factorization(n, f)
+    res = []
+    while f[n] > 0
+      res << f[n] # => [2], [2, 2]
+      n /= f[n] # => 6, 3
+    end
+    res << n # => [2, 2, 3]
+  end
+
+  factorization(n,f) # => [2, 2, 3]
+  ~~~
+
+* we can find all divisors, for example 12 has [1,2,3,4,6,12] divisor list, with
+  simply iterate to all numbers and add number (for example 2) to set for
+  product (divisors[4].add(2), divisors[6].add(2) ...).  Better perfomance is
+  when we stop at `number * number <= n` and we add
+  `divisors[product].add(product/number)` (note that we still iterate to n in
+  inner loop).
+
+  ~~~
+  n = 12
+  divisors = [] * (n+1)
+  [*1..n].each do |i| # => [1, 2, 3, 4, 5, 6]
+    divisors[i] = Set.new([1,i]) # => #<Set: {1}>, #<Set: {1, 2}>, #<Set: {1, 3}>, #<Set: {1, 4}>, #<Set: {1, 5}>, #<Set: {1, 6}>
+  end
+  number = 2
+  while number <= n  # number * number <= n
+    product = number # => 2, 3, 4, 5, 6
+    while product <= n
+      if ! divisors[product].include? number
+        divisors[product].add number # => #<Set: {1, 4, 2}>, #<Set: {1, 6, 2}>, #<Set: {1, 6, 2, 3}>
+        # divisors[product].add(product/number)
+      end
+      product += number
+    end
+    number += 1
+  end
+  ~~~
+
+* Found gcd(a,b) with Euclidean algorithm by subtraction in O(a+b) steps, or by
+  division in O(log(a+b))
+
+  ~~~
+  def gcd(a,b)
+    if a % b == 0
+      return b
+    else
+      gcd(b, a% b)
+    end
+  end
+  ~~~
+
+* lcm(a,b) = a*b/gcd(a,b)  and lcm(a,b,c) = lcm(a, lcm(b,c))
+
+* Fibonacci numbers F[n] = F[n-1] + F[n-2] and F[0] = 0 and F[1] = 1 and can be
+  generated in O(N)
+* faster could be with matrix calculation
+
+* binary search for sorted array could be in O(log(N)) time. We found middle
+  element and test condition.  Array should be sorted (ascending) so we can test
+  (mid<=target) and pick next item. Result is last middle when condition was
+  true (max element <= target). If it is true go with (bigger) elements,
+  othervise go with lower elements. We do not stop when we found solution since
+  usual we have optimization problem (min or max). When we pass solution and set
+  first = middle +1 (could be equal last) next iteration will be false (or last
+  = new_middle -1 until last < first).  If we search for min, then if condition
+  is true we took lower elements (last = mid - 1). That is easy to replace in
+  check function but result should be taken from that as well. So general check
+  function store result if test is true with max, or test is false with min.
+  Another nice non general solution is to return last for max, or first for min.
+
+  ~~~
+  a=[1,2,3,4,5] #[12,15,15,19,24,31,53,59,60,61]
+  target = 3 # 13 
+  def check(a, middle, target, result)
+    if a[middle] <= target
+      result.value = middle
+      true
+    else
+      false
+    end
+  end
+  #a = [0,1,1,0,1,1,0,1,1]
+  #target = 3 # k boards 3 boards
+  #def check(a, middle, target, result)
+  #  last_board = -1
+  #  boards = 0
+  #  middle # => 4, 1, 2
+  #  for i in 1..a.length
+  #    if a[i] == 1 && last_board < i
+  #      boards += 1 # => 1, 2, 1, 2, 3, 4, 5, 6, 1, 2, 3
+  #      last_board = i + middle - 1 # => 4, 8, 1, 2, 4, 5, 7, 8, 2, 5, 8
+  #    end
+  #  end
+  #  boards # => 2, 6, 3
+  #  if boards <= target # => true, false, true
+  #    # since we search to min, we invert return value
+  #    result.value = middle
+  #    false
+  #  else
+  #    true
+  #  end
+  #end
+  class Result
+    attr_accessor :value
+  end
+  def binary_search(a, target)
+    first = 0
+    last = a.length - 1
+    result = Result.new
+    result.value = -1
+    while first <= last
+      first     # => 0, 3
+      last    # => 4, 4
+      middle = (first+last)/2 # => 2, 3
+      if check(a, middle, target, result) # => true, false
+        first = middle + 1 # => 3
+      else
+        last = middle - 1 # => 2
+      end
+    end
+    return result.value
+  end
+  binary_search(a, target) # => 2
+  ~~~
+
+* caterpillar method. found subseqence which total sum equals s
+
+  ~~~
+  a = [6,2,7,4,1,3,6]
+  target_sum = 12
+
+  back = 0
+  front = 0
+  sum = 0
+  a.each_with_index do |e, back|
+    while front < a.length && sum + a[front] <= target_suM
+      sum += a[front]
+      front += 1
+    end
+    if sum == target_sum
+      puts "je"
+    end
+    sum -= e
+  end
+  ~~~
+
+* greedy algorithm is simplest possible algorithm
+* dinamic programming
+
+  ~~~
+  def dynamic_coin_changing(c, k)
+    n = c.length
+    dp = [0] + [1/0.0]* k # => [0, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity]
+    for i in 1..n # => 1..3
+      for j in c[i-1] .. k # => 1..6, 3..6, 4..6
+         # => 1..6, 3..6, 4..6
+        dp[j-c[i-1]]+1 # => 1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 1, 2, 3
+  dp[j] # => Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 3, 4, 5, 6, 2, 3, 2
+        dp[j] = [dp[j-c[i-1]]+1, dp[j]].min # => 1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 1, 2, 2
+      end
+      dp # => [0, 1, 2, 3, 4, 5, 6], [0, 1, 2, 1, 2, 3, 2], [0, 1, 2, 1, 1, 2, 2]
+    end
+    dp
+  end
+  dynamic_coin_changing([1,3,4],6) # => [0, 1, 2, 1, 1, 2, 2]
+  ~~~

@@ -239,3 +239,21 @@ Bootstrap `container` has fixed width for big devices.
   @import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) is when you
   provide media queries as parameter and load only for specific screen. Note
   that sass preprocessor scss `@import` will include inline the code.
+* if option select is required, we usually prompt user with one more option
+"Please select", but it is bad to allow user to pick that option "Please
+select". You can disable option, and you should force selected on it if other
+option is not selected [demo](http://jsfiddle.net/u8PWX/1/)
+
+  ~~~
+    <select onchange="this.form.submit()">
+      <option selected="selected" disabled="true">--Please Select --</option>
+      <option value="volvo">Volvo</option>
+      <option value="saab">Saab</option>
+    </select>
+  ~~~
+
+  In rails, you can use something like
+
+  ~~~
+    <%= select_tag "job[job_type_id]",("<option #{ "selected='selected'".html_safe unless fjob.object.job_type_id } disabled='disabled'>Job Type</option>".html_safe+ options_from_collection_for_select(JobType.active.all, :id, :name,{selected: fjob.object.job_type_id})), { class: "e1" } %>
+  ~~~

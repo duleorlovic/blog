@@ -79,7 +79,8 @@ $('#answers').append('<%= output %>');
 
 You can try
 [cocoon](https://github.com/nathanvda/cocoon) gem and use
-`link_to_add_association`
+`link_to_add_association` [tutorial
+post](https://www.sitepoint.com/better-nested-attributes-in-rails-with-the-cocoon-gem)
 
 # Validations
 
@@ -586,10 +587,10 @@ suggestions for code organization I use mostly:
   # app/services/process.rb
   class Process
     class Result
-      attr_accessor :success, :reason
-      def initialize(success, reason)
+      attr_accessor :success, :message
+      def initialize(success, message)
         @success = success
-        @reason = reason
+        @message = message
       end
 
       def success?

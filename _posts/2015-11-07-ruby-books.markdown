@@ -31,13 +31,6 @@ Maybe not so nice to share, but also interesing index of books:
 
 * https://it-ebooks.info/tag/rails/
 
-Math and algorith tasks
-
-* https://www.hackerrank.com
-* https://projecteuler.net/
-* http://www.beatmycode.com/
-* http://codility.com/programmers/
-
 
 # Ruby
 
@@ -292,7 +285,8 @@ is private but we can
   ~~~
 * big multiline strings can be concatenated from lines similar to HERE_DOC.
   `%q()`is without interpolation, uppercase `%Q()` (or empty) is with
-  interpolation. Indent is important since lines are joined with `\n`
+  interpolation. Indent is important since lines are joined with `\n`. First
+  character is not important `%Q()` is the same as `%Q{}`
 
   ~~~
   my_str = %(
@@ -301,7 +295,7 @@ is private but we can
   )
   ~~~
 
-  You can also write as strings but without new line `\n`
+  You can also write as single line strings, without new line `\n`
 
   ~~~
   string = "this is a \
@@ -309,6 +303,16 @@ is private but we can
   string = "this is also one "\
            "long string"
   ~~~
+
+* `%W` and `%w` returns arrays (interpolated or not)
+
+   ~~~
+   >> %W(#{foo} Bar Bar\ with\ space)
+   => ["Foo", "Bar", "Bar with space"]
+
+   >> %w(#{foo} Bar Bar\ with\ space)
+   => ["\#{foo}", "Bar", "Bar with space"]
+   ~~~
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
