@@ -114,15 +114,23 @@ title: CSS and HTML tips
 .text-align-right {
   text-align: right;
 }
+
+// hide  submit buttons, since android has problems when element is not visible
+.hide-to-up {
+  position:absolute;
+  top: -1000px;
+}
 ~~~
 
 ~~~
 // Here is example to show hide buttons that are not allowed for first or last
 //
-// <ol class="hide-first-child hide-last-child">
+// <ol>
 //   <!-- iterate over li -->
-//   <li class="hide-first-target"><i class="fa fa-arrow-up"></li>
-//   <li class="hide-last-target"><i class="fa fa-arrow-down"></li>
+//   <li  class="hide-first-child hide-last-child">
+//     <a class="hide-first-target"><i class="fa fa-arrow-up"></li></a>
+//     <a class="hide-last-target"><i class="fa fa-arrow-down"></li></a>
+//   </li>
 // </ol>
 
 .hide-first-child:first-child .hide-first-target {
@@ -240,9 +248,9 @@ Bootstrap `container` has fixed width for big devices.
   provide media queries as parameter and load only for specific screen. Note
   that sass preprocessor scss `@import` will include inline the code.
 * if option select is required, we usually prompt user with one more option
-"Please select", but it is bad to allow user to pick that option "Please
-select". You can disable option, and you should force selected on it if other
-option is not selected [demo](http://jsfiddle.net/u8PWX/1/)
+  "Please select", but it is bad to allow user to pick that option "Please
+  select". You can disable option, and you should force selected on it if other
+  option is not selected [demo](http://jsfiddle.net/u8PWX/1/)
 
   ~~~
     <select onchange="this.form.submit()">
@@ -257,3 +265,7 @@ option is not selected [demo](http://jsfiddle.net/u8PWX/1/)
   ~~~
     <%= select_tag "job[job_type_id]",("<option #{ "selected='selected'".html_safe unless fjob.object.job_type_id } disabled='disabled'>Job Type</option>".html_safe+ options_from_collection_for_select(JobType.active.all, :id, :name,{selected: fjob.object.job_type_id})), { class: "e1" } %>
   ~~~
+* `<a href="javascript:void(0)">` is required when you use `onclick=` and do not
+  want page to reload
+* `input type="checkbox" onchange="perform(this.checked)` you can get value with
+  input.checked. with jquery `$(input).is(':checked')`

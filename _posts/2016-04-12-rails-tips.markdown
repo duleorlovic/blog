@@ -119,11 +119,29 @@ end
 Business logic could enable some fields (like logo) to be empty (but initially
 with with default value) so you need to separate `default_values_on_create` that
 differs from `default_values` which could get `nil` on update.
-# Order
+
+# Default Order
 
 ~~~
 default_scope { order('created_at DESC') }
 ~~~
+
+Usually default scope is not good practice (except for order). Even to trashable
+concern is bad usage, for example if you use trashed on user and comments model
+
+~~~
+rails g migration add_trashed_to_users trashed:boolean
+rails g migration add_trashed_to_comments trashed:boolean
+
+# user.rb & comment.rb
+  default_scope { where(trashed: nil) }
+  scope :trashed, -> { unscoped.where(trashed: true) }
+~~~
+
+than query `User.first.comments.trashed` will return all trashed comments from
+ALL users! `unscoped` will remove even association scopes, thanks Joseph
+Ndungu on
+[comment](http://www.victorareba.com/tutorials/creating-a-trashing-concern-in-rails-5).
 
 
 # Format date
@@ -140,6 +158,13 @@ Time::DATE_FORMATS[:myapp_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:
 Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
 Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
 ~~~
+
+`Time.now` and `Date.today` are using system time. If you are using
+`browser-timezone-rails` than timezone will be set for each request. But if you
+need something from rails console, you need to set timezone manually.
+`Time.zone = 'Belgrade' (list all in `rake time:zones:all`). It is good to
+always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
+(`1.day.from_now`)
 
 # Multiline render js response
 
@@ -295,6 +320,84 @@ heroku dump file and import in database
   sudo pg_dropcluster 9.3 main
   ~~~
 
+* dump and restore postgresql database
+
+  ~~~
+  pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
+  # pg_dump PlayCityServer_development > dump
+  ~~~
+
+  ~~~
+  rake db:drop
+  rake db:create
+  psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
+  ~~~
+  
+  To disable sql log in rails logger put this in initializer file:
+
+  ~~~
+  # config/initializers/silent_sql_log.rb
+  ActiveRecord::Base.logger.level = Logger::INFO
+  ~~~
+
+* to allow any user to log in to database, ie any user in config/database.yml
+  even without password, you need to change postgres config:
+
+  ~~~
+  sudo vi /etc/postgresql/9.1/main/pg_hba.conf
+  # change all this words [md5, ident, peer] to trust
+  sudo /etc/init.d/postgresql restart
+  ~~~
+
+  create one user:
+
+  ~~~
+  sudo su - postgres
+  psql postgres
+  CREATE ROLE "orlovic" WITH CREATEDB LOGIN;
+  \q
+
+  # you can remove with DROP ROLE orlovic;
+  # or you can change anything on role
+  # https://www.postgresql.org/docs/9.3/static/sql-alterrole.html
+  # if you need uppercased (it was created `orlovic` instead of `Orlovic`)
+  ALTER ROLE orlovic RENAME TO "Orlovic";
+  # or
+  pgadmin3 # login as postgres without password and chage it to Orlovic
+
+  # create database is with linux command
+  createdb
+  ~~~
+
+* you can use production database locally with url from heroku config env
+  variable `HEROKU_POSTGRESQL_CRIMSON_URL:
+  postgres://flvmstxfdk:3fo9O62B-Q4BZ7EP8N4YU@ec2-107-20-191-205.compute-1.amazonaws.com:5432/d5ttgvqpjs1ftb`
+  and put it inside `config/database.yml` under `development` under `url:
+  postgres://asd.asd@asd.com:123/asd` item
+
+Migrations:
+
+* if we call `Products.update_all :fuzz => 'fuzzy'` in migration, it will
+  probably break in the future, because *Products* will be validated for
+  something that we did not know on that time. Better is to create local `class
+  Product < ActiveRecord::Base;end` and call `Product.reset_column_information`
+* to change type from string to integer (using cast)
+
+  ~~~
+  class ChangeScoreTypeInFilledAnswers < ActiveRecord::Migration 
+    def up
+      change_column :filled_answers, :score, 'integer USING CAST(score AS integer)'
+    end
+    def down
+      change_column :filled_answers, :score, :string
+    end
+  end
+  ~~~
+
+* use *db/seed.rb* to add some working data (users, products) that should not go
+  to production. add data to migration file if something needs to be in db
+  (select box, customer plans)
+
 # Mailer
 
 Usefull is to have internal notification
@@ -308,7 +411,21 @@ development: &default
 
 ~~~
 # mailers/application_mailer.rb
+class ApplicationMailer < ActionMailer::Base
+  default_from Rails.application.secrets.default_mailer_sender
+  INTERNAL_NOTIFICATION_EMAIL = Rails.application.secrets.internal_notification_email
 
+  def internal_notification(subject, item)
+    mail to: INTERNAL_NOTIFICATION_EMAIL,
+         subject: subject,
+         body: "<h1>#{subject}</h1><strong>Details:</strong>" +
+           item.inspect
+             .gsub(', ', ",<br>")
+             .gsub('{', '<br>{<br>')
+             .gsub('}', '<br>}<br>'),
+         content_type: "text/html"
+  end
+end
 ~~~
 
 ~~~
@@ -569,140 +686,165 @@ suggestions for code organization I use mostly:
 
 ## Service objects
 
-  ~~~
-  # app/services/match_posts.rb
-  def MatchPosts
-    def initialize(posts)
-      @posts = posts
+~~~
+# app/services/match_posts.rb
+def MatchPosts
+  def initialize(posts)
+    @posts = posts
+  end
+
+  def perform
+  end
+end
+~~~
+
+or more complex with exception rescue.
+
+~~~
+# app/services/process.rb
+class Process
+  class Result
+    attr_accessor :success, :message
+    def initialize(success, message)
+      @success = success
+      @message = message
     end
 
-    def perform
+    def success?
+      success
     end
   end
-  ~~~
 
-  or more complex with exception rescue.
+  class ProcessException < Exception
+  end
 
-  ~~~
-  # app/services/process.rb
-  class Process
-    class Result
-      attr_accessor :success, :message
-      def initialize(success, message)
-        @success = success
-        @message = message
-      end
+  def initialize(h)
+    @user = h[:user]
+  end
 
-      def success?
-        success
-      end
-    end
+  def process(posts)
+    do_something posts
+  rescue ProcessException => msg
+    Result.new false, msg
+  end
 
-    class ProcessException < Exception
-    end
+  private
 
-    def initialize(h)
-      @user = h[:user]
-    end
+  def do_something(posts)
+    raise ProcessException, "Empty posts" unless posts.present?
+  end
+end
+~~~
 
-    def process(posts)
-      do_something posts
-    rescue ProcessException => msg
-      Result.new false, msg
-    end
+## Form Objects
 
-    private
+form objects (query objects) for multiple in multiple out data
 
-    def do_something(posts)
-      raise ProcessException, "Empty posts" unless posts.present?
+~~~
+class Search
+  include ActiveModel::Validations
+  include ActiveModel::Conversion
+  extend ActiveModel::Naming
+
+  # input
+  attr_accessor :address, :food, :pure_vegetarian, :cuisines
+
+  # output
+  attr_accessor :target_location, :users, :menu_items, :tag_counts
+
+  validates :address, presence: true
+
+  def initialize(h)
+    @address = h.try :[], :address
+    @food = h[:food]
+    @pure_vegetarian = h[:pure_vegetarian]
+    @cuisines = h[:cuisines] || []
+  end
+
+  def perform
+    filter_users_by_address
+    filter_by_pure_vegetarian if pure_vegetarian.present?
+    filter_by_any_cuisine if cuisines.present?
+    filter_by_food if food.present?
+    generate_tag_counts
+  end
+
+  private
+
+  DISTANCE_IN_MILES = 10 # 50
+  def filter_users_by_address
+    self.target_location = Geocoder.search(address).first
+    if target_location.present?
+      self.users = User.active.near(
+        [target_location.latitude, target_location.longitude],
+        DISTANCE_IN_MILES
+      )
+    else
+      self.users = User.active.near(address, DISTANCE_IN_MILES)
     end
   end
-  ~~~
 
-* form objects (query objects) for multiple in multiple out data
+  def filter_by_pure_vegetarian
+    self.users = users.where(pure_vegetarian: true)
+  end
 
-  ~~~
-  class Search
-    include ActiveModel::Validations
-    include ActiveModel::Conversion
-    extend ActiveModel::Naming
+  def filter_by_any_cuisine
+    # we use filter
+    # http://stackoverflow.com/questions/17496629/fuzzy-tag-matching-with-acts-as-taggable
+    self.users = users.tagged_with(cuisines, any: true)
+    # http://stackoverflow.com/questions/4665979/how-to-find-number-of-tag-matches-in-acts-as-taggable-on
+    # @users = @users.tagged_with(params[:cuisines], any: true).all.to_a
+    # @users.sort_by! { |o| -(params[:cuisines] & o.cuisine_list).length }
+  end
 
-    # input
-    attr_accessor :address, :food, :pure_vegetarian, :cuisines
+  def filter_by_food
+    # TODO: this does not return relation
+    # User need to have at least one MenuItem
+    search_param = "%#{food}%"
+    # we need those @menu_items results
+    @menu_items = MenuItem.joins(:user)
+                  .where(user: users.map(&:id))
+                  .where("users.business_name ILIKE ? OR "\
+                           "menu_items.name ILIKE ? " \
+                           " OR menu_items.description ILIKE ?",
+                         search_param, search_param, search_param)
+                  .limit(5)
+    self.users = users.where(id: menu_items.map(&:user).uniq)
+  end
 
-    # output
-    attr_accessor :target_location, :users, :menu_items, :tag_counts
+  def generate_tag_counts
+    # https://github.com/mbleigh/acts-as-taggable-on/blob/master/lib/acts_as_taggable_on/taggable/collection.rb#L90
+    # since we need relation and filter_by_food does not return relation
+    # and there is PG::SyntaxError: ERROR:  subquery has too many columns
+    # we will load users and use their ids
+    users_for_tags = User.where(id: users.map(&:id))
+    self.tag_counts = users_for_tags.tag_counts_on :cuisines
+  end
+end
+~~~
 
-    validates :address, presence: true
+## Concerns
 
-    def initialize(h)
-      @address = h.try :[], :address
-      @food = h[:food]
-      @pure_vegetarian = h[:pure_vegetarian]
-      @cuisines = h[:cuisines] || []
-    end
+[DHH](https://signalvnoise.com/posts/3372-put-chubby-models-on-a-diet-with-concerns) and interesting is
+[trashable](https://github.com/discourse/discourse/blob/master/app/models/concerns/trashable.rb)
 
-    def perform
-      filter_users_by_address
-      filter_by_pure_vegetarian if pure_vegetarian.present?
-      filter_by_any_cuisine if cuisines.present?
-      filter_by_food if food.present?
-      generate_tag_counts
-    end
+~~~
+module Someable
+  extend ActiveSupport::Concern
 
-    private
+  included do
+    has_many :something_else, as: :someable
+    class_attribute :tag_limit
+  end
 
-    DISTANCE_IN_MILES = 10 # 50
-    def filter_users_by_address
-      self.target_location = Geocoder.search(address).first
-      if target_location.present?
-        self.users = User.active.near(
-          [target_location.latitude, target_location.longitude],
-          DISTANCE_IN_MILES
-        )
-      else
-        self.users = User.active.near(address, DISTANCE_IN_MILES)
-      end
-    end
-
-    def filter_by_pure_vegetarian
-      self.users = users.where(pure_vegetarian: true)
-    end
-
-    def filter_by_any_cuisine
-      # we use filter
-      # http://stackoverflow.com/questions/17496629/fuzzy-tag-matching-with-acts-as-taggable
-      self.users = users.tagged_with(cuisines, any: true)
-      # http://stackoverflow.com/questions/4665979/how-to-find-number-of-tag-matches-in-acts-as-taggable-on
-      # @users = @users.tagged_with(params[:cuisines], any: true).all.to_a
-      # @users.sort_by! { |o| -(params[:cuisines] & o.cuisine_list).length }
-    end
-
-    def filter_by_food
-      # TODO: this does not return relation
-      # User need to have at least one MenuItem
-      search_param = "%#{food}%"
-      # we need those @menu_items results
-      @menu_items = MenuItem.joins(:user)
-                    .where(user: users.map(&:id))
-                    .where("users.business_name ILIKE ? OR "\
-                             "menu_items.name ILIKE ? " \
-                             " OR menu_items.description ILIKE ?",
-                           search_param, search_param, search_param)
-                    .limit(5)
-      self.users = users.where(id: menu_items.map(&:user).uniq)
-    end
-
-    def generate_tag_counts
-      # https://github.com/mbleigh/acts-as-taggable-on/blob/master/lib/acts_as_taggable_on/taggable/collection.rb#L90
-      # since we need relation and filter_by_food does not return relation
-      # and there is PG::SyntaxError: ERROR:  subquery has too many columns
-      # we will load users and use their ids
-      users_for_tags = User.where(id: users.map(&:id))
-      self.tag_counts = users_for_tags.tag_counts_on :cuisines
+  # methods defined here are going to extend the class, not the instance of it
+  module ClassMethods
+    def tag_limit(value)
+      self.tag_limit_value = value
     end
   end
-  ~~~
+end
+~~~
 
 # Unsubscribe links
 
@@ -903,6 +1045,25 @@ end
 
 * `inverse_of` is needed when you have validation errors for
   `accepts_nested_attributes_for`
+* to change class **fields_with_error** you can override
+  ActionView::Base.field_error_proc in any controller
+
+  ~~~
+  ActionView::Base.field_error_proc = Proc.new { |html_tag, instance|
+    #html = %(<div class="field_with_errors">#{html_tag}</div>).html_safe
+    # add nokogiri gem to Gemfile
+    elements = Nokogiri::HTML::DocumentFragment.parse(html_tag).css "label, input"
+    elements.each do |e|
+      if e.node_name.eql? 'input'
+        e['class'] ||= ''
+        e['class'] = e['class'] << " error"
+        html_tag = "#{e}".html_safe
+      end
+    end
+    html_tag
+  }
+  ~~~
+
 
 * for clone with associations you can use dup or clone but easiest way to with
   new (build is deprecated) json except. If you use method `as_json.exept "id"`
@@ -943,27 +1104,6 @@ end
 
 * if you put `byebug` inside `User.first_or_initialize` than you will see empty
   for `User.all`
-* dump and restore postgresql database
-
-  ~~~
-  pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
-  # pg_dump PlayCityServer_development > dump
-  ~~~
-
-  ~~~
-  rake db:drop
-  rake db:create
-  psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
-  ~~~
-  
-  To disable sql log in rails logger put this in initializer file:
-
-  ~~~
-  # config/initializers/silent_sql_log.rb
-  ActiveRecord::Base.logger.level = Logger::INFO
-  ~~~
-
-
 * for `gon` gem you should `include_gon` before other javascript files. Note
   that `if gon` will still raise error if `gon` is not called in controller (so
   `gon` is undefined)
@@ -1077,3 +1217,4 @@ end
   [link](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html)
   `weekday = t.to_a[6]`
 
+* `enum status: [:paused]` should be type integer, or it will return nil

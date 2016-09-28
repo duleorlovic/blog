@@ -4,6 +4,10 @@ title: Gulp tasks
 tags: gulp
 ---
 
+Gulp commands are simple and sometimes not intuitive, so you need to read
+[practical examples](http://julienrenaux.fr/2014/05/25/introduction-to-gulp-js-with-practical-examples/)
+before using it.
+
 # Deploy to S3
 
 You can deploy frontend code on any static web host, like AWS S3. You just need

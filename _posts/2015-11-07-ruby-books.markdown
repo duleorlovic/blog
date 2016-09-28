@@ -321,4 +321,5 @@ is private but we can
 * if your service needs a lot of validation, raise exceptions to return message.
   Look at [rails tips service example]({{ site.baseurl }}
   {% post_url 2016-04-12-rails-tips %}).
-
+* ruby caret operator `^` is bitwise XOR, if you want square use power
+  (exponent) `**`

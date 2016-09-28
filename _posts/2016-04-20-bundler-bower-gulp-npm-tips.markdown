@@ -11,6 +11,27 @@ _4.2.0_ new mystore`
 
 To rebuild Gemfile.lock you can run `bundle update`
 
+Issues:
+
+* rmagic on ubuntu 16
+
+  ~~~
+  checking for Magick-config... no
+  Can't install RMagick 2.12.0. Can't find Magick-config in
+  ...
+  An error occurred while installing rmagick (2.12.0), and Bundler cannot continue.
+  Make sure that `gem install rmagick -v '2.12.0'` succeeds before bundling.
+  ~~~
+
+  I upgraded to rmagic 2.13.2 and follow this
+  [issue](https://github.com/ttscoff/Slogger/issues/344)
+
+  ~~~
+  sudo apt-get install libmagickwand-dev
+  sudo apt-get install graphicsmagick-imagemagick-compat
+  PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
+  ~~~
+
 
 # Bower
 

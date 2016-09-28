@@ -223,8 +223,6 @@ bottom of the element.
 * if you want to break array `forEach` method when you find el, you can use
   [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break)
 
-* to search file in google developer tools you can open console window (with
-  ESC) than on three dots, open dropdown menu and find *Search*
 * to remove item `myObject` from array `myArray.splice
   myArray.indexOf(myObject),1 `
 * `!!variable` will return false only for `0, null, "", undefined, NaN` NaN=Not
@@ -379,3 +377,39 @@ at specific location so I leave it in html format, and all other move to
   end
   ~~~
 
+* submit button should be disabled when text input or textarea are blank. You
+can enable button on change, but it should listen [other
+events](http://www.w3schools.com/tags/ref_eventattributes.asp) as well so it is
+enable for example, on onpaste.
+
+~~~
+<form>
+  <input onchange="d(this)" onkeyup="this.onchange()" onpaste="this.onchange()" oninput="this.onchange()" \>
+  <button id="send_button" disabled="disabled">Send</button>
+</form>
+<script>
+function d(e){
+  document.getElementById("send_button").disabled = e.value.length == 0;
+}
+</script>
+~~~
+
+this is unobtrusive version, works for input and select elements
+
+~~~
+# app/assets/javascripts/common.coffee
+  $('[data-disable-button-if-empty]').on 'change paste keyup input', ->
+    disabled = this.value.length == 0
+    $(this).parents('form').first().find('[type=submit]').prop('disabled', disabled)
+
+  # initial status
+  $.each $('[data-disable-button-if-empty]'), (index, el) ->
+    $(el).trigger('change')
+
+# app/views/posts/form.html.erb
+    <%= f.text_field :name, class: "input-large", 'data-disable-button-if-empty' => true %>
+    <%= f.collection_select :post_id, some_posts, :id, :name, { include_blank: 'Select Package' }, class: "field span5", 'data-disable-button-if-empty' => true %>
+~~~
+
+# regex
+[match](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)

@@ -898,3 +898,59 @@ override user as_json
     r
   end
 ~~~
+
+# Redirection after sign in
+
+You can use devise method for redirections
+
+~~~
+# app/controllers/application_controller.rb
+  def after_sign_in_path_for(resource)
+    redirect_url = stored_location_for(resource)
+    return redirect_url if redirect_url.present?
+    # calculate default paths for user
+  end
+~~~
+
+If you need to store landing page for future analitics or you need to redirect
+users after specific actions, you can implement your own
+
+~~~
+# app/controllers/application_controller.rb
+  before_action :set_back_variable_into_session_if_exists
+  before_action :save_landing_page, unless: :current_user
+
+  def set_back_variable_into_session_if_exists
+    session[:_back] = params[:_back] if params[:_back].present?
+    # facebook login overwrite params and querystring so we need to use request.env to get _back param
+    # https://github.com/intridea/omniauth-oauth2/issues/28
+    session[:_back] = request.env['omniauth.params'].try(:[],'_back') if request.env['omniauth.params'].try(:[],'_back').present?
+  end
+  def save_landing_page
+    if ! session[:landing_page].present?
+      session[:landing_page] = request.fullpath
+    end
+  end
+
+  # this overrides devise default
+  def after_sign_in_path_for(resource)
+    view_context.after_log_in_path_for(resource)
+  end
+
+# app/helpets/application_helper.rb
+  def after_log_in_path_for(user)
+    track_sign_in(user) if user.customer?
+    origin = request.env['omniauth.origin'] unless [new_user_session_url, signup_jobseeker_url, signup_employer_url, user_omniauth_authorize_url(:linkedin), user_omniauth_authorize_url(:facebook)].include? "#{request.env['omniauth.origin']}".split('?').first
+    session[:_back] || origin || controller.stored_location_for(user) || if user.user?
+      job_seeker_first_step_path
+    elsif user.customer?
+      employer_after_signup_path(:subscribe)
+    elsif user.admin?
+      users_path
+    elsif user.superadmin?
+      users_path
+    else
+      root_path
+    end
+  end
+~~~

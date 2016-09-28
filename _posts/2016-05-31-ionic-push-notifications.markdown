@@ -1,26 +1,30 @@
 ---
+layout: page
 title: Ionic Push Notification
 ---
 
-# Server
+# Server side in ruby
 
 ~~~
 cat >> Gemfile <<HERE_DOC
 # for notifications Google Cloud Messaging
 gem 'gcm'
 HERE_DOC
+bundle
 
 sed -i config/secrets.yml -e '/^test:/i \
   # google cloud messaging\
-  google_api_key: <%= ENV["GOOGLE_API_KEY"] %>\
-  '
+  google_api_key: <%= ENV["GOOGLE_API_KEY"] %>'
 
 cat >> config/initializers/google-api.rb <<HERE_DOC
 MY_GCM = GCM.new Rails.application.secrets.google_api_key
 HERE_DOC
 
-rails g model NotificationToken token kind:integer user:references
-# make sure kind has default 0
+rails g model NotificationToken token kind:integer notifiable:references{polymorphic} # user:references
+# make sure kind has default 0, since we can not write that in generator
+last_migration
+
+# app/models/concerns/notifiable.rb
 
 # app/models/user.rb
 +  has_many :notification_tokens, dependent: destroy
@@ -79,19 +83,47 @@ rails g model NotificationToken token kind:integer user:references
 + end
 ~~~
 
-# Ionic PushPlugin
+# Client
 
-Following <http://ngcordova.com/docs/plugins/pushNotifications> you can easilly 
-and [PushPlugin](https://github.com/phonegap-build/PushPlugin) feature.
-It is very small delay on real devices, but on emulator is slow. Emulator should
-be build with Google API support (this is important!).
+Old plugin [PushPlugin](https://github.com/phonegap-build/PushPlugin) has been
+replaced with new
+[phonegap-plugin-push](https://github.com/phonegap/phonegap-plugin-push).
+You can use ngcordova wrappers, but I found it is easier to use directly.
 
-When app is not loaded (killed, or back button pressed) or when it is runing in
-background, notification will be shown in android status bar. Click on it to
-load the app again (if it was killed than it will start).
-When app is foreground than no notification in android status bar.
-Anyway, when you receive message you can trigger reload some of your data based
-on collapse_key.
+GCM notifications arrives with ivery small delay on real devices, but on
+emulator it could be 10 seconds.
+Emulator should be build with Google API support (this is important!).
+
+App has 3 states: not loaded (killed, or back button pressed), background and
+foreground. In every state notification will be shown in android status bar.
+Clicking on it will load the app again (if it was killed than it will start).
+Before, when app is foreground than no notification will appear in android
+status bar.
+[android.forceShow](https://github.com/phonegap/phonegap-plugin-push/blob/master/docs/API.md#pushnotificationinitoptions)
+is true than callback is called only when user click on notification (for me
+sometimes it does use callback at all, for foreground and backgroun case), if
+false (default) callback is called immediately.
+
+Anyway, when you receive message you can trigger reload for some of your data
+based on collapse_key. If collapse key is set than any new message with the same
+collapse_key will overwrite old one. There is limit of 4 different collapse_key
+at one time.
+Even I do not use collapse key, new message will overwrite old one
+[stackoverflow](http://stackoverflow.com/questions/27713624/gcm-non-collapsible-message-always-replaces-the-previous-message)
+
+# Phonegap plugin push
+
+[Install](https://github.com/phonegap/phonegap-plugin-push/blob/master/docs/INSTALLATION.md)
+all required packages:
+
+~~~
+cordova plugin add phonegap-plugin-push --variable SENDER_ID=$GOOGLE_PROJECT_NUMBER
+ionic build
+android update sdk --no-ui --all --filter "extra-android-m2repository"
+
+~~~
+
+# PushPlugin
 
 ~~~
 cordova plugin add https://github.com/phonegap-build/PushPlugin.git
@@ -225,9 +257,6 @@ angular.module('starter')
   }
 });
 ~~~
-
-* new version is https://github.com/phonegap/phonegap-plugin-push
-
 # Android Emulator
 
 I found that genymotion works fine. Just install [google play

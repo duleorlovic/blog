@@ -46,6 +46,18 @@ Codility Solutions
 * http://codesays.com/ http://codesays.com/solutions-to-training-by-codility/ 
 * http://www.martinkysel.com/codility-solutions/
 
+# Just enough ruby
+
+* read from STDIN
+
+  ~~~
+  n = gets.to_i
+  array = gets.strip.split(' ').map(&:to_i)
+  ~~~
+* division is integer division, so that `1/2 == 0` in ruby. You need to convert
+  to float `x = x.to_f`
+* iterate range `(1..10).each`
+
 # Example code
 
 ~~~
@@ -55,22 +67,96 @@ Codility Solutions
 # (a, b, c, d)
 # s_a = s_b chars at a and d are the same
 # s_b = s_c
+# constrains:
 # 0<=a<b<c<d<n
-# INPUT: string s
+# input: string s
 # 1<= |s| < 10^6
-# OUTPUT: number of (a, b, c, d) tuples, use moduo 10^9 + 7
+# output: number of (a, b, c, d) tuples, use moduo 10^9 + 7
+DEBUG = true
 
-def solution(s)
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/AbcSize
+def solution(a)
+  r = a.length
+  debug "r=#{r}"
+  r
 end
+n = gets.to_i
+a = []
+n.times do
+  # strip is needed since on hackerrank, new line is at the end of gets
+  r = gets.strip.split('').map { |c| c == '*' ? 0 : 1 }
+  a << r
+end
+
+def debug(x)
+  return unless DEBUG
+  puts name if name
+  if x.class == Array
+    need_new_line = false
+    x.each do |e|
+      if e.class == Array
+        puts e.join(', ')
+      else
+        print e.to_s + ', '
+        need_new_line = true
+      end
+    end
+    puts if need_new_line
+  else
+    puts x
+  end
+end
+puts solution(a)
 
 require 'minitest/autorun'
 class Test < Minitest::Test
   def test_sample
     s = 'kkkkkkz'
-    assert_equal solution(s), 15
+    assert_equal 12, solution(prepare(s))
+  end
+
+  def test_long
+    s = %(***.*
+**..*
+***.*
+*****
+*****)
+    assert_equal 12, solution(prepare(s))
+  end
+
+  def test_float
+    asert_in_delta 0.5, solution(1,2) # default delta=0.001
+  end
+
+  private
+
+  def prepare(s)
+    s
   end
 end
 ~~~
+
+If you want to run only one test, than run `ruby 0_short_palindrome.rb --name
+test_sample`
+
+TIPS:
+
+* if you need to perform big number of tests, and you can not calculate solution
+  but you need to iterate something, than use table of solutions. First call
+  `create_table` of results and query that `@table[n]` (if you can, fill just
+  what it needs)
+* two dimensional 2d array `@table = Array.new(n) { Array.new(n) }`
+* if stack level too deep then try to use `@table` class variables instead of
+  passing them as arguments (not much help since arguments are passed by
+  reference, but there are less number of arguments
+  [link](http://stackoverflow.com/questions/28703587/systemstackerror-when-pushing-more-than-130798-objects-into-an-array))
+
+# Complexity
+
+Ruby `Array#find` method has O(n) complexity. If array is big, you should use
+[bsearch](http://ruby-doc.org/core-2.1.5/Array.html#method-i-bsearch) O(log(n))
+Also `include?` is O(n) but hash `key?` is O(1).
 
 # Counting of elements
 
@@ -421,3 +507,22 @@ sort(a) # => [0, 2, 2, 3, 4]
   end
   dynamic_coin_changing([1,3,4],6) # => [0, 1, 2, 1, 1, 2, 2]
   ~~~
+
+# Geometry
+
+* Find line that is perpendicular to line `y = 2*x + 11` and contains `(6, -7)`
+  [video](https://www.khanacademy.org/math/geometry/hs-geo-analytic-geometry/hs-geo-parallel-perpendicular-eq/e/line_relationships)
+  Perpendicular means slope is negative inverse ie `-1/2`. Note that in ruby you
+  need to use `x = x.to_f` since `1/2==0` for integer division
+* maximum area for fixed length sides (edges) polygon has edges on circle
+  (descripted circuit) and orders does not matter
+  [link](http://www.drking.org.uk/hexagons/misc/polymax.html)
+* triangle area `s = (a+b+c)/2; P = Math.sqrt(s*(s-a)*(s-b)*(s-c));`
+
+# Math
+
+* `radius = Math.sqrt((l1/2)**2 + (l2/2)**2)`
+
+# Tutorial
+
+* <https://www.toptal.com/algorithms/interview-questions>

@@ -176,3 +176,4 @@ Look my
   -en "\n\n\n" | command` . Or you can install
   [yes](https://en.wikipedia.org/wiki/Yes_%28Unix%29) command which outputs
   `y\n` in a infinite loop
+* last folder in path `basename $(pwd)`

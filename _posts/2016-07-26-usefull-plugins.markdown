@@ -6,10 +6,14 @@ title: Usefull plugins, services and opensource stuff
 # Javascript plugins
 
 * [jbox](http://stephanwagner.me/jBox) notifications, popups ...
-* "One minute ago" can be updated automatically in this [timeago](http://timeago.yarp.com/) plugin
+* "One minute ago" can be updated automatically in this
+  [timeago](http://timeago.yarp.com/) plugin. Similarly,
+  [jquery.countdown](https://github.com/hilios/jQuery.countdown) for future
+  dates
 * [zeroclipboard](https://github.com/zeroclipboard/zeroclipboard) to copy some
 text on click
-* [jsPDF](https://github.com/MrRio/jsPDF) pdf generator [examples](http://mrrio.github.io/jsPDF/#)
+* [jsPDF](https://github.com/MrRio/jsPDF) pdf generator
+  [examples](http://mrrio.github.io/jsPDF/#)
 
 * select something
   * [tokenize](http://zellerda.com/projects/jquery/tokenize) for tags,
@@ -65,6 +69,58 @@ text on click
 * rich text editor wyswyg
   * [quill](https://quilljs.com/)
 
+  ~~~
+  <!-- app/views/layouts/application.html.erb -->
+  <script src="//cdn.quilljs.com/1.0.3/quill.min.js" type="text/javascript"></script>
+  <link href="//cdn.quilljs.com/1.0.3/quill.snow.css" rel="stylesheet">
+  ~~~
+
+  ~~~
+  # app/assets/javascript/quill.coffee
+  $(document).on 'ready page:load', ->
+    options =
+      debug: 'info'
+      modules:
+        toolbar: [
+          ['bold', 'italic', 'underline']
+          ['blockquote', 'code-block']
+          [{ 'header': 1 }, { 'header': 2 }]
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+          [{ 'script': 'sub'}, { 'script': 'super' }]
+          [{ 'indent': '-1'}, { 'indent': '+1' }]
+          [{ 'direction': 'rtl' }]
+          [{ 'size': ['small', false, 'large', 'huge'] }]
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }]
+          [{ 'color': [] }, { 'background': [] }]
+          [{ 'font': [] }]
+          [{ 'align': [] }]
+          ['clean']
+        ]
+      theme: 'snow'
+    syncHtml = ->
+
+    $('[data-quill-editor]').each ->
+      editoContainer = $(this).get(0)
+      quill = new Quill(editoContainer, options)
+      $targetInput = $(this.dataset.quillEditor)
+      quill.on 'text-change', ->
+        newHtml = $(editoContainer).find('.ql-editor').html()
+        $targetInput.val newHtml
+  ~~~
+
+  ~~~
+  <%# app/views/admin/pages/show.html.erb %>
+  <div data-quill-editor="#editor-content">
+    <%=raw @page.content %>
+  </div>
+  <%= form_for @page, url: admin_page_path(@page) do |f| %>
+    <%= f.hidden_field :content, id: 'editor-content' %>
+    <%= f.submit 'Update', 'data-disable-with' => 'Processing...' %>
+  <% end %>
+  <%= link_to 'Preview', root_path + @page.permalink %>
+  <%= link_to "Back", admin_pages_path %>
+  ~~~
+
 # Graphs
 
 * [graphs
@@ -75,10 +131,7 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 [parallel](http://exposedata.com/parallel/) and the best is
 [grafana](http://play.grafana.org/)
 * [d3 for charts](http://plottablejs.org/examples/)
-
-# Chrome plugins and firefox extensions
-
-* [user agent switcher](https://github.com/chrispederick/user-agent-switcher/) 
+* [chartjs](http://www.chartjs.org/)
 
 # Free tier services
 
@@ -117,16 +170,6 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 * [gentelella](https://github.com/puikinsh/gentelella)
 [preview](https://colorlib.com/polygon/gentelella/index.html) [rails
 version](https://github.com/iogbole/gentelella_on_rails)
-
-# Chrome developer tools
-
-* [network tab filter
-  request](https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/resource-loading#filter-requests)
-  will filter by filename containg the string `posts`. But it also supports
-  keywords with autosuggestions. Examples: `domain:*.com`, `larger-than:1K`, 
-* to clear autofill suggestions you can use keyboard shortcut. First select
-  suggestion with UP or Down arrows than press Shift + Delete
-  [answer](https://support.google.com/chrome/answer/142893?p=settings_autofill&rd=1)
 
 # Nice design and ui tools
 
