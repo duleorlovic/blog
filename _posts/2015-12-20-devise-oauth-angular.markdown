@@ -685,21 +685,25 @@ angular.module 'starter'
 
 # www/js/interceptors/csrf.interceptor.coffee
 # http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on
-angular.module 'myappAngular'
+window.csrfRepeated = false
+angular.module 'starter'
   .factory 'csrfInterceptor', ($q, $injector) ->
     responseError: (rejection) ->
       if rejection.status == 422 &&
       rejection.data.error == 'Invalid authenticity token'
-        deferred = $q.defer()
+        console.log "CSRF error so try again and only one time"
+        if ! window.csrfRepeated
+          window.csrfRepeated = true
+          deferred = $q.defer()
 
-        successCallback = (resp) ->
-          deferred.resolve(resp)
-        errorCallback = (resp) ->
-          deferred.reject(resp)
+          successCallback = (resp) ->
+            deferred.resolve(resp)
+          errorCallback = (resp) ->
+            deferred.reject(resp)
 
-        $http = $http || $injector.get('$http')
-        $http(rejection.config).then(successCallback, errorCallback)
-        return deferred.promise
+          $http = $http || $injector.get('$http')
+          $http(rejection.config).then(successCallback, errorCallback)
+          return deferred.promise
 
       $q.reject(rejection)
 

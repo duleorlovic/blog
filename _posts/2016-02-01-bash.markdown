@@ -128,7 +128,8 @@ Look my
   you should use quotes since something could not be defined `if [ -n "$a" ]`
 
 * call function with `$(function_name)` and print variable with `$variable_name`
-  (without brackets)
+  (without brackets). If you need to concatenate with other string you can use
+  curly braces `${variable_name}other_string`
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
 * find 

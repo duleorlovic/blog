@@ -290,6 +290,12 @@ bottom of the element.
   ` resultCart = service.carts.filter (cart) -> cart.id == restaurant.id`
 
 
+* print empty lines in log
+
+  ~~~
+  console.log ("\n" for x in [0..10]).join('')
+  ~~~
+
 * [fat arrow =>](http://coffeescript.org/#fat-arrow) allow to `this` in callback
   functions
 

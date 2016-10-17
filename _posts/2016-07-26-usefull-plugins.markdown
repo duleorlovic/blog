@@ -132,6 +132,8 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 [grafana](http://play.grafana.org/)
 * [d3 for charts](http://plottablejs.org/examples/)
 * [chartjs](http://www.chartjs.org/)
+* arrows and grouping
+  <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
 
 # Free tier services
 

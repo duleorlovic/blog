@@ -66,8 +66,37 @@ angular.module 'starter'
 # www/js/locationTicke/locationTicket.controller.coffee
 ~~~
 
-Note that   url` could be a function that will be evaluated at runtime (usefull
-if you need to change api url depending on which user is logged in).
+Note that
+[resource-url](https://github.com/FineLinePrototyping/angularjs-rails-resource#resource-urls)
+could be a function that will be evaluated at runtime (usefull if you need to
+change api url depending on which user is logged in).  You can set context with
+
+~~~
+Item.query({category: 'Software'}, {storeId: 123}) // would generate a GET to /stores/123/items?category=Software
+Item.get({storeId: 123, id: 1}) // would generate a GET to /stores/123/items/1
+~~~
+
+I use that context to change url for my custom methods.
+
+~~~
+# some controller
+LocationTicket.query({}, info: true).then (info) ->
+  vm.info = info
+
+# www/js/resources/locationTicket.resource.coffee
+angular.module 'starter'
+  .factory 'LocationTicket', (railsResourceFactory, CustomerAuth) ->
+    railsResourceFactory
+      url: (context) ->
+        if context && context.id
+          CustomerAuth.locationServerUrl + '/api/v1/location_tickets/' +
+          context.id
+        else if context.info
+          CustomerAuth.locationServerUrl + '/api/v1/location_tickets/info'
+        else
+          CustomerAuth.locationServerUrl + '/api/v1/location_tickets'
+      name: 'location_ticket'
+~~~
 
 I use interceptor for loader. Also show toast if flag is set like
 `cart.showToastOnError = true; cart.delete()`. For some resource I show toast
@@ -146,6 +175,9 @@ use finally to clean up that resource for later `.save()`
       .finally ->
         user.signInAs = false
 ~~~
+
+[Adding custom
+methods](https://github.com/FineLinePrototyping/angularjs-rails-resource/blob/master/EXAMPLES.md#adding-custom-methods-to-a-resource) 
 
 # Example apps for Angular Rails:
 

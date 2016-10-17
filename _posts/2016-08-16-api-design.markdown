@@ -77,8 +77,7 @@ HTTP body can contain json data.
 * errors give us more info but for sensitive info we could send only `head
   :not_found` but its better to send the reason:
   * *303 See Other* when session create email does not exists
-  * *400 Bad Request*  `if ! @user.update() render json: @user.errors, status:
-    :bad_request` or `ParameterMissing`
+  * *400 Bad Request*  `:bad_request` or `ParameterMissing`
   * *401 Unauthorized* used for wrong password on login form, or when there is
     no current_user but it should exists. Note that it should not send when user
     is changing password and type incorect old one (he still should be logged
@@ -88,7 +87,8 @@ HTTP body can contain json data.
   * *404 Not Found* url is not valid router or resource does not exist
   * *410 Gone* data has been deleted, deactivated ...
   * *422 Unprocessable Entity* change password form but current password is bad,
-    or form validation errors
+    or form validation errors `if ! @user.update() render json: @user.errors.full_messages.join(','), status: :unprocessable_entity`
+
 * server
   * `500 Internal Server Error` unexpected happened on server side
   * `503 Service Unavailable` api is overloaded or in maintenance mode

@@ -150,7 +150,7 @@ Ruby define scope of variable using its name, precisely, first char:
     ~~~
 
     but you can access from closure definitions such: `define_method`, `proc` or
-    `lambda` or plain old `begin end` block, 
+    `lambda` or plain old `begin end` block
 
   * `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and
     `self` which is global maintaned by interpreter). Constant can be changed
@@ -323,3 +323,18 @@ is private but we can
   {% post_url 2016-04-12-rails-tips %}).
 * ruby caret operator `^` is bitwise XOR, if you want square use power
   (exponent) `**`
+* if you do not know where something is called, for example some validation
+  errors is added, you can dynamically extend objects
+  [link](http://blog.iempire.ru/2016/09/23/breaking-points). So create module in
+  runtime and extend the object or class, so it will stop on next `errors#add`
+  method
+
+  ~~~
+  mod = Module.new do
+    def add(*args)
+      binding.pry
+      super
+    end
+  end
+  credit_card.errors.extend(mod)
+  ~~~

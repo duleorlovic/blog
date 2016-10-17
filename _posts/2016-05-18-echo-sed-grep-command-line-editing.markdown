@@ -160,3 +160,7 @@ In vim:
 * note that `'regex'` is not the same as `"regex"` in terms of escaping so
   * `'\(asd\\|qwe\)'` is the same as `"\\(asd\\\|qwe\\)"`
 
+# AWK
+
+* split by one char: `echo "1:3" | awk '{split($0,a,":");print a[1] a[2]}' # 13`
+* split by multiple char: `echo "1:3x5" | awk -F':|x' '{print $1 $2 $3}' # 135`

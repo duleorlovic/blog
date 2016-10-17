@@ -156,7 +156,8 @@ TIPS:
 
 Ruby `Array#find` method has O(n) complexity. If array is big, you should use
 [bsearch](http://ruby-doc.org/core-2.1.5/Array.html#method-i-bsearch) O(log(n))
-Also `include?` is O(n) but hash `key?` is O(1).
+Also `include?` is O(n) but hash `key?` is O(1). So instead of big time, you can
+use big space by using Hashtables.
 
 # Counting of elements
 

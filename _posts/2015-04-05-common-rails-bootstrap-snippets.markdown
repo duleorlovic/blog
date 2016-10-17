@@ -449,6 +449,10 @@ For various ways of integrating Angular look at
 
 # Simplify secrets and add smtp credentials
 
+YML file can use anchor (`&`) and reference (`*`) so you do not repeat the code.
+When you use reference `*` (as for testing) you can not add or update keys, but
+with `<<` you can (as for production):
+
 ~~~
 cat > config/secrets.yml << HERE_DOC
 # export keys in your .profile file

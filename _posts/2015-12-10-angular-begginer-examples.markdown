@@ -10,8 +10,9 @@ Some of angular attribute directives:
   controllers
 * `ng-controller="StoreController as store"` defines controller, but it is
   usually defined in routes for specific template
-* `ng-repeat="product in store.products"` iteration of this element (you can 
-  use also `ng-if="$even"`, or `$index` variables)
+* `ng-repeat="product in store.products"` iteration of this element (you can
+  use also `ng-if="$even"`, or `$index` variables). Iterating over object is
+  `ng-repeat="(key, value) in data"`
 * `ng-show="product.CanPurchase"`,`ng-hide="expession"`, `ng-disabled="mySwitch"`
   to show/hide/disable element. In contrast, `ng-if` adds new scope or totally
   removes DOM element.
@@ -555,7 +556,8 @@ is not so simple, so here are examples:
 * query params are defined like `?contactId`
 * navigating with
   [ui-sref](https://github.com/angular-ui/ui-router/wiki/Quick-Reference#ui-sref)
-  `ui-sref="admin.menu_items({staurantId: restaurant.id})"`
+  `ui-sref="admin.menu_items({staurantId: restaurant.id})"` or with `$state.go
+  'tab.location_ticket_details', locationTicketId: locationTicket.id`
 * [ui-sref-active](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.directive:ui-sref-active) to add class on navigational links that are active
 * if you want to completely change the template with edit template, than wrap it
 

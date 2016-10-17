@@ -146,7 +146,7 @@ Ndungu on
 
 # Format date
 
-Write datetime in specific format
+Write datetime in specific my_time format
 
 ~~~
 # config/initializers/mytime_formats.rb
@@ -154,7 +154,7 @@ Write datetime in specific format
 # puts Time.now.to_s :myapp_time
 # puts Date.today.to_time :myapp_time # Date object need to be type casted to Time
 # puts Time.now.to_date :myapp_date # Time object to Date if we want myapp_date
-Time::DATE_FORMATS[:myapp_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
+Time::DATE_FORMATS[:at_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
 Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
 Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
 ~~~
@@ -374,13 +374,57 @@ heroku dump file and import in database
   postgres://flvmstxfdk:3fo9O62B-Q4BZ7EP8N4YU@ec2-107-20-191-205.compute-1.amazonaws.com:5432/d5ttgvqpjs1ftb`
   and put it inside `config/database.yml` under `development` under `url:
   postgres://asd.asd@asd.com:123/asd` item
+* you can use [rails counter
+  cache](http://guides.rubyonrails.org/association_basics.html#options-for-belongs-to-counter-cache)
+  with `belongs_to :author, counter_cache: true` but than you need to have
+  `authors.books_count` column. It is easier to have [sql for counter
+  cache](https://medium.com/@eric.programmer/the-sql-alternative-to-counter-caches-59e2098b7d7#.cmuuhtayh)
+
+  ~~~
+  # app/models/author.rb
+  class Author < ApplicationRecord
+    scope :with_counts, -> {
+      select <<~SQL
+        authors.*,
+        (
+          SELECT COUNT(books.id) FROM books
+          WHERE author_id = authors.id
+        ) AS books_count
+      SQL
+    }
+  end
+
+  # app/controllers/authors_controller.rb
+
+  @authors = Author.with_counts.all
+  @author = Author.with_counts.find params[:id]
+
+  # app/views/authors/index.html.erb
+
+  <% @authors.each do |author| %>
+    <% autor.books_count %>
+  <% end %>
+  <%= @author.books_count %>
+  ~~~
+
 
 Migrations:
 
-* if we call `Products.update_all :fuzz => 'fuzzy'` in migration, it will
+* if we call `Products.update_all fuzz: 'fuzzy'` in migration, it will
   probably break in the future, because *Products* will be validated for
-  something that we did not know on that time. Better is to create local `class
-  Product < ActiveRecord::Base;end` and call `Product.reset_column_information`
+  something that we did not know on that time. Better is to create local class
+  and call reset column information:
+
+  ~~~
+  # db/migrate/20161010121212_update_fuzz.rb
+  class UpdateFuzz < ACtiveRecord::Migration
+    class Product < ActiveRecord::Base;
+    end
+    Product.reset_column_information
+    Product.update_all fuzz: 'fuzzy'
+  end
+  ~~~
+
 * to change type from string to integer (using cast)
 
   ~~~
@@ -923,6 +967,19 @@ end
     'logo.png' %>` as it was underscored in erb, use hyphenated in sass
     `asset-url("logo.png")`. But in recent Rails 4, you can use normal
     `url("logo.png")`
+  * for coffeescript you need to add extension `customers.coffee.erb` and use
+    this initialization file
+
+  ~~~
+  config/initializers/sprockets.rb
+  Rails.application.config.assets.configure do |env|
+    env.context_class.class_eval do
+      # include MyAppHelper
+      include Rails.application.routes.url_helpers
+    end
+  end
+  ~~~
+
 * parse url to get where user come from `URI.parse(request.referrer).host`
 * always use `@post.destroy` instead of `@post.delete` because it propagates
   to all `has_many :comments, dependent: :destroy` (also need to define this
@@ -1218,3 +1275,36 @@ end
   `weekday = t.to_a[6]`
 
 * `enum status: [:paused]` should be type integer, or it will return nil
+* if you have
+  `/home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2.rb:31:in
+  `require': libmysqlclient.so.18: cannot open shared object file: No such file
+  or directory -
+  /home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2/mysql2.so
+  (LoadError)` than simply `gem uninstall mysql2;gem install mysql2`
+
+* params usually need to be striped, so you can use this code to get rid of all
+  unnecessary spaces
+
+  ~~~
+  params_contact_striped = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.split.join(" ") } # strip spaces
+  ~~~
+
+  or you can do in before save callback
+
+  ~~~
+  # app/models/contact.rb
+    before_save :strip_fields
+
+    def strip_fields
+      self.email.strip! if email.present?
+      self.first_name.strip! if first_name.present?
+    end
+  ~~~
+
+* also if you want to replace '\n' new lines in text area with <br> so it looks
+  the same when displaying it. Example is with nested associated elements:
+
+  ~~~
+  params[:contact] = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.each_with_object({}) { |(k1,v1),o1| o1[k1] = (v1.class == String ? v1.gsub(/\n/,'<br>'): v1) } }
+  ~~~
+

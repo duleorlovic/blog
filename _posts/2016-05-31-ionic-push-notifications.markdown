@@ -3,6 +3,28 @@ layout: page
 title: Ionic Push Notification
 ---
 
+# Keys
+
+You need to register a project on <https://console.developers.google.com> and
+enable "Google Cloud Messaging". Create API key and save as GOOGLE_API_KEY .
+
+You will also need project number, top righ "Project Settings" and go to the
+[settings](
+https://console.developers.google.com/iam-admin/settings/project?project=cybernetic-tide-90121)
+It is not Project ID, but it is just 12 numbers like 123123. Save it as
+GOOGLE_PROJECT_NUMBER
+
+You can install Chrome extension to register a client [google chrome example gcm
+notifications](https://github.com/GoogleChrome/chrome-app-samples/tree/master/samples/gcm-notifications)
+
+[pushwoosh
+extension](https://chrome.google.com/webstore/detail/pushwoosh-gcm-notificatio/ndeeiaalfemhaahglpildclkgilgnfce/related?hl=en)
+can register but it can not receive messages.
+
+There is nice explanation how to create notification on your site
+<https://developers.google.com/web/updates/2015/03/push-notifications-on-the-open-web?hl=en>
+
+
 # Server side in ruby
 
 ~~~
@@ -25,27 +47,34 @@ rails g model NotificationToken token kind:integer notifiable:references{polymor
 last_migration
 
 # app/models/concerns/notifiable.rb
+module Notifiable
+  extend ActiveSupport::Concern
+  included do
+    has_many :notification_tokens, as: :notifiable
+  end
+  class_methods do
+    def send_messages(message = "Hi All from myapp", collapse_key = nil, additional_data = nil)
+      tokens = all.map do |user|
+        user.notification_tokens.map(&:token)
+      end.flatten
+      send_to_tokens(tokens, message, collapse_key, additional_data)
+    end
 
-# app/models/user.rb
-+  has_many :notification_tokens, dependent: destroy
-+
-+  def self.send_messages(message = "Hi from myapp", collapse_key = 'do_not_collapse')
-+    options = { data: { message: message }, collapse_key: collapse_key }
-+    tokens = all.map do |user|
-+      user.notification_tokens.map(&:token)
-+    end.flatten
-+    logger.debug user_send_messages_tokens: tokens
-+    response = MY_GCM.send(tokens, options)
-+    logger.debug response_body: response[:body]
-+    response[:body]
-+  end
-+
-+  def send_message(message = "Hi from myapp", collapse_key = 'do_not_collapse')
-+    options = { data: { message: message }, collapse_key: collapse_key }
-+    response = MY_GCM.send(notification_tokens.map(&:token), options)
-+    logger.debug response[:body]
-+    response[:body]
-+  end
+    def send_to_tokens(tokens, message, collapse_key, additional_data)
+      data = { message: message }.merge additional_data
+      data = data.merge collapse_key: collapse_key
+      response = MY_GCM.send(tokens, data: data)
+      XceednetMailer.internal_notification('push message', tokens: tokens, data: data, response_body: response[:body]).deliver_now if Rails.env.development?
+      logger.info response[:body]
+      response[:body]
+    end
+  end
+
+  def send_message(message = "Hi from myapp", collapse_key = nil, additional_data = nil)
+    tokens = notification_tokens.map(&:token)
+    self.class.send_to_tokens(tokens, message, collapse_key, additional_data)
+  end
+end
 
 # config/routes.rb
 +      resources :notification_tokens
@@ -120,7 +149,6 @@ all required packages:
 cordova plugin add phonegap-plugin-push --variable SENDER_ID=$GOOGLE_PROJECT_NUMBER
 ionic build
 android update sdk --no-ui --all --filter "extra-android-m2repository"
-
 ~~~
 
 # PushPlugin

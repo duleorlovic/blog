@@ -163,8 +163,16 @@ t yy
 
 * using vim inside irb or rails console with gem [interactive_editor](https://github.com/jberkel/interactive_editor). Its usefull since you can paste only limited number of chars to irb line. Now you can write your input data in file/ruby code and insert byebug/debuger/pry in rails code, and start hunting for bugs 
 
-* videos
+videos
+
 * <https://www.youtube.com/watch?v=5r6yzFEXajQ>
+* [--noplugin](https://www.youtube.com/watch?v=XA2WjJbmmoM)
+
+  ~~~
+  # fuzzi finder
+  set path+=**
+  find *-vim
+  ~~~
 
 # Syntastic checker
 

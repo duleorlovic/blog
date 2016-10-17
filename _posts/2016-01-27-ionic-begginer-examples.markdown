@@ -77,7 +77,9 @@ git add . && git commit -m "ionic add android && ionic upload"
 ionic share some@email.com
 
 ionic serve # to see it in browser (rebuild also)
-ionic emulate -lcs # to run in emulator with live reload and logs (rebuild also)
+# to run in emulator with live reload and logs (rebuild also)
+# --target to select emulator
+ionic emulate -lcs --target=googleapi21
 ionic run --target 123123 # to run on device, find device name with adb devices
 # note that `run` will not rebuild, it will just install latest configured apk
 # note that it will rebuild and use env vars if `-l` parameter is used
@@ -567,8 +569,14 @@ Nice feature is to put forms inside
 You should clear data when modal is canceled
 
 ~~~
+# www/js/login/login.jade
+          .text-center
+            a(ng-click="vm.resetPasswordModal.show()") Forgot Password?
+
 # www/js/login/login.controller.coffee
-    vm.
+angular.module 'starter'
+  .controller 'LoginController', ($ionicModal, $scope) ->
+    vm.usernameOrMobileNo = ''
     $ionicModal.fromTemplateUrl(
       'jade_build/js/login/resetPassword.html'
       scope: $scope
@@ -578,6 +586,15 @@ You should clear data when modal is canceled
     # clear modal fields when user cancel modal
     $scope.$on 'modal.hidden', ->
       vm.usernameOrMobileNo = ''
+
+    vm.resetPassword = (usernameOrMobileNo) ->
+      CustomerAuth.resetPassword(usernameOrMobileNo).then(
+        (response) ->
+          vm.resetPasswordModal.hide()
+          NotifyService.toast response.data.message
+          vm.usernameOrMobileNo = ''
+        NotifyService.errorToast
+      )
 
 # www/js/login/resetPassword.jade
 ion-modal-view
@@ -594,6 +611,7 @@ ion-modal-view
         ng-model="vm.usernameOrMobileNo")
       .padding
         button.button.button-block.button-positive(type="submit") Submit
+
 ~~~
 
 # Common errors
@@ -666,30 +684,27 @@ telnet localhost 5554
 # Android dns for local server
 
 On Android emulator `127.0.0.1` will not point to your machine! Also your
-`/etc/hosts` file will not be used. There are sevelar solutions
+`/etc/hosts` file will not be used. You can change hosts on android phone.
+All changes will last only until you reboot emulator. If you want to make it
+permanent, copy system.img to system-qemu.img (new file in specific folder),
+and than make changes that you want to be permanent. You also need to increase
+partition-size and remount before those changes on new disk.
+Here is example of updating hosts file on android emulator, for example `n4`
+[link](http://www.bradcurtis.com/hosts-files-and-the-google-android-emulator/)
 
-* change hosts file on android emulator, for example `n4`
-  [link](http://www.bradcurtis.com/hosts-files-and-the-google-android-emulator/)
+~~~
+cp ~/Android/Sdk/system-images/android-17/default/x86/system.img ~/.android/avd/n4.avd/system-qemu.img
+# boot again emulator and repeat steps below
 
-  ~~~
-  emulator -avd n4 -partition-size 512 &
-  adb remount
-  adb pull /system/etc/hosts .
-  echo "192.168.2.4 my-domain.dev" >> hosts
-  echo "192.168.2.4 mylocationsubdomain.my-domain.dev" >> hosts
-  adb push hosts /system/etc
-  adb shell cat /etc/hosts
-  ~~~
+emulator -avd n4 -partition-size 512 &
+adb remount
+adb pull /system/etc/hosts .
+echo "192.168.2.4 my-domain.dev" >> hosts
+echo "192.168.2.4 mylocationsubdomain.my-domain.dev" >> hosts
+adb push hosts /system/etc
+adb shell cat /etc/hosts
+~~~
 
-  This will last only until you reboot emulator. If you want to make it
-  permanent, copy system.img to system-qemu.img (new file in specific folder),
-  and than make changes that you want to be permanent. You also need to increase
-  partition-size and remount before those changes on new disk.
-
-  ~~~
-  cp ~/Android/Sdk/system-images/android-17/default/x86/system.img ~/.android/avd/n4.avd/system-qemu.img
-  # boot again emulator and repeat steps above
-  ~~~
 
 # Deploy production
 
@@ -793,6 +808,7 @@ angular.module('starter')
         alert text
       console.log text
     this.errorToast = (message) ->
+      # if message is response, try to get message.data.error
       this.toast(message)
       # notify your server
     this.log = (message) ->
