@@ -4,11 +4,27 @@ title:  Rails through Vagrant to DigitalOcean
 tags: ruby-on-rails vagrant digitalocean
 ---
 
-When a lot of people are working on the same Rails application, than *Vagrant* 
-could help to set up environment quick and easy.
-Even Vagrant is not recommended for production, it is very usefull for testing
-bootstrap scripts automatically. For production we can simply copy bootstrap
-script and run commands manually.
+When a lot of people are working on the same Rails application, than
+*Vagrant* could help to set up environment quick and easy.  Even Vagrant
+is not recommended for production, it is very usefull for testing
+bootstrap scripts automatically. For production we can simply copy
+bootstrap script and run commands manually.
+
+# Vagrant
+
+Default user/password is `vagrant/vagrant`
+
+~~~
+vagrant init
+vagrant up
+vagrant ssh
+vagrant halt
+vagrant destroy
+~~~
+
+## Linux
+
+Run command as `deployer` user. Usually need to wrap inside `bash` if you have pipe `|`, for example `sudo -i -u deployer bash -c "ls | less -R"`
 
 # Deploy Ruby on Rails to VirtualBox
 

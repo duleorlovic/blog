@@ -145,7 +145,15 @@ end
 # Adding Table of Content
 
 
-If you need automatic Toc than use [jekyll-toc-generator](https://github.com/dafi/jekyll-toc-generator). I put [defaults](http://jekyllrb.com/docs/configuration/#front-matter-defaults) to not have a Toc, and enable on post that I want Toc to show.
+If you need automatic Toc than use
+[dafi jekyll-toc-generator](https://github.com/dafi/jekyll-toc-generator).
+
+I modify to use original id-s (that is hypernated version of header content) in
+[duleorlovic/jekyll-toc-generator](https://github.com/duleorlovic/jekyll-toc-generator/commit/9c83b67e183600bb51dcea533aaa8eeeae4eb18a)
+
+You can put
+[defaults](http://jekyllrb.com/docs/configuration/#front-matter-defaults) to not
+have a Toc, and enable on post that you want Toc to show.
 
 ~~~
 # _config.yml

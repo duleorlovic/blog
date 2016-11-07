@@ -137,7 +137,9 @@ Some of the most used capybara methods [link](https://gist.github.com/duleorlovi
 
 Than we go in details for frontend controller, backend controller and model test and make sure integration test pass.
 
-We can setup data using `let` or simply inside `it`
+We can setup data using `let` or simply inside `it`.
+[post](https://robb.weblaws.org/2016/10/20/why-i-dont-use-letlet-in-my-rspec/?)
+suggests that `let` should be replaced with instance variable.
 
 ~~~
 # spec/features/search_spec.rb
@@ -211,3 +213,18 @@ Do not use `it` outside of inner describe block
 https://gist.github.com/kyletcarlson/6234923
 
 https://www.youtube.com/watch?v=YjHKetQxk5I
+
+# Minitest
+
+For Minitest you need to install minitest gem and require it. You can `skip`
+single test. Run with colors `ruby my_class_test.rb -p`, or `ruby -r
+minitest/pride my_class_test.rb` or put `require 'pride'` in test file.
+
+~~~
+require 'minitest/autorun'
+class MyClassTest < Minitest::Test
+  def test_sample
+    assert MyClass.new
+  end
+end
+~~~

@@ -4,9 +4,11 @@ title: Google Maps and Locations
 categories: google location-suggestion maps
 ---
 
+# Installation
+
 As for any other google api, [Google Maps Javascript
 API](https://developers.google.com/maps/documentation/javascript/tutorial)
-requires GOOGLE_API_KEY. Use it in loading
+requires GOOGLE_API_KEY. You need it when you loading the script
 
 ~~~
 <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_API_KEY&callback=initMap"
@@ -17,43 +19,44 @@ You can load additional libraries using `libraries=` parameter. If the map is
 not the main feauture of the site, I prefer to load it in javascript when
 needed.
 
+For your google console project you need to enable relevant api: *Google Maps
+Javascript API* or *Google Static Maps API* *Google Places API Web Service* ...
+
 Start with samples, for example:
-* [geocoding](https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple) get locatio based on address
+
+* [geocoding](https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple)
+  input is address, output is location
 * [autocomplete](https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete)
   show suggestions for adress input
 
 # Edit location for some object
 
-Use this helper in edit.html with form object, and in show with object:
+Use this helper in edit.html with form object, and on show page with object.
+You do not need to create input fields, it will do it (you can change
+`text_field` to `hidden_field` if you want to hide it).
 
 ~~~
-# app/views/contacts/_form.html.erb
-  <%= edit_map f %>
-
-# app/views/contacts/show.html.erb
-  <%= show_map @contact %>
-
-# app/views/contacts/index.html.erb
-  <%= show_all_map @contacts %>
-
 # app/helpers/map_helper.rb
+# rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/MethodLength
 module MapHelper
+  INITIAL_LATITUDE = 51
+  INITIAL_LONGITUDE = -114
+  INITIAL_ZOOM = 5
   def edit_map(form_object)
     if form_object.object.latitude
-      already_have_position = true
       latitude = form_object.object.latitude
       longitude = form_object.object.longitude
       zoom_level = 17
     else
-      already_have_position = false
-      latitude = 20
-      longitude = 80
-      zoom_level = 5
+      latitude = INITIAL_LATITUDE
+      longitude = INITIAL_LONGITUDE
+      zoom_level = INITIAL_ZOOM
     end
-    content = form_object.hidden_field(:latitude, id: 'latitude-input')
-    content << form_object.hidden_field(:longitude, id: 'longitude-input')
-    content << text_field_tag(:address_suggestions, nil, placeholder: 'Write approximate address and drag')
-    content << content_tag(:div, nil, id: 'preview-map', style: 'height:300px;width:100%' )
+    content = text_field_tag(:address_suggestions, nil, placeholder: 'Write approximate address and drag')
+    content << content_tag(:div, nil, id: 'preview-map', class: 'edit-map-container')
+    content << form_object.text_field(:latitude, id: 'latitude-input')
+    content << form_object.text_field(:longitude, id: 'longitude-input')
     content << %(
       <script>
         function updateFields(position) {
@@ -68,18 +71,17 @@ module MapHelper
           });
           var autocomplete = new google.maps.places.Autocomplete(
             document.getElementById('address_suggestions'),
-            { componentRestrictions: {country: 'in'} }
+            { componentRestrictions: {country: 'ca'} }
           );
           var marker = new google.maps.Marker({
             map: map,
             anchorPoint: new google.maps.Point(0, -29),
             draggable: true,
             animation: google.maps.Animation.DROP,
-            #{form_object.object.latitude.present? ?
-            "position: {
+            #{"position: {
                lat: #{latitude},
                lng: #{longitude},
-             }," : "" }
+             }," if form_object.object.latitude.present?}
           });
           autocomplete.bindTo('bounds', map);
           autocomplete.addListener('place_changed', function() {
@@ -111,11 +113,30 @@ module MapHelper
     content << async_load
   end
 
+  # https://developers.google.com/maps/documentation/static-maps/intro
+  def show_static_map(object, options = {})
+    latitude = object.latitude
+    longitude = object.longitude
+    return "<div class='map-not-set'>Map position is not set</div>".html_safe unless latitude
+    img_options = {}
+    img_options[:class] = options[:class] if options[:class].present?
+    url = "//maps.googleapis.com/maps/api/staticmap?"
+    url += "size=70x70"
+    # custom icon must be http:// not https://
+    # markers=icon:http://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png|
+    url += "&markers=|#{latitude},#{longitude}"
+    # you need to enable "Google Static Maps API"
+    url += "&key=#{Rails.application.secrets.google_api_key}"
+    link_to "http://maps.google.com/?q=#{latitude},#{longitude}" do
+      image_tag url, img_options
+    end
+  end
+
   def show_map(object)
     latitude = object.latitude
     longitude = object.longitude
-    return "<h4>Map position is not set</h4>".html_safe unless latitude
-    content = content_tag(:div, nil, id: 'preview-map', style: 'height:300px;width:100%' )
+    return "<div class='map-not-set'>Map position is not set</div>".html_safe unless latitude
+    content = content_tag(:div, nil, id: 'preview-map', class: 'show-map-container')
     content << %(
       <script>
         function initialize_google() {
@@ -127,11 +148,10 @@ module MapHelper
           var marker = new google.maps.Marker({
             map: map,
             animation: google.maps.Animation.DROP,
-            #{latitude.present? ?
-            "position: {
+            #{"position: {
                lat: #{latitude},
                lng: #{longitude},
-             }," : "" }
+             }," if latitude.present?}
           });
         } // function initialize_google
       </script>
@@ -151,16 +171,16 @@ module MapHelper
         url: location_node_path(location_node),
       }
     end
-    content = content_tag(:div, nil, id: 'preview-map', style: 'height:300px;width:100%' )
+    content = content_tag(:div, nil, id: 'preview-map', class: 'show-all-map-container')
     content << %(
       <script>
         function initialize_google() {
           console.log('initializing google autocomplete');
           var map = new google.maps.Map(document.getElementById('preview-map'), {
-            center: {lat: 20, lng: 80},
-            zoom: 5,
+            center: {lat: #{INITIAL_LATITUDE}, lng: #{INITIAL_LONGITUDE}},
+            zoom: #{INITIAL_ZOOM},
           });
-          var data = #{ data.to_json };
+          var data = #{data.to_json};
           var markers = [];
           var bounds = new google.maps.LatLngBounds();
           var infoWindow = new google.maps.InfoWindow({
@@ -222,6 +242,27 @@ module MapHelper
     ).html_safe
   end
 end
+~~~
+
+~~~
+# app/views/contacts/_form.html.erb
+  <%= edit_map f %>
+
+# app/views/contacts/show.html.erb
+  <%= show_map @contact %>
+
+# app/views/contacts/index.html.erb
+  <%= show_all_map @contacts %>
+  <%= show_static_pam @contact %>
+
+# app/assets/stylesheets/maps.scss
+.edit-map-container {
+  height: 300px;
+  width: 100%;
+}
+.show-map-container {
+  height: 30px;
+}
 ~~~
 
 # Location search field
@@ -371,14 +412,6 @@ When creating a map, you need to provide zoom option.
     });
 </script>
 ~~~
-
-* static map with custom icon (must be http:// not https://)
-
-  ~~~
-  img(border='0', ng-src='//maps.googleapis.com/maps/api/staticmap?center=\
-    {{ location.latitude }},{{ location.longitude }} \
-    &size=100x100&markers=icon:http://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png|{{ location.latitude }},{{ location.longitude }}')
-  ~~~
 
 # Geolocating
 

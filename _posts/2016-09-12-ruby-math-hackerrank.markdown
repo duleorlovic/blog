@@ -6,7 +6,7 @@ title: Ruby Math Hackerrank
 # Install
 
 Install vim plugin [seeing-is-believing]({{ site.baseurl }}
-{% post_url 2015-12-01-vim-tips %}#tocAnchor-1-5) and write Gemfile
+{% post_url 2015-12-01-vim-tips %}#seeing-is-believing) and write Gemfile
 
 ~~~
 # Gemfile
@@ -56,9 +56,39 @@ Codility Solutions
   ~~~
 * division is integer division, so that `1/2 == 0` in ruby. You need to convert
   to float `x = x.to_f`
-* iterate range `(1..10).each`
+* iterate range `(1..10).each` or `1.upto(10).each`
 
 # Example code
+
+We can use [pp](https://ruby-doc.org/stdlib-2.1.0/libdoc/pp/rdoc/PP.html)
+standard library to print arrays just `require 'pp'`. But if you need to print
+matrix, than you can use ppp `require './ppp'`
+
+~~~
+# ppp.rb
+def ppp(x)
+  if x.class == Array
+    puts_array(x)
+  else
+    puts x
+  end
+end
+
+def puts_array(x)
+  need_new_line = false
+  x.each do |e|
+    if e.class == Array
+      puts e.join(', ')
+    else
+      print e.to_s + ', '
+      need_new_line = true
+    end
+  end
+  puts if need_new_line
+end
+~~~
+
+Here is example task solution. It contains description, stdin input and test.
 
 ~~~
 # 0_short_palindrome.rb
@@ -72,42 +102,35 @@ Codility Solutions
 # input: string s
 # 1<= |s| < 10^6
 # output: number of (a, b, c, d) tuples, use moduo 10^9 + 7
-DEBUG = true
+PRODUCTION = false
+if PRODUCTION
+  def ppp(_arg = nil); end
+
+  def pp(_arg = nil); end
+else
+  require 'pp'
+  require './ppp'
+  require 'byebug'
+end
 
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/AbcSize
 def solution(a)
   r = a.length
-  debug "r=#{r}"
+  ppp "r=#{r}"
   r
 end
-n = gets.to_i
-a = []
-n.times do
-  # strip is needed since on hackerrank, new line is at the end of gets
-  r = gets.strip.split('').map { |c| c == '*' ? 0 : 1 }
-  a << r
-end
 
-def debug(x)
-  return unless DEBUG
-  puts name if name
-  if x.class == Array
-    need_new_line = false
-    x.each do |e|
-      if e.class == Array
-        puts e.join(', ')
-      else
-        print e.to_s + ', '
-        need_new_line = true
-      end
-    end
-    puts if need_new_line
-  else
-    puts x
+if PRODUCTION
+  n = gets.to_i
+  a = []
+  n.times do
+    # strip is needed since on hackerrank, new line is at the end of gets
+    r = gets.strip.split('').map { |c| c == '*' ? 0 : 1 }
+    a << r
   end
-end
-puts solution(a)
+  puts solution(a)
+end # if PRODUCTION
 
 require 'minitest/autorun'
 class Test < Minitest::Test
@@ -380,6 +403,43 @@ sort(a) # => [0, 2, 2, 3, 4]
   end
   ~~~
 
+# Euclidean algorithm
+
+Theory:
+
+Def: integer m divides n (m|n) if exists r such that m*r = n
+Def: gcm(m, n) is the largest positive integer d which divides both m and n.
+That means d|m, d|n and for any c which c|m and c|n we have d>=c
+
+The: fpr a, b nonzero integer, their gcd(a,b) is linear combination of a and b
+ie: exists s and t such that s*a+t*b=gcd(a,b)
+Proof: let d be least positive linear combination d = s*a+t*b . We can show that
+d|a.
+We can write a = d*q+r (0 <= r < d ) so r = a - d*q = a - (s*a + t*b)*q = (1 -
+q*s)*a + (-qt)*b. Since d is least positive and r<d that means r = 0.
+Similarly d|b. We can show it is the greatest common divisor because if
+d1=gcd(a,b) < d it will be that d1|a d1|b and from d=s*a+t*b that d1|d which is
+contradiction so d1==d
+
+gcd(k, 1) = 1
+if a|b*c and gcd(a,b)==1 than a|c
+
+Lem: if a = b*q + r than gcd(a,b) == gcd(b,r)
+Proof: gcd(a,b)=gcd(b*q+r,b)=gcd(r,b)
+GCD will not change if you can add multiple of b, ie gcd(a,b)=gcd(a+k*b,b)
+
+
+Def: The integers a and b are relatively prime if and only if there exist
+integers α and β such that aα + bβ = 1
+
+Def: Lcm(a,b) least common multiple is = |a*b|/gcd(a,b)
+
+The: a*x+b*y=d has integer solution iff gcd(a,b)|d
+
+If (x0,y0) is solution, we can add +- a*b/d  ie a*x+b*y + a*b/d - b*a/d =
+a*(x+b/d) +b(y-a/d)  so (x+ b/d, y-a/d) is solution.
+General solutions are { (x0+k*b/d, y0-k*a/d) for k in Z}
+
 * Found gcd(a,b) with Euclidean algorithm by subtraction in O(a+b) steps, or by
   division in O(log(a+b))
 
@@ -388,7 +448,7 @@ sort(a) # => [0, 2, 2, 3, 4]
     if a % b == 0
       return b
     else
-      gcd(b, a% b)
+      gcd(b, a % b)
     end
   end
   ~~~

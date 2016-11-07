@@ -156,7 +156,7 @@ to have some pages for test if this notification works. First create routes
 get 'sample-error', to: 'pages#sample_error'
 get 'sample-error-in-resque', to: 'pages#sample_error_in_resque'
 get 'sample-error-in-javascript', to: 'pages#sample_error_in_javascript'
-get 'notify-javascript-error', to: 'pages#notify_javascript_error'
+post 'notify-javascript-error', to: 'pages#notify_javascript_error'
 {% endhighlight %}
 
 than controller method that we will use for manual notification
@@ -243,6 +243,9 @@ application.js so it is loaded before any other js code.
 
 // This should be loaded in <head> and separatelly from application.js
 // notification will not work if some error exist in this file
+//
+var MAX_NUMBER_OF_JS_ERROR_NOTIFICATIONS = 2;
+
 function exception_notification(data) {
   if (window.jQuery) {
     console.log("notify server about exception");
@@ -275,7 +278,7 @@ function exception_notification(data) {
 // https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror
 // https://blog.getsentry.com/2016/01/04/client-javascript-reporting-window-onerror.html
 window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
-  if (errorMsg && sessionStorage) {
+  if (sessionStorage) {
     var errorMsgs = JSON.parse(sessionStorage.getItem("errorMsgs") || "[]");
     if (errorMsgs.indexOf(errorMsg) != -1) {
       console.log("Ignore already notified error for this session and tab");
@@ -283,12 +286,32 @@ window.onerror = function(errorMsg, url, lineNumber, column, errorObj) {
     } else {
       sessionStorage.setItem("errorMsgs", JSON.stringify(errorMsgs + [errorMsg]));
     }
+
+    if (JSON.parse(sessionStorage.getItem("numberOfJsErrorNotifications") || "0") >= MAX_NUMBER_OF_JS_ERROR_NOTIFICATIONS) {
+      console.log("Ignore error since number of notification reached maxiumum " + MAX_NUMBER_OF_JS_ERROR_NOTIFICATIONS);
+      return;
+    }
+  }
+  ignoredErrors = {
+    // https://github.com/kogg/InstantLogoSearch/issues/199
+    tgt: "Cannot set property 'tgt' of null"
+  }
+  for (var key in ignoredErrors) {
+    if (errorMsg.indexOf(ignoredErrors[key]) != -1) {
+      console.log("Ignore " + key);
+      return;
+    }
   }
 
   flash_alert(errorMsg);
 
   var data = { errorMsg: errorMsg, url: url, lineNumber: lineNumber, column: column, stack: errorObj.stack, errorObj: errorObj };
   exception_notification(data);
+  if (sessionStorage) {
+    var numberOfJsErrorNotifications = JSON.parse(sessionStorage.getItem("numberOfJsErrorNotifications") || "0");
+    numberOfJsErrorNotifications += 1;
+    sessionStorage.setItem("numberOfJsErrorNotifications", JSON.stringify(numberOfJsErrorNotifications));
+  }
 }
 
 // another approach is with error event listener
@@ -323,6 +346,7 @@ window.console = window.console || (function(){
     var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
     return c;
 })();
+
 {% endhighlight %}
 
 * if your javascript asset `application.js` is not included in `<head>` than you

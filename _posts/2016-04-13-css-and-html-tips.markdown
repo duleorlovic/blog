@@ -177,12 +177,32 @@ title: CSS and HTML tips
 
 ~~~
 // show on hover
-.show-on-hover {
-  visibility: visible
+//
+//  <li class="show-on-hover">
+//    Text<a href="" class="show-on-hover-target">X</a>
+//  </li>
+.show-on-hover-target {
+  visibility: hidden;
+}
+.show-on-hover:hover {
+  .show-on-hover-target {
+    visibility: visible;
+  }
 }
 ~~~
 
-# Bootstrap Media queries
+# Bootstrap
+
+Bootstrap grid is mobile first, so three `.col-md-4` will be stacked until
+desktop and large desktop, where it will be three equal width columns.
+Bootstrap Media queries:
+
+* xs - phones (no need for media queary since this is default)
+* sm - tablets `@media (min-width: @screen-sm-min) { // 768px and up`
+* md - desktops ` @media (min-width: @screen-md-min) { // 992px and up`
+* lg - larger desktops `@media (min-width: @screen-lg-min) { // 1200px and up`
+
+So when you specify for sm, you do not need to specify for md or lg.
 
 With Bootstrap you can use their predefined media queries with `min-width`
 (mobile first), for example
@@ -198,6 +218,19 @@ With Bootstrap you can use their predefined media queries with `min-width`
 ~~~
 
 Bootstrap `container` has fixed width for big devices.
+
+You can use [responsive available
+classes](http://getbootstrap.com/css/#responsive-utilities-classes) to toggle
+between `display: block, inline, inline-block` or to hide, for specific viewport
+size:
+
+~~~
+.visibe-sm-block
+.hidden-md
+~~~
+
+You can write your own to match all greater (or smaller) sizes:
+
 ~~~
 # when it is max-width than it is Non-Mobile First Method
 # so we use le (less or equal then)
@@ -228,6 +261,9 @@ Bootstrap `container` has fixed width for big devices.
 }
 ~~~
 
+* you can center bootstrap column with offset
+
+# Tips
 
 * submit button outside of a form is
   [possible](http://stackoverflow.com/questions/7020659/submit-form-using-a-button-outside-the-form-tag)
@@ -269,3 +305,10 @@ Bootstrap `container` has fixed width for big devices.
   want page to reload
 * `input type="checkbox" onchange="perform(this.checked)` you can get value with
   input.checked. with jquery `$(input).is(':checked')`
+
+# Design
+
+* when you are asking user to select items from long lists, you should have
+  `Next` before and after the list so user does not need to scroll
+* be proactive with messages, when user needs to type password again (for
+  example signin with fb and confirm) than write `Excellent, we need just...`

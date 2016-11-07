@@ -9,11 +9,22 @@ Do you like one page application ? Do you like Rails ? Here is their child...
 Ajax with Rails
 ---
 
-[Rails and javascript](http://edgeguides.rubyonrails.org/working_with_javascript_in_rails.html) can live together but some rules has to be established so you know what is going on. Anytime you can put `debugger;` anywhere in javascript code and it should stop if you have enabled some of js tools in your browser.
+[Rails and
+javascript](http://edgeguides.rubyonrails.org/working_with_javascript_in_rails.html)
+can live together but some rules has to be established so you know what is going
+on. Anytime you can put `debugger;` anywhere in javascript code and it should
+stop if you have enabled some of js tools in your browser.
 
-There are two approaches when dealing with ajax calls: server responds with final templates and javascript, or server responds with json so client side javascript is responsible for rendering.
+`data-remote` ajax calls are enabled with
+[jquery_ujs](https://github.com/rails/jquery-ujs/wiki).
 
-For CRUD actions, ajax usually simulate get actions for links (new, show, edit), post actions for forms (create, update) and some patch actions for changing the state of item (destroy, activate, pause ...).
+There are two approaches when dealing with ajax calls: server responds with
+final templates and javascript, or server responds with json so client side
+javascript is responsible for rendering.
+
+For CRUD actions, ajax usually simulate get actions for links (new, show, edit),
+post actions for forms (create, update) and some patch actions for changing the
+state of item (destroy, activate, pause ...).
 
 For example:
 
@@ -24,64 +35,99 @@ and
 
     # update.js.erb
     $('#question-<%= @question.id %>').replaceWith(" <%= j render partial: 'questions/show_question', { question: @question } %>");
-    
 
-Do we need for each CRUD action to write this respond.js? No, we can simplify this by rendering respond.html templates and replacing content in javascript. If you need different rendering in index than it is in show action (for example show action has some new buttons etc), than you need to treat them separately, one partial for index and one template for show.
+
+Do we need for each CRUD action to write this respond.js? No, we can simplify
+this by rendering respond.html templates and replacing content in javascript. If
+you need different rendering in index than it is in show action (for example
+show action has some new buttons etc), than you need to treat them separately,
+one partial for index and one template for show.
 
 All data-attributes names should be lower case.
 
-For ajax requests, if there are no coresponding respond.js, rails will fall back for rendering respond.html. We just need to stop layout rendering in this case with this line in controller:
+For ajax requests, if there are no coresponding respond.js, rails will fall back
+for rendering respond.html. We just need to stop layout rendering in this case
+with this line in controller:
 
     # app/controllers/surveys_controller.rb
     layout Proc.new { |controller| false if controller.request.xhr? }
 
 
-Using this unobtrusive ajax, we do not need ID's for each element since we know what is `e.target` element so we can use `$(e.target).closest('p').replaceWith($new_elem);`.
+Using this unobtrusive ajax, we do not need ID's for each element since we know
+what is `e.target` element so we can use
+`$(e.target).closest('p').replaceWith($new_elem);`.
 
-For errors on form validations we could respond with json and some non successfully error code, for example `format.js { render json: @question.errors, status: :unprocessable_entity }`, but this is approach is more angular oriented.
+For errors on form validations we could respond with json and some non
+successfully error code, for example `format.js { render json: @question.errors,
+status: :unprocessable_entity }`, but this is approach is more angular oriented.
 
 Event listeners for new elements
 ---
 
-If you use javascript code like `$('a[data-activate]').click(...` it will not bind to new elements created by ajax. Instead you should bind to body or another element that stays on page and and use delegation:
+If you use javascript code like `$('a[data-activate]').click(...` it will not
+bind to new elements created by ajax. Instead you should bind to body or another
+element that stays on page and and use delegation:
 
     $('body').on('click', 'a[data-activate]', function() {});` 
-    
-If you  bind on `document` element make sure it is called only once, because of turbolinks if you navigate 3 times to that page where you are calling the script, you will have 3 event listeners.
 
-If you need something like datepicker you can bind on focus [link](http://stackoverflow.com/questions/10433154/putting-datepicker-on-dynamically-created-elements-jquery-jqueryui)
+If you  bind on `document` element make sure it is called only once, because of
+turbolinks if you navigate 3 times to that page where you are calling the
+script, you will have 3 event listeners.
+
+If you need something like datepicker you can bind on focus
+[link](http://stackoverflow.com/questions/10433154/putting-datepicker-on-dynamically-created-elements-jquery-jqueryui)
 
     $('body').on('focus',".datepicker_recurring_start", function(){
       $(this).datepicker();
     });
 
 
-Order of binded events on the same element is by definition order. If you want to execute on click event **before** other is target that is closer, for example insted of `$(document).on('click','[data-1]',` use `$('body').on('click','[data-1]',`. If you want to execute **after** events that are binded to `$(document).on('click'` than you should wrapp all that in one function and call the code with prefered order.
+Order of binded events on the same element is by definition order. If you want
+to execute on click event **before** other is target that is closer, for example
+insted of `$(document).on('click','[data-1]',` use
+`$('body').on('click','[data-1]',`. If you want to execute **after** events that
+are binded to `$(document).on('click'` than you should wrapp all that in one
+function and call the code with prefered order.
 
 Disable with "Adding..." 
 ----
 
-When you work with ajax it is advisable to use rails ujs `data: { disable_with: "Adding..." }` because user can click several times on a link before server responds. This is very important for all buttons/links that are not idempotent actions (idempotent actions are ones that you can apply them as many times as you want without worries, for example abs(abs(abs(x))) ).
+When you work with ajax it is advisable to use rails ujs `data: { disable_with:
+"Adding..." }` because user can click several times on a link before server
+responds. This is very important for all buttons/links that are not idempotent
+actions (idempotent actions are ones that you can apply them as many times as
+you want without worries, for example abs(abs(abs(x))) ).
 
-When you are using `<%= link_to path, data: { disable_with: "Saving"} do %> <div>..</div> <% end %>`, this will not work because whole `<div>..</div>` will be replaced with `Saving` (without div's). It is better to use `disable_with: "<div>Saving<span class='loading-icon'></span></div>".html_safe`.
+When you are using `<%= link_to path, data: { disable_with: "Saving"} do %>
+<div>..</div> <% end %>`, this will not work because whole `<div>..</div>` will
+be replaced with `Saving` (without div's). It is better to use `disable_with:
+"<div>Saving<span class='loading-icon'></span></div>".html_safe`.
 
 Show ajax errors
 ---
 
-In case of network failure or other errors, ajax links (with `[data-remote]`) do not inform the user. So it is advisable to attach event listener in case of errors (this is not error in form validations or some other response from server, it is a real error usually timeout because server did not respond).
+In case of network failure or other errors, ajax links (with `[data-remote]`) do
+not inform the user. So it is advisable to attach event listener in case of
+errors (this is not error in form validations or some other response from
+server, it is a real error usually timeout because server did not respond).
 
     // error handling just for debugging
     $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, error) {
       $('#flash-messages').append('Server responds with ' + status + ' ' + error);
       LOG && console.log("ajax:error [data-remote] " + status+' '+error );
     });
-      
+
 
 
 Flash messages
 ---
 
-In case of some form validations error or some successul action we can send flash message to the user. In rails it is just flash[:notice]="Message text", but if we use ajax calls, we should discard flash object otherwise it will show up on next page reload [link](http://stackoverflow.com/questions/21032465/rails-doesnt-display-flash-messages-after-ajax-call). With ajax server can send error and notice message with X-Message-Flash.
+In case of some form validations error or some successul action we can send
+flash message to the user. In rails it is just flash[:notice]="Message text",
+but if we use ajax calls, we should discard flash object otherwise it will show
+up on next page reload
+[link](http://stackoverflow.com/questions/21032465/rails-doesnt-display-flash-messages-after-ajax-call).
+With ajax server can send error and notice message with X-Message-Flash.
 
     class ApplicationController < ActionController::Base
       
@@ -97,7 +143,16 @@ In case of some form validations error or some successul action we can send flas
       end                                                                  
     end 
 
-This approach should be coupled with writing respond.js block that do not redirect for example for update/create action `format.js { render :show, status: :ok, location: @survey, content_type: Mime::HTML }` so we have those messages in javascript. Another solution is not to discard flash and use native redirection (the same as for format.html) ie not writing forman.js as use default format.html responses. There is also `flash.now[:notice] = msg` if you want to customize it further, probably on change (PUT, PATCH) requests, but think it twice, because but not on form submit because forms are wrapped with classes errors, and usually on some index pages (where we change some of the object property and wants to stay on the same page).
+This approach should be coupled with writing respond.js block that do not
+redirect for example for update/create action `format.js { render :show, status:
+:ok, location: @survey, content_type: Mime::HTML }` so we have those messages in
+javascript. Another solution is not to discard flash and use native redirection
+(the same as for format.html) ie not writing forman.js as use default
+format.html responses. There is also `flash.now[:notice] = msg` if you want to
+customize it further, probably on change (PUT, PATCH) requests, but think it
+twice, because but not on form submit because forms are wrapped with classes
+errors, and usually on some index pages (where we change some of the object
+property and wants to stay on the same page).
 
 * GET INDEX, GET SHOW(:id), GET NEW, GET EDIT(:id), not flash messages, response is template so ajax is ok (format.js == format.html)
 * POST CREATE, usually flash message, respond is redirect and in ajax is ok, second request is GET(:id) (format.js == format.html)

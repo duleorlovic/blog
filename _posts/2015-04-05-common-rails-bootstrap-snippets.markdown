@@ -121,18 +121,8 @@ git add . && git commit -m "Adding sample index page"
 
 I would not add node_modules to git as it was suggested <https://coderwall.com/p/6bmygq/heroku-rails-bower>
 
-You need to use two build packs. Follow this
-[commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
-It works for latest node and npm version. Older version could give errors:
-
-* bower version `~1.2` gives me error `error Path must be a string. Received
-   ...` so make sure you use latest bower.
-
-Old approach with assets from gems still works, no worry.
-First, we need to initialize bower.
-
 ~~~
-# do not name your package as bower or other existing package
+# do not name your package as `bower` or other existing package
 npm init -y # to create package.json, -y to accept defaults
 npm install bower --save
 sed -i package.json -e '/scripts/a \
@@ -149,8 +139,19 @@ cat >> config/initializers/assets.rb << HERE_DOC
 Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
 HERE_DOC
-git add . && git commit -m "Adding bower"
+git add . && git commit -m "Adding npm and bower"
+~~~
 
+For Heroku you need to use two build packs. Follow this
+[commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
+It works for latest node and npm version. Older version could give errors:
+
+* bower version `~1.2` gives me error `error Path must be a string. Received
+   ...` so make sure you use latest bower.
+
+Old approach with assets from gems still works, no worry.
+
+~~~
 heroku create myapp-with-bower
 heroku addons:create heroku-postgresql:hobby-dev
 heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
@@ -595,21 +596,50 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 ~~~
 cat >> Gemfile << HERE_DOC
 gem 'carrierwave'
-gem 'fog'
 HERE_DOC
 bundle
 rails generate uploader Document
 # we need just one field type string to store file url
 rails g migration add_document_to_companies document:string
 rake db:migrate
-sed -i '/class Company/a \  mount_uploader :document, DocumentUploader'  app/models/company.rb
-git add . && git commit -m "Adding carrierwave gem, document uploader and mount on company"
+sed -i app/models/company.rb -e '/class Company/a \
+  mount_uploader :document, DocumentUploader'
+git add . && git commit -m "Adding carrierwave gem document uploader"
 ~~~
 
 Replace `f.text_field :document` with `f.file_field :document` in your form. In
 view you can use `company.document.url`.
-You can use single table field for multiple files (field type json) but
-than you need postgres database.
+
+~~~
+<%# app/views/companies/_form.html.erb %>
+  <%  if @company.document.present?  %>
+    <%= image_tag @company.document, class: 'image-small'%>
+    <%= f.check_box :remove_document %>
+  <% end %>
+  <%= f.file_field :document %>
+
+# app/controllers/companies_controller.rb
+  def company_params
+    params.require(:company).permit(:document, :remove_document)
+  end
+~~~
+
+It is straightforward to use uploader in multiple fields. Also you can use
+single table field for multiple files (field type json) but than you need
+postgres database.
+
+When you rendering json, than
+[carrierwave will add nested
+url](http://stackoverflow.com/questions/28184975/carrierwave-causing-json-output-to-become-nested-on-photo-key).
+Solution is render json manually with `json.document_url company.document.url`
+or to override uploader serilization with
+
+~~~
+# app/uploaders/document_uploader.rb
+  def serializable_hash
+    url
+  end
+~~~
 
 ## Store on AWS S3
 
@@ -620,6 +650,9 @@ to set up your AWS keys in *~/.bashrc* `export AWS_ACCESS_KEY_ID=123123` and
 bucket.
 
 ~~~
+cat >> Gemfile << HERE_DOC
+gem 'fog'
+HERE_DOC
 cat > config/initializers/carrierwave.rb << 'HERE_DOC'
 # https://github.com/jnicklas/carrierwave#using-amazon-s3
 CarrierWave.configure do |config|
@@ -639,7 +672,8 @@ sed -i config/secrets.yml -e '/^test:/i \
   aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>\
   aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>\
   # region is important for all non us-east-1 regions\
-  aws_region: <%= ENV["AWS_REGION"] || "us-east-1" %>\n'
+  aws_region: <%= ENV["AWS_REGION"] || "us-east-1" %>\
+'
 
 sed -i app/uploaders/document_uploader.rb -e '/storage :file/r \
   # storage :file\

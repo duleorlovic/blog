@@ -288,7 +288,7 @@ sed -i config/initializers/devise.rb -e '/config.allow_unconfirmed_access_for/a 
 
 ~~~
 
-Perform some [common bootstrap stuff for secrets and emails]({{ site.baseurl }}{% post_url 2015-04-05-common-rails-bootstrap-snippets %}) and add [oauth installation as above](#tocAnchor-1-2).
+Perform some [common bootstrap stuff for secrets and emails]({{ site.baseurl }}{% post_url 2015-04-05-common-rails-bootstrap-snippets %}) and add [oauth installation as above](#devise-and-omniauth).
 
 For client start with steps at [2015-11-26-angular-and-ruby-on-rails]({{ site.baseurl }}
 {% post_url 2015-11-26-angular-and-ruby-on-rails %}).

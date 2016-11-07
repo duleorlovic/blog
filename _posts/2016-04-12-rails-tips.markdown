@@ -233,8 +233,10 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 # Postgres
 
-* if you want to add or remove reference in migration `rails g migration
-  add_user_to_leads user:references` than you can write
+## Add reference and index
+
+* add reference. if you want to add or remove reference in migration `rails g
+  migration add_user_to_leads user:references` than you can write
 
   ~~~
   class AddUserToLeads < ActiveRecord::Migration
@@ -244,9 +246,9 @@ $(document).on 'change', '[data-upload-file]', (e) ->
   end
   ~~~
 
-* if you want to add unique index on some columns (to see validation error
-  instead of database esception, should also be in rails `validates :email,
-  uniqueness: { scope: :user_id }`
+* add index. if you want to add unique index on some columns (to see validation
+  error instead of database esception, should also be in rails `validates
+  :email, uniqueness: { scope: :user_id }`
 
   ~~~
   class AddUniqContacts < ActiveRecord::Migration
@@ -256,52 +258,78 @@ $(document).on 'change', '[data-upload-file]', (e) ->
   end
   ~~~
 
-* adding array of any type and hstore is easy, just add default value `[]` and
+## Add json and hstore
+
+Adding array of any type and hstore is easy, just add default value `[]` and
 `''` (breaks for `{}`). You can create hstore extension in migration. If you
 need arrays of hstore than you need to go for json or jsonb (better optimization
 only pq 9.4) or json/jsonb array.
 
-  ~~~
-  class CreatePhones < ActiveRecord::Migration
-    def change
-      execute "create extension hstore"
-      create_table :phones do |t|
-        t.string :my_array, array: true, default: []
-        t.hstore :my_hash, default: ''
-        t.jsonb :my_json, default: []
-        t.jsonb :my_array_of_json, array: true, default: []
-      end
+~~~
+class CreatePhones < ActiveRecord::Migration
+  def change
+    execute "create extension hstore"
+    create_table :phones do |t|
+      t.string :my_array, array: true, default: []
+      t.hstore :my_hash, default: ''
+      t.jsonb :my_json, default: []
+      t.jsonb :my_array_of_json, array: true, default: []
     end
   end
-  ~~~
+end
+~~~
 
-  You can enable hstore [link](https://gist.github.com/terryjray/3296171) `sudo
-  psql -d Scuddle_app_development -U orlovic` and `CREATE EXTENSION hstore;` or
-  in one command: `sudo su postgres -c "psql Scuddle_app_test -c 'CREATE
-  EXTENSION hstore;'"`. You should do this also for *test* and *development*
-  database. If you don't know database name you can use [rails
-  runner](http://guides.rubyonrails.org/command_line.html#rails-runner)
-
-  ~~~
-  sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations["production"]["database"]'` -c 'CREATE EXTENSION hstore;'"
-  ~~~
-
-  If you need to run `rake db:migrate:reset` to rerun all migration to check if
-db/schema is in sync, than the best way is to alter user to have superuser
-privil `sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH
-SUPERUSER;'"` where orlovic is database username (you can see those usernames -
-roles using pqadmin visual program)
+DB user need to be superuser to be able to create extensuin. If you need to
+run `rake db:migrate:reset` to rerun all migration to check if db/schema is in
+sync, than the best way is to alter user to have superuser privil `sudo su
+postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"` where
+orlovic is database username (you can see those usernames - roles using
+pqadmin visual program)
 [link](https://github.com/diogob/activerecord-postgres-hstore/issues/99).
 
-* dump database from production for local inspection, you can download from
-heroku dump file and import in database
+You can enable hstore manually
+[link](https://gist.github.com/terryjray/3296171) `sudo psql -d
+Scuddle_app_development -U orlovic` and `CREATE EXTENSION hstore;` or in one
+command: `sudo su postgres -c "psql Scuddle_app_test -c 'CREATE EXTENSION
+hstore;'"`. You should do this also for *test* and *development* database. If
+you don't know database name you can use [rails
+runner](http://guides.rubyonrails.org/command_line.html#rails-runner)
 
-  ~~~
-  export DUMP_FILE=a.dump
-  export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
-  chmod a+r $DUMP_FILE
-  sudo su postgres -c 'pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE'
-  ~~~
+~~~
+sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations["production"]["database"]'` -c 'CREATE EXTENSION hstore;'"
+~~~
+
+## Dump database
+
+Dump database from production for local inspection, you can download from
+heroku to dump file `tmp/b001.dump` and import in database
+
+~~~
+export DUMP_FILE=tmp/b001.dump
+export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
+chmod a+r $DUMP_FILE
+
+rake db:drop db:create
+
+sudo su postgres -c 'pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE'
+~~~
+
+You can dump local database with
+
+~~~
+pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
+# pg_dump PlayCityServer_development > dump
+~~~
+
+Restore from local dump
+
+~~~
+rake db:drop
+rake db:create
+psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
+~~~
+
+## Postgres tips
 
 * you should explicitly add timestamps with `t.timestamps`
 * upgrade postgres from 9.3 to 9.4
@@ -320,20 +348,7 @@ heroku dump file and import in database
   sudo pg_dropcluster 9.3 main
   ~~~
 
-* dump and restore postgresql database
-
-  ~~~
-  pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
-  # pg_dump PlayCityServer_development > dump
-  ~~~
-
-  ~~~
-  rake db:drop
-  rake db:create
-  psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
-  ~~~
-  
-  To disable sql log in rails logger put this in initializer file:
+* To disable sql log in rails logger put this in initializer file:
 
   ~~~
   # config/initializers/silent_sql_log.rb
@@ -408,7 +423,7 @@ heroku dump file and import in database
   ~~~
 
 
-Migrations:
+## Migrations:
 
 * if we call `Products.update_all fuzz: 'fuzzy'` in migration, it will
   probably break in the future, because *Products* will be validated for
@@ -480,28 +495,48 @@ ApplicationMailer.internal_notification('SmsService', send: args)
 # Turbolinks
 
 With turbolinks rails acts as single page application. So if you want to do
-something on every page and on first load than you need to bind on two events:
+something on every page and on first load than you need to bind on two events
+`ready page:load`:
 
 ~~~
-// app/assets/javascripts/read_page_load.js
-$(document).on('ready page:load', function(){
-  console.log("document on ready page:load");
-  /* Activating Best In Place */
-  jQuery(".best_in_place").best_in_place();
-  autosize($('textarea'));
+// app/assets/javascripts/read_page_load.coffee
+$(document).on('ready page:load', ->
+  console.log "document on ready page:load"
+  # Activating Best In Place 
+  jQuery(".best_in_place").best_in_place()
+  autosize $('textarea')
+
+  $('[data-disable-button-if-empty]').on('change paste keyup input', ->
+    disabled = this.value.length == 0
+    button = $(this).parents('form').first().find('[type=submit]')
+    button.prop('disabled', disabled)
+
+  # initial status
+  $.each $('[data-disable-button-if-empty]'), (index, el) ->
+    $(el).trigger('change')
+
+  $('[data-on-change-submit]').on 'change', ->
+    $(this).parents('form').first().submit()
+~~~
+
+If you want to perform something on click for existing and new elements, but
+only on particular page, you can bind bind click on document on that page inside
+body. But when you navigate 10 times, it will trigger 10 times. So you can
+unbind on `page:before-change`. Note that you should write that after function
+declaration because when you click on paga again, it will assign "on" on
+previous version, and unassign latest version of your_function
+
+~~~
+<script>
+function your_function() {
+  LOG && console.log("your_function call");
+}
+$(document).on('click', '.class', your_function);
+$(document).one('page:before-change',function() {
+  LOG && console.log("unassign your_function");
+  $(document).off('click', your_function);
 });
-~~~
-
-The best approach is unobtrusive javascript
-
-~~~
-// Used to toggle class 'active' to selector
-// example <button data-toggle-active=".popup"></button>
-$(document).on('click','[data-toggle-active]', function(e) {
-  $( $(this).data('toggle-active')).toggleClass('active');
-  e.preventDefault();
-  console.log("click [data-toggle-active]="+$(this).data('toggle-active'));
-});
+</script>
 ~~~
 
 # Timezones
@@ -959,6 +994,19 @@ class AddUnsubscribeToUser < ActiveRecord::Migration
 end
 ~~~
 
+# Run rails in production mode
+
+~~~
+RAILS_ENV=production rake db:create
+RAILS_ENV=production rake assets:precompile
+
+export RAILS_SERVE_STATIC_FILES=true
+# export DO_NOT_USE_CANONICAL_HOST=true
+# export JAVASCRIPT_ERROR_RECIPIENTS=duleorlovic@gmx.com
+# remove eventual config.action_controller.asset_host = asdasd
+rails s -b 0.0.0.0 -e production
+~~~
+
 # Tips
 
 * [sprockets](https://github.com/rails/sprockets) are using for compiling assets
@@ -991,17 +1039,6 @@ end
   [json](http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html)
   can be customized with `render json: @phones.as_json(only: [:id], expect:
   [:created_at], include: :posts)`
-* run rails in production mode:
-
-  ~~~
-  RAILS_ENV=production rake db:create
-  rake assets:precompile RAILS_ENV=production
-  export RAILS_SERVE_STATIC_FILES=true
-  # export DO_NOT_USE_CANONICAL_HOST=true
-  # export JAVASCRIPT_ERROR_RECIPIENTS=duleorlovic@gmx.com
-  # remove eventual config.action_controller.asset_host = asdasd
-  rails s -b 0.0.0.0 -e production
-  ~~~
 
 * load databe from `db/schema.rb` (instead of `rake db:migrate`) is with `rake
   db:schema:load`.
@@ -1199,10 +1236,12 @@ end
   `undefined method `relation_delegate_class' for Templates:Module`
 
 * use helpers outside of a view
-  * if it is standard base helper, than just call it
+  * if it is standard base helper, than just call it from ActionController,
+    ActionView instance or Rails application routes.
 
   ~~~
   ActionController::Base.helpers.pluralize(count, 'mystring')
+  ActionView::Base.new.number_to_human 123123
   Rails.application.routes.url_helpers.jobs_url
   ~~~
 
@@ -1306,5 +1345,27 @@ end
 
   ~~~
   params[:contact] = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.each_with_object({}) { |(k1,v1),o1| o1[k1] = (v1.class == String ? v1.gsub(/\n/,'<br>'): v1) } }
+  ~~~
+
+* if you notice in logs double requests (messages are double rendered) it is
+  probably that you use `gem 'rails_12factor'` which should be only on
+  production `group: :production`
+* use cancancan and define all your actions in app/models/ability. If you want
+  to use
+  [load_resource](https://github.com/ryanb/cancan/wiki/authorizing-controller-actions#load_resource),
+  you should separately define: index (with hash), show/edit/update/destroy
+  (with block or hash), new/create (with hash). For nested resources just write
+  parent association
+* when we use CDN for assets, in root folder it should contain crossdomain.xml
+  file so flash recorder works nice.
+
+  ~~~
+  <?xml version="1.0"?>
+  <!-- http://www.osmf.org/crossdomain.xml -->
+  <!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">
+  <cross-domain-policy>
+      <allow-access-from domain="*" />
+      <site-control permitted-cross-domain-policies="all"/>
+  </cross-domain-policy>
   ~~~
 

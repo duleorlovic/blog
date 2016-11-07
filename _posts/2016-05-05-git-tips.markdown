@@ -21,19 +21,13 @@ Getting existing git branches to track remote branches:
 
     git branch --set-upstream gh-pages-bitbucket bitbucket/gh-pages 
 
-Git log
+# Git log
 
-    # show commits that are descendant of commit1 AND ancestors of commit2, in the same time
+Show commits that are descendant of commit1 AND ancestors of commit2, in the
+same time
+
     git log --reverse --ancestry-path commit1^..commit2
     git log $(git merge-base HEAD branch)..branch  # show commits only on branch
-
-Git stash only unstaged changes
-
-    git stash --keep-index
-
-Git checkout previous branch
-
-    git checkout -
 
 See all the changed code
 
@@ -42,6 +36,14 @@ See all the changed code
 Also with adding
 
     git add -p # e to open editor
+
+Git stash only unstaged changes
+
+    git stash --keep-index
+
+Git checkout previous branch
+
+    git checkout -
 
 When you want to undo some commands
 
@@ -77,6 +79,8 @@ If you need to push to two remote repositories, you can do it in one command
 
 Versioning [SEMVER](http://semver.org/)
 
+# Multiple accounts
+
 If there is two accounts on bitbucket or github with different keys use
 `.ssh/config` file and put:
 
@@ -88,14 +92,25 @@ If there is two accounts on bitbucket or github with different keys use
       Hostname bitbucket.org
       IdentityFile ~/.ssh/id_rsa
 
+Note that you need to use `git` protocol url when seting remote (`https`
+protocol does not use this mappings). To change current url you can edit
+`.git/config` or use command `git remote set-url origin
+git@newbitbucket.org:company/repo`.
+
 To see which username (-T) and wich key (-v) is using:
 
     ssh -T git@bitbucket.org
     ssh -v git@secure.bitbucket.org
 
+You can see which keys currenlty is used with `ssh-add -L`. You can create new
+session with `ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa_my_company_account; git
+clone git@github.com:company/repo.git'`
+
 If you want, you can generate id_rsa_secure with password, so it will asked each
 time you use git command.  Heroku uses keys from `~/.netrc` which is created
 when you type `heroku login` (once is setup, it stays forever)
+
+# Git commit
 
 If you want to ignore/reignore some files that are tracked (gitignore does not
 work on tracked files)

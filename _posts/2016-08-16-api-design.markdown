@@ -25,9 +25,18 @@ end
 If you use jbuilder, than create folder `app/views/api/v1/expenses` for view and
 controller `Api::V1::ExpensesController`
 
+# Postman
+
 You can use plugin
-[POSTMAN](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
+[Postman packaged
+app](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en)
+or [Postman REST
+client](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en)
 to send API requests.
+
+Nice extension is [JSON
+Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa)
+that will render json response in readable way.
 
 Curl commands:
 

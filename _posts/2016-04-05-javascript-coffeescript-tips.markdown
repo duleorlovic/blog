@@ -365,8 +365,27 @@ at specific location so I leave it in html format, and all other move to
   button is not working as espected. Its better to use
   `window.location.assign('new_page');` because the page is stored in history
 * when user click back button previous page is reshown, and chrome reruns
-  the javascript, but mozilla don't. if you want in mozilla to run again,
-  write `window.onunload = function(){};` or use cache buster.
+  the javascript, but mozilla doesn't. if you want in mozilla to run again,
+  use cache buster or try with:
+
+  * `window.onunload = function(){};`
+  * `$(window).unload(function () {});`
+  * `$(window).bind("pageshow", function() {});`
+
+  In both mozilla and chrome, form fields stays populated, so you can use
+  `$('form').each(function() { this.reset(); });` which is not user friendly, it
+  is better to target only one form
+
+  ~~~
+  <form id="reset-form"></form>
+  <script>
+    $(window).bind("pageshow", function() {
+      document.getElementById('reset-form').reset();
+    });
+  </script>
+  ~~~
+
+
 * disable turbolinks `document.body.setAttribute('data-no-turbolink','true')`
 * turbolinks are good if some of page content is changed using ajax.
   Browser back button when turbolink is enabled shows last content

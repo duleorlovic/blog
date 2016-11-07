@@ -7,6 +7,16 @@ title: Vim
 
 Good starting poing for **.vimrc** is  <http://vim.wikia.com/wiki/Example_vimrc>
 You can find my <https://github.com/duleorlovic/config/blob/master/.vimrc>
+Control key is upper caret `^` so instead `Ctrl + n` it can be written as `^n`.
+
+Use vim help, with:
+
+* `:help`
+* `:helpgrep windows`
+* `:help ^i` what Ctrl + i do in normal mode
+* `:help i_^i` what ctrl+i do in insert mode
+* `:help c_^i` what ctrl+i do in command mode
+
 
 # Plugins
 
@@ -79,8 +89,9 @@ map <silent> <S-F7> <C-W>l:bw<CR>
 imap <silent> <S-F7> <Esc><S-F7>a
 ~~~
 
-# Show ruby return values on each line in vim
+# Seeing is believing
 
+Show ruby return values on each line in vim.
 Install [seeing_is_believing](https://github.com/JoshCheek/seeing_is_believing)
 with `gem install seeing_is_believing --version 3.0.0.beta.7` and add plugin `cd
 ~/.vim/bundle && git clone https://github.com/hwartig/vim-seeing-is-believing`
@@ -108,10 +119,20 @@ augroup END
 
 * [quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
 * [tutorial](http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html)
+* `nnoremap ,html :asd` first letter `n` means that this applies only in normal
+  mode, `no remap` means do not reinvoke if those commands `,html` are used for
+  something else, `map` means simply when I type `,html` please type `:asd`
 * `CTRL+B` == `^B`
 * `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
 * `H` `M` `L` move to the top/middle/bottom of the window
-* `ciw` hange inner word, `caw` including spaces, `ca]` change all inside brackets including [ ]
+* `ciw` change inner word, `caw` including spaces that follows the word
+  * `ca]` change all inside brackets including both [ ]
+* daw removes the inner word
+* `vit` inner or `vat` outer (including tag) visual select tag `:h tag-blocks`
+  * repeat `at` to select wraped tag
+  * jump with `o` more on `:help visual-operators` `:help v_it`
+  * `vap` select paragraph (until next empty line, including that empty line)
+  * `dst` delete surround tag with vim surround plugin
 * `dt ` delete until the space, `df ` delete until the space including space
 * `va'` visually select all inside ' including '
 * `cgn` change visually selected text using previous search
@@ -126,8 +147,6 @@ augroup END
 * grep end of the word `/usan\>` help with `:h /\>`
 * `Ctrl+p`  # in insert mode is completing the string
 * dE # removes to the End of the string
-* daw removes the inner word
-t yy
 * :%s/old/new/gc
 * mA then 'A jump there (downcase letter a can jump only on current buffer), :marks gives the jump location, '' is jump back, '. jump to last change
 * :tabe file  open file in new tab, gt switch between tabs
@@ -145,8 +164,9 @@ t yy
 * CTRL+^ (shift+6) jump to previous buffer  
 * :set tabstop=2 shiftwidth=2 expandtab # set configuration
 * retab # this will actually reformat all source
-* `"+y` copy visual selection to system clipboard, ubuntu should run `sudo apt-get install vim-gtk`
-* `vit` inner or `vat` outer visual select tag, jump with `o` more on `:help visual-operators` `:help v_it`
+* `"+y` copy visual selection to system clipboard, ubuntu should run `sudo
+  apt-get install vim-gtk`. You can select which register to use with `"add`
+  `"ap"
 * :help Ctrl-W_T open current buffer in new tab
 * `%y+` copy all lines to clipboard
 * `:nnoremap _ f_x~` find next _, remove and uppercase
@@ -160,8 +180,20 @@ t yy
 * clear highlights until nex search `:noh`, to clear completely `set nohlsearch`
   or toggle `nnoremap <F3> :set hlsearch!<CR>`
   [link](http://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting)
-
-* using vim inside irb or rails console with gem [interactive_editor](https://github.com/jberkel/interactive_editor). Its usefull since you can paste only limited number of chars to irb line. Now you can write your input data in file/ruby code and insert byebug/debuger/pry in rails code, and start hunting for bugs 
+* using vim inside irb or rails console with gem
+  [interactive_editor](https://github.com/jberkel/interactive_editor). Its
+  usefull since you can paste only limited number of chars to irb line. Now you
+  can write your input data in file/ruby code and insert byebug/debuger/pry in
+  rails code, and start hunting for bugs
+* `b substring_of_filename` open buffer that matches substring (press tab in
+  case of multiple mathces)
+* `^n` or `^p` to autocomplete, `^x^n` only from current file`, `^x^f` to
+  complete filename (keep `^x^f` when you navigate subfolders), `^x^]` for tags
+  find other shortcuts with `:help ins-completion`
+* `set showcmd` enable showing all keys that I'm typing in bottom right corner,
+  very usefull when explaining to someone
+* snippet `nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a`
+* snippet `nnoremap ,baseurl :-1read $HOME/config/vim/jekyll.baseurl.md<CR>'
 
 videos
 
@@ -169,9 +201,19 @@ videos
 * [--noplugin](https://www.youtube.com/watch?v=XA2WjJbmmoM)
 
   ~~~
-  # fuzzi finder
+  # fuzzy finder
   set path+=**
-  find *-vim
+  find *-vim #
+  ~~~
+
+  ~~~
+  # ctags
+  # need to generate tags file with `ctags -R .`
+  # since I override Ctrl+] to be page up, run `pkill xbindkeys first`
+  ^] # jump to tag under cursos
+  g] # list all ambiguous tags: same method could be defined in multiple classes
+  ^t # jump back in tags stack
+  ^x^] # autocomplete tags
   ~~~
 
 # Syntastic checker

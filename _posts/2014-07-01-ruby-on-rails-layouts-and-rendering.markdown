@@ -4,9 +4,7 @@ title:  Ruby on Rails Layouts and rendering
 tags: layout render ruby-on-rails
 ---
 
-Short reminder how rails use rendering
----
-
+# Short reminder how rails use rendering
 
 [Guide](http://guides.rubyonrails.org/layouts_and_rendering.html) says that response from the server can be: render, redirect, or just head. `ActionController::Base#render` designedly use convention over configuration, that means if we request *products#show as HTML* it will render *app/view/products/show.html.erb* template (if there has not been a call to render something else). `ActionController::Base#render` method can set up **template** and **partial** to be rendered as **text, json, xml, js** (that is content-type) and set the **response code** (:status => :ok). 
 
@@ -41,8 +39,7 @@ In Ruby on Rails there are 6 asset tag helpers:
     <%= video_tag "movie.ogg" %>
     <%= audio_tag "music/first_song.mp3" %>
 
-Asset pipeline
----
+# Asset pipeline
 
 All asset files should be inside of `app/assets`, `lib/assets` or
 `vendor/assets` and they are served with sprockets gem hereof three features:
@@ -58,7 +55,15 @@ RAILS_ENV=production rake assets:precompile
 rails s -e production
 {% endhighlight %}
 
-[Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html) hides the first subfolder, for example *app/assets/javascrips/posts.js* will be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js* in development or included in *application-123.js* in production. It should be included in assets pipeline by `//= require posts` or `//= require tree .` (if not included, it could be accessible, but only in development mode). If we want to include whole library (with special index file for example *lib/assets/library_name/index.js*) we require just folder name `//= require library_name`.
+[Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html) hides
+(ignores) the first subfolder, for example *app/assets/javascrips/posts.js* will
+be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js*
+in development or included in *application-123.js* in production. It should be
+included in assets pipeline by `//= require posts` or `//= require tree .` (if
+not included, it could be accessible, but only in development mode). If we want
+to include whole library (with special index file for example
+*lib/assets/library_name/index.js*) we require just folder name `//= require
+library_name`.
 
 If we want to use controller specific assets (that is loaded only when that controller responds) we should not use `*= require tree .` in *app/assets/stylesheets/application.css* or *app/assets/javascripts/application.js* . Since we are including another js or css asset (that is not included in application.js/css) we have to add it to assets pipeline, for example in *config/initializers/assets.rb* 
 
@@ -79,8 +84,7 @@ Erb for assets is used only for `background-image: url(<%= asset_path 'image.png
 
 You can set dependency between assets using [link](https://github.com/sstephenson/sprockets#the-link-directive) directive.
 
-View
----
+# View
 
 View `render` method has nothing to do with controller `render` method. `<%= render 'menu' %>` will render *_menu.html.erb* partial. `<%= render 'product/edit' %>` will search for product/_edit.html. Partials can be rendered with its own [layout](http://guides.rubyonrails.org/layouts_and_rendering.html#partial-layouts) `<%= render partial: 'menu', layout: 'graybar' %>`
 
@@ -101,6 +105,10 @@ It is prefered to use local variables when passing data to partial (instead of *
        end 
      %> 
 
-In layouts you can use `<body class="<%= params[:controller] %>">` if you have something specific for each controller.
+In layouts you can use `<body class="controller-<%= controller_name %>">`.
+`controller_name` is `params[:controller]`. In you scss you can use:
+`.controller-home .header ...` if you have something specific for each action
+you can add `action_name` class.
 
-*content_for* can be controller method with this [gist](https://gist.github.com/hiroshi/985457)
+*content_for* can be controller method with this
+[gist](https://gist.github.com/hiroshi/985457)

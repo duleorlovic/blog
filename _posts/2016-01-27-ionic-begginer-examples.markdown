@@ -207,14 +207,14 @@ gulp.task('default', ['sass', 'jade']);
 ~~~
 
 You can convert [all html files to jade]({{ site.baseurl }}
-{% post_url 2016-04-05-javascript-coffeescript-tips %} #tocAnchor-1-5) but please
+{% post_url 2016-04-05-javascript-coffeescript-tips %}#jade) but please
 check them. `index.html` should be in html format since that path `www` is
 fixed.
 
 Also note that template path should be prefixed with `jade_build` in your router
 file, for example `templateUrl: 'jade_build/js/dashboard/dashboard.html'` Check
 example  of [login controller for ionic]({{ site.base_url }}
-{% post_url 2015-12-20-devise-oauth-angular %}#tocAnchor-1-6-3)
+{% post_url 2015-12-20-devise-oauth-angular %}#angular-devise)
 
 # Adding CONSTANT for SERVER_URL
 
@@ -280,7 +280,7 @@ When you add using `bower install angularjs-rails-resource --save` you need also
 ~~~
 
 Checkout [adding angular-devise authentication]({{ site.base_url }}
-{% post_url 2015-12-20-devise-oauth-angular %}#tocAnchor-1-6-3)
+{% post_url 2015-12-20-devise-oauth-angular %}#angular-devise)
 
 # Adding tabs templates
 
@@ -642,6 +642,12 @@ You can start cordova app main activity from command line with
 adb shell am start -a android.intent.action.MAIN -n `ionic_find_package_name my_app.apk`/.MainActivity
 ~~~
 
+## Emulator tips
+
+* copy paste links to emulator or device `adb shell input text "some text"`
+* new chrome will upcase first leter for some fields first name
+* old native browser on Android 4.0.3 does not support WebSockets
+
 ## VirtualBox and Android Emulator
 
 If you want to emulate and get this error
@@ -706,11 +712,17 @@ adb shell cat /etc/hosts
 ~~~
 
 
-# Deploy production
+# Releasing the app and deploy to google play store
 
 If you don't have a key, you should generate and always use that. If app is
-already installed on a phone with different keys, user can not update it (he
-needs to remove the app and than install again).
+already installed on a phone with different keys, user can not update it (since
+it uses the same package name, he needs to remove the app and than install
+again).
+If you lost the keystore, than only solution is to publish as different package
+on [google play](https://play.google.com/apps/publish). You need to rename
+existing app `Store Listing -> Title` so you can create new one with same name.
+Also you can not use the same package name so choose different if you are using
+different key to sign.
 
 ~~~
 keytool -genkey -v -keystore ~/config/keys/my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
@@ -736,8 +748,13 @@ You can use
 [ionic_publish](https://github.com/duleorlovic/config/blob/master/my_bashrc.sh)
 my bash function.
 
+
 When you want to publish another release, you need to update `config.xml`
 version attribute (do not touch id attribute).
+
+On google play, when you create new application and upload apk, you need to fill
+store listing: title, short and full description, high-res icon, feature
+graphic, 2 non android screenshots, target country, mark as free app...
 
 # Old browsers
 
@@ -874,7 +891,7 @@ window.localStorage.removeItem("url");
 # Devise authentication
 
 For backend you should [enable CORS]({{site.baseurl}}
-{% post_url 2015-11-26-angular-and-ruby-on-rails %}#tocAnchor-1-8)
+{% post_url 2015-11-26-angular-and-ruby-on-rails %}#cors)
 
 [angular_devise]({{site.baseurl}}{% post_url 2015-12-20-devise-oauth-angular %})
 gem works nice.

@@ -14,7 +14,22 @@ Model B Revision 2.0 (512MB).
 Start with [NOOBS](https://www.raspberrypi.org/downloads/noobs/) (which is based
 on Raspbian) to create SD card.
 [Instructions](https://www.raspberrypi.org/documentation/installation/noobs.md)
-says to run `gparted` and format as FAT32. Just extract zip to the card.
+says to run `gparted` and format as FAT32. Another way is using [dunbar
+instructions](http://qdosmsq.dunbar-it.co.uk/blog/2013/06/noobs-for-raspberry-pi/) `fdisk -l` to find your card mount point. then
+
+~~~
+sudo fdisk /dev/mmcblk0
+# d -> 1 to delete partitions
+# n to create partition (use default values)
+# t -> b to set FAT32 format
+# p to print current configuration
+# w to write partition table to disc
+
+# format card
+sudo mkfs.vfat /dev/mmcblk0p1
+~~~
+
+Than just extract zip to the card.
 
 Run `sudo raspi-config` to change Boot Options
 to `B1 Consolle Autologin`. This is important since we will run script from

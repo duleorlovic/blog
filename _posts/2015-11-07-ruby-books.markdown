@@ -283,7 +283,15 @@ is private but we can
     puts name, value
   end
   ~~~
+
 * big multiline strings can be concatenated from lines similar to HERE_DOC.
+
+  ~~~
+  MY_TEMPLATE = <<-HTML
+    <html></html>
+  HTML
+  ~~~
+
   `%q()`is without interpolation, uppercase `%Q()` (or empty) is with
   interpolation. Indent is important since lines are joined with `\n`. First
   character is not important `%Q()` is the same as `%Q{}`
@@ -306,13 +314,13 @@ is private but we can
 
 * `%W` and `%w` returns arrays (interpolated or not)
 
-   ~~~
-   >> %W(#{foo} Bar Bar\ with\ space)
-   => ["Foo", "Bar", "Bar with space"]
-
-   >> %w(#{foo} Bar Bar\ with\ space)
-   => ["\#{foo}", "Bar", "Bar with space"]
-   ~~~
+  ~~~
+  >> %W(#{foo} Bar Bar\ with\ space)
+  => ["Foo", "Bar", "Bar with space"]
+ 
+  >> %w(#{foo} Bar Bar\ with\ space)
+  => ["\#{foo}", "Bar", "Bar with space"]
+  ~~~
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
@@ -338,3 +346,6 @@ is private but we can
   end
   credit_card.errors.extend(mod)
   ~~~
+
+* random number `[*1..100].sample`
+* iterate over elements until first match `a.take_while {|i| i < 3}`

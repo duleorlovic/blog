@@ -165,14 +165,13 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 
 # Templates
 
-* [adminLTE](https://github.com/almasaeed2010/AdminLTE)
-[preview](https://almsaeedstudio.com/preview)
-[documentation](https://almsaeedstudio.com/themes/AdminLTE/documentation/index.html)
-[blog](https://almsaeedstudio.com/blog/features-of-adminlte-2.1)
 * [gentelella](https://github.com/puikinsh/gentelella)
 [preview](https://colorlib.com/polygon/gentelella/index.html) [rails
 version](https://github.com/iogbole/gentelella_on_rails)
+* [adminLTE]( {{ site.baseurl }} {% post_url 2016-10-28-adminlte-free-template-on-rails %})
+
 
 # Nice design and ui tools
 
 * [granim.js](https://sarcadass.github.io/granim.js/examples.html)
+* [DemoHouse](https://airen.github.io/DemoHouse/)
