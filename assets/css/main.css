@@ -479,3 +479,10 @@ h2:target {
     animation-timing-function: ease-out;
     }
 
+.signup-form {
+  display: none;
+}
+
+.signup-form.active {
+  display: block;
+}
