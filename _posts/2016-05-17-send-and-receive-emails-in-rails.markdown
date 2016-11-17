@@ -9,95 +9,106 @@ tags: rails emails
 There is nice table of [main
 providers](http://socialcompare.com/en/comparison/transactional-emailing-providers-mailjet-sendgrid-critsend)
 
-* Gmail smtp is the most easiest way to start
+## Gmail
 
-  ~~~
-  # config/application.rb
-    config.action_mailer.smtp_settings = {
-        address: "smtp.gmail.com",
-        port: 587,
-        domain: "gmail.com",
-        authentication: "plain",
-        enable_starttls_auto: true,
-        user_name: Rails.application.secrets.gmail_email,
-        password: Rails.application.secrets.gmail_password
-    }
+Gmail smtp is the most easiest way to start
 
-  # config/secrets.yml
-  ~~~
-
-
-* Sendgrid is simple to start on heroku. Just add new add-on free plan with
-  commands `heroku addons:create sendgrid` and that will set up env keys.
-  `heroku config` you can find the keys and copy them to `heroku config:set
-  SMTP_USERNAME=asdasdasd SMTP_PASSWORD=asdasdasd`. It allows sending with `from`
-  field any domain, but in gmail it shows that message is from: `My Company
-  support@example.com via sendgrid.me`.
-
-  ~~~
-  cat > config/initializers/smtp.rb << \HERE_DOC
-  ActionMailer::Base.smtp_settings = {
-    :user_name => Rails.application.secrets.smtp_username,
-    :password => Rails.application.secrets.smtp_password,
-    :domain => 'yourdomain.com',
-    :address => 'smtp.sendgrid.net',
-    :port => 587,
-    :authentication => :plain,
-    :enable_starttls_auto => true
+~~~
+# config/application.rb
+  config.action_mailer.smtp_settings = {
+      address: "smtp.gmail.com",
+      port: 587,
+      domain: "gmail.com",
+      authentication: "plain",
+      enable_starttls_auto: true,
+      user_name: Rails.application.secrets.gmail_email,
+      password: Rails.application.secrets.gmail_password
   }
-  HERE_DOC
-  ~~~
 
-  Another way is to use API
+# config/secrets.yml
+~~~
 
-  ~~~
+## Sendgrid
 
-  ~~~
+Sendgrid is simple to start on heroku. Just add new add-on free plan with
+commands `heroku addons:create sendgrid` and that will set up env keys.
+`heroku config` you can find the keys and copy them to `heroku config:set
+SMTP_USERNAME=asdasdasd SMTP_PASSWORD=asdasdasd`. It allows sending with `from`
+field any domain, but in gmail it shows that message is from: `My Company
+support@example.com via sendgrid.me`.
 
-* Mandrill is better than Sendgrid, since Sendgrid can not automatically convert
-  html to txt mails. Also mandrill has nice API so you do not need background
-  job to send a lot of emails quickly. To setup sending using API just run:
+~~~
+cat > config/initializers/smtp.rb << \HERE_DOC
+ActionMailer::Base.smtp_settings = {
+  :user_name => Rails.application.secrets.smtp_username,
+  :password => Rails.application.secrets.smtp_password,
+  :domain => 'yourdomain.com',
+  :address => 'smtp.sendgrid.net',
+  :port => 587,
+  :authentication => :plain,
+  :enable_starttls_auto => true
+}
+HERE_DOC
+~~~
 
-  ~~~
-  # Gemfile
-  gem 'mandrill_dm'
+Another way is to use API
 
-  # config/application.rb
-  config.action_mailer.delivery_method = :mandrill
+~~~
 
-  # config/initializers/mandrill.rb
-  MandrillDm.configure do |config|
-    config.api_key = Rails.application.secrets.mandrill_api_key
-  end
+~~~
 
-  # config/secrets.yml
-  development:
-    mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
-  ~~~
+## Mandrill
 
-* Sparkpost offer a lot of free usage (mandrill requires subscription) so
-  currenlty it is my best option. You need first to validate your domain, so you
-  can send with `from` field with that domain. You need also to 
+Mandrill is better than Sendgrid, since Sendgrid can not automatically convert
+html to txt mails. Also mandrill has nice API so you do not need background
+job to send a lot of emails quickly. To setup sending using API just run:
 
-  ~~~
-  echo "gem 'sparkpost_rails'" >> Gemfile
+~~~
+# Gemfile
+gem 'mandrill_dm'
 
-  sed -i config/environments/production.rb -e '/^end$/i \
-    config.action_mailer.delivery_method = :sparkpost'
+# config/application.rb
+config.action_mailer.delivery_method = :mandrill
 
-  cat > config/initializers/sparkpostrails.rb << HERE_DOC
-  SparkPostRails.configure do |c|
-    c.sandbox = false
-    c.api_key = Rails.application.secrets.sparkpost_api_key
-  end
-  HERE_DOC
+# config/initializers/mandrill.rb
+MandrillDm.configure do |config|
+  config.api_key = Rails.application.secrets.mandrill_api_key
+end
 
-  sed -i config/secrets.yml -e '/^test:/i \
-    # email provider\
-    sparkpost_api_key: <%= ENV["SPARKPOST_API_KEY"] %>'
+# config/secrets.yml
+development:
+  mandrill_api_key: <%= ENV["MANDRILL_API_KEY"] %>
+~~~
 
-  vi config/secrets.yml # update default_mailer_sender to match your domain
-  ~~~
+If you are using `mandril_delivery` for ExceptionNotification than emails will
+look scrambled, because generated html version will join all lines. Note that it
+will trigger any webhooks that you have set up.
+
+## Sparkpost
+
+Sparkpost offer a lot of free usage (mandrill requires subscription) so
+currenlty it is my best option. You need first to validate your domain, so you
+can send with `from` field with that domain. You need also to 
+
+~~~
+echo "gem 'sparkpost_rails'" >> Gemfile
+
+sed -i config/environments/production.rb -e '/^end$/i \
+  config.action_mailer.delivery_method = :sparkpost'
+
+cat > config/initializers/sparkpostrails.rb << HERE_DOC
+SparkPostRails.configure do |c|
+  c.sandbox = false
+  c.api_key = Rails.application.secrets.sparkpost_api_key
+end
+HERE_DOC
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # email provider\
+  sparkpost_api_key: <%= ENV["SPARKPOST_API_KEY"] %>'
+
+vi config/secrets.yml # update default_mailer_sender to match your domain
+~~~
 
 # Interceptor
 
@@ -185,7 +196,8 @@ Mandrill:
 authentication
 http://www.openspf.org/SPF_Record_Syntax
 
-Feedback Loop is in a header and some clients enable them http://www.list-unsubscribe.com/
+Feedback Loop is in a header and some clients enable them
+http://www.list-unsubscribe.com/
 
 
 # Internal Notification

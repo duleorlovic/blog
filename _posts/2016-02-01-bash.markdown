@@ -19,8 +19,14 @@ sudo service dnsmasq restart
 # Run commaind as another user
 
 In two ways
-  * `su deployer -c 'whoami` can add login `-l` option `su -l deployer -c 'rvm list'` so PATH is extended with `~/.rvm/bin/` and rvm script works
-  * `sudo -u deployer whoami` simpler, no need for quotes. Add option `-i` or `--login` to run as login shell. Wrap command inside `bash` to properly load XDG_RUNTIME_DIR for rails c or other ruby commands: `sudo -i -u deployer /bin/bash -c "cd /vagrant && rails c"`. Also when you use pipe `|` or `&&`, you should wrap inside bash.
+
+* `su deployer -c 'whoami` can add login `-l` option `su -l deployer -c 'rvm
+  list'` so PATH is extended with `~/.rvm/bin/` and rvm script works
+* `sudo -u deployer whoami` simpler, no need for quotes. Add option `-i` or
+  `--login` to run as login shell. Wrap command inside `bash` to properly load
+  XDG_RUNTIME_DIR for rails c or other ruby commands: `sudo -i -u deployer
+  /bin/bash -c "cd /vagrant && rails c"`. Also when you use pipe `|` or `&&`,
+  you should wrap inside bash or use `eval`
 
 # Shortcuts for windows
 
@@ -156,11 +162,6 @@ Look my
 * `ps aux | grep process_name` will return always the grep process because it
   match. But you can use regex so it is not matched `ps aux | grep
   [p]rocess_name`
-* you can pipe output of some command to file `c >> a.log`, and in other shell
-  `tailf a.log` but output will be
-  [buffered](http://stackoverflow.com/questions/9752291/bash-output-stream-write-to-a-file)
-  So you need to `sudo apt-get install expect-dev` and run with `unbuffer c >>
-  a.log`
 * edit long commands in bash `set -o vi` and than press Esc, and v (visual).
   Don't recomment to put in bashrc since it will disable bash shortcuts like:
   ctrp+p, bind, ....
@@ -178,3 +179,55 @@ Look my
   [yes](https://en.wikipedia.org/wiki/Yes_%28Unix%29) command which outputs
   `y\n` in a infinite loop
 * last folder in path `basename $(pwd)`
+* to check if file does not exists you can use
+
+  ~~~
+  if [ ! -f tmp/memory_profile.png ]; then
+    echo "File not found"
+  fi
+  ~~~
+
+* run multiple long running commands (like `watch` `tail -f`) with `;`
+* show commands being executed
+
+  ~~~
+  set -x
+  command
+  set +x
+  ~~~
+
+# Pipe
+
+* you can pipe output of some command to file `c >> a.log`, and in other shell
+  `tailf a.log` but output will be
+  [buffered](http://stackoverflow.com/questions/9752291/bash-output-stream-write-to-a-file)
+  So you need to `sudo apt-get install expect-dev` and run with `unbuffer c >>
+  a.log`
+* if you need pipe inside string `heroku logs -t | -o app.web.1` than you have
+  to `eval $my_string`
+* you can add a row to some pipe `(echo first line; cat file; echo last line) |
+  some_command` or with `ps | { echo "header"; grep "something"; }`
+* replace a string in pipe with sed. You can create a long running pipe with
+  `tailf` and `echo >>`
+
+  ~~~
+  tailf my.txt | sed 's/000/111/g'
+
+  echo "asd 000 asd 000" >> my.txt
+  ~~~
+
+* for redirection standard error to standard output ` 2>&1 |` there is shorthand
+  `|&` version.
+* history
+  * bash update history only on exit, but you can manually write with `history
+      -a` (do not do this for every command since multiple terminal will be
+      [interlieved](http://mywiki.wooledge.org/BashFAQ/088))
+  * to add command to history without executing it `history -s pwd`. Note that
+    this command if executing as param to bash will open new `history` file so
+    we can't have that command in history. Running history when you get console
+    is not the same when you pass history as param to bash command. For example
+    the following command will show pwd and empty history (if you repeat
+    `history` it will give you results) `gnome-terminal -x bash -lc "cd
+    ~/Downloads;bash --rcfile <(echo 'pwd;history;watch ls')"`. Solution is to
+    add command before invoking bash like [here](
+

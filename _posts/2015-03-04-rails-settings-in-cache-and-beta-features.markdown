@@ -14,7 +14,7 @@ to
 For Heroku, you need addon
 [MemCachier](https://devcenter.heroku.com/articles/memcachier) since FileStore
 is not shared between dynos (rails console is separate dyno).
-[rask-cache](https://devcenter.heroku.com/articles/rack-cache-memcached-rails31)
+[rack-cache](https://devcenter.heroku.com/articles/rack-cache-memcached-rails31)
 is even better. It is not needed if you have activeAdmin page for updating
 settings.
 So here is my beta features code that is accessible for *admin* user:

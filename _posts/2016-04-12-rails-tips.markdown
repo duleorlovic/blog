@@ -231,7 +231,11 @@ $(document).on 'change', '[data-upload-file]', (e) ->
   $(this).closest('form').submit()
 ~~~
 
-# Postgres
+# Database
+
+## Active record
+
+* union is not supported [issue 929](https://github.com/rails/rails/issues/939)
 
 ## Add reference and index
 
@@ -311,8 +315,12 @@ chmod a+r $DUMP_FILE
 
 rake db:drop db:create
 
-sudo su postgres -c 'pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE'
+sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
 ~~~
+
+Or you can use [my
+helper](https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39)
+`load_dump`
 
 You can dump local database with
 
@@ -327,6 +335,13 @@ Restore from local dump
 rake db:drop
 rake db:create
 psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
+~~~
+
+To restore on heroku you need to push the file somewhere on internet, for
+example AWS S3 and than run in console
+
+~~~
+heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorlovic-test-us-east-1/b001.dump DATABASE_URL
 ~~~
 
 ## Postgres tips
@@ -456,6 +471,34 @@ psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["data
 * use *db/seed.rb* to add some working data (users, products) that should not go
   to production. add data to migration file if something needs to be in db
   (select box, customer plans)
+* when you restora database `rake db:migrate:status` does not know that any
+  migration was perfomed. You can manually perform specific migration `rake
+  db:migrate:up VERSION=20161114162031`
+* `rake db:migrate` will also invoke `db:schema:dump` task
+  [link](http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations)
+
+
+# MySql
+
+* if you have
+  `/home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2.rb:31:in
+  `require': libmysqlclient.so.18: cannot open shared object file: No such file
+  or directory -
+  /home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2/mysql2.so
+  (LoadError)` than simply `gem uninstall mysql2;gem install mysql2`
+* create mysql user
+
+  ~~~
+  mysql -u root -p
+  CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'asdf';
+  ~~~
+
+* restore mysql sql dump
+
+  ~~~
+  mysql -u myuser -pMYPASSWORD my_database_name < tmp/web001db.sql
+  ~~~
+
 
 # Mailer
 
@@ -572,11 +615,13 @@ Use `faker` gem to generate example strings:
 # db/seeds.rb
 # deterministic data
 [
-  {:name => "Admin/Office"}
+  { name: "Admin/Office" }
 ].each do |doc|
-  job_type = JobType.where(doc).first_or_create! do
+  job_type = JobType.where(doc).first_or_create! do |job_type|
     # you do not need to call save! here
-    puts "JobType #{doc[:name]}" 
+    # put common stuff here
+    job_type.domain = 'my_domain'
+    puts "JobType #{doc[:name]}"
   end
 end if Rails.env.development?
 
@@ -996,15 +1041,64 @@ end
 
 # Run rails in production mode
 
+You probably need to set up database user for production env.
+
+Also set `config.force_ssl = false` in *config/environments/production.rb*
+
+If you use canonical host you need to disable it `export
+DO_NOT_USE_CANONICAL_HOST=true` and remove eventual
+`config.action_controller.asset_host = asdasd`
+~~~
+
 ~~~
 RAILS_ENV=production rake db:create
 RAILS_ENV=production rake assets:precompile
 
 export RAILS_SERVE_STATIC_FILES=true
-# export DO_NOT_USE_CANONICAL_HOST=true
-# export JAVASCRIPT_ERROR_RECIPIENTS=duleorlovic@gmx.com
-# remove eventual config.action_controller.asset_host = asdasd
 rails s -b 0.0.0.0 -e production
+~~~
+
+
+# Get template name
+
+You can try directly in controller to `byebug` and try something like
+
+~~~
+view_context.view_renderer.instance_variable_get('@lookup_context').instance_variable_get('@view_paths').instance_variable_get('@paths').first.instance_variable_get('@cache').instance_variable_get('@data').instance_variable_get('@backend').values.first.instance_variable_get('@backend').values.first.instance_variable_get('@backend').values.first.instance_variable_get('@backend').values.first.values
+~~~
+
+Another is with patch
+[ActionView::TemplateRenderer](http://stackoverflow.com/questions/4973699/rails-3-find-current-view-while-in-the-layout/8310881#8310881)
+and this is only accessible in view.
+
+~~~
+# getting current template is not possible in rails
+# https://github.com/rails/rails/issues/4876
+# patch taken from
+# http://stackoverflow.com/questions/4973699/rails-3-find-current-view-while-in-the-layout/8310881#8310881
+# note 3th comment (Lukas) about exception notification issue
+class ActionController::Base
+  attr_accessor :active_template
+
+  def active_template_virtual_path
+    self.active_template.virtual_path if self.active_template
+  end
+end
+
+class ActionView::TemplateRenderer
+  alias_method :_render_template_original, :render_template
+
+  def render_template(template, layout_name = nil, locals = {})
+    if @view.controller && @view.controller.respond_to?('active_template=')
+      @view.controller.active_template = template
+      result = _render_template_original( template, layout_name, locals)
+      @view.controller.active_template = nil
+    else
+      result = _render_template_original( template, layout_name, locals)
+    end
+    result
+  end
+end
 ~~~
 
 # Tips
@@ -1067,7 +1161,12 @@ rails s -b 0.0.0.0 -e production
   association objectloaded in memory. nested joins `includes(jobs: [:user])`.
   `Message.joins(:job).where(user: d,job: a.jobs)`. If you want to filter with
   raw SQL like: `.where('jobs.title ILIKE "%duke%"')` you need to use join, if
-  you want to files using hash `.where(jobs: { title: })` you can use includes
+  you want to filter using hash `.where(jobs: { title: })` you can use includes.
+* `includes` can be defined in association definition `has_many :comments, -> {
+  includes :author }` but this is bad since it will always load two tables.
+  Better is to make a query `Post.includes(:comments).all` or for instance
+  `@post.comments.includes(:author)`. You need to eager load before calling
+  `.all` or `.each`
 
 * `some_2d_array.each_with_index do |(col1, col2),index|` when you need
   [decomposition
@@ -1314,12 +1413,6 @@ rails s -b 0.0.0.0 -e production
   `weekday = t.to_a[6]`
 
 * `enum status: [:paused]` should be type integer, or it will return nil
-* if you have
-  `/home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2.rb:31:in
-  `require': libmysqlclient.so.18: cannot open shared object file: No such file
-  or directory -
-  /home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2/mysql2.so
-  (LoadError)` than simply `gem uninstall mysql2;gem install mysql2`
 
 * params usually need to be striped, so you can use this code to get rid of all
   unnecessary spaces
@@ -1369,3 +1462,40 @@ rails s -b 0.0.0.0 -e production
   </cross-domain-policy>
   ~~~
 
+# Prawn
+
+* if you need custom symbols in prawn than you need to use ttf fonts. Not all
+  contains every symbol. I downloaded from
+  `dejavu-fonts.org](http://dejavu-fonts.org/wiki/Download)
+
+  ~~~
+  # app/pdfs/common_pdf.rb
+  module CommonPdf
+    def h(amount)
+      ActionController::Base.helpers.humanized_money_with_symbol amount
+    end
+
+    def set_up_common_font
+      # http://dejavu-fonts.org/wiki/Download
+      font_families.update(
+        "DejaVu Sans" => {
+          normal: "#{Rails.root}/lib/DejaVuSans.ttf",
+          bold: "#{Rails.root}/lib/DejaVuSans-Bold.ttf",
+        }
+      )
+      font "DejaVu Sans"
+    end
+  end
+
+  # app/pdfs/my.pdf.rb
+  class MyPdf < Prawn::Document
+    include CommonPdf
+    set_up_common_font
+    text h 10
+  end
+  ~~~
+
+# Chrome extensions
+
+* [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+* [rack-mini-profiler](https://github.com/MiniProfiler/rack-mini-profiler)

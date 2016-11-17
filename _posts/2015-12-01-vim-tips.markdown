@@ -6,8 +6,10 @@ title: Vim
 # My Vimrc
 
 Good starting poing for **.vimrc** is  <http://vim.wikia.com/wiki/Example_vimrc>
-You can find my <https://github.com/duleorlovic/config/blob/master/.vimrc>
-Control key is upper caret `^` so instead `Ctrl + n` it can be written as `^n`.
+You can find my [.vimrc](https://github.com/duleorlovic/config/blob/master/.vimrc)
+
+Note that control key can be written as caret `^` so instead `Ctrl + n` it can
+be written as `^n`.
 
 Use vim help, with:
 
@@ -19,7 +21,6 @@ Use vim help, with:
 
 
 # Plugins
-
 
 Install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting plugins:
 
@@ -50,7 +51,8 @@ Some not used anymore
 
 # Netrw
 
-[start explorer](https://github.com/duleorlovic/config/blob/master/vim/netrw.vim).
+[netrw.vim](https://github.com/duleorlovic/config/blob/master/vim/netrw.vim) is
+native exprorer.
 To change current folder just press c on folder line `help :netrw-c`.
 That's better than `cd ../path` which change in all tabs. It will not affect
 already opened windows, so it should be done on the first window in the tab.
@@ -115,14 +117,41 @@ augroup seeingIsBelievingSettings
 augroup END
 ~~~
 
-# Usefull commands
+# Theory
 
 * [quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
 * [tutorial](http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html)
 * `nnoremap ,html :asd` first letter `n` means that this applies only in normal
   mode, `no remap` means do not reinvoke if those commands `,html` are used for
   something else, `map` means simply when I type `,html` please type `:asd`
-* `CTRL+B` == `^B`
+* `normal!` (with bang) means execute this exactly as I write (`normal` will not
+  ignore mappings that user could have written and destroy your commands)
+* functions can be used to wrap some commands and give it a name.
+  Use `function!` so you can overwrite it without error. Undo will undo whole
+  function at once.
+
+  ~~~
+  function! MyFuction()
+    normal! mmu`m
+  endfunction
+  nnoremap <leader>sp :call MyFuction()<cr>
+  ~~~
+* source current file `nnoremap <leader>sop :source %<cr>` is used to source
+  .vimrc so you do not need to exit and start vim again
+* conditionals
+
+  ~~~
+  function! MF(level)
+    if a:level == 1
+      normal! yy
+    elseif a:level == 2
+      " ....
+    endif
+  endfunction
+  ~~~
+
+# Motions and selections
+
 * `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
 * `H` `M` `L` move to the top/middle/bottom of the window
 * `ciw` change inner word, `caw` including spaces that follows the word
@@ -140,53 +169,68 @@ augroup END
   `:Explore`(short `:E`) `:Vex` of current editing file, `%` create new file
   in current directory
 * `gv` to select previous selected visual area
-* `+` and `-` move on the first letter up and down, { and } move on paragraph
+* `+` and `-` move on the first letter up and down
+* `{` and `}` move on paragraph
 * `dap}p` switch two paragraph
-* Repeat last colon command  @:  and @@
-* :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
-* grep end of the word `/usan\>` help with `:h /\>`
-* `Ctrl+p`  # in insert mode is completing the string
-* dE # removes to the End of the string
-* :%s/old/new/gc
-* mA then 'A jump there (downcase letter a can jump only on current buffer), :marks gives the jump location, '' is jump back, '. jump to last change
-* :tabe file  open file in new tab, gt switch between tabs
-* :vsp #1  vertically split window with file #1
-* :on or Ctrl+W+o #closes all windord except current
-* :buffers, :b1, :bun closes the buffer
-* q: shows history of commands
-* q/ shows history of searches
+* `dE` removes to the End of the string
+* mA then 'A jump there (downcase letter a can jump only on current buffer),
+  :marks gives the jump location, '' is jump back, '. jump to last change
+* `%` jump closing brackets
 * 5G or :5 goes to the line 5
 * gg goes top, G goes bottom
 * g, and g; jump to next/prev change on current buffer
-* :args app/*/*  to add all files to arg list
+
+# Searching
+
+* :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
+* grep end of the word `/usan\>` help with `:h /\>`
+* :%s/old/new/gc
+* q: shows history of commands
+* q/ shows history of searches
 * :argdo %s/foo/bar/ge | update   replace in all arg
-* find /home/bruno/old-friends -type f -exec sed -i 's/ugly/beautiful/g' {} \;
-* CTRL+^ (shift+6) jump to previous buffer  
-* :set tabstop=2 shiftwidth=2 expandtab # set configuration
-* retab # this will actually reformat all source
-* `"+y` copy visual selection to system clipboard, ubuntu should run `sudo
-  apt-get install vim-gtk`. You can select which register to use with `"add`
-  `"ap"
-* :help Ctrl-W_T open current buffer in new tab
-* `%y+` copy all lines to clipboard
-* `:nnoremap _ f_x~` find next _, remove and uppercase
-  [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
-  for moving underscore to CamelCase
-* `gq` in visual mode will format text to 80 char lines (good for markdown)
-* `ctrl+w+f` is the same as `gf` but opens in new vertical split window
 * `:set nowrapscan` is usefull when you want to stop search when you hit bottom
   of a file. With `gg` you can jump to begging. `:set wrapscan` when you want to
   back to wrapped search
 * clear highlights until nex search `:noh`, to clear completely `set nohlsearch`
   or toggle `nnoremap <F3> :set hlsearch!<CR>`
-  [link](http://stackoverflow.com/questions/657447/vim-clear-last-search-highlighting)
+
+# Windows buffers and tabs
+
+* `:tabe file` open file in new tab, gt switch between tabs
+* `gx` open link under cursor with `gnome-open`
+* :vsp #1  vertically split window with file #1
+* :on or Ctrl+W+o #closes all windord except current
+* :buffers, :b1, :bun closes the buffer
+* CTRL+^ (shift+6) jump to previous buffer
+* retab # this will actually reformat all source
+* :help Ctrl-W_T open current buffer in new tab
+* `ctrl+w+f` is the same as `gf` but opens in new vertical split window
+* `b substring_of_filename` open buffer that matches substring (press tab in
+  case of multiple mathces)
+
+# Copy paste
+
+* `"+y` copy visual selection to system clipboard, ubuntu should run `sudo
+  apt-get install vim-gtk`. You can select which register to use with `"add`
+  `"ap"
+* `%y+` copy all lines to clipboard
+
+# Usefull commands
+
+* find /home/bruno/old-friends -type f -exec sed -i 's/ugly/beautiful/g' {} \;
+* Repeat last colon command `@:`, repeat last command `@@`
+* `Ctrl+p`  # in insert mode is completing the string
+* :args app/*/*  to add all files to arg list
+* :set tabstop=2 shiftwidth=2 expandtab # set configuration
+* `:nnoremap _ f_x~` find next _, remove and uppercase
+  [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
+  for moving underscore to CamelCase
+* `gq` in visual mode will format text to 80 char lines (good for markdown)
 * using vim inside irb or rails console with gem
   [interactive_editor](https://github.com/jberkel/interactive_editor). Its
   usefull since you can paste only limited number of chars to irb line. Now you
   can write your input data in file/ruby code and insert byebug/debuger/pry in
   rails code, and start hunting for bugs
-* `b substring_of_filename` open buffer that matches substring (press tab in
-  case of multiple mathces)
 * `^n` or `^p` to autocomplete, `^x^n` only from current file`, `^x^f` to
   complete filename (keep `^x^f` when you navigate subfolders), `^x^]` for tags
   find other shortcuts with `:help ins-completion`
@@ -194,9 +238,12 @@ augroup END
   very usefull when explaining to someone
 * snippet `nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a`
 * snippet `nnoremap ,baseurl :-1read $HOME/config/vim/jekyll.baseurl.md<CR>'
+* recording macro to q with `qq`, exit with `q`, run with `@q`, paste commands
+  in insert mode with `^Rq`
 
-videos
+# Books, videos tutorials
 
+* <http://learnvimscriptthehardway.stevelosh.com/>
 * <https://www.youtube.com/watch?v=5r6yzFEXajQ>
 * [--noplugin](https://www.youtube.com/watch?v=XA2WjJbmmoM)
 
@@ -252,3 +299,9 @@ You need to install this tools:
   let g:syntastic_json_checkers=['jsonlint']
   ~~~
 * coffeescript `npm install -g coffeelint`
+
+# Show dedented lines
+
+When looking at large files in small window (I have 4 vim windows in my single
+terminal window) than I want to see to which block current line belongs.
+

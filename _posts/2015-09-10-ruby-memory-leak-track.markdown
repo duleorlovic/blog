@@ -9,16 +9,26 @@ In any ruby code you can use this snippet
 
 ~~~
 # config/initializers/memory_profiler.rb
-# show current process memory in log. Create log/memory_profile.log with
-# tail log/production.log -f | grep -o MEMORY.* --line-buffered | tee log/memory_profile.log
-Thread.new do
-  while true
-    pid = Process.pid
-    rss = `ps -eo pid,rss | grep #{pid} | awk '{print $2}'`.to_i
-    Rails.logger.info "MEMORY[#{pid}]: time: #{Time.now} rss(KB): #{rss}, live_objects: #{GC.stat[:heap_live_slots]}"
-    sleep 2
+# Show current process memory in log. Creat memory.log with
+# tail log/production.log -f | grep -o MEMORY.* --line-buffered | tee log/memory.log
+# you need to remove *rails_12factor* heroku gem to see *log/production.log'
+# and export RAILS_SERVE_STATIC_FILES=true
+if Rails.application.secrets.memory_profiler
+  Thread.new do
+    Kernel.loop do
+      pid = Process.pid
+      rss = `ps -eo pid,rss | grep #{pid} | awk '{print $2}'`.to_i
+      Rails.logger.info "MEMORY[#{pid}]: time: #{Time.now} rss: #{rss}, live_objects: #{GC.stat[:heap_live_slots]}"
+      sleep 1
+    end
   end
 end
+~~~
+
+~~~
+# config/secrets.yml
+  # memory profiler
+  memory_profiler: <%= ENV["MEMORY_PROFILER"] || false %>
 ~~~
 
 You can use [get_process_mem gem](https://github.com/schneems/get_process_mem)
@@ -27,8 +37,9 @@ kilobytes.
 `GC.stat[:heap_live_slots]` is not available before ruby 2.1.
 
 It's good to have similar env as on production, so it's better to [dump
-database]({{ site.baseurl }} {% post_url 2016-04-12-rails-tips %}) and [run in
-production mode]({{ site.baseurl }} {% post_url 2016-04-12-rails-tips %}#run-rails-in-production-mode) than to
+database]({{ site.baseurl }} {% post_url 2016-04-12-rails-tips %}#dump-database)
+and [run in production mode]({{ site.baseurl }} 
+{% post_url 2016-04-12-rails-tips %}#run-rails-in-production-mode) than to
 create fake seed data.
 
 You don't need to download database if you can deploy and download memory log.
@@ -46,16 +57,18 @@ grep -v auth |
 tee urls.txt
 ~~~
 
-To parse data for ploting, you need to run:
-
-~~~
-tail log/production.log -f | grep -o MEMORY.* --line-buffered | tee log/memory_profile.log
-~~~
-
-To plot data from *log/memory_profile.log*, run `gnuplot lib/memory_profile.gp`
-and open image in another without `gnome-open tmp/memory_profile.png`. If your
+To plot data you need to grep specific format to create *log/memory_profile.log*
+and to run `gnuplot lib/memory_profile.gp`
+and open image with `gnome-open tmp/memory_profile.png`. If your
 image viewer does not automatically refresh, you open image in firefox `firefox
-./tmp/memory_prifile.png`
+./tmp/memory_prifile.png` or using `feh --reload 2 tmp/memory_profile.png`
+
+~~~
+tail log/development.log -f | grep -o MEMORY.* --line-buffered | tee log/memory_profile.log | gnuplot lib/memory_profile.gp
+
+# or my function
+show_memory
+~~~
 
 ~~~
 # lib/memory_prifile.gp
@@ -236,6 +249,24 @@ Simulate load
   e.downcase!
   e.gsub!
   ~~~
+
+* limit number of columns that you retrieve from db
+
+  ~~~
+  Post.all.select [:id, :name]
+  Post.all.joins(:comments).select("posts.name", "comments.body")
+  Post.find_in_batches
+  ~~~
+
+* do plain sql to retreive array instead of ActiveRecord (3x size of data, and
+  allocate 2 objects per data value)
+
+  ~~~
+  ActiveRecord::Base.connection.execute("...")
+  ~~~
+
+* kill ruby process if it takes more than 200MB since GC will take more than
+  100ms to run [video](https://youtu.be/5dgjeCdVEPs?t=2550)
 
 # Links
 

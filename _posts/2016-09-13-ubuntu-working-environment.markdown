@@ -39,9 +39,6 @@ LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libv4l/v4l1compat.so /opt/google/talkplugin
 HERE_DOC
 ~~~
 
-* [chrome scrambled](https://code.google.com/p/chromium/issues/detail?id=375957) can be solved with `sudo amdconfig --initial`
-* chrome flickers on resize [link](http://askubuntu.com/questions/279088/google-chrome-flickering) solution is to disable (uncheck) **Use hardware acceleration when available** in System Settings -> Show Advanced -> (at bottom, search for this option) (or `--disable-gpu` in `/usr/share/applications/chromium-browser.desktop`). I try to disable only composition `--blacklist-accelerated-compositing` but still is enabled. Check that features is software only on <chrome://gpu/>.
-
 * Simple scan scanner for HP LasetJet MF1212nf MFP does not work if you add
   printer from gui. Better is to use:
 
@@ -58,11 +55,23 @@ HERE_DOC
   I comment out `# dns=dnsmasq` from /etc/NetworkManager/NetworkManager.conf and
   `sudo restart network-manager`
 
-# Chrome Developer Tools
+# Chrome chromium
+
+* [chrome scrambled](https://code.google.com/p/chromium/issues/detail?id=375957)
+  can be solved with `sudo amdconfig --initial`
+* chrome flickers on resize
+  [link](http://askubuntu.com/questions/279088/google-chrome-flickering)
+  solution is to disable (uncheck) **Use hardware acceleration when available**
+  in System Settings -> Show Advanced -> (at bottom, search for this option) (or
+  `--disable-gpu` in `/usr/share/applications/chromium-browser.desktop`). I try
+  to disable only composition `--blacklist-accelerated-compositing` but still is
+  enabled. Check that features is software only on <chrome://gpu/>.
+* you can open extension by going to `chrome://apps/`
 
 ## Plugins
 
-* [user agent switcher](https://github.com/chrispederick/user-agent-switcher/) 
+* [user agent switcher](https://github.com/chrispederick/user-agent-switcher/)
+
 
 ## Developer tools
 

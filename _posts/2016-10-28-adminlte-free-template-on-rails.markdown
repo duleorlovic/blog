@@ -187,6 +187,42 @@ Since asset pipeline [ignore first subfolders]( {{ site.baseurl }}
 care to name files differently when you create new scss and coffee files. I
 usually I add suffix `_adminlte`.
 
+## Notify if template exists
+
+You can notify if some of the translated templates does not exists using [get
+template name]( {{ site.baseurl }} 
+{% post_url 2016-04-12-rails-tips %}#get-template-name) and add notification
+
+~~~
+config/initializers/notify_if_adminlte_template_is_not_present.rb
+# getting current template is not possible in rails
+# https://github.com/rails/rails/issues/4876
+# patch taken from
+# http://stackoverflow.com/questions/4973699/rails-3-find-current-view-while-in-the-layout/8310881#8310881
+class ActionView::TemplateRenderer
+  alias_method :_render_template_original, :render_template
+
+  def render_template(template, layout_name = nil, locals = {})
+    if I18n.locale == :in && template.inspect.last(12) != ".in.html.erb" &&
+      template.inspect.last(11) != ".in.js.erb" &&
+      template.inspect != "text template".freeze # this is when send_data
+      cache_key = "adminlte_#{template.virtual_path}"
+      if Rails.cache.fetch cache_key
+        # already notified
+      else
+        Rails.cache.write cache_key, Time.now
+        XceednetMailer.internal_notification(
+          "Adminlte Template does not exists for #{template.virtual_path}",
+          template
+        ).deliver_now
+      end
+    end
+    result = _render_template_original( template, layout_name, locals)
+    result
+  end
+end
+~~~
+
 # Tunning
 
 ## Plugins

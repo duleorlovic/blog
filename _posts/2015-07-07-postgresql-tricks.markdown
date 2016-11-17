@@ -112,6 +112,12 @@ failure.
 * to use columns (like `$1` or name `a.b`) you can use
   * string concatenation  `(a.b || ' MINUTES')::INTERVAL`
   * multiplication `a.b * INTERVAL '1 MINUTES'` (much nicer)
+* you can find records for specific month and year with
+
+  ~~~
+  scope :posts_in_month_and_year, ->(month, year) {
+    where('MONTH(posts.created_at) = ? AND YEAR(posts.created_at) = ?', month, year)
+  ~~~
 
 Practical example in Ruby on Rails
 ============
