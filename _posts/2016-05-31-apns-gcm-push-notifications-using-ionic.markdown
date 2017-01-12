@@ -1,9 +1,26 @@
 ---
 layout: page
-title: Ionic Push Notification
+title: APNS GCM Push Notification using Ionic
 ---
 
-# Keys
+# APNS
+
+## Compile for iPhone
+
+You can download `vmdk` file and just use with your virtual box
+[video](https://www.youtube.com/watch?v=wI3ng69kTD0)
+Virtualbox machine settings -> system ->
+
+* Chipset should be PIIX3.
+* Enable EFI, but some tutorials says that should be unchecked.
+
+<https://randosity.wordpress.com/2010/06/21/running-mac-os-x-in-virtualbox>
+
+You cannot sign in to iCloud because there was a problem verifying the identity
+of this Mac. Try restarting your Mac and signing in again
+
+
+# GCM
 
 You need to register a project on <https://console.developers.google.com> and
 enable "Google Cloud Messaging". Create API key and save as GOOGLE_API_KEY .
@@ -112,6 +129,11 @@ end
 + end
 ~~~
 
+# Errors
+
+`NotRegisterd` gcm error response is when token is invalid. When user updates
+the app token become invalid.
+
 # Client
 
 Old plugin [PushPlugin](https://github.com/phonegap-build/PushPlugin) has been
@@ -119,7 +141,7 @@ replaced with new
 [phonegap-plugin-push](https://github.com/phonegap/phonegap-plugin-push).
 You can use ngcordova wrappers, but I found it is easier to use directly.
 
-GCM notifications arrives with ivery small delay on real devices, but on
+GCM notifications arrives with very small delay on real devices, but on
 emulator it could be 10 seconds.
 Emulator should be build with Google API support (this is important!).
 
@@ -295,4 +317,8 @@ You can use same login on all emulators.
 If genymotion emulator dissapears, run `adb kill-server` to clean connections.
 
 For first message you need to wait minute or two. But than it works instantly.
+
+# Service workers
+
+Another cool is service workers <https://developers.google.com/web/fundamentals>
 

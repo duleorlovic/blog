@@ -15,7 +15,9 @@ title: CSS and HTML tips
   parent as `position: relative` and than use `position: absolute; right: 10px`
 * align element at bottom use position relative/absolute pair, for parrent
   `position: relative` (does not have any effects) and for child: `position:
-  absolute;bottom: 10px;`
+  absolute;bottom: 10px;`. This
+  [question](http://stackoverflow.com/questions/17656623/position-absolute-scrolling)
+  explains why outer need to be relative.
 * use `vertical-align: baseline` for image to be on same bootom as other
   elements
 * use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
@@ -191,78 +193,6 @@ title: CSS and HTML tips
 }
 ~~~
 
-# Bootstrap
-
-Bootstrap grid is mobile first, so three `.col-md-4` will be stacked until
-desktop and large desktop, where it will be three equal width columns.
-Bootstrap Media queries:
-
-* xs - phones (no need for media queary since this is default)
-* sm - tablets `@media (min-width: @screen-sm-min) { // 768px and up`
-* md - desktops ` @media (min-width: @screen-md-min) { // 992px and up`
-* lg - larger desktops `@media (min-width: @screen-lg-min) { // 1200px and up`
-
-So when you specify for sm, you do not need to specify for md or lg.
-
-With Bootstrap you can use their predefined media queries with `min-width`
-(mobile first), for example
-
-~~~
-@media(min-width:$screen-sm){
-  .alert {
-    position: absolute;
-    bottom: 0px;
-    right: 20px;
-  }
-}
-~~~
-
-Bootstrap `container` has fixed width for big devices.
-
-You can use [responsive available
-classes](http://getbootstrap.com/css/#responsive-utilities-classes) to toggle
-between `display: block, inline, inline-block` or to hide, for specific viewport
-size:
-
-~~~
-.visibe-sm-block
-.hidden-md
-~~~
-
-You can write your own to match all greater (or smaller) sizes:
-
-~~~
-# when it is max-width than it is Non-Mobile First Method
-# so we use le (less or equal then)
-# (min-width is Mobile First and we use hide-ge-)
-/* Large Devices, Wide Screens */
-@media only screen and (max-width : 1200px) {
-  .hide-le-lg {
-    display: none;
-  }
-}
-/* Medium Devices, Desktops */
-@media only screen and (max-width : 992px) {
-  .hide-le-md {
-    display: none;
-  }
-}
-/* Small Devices, Tablets */
-@media only screen and (max-width : 768px) {
-  .hide-le-sm {
-    display: none;
-  }
-}
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
-  .hide-le-xs {
-    display: none;
-  }
-}
-~~~
-
-* you can center bootstrap column with offset
-
 # Tips
 
 * submit button outside of a form is
@@ -274,6 +204,20 @@ You can write your own to match all greater (or smaller) sizes:
   </form>
 
   <input type="submit" form="myform" />
+  ~~~
+
+* note that if you have multiple submit inputs and one text input field, when
+you press Enter, only first submit button will be used (so commit value will be
+it's value). you can disable submit on enter with
+
+  ~~~
+  $('#notification-form').on('keyup keypress', function(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 13) { 
+      e.preventDefault();
+      return false;
+    }
+  });
   ~~~
 
 * if you need two css files, than write two `<link rel="stylesheet"
@@ -312,3 +256,14 @@ You can write your own to match all greater (or smaller) sizes:
   `Next` before and after the list so user does not need to scroll
 * be proactive with messages, when user needs to type password again (for
   example signin with fb and confirm) than write `Excellent, we need just...`
+* when hover on footer link, other link in same block should be opacity
+[demo](https://www.parse.com/home/index)
+
+  ~~~
+  ul:hover li:hover {
+    opacity: 1;
+  }
+  ul:hover li {
+    opacity: 0.4;
+  }
+  ~~~

@@ -23,8 +23,13 @@ To install to existing rails project you can use [bower inside rails](
 ) and than add admin-lte
 
 ~~~
-bower install admin-lte --save
+bower install --save admin-lte boostrap#3.3.6 font-awesome
 ~~~
+
+I use separated bootstrap (not from admin-lte package) because "Glyphicons" are
+properly linked. Also I use latest font awesome.
+
+# Using with existing template
 
 To add new template while keeping existing you can use different layout base on
 locale. You can set new layout with option `?layout=true`
@@ -109,7 +114,7 @@ I'm from adminlte layout
 ~~~
 
 We will use `starter.html` for initial layout.
-If do not use turbolinks you can link assets in your
+If you do not use turbolinks you can link assets in your
 `vendor/assets/bower_components/` and precompile them in
 `config/initializers/assets.rb` with `Rails.application.config.assets.precompile
 << /AdminLTE\/.*/`
@@ -136,10 +141,15 @@ You can use assets pipeline to combine all files to one .css and .js file
 ~~~
 // app/assets/stylesheets/application_adminlte.scss
 /*
- *= require rails_bootstrap_forms
- *= require AdminLTE/bootstrap/css/bootstrap.min
+ * AdminLTE stuff
  *= require AdminLTE/dist/css/AdminLTE.min
  *= require AdminLTE/dist/css/skins/skin-blue.min
+ *
+ *= require bootstrap/dist/css/bootstrap
+ *= require font-awesome/css/font-awesome
+ *
+ * Rails stuff
+ *= require rails_bootstrap_forms
  */
 ~~~
 
@@ -147,8 +157,9 @@ You can use assets pipeline to combine all files to one .css and .js file
 // app/assets/javascript/application_adminlte.js
 //  AdminLTE stuff
 //= require AdminLTE/plugins/jQuery/jquery-2.2.3.min
-//= require AdminLTE/bootstrap/js/bootstrap.min
 //= require AdminLTE/dist/js/app.min
+//
+//= require bootstrap/dist/js/bootstrap
 //
 // Rails stuff
 //= require jquery_ujs
@@ -172,7 +183,7 @@ Stubing in sprockets is recursive so if you need to include libraries (for
 example `jquery_ujs`) in both layouts it will [stub that
 libraries also](https://github.com/sstephenson/sprockets/issues/467). Also if
 use use `require_tree .` than you can inadvertently add some libs to some
-layout.
+layout which you have not consider in that moment.
 
 Better approach is to create new folder `app/assets/adminlte`.
 Add it to asset pipeline paths:
@@ -185,7 +196,7 @@ Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'admin
 Since asset pipeline [ignore first subfolders]( {{ site.baseurl }}
 {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}) you need to take
 care to name files differently when you create new scss and coffee files. I
-usually I add suffix `_adminlte`.
+solved that by adding suffix `_adminlte`.
 
 ## Notify if template exists
 
@@ -223,7 +234,7 @@ class ActionView::TemplateRenderer
 end
 ~~~
 
-# Tunning
+# Configuration
 
 ## Plugins
 
@@ -252,6 +263,12 @@ as you can see in their
   checking is enabled` that means that asset path is bad, and rails can not find
   that precompiled asset. Sometime this happens only on production env.
 
+* [datatables]({{ site.baseurl }} {% post_url 2016-07-26-usefull-plugins %}
+  #datatables) is used for search and ordering on client side
+* [bootstrap-datepicker](https://github.com/uxsolutions/bootstrap-datepicker)
+* [bootstrap-daterangepicker](https://github.com/dangrossman/bootstrap-daterangepicker)
+
+
 ## Options
 
 It contains nice features (as stated in their [blog](https://almsaeedstudio.com/blog/features-of-adminlte-2.1))
@@ -269,4 +286,22 @@ box](https://github.com/almasaeed2010/AdminLTE/blob/master/dist/js/app.js#L562)
 in javascript by calling `$.AdminLTE.boxWidget.collapse($('#box-id'));` but it
 is better to write custom code.
 
+[rails bootstrap forms](https://github.com/bootstrap-ruby/rails-bootstrap-forms)
+works nice with template, for example registration form:
 
+~~~
+<%# app/views/devise/registrations/new.html.erb %>
+<%= bootstrap_form_for resource, as: resource_name, url: registration_path(resource_name) do |f| %>
+  <%= f.email_field :email, autofocus: true, placeholder: "Email", skip_label: true, icon: 'user' %>
+  <%= f.password_field :password, class: 'form-control', placeholder: 'Password', skip_label: true, icon: 'lock' %>
+  <%= f.password_field :password_confirmation, class: 'form-control', placeholder: 'Password Confirmation', skip_label: true, icon: 'lock' %>
+  <button type="submit" class="btn btn-primary btn-block btn-flat" data-disable-with="Processing...">Sign up</button>
+<% end %>
+<%= render "devise/shared/links" %>
+~~~
+
+# CRUD and ajax
+
+My prefered setup is to use ajax for edit/update form, use modal for create
+(with prefilled form, without ajax, since in case of success it should
+redirect).

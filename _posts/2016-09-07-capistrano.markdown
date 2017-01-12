@@ -60,3 +60,6 @@ Set the server ip address. Server also have roles `:web, :app, :db`
 `set :ssh_options, forward_agent: true` to use all your local keys on
 server so you can download private repository
 
+Some links
+[How to deploy RubyonRails project to AWS EC2 using capistrano](https://www.youtube.com/watch?v=imdrYD4ooIk)
+

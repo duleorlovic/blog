@@ -26,6 +26,10 @@ that is:
   Aggregate
   Functions](http://www.postgresql.org/docs/9.4/static/functions-aggregate.html)
   since those columns can be merged.
+  * you can group by hour with `SELECT date_trunc('hour', created_at), count(*)
+  FROM users GROUP BY date_trunc('hour', created_at) ORDER BY date_trunc('hour',
+  created_at);`. You can reference columns by select position `SELECT
+  date_trunc('hour', created_at), count(*) FROM users GROUP BY 1 ORDER BY 1;`
 
 I found very interesting paragraph in [tutorial for aggregate
 functions](http://www.postgresql.org/docs/devel/static/tutorial-agg.html).
@@ -118,6 +122,9 @@ failure.
   scope :posts_in_month_and_year, ->(month, year) {
     where('MONTH(posts.created_at) = ? AND YEAR(posts.created_at) = ?', month, year)
   ~~~
+
+* another grouping by day can be `SELECT COUNT(*), to_char(date, 'YYY-MM-DD') as
+'day' FROM orders GROUP BY 'day' ORDER BY 'day'`
 
 Practical example in Ruby on Rails
 ============

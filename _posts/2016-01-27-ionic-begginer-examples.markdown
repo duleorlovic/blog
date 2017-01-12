@@ -926,11 +926,6 @@ Or the best approach is to store all login state redirections in run
 ~~~
 ~~~
 
-# Compile for iPhone
-
-Run MAC with those `-x -v -f acpi=off PCIRootUID=1 GraphicsEnabler=No `
-[link](http://www.tonymacx86.com/snow-leopard-desktop-support/65465-experiencing-kernel-panic-initial-boot.html)
-
 
 <http://yeghishe.github.io/2015/08/13/my-gulp-files-ionic-app.html>
 <https://github.com/pluralsight/guides/blob/master/published/front-end-javascript/ionic-framework-a-definitive-10-000-word-guide/article.md>

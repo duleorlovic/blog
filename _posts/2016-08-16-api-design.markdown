@@ -136,3 +136,9 @@ In case of success, I use `message`
   message = "Successfully updated"
   format.json { render json: { message: message } }
 ~~~
+
+# API Documentation
+
+If you use rspec then go with
+[rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation),
+minitest try [apipie-rails](https://github.com/Apipie/apipie-rails)

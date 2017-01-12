@@ -958,3 +958,16 @@ users after specific actions, you can implement your own
     end
   end
 ~~~
+
+# Testing
+
+In `spec/rails_helper.rb` uncomment line that require all `spec/support/**/*.rb`
+files and create
+
+~~~
+# spec/support/devise.rb
+include Warden::Test::Helpers
+~~~
+
+And you can use in your acceptance tests `login_as user` where `user =
+User.create email: 'asd@.asd.asd', password: 'asdasd'`

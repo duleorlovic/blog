@@ -36,10 +36,10 @@ Issues:
 # Bower
 
 [bower](http://bower.io)  Adding new package will be saved in `bower.json` if
-you
-add option `--save` or `--save-dev`
+you add option `--save` or `--save-dev`
 
-You can add github repos, just replace version with github url with `#v3.0.x`
+With [install](https://bower.io/docs/api/#install) you can use package name, git
+url, local folder, with a version like `#v3.0.x`
 
 ~~~
 {
@@ -70,8 +70,13 @@ Check installed version of some package, for example `angular-material`
 
 ~~~
 cat  bower_components/angular-material/.bower.json | node_modules/json/lib/json.js version
-# install json with npm install json
+# install json with: npm install json
 ~~~
+
+Note that if you remove some files from package folder (for example
+`vendor/assets/bower_components/iCheck/skins` than `bower install` will not see
+that is was removed. You need to `rm -rf folder` so than `bower install` will
+get fresh copy of the package.
 
 # Gulp
 

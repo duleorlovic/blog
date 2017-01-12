@@ -87,3 +87,29 @@ wget https://raw.github.com/derv82/wifite/master/wifite.py
 chmod +x wifite.py
 sudo ./wifite.py
 ~~~
+
+# FNR Renault Ford
+
+Just to note that it's easy to get keys of Renault or Ford cars.
+Buy [remote key smart
+card](https://www.aliexpress.com/item/2PCS-New-quality-Remote-Key-433-MHz-W-Chip-ID46-for-RENAULT-Megane-Scenic-Smart-Card/32650476913.html)
+and [fnr key prog for
+renault](https://www.aliexpress.com/item/High-Quality-FNR-Key-Prog-For-Renault-For-Ford-For-Nissan-4-IN-1-Key-Programmer/1000001169897.html)
+(you also need a usb key, since it is required for software), software you can
+download on
+[mediafire](http://www.mediafire.com/file/l6jj1xd855612i5/KEY-PROG-sk127.rar
+)
+
+Add self to virtual box users `sudo usermod -a -G vboxusers orlovic` and attach
+Usb key and go to settings -> usb -> add -> FTDI FT232R USB UART, cable that you
+buyed.
+
+Change port number to ![com port 12]({{ site.baseurl }}/assets/posts/port12.png)
+
+# PDF torrent books
+
+Maybe not so nice to share, but also interesing index of books:
+
+* https://it-ebooks.info/tag/rails/
+* http://www.allitebooks.com/
+

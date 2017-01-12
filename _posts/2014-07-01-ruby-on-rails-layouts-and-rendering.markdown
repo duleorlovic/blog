@@ -42,30 +42,39 @@ In Ruby on Rails there are 6 asset tag helpers:
 # Asset pipeline
 
 All asset files should be inside of `app/assets`, `lib/assets` or
-`vendor/assets` and they are served with sprockets gem hereof three features:
+`vendor/assets` and they are served with
+[sprockets](https://github.com/rails/sprockets) hereof three features:
 fingerprint, minification and precompilation of sass and coffeescript. That
-features are not used in development mode, but you can serve production version
-it if you enable `config.serve_static_assets` in
-*config/environments.production.rb*, add `secret_key_base` in
-*config/secrets.yml* and then this commands:
+features are not used in development mode, but you can see it when you run in
+production environment.
+
+You need to enable `config.serve_static_assets` in
+*config/environments.production.rb* or use `RAILS_SERVE_STATIC_FILES=true`. If
+it is needed add `secret_key_base` in *config/secrets.yml*.
 
 {% highlight ruby %}
-RAILS_ENV=production rake db:setup
 RAILS_ENV=production rake assets:precompile
-rails s -e production
+RAILS_ENV=production rake db:setup
+RAILS_SERVE_STATIC_FILES=true rails s -e production
 {% endhighlight %}
 
 [Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html) hides
 (ignores) the first subfolder, for example *app/assets/javascrips/posts.js* will
 be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js*
-in development or included in *application-123.js* in production. It should be
-included in assets pipeline by `//= require posts` or `//= require tree .` (if
-not included, it could be accessible, but only in development mode). If we want
-to include whole library (with special index file for example
-*lib/assets/library_name/index.js*) we require just folder name `//= require
-library_name`.
+in development or included in *application-123.js* in production.
 
-If we want to use controller specific assets (that is loaded only when that controller responds) we should not use `*= require tree .` in *app/assets/stylesheets/application.css* or *app/assets/javascripts/application.js* . Since we are including another js or css asset (that is not included in application.js/css) we have to add it to assets pipeline, for example in *config/initializers/assets.rb* 
+All files  should be referenced to assets pipeline by `//= require posts` or
+`//= require tree .` (if it was not referenced, it could be accessible, but only
+in development mode). If we want to include whole library (with special index
+file for example *lib/assets/library_name/index.js*) we require just folder name
+`//= require library_name`.
+
+If we want to use controller specific assets (that is loaded only when that
+controller responds) we should not use `*= require tree .` in
+*app/assets/stylesheets/application.css* or
+*app/assets/javascripts/application.js* . Since we are including another js or
+css asset (that is not included in application.js/css) we have to add it to
+assets pipeline, for example in *config/initializers/assets.rb* 
 
     Rails.application.config.assets.precompile += %w( posts.js )
     Rails.application.config.assets.precompile += %w( posts.css )
@@ -80,9 +89,41 @@ with applications.js and application.css by the default matcher for compiling:
 
     [ Proc.new { |path, fn| fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path)) }, /application.(css|js)$/ ]
 
-Erb for assets is used only for `background-image: url(<%= asset_path 'image.png' %>)}` or asset_data_uri (including data directly into css). Remeber that precompiling assets is done only once. Same hyphenated function exists in sass *assets-path("image.png")*. There exists variation for *image, font, video, audio, JavaScript* and *stylesheet*, for example `image-url("rails.png")`
+## Scss
 
-You can set dependency between assets using [link](https://github.com/sstephenson/sprockets#the-link-directive) directive.
+Sass is similar to scss just without brackets and with indent. I think scss is
+better since any css code is also scss code.
+
+You can use assset path helpers in scss, instead of erb style `url(<%= asset_url
+'logo.png' %>)` as it was underscored in erb, use hyphenated in sass
+`asset-url("logo.png")`. But in recent Rails 4, you can use normal
+`url("logo.png")`.
+
+Note that for coffeescript you need to add extension `customers.coffee.erb` and
+use this initialization file
+
+~~~
+config/initializers/sprockets.rb
+Rails.application.config.assets.configure do |env|
+  env.context_class.class_eval do
+    # include MyAppHelper
+    include Rails.application.routes.url_helpers
+  end
+end
+~~~
+
+Note that if you are using sass-rails than you should use `@import
+"filename_without_extension";` instead of `require`. That way you can access
+global namespace and you can use variables. Do not link filename with extension
+since than it will use plain css [import
+rule](https://developer.mozilla.org/en/docs/Web/CSS/@import) instead of scss
+inserting content.
+
+Erb for assets could be used only for asset_data_uri (including data directly
+into css). Remember that precompiling assets is done only once.
+
+You can set dependency between assets using
+[link](https://github.com/sstephenson/sprockets#the-link-directive) directive.
 
 # View
 

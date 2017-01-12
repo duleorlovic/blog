@@ -27,10 +27,6 @@ Listing free books:
 * http://iwanttolearnruby.com/
 * https://rubymonk.com/
 
-Maybe not so nice to share, but also interesing index of books:
-
-* https://it-ebooks.info/tag/rails/
-
 
 # Ruby
 
@@ -56,9 +52,27 @@ module in your class, beside instance methods, it will extend and add some class
 methods as well. For example
 [Linkable](https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee)
 
+For rails concerns you need to [video](https://youtu.be/bHpVdOzrvkE?t=1640)
+
+~~~
+module Emailable
+  included do
+    # before_ has_ macros
+  end
+
+  # instance methods
+
+  def ClassMethods
+    # class methods without self.
+  end
+~~~
+
 Singleton mixin is used when you want to disallow multiple instance of some
 class, ie we set `private_class_method :new`, and create it in some other class
 method `def Logger.create;@@loger = new unless @logger;end`
+
+`true.class # TrueClass` there is only one copy of these objects (true, false,
+nil). This is example of singleton pattern.
 
 Access:
 
@@ -239,7 +253,8 @@ is private but we can
 * `C.public_method_defined? 'my_method'` to chech if method is defined
 * `echo "puts RbConfig::CONFIG['sitedir']" | ruby - | xargs ls -R` will show all
   C extensions (.so files). Use `CONFIG["site_ruby"]` to list libraries.
-* global variables `$0` filename, `$:` or `$LOAD_PATH` paths, `$$` processID
+* global variables `$0` filename, `$$` processID, `$:` or `$LOAD_PATH` paths
+(you can add folder to load path with `$:.unshift 'lib'` or `$: << '.'`)
 * `defined? a` is operator that can say if variable is defined.
 * `ruby -e 'p Kernel.private_instance_methods.sort'` prints all usefull script
   commands (require, load, raise)
@@ -273,6 +288,7 @@ is private but we can
   precedence](https://github.com/bbatsov/rubocop/issues/1520) so when rubocop
   alerts for `Style/Lambda: Use the `lambda` method for multi-line lambdas` you
   need parenthesis for example `scope :active, (lambda do ... end)`
+* `! a == b` is not the same as `a != b`
 * you should memoize with `return @current_isp if defined? @current_isp` instead
   of `@current_isp ||= blabla; return @current_isp` since it handles `false`
   value as well (it will not rerun the check if @current_isp = false)
@@ -329,6 +345,7 @@ is private but we can
 * if your service needs a lot of validation, raise exceptions to return message.
   Look at [rails tips service example]({{ site.baseurl }}
   {% post_url 2016-04-12-rails-tips %}).
+* its convetion to use keyword `fail` instead of `raise` (it is used only if you re-raise exception)
 * ruby caret operator `^` is bitwise XOR, if you want square use power
   (exponent) `**`
 * if you do not know where something is called, for example some validation
@@ -347,5 +364,121 @@ is private but we can
   credit_card.errors.extend(mod)
   ~~~
 
+* you can open singleton_class of the object and redefine
+
+  ~~~
+  num = Object.new
+  num.instance_exec {
+    def == other
+      other == 3
+    end
+  }
+  num == 4
+  # => false
+  num == 3
+  # => true
+  ~~~
+
+* you can open a class with module_exec
+
+  ~~~
+  class Thing
+  end
+
+  Thing.module_exec(arg) do |arg|
+    def hello
+      "Hi"
+    end
+  end
+
+  puts Thing.new.hello
+  ~~~
+
 * random number `[*1..100].sample`
 * iterate over elements until first match `a.take_while {|i| i < 3}`
+* get a class from value `my_string.constantize`
+* you can call lambda in different ways
+
+  ~~~
+  my_lambda = -> { puts "hi" }
+
+  my_lambda.call # preferred
+  my_lambda[]
+  my_lambda.()
+  ~~~
+
+* lamda are strict about arguments but procs are not
+
+  ~~~
+  my_lambda = ->(a, b)  { a + b }
+  my_proc   = Proc.new  { |a, b| a + b }
+
+  my_lambda.call(2)
+  # ArgumentError: wrong number of arguments (1 for 2)
+
+  my_proc.call(2)
+  # TypeError: nil can't be coerced into Fixnum
+  ~~~
+
+* you can find all instance methods in current class but not in parrent class
+with `o.methods - o.class.superclass.instance_methods`
+
+# Irb
+
+* to suppress out of commands use `;` in irb
+
+  ~~~
+  require 'rest-client'
+  RestClient.get('blackbytes.info');
+  ~~~
+
+* underscore variable `_` holds value of the last command. When used in code
+than it means we are not going to use it.
+
+# Expections
+
+* [exception ruby video](https://www.youtube.com/watch?v=BlTjn_SZQT0)
+* before ruby program exists it uses some callbacks
+
+  ~~~
+  trap("EXIT") { puts 'trap("EXIT")' }
+  at_exit { puts "at_exit" }
+  END { puts "END" }
+  raise "Not handled"
+
+  output:
+
+  trap("EXIT")
+  END
+  at_exit
+  a.rb:4:in `<main>': Not handled (RuntimeError)
+  ~~~
+
+# Tips
+
+* Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`
+* insert in strings with percentage `"Nums are %f %f" % [1, 2]`
+* [101 ruby code factoids](http://6ftdan.com/allyourdev/2016/01/13/101-ruby-code-factoids/)
+* you can return only from methods, but not from `do end` blocks
+* method default parameters can be set using ruby 2.0 keyword arguments `def
+my_method(name:, position: 1);end` They looks better than position arguments. It
+will be an error if we call without required arguments, for example `my_method
+position: 2`. It will be an error if we call with non existing arg `my_method
+name: 'me', date: 3`. You can mix with position arguments. It does not work if
+you instead of hash use object `ActionController::Parameters.new name: 'me'` so
+you need to call with `my_method name: ActionController::Parameters.new(name:
+'me').name`
+* ruby regex match will return
+[matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) for which you can
+call `captures` to get matched groups. You can use block instead of `if`
+
+  ~~~
+  exception.message.match(/for column (.*) at row/) do |match_data|
+    detail += " for the field #{match_data.captures.first}"
+  end
+  ~~~
+
+* decorators poro presenters
+[thoughtbot](https://robots.thoughtbot.com/evaluating-alternative-decorator-implementations-in)
+example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
+[video railsconf](https://www.youtube.com/watch?v=bHpVdOzrvkE)

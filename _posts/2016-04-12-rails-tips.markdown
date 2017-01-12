@@ -143,6 +143,7 @@ ALL users! `unscoped` will remove even association scopes, thanks Joseph
 Ndungu on
 [comment](http://www.victorareba.com/tutorials/creating-a-trashing-concern-in-rails-5).
 
+Uncope can receive params what to unscope, example `User.unscope(:where)`
 
 # Format date
 
@@ -162,7 +163,7 @@ Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{da
 `Time.now` and `Date.today` are using system time. If you are using
 `browser-timezone-rails` than timezone will be set for each request. But if you
 need something from rails console, you need to set timezone manually.
-`Time.zone = 'Belgrade' (list all in `rake time:zones:all`). It is good to
+`Time.zone = 'Belgrade'` (list all in `rake time:zones:all`). It is good to
 always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
 (`1.day.from_now`)
 
@@ -482,10 +483,10 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
 
 * if you have
   `/home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2.rb:31:in
-  `require': libmysqlclient.so.18: cannot open shared object file: No such file
+  require: libmysqlclient.so.18: cannot open shared object file: No such file
   or directory -
   /home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2/mysql2.so
-  (LoadError)` than simply `gem uninstall mysql2;gem install mysql2`
+  (LoadError)` than try `gem uninstall mysql2;gem install mysql2`
 * create mysql user
 
   ~~~
@@ -499,6 +500,11 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
   mysql -u myuser -pMYPASSWORD my_database_name < tmp/web001db.sql
   ~~~
 
+* create database with specific character set
+
+  ~~~
+  CREATE DATABASE my_app DEFAULT CHARACTER SET 'ascii';
+  ~~~
 
 # Mailer
 
@@ -542,7 +548,7 @@ something on every page and on first load than you need to bind on two events
 `ready page:load`:
 
 ~~~
-// app/assets/javascripts/read_page_load.coffee
+// app/assets/javascripts/ready_page_load.coffee
 $(document).on('ready page:load', ->
   console.log "document on ready page:load"
   # Activating Best In Place 
@@ -583,7 +589,6 @@ $(document).one('page:before-change',function() {
 ~~~
 
 # Timezones
-
 
 Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
 tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
@@ -626,16 +631,9 @@ Use `faker` gem to generate example strings:
 end if Rails.env.development?
 
 # deterministic and random data
-NUMBER_OF_FAKE_USERS = 5
-(
-  [
-    { email: 'asd@asd.asd', password: 'asdasd', role: User.roles[:manager],
-    remote_avatar_url: 'https://placehold.it/350x150' },
-  ] +
-  Array.new(NUMBER_OF_FAKE_USERS).map do
-    { email: Faker::Internet.email, password: Faker::Internet.password }
-  end
-).each do |doc|
+1.upto(10).map do |i|
+{ email: "user#{i}@asd.asd", password: Faker::Internet.password }
+end.each do |doc|
   User.where(doc.except(:password, :remote_avatar_url)).first_or_create! do |user|
     user.password = doc[:password]
     user.remote_avatar_url = doc[:remote_avatar_url]
@@ -807,6 +805,8 @@ shown when user come back to previous domain (on which request flash was set).
 From
 [7-ways-to-decompose-fat-activerecord-models](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/)
 suggestions for code organization I use mostly:
+
+You can check also <http://trailblazer.to/>
 
 ## Service objects
 
@@ -1103,25 +1103,6 @@ end
 
 # Tips
 
-* [sprockets](https://github.com/rails/sprockets) are using for compiling assets
-  (`//= require_tree .`)
-  * you can use assset path helpers in scss, instead of `<%= asset_url
-    'logo.png' %>` as it was underscored in erb, use hyphenated in sass
-    `asset-url("logo.png")`. But in recent Rails 4, you can use normal
-    `url("logo.png")`
-  * for coffeescript you need to add extension `customers.coffee.erb` and use
-    this initialization file
-
-  ~~~
-  config/initializers/sprockets.rb
-  Rails.application.config.assets.configure do |env|
-    env.context_class.class_eval do
-      # include MyAppHelper
-      include Rails.application.routes.url_helpers
-    end
-  end
-  ~~~
-
 * parse url to get where user come from `URI.parse(request.referrer).host`
 * always use `@post.destroy` instead of `@post.delete` because it propagates
   to all `has_many :comments, dependent: :destroy` (also need to define this
@@ -1167,6 +1148,15 @@ end
   Better is to make a query `Post.includes(:comments).all` or for instance
   `@post.comments.includes(:author)`. You need to eager load before calling
   `.all` or `.each`
+* `includes(user: :user_profile).where("user_profiles.name = 'dule'")` will not
+work since you can not add conditions to included models
+[includes](http://apidock.com/rails/ActiveRecord/QueryMethods/includes) you need
+to explicitly reference them `includes(user:
+:user_profile).where("user_profiles.name = 'dule'").references(user:
+:user_profile)`
+* when you need to eager load for a single object (show action) than you can
+simply repeat rails default before action `set_post` with: `@post =
+Post.includes(:comments).find params[:id\`
 
 * `some_2d_array.each_with_index do |(col1, col2),index|` when you need
   [decomposition
@@ -1344,6 +1334,12 @@ end
   Rails.application.routes.url_helpers.jobs_url
   ~~~
 
+  * if it your custom helper you can call from *ApplicationController*
+
+  ~~~
+  ApplicationController.helpers.my_custom_helper
+  ~~~
+
   * you can include all
 
   ~~~
@@ -1462,6 +1458,12 @@ end
   </cross-domain-policy>
   ~~~
 
+* very nasty issue is when your action returns
+  false [halting
+  execution](http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution)
+  so check if return value could be false and make sure before filters (like
+  before_create) always return not false value (you can return true or nil).
+
 # Prawn
 
 * if you need custom symbols in prawn than you need to use ttf fonts. Not all
@@ -1495,7 +1497,3 @@ end
   end
   ~~~
 
-# Chrome extensions
-
-* [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
-* [rack-mini-profiler](https://github.com/MiniProfiler/rack-mini-profiler)

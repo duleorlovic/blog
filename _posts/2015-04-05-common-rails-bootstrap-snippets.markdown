@@ -59,7 +59,7 @@ sed -i Gemfile -e '/group :development do/a  \
   # to detect N+1 sql queries\
   gem "bullet"\
   # do not show assets in log\
-  gem "quiet_assets"\
+  # gem "quiet_assets # can not find rails 5 version"\
   # irbtools includes interactive_editor gem (vim inside irb)\
   # just create ~/.irbrc with\
   # require "rubygems"\
@@ -67,7 +67,7 @@ sed -i Gemfile -e '/group :development do/a  \
   gem "irbtools", require: "irbtools/binding"\
 \
   # automatic reload\
-  gem "guard-livereload", "~> 2.5", require: false\
+  gem "guard-livereload", require: false\
   gem "rack-livereload"'
 
 cat >> Gemfile << HERE_DOC
@@ -75,7 +75,7 @@ cat >> Gemfile << HERE_DOC
 gem "autoprefixer-rails"
 
 # sets timezone based on browser timezone for each request
-# gem "browser-timezone-rails"
+gem "browser-timezone-rails"
 HERE_DOC
 
 bundle
@@ -95,6 +95,12 @@ end
 HERE_DOC
 
 git add . && git commit -m "Adding useful development & production gems"
+
+# to run guard live reload, first increase max watches than just run guard
+# https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
+# echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo
+sysctl -p
+# guard
 ~~~
 
 ~~~
@@ -111,7 +117,8 @@ echo '<button class="btn btn-primary">
   <i class="fa fa-camera-retro" aria-hidden="true"></i> fa-camera-retro</i>
 </button>
 ' >> app/views/pages/index.html.erb
-sed -i "/root 'welcome#index'/c \  root 'pages#index'" config/routes.rb
+sed -i config/routes.rb -e '/draw/a \
+  root "pages#index"'
 git add . && git commit -m "Adding sample index page"
 ~~~
 
@@ -281,7 +288,7 @@ cat > /tmp/template <<\HERE_DOC
               <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
+                <li><a href="<%= edit_user_registration_path %>">Change password</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a></li>
               </ul>
@@ -333,9 +340,10 @@ The easiest approach is with **bootstrap form**.
 ## Bootstrap form
 
 
-[bootstrap form](https://github.com/bootstrap-ruby/rails-bootstrap-forms) gem
-(not old [bootstrap_forms](https://github.com/sethvargo/bootstrap_forms)). Just
-add two lines
+[bootstrap_form gem rails-bootstrap-forms
+git](https://github.com/bootstrap-ruby/rails-bootstrap-forms) (not old pluralize
+[bootstrap_forms](https://github.com/sethvargo/bootstrap_forms)). Just add two
+lines
 
 ~~~
 cat >> Gemfile << HERE_DOC
@@ -350,6 +358,21 @@ sed -i app/assets/stylesheets/application.scss -e '1i\
 ~~~
 
 and use your `bootstrap_form_for`
+
+You can mix inline and horizontal layout for specific group
+
+~~~
+<%= bootstrap_form_for @location, layout: :horizontal, remote: true, label_col: "col-sm-4", control_col: "col-sm-8" do |f| %>
+  <%= f.text_field :name %>
+  <div class="form-inline">
+    <%= f.text_field :valid_for %>
+    <%= f.select :validity_unit, Unit.all, { include_blank: "Select", selected: @location.validity_unit, skip_label: true } %>
+  </div>
+  <%= f.text_field :description %>
+<% end %>
+~~~
+
+You can prepend or append strings.
 
 ## Adding flash (both from server and client)
 
@@ -452,7 +475,9 @@ For various ways of integrating Angular look at
 
 YML file can use anchor (`&`) and reference (`*`) so you do not repeat the code.
 When you use reference `*` (as for testing) you can not add or update keys, but
-with `<<` you can (as for production):
+with `<<` you can (as for production) (more on [get syntax right](
+{{ site.baseurl }} {% post_url 2017-01-10-get-syntax-right-in-jade-yaml %}#yaml))
+
 
 ~~~
 cat > config/secrets.yml << HERE_DOC
@@ -473,7 +498,7 @@ development: &default
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
     port: <%= ENV["DEFAULT_URL_PORT"] || 80 %>
 
-test: << *default
+test: *default
 production:
   <<: *default
   monitor_mode: true
@@ -501,8 +526,8 @@ sed -i app/mailers/application_mailer.rb -e '/default/c \
 Set default url option, that is domain for `root_url`:
 
 ~~~
-#sed -i '/  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
-sed -i config/application.rb -e '/  end$/i \
+#sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
+sed -i config/application.rb -e '/^  end$/i \
     # for link urls in emails
     config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys\
     # for link urls in rails console
@@ -638,6 +663,28 @@ or to override uploader serilization with
 # app/uploaders/document_uploader.rb
   def serializable_hash
     url
+  end
+~~~
+
+Resizing is by adding mini magick and configure uploader. It works on Heroku
+too. You can process files, 
+create new varsions based on
+[condtition](https://github.com/carrierwaveuploader/carrierwave#conditional-versions) or process based on [condition](http://stackoverflow.com/questions/11778464/conditional-versions-process-with-carrierwave)
+
+~~~
+echo "gem 'mini_magick'" >> Gemfile
+bundle
+
+# app/uploaders/document_uploader.rb
+  include CarrierWave::MiniMagick
+  process resize_to_limit: [200, 300]
+  process resize_to_limit: [300, 300], if: :logo?
+  def logo?(picture)
+    # check if we mount_uploader :logo_url or something else
+    picture.file.headers.match(/logo_url/)
+  end
+  version :thumb do
+    process resize_to_fill: [200, 300]
   end
 ~~~
 

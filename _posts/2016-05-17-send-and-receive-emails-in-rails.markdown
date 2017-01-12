@@ -110,6 +110,16 @@ sed -i config/secrets.yml -e '/^test:/i \
 vi config/secrets.yml # update default_mailer_sender to match your domain
 ~~~
 
+# Letter opener for local preview
+
+~~~
+sed -i '/group :development do/a  \
+  # open emails in browser\
+  gem "letter_opener"' Gemfile
+sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
+~~~
+
+
 # Interceptor
 
 When you need to test production emails localy, than you can set up interceptor

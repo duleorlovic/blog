@@ -35,6 +35,8 @@ gem 'minitest'
 Math and algorith tasks
 
 * https://www.hackerrank.com
+  * nice editor, solution have to be memory effiction (it raises Timeout or Run
+  Time Error)
 * https://projecteuler.net/
 * http://www.beatmycode.com/
 * http://codility.com/programmers/
@@ -57,6 +59,7 @@ Codility Solutions
 * division is integer division, so that `1/2 == 0` in ruby. You need to convert
   to float `x = x.to_f`
 * iterate range `(1..10).each` or `1.upto(10).each`
+* exponent is `2**2 == 4`
 
 # Example code
 
@@ -162,6 +165,12 @@ end
 
 If you want to run only one test, than run `ruby 0_short_palindrome.rb --name
 test_sample`
+
+If you want to print all local variables, you can use
+
+~~~
+local_variables.map { |vn| { vn => eval(vn.to_s) } }
+~~~
 
 TIPS:
 
@@ -321,26 +330,27 @@ sort(a) # => [0, 2, 2, 3, 4]
   ~~~
 
 * finding all primes less than N is in O(N*log(log(N))) Sieve of Eratosthenes.
-  We mark all multiplies of prime (starting from prime*prime since i*prime will
-  be marked with prime divisor of i), that is n/2 + n/3+ n/5 ... = n*log(log(n)
+Find first prime (until sqrt(N) since we do not need to mark greater than N) and
+mark all multiplies of prime, starting from prime*prime (since i*prime will be
+marked with prime divisor of i) untill N, that is n/2 + n/3+ n/5 ... =
+n*log(log(n)
+Rembember that largest prime factor of N can't be greated than Math.sqrt(N).
+0, 1 are not prime numbers.
 
   ~~~
-  n = 10
-  a = [true]*(n+1)
-  a[0] = a[1] = false # => false
-  i=2
-  while i*i <= n
-    if a[i]
-      prime = i # => 2, 3
-      temp = prime * prime
-      while temp <= n
-        a[temp] = false
-        temp += prime
-      end
-      i += 1
+  m = 10
+  definitely_non_prime = Array.new m + 1, false
+  definitely_non_prime[0] = definitely_non_prime[1] = true
+  2.upto(Math.sqrt(m)) do |i|
+    next if definitely_non_prime[i]
+    prime = i
+    non_prime = prime * prime
+    while non_prime <= m
+      definitely_non_prime[non_prime] = true
+      non_prime += prime
     end
   end
-  a.each_with_index { |e,i| puts i if e }
+  definitely_non_prime.each_with_index { |e,i| puts i if e == false }
   ~~~
 
 * factorization is to find prime numbers and its order. We can create fixed F
@@ -411,7 +421,7 @@ Def: integer m divides n (m|n) if exists r such that m*r = n
 Def: gcm(m, n) is the largest positive integer d which divides both m and n.
 That means d|m, d|n and for any c which c|m and c|n we have d>=c
 
-The: fpr a, b nonzero integer, their gcd(a,b) is linear combination of a and b
+The: for a, b nonzero integer, their gcd(a,b) is linear combination of a and b
 ie: exists s and t such that s*a+t*b=gcd(a,b)
 Proof: let d be least positive linear combination d = s*a+t*b . We can show that
 d|a.
@@ -587,3 +597,8 @@ General solutions are { (x0+k*b/d, y0-k*a/d) for k in Z}
 # Tutorial
 
 * <https://www.toptal.com/algorithms/interview-questions>
+
+# Constrains
+
+* memory: usually if you need to loop more than 10**6 (1MB) that could be a
+problem

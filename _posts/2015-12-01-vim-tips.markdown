@@ -19,6 +19,13 @@ Use vim help, with:
 * `:help i_^i` what ctrl+i do in insert mode
 * `:help c_^i` what ctrl+i do in command mode
 
+Update to vim 8 use
+
+~~~
+sudo add-apt-repository ppa:jonathonf/vim
+sudo apt-get update
+sudo apt-get install vim
+~~~
 
 # Plugins
 
@@ -32,8 +39,13 @@ cd ~/.vim/bundle
 git clone git://github.com/tpope/vim-rails.git # example: Rview
 ~~~
 
+
 You can find [my list of
 plugins](https://github.com/duleorlovic/config/blob/master/vim/update_vim_bundle.sh#L8)
+
+* rails-vim is nice
+  * if you want to use rspec instead of minitest, you need to remove `tests`
+  folder so `:Espec` works
 
 Some not used anymore
 
@@ -150,13 +162,26 @@ augroup END
   endfunction
   ~~~
 
-# Motions and selections
+# Movements
 
+* `+` and `-` move line up or down on the first letter
+* `{` and `}` move on paragraph (empty line)
 * `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
 * `H` `M` `L` move to the top/middle/bottom of the window
+* `mA` then `'A` jump there (downcase letter a can jump only on current buffer),
+  `:marks` gives the jump location, two ' `''` is jump back, `'.` jump to last
+  change
+* `%` jump closing brackets
+* `5G` or `:5` goes to the line 5
+* `gg` goes top, `G` goes bottom
+* `g,` and `g;` jump to next/prev change on current buffer
+* `:set scrollbind` in two buffers will make them scroll simultaneously
+
+# Motions and selections
+
 * `ciw` change inner word, `caw` including spaces that follows the word
   * `ca]` change all inside brackets including both [ ]
-* daw removes the inner word
+* `daw` removes the inner word
 * `vit` inner or `vat` outer (including tag) visual select tag `:h tag-blocks`
   * repeat `at` to select wraped tag
   * jump with `o` more on `:help visual-operators` `:help v_it`
@@ -169,25 +194,20 @@ augroup END
   `:Explore`(short `:E`) `:Vex` of current editing file, `%` create new file
   in current directory
 * `gv` to select previous selected visual area
-* `+` and `-` move on the first letter up and down
-* `{` and `}` move on paragraph
 * `dap}p` switch two paragraph
 * `dE` removes to the End of the string
-* mA then 'A jump there (downcase letter a can jump only on current buffer),
-  :marks gives the jump location, '' is jump back, '. jump to last change
-* `%` jump closing brackets
-* 5G or :5 goes to the line 5
-* gg goes top, G goes bottom
-* g, and g; jump to next/prev change on current buffer
+* recording macro to q with `qq`, exit with `q`, run with `@q`
+* paste commands in insert mode with `^Rq`
+* `^T` indent in insert mode
 
 # Searching
 
-* :grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I
+* `:grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I`
 * grep end of the word `/usan\>` help with `:h /\>`
-* :%s/old/new/gc
-* q: shows history of commands
-* q/ shows history of searches
-* :argdo %s/foo/bar/ge | update   replace in all arg
+* `:%s/old/new/gc`
+* `q:` shows history of commands
+* `q/` shows history of searches
+* `:argdo %s/foo/bar/ge | update`  replace in all arg
 * `:set nowrapscan` is usefull when you want to stop search when you hit bottom
   of a file. With `gg` you can jump to begging. `:set wrapscan` when you want to
   back to wrapped search
@@ -196,14 +216,15 @@ augroup END
 
 # Windows buffers and tabs
 
-* `:tabe file` open file in new tab, gt switch between tabs
+* `:tabe file` open file in new tab, `gt` switch between tabs
+* `:help Ctrl-W_T` move current buffer in new tab, Disable default Terminal ->
+Preferences -> Shortcuts
 * `gx` open link under cursor with `gnome-open`
-* :vsp #1  vertically split window with file #1
-* :on or Ctrl+W+o #closes all windord except current
-* :buffers, :b1, :bun closes the buffer
-* CTRL+^ (shift+6) jump to previous buffer
-* retab # this will actually reformat all source
-* :help Ctrl-W_T open current buffer in new tab
+* `:vsp #1`  vertically split window with file #1
+* `:on` or `Ctrl+W+o` closes all windord except current
+* `:buffers`, `:b1`, `:bun` closes the buffer
+* `CTRL+^` (shift+6) jump to previous buffer
+* `retab` this will actually reformat all source
 * `ctrl+w+f` is the same as `gf` but opens in new vertical split window
 * `b substring_of_filename` open buffer that matches substring (press tab in
   case of multiple mathces)
@@ -215,13 +236,17 @@ augroup END
   `"ap"
 * `%y+` copy all lines to clipboard
 
+# Completion
+
+* `^n` or `^p` in insert mode to autocomplete strings
+* `^x^n` only strings from current file
+* `^x^f` to complete filename (keep `^x^f` when you navigate subfolders)
+* `^x^]` for tags find other shortcuts with `:help ins-completion`
+
 # Usefull commands
 
-* find /home/bruno/old-friends -type f -exec sed -i 's/ugly/beautiful/g' {} \;
 * Repeat last colon command `@:`, repeat last command `@@`
-* `Ctrl+p`  # in insert mode is completing the string
-* :args app/*/*  to add all files to arg list
-* :set tabstop=2 shiftwidth=2 expandtab # set configuration
+* `:args app/*/*`  to add all files to arg list
 * `:nnoremap _ f_x~` find next _, remove and uppercase
   [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
   for moving underscore to CamelCase
@@ -229,17 +254,12 @@ augroup END
 * using vim inside irb or rails console with gem
   [interactive_editor](https://github.com/jberkel/interactive_editor). Its
   usefull since you can paste only limited number of chars to irb line. Now you
-  can write your input data in file/ruby code and insert byebug/debuger/pry in
+  can write your input data in file/ruby code and insert byebug/debugger/pry in
   rails code, and start hunting for bugs
-* `^n` or `^p` to autocomplete, `^x^n` only from current file`, `^x^f` to
-  complete filename (keep `^x^f` when you navigate subfolders), `^x^]` for tags
-  find other shortcuts with `:help ins-completion`
 * `set showcmd` enable showing all keys that I'm typing in bottom right corner,
   very usefull when explaining to someone
-* snippet `nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a`
-* snippet `nnoremap ,baseurl :-1read $HOME/config/vim/jekyll.baseurl.md<CR>'
-* recording macro to q with `qq`, exit with `q`, run with `@q`, paste commands
-  in insert mode with `^Rq`
+* snippet `nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a` [my
+snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
 
 # Books, videos tutorials
 

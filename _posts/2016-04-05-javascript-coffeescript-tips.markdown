@@ -3,6 +3,13 @@ layout: post
 title: Javascript & coffeescript tips
 ---
 
+# How is javascript loaded
+
+First are loaded scripts from `<head>` tag, than from `<body>` tag. It could
+happend that one `<script src=...` failed to load remote scipt, so probably
+the following script `<script>` tag will not work.
+
+
 # Scroll into view of element
 
 Sometimes you need to scroll the page to show some notification on top, or to
@@ -325,42 +332,6 @@ bottom of the element.
 * excellent reference for
   [coffeescript-cookbook](https://coffeescript-cookbook.github.io/chapters/arrays/filtering-arrays)
 
-# Jade
-
-Very nice tool, like coffescript. You can convert all html files with:
-
-~~~
-npm install -g html2jade
-html2jade *.html --bodyless --donotencode --noattrcomma --noemptypipe
-# --bodyless          do not output enveloping html and body tags
-# --donotencode       do not html encode characters (useful for templates)
-# --noattrcomma       omit attribute separating commas
-# --noemptypipe       omit lines with only pipe ('|') printable character
-rm *.html
-
-# version for all files in subdirectories
-find . -name '*.html' -exec html2jade {} --bodyless --donotencode --noattrcomma --noemptypipe \;
-find . -name '*.html' -exec  rm {} \;
-~~~
-
-Please check if format is good. At least this command will ignore <body> tag so
-you need to build that (index.html) separately. Usually index.html needs to be
-at specific location so I leave it in html format, and all other move to
-`jade_build` folder.
-
-* arguments could be in new line, but strings need `\`. comments are not allowed
-  inside ()
-
-  ~~~
-  // comment should be outside of (arguments)
-  md-button(ng-really-click='vm.delete()'
-  ng-really-message='Are you sure to \
-  remove this option?')
-  ~~~
-
-  I prefer not to indent attributes even they suggest to [indent
-  them](http://jade-lang.com/reference/attributes/)
-
 * if you are using `window.location.replace('http://a.b');` then browser back
   button is not working as espected. Its better to use
   `window.location.assign('new_page');` because the page is stored in history
@@ -438,3 +409,22 @@ this is unobtrusive version, works for input and select elements
 
 # regex
 [match](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+
+* when you are sending object with GET than you need to make it encoded (or you
+can use jQuery.get(url, data):
+
+  ~~~
+    var xhr = new XMLHttpRequest();
+    // http://stackoverflow.com/questions/5505085/flatten-a-javascript-object-to-pass-as-querystring
+    function toQueryString(obj) {
+      var parts = [];
+      for (var i in obj) {
+          if (obj.hasOwnProperty(i)) {
+              parts.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
+          }
+      }
+      return parts.join("&");
+    }
+    xhr.open('GET', '/notify-javascript-error?' + toQueryString(data));
+    xhr.send();
+  ~~~

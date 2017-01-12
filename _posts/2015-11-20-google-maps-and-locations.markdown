@@ -35,6 +35,10 @@ Use this helper in edit.html with form object, and on show page with object.
 You do not need to create input fields, it will do it (you can change
 `text_field` to `hidden_field` if you want to hide it).
 
+If you show/hide whole map, than you need to trigger resize with setCenter and
+setZoom or map.fitBounds (probably inside setTimeout if you are still in digest
+loop). Better is to use opacity 0, 1 and move element below
+
 ~~~
 # app/helpers/map_helper.rb
 # rubocop:disable Metrics/ModuleLength
@@ -161,6 +165,7 @@ module MapHelper
 
   def show_all_map(location_nodes)
     data = location_nodes.map do |location_node|
+      next if !location_node.latitude.present? || !location_node.longitude.present?
       {
         position: {
           lat: location_node.latitude,
@@ -170,7 +175,7 @@ module MapHelper
         description: location_node.description,
         url: location_node_path(location_node),
       }
-    end
+    end.compact
     content = content_tag(:div, nil, id: 'preview-map', class: 'show-all-map-container')
     content << %(
       <script>
@@ -253,10 +258,10 @@ end
 
 # app/views/contacts/index.html.erb
   <%= show_all_map @contacts %>
-  <%= show_static_pam @contact %>
+  <%= show_static_map @contact %>
 
 # app/assets/stylesheets/maps.scss
-.edit-map-container {
+.edit-map-container,.show-all-map-container {
   height: 300px;
   width: 100%;
 }

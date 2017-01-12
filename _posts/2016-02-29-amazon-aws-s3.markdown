@@ -93,7 +93,7 @@ policy to
 }
 ~~~
 
-## SSL on AWS Cloudfront
+## SSL on Amazon Cloud front
 
 You can request certificate [AWS Certificate
 Manager](https://console.aws.amazon.com/acm/). It will send email to the
@@ -111,6 +111,9 @@ front](https://console.aws.amazon.com/cloudfront/) distribution. Some
 * update your DNS record so CNAME is something like
   d1ub4fmsp3scvp.cloudfront.net
 
+* default is [24
+hours](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html)
+for cache to expire... you can try to invalidate some files manually
 
 # Access files
 

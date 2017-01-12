@@ -133,9 +133,6 @@ Look my
 * with [comparison operators](http://tldp.org/LDP/abs/html/comparison-ops.html)
   you should use quotes since something could not be defined `if [ -n "$a" ]`
 
-* call function with `$(function_name)` and print variable with `$variable_name`
-  (without brackets). If you need to concatenate with other string you can use
-  curly braces `${variable_name}other_string`
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
 * find 
@@ -218,6 +215,19 @@ Look my
 
 * for redirection standard error to standard output ` 2>&1 |` there is shorthand
   `|&` version.
+
+# Parameter expansion
+
+You can find substring
+
+* call function with `$(function_name)` and print variable with `$variable_name`
+  (without brackets). If you need to concatenate with other string you can use
+  curly braces `${variable_name}other_string`
+* [substring removal](http://wiki.bash-hackers.org/syntax/pe#common_use)
+
+
+# Tips
+
 * history
   * bash update history only on exit, but you can manually write with `history
       -a` (do not do this for every command since multiple terminal will be

@@ -68,9 +68,11 @@ HERE_DOC
   enabled. Check that features is software only on <chrome://gpu/>.
 * you can open extension by going to `chrome://apps/`
 
-## Plugins
+## Chrome plugins and extensions
 
 * [user agent switcher](https://github.com/chrispederick/user-agent-switcher/)
+* [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+* [rack-mini-profiler](https://github.com/MiniProfiler/rack-mini-profiler)
 
 
 ## Developer tools
@@ -87,4 +89,8 @@ HERE_DOC
 * to stop on some page that redirects immediatelly, you can go `Sources` tab and
   *Event Listener Breakpoints* and *Load -> beforeunload* or *Script -> Script
   first statement*
+* to use selected element in console use `$0` and for xpath use `$x()`
+[link](https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference)
+* use can use `monitor(function)`, `monitorEvents($0, "key");`
+* `debug(function)` or `undebug(function)`
 

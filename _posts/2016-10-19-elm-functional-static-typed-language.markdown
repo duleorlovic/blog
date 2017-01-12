@@ -21,11 +21,12 @@ Command line:
 # Core language
 
 * values
-  * stings `"asd"` `"asdf" ++ "asdf"`
-  * numbers `1` `5//2`
+  * strings `"asd"` (concatenation `"asdf" ++ "asdf"`)
+  * numbers `1` (integer division `5//2`)
 * functions
 
   ~~~
+  -- function definitions
   half n = n / 2
   -- using unonymous function
   half = \n -> n / 2
@@ -35,7 +36,7 @@ Command line:
   -- it is the same as divide = \x -> (\y -> x / y)
   divide 3
   <function> : Float -> Float
-  divise 3 2
+  divide 3 2
   1.5 : Float
   ~~~
 
@@ -70,12 +71,12 @@ Command line:
     under70 {age} = age < 70
     ~~~
 
-  * update values (non destructive, it will create new attribute and share
-    existing attributes) `{ point | x = 1 }`
+  * update values with pipe (non destructive, it will create new attribute and
+  share existing attributes) `{ point | x = 1 }`
   * difference with js objects is that you can't ask for nonexisting field, all
     fields are defined
 * types
-  * type annotations is written statement for types of arguments and output
+  * type annotations are written statement for types of arguments and output
 
     ~~~
     name : String
@@ -119,10 +120,34 @@ Command line:
 
 * use backslash `\` to split in multiple lines
 
+# User input
+
+~~~
+import Html exposing (
+
+-- MODEL
+type alias Model = {
+
+-- UPDATE
+type Msg = Reset |
+update : Msg -> Model -> Model
+update msg model =
+  case msg of
+    Reset -> ...
+
+-- VIEW
+
+view : Model -> Html Msg
+view model =
+~~~
+
 # Examples
 
 * [pairs.one](https://github.com/mxgrn/pairs.one) game in elixir and phoenix
 
 
 tutorial todo <https://guide.elm-lang.org/get_started.html>
+
+http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
+<https://www.toptal.com/front-end/make-web-front-end-reliable-with-elm>
 
