@@ -72,5 +72,3 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 # Live reloading in less than a second
 
 [Sharetribe](https://github.com/sharetribe/sharetribe/blob/master/docs/scss-coding-guidelines.md) uses [fast reloading](https://mattbrictson.com/lightning-fast-sass-reloading-in-rails)
-
-

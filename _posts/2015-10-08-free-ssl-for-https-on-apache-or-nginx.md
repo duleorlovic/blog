@@ -199,3 +199,7 @@ On ubuntu, you can rename `ssl.crt` to `ssl.crt.p12` (or ssl.crt.key) and double
 details of certificate.
 
 For heroku you can follow <https://gist.github.com/meskyanichi/3354578>
+
+# Lets encrypt for heroku
+
+https://github.com/pixielabs/letsencrypt-rails-heroku

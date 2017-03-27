@@ -48,6 +48,9 @@ Very usefull shortcuts to activate certain windows.
 Look at my
 [window_shortcuts](https://github.com/duleorlovic/config/blob/master/bashrc/window_shortcuts.sh)
 
+When I update ubuntu I need to map keys again. Go one by one and press ALT+key
+combination again.
+
 # Shortcuts for key mappings
 
 To scroll in terminal window, instead `shift+page_up` we can [bind to
@@ -94,6 +97,9 @@ bind '"\C-l": "\C-e\C-u xsel --clipboard <<"EOF"\n\C-y\nEOF\n\C-y"'
 In vim you can paste primary selection (just select, middle mouse, shift insert)
 with `"*p`. Clipboard selection (copy, paste) with  and `"+p`
 
+Maximize terminal window to full screen is with `F11` (yes it is the same
+shortcut for bash as for chrome).
+
 Only place where I sometimes need arrow keys is google chrome suggestions in
 address bar, but than I use Tab.
 
@@ -135,7 +141,7 @@ Look my
 
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
-* find 
+* find
   * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
   * find all html files `find . -name '*.html'`. Note that `find . -name *.html`
     will not work since wildcard will be changed to html file in current folder.
@@ -143,15 +149,22 @@ Look my
     212 bytes
 * test the speed on remote server:
   * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
-  * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to test upload link
-* you can put any shell (vim, rails s) to suspend state with `Control + z`. Than you can put it in background `bg` if needed. You can use that shell for inspection other things. When you are finished, you can switch back to vim, or rails s, with foreground `fg`
-* escape single quote `'` in linux scripts with `$'Hello I\'m here'` [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
+  * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
+  test upload link
+* you can put any shell (vim, rails s) to suspend state with `Control + z`. Than
+you can put it in background `bg` if needed. You can use that shell for
+inspection other things. When you are finished, you can switch back to vim, or
+rails s, with foreground `fg`
+* escape single quote `'` in linux scripts with `$'Hello I\'m here'`
+[link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
-* add task to crontab with linux command `# (crontab -l 2>/dev/null; echo "@reboot /home/orlovic/my.sh") | crontab -`
+* add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
+"@reboot /home/orlovic/my.sh") | crontab -`
 * repeat last command with sudo `sudo !!`
 * DDNS
   * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
-* copy all files from folder (including hidden) `cp folder/. /some-other/ -r` Note .` after folder.
+* copy all files from folder (including hidden) `cp folder/. /some-other/ -r`
+Note `.` after folder name.
 * preserve env variables with sudo `sudo -E ruby some_script.rb`, but `rvmsudo
   ruby some_script.rb` works better
 * `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
@@ -225,6 +238,46 @@ You can find substring
   curly braces `${variable_name}other_string`
 * [substring removal](http://wiki.bash-hackers.org/syntax/pe#common_use)
 
+# Curl
+
+To keep session in curl you can `-c` write and `-b` read from cookie file
+
+~~~
+curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
+~~~
+
+# Rsyslog
+
+Install
+[mongo](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04)
+
+~~~
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+cat << HERE_DOC | sudo tee -a /etc/systemd/system/mongodb.service
+[Unit]
+Description=High-performance, schema-free document-oriented database
+After=network.target
+
+[Service]
+User=mongodb
+ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
+
+[Install]
+WantedBy=multi-user.target
+HERE_DOC
+~~~
+
+~~~
+sudo systemctl start mongodb
+sudo systemctl status mongodb
+sudo systemctl enable mongodb
+~~~
+
+https://datatables.net/development/server-side/php_mongodb
 
 # Tips
 
@@ -240,4 +293,11 @@ You can find substring
     `history` it will give you results) `gnome-terminal -x bash -lc "cd
     ~/Downloads;bash --rcfile <(echo 'pwd;history;watch ls')"`. Solution is to
     add command before invoking bash like [here](
+* `cat /etc/issue` and `arch`
+  ~~~
+  $ cat /etc/issue
+  # Ubuntu 16.04.1 LTS \n \l
 
+  arch
+  # x86_64
+  ~~~

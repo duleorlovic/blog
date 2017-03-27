@@ -57,7 +57,7 @@ module MapHelper
       longitude = INITIAL_LONGITUDE
       zoom_level = INITIAL_ZOOM
     end
-    content = text_field_tag(:address_suggestions, nil, placeholder: 'Write approximate address and drag')
+    content = text_field_tag(:address_suggestions, nil, placeholder: 'Write approximate address and than move the marker icon', size: 50)
     content << content_tag(:div, nil, id: 'preview-map', class: 'edit-map-container')
     content << form_object.text_field(:latitude, id: 'latitude-input')
     content << form_object.text_field(:longitude, id: 'longitude-input')
@@ -310,9 +310,9 @@ class MyFormBuilder < ActionView::Helpers::FormBuilder
   # https://developers.google.com/maps/documentation/javascript/places
   def location_field( method, options={} )
     if options[:text_area] == true
-      content = text_area(method, options) 
+      content = text_area(method, options)
     else
-      content = text_field(method, options) 
+      content = text_field(method, options)
     end
     if options[:location_field_id].present?
       location_field_id = options[:location_field_id]

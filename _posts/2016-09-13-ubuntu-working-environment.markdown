@@ -3,6 +3,8 @@ layout: post
 title: Ubuntu working environment
 ---
 
+# Ubuntu stuff
+
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
 tunel `ssh -C -D 1080 server` gui `ssh -X server` remote `ssh -R
@@ -54,6 +56,11 @@ HERE_DOC
   [post](http://askubuntu.com/questions/368435/how-do-i-fix-dns-resolving-which-doesnt-work-after-upgrading-to-ubuntu-13-10-s)
   I comment out `# dns=dnsmasq` from /etc/NetworkManager/NetworkManager.conf and
   `sudo restart network-manager`
+
+* if `Bus 002 Device 003: ID 0d8c:013c C-Media Electronics, Inc. CM108 Audio
+Controller` microphone does not work automatically (but you can see in sound
+settings as *CM108 Audio Controller* than you need to comment out last line
+`#options snd-usb-audio index=0 ` in `/etc/modprobe.d/alsa-base.conf`.
 
 # Chrome chromium
 

@@ -5,22 +5,66 @@ title: APNS GCM Push Notification using Ionic
 
 # APNS
 
-## Compile for iPhone
+[Overview](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1)
+explain how it works. Your server acts as *provider* which stores tokens. 
 
-You can download `vmdk` file and just use with your virtual box
-[video](https://www.youtube.com/watch?v=wI3ng69kTD0)
-Virtualbox machine settings -> system ->
+> The token itself is opaque and persistent, changing only when a device’s data
+> and settings are erased
+> Each app instance receives its unique token when it registers with APNs.
+> Device tokens change when the user updates the operating system and when a
+> device’s data and settings are erased. As a result, apps should always request
+> the current device token at launch time.
 
-* Chipset should be PIIX3.
-* Enable EFI, but some tutorials says that should be unchecked.
+> If APNs attempts to deliver a notification and the destination device is
+> offline, APNs stores the notification for a limited period of time and
+> delivers it when the device becomes available again. This component stores
+> only the most recent notification per device and per app. If a device is
+> offline, sending a new notification causes the previous notification to be
+> discarded. If a device remains offline for a long time, all stored
+> notifications are discarded.
 
-<https://randosity.wordpress.com/2010/06/21/running-mac-os-x-in-virtualbox>
+Maximum size is 4KB. Payload is something like: `{ "aps" : { "alert" : "My
+message", "badge": 5, "sound": "default" }, "my_custom_data": "my custom data"
+}`
 
-You cannot sign in to iCloud because there was a problem verifying the identity
-of this Mac. Try restarting your Mac and signing in again
+> Silent notifications are not meant as a way to keep your app awake in the
+> background, nor are they meant for high priority updates. APNs treats silent
+> notifications as low priority and may throttle their delivery altogether if
+> the total number becomes excessive. The actual limits are dynamic and can
+> change based on conditions, but try not to send more than a few notifications
+> per hour.
 
+Silent notification are configured with `{"aps" : { "content-available" : 1 } }`
+and not alert, badge or sound keys.
 
-# GCM
+You can add customer actions using `category` in notification, so user responds
+before booting whole app.
+
+Feedback service should be used once a day to get tokens that are not longer
+active
+[docs](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/BinaryProviderAPI.html#//apple_ref/doc/uid/TP40008194-CH13-SW12)
+
+## How to make invalid apn token
+
+Feedback service will show tokens that are failed after you last checked. This
+will not show some invalid tokens that you have generated like: `123123`. You
+need to delete your app manually. Also the token would not be failed if you just
+delete your app, you need to send message to actually try to use token. After
+that you will find it in feedback service.  When you read feedback service than
+you need to try again to send to that token to find in in feedback service.
+
+It could be that you use mobile app with different cert than on server. Those
+tokens will not be invalidated, just messages will not be delivered.
+
+Running MAC in virtualbox is ok when you buy macOS, There are some youtube video
+[video](https://www.youtube.com/watch?v=wI3ng69kTD0) with links to download
+`vmdk` file and just use with your virtual box but that is not fair. Than you
+will get message like:
+
+> You cannot sign in to iCloud because there was a problem verifying the
+> identity of this Mac. Try restarting your Mac and signing in again
+
+# GCM Server side in ruby
 
 You need to register a project on <https://console.developers.google.com> and
 enable "Google Cloud Messaging". Create API key and save as GOOGLE_API_KEY .
@@ -41,8 +85,18 @@ can register but it can not receive messages.
 There is nice explanation how to create notification on your site
 <https://developers.google.com/web/updates/2015/03/push-notifications-on-the-open-web?hl=en>
 
+Docs for [response](https://developers.google.com/cloud-messaging/http#response)
 
-# Server side in ruby
+> if the value of failure and canonical_ids is 0, it's not necessary to parse
+> the remainder of the response
+
+If there are failures than iterate one by one and if message is some of the:
+"Unavailable', 'NotRegistered', 'InvalidRegistration' than you can remove it.
+If you notice `registration_id` than you should update it token
+
+## How to make invalid gcm token
+
+You need to clear all your app data.
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -81,7 +135,7 @@ module Notifiable
       data = { message: message }.merge additional_data
       data = data.merge collapse_key: collapse_key
       response = MY_GCM.send(tokens, data: data)
-      XceednetMailer.internal_notification('push message', tokens: tokens, data: data, response_body: response[:body]).deliver_now if Rails.env.development?
+      ApplicationMailer.internal_notification('push message', tokens: tokens, data: data, response_body: response[:body]).deliver_now if Rails.env.development?
       logger.info response[:body]
       response[:body]
     end
@@ -128,11 +182,6 @@ end
 +   end
 + end
 ~~~
-
-# Errors
-
-`NotRegisterd` gcm error response is when token is invalid. When user updates
-the app token become invalid.
 
 # Client
 

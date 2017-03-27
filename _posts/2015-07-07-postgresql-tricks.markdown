@@ -63,7 +63,7 @@ Some tips:
 * `FROM WHERE field IN ('a','b')` is the same as `field = 'a' OR field =
   'b'`
 
-# Some interview questions
+# Tutorial links
 
 <https://www.toptal.com/postgresql>
 Postgresql is better than NoSql because of:
@@ -96,6 +96,8 @@ failure.
 * `is null` is proper way to check if `null = null` or `cid = null`
 * `WHERE cid NOT IN (SELECT wcid FROM t WHERE wcid IS NOT null)` we need to
   check if null is in table since `NOT IN` will return empty set
+
+* Online exercises <https://pgexercises.com/>
 
 # Time Date
 

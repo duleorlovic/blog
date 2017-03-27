@@ -45,6 +45,7 @@ all superclasses and mixin modules with
 [A.ancestors](http://ruby-doc.com/docs/ProgrammingRuby/html/ospace.html).
 Module class object have `new` method, but it's instance (Module instance) does
 not have (on other hand `Class` object `a = Class.new` have `a.new` method).
+You can see all constants for particular class `Object.constants; A.constants`
 
 Ruby gems use `self.included` hook to modify class that is including a module
 (Rails version of this is `ActiveSupport::Concern`). So when you include some
@@ -300,17 +301,31 @@ is private but we can
   end
   ~~~
 
-* big multiline strings can be concatenated from lines similar to HERE_DOC.
+* big multiline strings can be concatenated from lines similar to HERE_DOC. It
+will show `\n` and will insert spaces because text is indented. There is
+`~HERE_DOC` version to strip spaces for all lines based on first line indent.
 
   ~~~
-  MY_TEMPLATE = <<-HTML
-    <html></html>
+  MY_TEMPLATE = <<HTML
+    <html>
+    </html>
   HTML
+
+  MY_TEMPLATE #=> "  <html>\n  </html>\n"
+
+  INDENT = <<~HERE_DOC
+    1
+      2
+    3
+  HERE_DOC
+
+  INDENT #=> "1\n  2\n3\n"
   ~~~
 
-  `%q()`is without interpolation, uppercase `%Q()` (or empty) is with
-  interpolation. Indent is important since lines are joined with `\n`. First
-  character is not important `%Q()` is the same as `%Q{}`
+  Same HERE_DOC functionality can be achieved with `%()` or `%Q()` with
+  interpolation (downcase `%q()` is without interpolation).
+  Indent is important since lines are joined with `\n`.  First character is not
+  important `%Q()` is the same as `%Q{}`
 
   ~~~
   my_str = %(
@@ -323,12 +338,13 @@ is private but we can
 
   ~~~
   string = "this is a \
-            long string"
+            long string with a lot of spaces"
   string = "this is also one "\
-           "long string"
+           "long string but without spaces"
   ~~~
 
-* `%W` and `%w` returns arrays (interpolated or not)
+* `%W` and `%w` returns arrays (interpolated or not). Same is with
+`HERE_DOC.split`
 
   ~~~
   >> %W(#{foo} Bar Bar\ with\ space)
@@ -420,8 +436,11 @@ is private but we can
   # TypeError: nil can't be coerced into Fixnum
   ~~~
 
-* you can find all instance methods in current class but not in parrent class
+* you can find method using grep `o.methods.grep /iden/`
+* you can list all instance methods in current class but not in parrent class
 with `o.methods - o.class.superclass.instance_methods`
+* in rails it is enough to exclude all default object methods `o.methods -
+Object.methods`
 
 # Irb
 
@@ -482,3 +501,20 @@ call `captures` to get matched groups. You can use block instead of `if`
 [thoughtbot](https://robots.thoughtbot.com/evaluating-alternative-decorator-implementations-in)
 example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
 [video railsconf](https://www.youtube.com/watch?v=bHpVdOzrvkE)
+* safe navigation operator `&.` can be used instead of `.try` for example: `user
+&& user.name` can be written as `user&.name`
+* you can call methods with dot but also with double colon `"a".size` or
+`"a"::size`. You can put spaces or new lines anywhere `a   .   size`.
+* destructuring block arguments (params), for example `a = [[1, 2], [3, 4]]` can
+be iterated with `a.each_with_index do |(first, last), i|`
+
+* if you see error `method_missing': undefined method this` than you need to reinstall ruby `rvm reinstall 2.3.1`
+
+todo
+
+http://norswap.com/ruby-dark-corners/
+https://www.amazon.com/Eloquent-Ruby-Addison-Wesley-Professional/dp/0321584104
+http://www.confidentruby.com/
+http://www.poodr.com/
+http://poignant.guide/book/chapter-5.html
+

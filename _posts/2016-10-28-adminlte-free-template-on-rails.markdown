@@ -19,8 +19,8 @@ gnome-open documentations/index.html
 ~~~
 
 To install to existing rails project you can use [bower inside rails](
-{{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}#bower
-) and than add admin-lte
+{{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}
+#bower) and than add admin-lte
 
 ~~~
 bower install --save admin-lte boostrap#3.3.6 font-awesome
@@ -28,11 +28,17 @@ bower install --save admin-lte boostrap#3.3.6 font-awesome
 
 I use separated bootstrap (not from admin-lte package) because "Glyphicons" are
 properly linked. Also I use latest font awesome.
+There is [admin-lte.scss](https://github.com/aguegu/AdminLTE) version but not
+updated.
 
 # Using with existing template
 
 To add new template while keeping existing you can use different layout base on
 locale. You can set new layout with option `?layout=true`
+So if you add param `?layout=true` it will render `index.in.html.erb` variant
+using new layout and put that in session (so all form submittions also use new
+layout). You can disable new_layout with `?layout=false`. If you have locale
+files (probably `devise.en.yml`) than you need to copy to `:in`
 
 ~~~
 # app/controllers/application_controller.rb
@@ -141,12 +147,13 @@ You can use assets pipeline to combine all files to one .css and .js file
 ~~~
 // app/assets/stylesheets/application_adminlte.scss
 /*
- * AdminLTE stuff
- *= require AdminLTE/dist/css/AdminLTE.min
- *= require AdminLTE/dist/css/skins/skin-blue.min
  *
  *= require bootstrap/dist/css/bootstrap
  *= require font-awesome/css/font-awesome
+ *
+ * AdminLTE stuff need to be after bootstrap (which includes normalize.scss)
+ *= require AdminLTE/dist/css/AdminLTE.min
+ *= require AdminLTE/dist/css/skins/skin-blue.min
  *
  * Rails stuff
  *= require rails_bootstrap_forms
@@ -198,14 +205,14 @@ Since asset pipeline [ignore first subfolders]( {{ site.baseurl }}
 care to name files differently when you create new scss and coffee files. I
 solved that by adding suffix `_adminlte`.
 
-## Notify if template exists
+## Notify if template is missing
 
 You can notify if some of the translated templates does not exists using [get
 template name]( {{ site.baseurl }} 
 {% post_url 2016-04-12-rails-tips %}#get-template-name) and add notification
 
 ~~~
-config/initializers/notify_if_adminlte_template_is_not_present.rb
+# config/initializers/notify_if_adminlte_template_is_not_present.rb
 # getting current template is not possible in rails
 # https://github.com/rails/rails/issues/4876
 # patch taken from
@@ -214,8 +221,12 @@ class ActionView::TemplateRenderer
   alias_method :_render_template_original, :render_template
 
   def render_template(template, layout_name = nil, locals = {})
-    if I18n.locale == :in && template.inspect.last(12) != ".in.html.erb" &&
-      template.inspect.last(11) != ".in.js.erb" &&
+    if I18n.locale == :in &&
+      template.inspect.last(12) != ".in.html.erb" &&
+      template.inspect.last(10) != ".in.js.erb" &&
+      template.inspect.last(17) != ".in.json.jbuilder" &&
+      template.inspect.first(23) != "app/views/devise/mailer" &&
+      template.inspect.first(17) != "app/views/mailers" &&
       template.inspect != "text template".freeze # this is when send_data
       cache_key = "adminlte_#{template.virtual_path}"
       if Rails.cache.fetch cache_key
@@ -263,7 +274,8 @@ as you can see in their
   checking is enabled` that means that asset path is bad, and rails can not find
   that precompiled asset. Sometime this happens only on production env.
 
-* [datatables]({{ site.baseurl }} {% post_url 2016-07-26-usefull-plugins %}
+* [datatables]({{ site.baseurl }}
+{% post_url 2016-07-26-usefull-plugins-services-and-opensource-stuff %}
   #datatables) is used for search and ordering on client side
 * [bootstrap-datepicker](https://github.com/uxsolutions/bootstrap-datepicker)
 * [bootstrap-daterangepicker](https://github.com/dangrossman/bootstrap-daterangepicker)
@@ -275,11 +287,12 @@ It contains nice features (as stated in their [blog](https://almsaeedstudio.com/
 
 * toolbar can be autoexpand using js options
 
-You can use colors with background `bg-red` `bg-blue` ... but also for
-components and it's status class. For example
+You can use colors with background `bg-red` `bg-blue` ... or for text
+`text-red`, `text-blue`...
+Colors could be also for components. For example
 [box](https://almsaeedstudio.com/themes/AdminLTE/documentation/index.html#component-box)
 could be `box-default`, `box-primary`, `box-info`, `box-success`, `box-danger`
-and `box-warning`
+and `box-warning`.
 
 You can [collapse
 box](https://github.com/almasaeed2010/AdminLTE/blob/master/dist/js/app.js#L562)
@@ -298,6 +311,20 @@ works nice with template, for example registration form:
   <button type="submit" class="btn btn-primary btn-block btn-flat" data-disable-with="Processing...">Sign up</button>
 <% end %>
 <%= render "devise/shared/links" %>
+~~~
+
+# Less source
+
+Since AdminLTE is build using less, you can set variables to customize colors
+and sizes.
+
+~~~
+// app/assets/adminlte/stylesheets/less_wrapper_adminlte.less
+// AdminLTE stuff need to be after bootstrap (which includes normalize.scss)
+@import "AdminLTE/build/less/AdminLTE";
+@import "AdminLTE/build/less/skins/skin-blue";
+
+@sidebar-width: 170px;
 ~~~
 
 # CRUD and ajax

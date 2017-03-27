@@ -30,6 +30,10 @@ div {
 }
 ~~~
 
+Note that element still occupy initial size. If you wrap with `<span>` than you
+need to set `display: inline-block` (`width` and `height` can only be applied to
+inline-block)
+
 2D transforms:
 
 * `translate(50px, 100px)` is 50px right and 100px down

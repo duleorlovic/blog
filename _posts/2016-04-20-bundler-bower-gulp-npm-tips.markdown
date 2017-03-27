@@ -11,26 +11,30 @@ _4.2.0_ new mystore`
 
 To rebuild Gemfile.lock you can run `bundle update`
 
-Issues:
+To specify github source of gem use
 
-* rmagic on ubuntu 16
+~~~
+gem 'jekyll', github: 'jekyll/jekyll' # branch: 'master'
+~~~
 
-  ~~~
-  checking for Magick-config... no
-  Can't install RMagick 2.12.0. Can't find Magick-config in
-  ...
-  An error occurred while installing rmagick (2.12.0), and Bundler cannot continue.
-  Make sure that `gem install rmagick -v '2.12.0'` succeeds before bundling.
-  ~~~
+Issue with rmagic on ubuntu 16
 
-  I upgraded to rmagic 2.13.2 and follow this
-  [issue](https://github.com/ttscoff/Slogger/issues/344)
+~~~
+checking for Magick-config... no
+Can't install RMagick 2.12.0. Can't find Magick-config in
+...
+An error occurred while installing rmagick (2.12.0), and Bundler cannot continue.
+Make sure that `gem install rmagick -v '2.12.0'` succeeds before bundling.
+~~~
 
-  ~~~
-  sudo apt-get install libmagickwand-dev
-  sudo apt-get install graphicsmagick-imagemagick-compat
-  PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
-  ~~~
+I upgraded to rmagic 2.13.2 and follow this
+[issue](https://github.com/ttscoff/Slogger/issues/344)
+
+~~~
+sudo apt-get install libmagickwand-dev
+sudo apt-get install graphicsmagick-imagemagick-compat
+PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
+~~~
 
 
 # Bower
@@ -87,3 +91,6 @@ get fresh copy of the package.
   [link](http://stackoverflow.com/questions/16748737/grunt-watch-error-waiting-fatal-error-watch-enospc)
 
 
+# Webpack
+
+<https://medium.com/statuscode/introducing-webpacker-7136d66cddfb>

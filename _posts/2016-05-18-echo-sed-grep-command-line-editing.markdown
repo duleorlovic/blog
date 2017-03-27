@@ -10,8 +10,7 @@ tags: echo sed grep edit command-line
 filename). You can use single quotes so you do not need to write `-e` and `\n`
 in multiline text but you need to escape other `'`. The best was to write
 multiline text is with `cat > filename << HERE_DOC ... some lines with ' or "
-...
-HERE_DOC`. First `\HERE_DOC` or `'HERE_DOC'` when no parametar expanded.
+...  HERE_DOC`. First `\HERE_DOC` or `'HERE_DOC'` when no parametar expanded.
 Remember to use double `<<` not single `<` redirection.
 
 ~~~
@@ -22,12 +21,13 @@ HERE_DOR
 
 # Sed
 
-`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and 
+`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and
 append *home* after that line (beside insert before `i`, this could be `a`
-append and `c` change matched line). Multiple lines need to have `\` at the end
-of line (multiline *echo ' ...'* does not need that trailing backslash). You can
-use `sed -i "// a" file.txt` but then you need `\n\` at the end of each line.
-Remember that no char (even space) could be after last `\`.
+append, `c` change matched line, `d` delete matched line). Multiple lines need
+to have "\" at the end of line (multiline *echo ' ...'* does not need that
+trailing backslash). You can use `sed -i "// a" file.txt` but then you need
+`\n\` at the end of each line.  Remember that no char (even space) could be
+after last `\`.
 
 Most common usage is to add before some line, for example line begins with
 `test`. If you need really need `'` for example `'a'` than you can replace it
@@ -61,7 +61,7 @@ Adding `,` and new `text` after `match` could be with `sed
 
 Sed has something different regular expressions so follow this [link](http://www.gnu.org/software/sed/manual/html_node/Regular-Expressions.html)
 
-When you want to change chars (and not whole line) than you can use `s/me/you/g', or several regexp in same command for example
+When you want to change chars (and not whole line) than you can use `s/me/you/g`, or several regexp in same command for example
 
 ~~~
 sed src/app/index.module.coffee \
@@ -85,13 +85,15 @@ HERE_DOC
 Note that all commands one per line. As with `sed ''` you need backslash for each line of multiline command.
 
  When you really need to add multiline template
-and don't want to escape `'` and to add `\` to the end of each line, than you
+and don't want to escape `'` and to add "\" to the end of each line, than you
 can try following command [inspiration](https://stackoverflow.com/questions/26770426/use-sed-in-bash-to-replace-string-with-heredoc/26770678#26770678)
 which will replace new lines with `ћ` (`N` means multiline match, `a` label... multiline match `:a;N;$!ba;s/\n/ћ/g`, note that `$` needs to be escaped if inside `""`) and than return back new line.
 
-Quote in `'HERE_DOC'` will not [substitute params](http://tldp.org/LDP/abs/html/here-docs.html#EX71C) so `$` `/` or `\` will remain in here doc. Instead of `<<` you can use `<<-` and closing HERE_DOC can be indented with *tab* character.
-For regexp we need
-to escape `/` and `\` with `\/` and `\\` (`s:\\:\\\\:g;s:/:\\/:g`)
+Quote in `'HERE_DOC'` will not [substitute
+params](http://tldp.org/LDP/abs/html/here-docs.html#EX71C) so `$` `/` or `\`
+will remain in here doc. Instead of "<<" you can use "<<-" and closing HERE_DOC
+can be indented with *tab* character.  For regexp we need to escape `/` and `\`
+with `\/` and `\\` (`s:\\:\\\\:g;s:/:\\/:g`)
 
 ~~~
 sed src/app/index.module.coffee -e "s/client/$(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' <<'HERE_DOC'
@@ -127,6 +129,13 @@ sed -i myfile.rb -e '/PLACEHOLDER/ {
   d
 }'
 rm /tmp/template
+~~~
+
+If you need `sudo` than you can use `tee` for example
+
+~~~
+cat << HERE_DOC | sudo tee -a /etc/systemd/system/mongodb.service
+HERE_DOC
 ~~~
 
 # Grep

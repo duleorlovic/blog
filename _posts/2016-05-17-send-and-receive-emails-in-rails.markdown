@@ -215,31 +215,43 @@ http://www.list-unsubscribe.com/
 Those are usefull admin or devops notifications
 
 ~~~
-# app/mailers/application_mailer.rb
+# config/secrets.yml
+development: &default
+  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
+  internal_notification_email: <%= ENV["INTERNAL_NOTIFICATION_EMAIL"] || "internal@example.com" %>
+~~~
+
+~~~
+# mailers/application_mailer.rb
 class ApplicationMailer < ActionMailer::Base
   layout 'mailer'
+  default from: Rails.application.secrets.default_mailer_sender
 
-  INTERNAL_EMAIL = Rails.application.secrets.internal_notification_email
+  INTERNAL_NOTIFICATION_EMAIL = Rails.application.secrets.internal_notification_email
 
-  def internal_notification(subject, item)
-    mail to: INTERNAL_EMAIL,
-         subject: subject,
-         body: "<h1>#{subject}</h1><strong>Details:</strong>" +
-           item.inspect
-             .gsub(', ', ",<br>")
-             .gsub('{', '<br>{<br>')
-             .gsub('}', '<br>}<br>'),
+  def internal_notification(subject, item = {})
+    return unless INTERNAL_NOTIFICATION_EMAIL
+    email_subject = "[MyApp#{' staging' if Rails.application.secrets.is_staging}] #{subject}"
+    email_body = "<h1>#{subject}</h1><strong>Details:</strong>" +
+                 item.inspect.
+                   gsub(', ', ",<br>").
+                   gsub('{', '<br>{<br>').
+                   gsub('}', '<br>}<br>')
+    mail to: INTERNAL_NOTIFICATION_EMAIL,
+         subject: email_subject,
+         body: email_body,
          content_type: "text/html"
   end
 end
 ~~~
 
-You can send notification in model (see that first arg is string, other are
-joined to hash)
+You can send notification in any class. Note that first param is string, and
+ohers are hash.
 
 ~~~
 # app/models/user.rb
   after_save :send_notification_geocode_failed
+
   def send_notification_geocode_failed
     if address_changed? && !city.present?
       ApplicationMailer.internal_notification(

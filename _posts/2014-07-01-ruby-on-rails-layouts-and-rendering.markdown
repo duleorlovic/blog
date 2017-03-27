@@ -62,6 +62,14 @@ RAILS_SERVE_STATIC_FILES=true rails s -e production
 (ignores) the first subfolder, for example *app/assets/javascrips/posts.js* will
 be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js*
 in development or included in *application-123.js* in production.
+It is important to remember that is `another-folder/application.js` uses
+`require main.js` that `main.js` file could be picked from wrong location (all
+asset paths are searched. If you want to add some path
+
+~~~
+# config/initializers/assets.rb
+Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'adminlte', 'images')
+~~~
 
 All files  should be referenced to assets pipeline by `//= require posts` or
 `//= require tree .` (if it was not referenced, it could be accessible, but only
@@ -89,15 +97,15 @@ with applications.js and application.css by the default matcher for compiling:
 
     [ Proc.new { |path, fn| fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path)) }, /application.(css|js)$/ ]
 
-## Scss
+# Scss
 
 Sass is similar to scss just without brackets and with indent. I think scss is
 better since any css code is also scss code.
 
-You can use assset path helpers in scss, instead of erb style `url(<%= asset_url
-'logo.png' %>)` as it was underscored in erb, use hyphenated in sass
-`asset-url("logo.png")`. But in recent Rails 4, you can use normal
-`url("logo.png")`.
+You can use assset path helpers in scss, instead of erb style `background-image:
+url(<%= asset_url 'logo.png' %>)` as it was underscored in erb, use hyphenated
+in sass `background-image: asset-url("logo.png")`. <s>But in recent Rails 4, you
+can use normal `url("logo.png")` </s>
 
 Note that for coffeescript you need to add extension `customers.coffee.erb` and
 use this initialization file
@@ -119,11 +127,185 @@ since than it will use plain css [import
 rule](https://developer.mozilla.org/en/docs/Web/CSS/@import) instead of scss
 inserting content.
 
+`@import` knows current folder so you can write only relative path.
+
 Erb for assets could be used only for asset_data_uri (including data directly
 into css). Remember that precompiling assets is done only once.
 
 You can set dependency between assets using
-[link](https://github.com/sstephenson/sprockets#the-link-directive) directive.
+[link](https://github.com/sstephenson/sprockets#the-link-directive) `link_tree`
+and `link_directory` directive.
+
+# Fonts
+
+If you need to include for example
+[simple-line-icons](https://github.com/thesabbir/simple-line-icons) than you
+can place it inslide `app/assets/simple_line_icons` and you need to overwrite
+font path, ie instead of `url('../fonts/Simple-Line-Icons.eot?v=2.4.0')` use
+`asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0');`
+
+~~~
+// app/assets/stylesheets/pages.scss
+/*
+ *= require css/simple-line-icons
+ */
+@font-face {
+  font-family: 'simple-line-icons';
+  src: asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0');
+  src: asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0#iefix')
+  format('embedded-opentype'),
+  asset-url('fonts/Simple-Line-Icons.woff2?v=2.4.0') format('woff2'),
+  asset-url('fonts/Simple-Line-Icons.ttf?v=2.4.0') format('truetype'),
+  asset-url('fonts/Simple-Line-Icons.woff?v=2.4.0') format('woff'), asset-url('fonts/Simple-Line-Icons.svg?v=2.4.0#simple-line-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+~~~
+
+# Less
+
+You can use less and scss in same project but you can not use variables from one
+to another since they are not compatible.
+
+~~~
+/*
+ *= require scss_wrapper
+ *= require less_wrapper
+ */
+~~~
+
+# Bower
+
+I would not add node_modules to git as it was suggested
+<https://coderwall.com/p/6bmygq/heroku-rails-bower>. Instead fetch is with
+bower.
+
+~~~
+# do not name your package as `bower` or other existing package
+npm init -y # to create package.json, -y to accept defaults
+npm install bower --save
+sed -i package.json -e '/scripts/a \
+    "postinstall": "./node_modules/bower/bin/bower install",'
+yes '' | bower init # to create bower.json, 'yes' is to choose default options
+echo '{
+  "directory": "vendor/assets/bower_components"
+}' > .bowerrc
+echo '
+# npm and bower packages
+node_modules
+vendor/assets/bower_components' >> .gitignore
+cat >> config/initializers/assets.rb << HERE_DOC
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
+HERE_DOC
+git add . && git commit -m "Adding npm and bower"
+~~~
+
+For Heroku you need to use two build packs. Follow this
+[commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
+It works for latest node and npm version. Older version could give errors:
+
+* bower version `~1.2` gives me error `error Path must be a string. Received
+   ...` so make sure you use latest bower.
+
+Old approach with assets from gems still works, no worry.
+
+~~~
+heroku create myapp-with-bower
+heroku addons:create heroku-postgresql:hobby-dev
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+heroku buildpacks # should return  1.nodejs  2.ruby (latest will run process)
+# alternativelly, we can define then in file .buildpacks
+# echo 'https://github.com/heroku/heroku-buildpack-ruby
+# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
+# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+git push heroku master --set-upstream
+~~~
+
+Example adding bootstrap:
+
+~~~
+bower install bootstrap --save
+sed -i app/assets/stylesheets/application.css -e '/require_tree/i \
+ *= require bootstrap/dist/css/bootstrap'
+sed -i app/assets/javascripts/application.js -e '/require_tree/i\
+//= require bootstrap/dist/js/bootstrap'
+
+git commit -am "Adding bootstrap"
+~~~
+
+Adding css and js files is working fine. There is a problem when some image/font
+files are hardcoded in css files. Hopefully there is scss verion of your
+library and you can override some variables. When filename is fixed and you can
+not include digest sha than you need to deploy files without fingerprint.
+
+So first solution is with help of
+[non-stupid-digest-assets](https://github.com/alexspeller/non-stupid-digest-assets)
+gem you can add non digest version. First your assets should be seen
+(precompiled) with sprockets than they will be again copied without digest.
+
+Sprockets `require` concatenates after sass compilation. So it's advices to use
+`@import` sass command instead of `require`. `@import` will work also in
+`application.css` but variable definition won't (like `$var: 1;`), so we need
+to move `css -> scss`.
+
+Here is example adding [fontawesome](http://fontawesome.io/examples/)
+
+~~~
+bower install fontawesome --save
+mv app/assets/stylesheets/application.css app/assets/stylesheets/application.scss
+cat >> app/assets/stylesheets/application.scss << \HERE_DOC
+$fa-font-path: 'font-awesome/fonts';
+@import 'font-awesome/scss/font-awesome';
+HERE_DOC
+cat >> Gemfile << HERE_DOC
+gem "non-stupid-digest-assets"
+HERE_DOC
+
+cat >> config/initializers/assets.rb << \HERE_DOC
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
+HERE_DOC
+
+cat >> config/initializers/non_digest_assets.rb << \HERE_DOC
+NonStupidDigestAssets.whitelist += [
+  /\.(?:svg|eot|woff|ttf)$/
+]
+HERE_DOC
+~~~
+
+Another solution is to overwrite `@font-face` css definition after you include
+all those icons css files
+
+~~~
+@import "simple-line-icons";
+
+@font-face {
+  font-family: 'simple-line-icons';
+  src:  asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.eot?v=2.2.2');
+  src:  asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.eot?#iefix&v=2.2.2') format('embedded-opentype'),
+        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.ttf?v=2.2.2') format('truetype'),
+        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.woff2?v=2.2.2') format('woff2'),
+        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.woff?v=2.2.2') format('woff'),
+        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.svg?v=2.2.2#simple-line-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+~~~
+
+You can test with:
+
+~~~
+RAILS_ENV=production rake db:setup db:migrate
+RAILS_ENV=production rake assets:precompile -v
+RAILS_SERVE_STATIC_FILES=true rails s -e production
+~~~
+
+You can check all current asset paths and write relative to that
+
+~~~
+rails runner "puts Rails.application.config.assets.paths"
+~~~
 
 # View
 

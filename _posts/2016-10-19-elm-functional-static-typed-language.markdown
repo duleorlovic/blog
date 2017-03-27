@@ -150,4 +150,5 @@ tutorial todo <https://guide.elm-lang.org/get_started.html>
 
 http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
 <https://www.toptal.com/front-end/make-web-front-end-reliable-with-elm>
+https://www.youtube.com/watch?v=28jCDXfZCgE#t=0.417205
 

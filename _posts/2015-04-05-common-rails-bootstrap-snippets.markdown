@@ -13,13 +13,7 @@ commands here.
 him for a lifetime
 
 
-# Initial commit
-
-~~~
-rails new myapp --database=postgresql
-cd myapp
-git init . && git add . && git commit -m "rails new myapp --database=postgresql"
-~~~
+# RVM and other tools
 
 If you do not have `rails` or `git` you need to install
 
@@ -30,6 +24,22 @@ rvm install 2.3.0
 gem install bundle
 
 sudo apt install git postgresql libpq-dev nodejs
+~~~
+
+# Initial commit
+
+You can choose database with rails param `rails new myapp --database=postgresql`
+but it is better to create `.railsrc` so it is used for all rails
+
+~~~
+cat >> ~/.railsrc << HERE_DOC
+-T # skip minitests
+-d postgresql # use postgresql
+HERE_DOC
+
+rails new myapp
+cd myapp
+git init . && git add . && git commit -m "rails new myapp"
 ~~~
 
 # Gitignore
@@ -47,6 +57,8 @@ cat >> .gitignore << 'HERE_DOC'
 .vagrant
 # byebug
 .byebug_history
+# rspec temporary file
+spec/examples.txt
 HERE_DOC
 git commit -am "Update .gitignore"
 ~~~
@@ -68,7 +80,11 @@ sed -i Gemfile -e '/group :development do/a  \
 \
   # automatic reload\
   gem "guard-livereload", require: false\
-  gem "rack-livereload"'
+  gem "rack-livereload"\
+\
+  # detects sql and gems vulnerability\
+  gem "brakeman", require: false\
+'
 
 cat >> Gemfile << HERE_DOC
 # adding vendor prefixes to css rules
@@ -103,11 +119,43 @@ sysctl -p
 # guard
 ~~~
 
+## Pronto
+
+You can create another github user bot (and invite him to collaborate on
+your project) and use [pronto](https://github.com/mmozuras/pronto) to post
+comments on commit, pull request or status
+
 ~~~
-# initial scale on mobile devices
-sed -i app/views/layouts/application.html.erb -e '/title/a \
-  <meta name="viewport" content="width=device-width, initial-scale=1">'
+sed -i Gemfile -e '/group :development do/a  \
+  gem "pronto", require: false\
+  gem "pronto-rubocop", require: false\
+  gem "pronto-brakeman", require: false\
+  gem "pronto-eslint", require: false\
+  gem "pronto-jshint", require: false\
+  gem "pronto-poper", require: false\
+  gem "pronto-rails_best_practices", require: false\
+  gem "pronto-reek", require: false\
+  gem "pronto-scss", require: false\
+  gem "pronto-flay", require: false\
+'
 ~~~
+
+Generate [Personal Access
+Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
+for the bot user and export in your env file so pronto command can post comments
+
+~~~
+pronto run -f github
+pronto run -f github_status
+pronto run -f github_pr
+~~~
+
+You need to set up target commit (default is master) to which it needs to
+compare current HEAD. It compare only changes that occurs between those two
+(changes on master are ignored).
+
+<https://christoph.luppri.ch/articles/2017/03/05/how-to-automatically-review-your-prs-for-style-violations-with-pronto-and-rubocop/?utm_source=rubyweekly&utm_medium=email>
+to find last pull request id
 
 # Sample page
 
@@ -122,111 +170,13 @@ sed -i config/routes.rb -e '/draw/a \
 git add . && git commit -m "Adding sample index page"
 ~~~
 
+~~~
+# initial scale on mobile devices
+sed -i app/views/layouts/application.html.erb -e '/title/a \
+  <meta name="viewport" content="width=device-width, initial-scale=1">'
+~~~
+
 # Front-end
-
-## Bower
-
-I would not add node_modules to git as it was suggested <https://coderwall.com/p/6bmygq/heroku-rails-bower>
-
-~~~
-# do not name your package as `bower` or other existing package
-npm init -y # to create package.json, -y to accept defaults
-npm install bower --save
-sed -i package.json -e '/scripts/a \
-    "postinstall": "./node_modules/bower/bin/bower install",'
-yes '' | bower init # to create bower.json, 'yes' is to choose default options
-echo '{
-  "directory": "vendor/assets/bower_components"
-}' > .bowerrc
-echo '
-# npm and bower packages
-node_modules
-vendor/assets/bower_components' >> .gitignore
-cat >> config/initializers/assets.rb << HERE_DOC
-Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
-HERE_DOC
-git add . && git commit -m "Adding npm and bower"
-~~~
-
-For Heroku you need to use two build packs. Follow this
-[commit](https://github.com/duleorlovic/heroku-rails-bower/commit/ba7c78a1f4f641cfe5592aa75b471aa142dc855a).
-It works for latest node and npm version. Older version could give errors:
-
-* bower version `~1.2` gives me error `error Path must be a string. Received
-   ...` so make sure you use latest bower.
-
-Old approach with assets from gems still works, no worry.
-
-~~~
-heroku create myapp-with-bower
-heroku addons:create heroku-postgresql:hobby-dev
-heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
-heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
-heroku buildpacks # should return  1.nodejs  2.ruby (latest will run process)
-# alternativelly, we can define then in file .buildpacks
-# echo 'https://github.com/heroku/heroku-buildpack-ruby
-# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
-# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
-git push heroku master --set-upstream
-~~~
-
-Example adding bootstrap:
-
-~~~
-bower install bootstrap --save
-sed -i app/assets/stylesheets/application.css -e '/require_tree/i \
- *= require bootstrap/dist/css/bootstrap'
-sed -i app/assets/javascripts/application.js -e '/require_tree/i\
-//= require bootstrap/dist/js/bootstrap'
-
-git commit -am "Adding bootstrap"
-~~~
-
-Adding css and js files is working fine. There is a problem when some image/font files are hardcoded in css files.
-Hopefully there is scss verion of your library and you can override some
-variables. When filename is fixed and you can not include digest sha
-than you need to deploy files without fingerprint. With help of
-[non-stupid-digest-assets](https://github.com/alexspeller/non-stupid-digest-assets)
-gem you can add non digest version. First your assets should be seen
-(precompiled) with sprockets than they will be again copied without digest.
-
-Sprockets `require` concatenates after sass compilation. So it's advices to use
-`@import` sass command instead of `require`. `@import` will work also in
-`application.css` but variable definition won't (like `$var: 1;`), so we need
-to move `css -> scss`.
-
-Here is example adding [fontawesome](http://fontawesome.io/examples/)
-
-~~~
-bower install fontawesome --save
-mv app/assets/stylesheets/application.css app/assets/stylesheets/application.scss
-cat >> app/assets/stylesheets/application.scss << \HERE_DOC
-$fa-font-path: 'font-awesome/fonts';
-@import 'font-awesome/scss/font-awesome';
-HERE_DOC
-cat >> Gemfile << HERE_DOC
-gem "non-stupid-digest-assets"
-HERE_DOC
-
-cat >> config/initializers/assets.rb << \HERE_DOC
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
-HERE_DOC
-
-cat >> config/initializers/non_digest_assets.rb << \HERE_DOC
-NonStupidDigestAssets.whitelist += [
-  /\.(?:svg|eot|woff|ttf)$/
-]
-HERE_DOC
-~~~
-
-You can test with:
-
-~~~
-RAILS_ENV=production rake db:setup db:migrate
-RAILS_ENV=production rake assets:precompile -v
-RAILS_SERVE_STATIC_FILES=true rails s -e production
-~~~
 
 ## Twitter bootstrap Gem
 
@@ -359,6 +309,12 @@ sed -i app/assets/stylesheets/application.scss -e '1i\
 
 and use your `bootstrap_form_for`
 
+You can use [horizontal
+forms](https://github.com/bootstrap-ruby/rails-bootstrap-forms#horizontal-forms)
+with `layout: :horizontal` (note that it won't work for string `layout:
+'horizontal'`). You can add options `label_col: 'col-sm-4', control_col:
+'col-sm-8'`
+
 You can mix inline and horizontal layout for specific group
 
 ~~~
@@ -373,6 +329,18 @@ You can mix inline and horizontal layout for specific group
 ~~~
 
 You can prepend or append strings.
+
+~~~
+  <%= f.text_field :price, append: '$' %>
+~~~
+
+Checkboxes should be inside a `form-group`
+
+~~~
+  <%= f.form_group label: { text: 'Admin' } do %>
+    <%= f.check_box :admin, label: '' %>
+  <% end %>
+~~~
 
 ## Adding flash (both from server and client)
 
@@ -528,9 +496,9 @@ Set default url option, that is domain for `root_url`:
 ~~~
 #sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
 sed -i config/application.rb -e '/^  end$/i \
-    # for link urls in emails
+    # for link urls in emails\
     config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys\
-    # for link urls in rails console
+    # for link urls in rails console\
     config.after_initialize do\
       Rails.application.routes.default_url_options = Rails.application.config.action_mailer.default_url_options\
     end'
@@ -779,55 +747,6 @@ sed -i config/initializers/carrierwave.rb -e '/^end/i \
   config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
 ~~~
 
-## Uploading using jQuery-File-Upload
-
-[jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload) 
-is much cleaner way of uploading
-[heroku tutorial](https://devcenter.heroku.com/articles/direct-to-s3-image-uploads-in-rails)
-that uses
-[PresignedPost](http://docs.aws.amazon.com/sdkforruby/api/Aws/S3/PresignedPost.html)
-
-~~~
-cat >> Gemfile << HERE_DOC
-# direct S3 uploading
-gem 'aws-sdk', '~> 2'
-HERE_DOC
-
-cat >> config/initializers/aws.rb << HERE_DOC
-Aws.config.update({
-  region: Rails.application.secrets.aws_region,
-  credentials: Aws::Credentials.new(
-    Rails.application.secrets.aws_access_key_id,
-    Rails.application.secrets.aws_secret_access_key
-  ),
-})
-
-S3_BUCKET = Aws::S3::Resource.new.bucket(
-  Rails.application.secrets.aws_bucket_name
-)
-HERE_DOC
-~~~
-
-~~~
-# in controller
-before_action :set_s3_direct_post, only: [:new, :edit, :create, :update]
-
-def set_s3_direct_post
-  @s3_direct_post = S3_BUCKET.presigned_post(
-    key: "uploads/#{SecureRandom.uuid}/${filename}",
-    success_action_status: '201', # Aws will respond with XML
-    acl: 'public-read'
-  )
-end
-~~~
-
-You can save one or many urls in `documents` field (type text) and use
-`serialize :documents, Array` but if you have more logic:
-
-~~~
-rails g model document name key documentable:references{polymorphic}
-
-~~~
 
 # Production Heroku deploy
 
@@ -874,6 +793,8 @@ export MYAPP_NAME=air
 # sed -i "/development.sqlite3/c \  database: ${MYAPP_NAME}_dev" config/database.yml
 # sed -i "/test.sqlite3/c \  database: ${MYAPP_NAME}_test" config/database.yml
 # sed -i "/production.sqlite3/c \  database: ${MYAPP_NAME}_prod" config/database.yml
+#
+# rails in production use: production: url: <%= ENV['DATABASE_URL'] %>
 
 echo '
 # heroku uses this 12 factor gem

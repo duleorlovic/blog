@@ -690,25 +690,28 @@ telnet localhost 5554
 # Android dns for local server
 
 On Android emulator `127.0.0.1` will not point to your machine! Also your
-`/etc/hosts` file will not be used. You can change hosts on android phone.
-All changes will last only until you reboot emulator. If you want to make it
-permanent, copy system.img to system-qemu.img (new file in specific folder),
-and than make changes that you want to be permanent. You also need to increase
-partition-size and remount before those changes on new disk.
-Here is example of updating hosts file on android emulator, for example `n4`
-[link](http://www.bradcurtis.com/hosts-files-and-the-google-android-emulator/)
+`/etc/hosts` file will not be used. You can change *hosts* file on android
+phone. On old sdk all changes last only until you reboot emulator so in order to
+make it permanent, we copied **system.img** to **system-qemu.img** (from your
+android sdk system image folder to your avd folder in your home) [about
+images](https//developer.android.com/studio/run/emulator-commandline.html#defaultimages).
+`cp $ANDROID_HOME/system-images/android-17/default/x86/system.img ~/.android/avd/n4.avd/system-qemu.img`
+We also needed to increase **partition-size**.
+
+On new SDK you only need to start emulator with option **-writable-system** and
+**adb root;adb remount** before those changes. You need to use
+`-writable-system` option for all future starting of emulator because if won't
+boot up.
 
 ~~~
-cp ~/Android/Sdk/system-images/android-17/default/x86/system.img ~/.android/avd/n4.avd/system-qemu.img
-# boot again emulator and repeat steps below
-
-emulator -avd n4 -partition-size 512 &
+emulator -writable-system -avd n4 &
+adb root
 adb remount
 adb pull /system/etc/hosts .
 echo "192.168.2.4 my-domain.dev" >> hosts
 echo "192.168.2.4 mylocationsubdomain.my-domain.dev" >> hosts
 adb push hosts /system/etc
-adb shell cat /etc/hosts
+adb shell 'cat /etc/hosts'
 ~~~
 
 

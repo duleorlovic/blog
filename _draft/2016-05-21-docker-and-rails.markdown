@@ -119,9 +119,14 @@ To see all running containers run `docker ps`. To kill `docker stop 323232`
 <http://blog.codeship.com/deploying-docker-rails-app>
 <http://blog.kontena.io/heroku-style-application-deployments-with-docker/?utm_source=rubyweekly&utm_medium=email>
 
+# Testing with docker
+
+<https://blog.codeship.com/effectively-testing-dockerized-ruby-applications/>
+
 # Tips
 
 * `docker-compose up` will not generate TTY session but `docker-compose run`
   will do. Add option `--service-ports` to map container ports if you use them.
 * `chown orlovic -R .` after initial build, since owner is set to root
+
 

@@ -155,6 +155,10 @@ class Test < Minitest::Test
     asert_in_delta 0.5, solution(1,2) # default delta=0.001
   end
 
+  def test_that_is_skipped
+    skip "later"
+  end
+
   private
 
   def prepare(s)
@@ -171,6 +175,9 @@ If you want to print all local variables, you can use
 ~~~
 local_variables.map { |vn| { vn => eval(vn.to_s) } }
 ~~~
+
+Run with colors `ruby my_class_test.rb -p`, or `ruby -r
+minitest/pride my_class_test.rb` or put `require 'pride'` in test file.
 
 TIPS:
 

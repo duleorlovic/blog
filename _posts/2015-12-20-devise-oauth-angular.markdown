@@ -40,7 +40,8 @@ to actually receive registration email.
 
 # Devise and Omniauth
 
-Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to add facebook and google authentication. It's easy installation.
+Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
+add facebook and google authentication. It's easy installation.
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -148,9 +149,9 @@ Note this situations:
 
 # Facebook app
 
-1. Create app on [developers.facebook.com](http://developers.facebook.com). By default
-   fb app is in development mode and can only be used by app admins, developers
-   and testers.
+1. Create app on [developers.facebook.com](http://developers.facebook.com). By
+   default fb app is in development mode and can only be used by app admins,
+   developers and testers.
 
 1. Add Contact Email on
    https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/ and toggle
@@ -254,7 +255,6 @@ Rails 4.2.5 use uppercase header names (Access-Token), but that does not affect
 the app. Also the method you fetch the resource does not matter, it could be
 $http, angular-rails-resource... headers will be send with ng-token-auth
 
-
 ~~~
 rails new my_app
 cd my_app
@@ -288,17 +288,20 @@ sed -i config/initializers/devise.rb -e '/config.allow_unconfirmed_access_for/a 
 
 ~~~
 
-Perform some [common bootstrap stuff for secrets and emails]({{ site.baseurl }}{% post_url 2015-04-05-common-rails-bootstrap-snippets %}) and add [oauth installation as above](#devise-and-omniauth).
+Perform some [common bootstrap stuff for secrets and emails]({{ site.baseurl }}
+{% post_url 2015-04-05-common-rails-bootstrap-snippets %}) and add [oauth
+installation as above](#devise-and-omniauth).
 
-For client start with steps at [2015-11-26-angular-and-ruby-on-rails]({{ site.baseurl }}
-{% post_url 2015-11-26-angular-and-ruby-on-rails %}).
+For client start with steps at [2015-11-26-angular-and-ruby-on-rails](
+{{ site.baseurl }} {% post_url 2015-11-26-angular-and-ruby-on-rails %}).
 
 
-We will use [md-dialog](https://material.angularjs.org/latest/demo/dialog) to show
-signup buttons or login form in another
+We will use [md-dialog](https://material.angularjs.org/latest/demo/dialog) to
+show signup buttons or login form in another
 [tab](https://material.angularjs.org/latest/demo/tabs).
 
-I have some problems to stay logged in immediatelly after log in and than hit refresh (while some params in url). We need to remove those params.
+I have some problems to stay logged in immediatelly after log in and than hit
+refresh (while some params in url). We need to remove those params.
 
 ~~~
 cd client
@@ -594,11 +597,12 @@ For angular_devise, path could be default `users/sign_in.json` (no need to place
 it on the root).
 In order to send headers and cookies, you need to add
 [$httpProvider.defaults.withCredentials =
-true](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials) to the `index.config.coffee`.
+true](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials)
+to the `index.config.coffee`.
 
 If protect_from_forgery is enabled, you need to pass `XSRF-TOKEN` token as
 cookie, and it will be returned later. We will read from that cookie (not from
-hiddent input fields as rails does).
+hidden input fields as rails does).
 
 Sometime rails responds multiple times, and last cookie is used.
 
@@ -961,13 +965,34 @@ users after specific actions, you can implement your own
 
 # Testing
 
+You can use [test login helpers]( {{ site.baseurl }}
+{% post_url 2015-11-09-testing-in-rails %}
+#login-helper)
 In `spec/rails_helper.rb` uncomment line that require all `spec/support/**/*.rb`
-files and create
-
-~~~
-# spec/support/devise.rb
-include Warden::Test::Helpers
-~~~
+files and create that login helper.
 
 And you can use in your acceptance tests `login_as user` where `user =
 User.create email: 'asd@.asd.asd', password: 'asdasd'`
+
+# HTTP Basic auth
+
+You can use basic http auth but you should `config.force_ssl = true` for
+production env.
+
+~~~
+# app/controllers/admin/admin_controller.rb
+module Admin
+  class AdminController < ApplicationController
+    http_basic_authenticate_with(
+      name: Rails.application.secrets.admin_username,
+      password: Rails.application.secrets.admin_password
+    )
+  end
+end
+
+# app/controllers/admin/users_controller.rb
+module Admin
+  class UsersController < Admin::AdminController
+  end
+end
+~~~

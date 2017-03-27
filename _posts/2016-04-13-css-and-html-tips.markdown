@@ -6,9 +6,12 @@ title: CSS and HTML tips
 * when you want to have smaller input field type number (smaller in terms of
   width) you need to provide both `min` and `max`, like `<input type="number"
   min="0" max="99">`
-* when you have some div/dt `float: left; width: 100px` than text can be on one
-  line `white-space: nowrap;overflow: hidden;text-overflow: ellipsis;` or in
-  multiple lines `white-space: normal`
+* to hide long text on div/dt `float: left; width: 100px` than:
+  * text can be on one line `white-space: nowrap;overflow: hidden;text-overflow:
+  ellipsis;` no wrap means it will no go to the next line
+  * multiple lines `white-space: normal`
+  * `word-wrap: break-word`
+
 * if you have `<small>` position relative, and apply left -100px, it will still
   occupy the space where it was. It is better to use `position: absolute`
 * to move element to the right but keep inside parent element you need to mark
@@ -213,13 +216,16 @@ it's value). you can disable submit on enter with
   ~~~
   $('#notification-form').on('keyup keypress', function(e) {
     var keyCode = e.keyCode || e.which;
-    if (keyCode === 13) { 
+    if (keyCode === 13) {
       e.preventDefault();
       return false;
     }
   });
   ~~~
 
+* `<input readonly="readonly">` is better to use than `<input
+disabled="disabled">` since it can receive focus, included in tabbing navigation
+and values are successfully posted (disabled input is not send to server).
 * if you need two css files, than write two `<link rel="stylesheet"
   type="text/css" href="1.css" />` . Do not use `@import url("2.css")` in
   `1.css` since it will prevent downloading files in parallel (2.css is
@@ -267,3 +273,51 @@ it's value). you can disable submit on enter with
     opacity: 0.4;
   }
   ~~~
+
+# Pizza cut
+
+Interesting design <http://hmfaysal.me/hmfaysal-omega-theme/> since it uses svg
+to cut the image and add animations.
+
+~~~
+<div class="decor-wrapper">
+  <svg id="header-decor" class="decor bottom" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path class="large left" d="M0 0 L50 50 L0 100" fill="rgba(255,255,255, .1)"></path>
+  </svg>
+</div>
+~~~
+
+# Table
+
+Table has [two layouts](http://www.w3schools.com/cssref/pr_tab_table-layout.asp)
+* `table-layout: auto` dependends on widest unbreakable content in the cells
+* `fixed` faster since browser does not need full content
+
+Rotate header [link](https://css-tricks.com/rotated-table-column-headers/)
+
+~~~
+<th class="rotate"><div><span>Column header 1</span></div></th>
+~~~
+
+~~~
+th.rotate {
+  /* Something you can count on */
+  height: 140px;
+  white-space: nowrap;
+}
+
+th.rotate > div {
+  transform:
+    /* Magic Numbers */
+    translate(25px, 51px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+  width: 30px;
+}
+th.rotate > div > span {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+~~~
+
+Note 

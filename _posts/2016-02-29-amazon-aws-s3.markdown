@@ -4,7 +4,7 @@ title: Amazon AWS S3
 tags: s3
 ---
 
-# Create IAM user and attach policy
+# Create IAM user and attach inline policy
 
 I usually one user for testing (keys that I export in my basrc), one user for
 all my apps, and one for some projects which other devs could have access.

@@ -1,0 +1,9 @@
+---
+layout: post
+title: Haskell
+---
+
+# Books
+
+* how to think in haskell [Maybe Haskell](https://gumroad.com/l/maybe-haskell)
+* understanding syntax [Learn You a Haskell](http://learnyouahaskell.com/)

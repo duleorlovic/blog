@@ -120,7 +120,7 @@ to global variable, or a property of global object or object passed by reference
 as an argument to the outer function call.
 
 Tip: in chrome console when you stop with `debugger` and try to reference
-variable than has not been referenced than is could say   undefined reference`
+variable than has not been referenced than is could say `undefined reference`
 although you can use it
 
 ~~~

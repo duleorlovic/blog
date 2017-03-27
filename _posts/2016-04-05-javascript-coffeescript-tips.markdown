@@ -8,6 +8,24 @@ title: Javascript & coffeescript tips
 First are loaded scripts from `<head>` tag, than from `<body>` tag. It could
 happend that one `<script src=...` failed to load remote scipt, so probably
 the following script `<script>` tag will not work.
+You can add script dynamically in javascript using `appendChild` and it will be
+executed after all inline scripts are done (after all defered so setting `defer`
+option in javascript has no efects).
+Threre are two phases: downloading and executing. All modern browsers download
+in parallel so we do not need to consider downloading. Execution could be
+immediatelly or after parsing.
+
+There are two additional attributes [html living standard 4.12
+Scripting](https://html.spec.whatwg.org/multipage/scripting.html)
+
+* `<script src="" async>` execute as soon as it is downloaded (download is not
+blocking). It could be in
+any order regarding other scripts and it could be before parser finishes.
+* when `async` is not present than`<script src="" defer>` (download is not
+blocking) execute in same order when page has finished parsing (just before
+DOMContentLoaded)
+`defer` is ignored on scripts without `src` (so defer works only for external
+scripts)
 
 
 # Scroll into view of element
@@ -331,6 +349,11 @@ bottom of the element.
 
 * excellent reference for
   [coffeescript-cookbook](https://coffeescript-cookbook.github.io/chapters/arrays/filtering-arrays)
+* global variables can be attached to `window` object like `window.my_var = 42`
+or you can use `@` syntax `@my_var = 42`
+
+
+# TIPS
 
 * if you are using `window.location.replace('http://a.b');` then browser back
   button is not working as espected. Its better to use
@@ -427,4 +450,38 @@ can use jQuery.get(url, data):
     }
     xhr.open('GET', '/notify-javascript-error?' + toQueryString(data));
     xhr.send();
+  ~~~
+
+* to create jquery elements you can select parent element and append to it:
+`$('p').append('<span>hi</span>')` or you can create and use appendTo
+`$('<span>hi</span>').appendTo('body');`. Instead of elements as html blocks, if
+you have a lot of javascript variables, you can pass additinal parameters and
+use quick self closed tags like
+
+~~~
+$('<div/>', {
+  id: 'foo',
+  css: {
+    fontWeight: 600
+  },
+  click: function() {
+    alert('Hi');
+  }
+});
+~~~
+
+you can add `$('p').after("some text")` or `$('p').before('some text')`
+
+* click event buble up, so when you attach click
+
+  ~~~
+  <button type="button" class="btn btn-box-tool" data-widget="collapse" data-user-preferences="expand_location_reports_customers"><i class="fa fa-minus"></i>
+  ~~~
+
+  target will will be inner `<i>` and currentTarget will be `<button>`
+
+  ~~~
+  @initializeUserPreferences = ->
+    $('[data-user-preferences]').click (e) ->
+      preference = e.currentTarget.dataset.dataUserPreferences
   ~~~

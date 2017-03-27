@@ -92,33 +92,57 @@ validates :email, format: { with: User.email_regexp, allow_blank: true }
 validates :email, uniqueness: { scope: :user_id }
 ~~~
 
+When validating associations, always is `_id` since we use that in select input
+inside form (don't validate object `validates :job_type, presence: true` since
+error will not be shown on `:job_type_id`).
+
+~~~
+validates :job_type_id, presence: true
+
+<%= f.select :job_type_id, ... %>
+~~~
+
 # Hooks
 
 Default value for column could be in migration but than you need another
 migration if you want to change value. If we put on `after_initialize
-:default_values` than it is called also when you read object. If you have
-`validates :logo` than you can not put on `before_save :default_logo` since
-validation will fail before that. We need before validation:
+:default_values_on_initialize` than it is called also when you read object (that
+is required if you want to change default values for existing objects) If you
+have `validates :logo` than you can not put on `before_save :default_logo` since
+validation will fail before that. We need `before_validation` which occurs only
+on update and create.
+
+Note that business logic could be that some fields could be cleared. For example
+some logo is default value, but someone could completely remove logo.
+So you need to separate `default_values_on_create` and
+`default_values_on_updarte` (which could get `nil` on update some fields)
 
 ~~~
-before_validation :default_values
+after_initialize :default_values_on_initialize
 before_validation :default_values_on_create, on: :create
+before_validation :default_values_on_updarte, on: :update
 
 private
 
-def default_values
+def default_values_on_initialize
   self.some_no_nil_number ||= 1
   self.some_positive_number = 1 unless some_positive_number.to_i > 0
+  self.some_false_value ||= false
+  # do not use self.some_true_value ||= true since that will override if
+  # some_true_value = false
+  self.some_true_value = true if some_true_value.nil?
+  # http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution
+  # return value should be true or nil
+  true
 end
 
 def default_values_on_create
-  self.logo = Rails.application.secrets.default_restaurant_logo
+  self.logo ||= Rails.application.secrets.default_restaurant_logo
+  # return value should be true or nil
+  # http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution
+  true
 end
 ~~~
-
-Business logic could enable some fields (like logo) to be empty (but initially
-with with default value) so you need to separate `default_values_on_create` that
-differs from `default_values` which could get `nil` on update.
 
 # Default Order
 
@@ -166,6 +190,23 @@ need something from rails console, you need to set timezone manually.
 `Time.zone = 'Belgrade'` (list all in `rake time:zones:all`). It is good to
 always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
 (`1.day.from_now`)
+
+* to get weekday from `ActiveSupport::TimeWithZone` use
+  [link](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html)
+  `weekday = t.to_a[6]`
+* to get first calendar date `Time.zone.today.beginning_of_month` or
+`Time.zone.today.end_of_month`
+
+## Timezones
+
+Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
+tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
+rails s returns default time zone `Time.zone # CEST Europe`. You can use users
+timezone with
+[browser-timezone-rails](https://github.com/kbaum/browser-timezone-rails).
+`Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
+why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
+
 
 # Multiline render js response
 
@@ -265,6 +306,10 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 ## Add json and hstore
 
+Note that you can use simple text column (without default value) and add
+`serialize :preferences, Hash` in your model, so `user.prefereces # => {}` is
+defined for initial empty value.
+
 Adding array of any type and hstore is easy, just add default value `[]` and
 `''` (breaks for `{}`). You can create hstore extension in migration. If you
 need arrays of hstore than you need to go for json or jsonb (better optimization
@@ -284,7 +329,7 @@ class CreatePhones < ActiveRecord::Migration
 end
 ~~~
 
-DB user need to be superuser to be able to create extensuin. If you need to
+DB user need to be superuser to be able to create extension. If you need to
 run `rake db:migrate:reset` to rerun all migration to check if db/schema is in
 sync, than the best way is to alter user to have superuser privil `sudo su
 postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"` where
@@ -397,7 +442,8 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
   pgadmin3 # login as postgres without password and chage it to Orlovic
 
   # create database is with linux command
-  createdb
+  createdb # this will create db with same name as current user
+  createdb orlovic
   ~~~
 
 * you can use production database locally with url from heroku config env
@@ -441,6 +487,10 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
 
 ## Migrations:
 
+* `rails g model user email_address` will generate migration and model. It is
+good to edit `last_migration` and add `null: false` to not null fields
+(particularly for foreign keys) and
+`add_index :users, :email_address, unique: true`
 * if we call `Products.update_all fuzz: 'fuzzy'` in migration, it will
   probably break in the future, because *Products* will be validated for
   something that we did not know on that time. Better is to create local class
@@ -479,6 +529,69 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
   [link](http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations)
 
 
+## Has_many through
+
+`has_many :roles; has_many :projects, through: roles` can be used for many to
+many associations. You can automatically add new role, no need to `user.save`.
+
+~~~
+user.roles.create project: project
+# or
+user.projects << project
+~~~
+
+[has_and_belongs_to_many](http://guides.rubyonrails.org/association_basics.html#the-has-and-belongs-to-many-association)
+(habtm) can be generated with `rails g migration create_campaigns_templates
+campaign:references template:references` and add `id: false` as
+[suggested](http://guides.rubyonrails.org/association_basics.html#updating-the-schema)
+Note that both model names are plural.
+
+~~~
+class CreateCampaignsTemplates < ActiveRecord::Migration
+  def change
+    create_table :campaigns_templates, id: false do |t|
+      t.references :campaign, foreign_key: true, null: false
+      t.references :template, foreign_key: true, null: false
+    end
+  end
+end
+~~~
+
+and adding `has_and_belongs_to_many :templates` in those classes.
+
+If you have different name of the table: `t.references :donor, foreign_key:
+true, null: false` but donor is actually in users table, than you need to change
+foreign key:
+
+~~~
+t.references :donor, foreign_key: { to_table: :users }, null: false
+~~~
+
+or manually write relation
+
+~~~
+t.belongs_to :donor, index: true, null: false
+add_foregn_key :donations, :users, column: :donor_id
+~~~
+
+Also in model you need to write: `has_many :donations, foreign_key: :donor_id`
+and `belongs_to :donor, class_name: "User"`
+
+If you need to update specific fields of association, add validation or cdd
+ustom order then you should create the model and use `has_many :templates,
+through: campaign_templates, order: 'campaign_templates.created_at ASC'`
+Note that here we user singular first part so model name looks better
+
+~~~
+class CampaignTemplate < ActiveRecord::Base
+  belongs_to :campaign
+  belongs_to :template
+end
+~~~
+
+If you accidentaly use `belongs_to :templates` (pluralized) than error is
+`undefined method relation_delegate_class' for Templates:Module`
+
 # MySql
 
 * if you have
@@ -506,40 +619,16 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
   CREATE DATABASE my_app DEFAULT CHARACTER SET 'ascii';
   ~~~
 
-# Mailer
+  or in `config/database.yml` with
 
-Usefull is to have internal notification
+  ~~~
+  development:
+    adapter: mysql2
+    encoding: ascii
+  ~~~
 
-~~~
-# config/secrets.yml
-development: &default
-  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "support@example.com" %>
-  internal_notification_email: <%= ENV["INTERNAL_NOTIFICATION_EMAIL"] || "internal@example.com" %>
-~~~
-
-~~~
-# mailers/application_mailer.rb
-class ApplicationMailer < ActionMailer::Base
-  default_from Rails.application.secrets.default_mailer_sender
-  INTERNAL_NOTIFICATION_EMAIL = Rails.application.secrets.internal_notification_email
-
-  def internal_notification(subject, item)
-    mail to: INTERNAL_NOTIFICATION_EMAIL,
-         subject: subject,
-         body: "<h1>#{subject}</h1><strong>Details:</strong>" +
-           item.inspect
-             .gsub(', ', ",<br>")
-             .gsub('{', '<br>{<br>')
-             .gsub('}', '<br>}<br>'),
-         content_type: "text/html"
-  end
-end
-~~~
-
-~~~
-ApplicationMailer.internal_notification('SmsService', send: args)
-                 .deliver_now
-~~~
+On Heroku it is better to use *JawsDB MySQL* than *ClearDB MySQL* since it has
+more MB in for free usage.
 
 # Turbolinks
 
@@ -587,16 +676,6 @@ $(document).one('page:before-change',function() {
 });
 </script>
 ~~~
-
-# Timezones
-
-Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
-tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
-rails s returns default time zone `Time.zone # CEST Europe`. You can use users
-timezone with
-[browser-timezone-rails](https://github.com/kbaum/browser-timezone-rails).
-`Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
-why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
 
 # Seed
 
@@ -712,7 +791,7 @@ http://stackoverflow.com/questions/6407141/how-can-i-have-ruby-logger-log-output
 [mustache](https://github.com/mustache/mustache) is nice to render user
 templates
 
-Usage is simple as 
+Usage is simple as
 
 ~~~
 data_for_body == current_user.contacts.first
@@ -770,6 +849,24 @@ rake update_subdomain:my_user[]
 rake update_subdomain:my_user[new_subdomain]
 ~~~
 
+Another use of rake is to seed
+
+~~~
+# lib/tasks/seed.rake
+namespace :seed do
+  task :bid_types => :environment do
+    ["live", "silent", "teacup"].each do |name|
+      BidType.find_or_create_by! name: name
+    end
+  end
+end
+
+# db/seed.rb
+Rake::Task["seed:bid_types"].invoke
+~~~
+
+so you can create with `rake db:seed` or `rake seed:bid_types`
+
 # Sessions and share cookies on multiple subdomains
 
 If you use [sharing-cookies-across-subdomains-with-rails-3](http://makandracards.com/makandra/31381-sharing-cookies-across-subdomains-with-rails-3) or [what-does-rails-3-session-store-domain-all-really-do](http://stackoverflow.com/questions/4060333/what-does-rails-3-session-store-domain-all-really-do)
@@ -780,10 +877,25 @@ Rails.application.config.session_store :cookie_store, key: '_myapp_session',
 domain: :all, expire_after: 60.minutes
 ~~~
 
-you need to know that some domains like `herokuapp.com` belongs to [Public
+This works fine for top level domains and subdomains for them.
+
+For example if you have `domain: :all` and you sign in at `asd.dev`, than you
+will be signed in also on `asd.asd.dev` and `asd.asd.asd.dev` and so on...
+Cookie will be with domain `.asd.dev` for all those sites.
+
+You need to know that some domains like `herokuapp.com` belongs to [Public
 Suffix List](https://devcenter.heroku.com/articles/cookies-and-herokuapp-com) so
-browser will prevent setting cookie for them (because someone can use
-attacker.herokuapp.com to read cookies from myapp.herokuapp.com).
+browser will prevent setting `domain: :all` cookie for them (because someone can
+use attacker.herokuapp.com to read cookies from myapp.herokuapp.com).
+
+Note you can not login at `in.rs` (PSL and browser will prevent cookie).
+
+Rails cookie store knows for public suffix list, so for `trk.in.rs` it will use
+`.trk.in.rs` and all others like `asd.in.dev` it will use `.in.dev`.
+
+You can login at `trk.in.rs` but it wont be shared to `asd.in.rs`. Cookie will
+be with domain `.trk.in.rs`, so you will be signed in also on `1.trk.in.rs`
+`2.1.trk.in.rs` ...
 
 Cookie are send on each request. Cookies usually does not expire, but you can
 set `expire_after: 60.minutes`. They are send again when you refresh close &
@@ -792,6 +904,42 @@ open window.
 Note that flash messages are also for each domain. So if you redirect from one
 domain to another, you can not use flash messages. Old flash message will be
 shown when user come back to previous domain (on which request flash was set).
+
+# Subdomains and long domains
+
+Rails has method [extract
+domains](http://api.rubyonrails.org/classes/ActionDispatch/Http/URL.html#method-c-extract_domain)
+but it requires second param which determine if it is top level and second level
+domain.
+
+~~~
+ActionDispatch::Http::URL.extract_domain 'dule.asd.zxc.com', 1 # 'zxc.com'
+ActionDispatch::Http::URL.extract_domain 'dule.asd.zxc.com', 2 # 'asd.zxc.com'
+~~~
+
+You could try to guess based on next to last string and determine if it
+is shorter or equal than 3 chars.
+Rails domain is always last two strings.
+
+~~~
+# dule.asd.zxc.com
+request.host = 'dule.asd.zxc.com'
+request.domain = 'zxc.com'
+request.subdomain = 'dule.asd'
+~~~
+
+When you use url for, you can pass `host` parameter.
+But if you pass also `subdomain` than host param will be trimmed to only last
+two strings [issue](https://github.com/rails/rails/issues/2025)
+
+~~~
+url_for
+ActionDispatch::Http::URL.url_for host: 'dule.asd.zxc.com'
+# http://dule.asd.zxc.com
+ActionDispatch::Http::URL.url_for host: 'dule.asd.zxc.com', subdomain: 'sub'
+# http://sub.zxc.com
+# note that we are missing 'asd' in domain name
+~~~
 
 # Text syntax on buttons and messages
 
@@ -807,6 +955,8 @@ From
 suggestions for code organization I use mostly:
 
 You can check also <http://trailblazer.to/>
+You can organize domain (controller, model and view) into separate folders
+[drawers](https://github.com/NullVoxPopuli/drawers)
 
 ## Service objects
 
@@ -1048,7 +1198,6 @@ Also set `config.force_ssl = false` in *config/environments/production.rb*
 If you use canonical host you need to disable it `export
 DO_NOT_USE_CANONICAL_HOST=true` and remove eventual
 `config.action_controller.asset_host = asdasd`
-~~~
 
 ~~~
 RAILS_ENV=production rake db:create
@@ -1057,7 +1206,6 @@ RAILS_ENV=production rake assets:precompile
 export RAILS_SERVE_STATIC_FILES=true
 rails s -b 0.0.0.0 -e production
 ~~~
-
 
 # Get template name
 
@@ -1086,17 +1234,33 @@ class ActionController::Base
 end
 
 class ActionView::TemplateRenderer
-  alias_method :_render_template_original, :render_template
+  alias_method :_render_template_original_, :render_template
 
   def render_template(template, layout_name = nil, locals = {})
     if @view.controller && @view.controller.respond_to?('active_template=')
       @view.controller.active_template = template
-      result = _render_template_original( template, layout_name, locals)
+      result = _render_template_original_( template, layout_name, locals)
       @view.controller.active_template = nil
     else
-      result = _render_template_original( template, layout_name, locals)
+      result = _render_template_original_( template, layout_name, locals)
     end
     result
+  end
+end
+~~~
+
+# Form builder
+
+You can write your own form builder that extends for example
+[rails-bootstrap-forms](https://github.com/bootstrap-ruby/rails-bootstrap-forms)
+
+~~~
+# app/form_builders/my_form_builder.rb
+class MyFormBuilder << ActionView::Helpers::FormBuilder
+  def my_text_field(method, options = {})
+    content_tag :div, class: "my-wrapper" do
+      super method, options
+    end
   end
 end
 ~~~
@@ -1110,11 +1274,6 @@ end
 * `spring stop` in many cases:
   * when you export some ENV and use them in `config/secrets.yml` but can't see
     in `rails c`
-* render
-  [json](http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html)
-  can be customized with `render json: @phones.as_json(only: [:id], expect:
-  [:created_at], include: :posts)`
-
 * load databe from `db/schema.rb` (instead of `rake db:migrate`) is with `rake
   db:schema:load`.
 * run at port 80 `sudo service apache2 stop` and `rvmsudo rails s -p 80`. Note
@@ -1156,7 +1315,7 @@ to explicitly reference them `includes(user:
 :user_profile)`
 * when you need to eager load for a single object (show action) than you can
 simply repeat rails default before action `set_post` with: `@post =
-Post.includes(:comments).find params[:id\`
+Post.includes(:comments).find params[:id]`
 
 * `some_2d_array.each_with_index do |(col1, col2),index|` when you need
   [decomposition
@@ -1166,53 +1325,8 @@ Post.includes(:comments).find params[:id\`
 * long output of a command (for example segmentation fault) can be catched with
   `rails s 2>&1 | less -R`
 * use different layout and template based on different params is easy using
-  locales.
-
-    layout proc { |controller| controller.new_layout? ? 'adminlte' : 'application' }
-    before_filter :set_locale_for_layout
-    def set_locale_for_layout
-      if session[:layout] == true
-        if params[:layout] == "false"
-          # disable new layout
-          session[:layout] = false
-          I18n.locale = 'en'
-          logger.debug "layout became false"
-        else
-          logger.debug "layout still true"
-          I18n.locale = 'in'
-        end
-      else
-        # session[:layout] == false
-        if params[:layout] == "true"
-          # enable new layout
-          session[:layout] = true
-          logger.debug "layout became true"
-          I18n.locale = 'in'
-        else
-          I18n.locale = 'en'
-          logger.debug "layout still false"
-        end
-      end
-    end
-
-    def new_layout?
-      I18n.locale == :in
-    end
-
-  so if you add param `?layout=true` it will render `index.in.html.erb` variant
-  using new layout and put that in session (so all form submittions also use new
-  layout). You can disable new_layout with `?layout=false`. If you have locale
-  files (probably `devise.en.yml`) than you need to copy to `:in`
-
-  ~~~
-  # config/locales/devise.en.yml
-  en: &default
-  #  here is original translations
-
-  # copy all translations for new locale
-  in:
-    <<: *default
-  ~~~
+locales [look for adminlte example]( {{ site.baseurl }}
+{% post_url 2016-10-28-adminlte-free-template-on-rails %})
 
 * title and meta tags for the template can be added using helper functions
 
@@ -1291,40 +1405,7 @@ Post.includes(:comments).find params[:id\`
   that `if gon` will still raise error if `gon` is not called in controller (so
   `gon` is undefined)
 
-* [has_and_belongs_to_many](http://guides.rubyonrails.org/association_basics.html#the-has-and-belongs-to-many-association)
-  (habtm) can be generated with `rails g migration create_campaigns_templates
-  campaign:references template:references` and add `id: false` as
-  [suggested](http://guides.rubyonrails.org/association_basics.html#updating-the-schema)
-
-  ~~~
-  class CreateCampaignsTemplates < ActiveRecord::Migration
-    def change
-      create_table :campaigns_templates, id: false do |t|
-        t.references :campaign, index: true, foreign_key: true
-        t.references :template, index: true, foreign_key: true
-      end
-    end
-  end
-  ~~~
-
-  and adding `has_and_belongs_to_many :templates` in those classes.
-
-  If you need to update specific fields of association, add validation or cdd
-  ustom order then you should create the model and use `has_many :templates,
-  through: campaign_templates, order: 'campaign_templates.created_at ASC'`
-  Note that here we user singular first part so model name looks better
-
-  ~~~
-  class CampaignTemplate < ActiveRecord::Base
-    belongs_to :campaign
-    belongs_to :template
-  end
-  ~~~
-
-  If you accidentaly use `belongs_to :templates` (pluralized) than error is
-  `undefined method `relation_delegate_class' for Templates:Module`
-
-* use helpers outside of a view
+* access helpers outside of a view
   * if it is standard base helper, than just call it from ActionController,
     ActionView instance or Rails application routes.
 
@@ -1364,7 +1445,7 @@ Post.includes(:comments).find params[:id\`
   * `request.env["HTTP_USER_AGENT"]`
 
 * Heroku problems:
-* `undefined method `url_options' for #<Module:` maybe problem with
+* `undefined method url_options' for #<Module:` maybe problem with
   [puma](https://gist.github.com/IAMRYO/e8bee5a8e6710ad4b970)
 
 * rails router
@@ -1375,6 +1456,9 @@ Post.includes(:comments).find params[:id\`
     get '/', to: 'admin#index'
   end
   ~~~
+
+  * you can get dynamic path resoulution with `link_to "Dynamic #{e}",
+  controller: :pages, action: e, id: @user.id`
 
 * export csv
 
@@ -1392,7 +1476,8 @@ Post.includes(:comments).find params[:id\`
   # app/controllers/users_controller.rb
     respond_to do |format|
       format.html
-      format.csv { send_data @users.to_csv }
+      format.csv { send_data @users.to_csv, filename: 'users.csv', type:
+      'text/csv', disposition: 'inline' }
     end
 
   # app/views/index.html.erb
@@ -1404,10 +1489,6 @@ Post.includes(:comments).find params[:id\`
   add a line in model `acts_as_list scope: :post, column: :priority` and to use
   that priority in associations `has_many :comments, -> { order priority: :asc
   }, dependent: :destroy`
-* to get weekday from `ActiveSupport::TimeWithZone` use
-  [link](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html)
-  `weekday = t.to_a[6]`
-
 * `enum status: [:paused]` should be type integer, or it will return nil
 
 * params usually need to be striped, so you can use this code to get rid of all
@@ -1429,8 +1510,9 @@ Post.includes(:comments).find params[:id\`
     end
   ~~~
 
-* also if you want to replace '\n' new lines in text area with <br> so it looks
-  the same when displaying it. Example is with nested associated elements:
+* also if you want to replace '\n' new lines in text area (`f.text_area`) with
+<br> so it looks the same when displaying it (alternativelly you can use `<%=
+simple_format @contact.text %>`).  Example is with nested associated elements:
 
   ~~~
   params[:contact] = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.each_with_object({}) { |(k1,v1),o1| o1[k1] = (v1.class == String ? v1.gsub(/\n/,'<br>'): v1) } }
@@ -1458,7 +1540,7 @@ Post.includes(:comments).find params[:id\`
   </cross-domain-policy>
   ~~~
 
-* very nasty issue is when your action returns
+* very nasty issue is when your before action returns
   false [halting
   execution](http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution)
   so check if return value could be false and make sure before filters (like
@@ -1468,7 +1550,7 @@ Post.includes(:comments).find params[:id\`
 
 * if you need custom symbols in prawn than you need to use ttf fonts. Not all
   contains every symbol. I downloaded from
-  `dejavu-fonts.org](http://dejavu-fonts.org/wiki/Download)
+  [dejavu-fonts.org](http://dejavu-fonts.org/wiki/Download)
 
   ~~~
   # app/pdfs/common_pdf.rb
@@ -1497,3 +1579,85 @@ Post.includes(:comments).find params[:id\`
   end
   ~~~
 
+* to start new project from specific rails, run `rails _4.2.7.1_ new myapp` .
+  `gem list | grep rails` can show you installed versions
+* for multiple form submit buttons you can use rails builder
+
+  ~~~
+  <%= f.submit "Some label" %>
+  <%= f.submit "Some other label" %>
+  ~~~
+
+  will generate
+
+  ~~~
+  <input type="submit" name="commit" value="Some label">
+  <input type="submit" name="commit" value="Some other label">
+  ~~~
+
+  so you can check on server
+
+  ~~~
+  if params[:commit] == "Some label"
+  ~~~
+
+  When you are not using `f.submit` but plain `<button>Some label</button>` than
+  you need to add `hidden_field_tag :commit, "Some label"`
+* when you call render partial with current object than first param is string
+(not hash `partial: `) `<%= render 'layouts/audit_log', current_object: @user
+%>`
+* you can use config inside your initializers so you do not need to write
+`Rails.application.` again, but does not work for `cache_store`
+
+  ~~~
+  # config/initializers/dalli.rb
+  Rails.application.configure do
+    secrets.internal_notification_email
+    config.,,,
+  end
+  ~~~
+
+* for complex forms, it is advised to be able to easily populate all required
+fields, so I populate data in controller or in model. For unique fields you need
+to iterate...
+
+  ~~~
+  <%# app/views/items/_form.html.erb
+  <% if Rails.env.development? %>
+    <%= link_to "Example", new_item_path(example: true) %>
+  <% end %>
+
+  # app/constrollers/items_controller.rb
+  def new
+    @item = Item.new
+    if Rails.env.development? && params[:example] == "true"
+      @item.assign_attributes(
+        name: 'Example Name',
+        phone: '123',
+      )
+    end
+  end
+
+  # or
+  # app/controllers/items_controller.rb
+  def new
+    @item = Item.new
+    @item.example if Rails.env.development? && params[:example] == "true"
+  end
+
+  # app/models/item.rb
+  def example
+    i = 1
+    while self.class.find_by name: "Example Name #{i}"
+      i += 1
+    end
+    self.name = "Example Name #{i}"
+  end
+  ~~~
+
+* to assign multiple attributes to active record object you can use `slice`
+(`pluck` is for database query) and `assign_attributes`
+
+  ~~~
+  user.assign_attributes other_user.slice :email, :phone
+  ~~~
