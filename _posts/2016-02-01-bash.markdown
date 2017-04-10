@@ -22,11 +22,13 @@ In two ways
 
 * `su deployer -c 'whoami` can add login `-l` option `su -l deployer -c 'rvm
   list'` so PATH is extended with `~/.rvm/bin/` and rvm script works
-* `sudo -u deployer whoami` simpler, no need for quotes. Add option `-i` or
-  `--login` to run as login shell. Wrap command inside `bash` to properly load
-  XDG_RUNTIME_DIR for rails c or other ruby commands: `sudo -i -u deployer
-  /bin/bash -c "cd /vagrant && rails c"`. Also when you use pipe `|` or `&&`,
-  you should wrap inside bash or use `eval`
+* `sudo -u deployer whoami` simpler, no need for quotes
+  * Add option `-i` or `--login` to run as login shell. In login shell `~` is
+  pointing to `/home/deployer/` not `/root/` home.
+  * Wrap command inside `bash` to properly load XDG_RUNTIME_DIR for rails c or
+  other ruby commands: `sudo -i -u deployer /bin/bash -c "cd /vagrant && rails
+  c"`. Also when you use pipe `|` or `&&` or redirection `>>`, you should wrap
+  inside bash or use `eval`
 
 # Shortcuts for windows
 
@@ -187,7 +189,7 @@ Note `.` after folder name.
 * if you need to answer yes and there is no `-y` parameter, you can use `echo
   -en "\n\n\n" | command` . Or you can install
   [yes](https://en.wikipedia.org/wiki/Yes_%28Unix%29) command which outputs
-  `y\n` in a infinite loop
+  `y\n` in a infinite loop `yes | command`
 * last folder in path `basename $(pwd)`
 * to check if file does not exists you can use
 
@@ -246,6 +248,16 @@ To keep session in curl you can `-c` write and `-b` read from cookie file
 curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
 ~~~
 
+# SSH
+
+You can enable ssh agent forwaring so remote connection can use your keys. When
+is it enabled there is `env | grep SSH_AUTH_SOCK` environment variable. You can
+enable with `ssh -A` option.
+
+~~~
+ssh -A vagrant@127.0.0.1 -p 2222 'env | grep SSH_AUTH_SOCK'
+~~~
+
 # Rsyslog
 
 Install
@@ -294,6 +306,7 @@ https://datatables.net/development/server-side/php_mongodb
     ~/Downloads;bash --rcfile <(echo 'pwd;history;watch ls')"`. Solution is to
     add command before invoking bash like [here](
 * `cat /etc/issue` and `arch`
+
   ~~~
   $ cat /etc/issue
   # Ubuntu 16.04.1 LTS \n \l
@@ -301,3 +314,22 @@ https://datatables.net/development/server-side/php_mongodb
   arch
   # x86_64
   ~~~
+
+* move file to another file appending some suffix without writting filename
+twice
+
+  ~~~
+  mv config/database.yml{,.example}
+  ~~~
+
+* get second string: `echo 'first second' | awk '{print $2}'`
+* in bash [3 kinds of variable
+substitution](http://www.linuxjournal.com/article/8919)
+  * pattern matching: deletes match `#` shortest from left, `##` longest from
+  left, `%` shortest from right, `%%` longest from right
+    * `NAME=${MYVAR%:*}`  retain the part before the colon `:`
+    * `NAME=${NAME##*/}`  retain the part after the last slash `/`
+  * substitution `${foo:-bar}`
+* [string manipulation](http://tldp.org/LDP/abs/html/string-manipulation.html)
+
+* `wget trk.in.rs --recursive` will download all files from the site.

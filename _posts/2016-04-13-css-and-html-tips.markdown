@@ -196,66 +196,6 @@ title: CSS and HTML tips
 }
 ~~~
 
-# Tips
-
-* submit button outside of a form is
-  [possible](http://stackoverflow.com/questions/7020659/submit-form-using-a-button-outside-the-form-tag)
-
-  ~~~
-  <form id="myform" method="get" action="something.php">
-  <input type="text" name="name" />
-  </form>
-
-  <input type="submit" form="myform" />
-  ~~~
-
-* note that if you have multiple submit inputs and one text input field, when
-you press Enter, only first submit button will be used (so commit value will be
-it's value). you can disable submit on enter with
-
-  ~~~
-  $('#notification-form').on('keyup keypress', function(e) {
-    var keyCode = e.keyCode || e.which;
-    if (keyCode === 13) {
-      e.preventDefault();
-      return false;
-    }
-  });
-  ~~~
-
-* `<input readonly="readonly">` is better to use than `<input
-disabled="disabled">` since it can receive focus, included in tabbing navigation
-and values are successfully posted (disabled input is not send to server).
-* if you need two css files, than write two `<link rel="stylesheet"
-  type="text/css" href="1.css" />` . Do not use `@import url("2.css")` in
-  `1.css` since it will prevent downloading files in parallel (2.css is
-  downloaded only after 1.css). Only [user of
-  @import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) is when you
-  provide media queries as parameter and load only for specific screen. Note
-  that sass preprocessor scss `@import` will include inline the code.
-* if option select is required, we usually prompt user with one more option
-  "Please select", but it is bad to allow user to pick that option "Please
-  select". You can disable option, and you should force selected on it if other
-  option is not selected [demo](http://jsfiddle.net/u8PWX/1/)
-
-  ~~~
-    <select onchange="this.form.submit()">
-      <option selected="selected" disabled="true">--Please Select --</option>
-      <option value="volvo">Volvo</option>
-      <option value="saab">Saab</option>
-    </select>
-  ~~~
-
-  In rails, you can use something like
-
-  ~~~
-    <%= select_tag "job[job_type_id]",("<option #{ "selected='selected'".html_safe unless fjob.object.job_type_id } disabled='disabled'>Job Type</option>".html_safe+ options_from_collection_for_select(JobType.active.all, :id, :name,{selected: fjob.object.job_type_id})), { class: "e1" } %>
-  ~~~
-* `<a href="javascript:void(0)">` is required when you use `onclick=` and do not
-  want page to reload
-* `input type="checkbox" onchange="perform(this.checked)` you can get value with
-  input.checked. with jquery `$(input).is(':checked')`
-
 # Design
 
 * when you are asking user to select items from long lists, you should have
@@ -320,4 +260,64 @@ th.rotate > div > span {
 }
 ~~~
 
-Note 
+# Tips
+
+* submit button outside of a form is
+  [possible](http://stackoverflow.com/questions/7020659/submit-form-using-a-button-outside-the-form-tag)
+
+  ~~~
+  <form id="myform" method="get" action="something.php">
+  <input type="text" name="name" />
+  </form>
+
+  <input type="submit" form="myform" />
+  ~~~
+
+* note that if you have multiple submit inputs and one text input field, when
+you press Enter, only first submit button will be used (so commit value will be
+it's value). you can disable submit on enter with
+
+  ~~~
+  $('#notification-form').on('keyup keypress', function(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 13) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  ~~~
+
+* `<input readonly="readonly">` is better to use than `<input
+disabled="disabled">` since it can receive focus, included in tabbing navigation
+and values are successfully posted (disabled input is not send to server).
+* if you need two css files, than write two `<link rel="stylesheet"
+  type="text/css" href="1.css" />` . Do not use `@import url("2.css")` in
+  `1.css` since it will prevent downloading files in parallel (2.css is
+  downloaded only after 1.css). Only [user of
+  @import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) is when you
+  provide media queries as parameter and load only for specific screen. Note
+  that sass preprocessor scss `@import` will include inline the code.
+* if option select is required, we usually prompt user with one more option
+  "Please select", but it is bad to allow user to pick that option "Please
+  select". You can disable option, and you should force selected on it if other
+  option is not selected [demo](http://jsfiddle.net/u8PWX/1/)
+
+  ~~~
+    <select onchange="this.form.submit()">
+      <option selected="selected" disabled="true">--Please Select --</option>
+      <option value="volvo">Volvo</option>
+      <option value="saab">Saab</option>
+    </select>
+  ~~~
+
+  In rails, you can use something like
+
+  ~~~
+    <%= select_tag "job[job_type_id]",("<option #{ "selected='selected'".html_safe unless fjob.object.job_type_id } disabled='disabled'>Job Type</option>".html_safe+ options_from_collection_for_select(JobType.active.all, :id, :name,{selected: fjob.object.job_type_id})), { class: "e1" } %>
+  ~~~
+* `<a href="javascript:void(0)">` is required when you use `onclick=` and do not
+  want page to reload
+* `input type="checkbox" onchange="perform(this.checked)` you can get value with
+  input.checked. with jquery `$(input).is(':checked')`
+* in css file you can include comment for source maps, for example `/*#
+sourceMappingURL=bootstrap-datepicker3.css.map */`

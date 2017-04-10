@@ -101,3 +101,9 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 * use can use `monitor(function)`, `monitorEvents($0, "key");`
 * `debug(function)` or `undebug(function)`
 
+
+# Firefox
+
+url suggestion does not use port number, so it is advised to disable it on
+`about:config` for `browser.urlbar.autoFill` to false. That way only history
+links will be provided, so you can navigate to them using tab.

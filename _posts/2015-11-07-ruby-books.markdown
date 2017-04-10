@@ -323,7 +323,7 @@ will show `\n` and will insert spaces because text is indented. There is
   ~~~
 
   Same HERE_DOC functionality can be achieved with `%()` or `%Q()` with
-  interpolation (downcase `%q()` is without interpolation).
+  interpolation (downcase `%q()` is without interpolation, same as `'HTML'`).
   Indent is important since lines are joined with `\n`.  First character is not
   important `%Q()` is the same as `%Q{}`
 
@@ -353,6 +353,8 @@ will show `\n` and will insert spaces because text is indented. There is
   >> %w(#{foo} Bar Bar\ with\ space)
   => ["\#{foo}", "Bar", "Bar with space"]
   ~~~
+
+* `%x(pwd)` is used to call system bash commands
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`

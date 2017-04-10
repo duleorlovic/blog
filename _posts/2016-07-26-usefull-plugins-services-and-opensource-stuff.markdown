@@ -259,11 +259,20 @@ window.loadQuill = (editorContent, editorContainer) ->
           ['blockquote', 'code-block']
           [{ 'list': 'ordered'}, { 'list': 'bullet' }]
           ['clean']
+          ['link']
         ]
       theme: 'snow'
 
     $editorContainer = $("##{editorContainer}")
     quill = new Quill($editorContainer.get(0), options)
+    toolbar = quill.getModule 'toolbar'
+    toolbar.addHandler 'link', (value) ->
+      if (value)
+        href = prompt('Enter the URL')
+        href = "http://#{href}" if href.substring(0,4) != "http"
+        this.quill.format('link', href)
+      else
+        this.quill.format('link', false)
     quill.on 'text-change', ->
       newHtml = $($editorContainer).find('.ql-editor').html()
       $("##{editorContent}").val newHtml
@@ -455,9 +464,16 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
 
-# Free tier services
+# Email services
 
 * [formspree](http://formspree.io/) sending emails in javascript
+
+# User support services
+
+* [user deck](https://userdeck.com)
+
+# Optimisation
+
 * [caniuse.com](http://caniuse.com/) to see what is supported and what is not
 in modern browsers
 * optimization for speed [google

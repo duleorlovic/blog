@@ -369,6 +369,9 @@ and reopen tab, `J` `K` switch, `space` `shift+space` page down up.
 [Hints
 mode](https://github.com/akhodakivskiy/VimFx/blob/master/documentation/commands.md):
 * `f` anything clicable `F` opens in new tab (or press Ctrl) `ew` new window
+* by default lowercase letter will filter hint strings, but you can use
+uppercase letter to filter by text (you can see what is entered in lower right
+corner)
 * `yf` copy text and links
 
 # Rails vim

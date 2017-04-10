@@ -50,9 +50,232 @@ $('#clicks-table').DataTable({
 });
 ~~~
 
-* default client side orocessing works for less than [10 000
+You can use
+[jquery-datatables-rails](https://github.com/rweng/jquery-datatables-rails)
+gem. Add gem to Gemfile and run `rails g jquery:datatables:install`.
+If you have `Uncaught TypeError: Cannot read property 'mData' of undefined` than
+you need to replace `<th colspan="3"></th>` with three `<th></th> <th></th>
+<th></th>`
+
+# Data
+
+Initial data could be inside ([DOM](https://datatables.net/manual/data/#DOM)) or
+you can use ajax call to load all items. That is client side processing and it
+works for less than [10 000
 rows](https://datatables.net/manual/data/#Processing-modes). For greater than
-100 000 you should use server side processing.
+100 000 you should use server side processing. But problem is delay that occurs
+(at leat on rails) when it need to render 1000 rows, so we have to use server
+side processing. In that case we need to implement searching and ordering on
+server.
+
+When using ajax you need to point where [data
+array](https://datatables.net/manual/ajax#Data-array-location) is in JSON object
+(`dataSrc: ''` if we return array, or `dataSrc: 'data'` if we return object with
+data array).
+We need to point where each column is on array item. If item is object
+we can use their keys `columns: [ { data: 'name' }, { data: 'price' } ]`.
+If item is also array we can use their index `columns: [ { data: 0 }, { data: 1
+} ]`. We can also omit `columns` definition than it will use first column, first
+data from array, second column second data ...
+
+# Server side processing
+
+[Server side processing](https://datatables.net/manual/server-side) is enabled
+with `serverSide: true` and use `data` or `ajax` options. Note
+that in this case any existing data will be discarded (you can not mix).
+
+There was a forum question to add data manually
+[deferred loading client
+side](https://datatables.net/forums/discussion/16440/best-way-to-do-deferred-loading-client-side)
+Best option is [defer
+loading](https://datatables.net/examples/server_side/defer_loading.html)
+Just add option `deferLoading: <%= @users.count %>` than initially data from the
+page will be shown, than on any search, reorder or page, server side request
+will be made. Note that you can not use `data-order` and `data-search` on
+initial page (error is like `datatables warning requested unknown parameter
+'[ojbect Object]' for row 0 column 7`).
+Note that when deferred loading is enabled, you can not use `stateSave: true`
+option (which will remember sort and search inside localstorage).
+
+If you have long column names and a lot of columns (for example 10), than it
+could be that url is too long, you can see in console `414 (Request-URI Too
+Large)`. Than you should switch to method POST and since post is used to create
+items, you need to use another route `search_products_path format: :json`
+
+Request send a lot of params:
+
+* `"draw"=>"1"` sequence counter so we know which one is last
+* `"start"=>"0", "length"=>"10"` for pagination
+* `"search"=>{"value"=>"323", "regex"=>"false"}` global search for all coulmns
+with searchable true
+* `"order"=>{"0"=>{"column"=>"0", "dir"=>"asc"}}` for ordering
+* `"columns"=>{"0"=>{"data"=>"name", "name"=>"", "searchable"=>"true",
+  "orderable"=>"true", "search"=>{"value"=>"", "regex"=>"false"}}` name and
+  other properties of columns
+
+Server need to returns:
+
+* `draw` should be echo
+* `recordsTotal` total number before filtering
+* `recordsFiltered` total number after filtering
+* `data` array with data used in ajax option
+
+Example
+
+~~~
+# Gemfile
+# for pagination
+gem 'will_paginate'
+~~~
+
+~~~
+# app/assets/javascripts/products.coffee
+jQuery ->
+  $('#products').dataTable(
+    ajax:
+      url: $('#products').data('source')
+      dataSrc: 'data'
+      error: (xhr, message, error) ->
+        flash_alert("Please refresh the page. #{error}")
+    columns: [
+      { data: 'name' }
+      { data: 'price' }
+      { data: 'description' }
+    ]
+    deferLoading: $('#products').data('total')
+    serverSide: true
+  )
+~~~
+
+~~~
+# app/datatables/products_datatable.rb
+# http://railscasts.com/episodes/340-datatables?autoplay=true
+class ProductsDatatable
+  delegate :params, :page, :per_page, to: :@view
+  def initialize(view)
+    @view = view
+  end
+
+  def as_json(options = {})
+    {
+      draw: params[:draw].to_i,
+      recordsTotal: Product.count,
+      recordsFiltered: products.total_entries,
+      data: data,
+    }
+  end
+
+  private
+
+  def data
+    products.map do |product|
+      product.slice :name, :price, :description
+    end
+  end
+
+  def products
+    @products ||= fetch_products
+  end
+
+  def fetch_products
+    products = Product.order("#{sort_column } #{sort_direction}")
+    products = products.page(page).per_page(per_page)
+    if params[:search][:value].present?
+      # ILIKE is case insensitive LIKE
+      sql = "name ILIKE :search OR description ILIKE :search"
+      # you can reference association but than references is needed
+      # sql += " OR customers.name ILIKE :search"
+      # sql += " OR DATE_FORMAT(updated_at, '%d-%b-%Y') ILIKE :search"
+      products = products
+        .where(sql, search: "%#{params[:search][:value]}%")
+        # .include(:customer)
+        # .references(:customer)
+    end
+    products
+  end
+
+  def page
+    params[:start].to_i / per_page + 1
+  end
+
+  def per_page
+    params[:length].to_i > 0 ? params[:lenght].to_i : 10
+  end
+
+  def sort_column
+    columns = %w[name price description]
+    columns[params[:order]["0"][:column].to_i]
+  end
+
+  def sort_direction
+    params[:order]["0"][:dir] == "desc" ? "desc" : "asc"
+  end
+end
+~~~
+
+~~~
+# app/controllers/products_controller.rb
+class ProductsController < ApplicationController
+  def index
+    @products = Product.all.limit 10
+  end
+
+  def search
+    render json: ProductsDatatable.new(view_context)
+  end
+end
+~~~
+
+~~~
+<%# app/views/products/index.html.erb %>
+<table id="products" data-source="<%= products_path format: :json %>" data-total="<%= Product.count %>">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+        <td><%= product.price %></td>
+        <td><%= product.description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+~~~
+
+If you have nested models, you can order by `customers.name asc` and search
+`customers.name like '%a%'`, but you should use references since includes works
+only with hash params: `includes(:customer).where("customers.name like
+'%d%').references(:customer)`.
+
+# Using data from datatables
+
+Columns are defined using
+
+* [columns](https://datatables.net/reference/option/columns) option which define
+all columns by its index (zero based). Note that all columns need to be defined
+* [columnDefs](https://datatables.net/reference/option/columnDefs) `targets` key
+which can use: number (index or negative index), string (class name without dot
+on th element) `targets: 'username'` for `<th class="username">`. Note that we
+do not need to define all columns, just those that we need to set up some
+property `columnDefs: [ { targets: '_all', visible: false } ]`
+
+Columns can be selected
+[column-selector](https://datatables.net/reference/type/column-selector) by:
+
+* its index
+* jQuery selector
+* columns.name (names should be
+[defined](https://datatables.net/reference/option/columns.name)).
+
+
+
 
 # Export
 
@@ -76,21 +299,6 @@ $('#clicks-table').DataTable({
 ~~~
 
 If you have special simbols, you can try to enable `bom: true` option.
-
-# Core
-
-Columns can be
-[column-selector](https://datatables.net/reference/type/column-selector) by its
-index (zero based), jQuery selector or columns.name (names should be
-[defined](https://datatables.net/reference/option/columns.name)). You can define
-name targeting using
-[columnDefs](https://datatables.net/reference/option/columnDefs) targets which
-use class name without dot `targets: 'username'` for `<th class="username">` so
-we can continue with jQuery selector.
-
-~~~
-
-~~~
 
 # DOM
 
@@ -123,7 +331,8 @@ $('#clicks-table').DataTable({
 
 # Seach (or filter is used for filtering out)
 
-For search you can use html data attribute `<td data-search="Novembar">2.2.2012</td>`
+For search you can use html data attribute `<td
+data-search="Novembar">2.2.2012</td>`
 
 * when using `data-search` then original text is not used, so it is better to
 merge original text to `data-search`
@@ -177,7 +386,8 @@ or you can search specific columns.
 # Order (sort)
 
 * disable ordering with
-[orderable](https://datatables.net/reference/option/columns.orderable) property
+[orderable](https://datatables.net/reference/option/columns.orderable) property 
+or as data attribute on th element: `<th data-orderable="false">`
 * read about [usage columns](http://legacy.datatables.net/usage/columns) to
 define sort based on another column. Also hide some `<td class="hidden"><%=
 index %></td>` column both in css and in datatable
@@ -225,14 +435,6 @@ input](https://editor.datatables.net/examples/dates/datetime.html)
 length](https://datatables.net/examples/advanced_init/length_menu.html) with
 [lengthMenu](https://datatables.net/reference/option/lengthMenu) option
 
-# Ajax
-
-* data can be inside table ([DOM](https://datatables.net/manual/data/#DOM)
-data). Note that it will be discarded if `data` or `ajax` option is used.
-[deferred loading client
-side](https://datatables.net/forums/discussion/16440/best-way-to-do-deferred-loading-client-side)
-is possible only with manually adding rows
-
 # Responsive
 
 There are a lot of tools for
@@ -240,6 +442,10 @@ There are a lot of tools for
 
 * [column priority and
 expand](https://datatables.net/extensions/responsive/examples/column-control/columnPriority.html) or you can show [details in modal](https://datatables.net/extensions/responsive/examples/display-types/bootstrap-modal.html)
+* you can use [fixed
+columns](https://datatables.net/extensions/fixedcolumns/examples/initialisation/left_right_columns.html) so they always stays fixed, but all other columns can be scrolled
+* user can select which columns to see
+[colvis](https://datatables.net/extensions/fixedcolumns/examples/initialisation/colvis.html) note: retired
 
 # Tips
 

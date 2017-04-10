@@ -1298,10 +1298,11 @@ end
   :associated_table then `joins` will return multiple values because of multi
   values of :associated_table per item, or none is :associated_table does not
   exists for current item. `includes` will return the same number of items, with
-  association objectloaded in memory. nested joins `includes(jobs: [:user])`.
+  association object loaded in memory. nested joins `includes(jobs: [:user])`.
   `Message.joins(:job).where(user: d,job: a.jobs)`. If you want to filter with
-  raw SQL like: `.where('jobs.title ILIKE "%duke%"')` you need to use join, if
-  you want to filter using hash `.where(jobs: { title: })` you can use includes.
+  raw SQL like: `.where('jobs.title ILIKE "%duke%"')` you need to use join (or
+  you can reference them, see below), if you want to filter using hash
+  `.where(jobs: { title: })` you can use includes.
 * `includes` can be defined in association definition `has_many :comments, -> {
   includes :author }` but this is bad since it will always load two tables.
   Better is to make a query `Post.includes(:comments).all` or for instance
@@ -1316,6 +1317,7 @@ to explicitly reference them `includes(user:
 * when you need to eager load for a single object (show action) than you can
 simply repeat rails default before action `set_post` with: `@post =
 Post.includes(:comments).find params[:id]`
+
 
 * `some_2d_array.each_with_index do |(col1, col2),index|` when you need
   [decomposition
@@ -1661,3 +1663,6 @@ to iterate...
   ~~~
   user.assign_attributes other_user.slice :email, :phone
   ~~~
+
+* to count by grouping you can group_by specific column
+`User.group(:company_id).count.values.max`

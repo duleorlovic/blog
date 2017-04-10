@@ -22,9 +22,15 @@ vagrant halt
 vagrant destroy
 ~~~
 
-## Linux
+Run command as `deployer` user. Usually need to wrap inside `bash` if you have
+pipe `|`, for example `sudo -i -u deployer bash -c "ls | less -R"`
 
-Run command as `deployer` user. Usually need to wrap inside `bash` if you have pipe `|`, for example `sudo -i -u deployer bash -c "ls | less -R"`
+If you have multuple vagrant boxes and there is port collision, you can set auto
+fix
+
+~~~
+config.vm.network :forwarded_port, guest: 8080, host: 80, auto_correct: true
+~~~
 
 # Deploy Ruby on Rails to VirtualBox
 
