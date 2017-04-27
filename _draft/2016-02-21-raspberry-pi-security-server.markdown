@@ -103,3 +103,80 @@ Than run in console (it could take 10 minutes):
 ~~~
 sudo fsck.ext4 -fy /dev/sdc7
 ~~~
+
+# Program Attiny
+
+[highlowtech](http://highlowtech.org/?p=1695) tutorial suggest to add board
+manager
+<https://raw.githubusercontent.com/damellis/attiny/ide-1.6.x-boards-manager/package_damellis_attiny_index.json>
+
+# POE power over ethernet
+
+From left to right, when you hold cable and look at pins (T568A color)
+
+1 White green
+2 Green
+3 White organge
+4 Blue (DC-)
+5 White blue (DC-)
+6 Orange
+7 White brown (DC+)
+8 Brown (DC+)
+
+# Zoneminder
+
+[Installation](http://zoneminder.readthedocs.io/en/latest/installationguide/ubuntu.html#easy-way-ubuntu-16-04)
+
+~~~
+su
+add-apt-repository ppa:iconnor/zoneminder
+apt-get update
+apt-get upgrade
+apt-get dist-upgrade
+apt-get install zoneminder
+
+echo "sql_mode = NO_ENGINE_SUBSTITUTION" >> /etc/mysql/mysql.conf.d/mysqld.cnf
+systemctl restart mysql
+
+chmod 740 /etc/zm/zm.conf
+chown root:www-data /etc/zm/zm.conf
+chown -R www-data:www-data /usr/share/zoneminder/
+
+a2enconf zoneminder
+a2enmod cgi
+a2enmod rewrite
+
+systemctl enable zoneminder
+systemctl start zoneminder
+
+sed -i /etc/php/7.0/apache2/php.ini -e '/\[Date\]/a \
+date.timezone = Europe/Belgrade'
+~~~
+
+<http://localhost/zm/api/host/getVersion.json> should return version.
+
+~~~
+{"version":"1.30.2","apiversion":"1.0"}
+~~~
+
+Motion recording works but can not see stream. One fix for
+[ubuntu](https://forums.zoneminder.com/viewtopic.php?t=24265)
+
+~~~
+1) (Web interface) Options, paths, and update PATH_ZMS from "/cgi-bin/nph-zms" to "/zoneminder/cgi-bin/nph-zms"
+2) edit /etc/apache2/conf-available/zoneminder.conf
+#ScriptAlias /zm/cgi-bin "/usr/lib/zoneminder/cgi-bin"
+ScriptAlias /zoneminder/cgi-bin "/usr/lib/zoneminder/cgi-bin"
+
+service apache2 restart
+service zoneminder restart
+~~~
+
+To trigger some functions you can run script with
+[patch](https://forums.zoneminder.com/viewtopic.php?t=24494)
+
+
+## Zones
+
+[wiki](https://wiki.zoneminder.com/Understanding_ZoneMinder's_Zoning_system_for_Dummies)
+has example. Use small zone for far distances so percentage is same.

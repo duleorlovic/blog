@@ -15,7 +15,13 @@ Expressions](http://www.postgresql.org/docs/9.4/static/queries-table-expressions
 that is:
 
 * `FROM products p INNER JOIN sales s ON p.id = s.product_id` where *p* and *s*
-  are aliases.
+  are aliases. In following sql you need to use those aliases `p` instead
+  `produts`
+* You can create column aliases for columns `SELECT *, t.lat AS latitude`
+  but you can not use in `where` clause since where clause is logically before
+  select clause (and before alias is created). If you need to use, you need to
+  write that statement twice, or use sql wrapper wich will contain only that
+  `where`
 * after processing *FROM* clause, thie new virtual table is checked against
   search conditions *WHERE*, for example: `WHERE s.date > CURRENT_DATE -
   INTERVAL '4 weeks'` This filtering is done *before* processing with *GROUP BY*
@@ -62,6 +68,8 @@ Some tips:
   division by nil is nil.
 * `FROM WHERE field IN ('a','b')` is the same as `field = 'a' OR field =
   'b'`
+* you can use IN, ANY, ALL
+[functions-comparisons](https://www.postgresql.org/docs/current/static/functions-comparisons.html#AEN18509)
 
 # Tutorial links
 
@@ -342,3 +350,11 @@ render 'stats_line_graph'
 </script>
 ~~~
 
+# Other gems
+
+I found interesting gems:
+
+* <https://github.com/ankane/groupdate> for grouping
+* <https://github.com/ankane/chartkick> simple charts from ruby, support
+chart.js, highcarts, goole charts [js
+version](https://github.com/ankane/chartkick.js)

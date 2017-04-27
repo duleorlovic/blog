@@ -321,3 +321,5 @@ and values are successfully posted (disabled input is not send to server).
   input.checked. with jquery `$(input).is(':checked')`
 * in css file you can include comment for source maps, for example `/*#
 sourceMappingURL=bootstrap-datepicker3.css.map */`
+* plain `<input>` has default with (probably 157px), but if you want to set
+size, use `style="width: 100%"`

@@ -230,6 +230,7 @@ Note `.` after folder name.
 
 * for redirection standard error to standard output ` 2>&1 |` there is shorthand
   `|&` version.
+* last command exit status `echo $?` (`0` is success)
 
 # Parameter expansion
 
@@ -333,3 +334,7 @@ substitution](http://www.linuxjournal.com/article/8919)
 * [string manipulation](http://tldp.org/LDP/abs/html/string-manipulation.html)
 
 * `wget trk.in.rs --recursive` will download all files from the site.
+* sometimes when using multiprocess puma as rails server, I do not see what I'm
+typing in
+[bash](https://askubuntu.com/questions/171449/shell-does-not-show-typed-in-commands-reset-works-but-what-happened)
+so I need to run `reset` command

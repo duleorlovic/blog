@@ -274,9 +274,6 @@ Columns can be selected
 * columns.name (names should be
 [defined](https://datatables.net/reference/option/columns.name)).
 
-
-
-
 # Export
 
 [export to csv,
@@ -303,8 +300,9 @@ If you have special simbols, you can try to enable `bom: true` option.
 # DOM
 
 [dom](https://datatables.net/reference/option/dom) control buttons: `l` for
-lenght menu, `B` buttons, `t` table, `p` pagination, `r` processing display.
-You can add class for styling page info and menu.
+lenght change menu, `B` buttons, `t` table, `p` pagination, `r` processing
+display, `f` filtering.
+You can add class `move-up` for info and length `il`.
 
 ~~~
 <%# app/views/clicks/index.html.erb
@@ -344,7 +342,8 @@ smart=true`, that means any order of strings and matching substring. For example
 `my name` is matched with `my n a m m e e e e`. You can also use double quotes
 `"my name"`.
 * it is usefull to add param search term and using regex, for example
-`dule|mile`
+`dule|mile`. Note that you HAVE TO disable smart search and use second param
+(false).
 
 ~~~
   table.search("<%= params[:search_term] %>", true, false).draw();
@@ -400,8 +399,9 @@ index %></td>` column both in css and in datatable
   ],
 ~~~
 
-* [html 5 attributes](https://datatables.net/manual/data/orthogonal-data#HTML-5)
-for ordering data-sort is `<td data-order="<%= post.created_at.to_datetime.to_i
+* orthogonal data can be defined using [html 5
+attributes](https://datatables.net/manual/data/orthogonal-data#HTML-5) for
+ordering data-sort is `<td data-order="<%= post.created_at.to_datetime.to_i
 %>">2 Novemeber</td>`.
 * you can also achieve sorting if you have ajax data
 
@@ -440,12 +440,50 @@ length](https://datatables.net/examples/advanced_init/length_menu.html) with
 There are a lot of tools for
 [responsive](https://datatables.net/extensions/responsive/examples/):
 
-* [column priority and
-expand](https://datatables.net/extensions/responsive/examples/column-control/columnPriority.html) or you can show [details in modal](https://datatables.net/extensions/responsive/examples/display-types/bootstrap-modal.html)
+~~~
+responsive: true # enable responsive styles
+scrollX: true # enable horizontal scroll, problem on big screens because it does
+              # not occupy 100% width. if false, than only data will scroll but
+              # header will still be fixed
+scrollY: "55vh" # 55% of the vertical height of the browser window. Usefull
+                # since user can see footer navigation links
+scrollCollapse: true # if there are not data (when filtering) than table body
+                     # will collapse
+autoWidth: false # disable auto calculation for column width so on big screens
+                 # it occupy 100% width
+~~~
+
+Note that bootstrap tooltip won't work since it is inside `overflow-y: scroll;`
+element (or `overflow: hidden`) so you need to change where it is attached
+`$.fn.tooltip.Constructor.DEFAULTS.container = 'body'`. Only `<select>` element
+is natively shown over borders. You can use trick `position:fixed`
+
+Without horizontal scrolling you can hide some columns by [column priority and
+expand](https://datatables.net/extensions/responsive/examples/column-control/columnPriority.html)
+or you can show [details in
+modal](https://datatables.net/extensions/responsive/examples/display-types/bootstrap-modal.html)
 * you can use [fixed
-columns](https://datatables.net/extensions/fixedcolumns/examples/initialisation/left_right_columns.html) so they always stays fixed, but all other columns can be scrolled
+columns](https://datatables.net/extensions/fixedcolumns/examples/initialisation/left_right_columns.html)
+so they always stays fixed, but all other columns can be scrolled
 * user can select which columns to see
-[colvis](https://datatables.net/extensions/fixedcolumns/examples/initialisation/colvis.html) note: retired
+[colvis](https://datatables.net/extensions/fixedcolumns/examples/initialisation/colvis.html)
+note: retired
+
+# Custom types
+
+[type detection](https://datatables.net/development/type-detection) is automati
+for numeric, date and string, so default sorting works fine. If you want to do
+custom searching than you need to use
+[$.fn.dataTableExt.afnFiltering.push](https://datatables.net/forums/discussion/36925)
+or newer
+[$.fn.dataTable.ext.search](https://datatables.net/manual/plug-ins/search)
+Note that is used on global search. If we add manually, than we need to remove
+also.This
+[codepen](https://codepen.io/markmichon/pen/tmeGD) show how to add and remove
+filter
+
+~~~
+~~~
 
 # Tips
 

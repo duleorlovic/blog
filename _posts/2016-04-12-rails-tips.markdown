@@ -975,8 +975,8 @@ end
 or more complex with exception rescue.
 
 ~~~
-# app/services/process.rb
-class Process
+# app/services/my_service.rb
+class MyService
   class Result
     attr_accessor :success, :message
     def initialize(success, message)
@@ -989,6 +989,7 @@ class Process
     end
   end
 
+  # Some custom exception if needed
   class ProcessException < Exception
   end
 
@@ -997,7 +998,8 @@ class Process
   end
 
   def process(posts)
-    do_something posts
+    success_message = do_something posts
+    Result.new true, success_message
   rescue ProcessException => msg
     Result.new false, msg
   end
@@ -1005,9 +1007,21 @@ class Process
   private
 
   def do_something(posts)
-    raise ProcessException, "Empty posts" unless posts.present?
+    raise ProcessException, "Error: empty posts" unless posts
+    "Done with do_something"
   end
 end
+~~~
+
+~~~
+# main.rb
+require './my_service.rb'
+
+my_service = MyService.new user: 'me'
+puts my_service.process(1).success? # true
+puts my_service.process(1).message # Done with do_something
+puts my_service.process(false).success? # false
+puts my_service.process(false).message # empty posts
 ~~~
 
 ## Form Objects
@@ -1118,6 +1132,73 @@ module Someable
     end
   end
 end
+~~~
+
+## Observable
+
+We an use observable objects to send notifications [implementation in 3
+languages](http://www.diatomenterprises.com/observer-pattern-in-3-languages-ruby-c-and-elixir/)
+It could look like [action as a
+distance](https://en.wikipedia.org/wiki/Action_at_a_distance_(computer_programming))
+antipattern but if we explicitly add than is it fine.
+
+~~~
+module ObservableImplementation
+  def observers
+    @observers ||= []
+  end
+
+  def notify_observers(*args)
+    observers.each do |observer|
+      observer.update(*args)
+    end
+  end
+
+  def add_observer(object)
+    observers << object
+  end
+end
+
+class Task
+  include ObservableImplementation
+  attr_accessor :counter
+  def initialize
+    self.counter = 0
+  end
+
+  def tick
+    self.counter += 1
+    notify_observers(counter)
+  end
+end
+
+class PutsObserver
+  def initialize(observable)
+    observable.add_observer self
+  end
+
+  def update(counter)
+    puts "Count has increased by #{counter}"
+  end
+end
+
+class DotsObserver
+  def initialize(observable)
+    observable.add_observer self
+  end
+
+  def update(counter)
+    puts "." * counter
+  end
+end
+
+task = Task.new
+task.tick
+DotsObserver.new(task)
+task.tick # ..
+PutsObserver.new(task)
+task.tick # ...
+# Count has increased by 3
 ~~~
 
 # Unsubscribe links
@@ -1265,6 +1346,14 @@ class MyFormBuilder << ActionView::Helpers::FormBuilder
 end
 ~~~
 
+# Email Style
+
+<https://github.com/Mange/roadie>
+
+# Money
+
+Dealing with money with <https://github.com/RubyMoney/money-rails>
+
 # Tips
 
 * parse url to get where user come from `URI.parse(request.referrer).host`
@@ -1294,26 +1383,34 @@ end
     comments_count", group: "users.id")` you can output just specific value
 * [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
   problem is solved with `includes(:associated_table)` wich is actually LEFT
-  OUTER JOINS, `joins(:associated_table)` is INNER JOIN. If model has_many
-  :associated_table then `joins` will return multiple values because of multi
-  values of :associated_table per item, or none is :associated_table does not
-  exists for current item. `includes` will return the same number of items, with
-  association object loaded in memory. nested joins `includes(jobs: [:user])`.
-  `Message.joins(:job).where(user: d,job: a.jobs)`. If you want to filter with
-  raw SQL like: `.where('jobs.title ILIKE "%duke%"')` you need to use join (or
-  you can reference them, see below), if you want to filter using hash
-  `.where(jobs: { title: })` you can use includes.
-* `includes` can be defined in association definition `has_many :comments, -> {
-  includes :author }` but this is bad since it will always load two tables.
-  Better is to make a query `Post.includes(:comments).all` or for instance
+  OUTER JOINS, but `joins(:associated_table)` is INNER JOIN. Works also for
+  nested joins `includes(jobs: [:user])`.
+  * If model has_many :associated_table then `joins` will return multiple values
+  because of multi values of :associated_table per item, or none is
+  :associated_table does not exists for current item.
+  * `includes` will return the same number of items, with association object
+  loaded in memory.  eager load `includes` can be defined in association
+  definition `has_many :comments, -> { includes :author }` but this is bad since
+  it will **always** load two tables.  Better is to make a query
+  `Post.includes(:comments).all` or for instance
   `@post.comments.includes(:author)`. You need to eager load before calling
   `.all` or `.each`
-* `includes(user: :user_profile).where("user_profiles.name = 'dule'")` will not
-work since you can not add conditions to included models
-[includes](http://apidock.com/rails/ActiveRecord/QueryMethods/includes) you need
-to explicitly reference them `includes(user:
+* If you want to filter with raw SQL like: `.where('jobs.title ILIKE "%duke%"')`
+you need to `reference` them (see below) or use join (filtering using hash works
+without referencing since rails knows which table to look `.where(jobs: { title:
+}, user: company.users)`). Along with
+[includes](http://apidock.com/rails/ActiveRecord/QueryMethods/includes)
+`includes(user: :user_profile).where("user_profiles.name = 'dule'")`
+you need to explicitly reference them `includes(user:
 :user_profile).where("user_profiles.name = 'dule'").references(user:
 :user_profile)`
+* note that you should not use `joins` and `includes` in the same time, for the
+same columns (you can use it for different columns). Joins
+could be replaced with `references`. But I have some problems with `references`
+since it remove my custom selected data, so instead `references` I use
+`joins('LEFT OUTER JOIN sports ON sports.id = users.sport_id')` and `distinct`.
+Rails 5 has method
+[left_outer_joins](http://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins)
 * when you need to eager load for a single object (show action) than you can
 simply repeat rails default before action `set_post` with: `@post =
 Post.includes(:comments).find params[:id]`
@@ -1548,7 +1645,13 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
   so check if return value could be false and make sure before filters (like
   before_create) always return not false value (you can return true or nil).
 
-# Prawn
+# PDF
+
+## Wicked PDF
+
+<https://github.com/mileszs/wicked_pdf>
+
+## Prawn
 
 * if you need custom symbols in prawn than you need to use ttf fonts. Not all
   contains every symbol. I downloaded from
@@ -1666,3 +1769,13 @@ to iterate...
 
 * to count by grouping you can group_by specific column
 `User.group(:company_id).count.values.max`
+
+* to run ruby script with rails you can include
+
+~~~
+require File.expand_path('/home/orlovic/rails/myApp/config/environment', __FILE__)
+puts User.all
+~~~
+
+* security tips
+<https://github.com/brunofacca/zen-rails-security-checklist>

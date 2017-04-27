@@ -504,7 +504,9 @@ call `captures` to get matched groups. You can use block instead of `if`
 example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
 [video railsconf](https://www.youtube.com/watch?v=bHpVdOzrvkE)
 * safe navigation operator `&.` can be used instead of `.try` for example: `user
-&& user.name` can be written as `user&.name`
+&& user.name` can be written as `user&.name`. In rinu 2.3 there is also
+`Array#dig` and `Hash#dig` so instead of `params[:a].try(:[], :b)` you can
+`params.dig(:a, :b)`
 * you can call methods with dot but also with double colon `"a".size` or
 `"a"::size`. You can put spaces or new lines anywhere `a   .   size`.
 * destructuring block arguments (params), for example `a = [[1, 2], [3, 4]]` can

@@ -286,5 +286,45 @@ Copy `dist` content to your `public/apidocs` and update all paths in
 can provide a function for `apisSorter` `operationsSorter` but too complicated.
 Order in server response if not supported.
 
+* if grape is used than we can rescue from all exceptions, but that needs to be
+before `mount` methods and only for StandardError exceptions
+
+~~~
+# app/api/v1/root.rb
+module API
+  module V1
+    class Root < Grape::API
+      rescue_from Koala::Facebook::AuthenticationError, MyappExceptions::Base do |e|
+        ExceptionNotifier.notify_exception(
+                        Exception.new(e.message),
+                        data: {
+                          message: e.message,
+                          stack: e.backtrace,
+                          error: e
+                        }
+        )
+        Rack::Response.new(["#{e.class} #{e.message}"], 500, 'Content-type' => 'text/error').finish
+      end
+      # now we can mount ...
+      mount Users
+      ....
+~~~
+
+~~~
+# app/models/myapp_exceptions.rb
+module MyappExceptions
+  # use this base class so it is easier to rescue only that
+  # grape rescue only from standard error
+  class Base < StandardError
+  end
+  class UserNotFound < Base
+  end
+end
+~~~
+
+# JWT Json web tokens
+
+<https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two>
+
 https://medium.com/@stevenpetryk/providing-useful-error-responses-in-a-rails-api-24c004b31a2e#.lp6e0sjpf
 <https://medium.com/statuscode/introducing-webpacker-7136d66cddfb#.edrnqbrj6>

@@ -115,6 +115,11 @@ filter](http://codyhouse.co/demo/bouncy-content-filter/)
   });
   ~~~
 
+* [multiple select](https://github.com/wenzhixin/multiple-select) it creates ul
+lists, if inside `overflow: hidden` you can use
+[container](https://github.com/wenzhixin/multiple-select/pull/34) and
+`dropWidth: '100px'` options
+
 ## Select2
 
 This nice [select2 examples](https://select2.github.io/examples.html) works.
@@ -166,13 +171,16 @@ $.fn.select2.defaults.set("width", "100%")
 
 # Calendar date and time picker
 
+* Best option is [daterangepicker](http://www.daterangepicker.com/) it can be
+used for singleDatePicker, autoApply (can't be used when timePicker enabled),
+autoUpdateInput (when you want to parse user selection, custom format), it can
+contains predefined ranges (Last 7 days)
 * [pickdate](http://amsul.ca/pickadate.js/)
 * [jquery ui datepicker](https://jqueryui.com/datepicker/)
   Error on chrome if you use `type=date`
   [link](http://stackoverflow.com/questions/16890376/chrome-type-date-and-jquery-ui-date-picker-clashing)
   so use `type=text`
 * [bootstrap-datepicker](https://bootstrap-datepicker.readthedocs.io/en/latest/index.html)
-* [daterangepicker](http://www.daterangepicker.com/)
 
 # Image file upload drag and drop crop
 
@@ -440,6 +448,30 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 
 You can hide modal with `$('#my-modal').modal('toggle');`
 
+## Bootstrap tooltip
+
+To inspect `data-toggle="tooltip"` you need to find it's selector and
+manually call `$('.myel').tooltip("show");` or in developer tools when you
+select `<a title=` element you can reference it with `$0` so command is
+`$($0).tooltip("show")` or you can increase delay for hide
+
+~~~
+  $('[data-toggle="tooltip"]').tooltip(
+    delay:
+      hide: 100000
+  )
+~~~
+
+If it is inside element with `overflow-y: scroll;` than it won't be seen if it
+goes over borders. You need to change container of the tooltip. You can do it
+simply for all tooptips by overwriting DEFAULTS (if you need more customization,
+you can overwrite any prototype of the class)
+
+~~~
+$.fn.tooltip.Constructor.DEFAULTS.container = 'body'
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'right'
+~~~
+
 # Fontawesome
 
 FA icons are very usefull for quick icons. Look for
@@ -447,7 +479,6 @@ FA icons are very usefull for quick icons. Look for
 
 * color can be set with `bg-red`
 * spinner `<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>`
-
 
 
 # Graphs

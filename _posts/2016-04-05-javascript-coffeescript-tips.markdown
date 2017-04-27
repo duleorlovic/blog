@@ -241,35 +241,7 @@ bottom of the element.
 
 <iframe width="100%" height="300" src="//jsfiddle.net/duleorlovic/ffbnr62f/8/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
-# Tips
-
-* to see all keys of `myObj` you can use `Object.keys(myObj)`
-* alert object with `alert(JSON.stringify(myObj))`
-* if you want to break array `forEach` method when you find el, you can use
-  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break)
-
-* to remove item `myObject` from array `myArray.splice
-  myArray.indexOf(myObject),1 `
-* `!!variable` will return false only for `0, null, "", undefined, NaN` NaN=Not
-  a number
-* to check if some property is defined on a object (method or variable), you can
-  use `in` for example `a = {b:1}; 'b' in a // returns true`
-* get last element of array `array.slice(-1);`
-* replaceAll is the same as `/g` example `"asdasd".replace(/s/g,"***")`
-* merging arrays is better to append `array1.push.apply(array1, array2)` than to
-  create new `array1.concat(array2)`
-* instead of `parseInt('10')` you can use `+'10'` to type cast string to number
-* `jQuery.data()` is different than plain javascript `this.dataset` because
-  javascript always returns string `this.dataset.a // "[1]"` but jQuery use
-  JSON.parse and returns string in case it is not valid json `$(this).data('a')
-  // [1]`.
-* if variable point to the same array or object, than it will be the same
-  `a=[1];b=a;a==b//true`. But if it different object (event with same data)
-  variables will not have the same value. `a=[1];b=[1];a==b//false` or
-  `{a:1}=={a:1}//false`. Comparing arrays or objects should be done one by one
-  [link](http://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript)
-
-# Coffeescript
+# Coffeescript tips
 
 * [try coffeescript](http://coffeescript.org/) and convertor
   [js2coffe](http://js2.coffee/)
@@ -351,9 +323,38 @@ bottom of the element.
   [coffeescript-cookbook](https://coffeescript-cookbook.github.io/chapters/arrays/filtering-arrays)
 * global variables can be attached to `window` object like `window.my_var = 42`
 or you can use `@` syntax `@my_var = 42`
+* [iterate loops](http://coffeescript.org/#loops) over hash object `for k, v of
+my_object`
 
 
-# TIPS
+# Javascript tips
+
+* to see all keys of `myObj` you can use `Object.keys(myObj)`
+* alert object with `alert(JSON.stringify(myObj))`
+* if you want to break array `forEach` method when you find el, you can use
+  [some](http://stackoverflow.com/questions/2641347/how-to-short-circuit-array-foreach-like-calling-break)
+
+* to remove item `myObject` from array `myArray.splice
+  myArray.indexOf(myObject),1 `
+* `!!variable` will return false only for `0, null, "", undefined, NaN` NaN=Not
+  a number
+* to check if some property is defined on a object (method or variable), you can
+  use `in` for example `a = {b:1}; 'b' in a // returns true`
+* get last element of array `array.slice(-1);`
+* replaceAll is the same as `/g` example `"asdasd".replace(/s/g,"***")`
+* merging arrays is better to append `array1.push.apply(array1, array2)` than to
+  create new `array1.concat(array2)`
+* instead of `parseInt('10')` you can use `+'10'` to type cast string to number
+* `jQuery.data()` is different than plain javascript `this.dataset` because
+  javascript always returns string `this.dataset.a // "[1]"` but jQuery use
+  JSON.parse and returns string in case it is not valid json `$(this).data('a')
+  // [1]`.
+* if variable point to the same array or object, than it will be the same
+  `a=[1];b=a;a==b//true`. But if it different object (event with same data)
+  variables will not have the same value. `a=[1];b=[1];a==b//false` or
+  `{a:1}=={a:1}//false`. Comparing arrays or objects should be done one by one
+  [link](http://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript)
+
 
 * if you are using `window.location.replace('http://a.b');` then browser back
   button is not working as espected. Its better to use
@@ -485,3 +486,7 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
     $('[data-user-preferences]').click (e) ->
       preference = e.currentTarget.dataset.dataUserPreferences
   ~~~
+
+* jquery selectors
+  * `$('thead th[data-searchable!="false"]')` select all th that do not have
+  `data-searchable` or have it but different than `false`

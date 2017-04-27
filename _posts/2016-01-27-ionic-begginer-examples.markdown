@@ -687,7 +687,7 @@ telnet localhost 5554
   geo fix 19 45 # to fix gps location, first is longitude than latitude
 ~~~
 
-# Android dns for local server
+# DNS for local server
 
 On Android emulator `127.0.0.1` will not point to your machine! Also your
 `/etc/hosts` file will not be used. You can change *hosts* file on android

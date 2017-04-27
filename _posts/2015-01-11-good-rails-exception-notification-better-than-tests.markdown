@@ -206,13 +206,15 @@ class PagesController < ApplicationController
         Exception.new(params[:errorMsg]),
         env: request.env,
         # set env to nil if you do not want sections: request and session
-        # backtrace is not shown for manual notification
+        # backtrace is not shown for manual notification (only if data section
+        # contains backtrace, so I use different key (stack) to avoid duplicate)
         # data section is always shown if exists
         # sections: %w(request message),
         exception_recipients: "#{js_receivers}".split(','),
         data: {
           current_user: current_user,
           params: params,
+          stack: e.backtrace,
         },
       )
     end
@@ -276,7 +278,10 @@ function sendExceptionNotification(data) {
 }
 
 function ignoreErrorMsg(errorMsg) {
-  if (errorMsg.length == 0) return true;
+  if (errorMsg.length == 0) return true; // no need to notify empty message
+  <% if Rails.env.development? %>
+      return false; // always notify on development
+  <% end %>
   if (sessionStorage) {
     var errorMsgs = JSON.parse(sessionStorage.getItem("errorMsgs") || "[]");
     if (errorMsgs.indexOf(errorMsg) != -1) {
@@ -294,8 +299,10 @@ function ignoreErrorMsg(errorMsg) {
   ignoredErrors = {
     // https://github.com/kogg/InstantLogoSearch/issues/199
     tgt: "Cannot set property 'tgt' of null",
-    // extension http://s3.amazonaws.com/js-cache/ddc1b879c920534271.js
+    // from extention http://s3.amazonaws.com/js-cache/ddc1b879c920534271.js
     partnrz: "Unexpected token < in JSON at position 1",
+    // from extension http://s3.amazonaws.com/jscache/de53b459ee43e7774f.js
+    monetize: "SyntaxError: Unexpected end of JSON input",
     plugin1: "TypeError: undefined is not an object (evaluating 'Window.prototype.setTimeout.call')",
     deals: "Uncaught ReferenceError: US is not defined",
     // http://pastebin.com/JAPbmEX6
@@ -313,9 +320,7 @@ function ignoreErrorMsg(errorMsg) {
 }
 
 function ignoreSourceUrl(sourceUrl) {
-  // chrome extension can use eval, so source url will be from our domain, but
-  // in error stack you can find that eval was called from remote script
-  if (sourceUrl != null &&
+  if (sourceUrl != null && sourceUrl != "" &&
     sourceUrl.indexOf(window.location.hostname) == -1) {
     console.log("ignoreSourceUrl");
     return true;
@@ -323,15 +328,29 @@ function ignoreSourceUrl(sourceUrl) {
   return false;
 }
 
-function checkAndSendNotification(errorObj, additionalData) {
-  if (!errorObj) return;
-  var errorMsg = errorObj.toString();
+function ignoreStack(stack) {
+  if (stack == null) {
+    return false;
+  }
+  ignoredStacks = {
+    akamai: "akamaihd.net",
+  }
+  for (var key in ignoredStacks) {
+    if (stack.indexOf(ignoredStacks[key]) != -1) {
+      console.log("ignoredStacks key=" + key);
+      return true;
+    }
+  }
+  return false;
+}
+
+function checkAndSendNotification(notificationData) {
+  var errorMsg = notificationData.errorMsg;
+  if (ignoreSourceUrl(notificationData.sourceUrl)) return;
+  if (ignoreStack(notificationData.stack)) return;
   if (ignoreErrorMsg(errorMsg)) return;
-  if (ignoreSourceUrl(additionalData.sourceUrl)) return;
-  additionalData['errorMsg'] = errorMsg;
-  additionalData['stack'] = errorObj.stack;
   flash_alert(errorMsg);
-  sendExceptionNotification(additionalData);
+  sendExceptionNotification(notificationData);
   if (sessionStorage) {
     var numberOfJsErrorNotifications = JSON.parse(sessionStorage.getItem("numberOfJsErrorNotifications") || "0");
     numberOfJsErrorNotifications += 1;
@@ -342,8 +361,17 @@ function checkAndSendNotification(errorObj, additionalData) {
 // https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror
 // https://blog.getsentry.com/2016/01/04/client-javascript-reporting-window-onerror.html
 window.onerror = function(errorMsg, sourceUrl, lineNumber, column, errorObj) {
-  var additionalData = { sourceUrl: sourceUrl, lineNumber: lineNumber, column: column};
-  checkAndSendNotification(errorObj, additionalData);
+  if (errorObj != null) {
+    errorMsg = errorObj.toString();
+  }
+  var stack;
+  if (errorObj == null || errorObj.stack == null) {
+    stack = new Error().stack;
+  } else {
+    stack = errorObj.stack
+  }
+  var notificationData = { errorMsg: errorMsg, sourceUrl: sourceUrl, lineNumber: lineNumber, column: column, stack: stack };
+  checkAndSendNotification(notificationData);
 }
 
 // another approach is with error event listener
@@ -360,12 +388,12 @@ window.onerror = function(errorMsg, sourceUrl, lineNumber, column, errorObj) {
 function listenAjaxErrors() {
  // https://github.com/rails/jquery-ujs/wiki/ajax
  $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, errorObj) {
-   flash_alert("Please refresh the page. Server responds with: " +
-     "status=" + status + " message=" + errorObj);
-   var additionalData = { status: status };
-   checkAndSendNotification(errorObj, additionalData);
+   flash_alert("Please refresh the page. Server responds with: " + errorObj);
+   var notificationData = { errorMsg: errorObj.toString(), status: status, stack: errorObj.stack };
+   checkAndSendNotification(notificationData);
  });
 }
+
 // http://stackoverflow.com/questions/7486309/how-to-make-script-execution-wait-until-jquery-is-loaded
 function defer(method) {
   if (window.jQuery)
@@ -373,6 +401,7 @@ function defer(method) {
   else
     setTimeout(function() { defer(method) }, 150);
 }
+
 defer(listenAjaxErrors);
 
 function flash_alert(msg) {

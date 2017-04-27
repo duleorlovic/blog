@@ -170,6 +170,20 @@ Note this situations:
 Changes are visible immediatelly.
 More on blog facebook share buttons.
 
+## Koala gem
+
+[koala](https://github.com/arsduo/koala) 
+I received error notification
+
+~~~
+A Koala::Facebook::ClientError occurred in #:
+
+  type: OAuthException, code: 5, message: (#5) Unauthorized source IP address, x-fb-trace-id: DRbq0PcDTWj [HTTP 400]
+  app/models/user.rb:75:in `get_user_by_token'
+~~~
+
+This means that server is on facebook banned list. `heroku restart` can help.
+
 # Google console
 
 Create a project in google console and enable *Google+ API*. Create *OAuth 2.0

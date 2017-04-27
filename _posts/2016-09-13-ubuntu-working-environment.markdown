@@ -96,10 +96,25 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 * to stop on some page that redirects immediatelly, you can go `Sources` tab and
   *Event Listener Breakpoints* and *Load -> beforeunload* or *Script -> Script
   first statement*
-* to use selected element in console use `$0` and for xpath use `$x()`
+* to use selected element in console use `$0` (`$1` previous selected and so
+on), for xpath use `$x()`. Use `$_` for last returned value in console.
 [link](https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference)
 * use can use `monitor(function)`, `monitorEvents($0, "key");`
-* `debug(function)` or `undebug(function)`
+* `debug(function)` or `undebug(function)`. Usefull when you want to stop on
+some event listener `debug(getEventListeners($0).click[0].listener)` (you can do
+the same using Elements, Event Listeners tab, click, and jump to source where
+you want breakpoint)
+  * to show some value in log you can add Conditional breakport with
+  `console.low(varname);`
+* on elements panel
+  * `h` to hide element (`visibility: hidden`)
+
+* `Ctrl + o` find filename
+* `Ctrl + shift + `
+ * `^shift+c` to click and locate element
+ * `^shift+f` to find string in all files
+ * `^shift+o` find functions in the current file
+ * `^shift+p` chrome shortcuts
 
 
 # Firefox
@@ -107,3 +122,14 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 url suggestion does not use port number, so it is advised to disable it on
 `about:config` for `browser.urlbar.autoFill` to false. That way only history
 links will be provided, so you can navigate to them using tab.
+
+# FTP
+
+To enable ftp write you need to uncomment `sudo vi /etc/vsftpd.conf`
+`write_enable=YES` and restart `sudo service vsftpd restart`. You need to create
+folder (owner should be trkftp user).
+
+# TIPS
+
+* to change default program open with file type, you can right click,
+properties, set default.

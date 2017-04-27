@@ -340,6 +340,7 @@ are used for full stack testing without stubbing. Usually for oauth (doorkeeper
 gem)
 
 ~~~
+# spec/requests/oauth_password_flow_spec.rb
 RSpec.describe "OAUTH" do
   let :email_address do
     "test@email.com"

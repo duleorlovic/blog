@@ -445,7 +445,9 @@ YML file can use anchor (`&`) and reference (`*`) so you do not repeat the code.
 When you use reference `*` (as for testing) you can not add or update keys, but
 with `<<` you can (as for production) (more on [get syntax right](
 {{ site.baseurl }} {% post_url 2017-01-10-get-syntax-right-in-jade-yaml %}#yaml))
-
+Note that you can use default values for env variables but only for those
+strings. Do not use boolean since `<%= ENV['MY_VAR'} || true %>` will always
+resolve to true.
 
 ~~~
 cat > config/secrets.yml << HERE_DOC
