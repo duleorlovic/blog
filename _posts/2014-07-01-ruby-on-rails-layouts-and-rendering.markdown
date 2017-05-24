@@ -102,11 +102,12 @@ with applications.js and application.css by the default matcher for compiling:
 Sass is similar to scss just without brackets and with indent. I think scss is
 better since any css code is also scss code.
 
-You can use assset path helpers in scss, instead of erb style `background-image:
+You can use asset path helpers in scss, instead of erb style `background-image:
 url(<%= asset_url 'logo.png' %>)` as it was underscored in erb, use hyphenated
 in sass `background-image: asset-url("logo.png")`. <s>But in recent Rails 4, you
 can use normal `url("logo.png")` </s> No, you can not use same tags, you need
-`asset-url`
+`asset-url`. Note that asset path `asset-path` does not work, you need to use
+assets url.
 
 Note that for coffeescript you need to add extension `customers.coffee.erb` and
 use this initialization file

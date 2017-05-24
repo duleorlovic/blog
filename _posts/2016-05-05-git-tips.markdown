@@ -110,7 +110,9 @@ when you type `heroku login` (once is setup, it stays forever)
 If you want to ignore/reignore some files that are tracked (gitignore does not
 work on tracked files)
 
-    git update-index --[no]-assume-unchanged <file>
+    git update-index --assume-unchanged <file>
+    # then to track changes again
+    git update-index --no-assume-unchanged <file>
 
 If you want to add folder to git structure but include all its content (like
 `backup` or `tmp` folder) you can do with three steps
@@ -145,12 +147,17 @@ Rebase branches
      git pull --rebase # pull remote changes and rebase you local commits
      git rebase master # call this while you are on some feature branch
 
-Rebase pull request
+Interactivelly rebase pull request
 
      git rebase -i HEAD~2 # rebase last two commits
      # pick : use same commit
      # squash : meld with previous commit (on this list is previous)
      # reword : change commit message
+     # edit : use commit but stop for amending
+
+To find if given commit hash is incuded on some release (release is a tag)
+
+    git tag --contains <commit>
 
 # Github
 

@@ -272,3 +272,8 @@ is what we can do with ActionMailer:
 * headers
 * attachments
 * mail
+
+# Interesting
+
+You can include small giff that looks like screencast. Image should be less than
+1MB and included inline.

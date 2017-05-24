@@ -79,7 +79,6 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 
 * [user agent switcher](https://github.com/chrispederick/user-agent-switcher/)
 * [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
-* [rack-mini-profiler](https://github.com/MiniProfiler/rack-mini-profiler)
 
 
 ## Developer tools
@@ -105,7 +104,7 @@ some event listener `debug(getEventListeners($0).click[0].listener)` (you can do
 the same using Elements, Event Listeners tab, click, and jump to source where
 you want breakpoint)
   * to show some value in log you can add Conditional breakport with
-  `console.low(varname);`
+  `console.log(varname);`
 * on elements panel
   * `h` to hide element (`visibility: hidden`)
 

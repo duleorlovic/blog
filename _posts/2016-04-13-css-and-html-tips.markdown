@@ -310,11 +310,20 @@ and values are successfully posted (disabled input is not send to server).
     </select>
   ~~~
 
-  In rails, you can use something like
+  In rails, you can use with `select_tag`:
 
   ~~~
     <%= select_tag "job[job_type_id]",("<option #{ "selected='selected'".html_safe unless fjob.object.job_type_id } disabled='disabled'>Job Type</option>".html_safe+ options_from_collection_for_select(JobType.active.all, :id, :name,{selected: fjob.object.job_type_id})), { class: "e1" } %>
   ~~~
+
+  or with `f.collection_select`
+
+  ~~~
+    <%= f.collection_select :user_id, User.all.unshift(User.new id: 0, name:
+    "Please Select User"), :id, :name), {}  %>
+  ~~~
+
+
 * `<a href="javascript:void(0)">` is required when you use `onclick=` and do not
   want page to reload
 * `input type="checkbox" onchange="perform(this.checked)` you can get value with
@@ -323,3 +332,40 @@ and values are successfully posted (disabled input is not send to server).
 sourceMappingURL=bootstrap-datepicker3.css.map */`
 * plain `<input>` has default with (probably 157px), but if you want to set
 size, use `style="width: 100%"`
+* if you want background image to be blured, you can use overlay with opacity
+position absolute that cover whole area. Your element should be position
+relative and defined after cover to stand out of that cover.
+
+~~~
+<body>
+  <div class="gradient"></div>
+  <div class="my-stuff"></div>
+</div>
+~~~
+
+~~~
+.my-stuff {
+  position: relative;
+}
+.gradient {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: .7;
+  -webkit-backface-visibility: hidden;
+  background-color: #52d3aa;
+  background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0, #3f95ea), color-stop(1, #52d3aa));
+  /* Android 2.3 */
+  background-image: -webkit-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);
+  /* IE10+ */
+  background-image: repeating-linear-gradient(to bottom right, #3f95ea 0%, #52d3aa 100%);
+  background-image: -ms-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);
+}
+~~~
+
+* for phone you need to use `<a href="tel:123123">+123-123</a>` (rails `<%=
+link_to "+123-123", "tel:123123" %>`)
+* for mail `<a href="mailto:asd@asdasd">asd@asd.asd</a>` (rails `<%= mail_to
+"asd@asd.asd", "asd@asd.asd" %>`)

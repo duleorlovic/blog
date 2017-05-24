@@ -51,31 +51,37 @@ end
 window.flash_alert = (message) ->
   # https://stephanwagner.me/jBox/documentation says that we need to wait for
   # ready for page load, so we use setTimeout
-  setTimeout ->
-    new jBox 'Alert',
-      autoClose: 10000
-      attributes:
-        x: 'right'
-        y:'bottom'
-      stack: false
-      animation:
-        open:'bounce'
-        close:'fadeOut'
-      content: message
-      color: 'red'
+  setTimeout(
+    ->
+      new jBox 'Alert',
+        autoClose: 10000
+        attributes:
+          x: 'right'
+          y:'bottom'
+        stack: false
+        animation:
+          open:'bounce'
+          close:'fadeOut'
+        content: message
+        color: 'red'
+    1
+  )
 window.flash_notice = (message) ->
-  setTimeout ->
-    new jBox 'Notice',
-      autoClose: 10000
-      attributes:
-        x: 'right'
-        y:'bottom'
-      stack: false
-      animation:
-        open:'bounce'
-        close:'fadeOut'
-      content: message
-      color: 'blue'
+  setTimeout(
+    ->
+      new jBox 'Notice',
+        autoClose: 10000
+        attributes:
+          x: 'right'
+          y:'bottom'
+        stack: false
+        animation:
+          open:'bounce'
+          close:'fadeOut'
+        content: message
+        color: 'blue'
+    1
+  )
 ~~~
 
 # Select something
@@ -164,10 +170,15 @@ since it is used already)
   </script>
 ~~~
 
+~~~
 # default options for all select
 # https://select2.github.io/options.html#setting-default-options
 # issue when select2 is used in modal or other elements that fades in
 $.fn.select2.defaults.set("width", "100%")
+~~~
+
+Problem is when select2 is inside modal with `tabindex="-1"`
+[example](https://github.com/select2/select2/issues/119)
 
 # Calendar date and time picker
 
@@ -189,7 +200,17 @@ contains predefined ranges (Last 7 days)
 * [jQuery-File-Upload](https://blueimp.github.io/jQuery-File-Upload/)
 * [browser-camera](https://davidwalsh.name/browser-camera) html5 getUserMedia
 
-# Rich text editor wyswyg
+# Editors
+
+## Wiki style
+
+<http://wagn.org> is whole project
+
+## Rich text editors wyswyg
+
+* [fireEdit](https://github.com/coltaemanuela/FireEdit)
+
+* quill
 
 [quill](https://quilljs.com/) [examples](https://quilljs.com/playground)
 You can edit by selecting content
@@ -341,137 +362,6 @@ $(document).on 'ready page:load', ->
     </script>
 ~~~
 
-# Bootstrap
-
-Bootstrap grid is mobile first, so three `.col-md-4` will be stacked until
-desktop and large desktop, where it will be three equal width columns.
-Bootstrap Media queries:
-
-* xs - phones (no need for media queary since this is default)
-* sm - tablets `@media (min-width: @screen-sm-min) { // 768px and up`
-* md - desktops `@media (min-width: @screen-md-min) { // 992px and up`
-* lg - larger desktops `@media (min-width: @screen-lg-min) { // 1200px and up`
-
-So when you specify for sm, you do not need to specify for md or lg.
-
-With Bootstrap you can use their predefined media queries with `min-width`
-(mobile first), for example
-
-~~~
-@media(min-width:$screen-sm){
-  .alert {
-    position: absolute;
-    bottom: 0px;
-    right: 20px;
-  }
-}
-~~~
-
-Bootstrap `container` has fixed width for big devices.
-
-You can use [responsive available
-classes](http://getbootstrap.com/css/#responsive-utilities-classes) to toggle
-between `display: block, inline, inline-block` or to hide, for specific viewport
-size:
-
-~~~
-.visibe-sm-block
-.hidden-md
-~~~
-
-You can write your own to match all greater (or smaller) sizes:
-
-~~~
-# when it is max-width than it is Non-Mobile First Method
-# so we use le (less or equal then)
-# (min-width is Mobile First and we use hide-ge-)
-/* Large Devices, Wide Screens */
-@media only screen and (max-width : 1200px) {
-  .hide-le-lg {
-    display: none;
-  }
-}
-/* Medium Devices, Desktops */
-@media only screen and (max-width : 992px) {
-  .hide-le-md {
-    display: none;
-  }
-}
-/* Small Devices, Tablets */
-@media only screen and (max-width : 768px) {
-  .hide-le-sm {
-    display: none;
-  }
-}
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
-  .hide-le-xs {
-    display: none;
-  }
-}
-~~~
-
-* you can center bootstrap column with offset
-* you can set icons on inputs, easy with generators, just add `prepend:
-'password'`
-
-## bootstrap modal
-
-You can use ajax, but than `render layout: false` and provide only inner html of
-`<div class="modal"><div class="modal-dialog">...` ie only `.modal-content` will
-be replaced. So you should use same header and footer in initial and ajax
-version.
-
-To close modal with escape key you need to add tabindex `<div class="modal"
-tabindex="-1">`. On activation button you do not need `data-keyboard="true"`
-since that is default.
-
-You can use `autofocus="true"` option to focus input field when modal shows up.
-
-For [tooltips](http://getbootstrap.com/javascript/#tooltips) you can use html
-version `data-html="true" data-toggle="tooltip" title="<h2>Hi</h2>"`.
-
-If you use ajax than modal content is cached, you can clear that cache on shown
-or hidden event (or in ajax response).
-
-~~~
-<script>
-$('#assign-location-modal').on('shown.bs.modal', function () {
-  $(this).removeData('bs.modal');
-});
-// or
-$('body').on('hidden.bs.modal', '.modal', function () {
-  $(this).removeData('bs.modal');
-});
-</script>
-~~~
-
-You can hide modal with `$('#my-modal').modal('toggle');`
-
-## Bootstrap tooltip
-
-To inspect `data-toggle="tooltip"` you need to find it's selector and
-manually call `$('.myel').tooltip("show");` or in developer tools when you
-select `<a title=` element you can reference it with `$0` so command is
-`$($0).tooltip("show")` or you can increase delay for hide
-
-~~~
-  $('[data-toggle="tooltip"]').tooltip(
-    delay:
-      hide: 100000
-  )
-~~~
-
-If it is inside element with `overflow-y: scroll;` than it won't be seen if it
-goes over borders. You need to change container of the tooltip. You can do it
-simply for all tooptips by overwriting DEFAULTS (if you need more customization,
-you can overwrite any prototype of the class)
-
-~~~
-$.fn.tooltip.Constructor.DEFAULTS.container = 'body'
-$.fn.tooltip.Constructor.DEFAULTS.placement = 'right'
-~~~
-
 # Fontawesome
 
 FA icons are very usefull for quick icons. Look for
@@ -480,6 +370,9 @@ FA icons are very usefull for quick icons. Look for
 * color can be set with `bg-red`
 * spinner `<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>`
 
+# Images
+
+* free high resolution <https://unsplash.com/>
 
 # Graphs
 
@@ -524,11 +417,11 @@ generate translated yml locale files for rails localisations using google
 translate `for f in $(find config/locales/ -type d);do yml_gt en rs $f;done`.
 Also usefull when want to grep only en.yml `grep -i catar config/locales
 --include *.en.yml -R`
-* [memory_profiler](https://github.com/SamSaffron/memory_profiler)
 
 # Rails
 
 * crowdsourcing [catarse](https://github.com/catarse/catarse) [tilt](https://github.com/crowdtilt/crowdtiltopen/) is not actually opensource, since their api should be used
+* opensource market peer-to-peer marketplace [sharetribe](https://github.com/sharetribe/sharetribe)
 
 # Templates
 
@@ -555,3 +448,12 @@ version](https://github.com/iogbole/gentelella_on_rails)
 * [simple-line-icons](http://simplelineicons.com/)
 * [bootstrap glyphs](http://getbootstrap.com/components/)
 
+
+# Web framework
+
+<https://github.com/kemalyst/kemalyst> based on <https://crystal-lang.org/>
+
+# Static analysis
+
+* [shellckeck](https://github.com/koalaman/shellcheck) static analysis tool for
+shell scripts

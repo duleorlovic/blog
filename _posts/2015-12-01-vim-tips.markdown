@@ -46,6 +46,8 @@ plugins](https://github.com/duleorlovic/config/blob/master/vim/update_vim_bundle
 * rails-vim is nice
   * if you want to use rspec instead of minitest, you need to remove `tests`
   folder so `:Espec` works
+  * run `<leader>s` to run nearest spec (also `t,l,a` for file, last and all
+  specs)
 
 Some not used anymore
 
@@ -404,3 +406,6 @@ RSpec.describe Project do
    it "order by date" do
      project
 ~~~
+
+Also in view, I want to be able where current element belongs, so list all
+wrapped elements.

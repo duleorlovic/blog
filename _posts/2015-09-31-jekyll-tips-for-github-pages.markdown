@@ -593,7 +593,7 @@ Another theme example is
   beggining is mandatory) instead of writting it twice
   `[http://projektor.trk.in.rs](http://projektor.trk.in.rs)`
 * internal link to post is with `{{ '{%' }} %}` like
-  `[My page]({{ '{% 2016-03-02-my-page.markdown' }} %})`
+  `[My page]({{ '{% link 2016-03-02-my-page.markdown' }} %})`
 * images `![alt text]({ { site.base_url }}/assets/path_to_image "Title text")`
 * strikethrough (words crossed, deleted, removed text) can be used with
   `<s>Example</s>` or `<del>Example</del>` (with kramdown no shortcut works
@@ -622,21 +622,42 @@ and use it inside like `{ % if include.id %} { % assign target_page =
   * There is no negative, not `!` and there is no parentheses (use nested if)
 * `{ % for item in array %} { % break %} { % continue %} { % endfor %}`
   * when iterating a hash `item[0]` is key and `item[1]` is value
-  * iterating over ranges `{ % for i in (1..item.quantity) %}`
+  * iterating over ranges `{ % for i in (1..item.quantity) %}` or `{ % for
+  member in ste.data.members %}`
   * helper variables inside loop `forloop.length`, `forloop.index0`,
   `forloop.last`
   * 3 optional arguments `{ % for item in array limit:2 offset:3 reversed %}`
   * you can use `{ % else %}` to show when array is empty
-* `{ % cycle 'blue', 'white', 'red' %}` will repeat those colors
+* `{ % cycle 'blue', 'white', 'red' %}` will repeat those colors, Usefull when
+iterating for bootstrap row col
+
+  ~~~
+    {% for product in site.data.products %}
+      {% cycle '<div class="row">', '', '' %}
+        <div class="col-sm-4">
+        ...
+        </div>
+      {% cycle '', '', '</div>' %}
+    {% endfor %}
+  ~~~
+
 * `{ % case my_var %} { % when 'dule' or 'mile' %} { % else } { % endcase %}`
 
 Internal jekyll tags
+
+[link](https://jekyllrb.com/docs/templates/#links)
+Note that you do not have to use quotes: `'` or `"`.
 
 * `{ % post_url %}`. Note that you can not use string filters like `prepend: `
  inside tags (works only with double curly brackets `{ { }}`, so for link to
 another post (by it's file name) when `site.baseurl` is set, [you
 need](https://github.com/jekyll/jekyll/issues/3708) `[my-post]({ {
 site.baseurl }}{ % post_url 2015-12-20-my-post %})`
+* when you want to link assets you can use `{ { "/assets/style.css" |
+relative_url }}`
+* you can link to (link_to) pages also (not just posts) with `{ { site.baseurl
+}}{ % link news/index.html %}`. Parameter for `link` should contain extension
+(for example `.md`).
 
 # Types:
 
@@ -644,7 +665,7 @@ site.baseurl }}{ % post_url 2015-12-20-my-post %})`
   * integer can be incremented `{ % increment my_int %}` or `{ % decrement
   my_int %}`
   * range is defined similar to ruby `{ % for i in (1..my_int) %}`
-  * to add two number you can use
+  * to use operation sumarize, for exaple add two number you can use
 
   ~~~
   {% assign number_of_columns = 3 | minus: site.data.footer_links.size %}
@@ -654,6 +675,8 @@ site.baseurl }}{ % post_url 2015-12-20-my-post %})`
 * array elements can be accessed only like `my_array[2]`
 * hash elements can be accessed with `my_hash['name']` or `my_hash.name`
 * you can call `my_array.size` or `my_hash.size`
+* all yml files from `_data` folder will be available under
+`site.data.file_name.item`
 
 # Filters
 
@@ -754,6 +777,72 @@ Liquid::Template.register_filter(Jekyll::AlertFilter)
 ~~~
 
 Filter is used like `{ { page | alert }}`
+
+# Scss
+
+For adding scss support, you need to put your main scss file inside for example
+`css/main.scss` and it needs to have double three lines `---`. From there you
+can use `@import "file_from_scss";` to load partials from `_sass` folder
+
+~~~
+---
+# this is css/main.scss which imports other scss files
+---
+
+@import "overrides";
+~~~
+
+~~~
+<!-- override default template file _includes/head.html -->
+...
+<link rel="stylesheet" href="css/main.css">
+~~~
+
+# Coffee script
+
+To enable coffee script you need to add to config.yml
+
+~~~
+cat >> _config.yml << HERE_DOC
+gems:
+  - jekyll-coffeescript
+HERE_DOC
+~~~
+
+And you coffee files need to have three lines `---` for example
+
+~~~
+---
+# assets/js/cart.coffee
+---
+class Cart
+  constructor: (@buttons, @cart) ->
+    @buttons.click (event) =>
+      @textContent = 'Added'
+      do event.preventDefault
+      itemContainer = event.target.parentNode.parentNode.parentNode
+      itemNumber = do $ itemContainer
+      .find 'h3.panel-title'
+      .text
+
+      listItem = do $ @cart
+      .find 'li:last'
+      .clone
+
+      listItem.text itemNumber
+      @cart.append listItem
+      .hide()
+      .fadeIn 'slow'
+
+
+      console.log itemContainer
+
+$ ->
+  cart = new Cart $('form button'), $('ul#cart')
+~~~
+
+and they will be compiled, so you can include them `<script
+src="assets/js/cart.js"></script>`
 
 # Tips
 

@@ -37,7 +37,28 @@ You do not need to create input fields, it will do it (you can change
 
 If you show/hide whole map, than you need to trigger resize with setCenter and
 setZoom or map.fitBounds (probably inside setTimeout if you are still in digest
-loop). Better is to use opacity 0, 1 and move element below
+loop). Better is to use opacity 0, 1 and move element below.
+Note that when `resize` is triggered than center is changed, so you need to grab
+center before resize, than call resize (so map is actually shown) and than call
+setCenter or panTo the original center. To get map object we use mapObject data
+
+~~~
+$(document).on 'ready page:load', ->
+  # if you do not have map object, you can trigger resize on window
+  # google.maps.event.trigger(window, 'resize', {})
+  # but the problem is when map is initialized to hidden element, than center is
+  # on top right corner, so when you trigger resize, pin will be on top-right
+  # We need to getCenter and call setCenter again after we trigger resize
+  if $('#preview-map').length
+    $('.nav-tabs').on 'shown.bs.tab', ->
+      map = $('#preview-map').data('mapObject')
+      originalCenter = map.getCenter()
+      #google.maps.event.trigger(window, 'resize', {})
+      #map.setCenter c
+      google.maps.event.trigger map, 'resize'
+      map.panTo originalCenter
+~~~
+
 
 ~~~
 # app/helpers/map_helper.rb
@@ -136,16 +157,17 @@ module MapHelper
     end
   end
 
-  def show_map(object)
+  def show_map(object, options = {})
     latitude = object.latitude
     longitude = object.longitude
     return "<div class='map-not-set'>Map position is not set</div>".html_safe unless latitude
-    content = content_tag(:div, nil, id: 'preview-map', class: 'show-map-container')
+    content = content_tag(:div, nil, id: 'preview-map', class: "show-map-container #{options[:class]}")
     content << %(
       <script>
         function initialize_google() {
           console.log('initializing google autocomplete');
-          var map = new google.maps.Map(document.getElementById('preview-map'), {
+          var previewMapElement = document.getElementById('preview-map');
+          var map = new google.maps.Map(previewMapElement, {
             center: {lat: #{latitude}, lng: #{longitude} },
             zoom: 17,
           });
@@ -157,13 +179,14 @@ module MapHelper
                lng: #{longitude},
              }," if latitude.present?}
           });
+          $(previewMapElement).data('mapObject', map);
         } // function initialize_google
       </script>
     ).html_safe
     content << async_load
   end
 
-  def show_all_map(location_nodes)
+  def show_all_map(location_nodes, options = {})
     data = location_nodes.map do |location_node|
       next if !location_node.latitude.present? || !location_node.longitude.present?
       {
@@ -176,7 +199,7 @@ module MapHelper
         url: location_node_path(location_node),
       }
     end.compact
-    content = content_tag(:div, nil, id: 'preview-map', class: 'show-all-map-container')
+    content = content_tag(:div, nil, id: 'preview-map', class: "show-all-map-container #{options[:class]}")
     content << %(
       <script>
         function initialize_google() {
@@ -215,8 +238,6 @@ module MapHelper
               markers[i].setMap(map);
             };
           }
-
-
         } // function initialize_google
       </script>
     ).html_safe

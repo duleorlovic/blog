@@ -29,7 +29,11 @@ Given [role and state]
 When [an event occurs]
 Then [the benefit]
 
-or AAA: Arange Act and Assert
+or AAA:
+Arange - set data
+Act - run code
+Assert - verify that code did what is expected
+# note that multiple assets is OK only if they are related
 ~~~
 
 # Setup test env
@@ -813,35 +817,34 @@ Some of the most used capybara methods
 [link](https://gist.github.com/duleorlovic/042178b92f1badc09490) or [cheat
 sheet](https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf)
 
-* [session
-methods](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method) you can set expectation for `current_path`
+* session methods you can set expectation for `current_path`
   * `visit "/"`, `visit new_project_path`
   * `within "#login-form" do`
-* [node
-actions](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)
-target elements by their: id, name, label text, alt text, inner text. You can
-use substring or you can define `exact: true`
+  * [more](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)
+* node actions target elements by their: id, name, label text, alt text, inner
+text. Note that it is case sensitive. You can use substring or you can define
+`exact: true`
   * `click_on "Submit"` (both buttons and links) `click_button "Sign in"`,
   `click_link "Menu"`
   * `fill_in "email", with: 'asd@asd.asd'`
   * `check(locator)`, `choose(locator)`, `select(value, from: locator)`, and
   `uncheck`, `unselect`
-* [node
-finders](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders)
+  * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)
+* node finders
   * `find('ng-model="newExpense.amount"').set('123')` [find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method) can use css or xpath (see some [xpath examples](scrapper post)) When 
   * `find_all('input').first.set(123)`
-* [node
-matchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers)
-and similar
-[rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
+  * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders)
+* node matchers and rspec matchers
   * `expect(page.has_css?('.asd')).to be true`
-  * `expect(page).to have_css(".asd")`, `have_text`, `have_link`,
-  `have_selector("#project_#{project.id} .name", text: 'duke')`
-  (`assert_selector` in minitest). `have_no_selector` for opposite. You can use
-  `text`, `count` which is number of occurences
-* [node
-element](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Element)
+  * `expect(page).to have_css(".title", text: "my title")`, `have_text`,
+  `have_link`, `have_selector("#project_#{project.id} .name", text: 'duke')`
+  (`assert_selector` in minitest). `have_no_selector` for opposite. With all you
+  can use `text: '...'` and `count: 2` which is number of occurences
+  * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers)
+  * [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
+* node element
   * `find('input').trigger('focus')` (does not work in selenium)
+  * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Element)
 * confirm dialog
   * selenium `page.driver.browser.switch_to.alert.accept  # can also be .dismiss`
   * webkit `page.accept_confirm { click_link "x" } }` so actions is wrapped with this page.accept_confirm
@@ -865,12 +868,12 @@ Capybara example
 require 'rails_helper'
 
 RSpec.feature "Search recipes", js: true do
-  # fixtures :all
-  # or
+# write data inside or
+  # fixtures :all  # or
   before do
     Recipe.create! name: 'Baked Potato'
   end
-  scenario "find recipes" do
+  scenario "successfully" do
     visit "/"
     fill_in "keywords", with: "baked"
 
@@ -882,6 +885,9 @@ RSpec.feature "Search recipes", js: true do
   end
 end
 ~~~
+
+# Debug with selenium
+
 
 # Rspec Helpers
 
@@ -1398,6 +1404,10 @@ require "mocha/mini_test"
   end
 ~~~
 
+# System testing
+
+System tests are not included in default test suite, you should run `rake
+test:system`
 
 # Testing time and date
 
@@ -1554,6 +1564,14 @@ client and server, **fake server** returns a fake response
 * *integration test* is using fake server
 * *client unit test* ends at adapter
 
+# When not to write tests
+
+* when things are too hard to test, for example setting up model that external
+services need to use
+* too trivial tests
+* overtesting when we use same model method on severall controllers
+* exploratory coding (code that will not go to production)
+
 # Tips
 
 * write tests that descibe behavior not implementation, so it does not change
@@ -1604,6 +1622,10 @@ better that test is fragile than writting/updating test double setup
 > the first place.
 
 * you do not need to write tests for part of the framework.
+* YAGNI is not used in tests
+* repeat Red-Green-Refactor cycle in small increments, because a lot of changes
+will have a lot of places where code could broke. Refactoring step should not
+need to change any tests, just code.
 
 # TODO:
 
@@ -1679,8 +1701,13 @@ Sturgeon list](https://www.youtube.com/watch?v=Q00H6BPVNQI&list=PL6XWIjBFDFOIiJy
 [carlos souza](https://www.youtube.com/watch?v=GV37oAofoak)
 * [Sean Devine Live code a charity auction
 application](https://www.youtube.com/playlist?list=PL93_jRSrU7hzEUNmevlnMeUx6F35Za638)
+* [thoughbot workshop](https://www.youtube.com/watch?v=sj5TXzgZ1Sk) also https://www.youtube.com/watch?v=8368hGNIJMQ
+* [matt smith](https://www.youtube.com/watch?v=H1Czc3NL4c4)
+* [Paul Hiatt](https://www.youtube.com/watch?v=9f08KzNO4qo)
 
 TODO
 
 https://www.youtube.com/watch?v=yTkzNHF6rMs
 https://vimeo.com/44807822
+https://www.youtube.com/watch?v=9f08KzNO4qo
+

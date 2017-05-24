@@ -216,12 +216,12 @@ ruby> reader.call
    2
 ~~~
 
-* `attr_accessor :price` creates getter and setter method. Its better to write
+* `attr_accessor :price` creates getter and setter method. its better to write
   all instance variable like that at beggining so we know what defines state
 * required and optional arguments for methods `def f(a, b=1, *c, d)` prefix
   asterix means that all other arguments will be sponged up an array `c`. `a`
   and `d` are required, ie you can not call `f(1)`. `b` has default value
-* [Matrix](http://docs.ruby-lang.org/en/2.2.0/Matrix.html#method-c-5B-5D) `[]=`
+* [matrix](http://docs.ruby-lang.org/en/2.2.0/Matrix.html#method-c-5B-5D) `[]=`
 is private but we can
 [open](http://stackoverflow.com/questions/12683772/how-to-modify-a-matrix-ruby-std-lib-matrix-class/21559458#21559458)
 
@@ -512,7 +512,112 @@ example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
 * destructuring block arguments (params), for example `a = [[1, 2], [3, 4]]` can
 be iterated with `a.each_with_index do |(first, last), i|`
 
-* if you see error `method_missing': undefined method this` than you need to reinstall ruby `rvm reinstall 2.3.1`
+* if you see error `method_missing': undefined method this` than you need to
+reinstall ruby `rvm reinstall 2.3.1`
+* in rails there is
+[args.extract_options!](https://simonecarletti.com/blog/2009/09/inside-ruby-on-rails-extract_options-from-arrays/)
+modify args and return last hash (or empty hash if there is no hash).
+
+  ~~~
+  def my_method(*args)
+    options = args.extract_options!
+    puts "Arguments:  #{args.inspect}"
+    puts "Options:    #{options.inspect}"
+  end
+
+  my_method(1, 2, :a => :b)
+  # Arguments:  [1, 2]
+  # Options:    {:a=>:b}
+  ~~~
+
+* in rails you can set up default options with [reverse
+merge](https://apidock.com/rails/Hash/reverse_merge)
+
+  ~~~
+  options = options.reverse_merge(size: 25, velocity: 10)
+  # is equivalent to
+  options = { size: 25, velocity: 10 }.merge(options)
+  ~~~
+
+* to run script and require byebug you can use
+
+  ~~~
+  ruby -rbyebug my_script_with_byebug.rb
+  ~~~
+
+  if you want to debug some ruby cli (file that begins with `#!/usr/bin/env
+  ruby...`), you can call it (if you use Gemfil, add byebug to it and wrap with
+  bundle exec)
+
+  ~~~
+  ruby -rbyebug $(which vagrant) up
+  bundle exec ruby -rbyebug $(which vagrant) up
+  ~~~
+
+* you can use Resolv ruby class, but sometimes you get error `uninitialized
+constant Resolv`. You should reload all services or you can add to Gemfile
+
+  ~~~
+  # http://stackoverflow.com/questions/42967546/ruby-puma-error-unable-to-load-application-nameerror-uninitialized-constant
+  gem 'rubysl-resolv'
+  ~~~
+
+# Fast ruby using optimizations for speed
+
+List of methods that are faster than other methods
+[fast-ruby](https://github.com/PerfectMemory/fast-ruby)
+[video](https://www.youtube.com/watch?v=fGFM_UrSp70)
+[benches](https://github.com/ombulabs/benches)
+
+* every method has implicit argument "block" which you can yield
+
+~~~
+def slow(&block)
+  block.call
+end
+
+def fast
+  yield
+end
+~~~
+
+* `enum.map { }.flatten(1)` should be replaced with `enum.flat_map {}` since we
+do not need to traverse twice
+* use mutation methods (with !) so you do not need to create new objects. For
+example `return hash.merge a: 1` should be replaced with `return hash.merge! a:
+1` but for hash we can also use `hash[:a] = 1` whih is faster.
+* hash fetch method can be used to define default value if the key does not
+exists. You can use block instead of second argument to define default value,
+and it is faster since block is not called if key is not found so
+`hash.fetch(:foo, :my_default_value_computation)` should be replaced with
+`hash.fetch(:foo) { my_default_value_computation }`
+* `string.gsub("asd", "qwe")` should be replaced with `string.sub("asd", "qwe")`
+if we need to replace only first occurence, so no need to scan string to the
+end. Also you can use `string.tr(" ", "_")`
+* do not use exception for controll flow, so better is to check before
+
+~~~
+begin
+  foo
+rescue NoMethodError
+  bar
+end
+~~~
+
+should be replaced
+
+~~~
+if respond_to?(:foo)
+  foo
+else
+  bar
+end
+~~~
+
+* `Time.parse('2001-01-01 06:06:06 UTC')` should be raplaced with
+`Time.at(999232123).utc)` since we do not need to parse every time
+* instead of `map(&:id)` use `pluck(:id)`
+
 
 todo
 

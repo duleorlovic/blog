@@ -270,7 +270,7 @@ Simulate load
 
 # Links
 
-* [memory_profiler gem](https://github.com/SamSaffron/memory_profiler)
+* memory_profiler gem <https://github.com/SamSaffron/memory_profiler>
 
 # TODO
 
@@ -286,7 +286,34 @@ http://thorstenball.com/blog/2014/03/12/watching-understanding-ruby-2.1-garbage-
 
 * https://github.com/rails/rails/pull/21523
 
+# Rack memory profiles
 
+
+Gem rack-mini-profiler <https://github.com/MiniProfiler/rack-mini-profiler>
+Add to your gemfile
+
+~~~
+# for profiling memory and sql
+gem 'rack-mini-profiler'
+gem 'flamegraph'
+gem 'stackprof' # ruby 2.1+ only
+gem 'memory_profiler'
+~~~
+
+To enable on production env use
+
+~~~
+# app/controllers/application_controller.rb
+  before_action :enable_rack_miniprofiler_for_admin
+  def enable_rack_miniprofiler_for_admin
+    if current_user && Rails.application.secrets.admin_emails.include?(current_user.email) && params[:profiler] == "true"
+       Rack::MiniProfiler.authorize_request
+    end
+  end
+~~~
+
+
+# Links
 
 * [rblineprof](https://github.com/tmm1/rblineprof)
 * [stackprof](https://github.com/tmm1/stackprof) replacing [perftools](https://github.com/tmm1/perftools.rb)
@@ -299,6 +326,9 @@ https://github.com/tmm1/rbtrace
 http://blog.skylight.io/hunting-for-leaks-in-ruby/
 http://www.slideshare.net/engine_yard/debugging-ruby
 
-
 http://www.linuxatemyram.com/play.html
 https://tunemygc.com/configs/f4179cc82e52ba59155dc285802e0a89
+
+videos
+
+* <https://www.youtube.com/watch?v=yxhrYiqatdA>

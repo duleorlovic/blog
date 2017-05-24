@@ -36,6 +36,12 @@ sudo apt-get install graphicsmagick-imagemagick-compat
 PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
 ~~~
 
+To remove all gems from current gemset
+
+~~~
+rvm gemset empty
+~~~
+
 
 # Bower
 

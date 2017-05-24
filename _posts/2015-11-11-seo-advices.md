@@ -26,11 +26,11 @@ Test your site on
 * nice mobile rendering (buttons at least 48px width/height, 32px padding around
   tap targets)
 * add viewport meta tag `<meta name="viewport" content="initial-scale=1.0,
-  width=device-width"> and use CSS media queries to apply different style
+  width=device-width">` and use CSS media queries to apply different style
   depending of screen size
 * enable gzip compresion, optimize image, eliminate render-blocking javascript
   and css, leverage browser caching, minify css, to have small page size
-  (<320Kb) and load under one second
+  (less than 320Kb) and load under one second
   * [google web
   fonts](https://fonts.googleapis.com/css?family=Montserrat|Open+Sans) are
   cached only for one day (each day, it is downloaded again). For
@@ -239,3 +239,9 @@ You can enable `Destination URL Auto-tagging. Automatically tag my ad
 destination URLs` in Account Settings -> Preferences
 
 
+# Customer Analitics
+
+You can use some of the services: Google Analytics, Firebase anal, Amazon anal,
+Fabric Answers, Mixpanel, Keen, Segment, Amplitude, Localytics, Ionic Analytics
+
+  To create mockups you can use: Invision, Marvel, Baslamiq, Sketch

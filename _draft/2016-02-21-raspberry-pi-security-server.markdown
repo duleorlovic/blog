@@ -180,3 +180,72 @@ To trigger some functions you can run script with
 
 [wiki](https://wiki.zoneminder.com/Understanding_ZoneMinder's_Zoning_system_for_Dummies)
 has example. Use small zone for far distances so percentage is same.
+
+* set A is full zone pixels
+* set B is Min/Max pixel Threshold: difference in color from previous
+  * also Min/Max alarmed Area: check if set B is at least/most of set A in %
+* set C is Filter Width/Height: check if 3x3 surround pixels (from set B) is
+also different in colors
+  * also Min/Max Filtered Area: check if C cover min/max of set A in %
+* set D is Min/Max blobs: number of blobs
+  * also Min/Max Blob area: check if cover at least/most of set A in %
+
+To eliminate sun shadow, you can lower the *Max Alarmed Area* (50%) and use
+*Overload Frame Ignore Count* to ignore next 3 frames in that case of overload.
+
+To eliminate camera glitches, you can set in tab Source -> Monitor -> Buffers ->
+Alarm Frame Count to 2.
+
+Also you are using old camera in snapshot mode, zoneminder is pulling for new
+images, you should limit Analysis FPS, Maximum FPS, and Alarm Maximum FPS in
+Source -> Monitor -> General tab
+
+# Chine IP cam
+
+When I look at the source I see
+
+~~~
+var g_SoftWareVersion="V4.02.R12.00006531.10010.143300.00000";
+var g_HardWareVersion="Unknown";
+var g_mBuildTime="2016/9/13 16:50:12";
+var g_SerialNo="fcccccdda05ad0a9";
+var g_VideoInChannel=1;
+var g_AlarmInChannel=2;
+var g_AlarmOutChannel=1;
+var g_AudioInChannel=1;
+var g_DigChannel=0;
+
+
+var g_channelNumber=1;
+var g_user="admin";
+var g_port="554";
+ var g_address =document.location.hostname;
+
+if (g_address == "")
+{
+//	g_address = "10.2.4.46";
+}
+
+var iLanguage=101;
+var g_passWord="";
+~~~
+
+So to set zoneminder you can use "ONVIF" link at the top or manually select:
+
+* Source Type -> Ffmpeg
+* Source Path -> rtsp://admin:@192.168.1.11:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream
+* Remote Method -> TCP
+* Capture Width: 1280, Capture Height: 960
+
+
+# Lead acid
+
+Charging is limited to 2.4V per cell (6x2.4 = 14.4v for 12v battery). Current is
+10% of capacity, 0.1C (0.7A for 7Ah). Stop charging when current is below 3% of
+capacity (0.21A for 7Ah), or after 16hours time (time to charge depends on current, if it is 10% than it need 10 hours).
+Slow charging is 2.25V per cell (6x2.25 = 13.5V for 12v battery).
+Best option is to start with 14.4V and decrease to 13.5V when battery is full.
+Battery needs charge when it is below 12.5V in open circuit. Battery is fully
+discarged when is it below 9.5V (do not go this far). Battery is around 2.1V per
+cell when is fully charged (12.7V for 12V battery). Wait for 12hours after
+charging to measure open circuit.

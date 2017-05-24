@@ -325,6 +325,21 @@ bottom of the element.
 or you can use `@` syntax `@my_var = 42`
 * [iterate loops](http://coffeescript.org/#loops) over hash object `for k, v of
 my_object`
+* you can call functions without parantesis but if you have params. But if you
+do not have params, that would be just a reference to a function, to call it you
+can use `do`
+[link](https://coffeescript-cookbook.github.io/chapters/functions/parentheses)
+
+  ~~~
+  event.preventDefault()
+  # or
+  do event.preventDefault
+  ~~~
+
+  another usage of do is for [closures]({{ site.baseurl }} {% post_url 2016-02-10-javascript-thery %}#closures)
+* you can use `class`, `constructor`, `@instance_valiable =`, `@class_variable:
+` for
+[classes](http://coffeescript-cookbook.github.io/chapters/classes_and_objects/)
 
 
 # Javascript tips
@@ -490,3 +505,10 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
 * jquery selectors
   * `$('thead th[data-searchable!="false"]')` select all th that do not have
   `data-searchable` or have it but different than `false`
+* if jQuery finder returns `n,fn.init` that means it did not find DOM elemenent
+[link](http://stackoverflow.com/questions/34494873/why-is-my-jquery-selector-returning-a-n-fn-init0-and-what-is-it)
+
+> when found an element based on the selector criteria it returns the matched
+> elements; when the criteria does not match anything it returns the prototype
+> object of the function.
+

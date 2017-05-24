@@ -1055,3 +1055,8 @@ Or the best approach is to store all login state redirections in run
         button.button.button-block.button-positive(ng-click="vm.proceedOnlinePayment(vm.paymentFields)") Pay Now
   ~~~
 
+* you can push your code and assets without going through app store. Ionic
+Deploy, Code Push, PhoneGap ContentSync, PhoneGap hydration.
+* use authentication can we implemented with 3th party service: Firebase Auth,
+GCP Auth, Auth.io, Auth0, Stormpath, Fabric Digits, Amazon Cognito, Azure Auth,
+Ionic Auth

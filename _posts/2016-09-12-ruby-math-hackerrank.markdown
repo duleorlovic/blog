@@ -179,6 +179,8 @@ local_variables.map { |vn| { vn => eval(vn.to_s) } }
 Run with colors `ruby my_class_test.rb -p`, or `ruby -r
 minitest/pride my_class_test.rb` or put `require 'pride'` in test file.
 
+For minitests you can use `describe` and `it` blocks.
+
 TIPS:
 
 * if you need to perform big number of tests, and you can not calculate solution

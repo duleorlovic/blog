@@ -12,7 +12,60 @@ tags: javascript
 >  outside of the function in which it was contained, so that it may be executed
 >  after the outer function has returned. At which point it still has access to
 >  the local variables, parameters and inner function declarations of its outer
->  function. 
+>  function.
+
+Example from
+[stackoverflow](http://stackoverflow.com/questions/643542/doesnt-javascript-support-closures-with-local-variables/643664#643664)
+
+~~~
+var closures = [];
+function create() {
+  for (var i = 0; i < 5; i++) {
+    closures[i] = function() {
+      alert("i = " + i);
+    };
+  }
+}
+
+function run() {
+  for (var i = 0; i < 5; i++) {
+    closures[i]();
+  }
+}
+
+create();
+run();
+~~~
+
+This will print 5,5,5,5,5 since at the time function is called, `for` loop
+already set i to 5. More correct is to call inner function when you define it
+
+~~~
+function create() {
+  for (var i = 0; i < 5; i++) {
+    closures[i] = (function(tmp) {
+        return function() {
+          alert("i = " + tmp);
+        };
+    })(i);
+  }
+~~~
+
+Thats why `do` exist in coffee script
+
+> When using a JavaScript loop to generate functions, it’s common to insert a
+> closure wrapper in order to ensure that loop variables are closed over, and
+> all the generated functions don’t just share the final values. CoffeeScript
+> provides the do keyword, which immediately invokes a passed function,
+> forwarding any arguments.
+
+~~~
+closures = []
+create ->
+  for i in [0..5]
+    closures[i] = do (i) ->
+      -> alert i
+~~~
 
 ## Resolution of property names on objects
 
@@ -27,8 +80,8 @@ alert(objectRef.testNumber);
 
 [w3 prototypes](http://www.w3schools.com/js/js_object_prototypes.asp)
 
-> All JavaScript objects inherit their properties and methods from their prototype.
-> The Object.prototype is on the top of the prototype chain.
+> All JavaScript objects inherit their properties and methods from their
+> prototype. The Object.prototype is on the top of the prototype chain.
 
 `prototype` property is on functions only. Prototype is an object.
 Function by default have Object.prototype prototype object.

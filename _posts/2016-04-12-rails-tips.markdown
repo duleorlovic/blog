@@ -279,30 +279,6 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 * union is not supported [issue 929](https://github.com/rails/rails/issues/939)
 
-## Add reference and index
-
-* add reference. if you want to add or remove reference in migration `rails g
-  migration add_user_to_leads user:references` than you can write
-
-  ~~~
-  class AddUserToLeads < ActiveRecord::Migration
-    def change
-      add_reference :leads, :contact, index: true, foreign_key: true
-    end
-  end
-  ~~~
-
-* add index. if you want to add unique index on some columns (to see validation
-  error instead of database esception, should also be in rails `validates
-  :email, uniqueness: { scope: :user_id }`
-
-  ~~~
-  class AddUniqContacts < ActiveRecord::Migration
-    def change
-      add_index :contacts, [:email, :user_id], unique: true
-    end
-  end
-  ~~~
 
 ## Add json and hstore
 
@@ -499,9 +475,10 @@ good to edit `last_migration` and add `null: false` to not null fields
   ~~~
   # db/migrate/20161010121212_update_fuzz.rb
   class UpdateFuzz < ACtiveRecord::Migration
+    # this is local Product class used only inside this migration
     class Product < ActiveRecord::Base;
     end
-    Product.reset_column_information
+    # Product.reset_column_information not sure if we need this
     Product.update_all fuzz: 'fuzzy'
   end
   ~~~
@@ -592,6 +569,70 @@ end
 If you accidentaly use `belongs_to :templates` (pluralized) than error is
 `undefined method relation_delegate_class' for Templates:Module`
 
+## Database indexes
+
+Indexes should be on all columns that are references in `WHERE, HAVING, ORDER
+BY` parts of sql.
+For example if you find using specific column `User.find_by column: 'val'`.
+Also we can add index to to `:updated_at` column since we sometimes order by
+that column.
+
+All foreign keys need to have index.
+You can use `add_reference` (adding column and index). if you want to add or
+remove reference in migration `rails g migration add_user_to_leads
+user:references` which will generate
+
+~~~
+class AddUserToLeads < ActiveRecord::Migration
+  def change
+    # reference will automatically include index on that column
+    add_reference :leads, :contact, foreign_key: true
+  end
+end
+~~~
+
+For polymorphic associations `owner_id` and `owner_type`
+
+~~~
+class Organization < ActiveRecord::Base
+  has_many :projects, :as => :owner
+end
+
+class User < ActiveRecord::Base
+  has_many :projects, :as => :owner
+end
+
+class Project < ActiveRecord::Base
+  belongs_to :owner, :polymorphic => true
+end
+~~~
+
+You need to add double index:
+
+~~~
+# Bad: This will not improve the lookup speed
+add_index :projects, :owner_id
+add_index :projects, :owner_type
+
+# Good: This will create the proper index
+add_index :projects, [:owner_type, :owner_id]
+~~~
+
+You can add unique index on some existing columns (to see
+validation error instead of database esception, should also be in rails
+`validates :email, uniqueness: { scope: :user_id }`)
+
+~~~
+class AddUniqContacts < ActiveRecord::Migration
+  def change
+    add_index :contacts, [:email, :user_id], unique: true
+  end
+end
+~~~
+
+Do not add index for tables that has a lot or removing, since perfomance will be
+bad. Also huge tables need huge indexes, so pay attention on size.
+
 # MySql
 
 * if you have
@@ -629,6 +670,14 @@ If you accidentaly use `belongs_to :templates` (pluralized) than error is
 
 On Heroku it is better to use *JawsDB MySQL* than *ClearDB MySQL* since it has
 more MB in for free usage.
+
+* to chech if mysql database exists use mysqlshow
+
+  ~~~
+  exists = capture("echo $(mysqlshow --user=#{env.db_user} --password=#{env.db_pass} #{env.db_name} | grep -V Wildcard | grep -o #{env.db_name})")
+  if exists.strip.size == 0
+    # does not exists
+  ~~~
 
 # Turbolinks
 
@@ -866,6 +915,17 @@ Rake::Task["seed:bid_types"].invoke
 ~~~
 
 so you can create with `rake db:seed` or `rake seed:bid_types`
+
+If you want to know inside some code whether you run from rake or from rails
+(for example you do not want to send emails for seed users), you can use
+
+~~~
+if File.basename($0) == "rake"
+  # I'm from rake
+else
+  # I'm from rails
+end
+~~~
 
 # Sessions and share cookies on multiple subdomains
 
@@ -1330,22 +1390,6 @@ class ActionView::TemplateRenderer
 end
 ~~~
 
-# Form builder
-
-You can write your own form builder that extends for example
-[rails-bootstrap-forms](https://github.com/bootstrap-ruby/rails-bootstrap-forms)
-
-~~~
-# app/form_builders/my_form_builder.rb
-class MyFormBuilder << ActionView::Helpers::FormBuilder
-  def my_text_field(method, options = {})
-    content_tag :div, class: "my-wrapper" do
-      super method, options
-    end
-  end
-end
-~~~
-
 # Email Style
 
 <https://github.com/Mange/roadie>
@@ -1777,5 +1821,21 @@ require File.expand_path('/home/orlovic/rails/myApp/config/environment', __FILE_
 puts User.all
 ~~~
 
+* if you are using rails data attritubes than you to not need to use `to_json`.
+And if you use jQuery data method than you do not need to use JSON.parse.
+
+  ~~~
+  <%= f.text_field :name, "data-predefined-range": {a: 3} %>
+  <input data-predefined-rage="<%= {a: 3}.to_json %>">
+
+  <script>
+  range = JSON.parse(input.dataset.predefinedRange);
+  range = $(input).data("predefinedRage");
+  ~~~
+
 * security tips
 <https://github.com/brunofacca/zen-rails-security-checklist>
+
+* if you want to use `key.to_sym` for all keys you can use `hash.symbolize_keys`
+but if you want that recursively for nested hashes as well you can use
+`params[:some_pararam].deep_symbolize_keys`
