@@ -152,3 +152,7 @@ http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.h
 <https://www.toptal.com/front-end/make-web-front-end-reliable-with-elm>
 https://www.youtube.com/watch?v=28jCDXfZCgE#t=0.417205
 
+# Haskell Books
+
+* how to think in haskell [Maybe Haskell](https://gumroad.com/l/maybe-haskell)
+* understanding syntax [Learn You a Haskell](http://learnyouahaskell.com/)

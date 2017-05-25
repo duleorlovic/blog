@@ -336,7 +336,7 @@ can use `do`
   do event.preventDefault
   ~~~
 
-  another usage of do is for [closures]({{ site.baseurl }} {% post_url 2016-02-10-javascript-thery %}#closures)
+  another usage of do is for [closures]({{ site.baseurl }} {% post_url 2016-02-10-javascript-theory %}#closures)
 * you can use `class`, `constructor`, `@instance_valiable =`, `@class_variable:
 ` for
 [classes](http://coffeescript-cookbook.github.io/chapters/classes_and_objects/)

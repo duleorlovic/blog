@@ -27,6 +27,10 @@ Listing free books:
 * http://iwanttolearnruby.com/
 * https://rubymonk.com/
 
+Bundle
+
+* http://www.railsbookbundle.com/
+* http://rubybookbundle.com/
 
 # Ruby
 

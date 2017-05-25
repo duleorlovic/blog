@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Raspberry Pi security server
+title:  Zoneminder security server and Raspberry Pi home automation
 ---
 
 # RPi
@@ -236,6 +236,12 @@ So to set zoneminder you can use "ONVIF" link at the top or manually select:
 * Source Path -> rtsp://admin:@192.168.1.11:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream
 * Remote Method -> TCP
 * Capture Width: 1280, Capture Height: 960
+
+Vendor is H264DVR, media port 34567, IP address: 192.168.1.11.
+You can search (just type 192.168.1. (blank)) and you can change ip.
+
+![search]({{ site.base_url }}/assets/posts/china ip camera ip settings edit.png)
+![search]({{ site.base_url }}/assets/posts/china ip camera ip settings edit address.png)
 
 
 # Lead acid

@@ -396,6 +396,17 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 
 * [user deck](https://userdeck.com)
 
+# Visitor analytics
+
+* <https://www.hotjar.com/tour>
+* <https://www.fullstory.com/features>
+
+# Marketing
+
+* <https://submit.co> where to submit news about your project
+* <http://www.communitybuildingguide.com/> brick by brick guide for awesome
+communities
+
 # Optimisation
 
 * [caniuse.com](http://caniuse.com/) to see what is supported and what is not
