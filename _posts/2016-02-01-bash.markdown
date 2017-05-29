@@ -338,3 +338,5 @@ substitution](http://www.linuxjournal.com/article/8919)
 typing in
 [bash](https://askubuntu.com/questions/171449/shell-does-not-show-typed-in-commands-reset-works-but-what-happened)
 so I need to run `reset` command
+* to select vim as default editor for root, run `update-alternatives --config
+editor` and choose vim.basic

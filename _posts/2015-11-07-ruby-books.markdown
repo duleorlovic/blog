@@ -32,6 +32,10 @@ Bundle
 * http://www.railsbookbundle.com/
 * http://rubybookbundle.com/
 
+Questions
+
+* <https://gist.github.com/ryansobol/5252653> 15 questions
+
 # Ruby
 
 ## Object and classes
@@ -517,7 +521,78 @@ example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
 be iterated with `a.each_with_index do |(first, last), i|`
 
 * if you see error `method_missing': undefined method this` than you need to
-reinstall ruby `rvm reinstall 2.3.1`
+reinstall ruby `rvm reinstall 2.3.1`. But is related to rubygems
+[1420](https://github.com/rubygems/rubygems/issues/1420) and best patch is
+[tenderlove
+comment](https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431)
+* argument list length could be variable, there is
+[splat](https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator)
+star/asterix `*` operator, where all other parameters are collected in array.
+  ~~~
+  def f(x, y, *allOtherValues)
+  end
+  f(1, 2, 3, c: 4) # allOtherValues = [3, { c: 4} ]
+  ~~~
+
+  If it is used in method call than it is oposed:
+
+  ~~~
+  a = [1, 2]
+  f(*a) # is the same as f(1, 2)
+  ~~~
+
+  Last argument could be hash so it can grab all params
+
+  ~~~
+  def f(args)
+    puts args.inspect
+  end
+  f(a: 1) # { :a => 1}
+  ~~~
+
+  In ruby > 2.0 you can use keyword arguments, for which you can define default
+  values or they need to be required hash param
+
+  ~~~
+  def f(x, y, c: , d: 1)
+  end
+  f(1, 2, c: 1, d: 2)
+  f(1, 2) # ArgumentError: missing keyword: c
+  ~~~
+
+  Similar to asteriks, last parameter can be prefixed with ampersand (&) which
+  means function expect a code block. A Proc object will be created and assigned
+  to parameter.
+
+  ~~~
+  def f(a, &block)
+    block.call a
+  end
+  f 1 do |i| puts i; end # output: 1
+  # parenthesis are required when passing using {}
+  f(1) { |i| puts i }
+  ~~~
+
+  Similarly, using ampersand in method call for a Proc object, it will be
+  extrapolated/replaced with block, which you can use with `yield`. 
+  Every method has implicit argument "block" which you can yield
+  <https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator>
+  <https://gist.github.com/kidlab/72fff6e239b0af1dd3e5> for something that need
+  test or we just want to showcase
+
+  ~~~
+  def f(a, &block)
+    block.call a
+  end
+
+  def f1(a)
+    yield a
+  end
+
+  def 
+  ~~~
+
+
 * in rails there is
 [args.extract_options!](https://simonecarletti.com/blog/2009/09/inside-ruby-on-rails-extract_options-from-arrays/)
 modify args and return last hash (or empty hash if there is no hash).
@@ -572,18 +647,6 @@ List of methods that are faster than other methods
 [fast-ruby](https://github.com/PerfectMemory/fast-ruby)
 [video](https://www.youtube.com/watch?v=fGFM_UrSp70)
 [benches](https://github.com/ombulabs/benches)
-
-* every method has implicit argument "block" which you can yield
-
-~~~
-def slow(&block)
-  block.call
-end
-
-def fast
-  yield
-end
-~~~
 
 * `enum.map { }.flatten(1)` should be replaced with `enum.flat_map {}` since we
 do not need to traverse twice

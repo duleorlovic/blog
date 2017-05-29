@@ -401,6 +401,15 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 * <https://www.hotjar.com/tour>
 * <https://www.fullstory.com/features>
 
+## Opensource heatmaps
+
+* example how to to track with firebase
+<https://github.com/seeyourvisitors/seeyourvisitors/blob/master/gg.dev.js> and
+how to show results with <https://github.com/pa7/heatmap.js> example js is here
+<https://github.com/seeyourvisitors/heatmap>
+
+* another solution is <https://github.com/dugwood/clickheat>
+
 # Marketing
 
 * <https://submit.co> where to submit news about your project

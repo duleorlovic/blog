@@ -280,6 +280,12 @@ as you can see in their
 * [bootstrap-datepicker](https://github.com/uxsolutions/bootstrap-datepicker)
 * [bootstrap-daterangepicker](https://github.com/dangrossman/bootstrap-daterangepicker)
 
+## Premium plugins
+
+You can check premium version of
+[adminlte](http://wrapbootstrap.com/preview/WB0N89JMK) which usually use free
+plugins which you can download separatelly.
+
 
 ## Options
 

@@ -574,7 +574,7 @@ If you accidentaly use `belongs_to :templates` (pluralized) than error is
 Indexes should be on all columns that are references in `WHERE, HAVING, ORDER
 BY` parts of sql.
 For example if you find using specific column `User.find_by column: 'val'`.
-Also we can add index to to `:updated_at` column since we sometimes order by
+Also we can add index to `:updated_at` column since we sometimes order by
 that column.
 
 All foreign keys need to have index.
@@ -632,6 +632,16 @@ end
 
 Do not add index for tables that has a lot or removing, since perfomance will be
 bad. Also huge tables need huge indexes, so pay attention on size.
+
+In mysql sometimes `LIMIT 10` is slower than `LIMIT 100` since it won't use
+index for small stuff, but if table is huge than it's much slower without index.
+To force index use something like `User.from("'users' FORCE INDEX
+(my_user_index")`
+[link](http://fuzzyblog.io/blog/rails/2017/02/24/understanding-low-level-index-issues-in-mysql.html)
+If you receive error `undefined method map for "'users' FORCE INDEX
+(my_user_index)":Arel::Nodes::SqlLiteral` than you can try to replace
+`includes/references` with `joins`.
+
 
 # MySql
 

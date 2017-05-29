@@ -144,7 +144,7 @@ end
 When you need to preview a lot of emails, its faster to use letter_opener gem.
 Just put in your Gemfile under development `gem "letter_opener"` and in
 *config/environments/development.rb* `config.action_mailer.delivery_method =
-:letter_opener`. Works whenever email is sent (even from ajax response or console).
+:letter_opener`. Works when email is sent (even from ajax response or console).
 
 # Style
 

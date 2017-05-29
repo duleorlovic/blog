@@ -7,8 +7,11 @@ title: Ubuntu working environment
 
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
-tunel `ssh -C -D 1080 server` gui `ssh -X server` remote `ssh -R
-5900:localhost:5900 guest@joes-pc` local
+tunel `ssh -C -D 1080 server`, than in firefox <about:preferences#advanced>
+Networktab -> Settings choose "Manual proxy configuration" and type SOCKS Host:
+localhost, and port 1080.
+* gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
+guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
 `sudo make install` and `sudo modprobe v4l2loopback` we can stream some video
 file to device `while true; do gst-launch-0.10 filesrc

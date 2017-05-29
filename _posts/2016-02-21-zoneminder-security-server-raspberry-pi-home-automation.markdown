@@ -172,6 +172,16 @@ service apache2 restart
 service zoneminder restart
 ~~~
 
+To change apache port to 81 you can change:
+
+~~~
+# /etc/apache2/sites-enabled/000-default.conf
+<VirtualHost *:81>
+
+# /etc/apache2/ports.conf
+Listen 81
+~~~
+
 To trigger some functions you can run script with
 [patch](https://forums.zoneminder.com/viewtopic.php?t=24494)
 
@@ -200,7 +210,7 @@ Also you are using old camera in snapshot mode, zoneminder is pulling for new
 images, you should limit Analysis FPS, Maximum FPS, and Alarm Maximum FPS in
 Source -> Monitor -> General tab
 
-# Chine IP cam
+# China IP cam
 
 When I look at the source I see
 
@@ -237,12 +247,22 @@ So to set zoneminder you can use "ONVIF" link at the top or manually select:
 * Remote Method -> TCP
 * Capture Width: 1280, Capture Height: 960
 
-Vendor is H264DVR, media port 34567, IP address: 192.168.1.11.
-You can search (just type 192.168.1. (blank)) and you can change ip.
+IPC-Model vendor is H264DVR, media port 34567, IP address: 192.168.1.11.
+You can search, just type 192.168.1. (blank). Or you do not need to type
+address, it will find cameras on other subnet mask.
+You can change ip with "EditDevice"
 
 ![search]({{ site.base_url }}/assets/posts/china ip camera ip settings edit.png)
 ![search]({{ site.base_url }}/assets/posts/china ip camera ip settings edit address.png)
 
+
+# Dahua IP Cam
+
+IPC-HDW4300C default IP address 192.168.1.108 media port 3777 MAC
+3c:ef:8c:a3:c9:6b, vendor Dahua, username: admin, password: admin. Also have
+RTSP port 554.
+
+Zoneminder ONVIF rtsp://admin:admin@192.168.3.5:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
 
 # Lead acid
 

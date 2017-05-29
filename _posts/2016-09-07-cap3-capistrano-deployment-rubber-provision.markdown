@@ -316,6 +316,8 @@ set -e # Any commands which fail will cause the shell script to exit immediately
 set -x # show command being executed
 L=en_US.UTF-8
 update-locale LANG=$L LANGUAGE=$L LC_ALL=$L # needed for database default enc
+# or install missing locale with, for example sr_RS
+# locale-gen sr_RS
 
 echo "STEP: update"
 # apt-get -y update > /dev/null # update is needed to set proper apt sources
