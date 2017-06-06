@@ -189,7 +189,7 @@ Ruby define scope of variable using its name, precisely, first char:
     is shared with all ancestor classes so better is to store data at class
     object instance and create attr_accessor for that.
 
-Every method call create its own local scope. Roby does some preprocessing
+Every method call create its own local scope. Ruby does some preprocessing
 compile time where it recognizes all local variables (class @@x instance @x and
 global $x are recognized by their appearance)
 
@@ -201,10 +201,9 @@ puts x # x is created but not assigned
 puts y # Fatal error: y is unknown
 ~~~
 
-In recursion, self is the same but
-scope is generated each time. But procedure local objects share the same scope
-with parent. That way we can create something similar to closures to simulate
-classes.
+In recursion, self is the same but scope is generated each time. But procedure
+local objects share the same scope with parent. That way we can create something
+similar to closures to simulate classes.
 
 ~~~
 ruby> def box
@@ -215,7 +214,7 @@ ruby> def box
     | end
    nil
 ruby> reader, writer = box
-   [#<Proc:0x40170fc0>, #<Proc:0x40170fac>] 
+   [#<Proc:0x40170fc0>, #<Proc:0x40170fac>]
 ruby> reader.call
    nil
 ruby> writer.call(2)
@@ -236,15 +235,6 @@ is private but we can
   ~~~
   class Matrix
     public :"[]=", :set_element, :set_component
-  end
-  ~~~
-
-* params can be exploded
-
-  ~~~
-  def initialize(name:, address:)
-    @name = name
-    @address = address
   end
   ~~~
 
@@ -528,6 +518,7 @@ comment](https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431
 * argument list length could be variable, there is
 [splat](https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator)
 star/asterix `*` operator, where all other parameters are collected in array.
+
   ~~~
   def f(x, y, *allOtherValues)
   end
@@ -547,11 +538,12 @@ star/asterix `*` operator, where all other parameters are collected in array.
   def f(args)
     puts args.inspect
   end
-  f(a: 1) # { :a => 1}
+  f(a: 1, b: 2) # { a: 1, b: 2 }
   ~~~
 
-  In ruby > 2.0 you can use keyword arguments, for which you can define default
-  values or they need to be required hash param
+  In ruby > 2.0 you can use keyword arguments (params are exploded), for which
+  you can define default values or they need to be required (hash key is
+  required)
 
   ~~~
   def f(x, y, c: , d: 1)
@@ -560,38 +552,154 @@ star/asterix `*` operator, where all other parameters are collected in array.
   f(1, 2) # ArgumentError: missing keyword: c
   ~~~
 
+  There exists double splats (**) which is used for hashes
+  [link](https://alexcastano.com/everything-about-ruby-splats/)
+  Single splat convert to array, but double splat convert to hash. Note that it
+  only takes symbol keys (and leave string keys). And double splat differs from
+  hash last arg since hash can have default value, but it can be overwritten
+  with some non hash. So use splat if you really need last param to be hash
+
+  ~~~
+  def f_with_hash(a, h = {})
+  end
+  def f_with_double(a, **d)
+  end
+  f_with_hash 1, 2 # => h = 2
+  f_with_double 1, 2 # => ArgumentError: wrong number of arguments (given 2, expected 1)
+  ~~~
+
+  To see parameters of some function you can use
+
+  ~~~
+  Object.instance_method(:f).parameters
+  ~~~
+
   Similar to asteriks, last parameter can be prefixed with ampersand (&) which
   means function expect a code block. A Proc object will be created and assigned
   to parameter.
 
   ~~~
-  def f(a, &block)
-    block.call a
+  def f(a, &p)
+    p.call a
   end
+  # parenthesis for method params are required when passing using {}
+  f(1) { |i| puts i } # output: 1
+  # parenthesis are not required for do end
   f 1 do |i| puts i; end # output: 1
-  # parenthesis are required when passing using {}
-  f(1) { |i| puts i }
   ~~~
 
   Similarly, using ampersand in method call for a Proc object, it will be
-  extrapolated/replaced with block, which you can use with `yield`. 
-  Every method has implicit argument "block" which you can yield
-  <https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator>
+  extrapolated/replaced with block `f &someBlock` for which you can use:
+  `def f; yield; end`
+
+# Procs
+
+<https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Understanding_blocks.2C_Procs_and_methods>
+Using Proc ruby can be used in functional programming (it enable first-class
+functions - function can be created at runtime, assigned to variable, passed as
+argument and be return value from other functions).
+Ruby differs from other functional languages for which we can use name of
+function as variable with function type (in ruby we need to use Proc).
+First-class functions can be used for higher-order functions (functions which
+takes other functions as arguments).
+
+> Proc objects are blocks of code that have been bound to a set of local
+> variables. Once bound, the code may be called in different contexts and still
+> access those variables.
+
+~~~
+def gen_times(factor)
+  shared = 1
+  _proc = Proc.new {|n| n*factor*shared }
+  shared = 2
+  _proc
+end
+times3 = gen_times(3)
+times5 = gen_times(5)
+
+puts times3.call(12) # 12 * 3 * 2
+puts times5.call(5) # 5 * 5 * 2
+~~~
+
+That is very similar to [closures]({{ site.baseurl }} {% post_url 2016-02-10-javascript-theory %})
+
+Proc object can be used as argument for functor (functor is higher-order
+function, ie takes function as argument).
+
+~~~
+def functor(a, b)
+  a.call b
+end
+
+p = Proc.new { |i| puts i }
+functor(p, 1) # 1
+~~~
+
+Shorthand notation for creating Procs is `p = lambda {|i| puts i}` but there are
+differences:
+
+* proc object does not check the number of params (you can call `p.call 1,2,3`
+or `p.call` i will be nil). Lambda throws an error if number of params does not
+match
+* also if you use `return` inside proc object, it will stop current method, but
+for lambda it will not.
+
+You can call using `p.call some_param` or `p[some_param]`.
+Block can't live alone, it is used as last param of methods. Every method has
+implicit argument for that block and since we do not have name, we use `yield`
+to call it. Someone prefer to use explicit argument so we know that method
+expects block.
+
+~~~
+def f(a, &p)
+  # we can use explicit
+  p.call a
+  # but also we can use
+  yield a
+end
+
+f(1) { |i| puts i }
+~~~
+
+Note that proc is not an actual argument and you can not use parenthesis around
+`f(1, lambda {|i| puts i})`. But you can use ampersand `&` in method call to
+convert it to block.
+
+~~~
+def f(a)
+  yield a
+end
+p = lambda {|i| puts i}
+f(1, &p)
+~~~
+
+This is used for example in  `map` functor. If we use ampersand for symbol, than
+it will be converted `Symbol#to_proc` and passed in.
+
+~~~
+class Symbol
+  def to_proc
+    lambda {|x, *args| x.send(self, *args)}
+  end
+end
+
+words = %w(Jane, aara, multiko)
+upcase_words = words.map {|w| w.upcase}
+upcase_words = words.map {|w| w.send :upcase}
+upcase_words = words.map(&:upcase)
+~~~
+
+* there are special methods in ruby
+  * `method_missing(method, *args)` can be used to catch all missing methods
+  * `initialize` to instantiate class
+
+* method can be called using 3 ways:
+  * dot notation `o.my_method`
+  * send `o.send :my_method`
+  * grab method and call it `o.method(:my_method).call`
+
   <https://gist.github.com/kidlab/72fff6e239b0af1dd3e5> for something that need
   test or we just want to showcase
-
-  ~~~
-  def f(a, &block)
-    block.call a
-  end
-
-  def f1(a)
-    yield a
-  end
-
-  def 
-  ~~~
-
 
 * in rails there is
 [args.extract_options!](https://simonecarletti.com/blog/2009/09/inside-ruby-on-rails-extract_options-from-arrays/)

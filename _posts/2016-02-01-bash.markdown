@@ -74,7 +74,7 @@ Here are all bash CTRL shortcuts:
 * ctrl+b (+f) : move cursor by one char to left (right)
 * ctrl+h (+d) : delete char left to the cursor-backspace (under the cursor)
 * ctrl+w : delete word before the cursor
-* ctrl+i : tab completion
+* ctrl+i : (or tab) completion
 * ctrl+j : enter
 * ctrl+k (+u) [+y]: cut chars until the end of the line (before the cursor
   position) [yank cutted text]
@@ -101,6 +101,9 @@ with `"*p`. Clipboard selection (copy, paste) with  and `"+p`
 
 Maximize terminal window to full screen is with `F11` (yes it is the same
 shortcut for bash as for chrome).
+Inside terminal there are Terminal->Preferences->Shortcuts
+
+* `Shift+Ctrl+F` search (`G` and `H` next and previous)
 
 Only place where I sometimes need arrow keys is google chrome suggestions in
 address bar, but than I use Tab.
@@ -240,6 +243,18 @@ You can find substring
   (without brackets). If you need to concatenate with other string you can use
   curly braces `${variable_name}other_string`
 * [substring removal](http://wiki.bash-hackers.org/syntax/pe#common_use)
+
+# Arrays
+
+[linuxjournal](http://www.linuxjournal.com/content/bash-arrays)
+
+~~~
+arr=(Dule Orlovic)
+${arr[*]}         # Dule Orlovic All of the items in the array
+${!arr[*]}        # 0 1 All of the indexes in the array
+${#arr[*]}        # 2 Number of items in the array
+${#arr[0]}        # 4 Length of item zero
+~~~
 
 # Curl
 

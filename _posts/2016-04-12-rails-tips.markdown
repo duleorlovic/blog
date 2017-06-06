@@ -102,6 +102,18 @@ validates :job_type_id, presence: true
 <%= f.select :job_type_id, ... %>
 ~~~
 
+[form
+select](https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select)
+can accept a lot of options as 3th param:
+
+* `select: value` if you need different than `job.job_type_id`
+* `disabled: [values]` to disable some options
+* `label: 'My label'`
+* `prompt: 'Please select'` this is shown only if not already have some value
+* `include_blank: 'Please select'` this is shown always (even already have
+value)
+
+
 # Hooks
 
 Default value for column could be in migration but than you need another
@@ -538,21 +550,33 @@ and adding `has_and_belongs_to_many :templates` in those classes.
 
 If you have different name of the table: `t.references :donor, foreign_key:
 true, null: false` but donor is actually in users table, than you need to change
-foreign key:
+foreign key
 
 ~~~
+# to_table is in rails 5
 t.references :donor, foreign_key: { to_table: :users }, null: false
 ~~~
 
 or manually write relation
 
 ~~~
-t.belongs_to :donor, index: true, null: false
+create_table :donations
+  t.belongs_to :donor, index: true, null: false
+end
 add_foregn_key :donations, :users, column: :donor_id
 ~~~
 
 Also in model you need to write: `has_many :donations, foreign_key: :donor_id`
 and `belongs_to :donor, class_name: "User"`
+
+Note that `t.belongs_to` by default use `index: false`, so you need to use
+`index: true`. But usually you use `add_foreign_key` that will also add index
+(name will be like: `fk_rails_123123`) if it is not added by belongs_to, so you
+can safelly use `t.belongs_to ... index: false` if you are using
+`add_foregn_key`.
+
+For MySql I have to use `unsigned: true` in `t.belongs_to :user, null: false,
+unsigned: true`
 
 If you need to update specific fields of association, add validation or cdd
 ustom order then you should create the model and use `has_many :templates,

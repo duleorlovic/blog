@@ -94,16 +94,27 @@ cat "gem 'state_machine-audit_trail'" >> Gemfile
 rails generate state_machine:audit_trail Post status
 ~~~
 
-This will generate migration
+This will generate model and migration which you can update
 
 ~~~
+# app/models/post_status_transition.rb
+class PostStatusTransition < ActiveRecord::Base
+  belongs_to :post
+end
+~~~
+
+~~~
+# db/migrate/123123123123_create_post_status_transitions.rb
 class CreatePostStatusTransitions < ActiveRecord::Migration[5.1]
   def change
     create_table :post_status_transitions do |t|
       t.references :post, foreign_key: true
+      # t.string :namespace # this is for new version of state_machines
       t.string :event
       t.string :from
       t.string :to
+      # add your custom fields
+      t.string :change_description
       t.timestamp :created_at
     end
   end

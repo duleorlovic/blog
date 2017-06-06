@@ -14,6 +14,8 @@ tags: javascript
 >  the local variables, parameters and inner function declarations of its outer
 >  function.
 
+Nice example on
+[wiki](https://en.wikipedia.org/wiki/Closure_(computer_programming))
 Example from
 [stackoverflow](http://stackoverflow.com/questions/643542/doesnt-javascript-support-closures-with-local-variables/643664#643664)
 
@@ -37,8 +39,9 @@ create();
 run();
 ~~~
 
-This will print 5,5,5,5,5 since at the time function is called, `for` loop
-already set i to 5. More correct is to call inner function when you define it
+This will print 5,5,5,5,5 since at the time function is created it reference to
+variable `i`, but when function is called `for` loop already set `i` to 5. More
+correct is to call inner function when you define it
 
 ~~~
 function create() {
@@ -63,8 +66,25 @@ Thats why `do` exist in coffee script
 closures = []
 create ->
   for i in [0..5]
+    # instead of closuers[i] = ->
     closures[i] = do (i) ->
       -> alert i
+~~~
+
+Here is example in ruby
+
+~~~
+def create
+  r = []
+  # 1.upto 5 do |i| # this will print 1,2,3,4,5 since i is not shared between
+  for i in 1..5
+    r.push Proc.new { i }
+  end
+  r
+end
+
+a = create
+a.each {|f| puts f.call } # [5,5,5,5,5] since i is shared for all closures
 ~~~
 
 ## Resolution of property names on objects
@@ -278,27 +298,51 @@ Examples
   };
   ~~~
 
-# Difference ES6 and ES5
+# Difference ES6 (ie ES2015) and ES5
 
 This [post](http://kamranahmed.info/blog/2016/04/04/es6-in-depth/) explains what
 is new in ES6 (Ecma Script 2015). Almost all those features already exists in
 coffee script [nice reply](https://gist.github.com/benjie/d0e39fbe8a61bc30ed93).
 It's good that no need to write `function` keyword. Also nice table of
-[es6-features](http://es6-features.org/)
+[es6-features](http://es6-features.org/) and [supported
+browsers](http://kangax.github.io/compat-table/es6/)
 
 * `use strict` mode by default (by this
   [info](http://arcturo.github.io/library/coffeescript/07_the_bad_parts.html)
   you should use in development but not on production
-* `let myVar; const myConst;` has block scope like inside `if () { let myVar=1; }`
-* template literals with backticks (coffe version on `"Hellp #{name}"`)
+* `let myVar;` has block scope like inside `if () { let myVar=1; }` (`var` has
+function scope). You can notice difference in
+
+  ~~~
+  for (var i = 1; i< 5; i++) {
+    console.log(i)
+    setTimeout(function() {
+      console.log(i) # here we have i = 5,5,5,5 since same variable is used
+      # if we used let i=1;i<5;i++ than it will be different variable: 1,2,3,4
+    }, 1000)
+  }
+  ~~~
+
+* also `const myConst = document.querySelect(".my-class");` have block scope,
+and it should be used for all non volatile variables
+* template literals with backticks and curly braces (coffe version on "Hello
+#{name}")
 
   ~~~
   var name = "Duke";
   console.log(`Hello ${name}`);
+
+  const multiLine = `this
+  is
+  multi
+  line`
   ~~~
 
-* array functions are on abbreviated syntax for anonymouse functions (coffee fat
-  arrow instead of slim arrow `->`, binds to the outer `this`)
+* array functions are abbreviated syntax for anonymouse functions (coffee fat
+  arrow instead of slim arrow `->`, binds to the outer `this`). If there is only
+  one parameter than you can omit parenthesis, if there are no params than you
+  can replace parenthesis with `_`. One liner syntax (without block) use
+  implicit return, for other you need explicit return if you need.
 
   ~~~
   var sayHello = (name) => `Hello ${name}!`;
@@ -307,20 +351,70 @@ It's good that no need to write `function` keyword. Also nice table of
   }
   ~~~
 
+  Note that `self` inside arrow functions does not bind to current object for
+  object methods. It binds to outer `this`. So it is usefull only if you have
+  function inside method that is defined in clasical way, like
+
+  ~~~
+  let o = {
+    myMethod: function() {
+      setTimeout( () => {
+        console.log(this) //o
+      }, 3000)
+    }
+  }
+  ~~~
+
 * destructuring with default values and renaming (also in coffescript
   `[_, month, date = 1] = ...`)
 
   ~~~
-  var [, month, date = 1] = '2010-10-11'.split('-')
-  var {name, age, gender:sex = 'male'} = { name: 'Duke', age: '33', gender: 'male' }
+  # destructuring arrays
+  let [, month, date = 1] = '2010-10-11'.split('-')
+  # month = '10' and date = '11'
+  let [f, s, ...rest] = [1, 2, 3, 4]
+  # f=1, s=2, rest = [3,4[
+
+  # destructuring objects
+  let { name, age, gender:sex = 'male' } = { name: 'Duke', age: '33', gender: 'male' }
+  # is the same as
+  let name = o.name
+  let age = o.age
+  let sex = o.gender # here we also renaming
   ~~~
 
-* `for(i=0;i<cars.loeght;i++) {}` is not concise `cars.forEach(myFunction)` is
-  concise but can not break out of the loop. `for...of` is concise and can break
-  `for(let car of cars) { }` (coffee script has `.each`)
+  You can also use descructuring when defining methods
+
+  ~~~
+  function call({
+    name: 'My Name',
+    phone: '123123',
+  } = {}) {
+    console.log(name + ' ' + phone)
+  }
+  ~~~
+
+  There exists rest `...` parameter which convers to array
+
+  ~~~
+  const sum = (...a) => a.raduce((sum, current) => sum + current, 0)
+  ~~~
+
+  and same operator `...` inside method call is called *spread* and it expands
+  array to params (coffee calls this splats `f(items...)`)
+
+  ~~~
+  let a = [1, 2, 3]
+  f(...a)
+  # is the same as
+  f(1, 2, 3)
+  ~~~
+
 * default parameter values `function g(a=2){}` (the same for coffeescript)
-* spread operator `...` in `function a(...items){}` (coffee calls this splats
-  `a(items...)`)
+
+* `for(i=0;i<cars.loeght;i++) {}` is not concise `cars.forEach(myFunction)` is
+  concise but can not break out of the loop. `for(let ... of ...)` is concise
+  and can break `for(let car of cars) { }` (coffee script has `.each`)
 * extend classes `class Employee extends Person {}` so we don't need to write
   `Employee.prototype = new Person`
 * new data structure called `Map` and `WeakMap` (keys are objects, not plain
@@ -338,5 +432,59 @@ It's good that no need to write `function` keyword. Also nice table of
 * new array functions `Array.from([1,2,3], x => x + x)`
  and `Array.find( user => user.age > 15)` same as `Array.findIndex` but returns
  object instead of index
-* modules `import User from 'user';`
+* modules like `import User from 'user';`
+[link](https://www.sitepoint.com/understanding-es6-modules/)
 
+  ~~~
+  // lim/math.js
+  export function sum(x, y) {
+    return x + y;
+  }
+  export let pi = 3.141593;
+  ~~~
+
+  ~~~
+  import * as math from "lib/math";
+  console.log("2pi = " + math.sum(math.pi, math.pi));
+
+  // or we could
+  import { pi, sum } from "lib/math";
+  console.log("2pi = " + sum(pi, pi));
+  ~~~
+* property value shorthands, when you define object and you already have
+variable with same same as key, you can use
+
+  ~~~
+  const name = 'dule'
+  const anPerson = {
+    name
+  }
+  // is the same as
+  const aPerson = {
+    name: name
+  }
+  ~~~
+
+  it also exists for methods
+
+  ~~~
+  const aPerson = {
+    speak (word) {},
+    // same as
+    speak: function (word) {},
+    // do not use arroy because you can not acsess this
+    // speak: () => {},
+  }
+  ~~~
+
+* computed object property names
+
+  ~~~
+  const name = 'dule'
+
+  const aPerson = {
+    'mile': 'value',
+    [name]: 'dule is key and value',
+    [name+'car']: 'value',
+  }
+  ~~~

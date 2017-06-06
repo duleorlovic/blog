@@ -704,7 +704,7 @@ end
 I tried with `v.name = 'mysubdomain'` inside `Vagrantfile` but that just rename
 virtual machine name
 ([machine.name](https://github.com/rubber/rubber/blob/master/lib/rubber/vagrant/provisioner.rb#L39)]
-inside rubber plugin do not take that name). All that plugin does is a call to
+inside rubber plugin does not take that name). All that plugin does is a call to
 script command
 
 ~~~

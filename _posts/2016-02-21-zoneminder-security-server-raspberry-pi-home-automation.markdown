@@ -210,6 +210,13 @@ Also you are using old camera in snapshot mode, zoneminder is pulling for new
 images, you should limit Analysis FPS, Maximum FPS, and Alarm Maximum FPS in
 Source -> Monitor -> General tab
 
+You can see stats by clicking Frames -> last column is Score (on stills you can see only score on hover). For example:
+
+|Zone|Pixel Diff|Alarm Px|Filter Px|Blob Px|Blobs|Blob Sizes|Alarm Limits|Score|
+|All|67|437 (5%)|97629 (5%)|96123 (5%)|1|96123 (5%)|813,0-1306,269|5|
+
+In filter window you can see Max score frame (last column)
+
 # China IP cam
 
 When I look at the source I see

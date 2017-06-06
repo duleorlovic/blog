@@ -108,7 +108,9 @@ when you type `heroku login` (once is setup, it stays forever)
 # Git commit
 
 If you want to ignore/reignore some files that are tracked (gitignore does not
-work on tracked files)
+work on tracked files). Note that when you change branch with changes to that
+files, error will be reported. Also note that `git checkout .` or `git stash`
+will be also applied to those hidden changes.
 
     git update-index --assume-unchanged <file>
     # then to track changes again

@@ -154,19 +154,24 @@ augroup END
 
 # Movements
 
+* `$` end of line, `0` start of line (or `^`)
 * `+` and `-` move line up or down on the first letter
 * `{` and `}` move on paragraph (empty line)
-* `^B`(`^U`) or `^F` (^D) scroll up (half) or down (half) page
-* `H` `M` `L` move to the top/middle/bottom of the window
-* `mA` then `'A` jump there (downcase letter a can jump only on current buffer),
-  `:marks` gives the jump location, two ' `''` is jump back, `'.` jump to last
-  change
-* `%` jump closing brackets
+* `^B`(`^U`) or `^F` (`^D`) scroll up (half) or down (half) page
+* `H` `M` `L` move to the top/middle/bottom of the window, so you can scroll
+* `mA` then `'A` jump there (downcase letter `a` can jump only on current
+buffer), `:marks` gives the jump location, two ' `''` is jump back, `'.` jump to
+last change
+* `%` jump closing brackets or other matching brace
 * `5G` or `:5` goes to the line 5
 * `gg` goes top, `G` goes bottom
 * `g,` and `g;` jump to next/prev change on current buffer
 * `:set scrollbind` in two buffers will make them scroll simultaneously. toggle
 scrolling with `:set scb!`
+* show line numbers `:set number` or relative numbers `:set relativenumber` (or
+shorter `:set rnu`
+* show approx position in text `^G`
+* jump to previous and next positions `^O` and `^I`
 
 # Motions and selections
 
@@ -187,6 +192,10 @@ scrolling with `:set scb!`
 * recording macro to q with `qq`, exit with `q`, run with `@q`
 * paste commands in insert mode with `^Rq`
 * `^T` indent in insert mode
+
+# Motion in visual mode
+
+* `'<` to the first char of last selected visual area
 
 # Copy paste
 
@@ -226,6 +235,8 @@ will change directory only in current buffer.
 
 # Searching
 
+* `/` for searching, to search in oposite direction `?` (`n` and `N` for next
+and previous result)
 * `:grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I`
 * grep end of the word `/usan\>` help with `:h /\>`
 * `:%s/old/new/gc`
@@ -261,6 +272,10 @@ Preferences -> Shortcuts
 * `^x^n` only strings from current file
 * `^x^f` to complete filename (keep `^x^f` when you navigate subfolders)
 * `^x^]` for tags find other shortcuts with `:help ins-completion`
+* `^a` and `^x` to increment and decrement numbers
+[speeddating](https://github.com/tpope/vim-speeddating) if you want to increment
+dates
+* for commands you can use `^d` to show all completion and `<tab>` to use it
 
 # Usefull commands
 
@@ -282,7 +297,7 @@ snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
 
 # Books, videos tutorials
 
-* <http://learnvimscriptthehardway.stevelosh.com/>
+* [vim theory]({{ site.baseurl }} {% post_url 2017-06-05-vim-theory %})
 * <https://www.youtube.com/watch?v=5r6yzFEXajQ>
 * [--noplugin](https://www.youtube.com/watch?v=XA2WjJbmmoM)
 
@@ -378,10 +393,21 @@ corner)
 
 # Rails vim
 
-When I type `:Rcontroller post` it should go to `:Rcontroller posts` instead of
-error: `No such controller post`
+Some todos:
 
-# Show dedented lines
+## Pluralize
+
+When I type `:Rcontroller customer` it should go to `:Rcontroller customers`
+instead of error: `No such controller customer`. This usually happens when I
+have a lot of models `customer_invoices`, `customer_payments` and `customers`.
+
+## Localize
+
+When I'm in `index.html.erb` and I type `:Rcontroller` than I jump to
+controller, but if I'm on `index.in.html.erb` than there is an error `Argument
+required`. Also problem with `:Eview another_`
+
+# My plugin: Show dedented lines
 
 When looking at large files in small window (I have 4 vim windows in my single
 terminal window) than I want to see to which block current line belongs.

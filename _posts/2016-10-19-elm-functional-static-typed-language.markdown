@@ -118,7 +118,7 @@ Command line:
     ~~~
 
 
-* use backslash `\` to split in multiple lines
+* use backslash `\ ` to split in multiple lines
 
 # User input
 
@@ -151,6 +151,7 @@ tutorial todo <https://guide.elm-lang.org/get_started.html>
 http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
 <https://www.toptal.com/front-end/make-web-front-end-reliable-with-elm>
 https://www.youtube.com/watch?v=28jCDXfZCgE#t=0.417205
+* [monads for rubyist](https://wuest.me/blog/e/20170528-io-monad-for-rubyists/)
 
 # Haskell Books
 
