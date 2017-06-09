@@ -162,6 +162,7 @@ augroup END
 * `mA` then `'A` jump there (downcase letter `a` can jump only on current
 buffer), `:marks` gives the jump location, two ' `''` is jump back, `'.` jump to
 last change
+* `^o` and `^i` will jump to previos and next location
 * `%` jump closing brackets or other matching brace
 * `5G` or `:5` goes to the line 5
 * `gg` goes top, `G` goes bottom
@@ -171,7 +172,8 @@ scrolling with `:set scb!`
 * show line numbers `:set number` or relative numbers `:set relativenumber` (or
 shorter `:set rnu`
 * show approx position in text `^G`
-* jump to previous and next positions `^O` and `^I`
+* `gf` follow that file
+* `^]` open ctag
 
 # Motions and selections
 
@@ -317,6 +319,7 @@ snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
   ^t # jump back in tags stack
   ^x^] # autocomplete tags
   ~~~
+
 
 # Syntastic checker
 

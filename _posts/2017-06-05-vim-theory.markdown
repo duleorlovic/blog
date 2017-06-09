@@ -19,6 +19,7 @@ special variables
 * `<non-keyword-character>` maps all non keyword chars: `:set iskeyword?`
   returns `iskeyword=@,48-57,_,192-255,-` ie alphabetic ascii, digits 0-9, _ ,
   and some special chars
+* `<nop>` no operation, usefull when you want to disable some keys
 
 # Lean Vim Script The Hard Way
 
@@ -40,7 +41,11 @@ special variables
   * you can map two keys, for example `:map -d dd`
 * change leader key `:let mapleader = "-"` so you can write `:map <leader>d dd`
   (note that it does not have effect for already defined mappings)
-  * `:let maplocalleader = "\\"` mapings only for local buffer
+  * `:let maplocalleader = "\\"` mapings only for local buffer. So instead
+    `:nnoremap <buffer> <leader>d dd` you can use `:nnoremap <localleader>d dd`:
+  * `:setlocal nowrap` is only for current buffer (file), when you open another
+    file (inside same window) it will not have nowrap. If you have same mappings
+    than local will be chosen since it is more specific
 * abbreviations are similar to mappings but for insert, replace and command mode
   * `:iabbrev adn and` this will replace `adn<non-keyword-character>` with `and`
   so that is difference between `nmap` since `map` does not count for
