@@ -178,15 +178,7 @@ shorter `:set rnu`
 * `ciw` change inner word, `caw` including spaces that follows the word
   * `ca]` change all inside brackets including both [ ]
 * `daw` removes the inner word
-* `vit` inner or `vat` outer (including tag) visual select tag `:h tag-blocks`
-  * repeat `at` to select wraped tag
-  * jump with `o` more on `:help visual-operators` `:help v_it`
-  * `vap` select paragraph (until next empty line, including that empty line)
-  * `dst` delete surround tag with vim surround plugin
 * `dt ` delete until the space, `df ` delete until the space including space
-* `va'` visually select all inside ' including '
-* `cgn` change visually selected text using previous search
-* `gv` to select previous selected visual area
 * `dap}p` switch two paragraph
 * `dE` removes to the End of the string
 * recording macro to q with `qq`, exit with `q`, run with `@q`
@@ -195,7 +187,16 @@ shorter `:set rnu`
 
 # Motion in visual mode
 
-* `'<` to the first char of last selected visual area
+* `'<` to the first line (`\`<` char) of last selected visual area. Note that
+you need to exit current visual area and than jump to first or last line/char
+* `vit` inner or `vat` outer (including tag) visual select tag `:h tag-blocks`
+  * repeat `at` to select wraped tag
+  * jump with `o` more on `:help visual-operators` `:help v_it`
+  * `vap` select paragraph (until next empty line, including that empty line)
+  * `dst` delete surround tag with vim surround plugin
+* `va'` visually select all inside ' including '
+* `cgn` change visually selected text using previous search
+* `gv` to select previous selected visual area
 
 # Copy paste
 
@@ -434,4 +435,5 @@ RSpec.describe Project do
 ~~~
 
 Also in view, I want to be able where current element belongs, so list all
-wrapped elements.
+wrapped elements. And when I'm in scss I want to see all parent selector,
+classes and media queries.

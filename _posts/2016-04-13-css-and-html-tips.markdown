@@ -27,7 +27,9 @@ title: CSS and HTML tips
 * use relative units instead of absolute
   <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 { font-size: 20vh;}`
 * you can not set the width of inline elements, so to set width of `span` you
-  need to make it `display:inline-block; width: 100px`
+need to make it `display:inline-block; width: 100px`
+  * image can be some percentage of parent div, but in firefox parent div also
+  need to have `width: 100%`
 * also top and bottom padding has no efect for label since it is an inline
   element
   [link](http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements).
@@ -124,6 +126,19 @@ title: CSS and HTML tips
 .hide-to-up {
   position:absolute;
   top: -1000px;
+}
+
+// childrens (like h1 and p) will be aligned to both edges
+.left-right-children {
+  text-align: justify;
+  &:after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    font-size:0;
+    line-height:0;
+  }
 }
 ~~~
 

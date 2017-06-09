@@ -15,8 +15,10 @@ text on click
 * [jsPDF](https://github.com/MrRio/jsPDF) pdf generator
   [examples](http://mrrio.github.io/jsPDF/#)
 * number input field [spinner](https://github.com/vsn4ik/jquery.spinner)
-* toggle checkbox [draggable
+* toggle checkbox:
+  * [draggable
   switch](http://www.bootstrap-switch.org/examples.html)
+  * [abpetkov/switchery](https://github.com/abpetkov/switchery)
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
 
 # Alerts and notifications

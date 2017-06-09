@@ -61,7 +61,9 @@ module in your class, beside instance methods, it will extend and add some class
 methods as well. For example
 [Linkable](https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee)
 
-For rails concerns you need to [video](https://youtu.be/bHpVdOzrvkE?t=1640)
+
+For rails concerns you can see [concerns]({{ site.baseurl }} 
+{% post_url 2016-04-12-rails-tips %}#concerns)
 
 ~~~
 module Emailable
@@ -72,7 +74,6 @@ module Emailable
   # instance methods
 
   def ClassMethods
-    # class methods without self.
   end
 ~~~
 
@@ -517,7 +518,8 @@ reinstall ruby `rvm reinstall 2.3.1`. But is related to rubygems
 comment](https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431)
 * argument list length could be variable, there is
 [splat](https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator)
-star/asterix `*` operator, where all other parameters are collected in array.
+star/asterix/expand `*` operator, where all other parameters are collected in
+array. (note you can not use splat and last hash attribute)
 
   ~~~
   def f(x, y, *allOtherValues)

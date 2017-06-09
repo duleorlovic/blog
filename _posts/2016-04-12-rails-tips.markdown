@@ -132,7 +132,7 @@ So you need to separate `default_values_on_create` and
 ~~~
 after_initialize :default_values_on_initialize
 before_validation :default_values_on_create, on: :create
-before_validation :default_values_on_updarte, on: :update
+before_validation :default_values_on_update, on: :update
 
 private
 
@@ -179,7 +179,12 @@ ALL users! `unscoped` will remove even association scopes, thanks Joseph
 Ndungu on
 [comment](http://www.victorareba.com/tutorials/creating-a-trashing-concern-in-rails-5).
 
-Uncope can receive params what to unscope, example `User.unscope(:where)`
+Uncope can receive params what to unscope, example `User.unscope(:where)`. If
+you use this in `belongs_to :location, -> { unscope :where }` than it will also
+remove association belongs to condition, so you have to unscoped only columnds
+from default_scope `belongs_to :location, -> { unscope where: :operator_id }`
+[excellent link how to remove
+scope](https://singlebrook.com/2015/12/18/how-to-carefully-remove-a-default-scope-in-rails/)
 
 # Format date
 
@@ -208,6 +213,9 @@ always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
   `weekday = t.to_a[6]`
 * to get first calendar date `Time.zone.today.beginning_of_month` or
 `Time.zone.today.end_of_month`
+  * get interval for previous month: `'Last Month':
+  [Time.zone.today.prev_month.at_beginning_of_month,
+  Time.zone.today.prev_month.at_end_of_month],`
 
 ## Timezones
 
@@ -1209,6 +1217,7 @@ end
 
 [DHH](https://signalvnoise.com/posts/3372-put-chubby-models-on-a-diet-with-concerns) and interesting is
 [trashable](https://github.com/discourse/discourse/blob/master/app/models/concerns/trashable.rb)
+[video](https://youtu.be/bHpVdOzrvkE?t=1640)
 
 ~~~
 module Someable
@@ -1220,7 +1229,9 @@ module Someable
   end
 
   # methods defined here are going to extend the class, not the instance of it
-  module ClassMethods
+  # do not use self. in method definition
+  # also you can include other concerns here
+  class_methods do
     def tag_limit(value)
       self.tag_limit_value = value
     end

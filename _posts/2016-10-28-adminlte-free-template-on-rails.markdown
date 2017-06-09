@@ -282,10 +282,13 @@ as you can see in their
 
 ## Premium plugins
 
-You can check premium version of
+You can check premium version:
 [adminlte](http://wrapbootstrap.com/preview/WB0N89JMK) which usually use free
-plugins which you can download separatelly.
+plugins which you can download separatelly. It looks more professional.
 
+* [wrapboostrap inspinia](https://wrapbootstrap.com/theme/inspinia-responsive-admin-theme-WB0R5L90S)
+  * checkbox [abpetkov/switchery](https://github.com/abpetkov/switchery)
+* [themeforest ucm theme crm](https://themeforest.net/item/ucm-theme-adminlte-crm/8565409?sso=1&_ga=2.183038054.1513538055.1496854657-1559534847.1496854657)
 
 ## Options
 
