@@ -3,6 +3,11 @@ layout: post
 title: MacBook MacOS OSX
 ---
 
+I got new macOS Sierra 10.12.5
+Since I like Alt + ` to switch to next window inside same app, I choose English
+PC in System Preferences->Input Sources. This way keys (§ and `)  were replaced.
+but also single quote key, so better is do download https://www.macupdate.com/app/mac/25141/karabiner/download
+
 # Shortcuts
 
 Option (ALT) key is ⌥

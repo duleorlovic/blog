@@ -11,6 +11,12 @@ tags: css
 * base: usually single element  (`a`,`h1`) or pseudo-class (`a:hover`)
   selectors (but not a class `my-class` selector). Its default styling for
   elements in all occurences on the page.
+  * `p + p` is sibling selector, so only for paragraph that is after paragraph
+  (so it wont affect first p, only ones that are immediately after p)
+  * `p ~ p` is [general
+    sibling](https://www.w3.org/TR/selectors/#general-sibling-combinators) so
+    all p elements who has sibling p which if before (not neccessary
+    immediatelly before).
 * layout: divide page into sections. prefix with `l-` like `l-inline`
 * module: reusable parts: `callouts`, `products`... When used in different part
   of page you should use subclassing class_name-module, for example: `<div
@@ -67,6 +73,12 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 * rely on inheritance, instead of `#bookmarkMenuItem > .menu-left {
   list-style-image: url(blah) }` its enough to write `#bookmarkMenuItem {
   list-style-image: url(bla) }`
+
+# CSS variables
+
+* you can set to `:root { --my-var: red; }` and than use later with `p { color:
+  var(--my-var); }`. Those properties are inherited from elements where are
+  defined.
 
 
 # Live reloading in less than a second
