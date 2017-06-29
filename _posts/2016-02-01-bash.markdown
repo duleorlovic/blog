@@ -53,6 +53,10 @@ Look at my
 When I update ubuntu I need to map keys again. Go one by one and press ALT+key
 combination again.
 
+On blank ubuntu I need to go All Settings -> Appearance -> (tab) Behavior and
+*Auto-hide the Launcher* to ON and *Enable workspaces*.
+(in virtualBox I can not open launcher, only hud with left alt)
+
 # Shortcuts for key mappings
 
 To scroll in terminal window, instead `shift+page_up` we can [bind to
