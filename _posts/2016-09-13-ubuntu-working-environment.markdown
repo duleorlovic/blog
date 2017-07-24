@@ -9,7 +9,7 @@ title: Ubuntu working environment
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
 tunel `ssh -C -D 1080 server`, than in firefox <about:preferences#advanced>
 Networktab -> Settings choose "Manual proxy configuration" and type SOCKS Host:
-localhost, and port 1080.
+localhost, and port 1080. Do not write anyting in HTTP proxy... 
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
 guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after

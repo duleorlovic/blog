@@ -161,7 +161,27 @@ To find if given commit hash is incuded on some release (release is a tag)
 
     git tag --contains <commit>
 
+Add global gitignore for all projects
+
+    git config --global core.excludesfile ~/.gitignore
+
+# Time tracking
+
+* https://github.com/laughedelic/gtm is old unmaintained
+* https://github.com/git-time-metric/gtm
+
+  ~~~
+  brew tap git-time-metric/gtm
+  brew install gtm
+  ~~~
+
+* https://github.com/timeglass/glass
+
+
 # Github
 
 For you project you can set instructions for issues, look example
 <https://github.com/arsduo/koala/issues/new>
+
+Very usefull github cheat sheet
+<https://github.com/tiimgreen/github-cheat-sheet#github-talks>

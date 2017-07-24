@@ -260,6 +260,11 @@ th.rotate > div > span {
 }
 ~~~
 
+# Style guide
+
+* [google html css style
+  guide](https://google.github.io/styleguide/htmlcssguide.html)
+
 # Tips
 
 * submit button outside of a form is
@@ -369,3 +374,6 @@ relative and defined after cover to stand out of that cover.
 link_to "+123-123", "tel:123123" %>`)
 * for mail `<a href="mailto:asd@asdasd">asd@asd.asd</a>` (rails `<%= mail_to
 "asd@asd.asd", "asd@asd.asd" %>`)
+
+
+

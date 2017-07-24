@@ -1873,3 +1873,6 @@ And if you use jQuery data method than you do not need to use JSON.parse.
 * if you want to use `key.to_sym` for all keys you can use `hash.symbolize_keys`
 but if you want that recursively for nested hashes as well you can use
 `params[:some_pararam].deep_symbolize_keys`
+
+* single file rails app in one file
+  <https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/>

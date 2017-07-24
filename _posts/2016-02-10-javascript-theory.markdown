@@ -488,3 +488,9 @@ variable with same same as key, you can use
     [name+'car']: 'value',
   }
   ~~~
+
+# Books
+
+* https://performancejs.com/post/hde6d32/The-Best-Frontend-JavaScript-Interview-Questions-%28written-by-a-Frontend-Engineer%29
+* https://github.com/getify/You-Dont-Know-JS
+* best practices https://github.com/wearehive/project-guidelines
