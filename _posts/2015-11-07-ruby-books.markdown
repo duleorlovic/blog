@@ -26,7 +26,8 @@ Listing free books:
 * http://www.dmoz.org/Computers/Programming/Languages/Ruby/
 * http://iwanttolearnruby.com/
 * https://rubymonk.com/
-
+* github list of books
+  <https://github.com/EbookFoundation/free-programming-books/blob/master/free-programming-books.md#professional-development>
 Bundle
 
 * http://www.railsbookbundle.com/

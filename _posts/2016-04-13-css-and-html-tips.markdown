@@ -12,13 +12,22 @@ title: CSS and HTML tips
   * multiple lines `white-space: normal`
   * `word-wrap: break-word`
 
+* if you have `<small>` position relative, and apply left -100px, it will still
+  occupy the space where it was. It is better to use `position: absolute`
+* to move element to the right but keep inside parent element you need to mark
+  parent as `position: relative` and than use `position: absolute; right: 10px`
+* align element at bottom use position relative/absolute pair, for parrent
+  `position: relative` (does not have any effects) and for child: `position:
+  absolute;bottom: 10px;`. This
+  [question](http://stackoverflow.com/questions/17656623/position-absolute-scrolling)
+  explains why outer need to be relative.
+* use `vertical-align: baseline` for image to be on same bootom as other
+  elements
 * use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
 * use relative units instead of absolute
   <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 { font-size: 20vh;}`
 * you can not set the width of inline elements, so to set width of `span` you
-need to make it `display:inline-block; width: 100px`
-  * image can be some percentage of parent div, but in firefox parent div also
-  need to have `width: 100%`
+  need to make it `display:inline-block; width: 100px`
 * also top and bottom padding has no efect for label since it is an inline
   element
   [link](http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements).
@@ -71,6 +80,25 @@ need to make it `display:inline-block; width: 100px`
 * hide something but still occupy space you can use `visibility: hidden` and
   `visibility: visible`
 
+# SCSS Sass
+
+* you can set default value of variable `$my-var: 123 !default;`. This has no
+  effect if variable is already defined.
+* <https://responsivedesign.is/develop/getting-started-with-sass>
+* you can select `this` using `&`
+
+  ~~~
+  .a:hover {
+    background: blue;
+  }
+  // is the same as
+  .a {
+    &:hover {
+      background: blue;
+    }
+  }
+  ~~~
+
 * chrome 39 for android use different color for toolbar, just add `<meta
   name="theme-color" content="#db5945">`
 
@@ -96,19 +124,6 @@ need to make it `display:inline-block; width: 100px`
 .hide-to-up {
   position:absolute;
   top: -1000px;
-}
-
-// childrens (like h1 and p) will be aligned to both edges
-.left-right-children {
-  text-align: justify;
-  &:after {
-    content: '';
-    display: inline-block;
-    width: 100%;
-    height: 0;
-    font-size:0;
-    line-height:0;
-  }
 }
 ~~~
 
@@ -242,62 +257,6 @@ th.rotate > div {
 th.rotate > div > span {
   border-bottom: 1px solid #ccc;
   padding: 5px 10px;
-}
-~~~
-
-# CSS Position
-
-<https://developer.mozilla.org/en/docs/Web/CSS/position?v=control#Absolute_positioning>
-* if you have `<small>` position relative, and apply left -100px, it will still
-  occupy the space where it was. It is better to use `position: absolute`
-* to move element to the right but keep inside parent element you need to mark
-  parent as `position: relative` and than use `position: absolute; right: 10px`
-* align element at bottom use position relative/absolute pair, for parrent
-  `position: relative` (does not have any effects) and for child: `position:
-  absolute;bottom: 10px;`. This
-  [question](http://stackoverflow.com/questions/17656623/position-absolute-scrolling)
-  explains why outer need to be relative.
-* use `vertical-align: baseline` for image to be on same bootom as other
-  elements. if you want `vertical-align: middle` you can see [this
-  explanation](https://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-div) (both elements should have height 100% and middle).
-* width and height if expressed in % than will occupy only the content (note
-that I need doctype `<!DOCTYPE html>` because without that it will use all
-area) [codepen](https://codepen.io/ricotheque/pen/ZyzeYa) you can use `padding:
-100%` ie that is same as `width`. For videos or images that needs to preserve
-aspect ratio, for example 9/16, padding is 9/16*100% = 56.25%
-[codepen](https://codepen.io/ricotheque/pen/awoJOj)
-* keep width and height proportional. Use font size as basis of dimension (1em
-is font size) [codepen](https://codepen.io/ricotheque/pen/qjWrbL)
-
-
-# CSS optimisations
-
-* selectors order by speed is: `#id`, `.class`, type `div`, adjacent sibling `h1
-+ p`, general sibling `.a ~ .b`, child `li > ul`, descendant `ul a`, universal
-`*`, attribute `[type="text"]` and pseudo classes `a:hover`
-* `key` selector is right most part of css selector and browser parse that
-first, so for `#social a` it will mark all `a` on the page and than select only
-ones that are inside `#social`, so better is to add a class and target only that
-`#social .social-link`
-* overqualified selectors (when there are unnecessary parts) do more cheks than
-it is needed so replace `.list .list-item p` with `.list p`
-* do not tag qualify, for example `li.list-item` -> `.list-item` since you will
-use `list-item` only on `<li>` tags
-* replace slow `.item:first-child` with oposite formulation with selector `.item
-+ .item` (item that has previous sibling item, so not first-child)
-
-# CSS Tips
-
-* when you set `width: 100px` on some IE it will include also padding, border
-and margin but on Firefor and Chrome 100px is only content. To disable that and
-limit whole area to 100px use
-
-~~~
-html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
 }
 ~~~
 

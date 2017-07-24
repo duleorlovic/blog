@@ -408,6 +408,11 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 
 * [user deck](https://userdeck.com)
 
+# User intro tour to website with help tips
+
+* [introjs](http://introjs.com/) commercial lincence after 2.1
+* [bootstrap-tour](https://github.com/sorich87/bootstrap-tour)
+
 # Visitor analytics
 
 * <https://www.hotjar.com/tour>

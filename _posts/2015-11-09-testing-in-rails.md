@@ -1239,6 +1239,8 @@ have same test descriptions since it will be converted to same
 
 You can run specific line `rails test test/models/article_test.rb:6` or name
 `rails test -n test_example`
+or using ENV variables `rake test TEST=test/machine_with_callbacks_test.rb
+TESTOPTS="--name=test_should_run_validations_for_specific_state -v"`
 
 Model test looks like
 
@@ -1705,10 +1707,16 @@ application](https://www.youtube.com/playlist?list=PL93_jRSrU7hzEUNmevlnMeUx6F35
 * [matt smith](https://www.youtube.com/watch?v=H1Czc3NL4c4)
 * [Paul Hiatt](https://www.youtube.com/watch?v=9f08KzNO4qo)
 
+Rspec book <http://www.betterspecs.org/>
+
 TODO
 
 https://www.youtube.com/watch?v=yTkzNHF6rMs
 https://vimeo.com/44807822
 https://www.youtube.com/watch?v=9f08KzNO4qo
+https://m.patrikonrails.com/how-i-test-my-rails-applications-cf150e347a6b
+https://robots.thoughtbot.com/headless-feature-specs-with-chrome
+https://building.buildkite.com/5-ways-weve-improved-flakey-test-debugging-4b3cfb9f27c8
 [aceptance
 testing](http://blog.arkency.com/2017/06/acceptance-testing-ruby-using-actors-personas)
+

@@ -186,6 +186,7 @@ Listen 81
 To trigger some functions you can run script with
 [patch](https://forums.zoneminder.com/viewtopic.php?t=24494)
 
+or event server as in ZMNinja
 
 ## Zones
 

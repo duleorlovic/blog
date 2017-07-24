@@ -492,3 +492,7 @@ RSpec.describe Project do
 Also in view, I want to be able where current element belongs, so list all
 wrapped elements. And when I'm in scss I want to see all parent selector,
 classes and media queries.
+
+# Graph visualization in markdown
+
+<https://markvis-editor.js.org/>

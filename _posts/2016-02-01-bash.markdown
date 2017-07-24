@@ -39,11 +39,13 @@ Very usefull shortcuts to activate certain windows.
 * `xwininfo` to click on window to find it's `0x440003d` which we can use to
   create shortcut `xdotool windowactivate 0x440003d`. 
   Go to Settings -> Keyboard -> Shortcuts -> Custom Schortcuts -> + .
-  Name: *main editor* command `xdotool windowsactivate 0x123123` shortcut *Alt+M*.
+  Name: *main editor* command `xdotool windowsactivate 0x123123` shortcut
+  *Alt+M*.
 * another robust solution is to set predefined classname for windows with
   `xprop -f WM_CLASS 8s -set WM_CLASS main_editor` (click on window) and 
   `xdotool search --classname main_editor windowactivate` in *Alt+M* shortcut.
   I'm using ALT+HJKL; with *class_hjkl;*
+
 
 ![mapping hjkl keys to activate window]({{ site.baseurl }}/assets/posts/mapping hjkl keys to activate window.png)
 ![mapping workspace keys to hjkl]({{ site.baseurl }}/assets/posts/mapping_workspace_keys_to_hjkl.png 'mapping workspace keys to hjkl')
@@ -52,6 +54,10 @@ Look at my
 
 When I update ubuntu I need to map keys again. Go one by one and press ALT+key
 combination again.
+
+On blank ubuntu I need to go All Settings -> Appearance -> (tab) Behavior and
+*Auto-hide the Launcher* to ON and *Enable workspaces*.
+(in virtualBox I can not open launcher, only hud with left alt)
 
 # Shortcuts for key mappings
 
@@ -307,6 +313,19 @@ sudo systemctl enable mongodb
 ~~~
 
 https://datatables.net/development/server-side/php_mongodb
+
+# MACBook macOS
+
+xprop for macos can be installed using: `sudo port install xdotool`
+Find and xargs can be used also:
+
+~~~
+find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
+~~~
+
+[xsel](https://linux.die.net/man/1/xsel) equivalent is
+[pbcopy](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/pbcopy.1.html)
+so I use` [is_mac_os]() to determine os.
 
 # Tips
 
