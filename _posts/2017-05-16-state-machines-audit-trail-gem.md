@@ -115,6 +115,7 @@ class CreatePostStatusTransitions < ActiveRecord::Migration[5.1]
       t.string :to
       # add your custom fields
       t.string :change_description
+      t.text :comment
       t.timestamp :created_at
     end
   end
@@ -122,9 +123,10 @@ end
 ~~~
 
 If you need more data you need to add more columns, for example
-`change_description` (by server) and `comment` (by user). You need to add
-columns to both tables (model and status_transitions) or in model it could be
-`attr_accessor :comment` (which user populate in a form field)
+`change_description` (by server) and `comment` (by user) which are defined as
+`attr_accessor :change_description, :comment` in model and populated in form or
+before_transition. For other fields that you want to track, those columns need
+to exists in table.
 
 ~~~
 class Post < ApplicationRecord
@@ -188,9 +190,9 @@ In model you need
 
 ~~~
 class Post < ApplicationRecord
-  attr_accessor :comment
+  attr_accessor :change_description, :comment
   state_machine :status, initial: :walk do
-    audit_trail context: [:name, :description, :comment]
+    audit_trail context: [:change_description, :comment, :name]
     event :start do
       transition all => :run
     end
@@ -221,6 +223,12 @@ In your view
 
   # or on update form
   <%= form.select :status_event, post.status_events %>
+
+  # of in hidden field on form object
+  <%= form.hidden_field :status_event, value: :edit %>
+
+  # or plain input (no need for :value key)
+  <%= hidden_field_tag :status_event, :edit %>
 ~~~
 
 And controller
@@ -233,5 +241,14 @@ And controller
   end
 
   # or on update form
-    params.require(:post).permit(:name, :description, :status_event)
+  params.require(:post).permit(
+    :name, :description, :status_event
+  ).merge(
+    updated_from_ip: request.remote_ip,
+    updated_by: current_user,
+  )
 ~~~
+
+You can use `Constant.POST_STATUSES # { CREATED_NEW: "Created new" }` to list
+all statuses and events in one file. Than in transition you can use `transition
+all - Constant.POST_STATUSES.slice(:CREATED_NEW) => same`

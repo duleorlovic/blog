@@ -156,10 +156,14 @@ gem 'roadie'
 gem 'roadie-rails'
 ~~~
 
-To preview emails create *app/mailer_previews/application_mailer_preview.rb*
-with content
+[Official gmail styles](https://developers.google.com/gmail/design/css) supports
+`<style>` in head and media queries, but this gem will support more (it will
+copy and duplicate all styles to inline style).
+
+To preview emails create new file:
 
 ~~~
+# app/mailer_previews/application_mailer_preview.rb
 class ApplicationMailerPreview < ActionMailer::Preview
   def new_message_from_client
     message = Message.last
@@ -172,6 +176,44 @@ add a line `config.action_mailer.preview_path =
 "#{Rails.root}/app/mailer_previews"` to *config/environments/development.rb* and
 go to [rails/mailers](http://localhost:3000/rails/mailers).
 
+Here is example of style:
+
+~~~
+# app/mailers/applicaion_mailer/new_message_from_client.html.erb
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css">
+      .email-container {
+        max-width: 500px;
+      }
+      .pre-header {
+        display: none;
+      }
+      .bordered {
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        background: #e5f1ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="pre-header">
+        <%= @message %>
+      </div>
+      <p>
+        Hi <%= @receiver_name %>,
+        <br><br>
+        Message is: <%= @message %>
+        </dd>
+      </div>
+    </div>
+  </body>
+</html>
+~~~
 
 # Receiving emails
 

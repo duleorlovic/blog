@@ -358,3 +358,6 @@ I found interesting gems:
 * <https://github.com/ankane/chartkick> simple charts from ruby, support
 chart.js, highcarts, goole charts [js
 version](https://github.com/ankane/chartkick.js)
+
+* interesting [no sql not required data analytics tool
+INSIGHTS](https://github.com/mariusandra/insights)

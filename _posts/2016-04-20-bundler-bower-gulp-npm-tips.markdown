@@ -42,6 +42,9 @@ To remove all gems from current gemset
 rvm gemset empty
 ~~~
 
+# RVM
+
+* install specific version and patch level `rvm install 2.3.3-p451`
 
 # Bower
 

@@ -99,14 +99,20 @@ error will not be shown on `:job_type_id`).
 ~~~
 validates :job_type_id, presence: true
 
-<%= f.select :job_type_id, ... %>
+<%= f.select :job_type_id, Job.all.map { |job| [job.name, job.id] }, {
+include_blank: true }, class: 'my-class' %>
 ~~~
 
 [form
 select](https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select)
-can accept a lot of options as 3th param:
+can accept as 2th param (choices) two variant:
 
-* `select: value` if you need different than `job.job_type_id`
+* flat collection `options_for_select`
+* nested collection `grouped_options_for_select()`
+
+as 3th param (options):
+
+* `select: value` if you need selected value be different than `job.job_type_id`
 * `disabled: [values]` to disable some options
 * `label: 'My label'`
 * `prompt: 'Please select'` this is shown only if not already have some value
@@ -181,10 +187,19 @@ Ndungu on
 
 Uncope can receive params what to unscope, example `User.unscope(:where)`. If
 you use this in `belongs_to :location, -> { unscope :where }` than it will also
-remove association belongs to condition, so you have to unscoped only columnds
+remove association belongs to condition, so you have to unscoped only columns
 from default_scope `belongs_to :location, -> { unscope where: :operator_id }`
 [excellent link how to remove
 scope](https://singlebrook.com/2015/12/18/how-to-carefully-remove-a-default-scope-in-rails/)
+I usually create additional classes with `self.default_scopes = []` so it does
+not use default scope. Also set table name so I can use sql.
+
+~~~
+class UnscopedCustomer < Customer
+  self.default_scopes = []
+  self.table_name = "customers"
+  belongs_to :unscoped_company, foreign_key: :company_id
+~~~
 
 # Format date
 
@@ -486,20 +501,31 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
 * `rails g model user email_address` will generate migration and model. It is
 good to edit `last_migration` and add `null: false` to not null fields
 (particularly for foreign keys) and
-`add_index :users, :email_address, unique: true`
+`add_index :users, :email_address, unique: true`... 
+if you want to add index in different step (not in `t.references :c, index:
+false` because name is too long (error like `Index name 'index_table_column' on
+table 'table' is too long; the limit is 64 characters`) than you can use
+different name NOTE that you need to use exact column name (with `_id`)
+`add_index :users, :company_id, name: 'index company on users'`
 * if we call `Products.update_all fuzz: 'fuzzy'` in migration, it will
   probably break in the future, because *Products* will be validated for
   something that we did not know on that time. Better is to create local class
-  and call reset column information:
+  and call reset column information. Also if we are adding not null column we
+  need to do it in two steps to populate existing records.
 
   ~~~
   # db/migrate/20161010121212_update_fuzz.rb
-  class UpdateFuzz < ACtiveRecord::Migration
+  class UpdateFuzz < ActiveRecord::Migration
     # this is local Product class used only inside this migration
-    class Product < ActiveRecord::Base;
+    class Product < ActiveRecord::Base
     end
-    # Product.reset_column_information not sure if we need this
-    Product.update_all fuzz: 'fuzzy'
+    def change
+      add_column :products, :fuzz, :string
+      # Product.reset_column_information # not sure if we need this
+      Product.update_all fuzz: 'fuzzy'
+      Product.find_each { |product| product.save! }
+      change_column :products, :fuzz, :string, null: false
+    end
   end
   ~~~
 
@@ -519,9 +545,12 @@ good to edit `last_migration` and add `null: false` to not null fields
 * use *db/seed.rb* to add some working data (users, products) that should not go
   to production. add data to migration file if something needs to be in db
   (select box, customer plans)
-* when you restora database `rake db:migrate:status` does not know that any
-  migration was perfomed. You can manually perform specific migration `rake
-  db:migrate:up VERSION=20161114162031`
+* when you restore database you can see that list of performed migrations `rake
+db:migrate:status` does not show that any migration was perfomed. You can
+manually perform specific migration `rake db:migrate:up VERSION=20161114162031`.
+* you can use `rake db:migrate:redo STEP=2` to redo last two migrations, or you
+can run all migratio to certain point with `rake db:migrate
+VERSION=20161114162031` (note that `:up` `:down` only run one migration)
 * `rake db:migrate` will also invoke `db:schema:dump` task
   [link](http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations)
 
@@ -556,6 +585,14 @@ end
 
 and adding `has_and_belongs_to_many :templates` in those classes.
 
+You can force uniq with `add_index :campaign_templates, [:campaign_id,
+:template_id], unique: true` and check in rails with
+
+~~~
+campaign.templates << template unless campaign.templates.include? template
+# remove
+~~~
+
 If you have different name of the table: `t.references :donor, foreign_key:
 true, null: false` but donor is actually in users table, than you need to change
 foreign key
@@ -578,13 +615,13 @@ Also in model you need to write: `has_many :donations, foreign_key: :donor_id`
 and `belongs_to :donor, class_name: "User"`
 
 Note that `t.belongs_to` by default use `index: false`, so you need to use
-`index: true`. But usually you use `add_foreign_key` that will also add index
-(name will be like: `fk_rails_123123`) if it is not added by belongs_to, so you
-can safelly use `t.belongs_to ... index: false` if you are using
-`add_foregn_key`.
+`index: true` (or `add_index` later) But usually you use `add_foreign_key` that
+will also add index (name will be like: `fk_rails_123123`) if it is not added by
+belongs_to, so you can safelly use `t.belongs_to ... index: false` if you are
+using `add_foregn_key`.
 
 For MySql I have to use `unsigned: true` in `t.belongs_to :user, null: false,
-unsigned: true`
+unsigned: true` or for `t.references :user, unsigned: true`
 
 If you need to update specific fields of association, add validation or cdd
 ustom order then you should create the model and use `has_many :templates,
@@ -1102,8 +1139,8 @@ class MyService
   def process(posts)
     success_message = do_something posts
     Result.new true, success_message
-  rescue ProcessException => msg
-    Result.new false, msg
+  rescue ProcessException => e
+    Result.new false, e.message
   end
 
   private
@@ -1223,16 +1260,28 @@ end
 module Someable
   extend ActiveSupport::Concern
 
+  # access module variables @@my_module_variable or class variable
+  # self.class.class_variable_get :@@someable_value
+  # you can define validations, assocications here
   included do
     has_many :something_else, as: :someable
     class_attribute :tag_limit
   end
 
+  # instance methods are defined here
+
+
   # methods defined here are going to extend the class, not the instance of it
-  # do not use self. in method definition
+  # do not use "self." in method definition
+  # you can set "@@my_module_variable" here
+  # better is to set class_variable:  self.ancestors.first.class_variable_set :@@someable_value, 'some value'
   # also you can include other concerns here
   class_methods do
     def tag_limit(value)
+      klass = self.ancestors.first
+      previous_columns = klass.class_variable_get(:@@monetized_columns) if klass.class_variables.include? :@@monetized_columns
+      previous_columns ||= []
+      klass.class_variable_set :@@monetized_columns, previous_columns + columns
       self.tag_limit_value = value
     end
   end
@@ -1442,6 +1491,181 @@ end
 # Money
 
 Dealing with money with <https://github.com/RubyMoney/money-rails>
+
+# Carrierwave for uploading
+
+## Store on server
+
+~~~
+cat >> Gemfile << HERE_DOC
+gem 'carrierwave'
+HERE_DOC
+bundle
+rails generate uploader Document
+# we need just one field type string to store file url
+rails g migration add_document_to_companies document:string
+rake db:migrate
+sed -i app/models/company.rb -e '/class Company/a \
+  mount_uploader :document, DocumentUploader'
+git add . && git commit -m "Adding carrierwave gem document uploader"
+~~~
+
+Replace `f.text_field :document` with `f.file_field :document` in your form. In
+view you can use `company.document.url`.
+
+~~~
+<%# app/views/companies/_form.html.erb %>
+  <%  if @company.document.present?  %>
+    <%= image_tag @company.document, class: 'image-small'%>
+    <%= f.check_box :remove_document %>
+  <% end %>
+  <%= f.file_field :document %>
+
+# app/controllers/companies_controller.rb
+  def company_params
+    params.require(:company).permit(:document, :remove_document)
+  end
+~~~
+
+It is straightforward to use uploader in multiple fields. Also you can use
+single table field for multiple files (field type json) but than you need
+postgres database.
+
+When you rendering json, than
+[carrierwave will add nested
+url](http://stackoverflow.com/questions/28184975/carrierwave-causing-json-output-to-become-nested-on-photo-key).
+Solution is render json manually with `json.document_url company.document.url`
+or to override uploader serilization with
+
+~~~
+# app/uploaders/document_uploader.rb
+  def serializable_hash
+    url
+  end
+~~~
+
+Resizing is by adding mini magick and configure uploader. It works on Heroku
+too. You can process files,
+create new versions based on
+[condition](https://github.com/carrierwaveuploader/carrierwave#conditional-versions) or process based on [condition](http://stackoverflow.com/questions/11778464/conditional-versions-process-with-carrierwave)
+
+~~~
+echo "gem 'mini_magick'" >> Gemfile
+bundle
+
+# app/uploaders/document_uploader.rb
+  include CarrierWave::MiniMagick
+  process resize_to_limit: [200, 300]
+  process resize_to_limit: [300, 300], if: :logo?
+  def logo?(picture)
+    # check if we mount_uploader :logo_url or something else
+    picture.file.headers.match(/logo_url/)
+  end
+  version :thumb do
+    process resize_to_fill: [200, 300]
+  end
+~~~
+
+## Store on AWS S3
+
+For [Amazon
+S3](https://github.com/carrierwaveuploader/carrierwave#using-amazon-s3) you need
+to set up your AWS keys in *~/.bashrc* `export AWS_ACCESS_KEY_ID=123123` and
+`export AWS_SECRET_ACCESS_KEY=123123`. Bucket should be created as standard USA
+bucket.
+
+~~~
+cat >> Gemfile << HERE_DOC
+gem 'fog'
+HERE_DOC
+cat > config/initializers/carrierwave.rb << 'HERE_DOC'
+# https://github.com/jnicklas/carrierwave#using-amazon-s3
+CarrierWave.configure do |config|
+  config.fog_credentials = {
+    :provider               => 'AWS',
+    :aws_access_key_id      => Rails.application.secrets.aws_access_key_id,
+    :aws_secret_access_key  => Rails.application.secrets.aws_secret_access_key,
+    :region                 => Rails.application.secrets.aws_region # us-east-1
+  }
+  config.fog_directory  = Rails.application.secrets.aws_bucket_name
+end
+HERE_DOC
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # aws s3\
+  aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>\
+  aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>\
+  aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>\
+  # region is important for all non us-east-1 regions\
+  aws_region: <%= ENV["AWS_REGION"] || "us-east-1" %>\
+'
+
+sed -i app/uploaders/document_uploader.rb -e '/storage :file/r \
+  # storage :file\
+  storage :fog'
+
+git add . && git commit -m "Configure AWS S3"
+~~~
+
+## Store directly on AWS S3 and upload the key to the server
+
+You can put the `direct_upload_form_for` on any page, let's use show:
+
+~~~
+cat >> Gemfile << HERE_DOC
+# direct upload to S3
+gem 'carrierwave_direct'
+HERE_DOC
+bundle
+
+sed -i app/uploaders/document_uploader.rb -e '/DocumentUploader/a \
+  include CarrierWaveDirect::Uploader'
+
+sed -i app/uploaders/document_uploader.rb -e '/store_dir/c \
+  # we do not use store_dir because of dirrect carrierwave\
+  def store_dir_origin'
+
+cat >> app/views/companies/show.html.erb << 'HERE_DOC'
+<%= direct_upload_form_for @uploader do |f| %>
+  <%= f.file_field :document %>
+  <%= f.submit %>
+<% end %>
+HERE_DOC
+
+sed -i app/controllers/companies_controller.rb -e '/def show/a \
+   # @uploader = @company.document # do not use old since key will remain\
+   @uploader = DocumentUploader.new\
+   # default key is /uploads/<unique_guid>/foo.png\
+   # you can change, but use ONLY ONE folder ie "1/2/a.txt" -> "2/a.txt"\
+   # it always adds prefix "uploads" so it does not need to be written\
+   @uploader.key = "uploads/#{@company.id}-#{request.ip}/${filename}"\
+   @uploader.success_action_redirect = company_url(@company)\
+   if params[:key]\
+     @company.document.key = params[:key]\
+     @company.save!\
+     # we need to reload since old key is there\
+     @company = Company.find(@company.id)\
+     # or to redirect\
+     redirect_to company_path(@company)\
+   end\
+   # you can call @company.remove_document! to remove from aws, but please\
+   # reload after that with @company = Company.find(@company.id)'
+
+sed -i config/initializers/carrierwave.rb -e '/^end/i \
+  # max_file_size is not originally on carrierwave, but is added on CWDirect\
+  # if file is greater than allowed than error is from Amazon EntityTooLarge\
+  config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
+~~~
+
+## Carrier wave in seed
+
+You can open file and use it in seed `user.image url =
+File.open(File.join(Rails.root, 'public/my_image.png'))`. But if your storage is
+`fox` than you can use `user.remote_image_url_url =
+'http://www.gstatic.com/webp/gallery/1.jpg'`. Note that file will be downloaded
+and uploaded to your aws bucket so better is to set `storage
+Rails.env.development? ? :file : :fog` and use first file.open method so it does
+not need to download file.
 
 # Tips
 
@@ -1715,6 +1939,8 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
   you should separately define: index (with hash), show/edit/update/destroy
   (with block or hash), new/create (with hash). For nested resources just write
   parent association
+  * next `cannot` rule will override a previous `can` rule, so it is enough to
+  set `can :manage, :all` and than write what `cannot :destroy, Project`
 * when we use CDN for assets, in root folder it should contain crossdomain.xml
   file so flash recorder works nice.
 
@@ -1773,6 +1999,8 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
   end
   ~~~
 
+# Tips
+
 * to start new project from specific rails, run `rails _4.2.7.1_ new myapp` .
   `gem list | grep rails` can show you installed versions
 * for multiple form submit buttons you can use rails builder
@@ -1797,6 +2025,12 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
 
   When you are not using `f.submit` but plain `<button>Some label</button>` than
   you need to add `hidden_field_tag :commit, "Some label"`
+* `"data-disable-with": "<i class='fa fa-spinner fa-spin'></i> #{name}"` works
+on any element except `f.submit` since it is `input` element and you will see
+`<i>` tags... better is to use `f.button` but than you lose `params[:commit]`
+which is included in `f.submit`. So solution is to include `hidden_field_tag
+:commit, "Some label"`
+
 * when you call render partial with current object than first param is string
 (not hash `partial: `) `<%= render 'layouts/audit_log', current_object: @user
 %>`
@@ -1824,12 +2058,18 @@ to iterate...
   # app/constrollers/items_controller.rb
   def new
     @item = Item.new
-    if Rails.env.development? && params[:example] == "true"
-      @item.assign_attributes(
-        name: 'Example Name',
-        phone: '123',
-      )
+    @item = Item.new example_params if Rails.env.development? && params[:example]
     end
+  end
+
+  private
+
+  def example_params
+    i = 1
+    while Item.find_by name: "Example Name #{i}"
+      i += 1
+    end
+    self.name = "Example Name #{i}"
   end
 
   # or
@@ -1850,7 +2090,7 @@ to iterate...
   ~~~
 
 * to assign multiple attributes to active record object you can use `slice`
-(`pluck` is for database query) and `assign_attributes`
+(`pluck` is for database query) and `assign_attributes` to self
 
   ~~~
   user.assign_attributes other_user.slice :email, :phone
@@ -1884,3 +2124,17 @@ And if you use jQuery data method than you do not need to use JSON.parse.
 * if you want to use `key.to_sym` for all keys you can use `hash.symbolize_keys`
 but if you want that recursively for nested hashes as well you can use
 `params[:some_pararam].deep_symbolize_keys`
+
+* memoization is nice if you have network calls
+
+~~~
+class User < ActiveRecord::Base
+  def twitter_followers
+    # assuming twitter_user.followers makes a network call
+    @twitter_followers ||= twitter_user.followers
+  end
+end
+~~~
+
+* single file rails application in one file
+<https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/>

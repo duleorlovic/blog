@@ -222,12 +222,15 @@ class ActionView::TemplateRenderer
 
   def render_template(template, layout_name = nil, locals = {})
     if I18n.locale == :in &&
-      template.inspect.last(12) != ".in.html.erb" &&
-      template.inspect.last(10) != ".in.js.erb" &&
-      template.inspect.last(17) != ".in.json.jbuilder" &&
-      template.inspect.first(23) != "app/views/devise/mailer" &&
-      template.inspect.first(17) != "app/views/mailers" &&
-      template.inspect != "text template".freeze # this is when send_data
+      template.inspect.end_with?(".in.html.erb") &&
+      template.inspect.end_with?(".in.js.erb") &&
+      template.inspect.end_with?(".in.json.jbuilder") &&
+      template.inspect.start_with?("app/views/devise/mailer") &&
+      template.inspect.start_with?("app/views/mailers") &&
+      template.inspect.start_with?("app/views/api") &&
+      template.inspect.start_with?("rails/mailers/email") &&
+      template.inspect != "text template".freeze && # this is when send_data
+      template.inspect != "html template".freeze # this is when render html
       cache_key = "adminlte_#{template.virtual_path}"
       if Rails.cache.fetch cache_key
         # already notified

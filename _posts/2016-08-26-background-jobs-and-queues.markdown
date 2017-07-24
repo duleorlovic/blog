@@ -212,3 +212,80 @@ resque: bundle exec foreman start -f Procfile.workers
 worker_1: QUEUE=* bundle exec rake resque:work
 worker_2: QUEUE=* bundle exec rake resque:scheduler
 ~~~
+
+## Delayed Job
+
+Configuration is in `config/application.rb` to set
+`config.active_job.queue_adapter = :delayed_job`. Note that it is not fully
+compatible with activejob (does not use default mailer queue name, starts
+immediatelly and in background with rake jobs:work)
+
+Running is using gem `daemons` (so put it in your Gemfile) and then `rails g
+delayed_job` will generate script file `bin/delayed_job` which you can use
+
+* `RAILS_ENV=production bin/delayed_job start`
+* `RAILS_ENV=production bin/delayed_job start --queues=webapp,jobs`
+* `RAILS_ENV=production bin/delayed_job start --exit-on-complete` exit when
+  there are not more jobs
+* `RAILS_ENV=production bin/delayed_job run` is to run in foreground
+* `RAILS_ENV=production bin/delayed_job restart`
+* `RAILS_ENV=production bin/delayed_job status`
+* rails ways is `rake jobs:work`, also `rake jobs:workoff` to exit after is done
+with all jobs, `rake jobs:clear` to delete all jobs, `QUEUES=webapp,jobs rake
+jobs:work`
+
+Note that email letter opener does not work when you run with `rake jobs:work`,
+but works when `bin/delayed_job run` (Launchy works in both cases, this
+difference is only for mailer).
+
+Workers will check database every 5 seconds.
+
+Jobs are objects with a method called `perform`. Also you can override
+`Delayed::Worker.max_attempts` with your method `max_attempts` (you can find
+[defaults](https://github.com/collectiveidea/delayed_job#gory-details) for other
+methods like: `max_run_time`, `detroy_failed_jobs?`)
+
+To see that is it actually working you need to enable log:
+
+~~~
+# config/initializers/delayed_job_config.rb
+Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
+~~~
+
+Also you can see all jobs in console:
+
+~~~
+Delayed::Job.all
+~~~
+
+Usage is simply with inserting `delay` method and it will run in background. So
+instead `@user.activate(params)` call with `@user.delay.activate(params)`.
+Another way is to define `handle_asynchronously :activate` on User class. It can
+take these params:
+
+* `priority: 10` lower numbers run first
+* `run_at: 5.minutes.from_now` or `handle_asynchronously :activate, run_at:
+Proc.new { 5.minutes.from_now }`
+* `queue: 'important'` or `handle_asynchronously :ativate, queue: 'important'`
+than you can assign priority for each queue:
+
+  ~~~
+  Delayed::Worker.queue_attributes = {
+    important: { priority: -10 },
+    low_priority: { priority: 10 }
+  }
+  ~~~
+
+For mailer we need to remove `.deliver` method and use `.delay` in prefix, like
+`MyMailer.delay(run_at: 5.minutes.from_now).welcome(user)`
+
+Another way to run background jobs is with `Delayed::Job.enqueue CleanJob.new,
+queue: 'import'`. Note that for ActiveJob instances it runs immediatelly
+and also in background task. So advice is not to mix those two...
+
+[best practices](https://www.sitepoint.com/delayed-jobs-best-practices/)
+
+Sample worker
+
+`User.find(1).with_lock do sleep(10); puts "worker 1 done" end`
+`User.find(1).with_lock do sleep(1); puts "worker 2 done" end`

@@ -1710,4 +1710,5 @@ TODO
 https://www.youtube.com/watch?v=yTkzNHF6rMs
 https://vimeo.com/44807822
 https://www.youtube.com/watch?v=9f08KzNO4qo
-
+[aceptance
+testing](http://blog.arkency.com/2017/06/acceptance-testing-ruby-using-actors-personas)

@@ -72,3 +72,25 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 # Live reloading in less than a second
 
 [Sharetribe](https://github.com/sharetribe/sharetribe/blob/master/docs/scss-coding-guidelines.md) uses [fast reloading](https://mattbrictson.com/lightning-fast-sass-reloading-in-rails)
+
+# SCSS Sass
+
+* you can set default value of variable `$my-var: 123 !default;`. This has no
+  effect if variable is already defined.
+* you can select `this` using `&`
+
+  ~~~
+  .a:hover {
+    background: blue;
+  }
+  // is the same as
+  .a {
+    &:hover {
+      background: blue;
+    }
+  }
+  ~~~
+
+<https://responsivedesign.is/develop/getting-started-with-sass>
+
+* `@extend .email-container` will copy definitions from email container

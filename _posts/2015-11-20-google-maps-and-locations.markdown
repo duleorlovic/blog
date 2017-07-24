@@ -19,8 +19,13 @@ You can load additional libraries using `libraries=` parameter. If the map is
 not the main feauture of the site, I prefer to load it in javascript when
 needed.
 
-For your google console project you need to enable relevant api: *Google Maps
-Javascript API* or *Google Static Maps API* *Google Places API Web Service* ...
+For your google console project you need to enable relevant api:
+
+* *Google Maps Javascript API* (to load gmap on the page)
+* *Google Static Maps API* (to show image with pin marker)
+* *Google Places API Web Service* (to search by address, restauran or other
+place) note that I can not find this in search apis but only using this link
+<https://console.developers.google.com/apis/api/places_backend?project=_>
 
 Start with samples, for example:
 

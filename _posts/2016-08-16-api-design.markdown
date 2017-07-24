@@ -195,6 +195,7 @@ but for larger API you need to have centralized serializers.
 
 To generate json you can use
 [active_model_serializers](https://github.com/rails-api/active_model_serializers)
+[documents](https://github.com/rails-api/active_model_serializers/tree/0-10-stable/docs)
 
 ~~~
 cat >> Gemfile << HERE_DOC
@@ -225,7 +226,21 @@ def UserSerializer < ApplicationSerializer
 end
 ~~~
 
+Associations are handled in
+[reflections](http://www.rubydoc.info/gems/active_model_serializers/ActiveModel/Serializer/Reflection)
+
+You can call `@users.active_model_serializer.new(@users, options).to_json`
+For grape you can use
+<https://github.com/ruby-grape/grape-active_model_serializers>
+
+# json api
+
+<http://jsonapi.org/>
+
 ~~~
+cat >> config/initializers/active_model_serializers.rb << HERE_DOC
+ActiveModelSerializers.config.adapter = :json_api
+HERE_DOC
 ~~~
 
 # JBuilder
@@ -240,7 +255,32 @@ If you use rspec then go with
 minitest try [apipie-rails](https://github.com/Apipie/apipie-rails)
 or swagger
 
-## Swagger
+## Swagger ui grape
+
+<https://github.com/kendrikat/grape-swagger-ui>
+
+~~~
+# Gemfile
+gem 'grape-swagger'
+gem 'grape-swagger-ui'
+
+
+# app/api/v1/root.rb
+require 'grape-swagger'
+module API
+  module V1
+    class Root < Grape::API
+      mount Events
+      add_swagger_documentation
+    end
+  end
+end
+
+# config/initializers/assets.rb
+config.assets.precompile += %w(swagger_ui.js swagger_ui.css swagger_ui_print.css swagger_ui_screen.css)
+~~~
+
+## Swagger docs
 
 ~~~
 sed -i Gemfile -e '/group :development do/a  \
@@ -286,7 +326,9 @@ Copy `dist` content to your `public/apidocs` and update all paths in
 can provide a function for `apisSorter` `operationsSorter` but too complicated.
 Order in server response if not supported.
 
-* if grape is used than we can rescue from all exceptions, but that needs to be
+# Grape
+
+If grape is used than we can rescue from all exceptions, but that needs to be
 before `mount` methods and only for StandardError exceptions
 
 ~~~

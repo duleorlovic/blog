@@ -111,6 +111,7 @@ you want breakpoint)
 * on elements panel
   * `h` to hide element (`visibility: hidden`)
 
+* `Ctrl + Shift + m` to toggle mobile responsive view
 * `Ctrl + o` find filename
 * `Ctrl + shift + `
  * `^shift+c` to click and locate element

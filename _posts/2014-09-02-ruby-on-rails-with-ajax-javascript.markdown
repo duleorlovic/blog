@@ -98,8 +98,15 @@ responds. This is very important for all buttons/links that are not idempotent
 actions (idempotent actions are ones that you can apply them as many times as
 you want without worries, for example abs(abs(abs(x))) ).
 
-When you are using `<%= link_to path, data: { disable_with: "Saving"} do %>
-<div>..</div> <% end %>`, this will not work because whole `<div>..</div>` will
+When you are using
+
+~~~
+<%= link_to path, data: { disable_with: "Saving"} do %>
+  <div>..</div>
+<% end %>
+~~~
+
+this will not work because whole `<div>..</div>` will
 be replaced with `Saving` (without div's). It is better to use `disable_with:
 "<div>Saving<span class='loading-icon'></span></div>".html_safe`.
 

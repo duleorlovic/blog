@@ -564,9 +564,9 @@ Note that this notifications will be triggered for jobs that are inserted using
 
 # when you change this file, make sure that you restart delayed_job process
 # bin/delayed_job stop && bin/delayed_job start
-# if it configured, it will try 3 times, so probably 3 notification emails
+# probably DelayedJob is configured to retry 3 times, so you will receive
+# notification emails
 # do not rescue in worker because no notification email will be send
-# 
 # http://andyatkinson.com/blog/2014/05/03/delayed-job-exception-notification-integration
 
 # Chain delayed job's handle_failed_job method to do exception notification
@@ -574,28 +574,25 @@ Delayed::Worker.class_eval do
   def handle_failed_job_with_notification(job, error)
     handle_failed_job_without_notification(job, error)
 
-    # only actually send mail in production
-    if Rails.env.production?
-      # rescue if ExceptionNotifier fails for some reason
-      begin
-        # ExceptionNotifier.notify_exception(error) do not use standard notification, use delayed_job partial
-        env = {}
-        env['exception_notifier.options'] = {
-          :sections => %w(backtrace delayed_job),
-          :email_prefix => "[MyApp Delayed Job Exception] ",
-        }
-        env['exception_notifier.exception_data'] = {:job => job}
-        ::ExceptionNotifier::Notifier.exception_notification(env, error).deliver
+    # rescue if ExceptionNotifier fails for some reason
+    begin
+      # ExceptionNotifier.notify_exception(error) do not use standard notification, use delayed_job partial
+      env = {}
+      env['exception_notifier.options'] = {
+        sections: %w(backtrace delayed_job),
+        email_prefix: "[Xceednet Delayed Job Exception] ",
+      }
+      env['exception_notifier.exception_data'] = {job: job}
+      ExceptionNotifier::Notifier.exception_notification(env, error).deliver
 
-      rescue Exception => e
-        Rails.logger.error "ExceptionNotifier failed: #{e.class.name}: #{e.message}"
+    rescue Exception => e
+      Rails.logger.error "ExceptionNotifier failed: #{e.class.name}: #{e.message}"
 
-        e.backtrace.each do |f|
-          Rails.logger.error "  #{f}"
-        end
-
-        Rails.logger.flush
+      e.backtrace.each do |f|
+        Rails.logger.error "  #{f}"
       end
+
+      Rails.logger.flush
     end
   end
 

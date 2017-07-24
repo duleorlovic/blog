@@ -93,7 +93,7 @@ window.flash_notice = (message) ->
 * nice js filter [bouncy content
 filter](http://codyhouse.co/demo/bouncy-content-filter/)
 * javascript input filter
-[http://digitalbush.com/projects/masked-input-plugin/](http://digitalbush.com/projects/masked-input-plugin/)
+<http://digitalbush.com/projects/masked-input-plugin/>
 * [selectize](http://brianreavis.github.io/selectize.js/) and
 [selectize-rails](https://github.com/manuelvanrijn/selectize-rails)
 * [multiselect](http://loudev.com/) nice way to select multiple items from
@@ -185,9 +185,14 @@ Problem is when select2 is inside modal with `tabindex="-1"`
 # Calendar date and time picker
 
 * Best option is [daterangepicker](http://www.daterangepicker.com/) it can be
-used for singleDatePicker, autoApply (can't be used when timePicker enabled),
-autoUpdateInput (when you want to parse user selection, custom format), it can
-contains predefined ranges (Last 7 days)
+used for singleDatePicker, dateTime picker
+  * download with `bower install bootstrap-daterangepicker --save` (git should
+  be <https://github.com/dangrossman/bootstrap-daterangepicker>)
+  * autoApply (can't be used when timePicker enabled)
+  * autoUpdateInput (when you want to parse user selection, custom format)
+  * it can contains predefined ranges (Last 7 days)
+  * note that is uses `data-daterangepicker` so use with your own
+  `data-bootstrap-datarangepicker`
 * [pickdate](http://amsul.ca/pickadate.js/)
 * [jquery ui datepicker](https://jqueryui.com/datepicker/)
   Error on chrome if you use `type=date`
@@ -375,6 +380,8 @@ FA icons are very usefull for quick icons. Look for
 # Images
 
 * free high resolution <https://unsplash.com/>
+* free online sample images https://unsplash.it/images
+* sample placeholder https://placeholder.com/
 
 # Graphs
 
@@ -389,6 +396,9 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 * [chartjs](http://www.chartjs.org/)
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
+
+* smooth transitions between different svg
+[flubber](https://github.com/veltman/flubber)
 
 # Email services
 
@@ -469,6 +479,8 @@ version](https://github.com/iogbole/gentelella_on_rails)
 <https://icomoon.io/#preview-free>
 * [simple-line-icons](http://simplelineicons.com/)
 * [bootstrap glyphs](http://getbootstrap.com/components/)
+
+* set specific font styles <http://www.cssfontstack.com/Arial-Narrow>
 
 
 # Web framework

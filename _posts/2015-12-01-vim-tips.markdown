@@ -19,6 +19,26 @@ Use vim help, with:
 * `:help i_^i` what ctrl+i do in insert mode
 * `:help c_^i` what ctrl+i do in command mode
 
+Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
+
+* You can press `<Enter>` anywhere inside line
+* Navigation with cursors `<Left>`, `<S-Left>` (one word left) and
+`CTRL+B`/`CTRL+E` begin/end of line (only difference with bash is that `CTRL+B`
+is char left and `CTRL+F` enters *Replace mode* in comand line window)
+* Delete with `<BS>` or `CTRL-W` delete whole word, `CTRL+U` delete all before
+text
+
+* tab completetion works and you can see all matches with `CTRL-D` (match is
+when command starts or short name starts with that)
+* command line history can be used when you type start of command and `:se<UP>`
+`CTRL-P` ignore what is already typed.
+
+* Command line window `q:` or `CTRL-F` is used to edit long commands. `<CR>` to
+execute comand end exit. Exit with `:q` or `CTRL-C`.
+
+You can join multiple commands with `|` or `<NR>` (more help with
+`cmdline-lines`)
+
 Update to vim 8 use
 
 ~~~
@@ -253,8 +273,18 @@ and previous result)
   or toggle `nnoremap <F3> :set hlsearch!<CR>`
 * `vim my_string **/*.md | copen` search only md files for my_string and show
 results
+* beggining and end of line marks like `/^asd` and `/asd$` works fine (not in
+the middle `/asd^qwe`. For multiline search you can use: `\n` new line, `\_s`
+space,tab or newline, `\_.` any char including new line, `\_^` and `\_$` are
+beggining and end of line. You can use minimum matcher `\{-}` to stop as soon as
+possible (instead of `*` which will stop at last occurrence).
+  * `/asd\_.\{-}qwe` find asd followed with any character (including new line)
+  and stop at qwe. You can use [S and S!
+  snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
 
 # Windows buffers and tabs
+
+[terminology](http://vim.wikia.com/wiki/Easier_buffer_switching)
 
 * `:tabe file` open file in new tab, `gt` switch between tabs
 * `:help Ctrl-W_T` move current buffer in new tab, Disable default Terminal ->
@@ -380,6 +410,28 @@ You need to install this tools:
   let g:syntastic_json_checkers=['jsonlint']
   ~~~
 * coffeescript `npm install -g coffeelint`
+
+# Vimium
+
+Normal mode:
+
+* `j` and `k` down and up on a page
+* `f` follow links `F` follow in new tab
+* `H` and `L` back and forward in history
+* `J` and `K` prev and next tab
+* `o` search and open history links
+* `T` search open tabs
+* `r` reload the page
+
+Find mode, enter with `/`:
+
+* `n` and `N` next and prev search match
+
+Insert mode, enter with `i`. So if you notice that `x` closes tab even you are
+inside input, jump into insert mode first...
+
+Since gmail has own `j` `k` prev and next email, I added rule to ignore all
+(`*`) keys
 
 # Vimum VimFx
 

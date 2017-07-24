@@ -64,6 +64,27 @@ will get message like:
 > You cannot sign in to iCloud because there was a problem verifying the
 > identity of this Mac. Try restarting your Mac and signing in again
 
+# How to generate Push Notification cert
+
+How to generate Push Notification cert
+
+* developer.apple.com - account
+* Certificates, Identifiers, … App Ids
+* Push notifications -  DEV for testing, production for app store and test flight -> generate
+* Keychain -> Certificate assistant -> generate request for certificate with authority
+* Upload that file to push notification screen on generate Dev/Prod SSL client form
+* Follow steps to generate cert file
+* Import that file as a login keychain (Note that it has to have keychain linked to certificate to be able to export it as a .p12 file)
+* Export certificate as a .p12 file
+* Terminal, navigate to root folder of .p12
+* openssl pkcs12 -in yourcert.p12 -out yourcert.pem -nodes -clcerts
+
+# iPhone tips
+
+* to close any app use double click on home button and swipe up
+* sometimes you need to restart Settings app (geard icon) to be able to set up
+variables for specific app
+
 # GCM Server side in ruby
 
 You need to register a project on <https://console.developers.google.com> and
@@ -371,3 +392,6 @@ For first message you need to wait minute or two. But than it works instantly.
 
 Another cool is service workers <https://developers.google.com/web/fundamentals>
 
+# Firebase Cloud messaging FCM
+
+Upgrade <https://developers.google.com/cloud-messaging/faq>

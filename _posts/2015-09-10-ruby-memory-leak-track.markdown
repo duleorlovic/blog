@@ -332,3 +332,7 @@ https://tunemygc.com/configs/f4179cc82e52ba59155dc285802e0a89
 videos
 
 * <https://www.youtube.com/watch?v=yxhrYiqatdA>
+
+Heroku dyno puma settings
+
+<https://youtu.be/itbExaPqNAE>

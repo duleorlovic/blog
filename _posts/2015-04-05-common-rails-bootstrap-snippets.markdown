@@ -304,7 +304,7 @@ development: &default
   # when url host is not available (for example rails console)
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
-    port: <%= ENV["DEFAULT_URL_PORT"] || 80 %>
+    port: <%= ENV["DEFAULT_URL_PORT"] || Rails::Server.new.options[:Port] %>
 
 test: *default
 production:
@@ -334,7 +334,11 @@ sed -i app/mailers/application_mailer.rb -e '/default/c \
 Set default url option, that is domain for `root_url`:
 
 ~~~
-#sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb 
+#sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb
+# if you need to get from rails use { port: Rails::Server.new.options[:Port] }
+# in config/environments/development.rb and also include
+# require 'rails/commands/server` on the top of the file
+
 sed -i config/application.rb -e '/^  end$/i \
     # for link urls in emails\
     config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys\
@@ -421,173 +425,6 @@ sed -i '/companies/a \  root "companies#index"' config/routes.rb
 rake db:migrate && git add . && git commit -m "rails g scaffold company name:string user:references"
 ~~~
 
-
-# Carrierwave for uploading
-
-## Store on server
-
-~~~
-cat >> Gemfile << HERE_DOC
-gem 'carrierwave'
-HERE_DOC
-bundle
-rails generate uploader Document
-# we need just one field type string to store file url
-rails g migration add_document_to_companies document:string
-rake db:migrate
-sed -i app/models/company.rb -e '/class Company/a \
-  mount_uploader :document, DocumentUploader'
-git add . && git commit -m "Adding carrierwave gem document uploader"
-~~~
-
-Replace `f.text_field :document` with `f.file_field :document` in your form. In
-view you can use `company.document.url`.
-
-~~~
-<%# app/views/companies/_form.html.erb %>
-  <%  if @company.document.present?  %>
-    <%= image_tag @company.document, class: 'image-small'%>
-    <%= f.check_box :remove_document %>
-  <% end %>
-  <%= f.file_field :document %>
-
-# app/controllers/companies_controller.rb
-  def company_params
-    params.require(:company).permit(:document, :remove_document)
-  end
-~~~
-
-It is straightforward to use uploader in multiple fields. Also you can use
-single table field for multiple files (field type json) but than you need
-postgres database.
-
-When you rendering json, than
-[carrierwave will add nested
-url](http://stackoverflow.com/questions/28184975/carrierwave-causing-json-output-to-become-nested-on-photo-key).
-Solution is render json manually with `json.document_url company.document.url`
-or to override uploader serilization with
-
-~~~
-# app/uploaders/document_uploader.rb
-  def serializable_hash
-    url
-  end
-~~~
-
-Resizing is by adding mini magick and configure uploader. It works on Heroku
-too. You can process files, 
-create new varsions based on
-[condtition](https://github.com/carrierwaveuploader/carrierwave#conditional-versions) or process based on [condition](http://stackoverflow.com/questions/11778464/conditional-versions-process-with-carrierwave)
-
-~~~
-echo "gem 'mini_magick'" >> Gemfile
-bundle
-
-# app/uploaders/document_uploader.rb
-  include CarrierWave::MiniMagick
-  process resize_to_limit: [200, 300]
-  process resize_to_limit: [300, 300], if: :logo?
-  def logo?(picture)
-    # check if we mount_uploader :logo_url or something else
-    picture.file.headers.match(/logo_url/)
-  end
-  version :thumb do
-    process resize_to_fill: [200, 300]
-  end
-~~~
-
-## Store on AWS S3
-
-For [Amazon
-S3](https://github.com/carrierwaveuploader/carrierwave#using-amazon-s3) you need
-to set up your AWS keys in *~/.bashrc* `export AWS_ACCESS_KEY_ID=123123` and
-`export AWS_SECRET_ACCESS_KEY=123123`. Bucket should be created as standard USA
-bucket.
-
-~~~
-cat >> Gemfile << HERE_DOC
-gem 'fog'
-HERE_DOC
-cat > config/initializers/carrierwave.rb << 'HERE_DOC'
-# https://github.com/jnicklas/carrierwave#using-amazon-s3
-CarrierWave.configure do |config|
-  config.fog_credentials = {
-    :provider               => 'AWS',
-    :aws_access_key_id      => Rails.application.secrets.aws_access_key_id,
-    :aws_secret_access_key  => Rails.application.secrets.aws_secret_access_key,
-    :region                 => Rails.application.secrets.aws_region # us-east-1
-  }
-  config.fog_directory  = Rails.application.secrets.aws_bucket_name
-end
-HERE_DOC
-
-sed -i config/secrets.yml -e '/^test:/i \
-  # aws s3\
-  aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>\
-  aws_access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>\
-  aws_secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>\
-  # region is important for all non us-east-1 regions\
-  aws_region: <%= ENV["AWS_REGION"] || "us-east-1" %>\
-'
-
-sed -i app/uploaders/document_uploader.rb -e '/storage :file/r \
-  # storage :file\
-  storage :fog'
-
-git add . && git commit -m "Configure AWS S3"
-~~~
-
-## Store directly on AWS S3 and upload the key to the server
-
-You can put the `direct_upload_form_for` on any page, let's use show:
-
-~~~
-cat >> Gemfile << HERE_DOC
-# direct upload to S3
-gem 'carrierwave_direct'
-HERE_DOC
-bundle
-
-sed -i app/uploaders/document_uploader.rb -e '/DocumentUploader/a \
-  include CarrierWaveDirect::Uploader'
-
-sed -i app/uploaders/document_uploader.rb -e '/store_dir/c \
-  # we do not use store_dir because of dirrect carrierwave\
-  def store_dir_origin'
-
-cat >> app/views/companies/show.html.erb << 'HERE_DOC'
-<%= direct_upload_form_for @uploader do |f| %>
-  <%= f.file_field :document %>
-  <%= f.submit %>
-<% end %>
-HERE_DOC
-
-sed -i app/controllers/companies_controller.rb -e '/def show/a \
-   # @uploader = @company.document # do not use old since key will remain\
-   @uploader = DocumentUploader.new\
-   # default key is /uploads/<unique_guid>/foo.png\
-   # you can change, but use ONLY ONE folder ie "1/2/a.txt" -> "2/a.txt"\
-   # it always adds prefix "uploads" so it does not need to be written\
-   @uploader.key = "uploads/#{@company.id}-#{request.ip}/${filename}"\
-   @uploader.success_action_redirect = company_url(@company)\
-   if params[:key]\
-     @company.document.key = params[:key]\
-     @company.save!\
-     # we need to reload since old key is there\
-     @company = Company.find(@company.id)\
-     # or to redirect\
-     redirect_to company_path(@company)\
-   end\
-   # you can call @company.remove_document! to remove from aws, but please\
-   # reload after that with @company = Company.find(@company.id)'
-
-sed -i config/initializers/carrierwave.rb -e '/^end/i \
-  # max_file_size is not originally on carrierwave, but is added on CWDirect\
-  # if file is greater than allowed than error is from Amazon EntityTooLarge\
-  config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
-~~~
-
-
 # Production Heroku deploy
 
 Since you need to run separate command for background jobs, you need to write
@@ -654,7 +491,7 @@ heroku run rake db:setup
 ~~~
 
 On heroku add *Papertrail* add-on and go to the
-[https://papertrailapp.com/events](https://papertrailapp.com/events) and search
+<https://papertrailapp.com/events> and search
 for "Started GET" , save and create email alert or [add internal
 notification]({{ site.baseurl }}{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
 
@@ -662,3 +499,8 @@ For custom domain just add on settings your domain name and create CNAME record
 for `www` with value `myapp.herokuapp.com`. If you need to match all subdomains,
 you can put *Domain Name* `*.kontakt.in.rs` and CNAME record for `*` with same
 value `myapp.herokuapp.com`.
+
+# Google app engine
+
+It is not hard to deploy to [google ap engine
+](https://cloud.google.com/ruby/rails/appengine)

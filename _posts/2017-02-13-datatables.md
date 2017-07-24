@@ -284,6 +284,7 @@ pdf](https://datatables.net/extensions/buttons/examples/initialisation/export.ht
 
 ~~~
 $('#clicks-table').DataTable({
+  dom: 'B',
   buttons: [
     {
       extend: 'pdf',

@@ -112,16 +112,17 @@ manager
 
 # POE power over ethernet
 
-From left to right, when you hold cable and look at pins (T568A color)
+From left to right, when you hold lan cable and look at pins (T568A color)
+pinouts
 
-1 White green
-2 Green
-3 White organge
-4 Blue (DC-)
-5 White blue (DC-)
-6 Orange
-7 White brown (DC+)
-8 Brown (DC+)
+* 1 White green
+* 2 Green
+* 3 White organge
+* 4 Blue (DC-)
+* 5 White blue (DC-)
+* 6 Orange
+* 7 White brown (DC+)
+* 8 Brown (DC+)
 
 # Zoneminder
 
@@ -216,6 +217,9 @@ You can see stats by clicking Frames -> last column is Score (on stills you can 
 |All|67|437 (5%)|97629 (5%)|96123 (5%)|1|96123 (5%)|813,0-1306,269|5|
 
 In filter window you can see Max score frame (last column)
+
+To enable authentication and admin password go to options -> System ->
+OPT_USE_AUTH checked. Default is admin/admin.
 
 # China IP cam
 

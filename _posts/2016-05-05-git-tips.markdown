@@ -112,9 +112,9 @@ work on tracked files). Note that when you change branch with changes to that
 files, error will be reported. Also note that `git checkout .` or `git stash`
 will be also applied to those hidden changes.
 
-    git update-index --assume-unchanged <file>
+    git update-index --assume-unchanged config/database.yml
     # then to track changes again
-    git update-index --no-assume-unchanged <file>
+    git update-index --no-assume-unchanged config/database.yml
 
 If you want to add folder to git structure but include all its content (like
 `backup` or `tmp` folder) you can do with three steps

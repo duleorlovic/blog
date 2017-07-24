@@ -199,6 +199,10 @@ rails g administrate:dashboard MySetting
 
 # ActiveAdmin
 
+[activeadmin gem](https://github.com/activeadmin/activeadmin) is nice way to
+edit stuff. It contains generators, for example `rails g active_admin:resource
+Banner`
+
 ~~~
 # app/admin/my_setting.rb
 ActiveAdmin.register MySetting do

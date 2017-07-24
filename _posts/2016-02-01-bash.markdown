@@ -59,7 +59,7 @@ To scroll in terminal window, instead `shift+page_up` we can [bind to
 key](http://askubuntu.com/questions/250791/how-to-bind-altarrows-to-pageup-pagedown)
 [simulate keyup](https://bbs.archlinux.org/viewtopic.php?id=136265).
 [xbindkeys](https://wiki.archlinux.org/index.php/Xbindkeys) I usually map vim
-shortcuts *CTRL+* , so for terminal winodws I use *ALT+*.  Do not override
+shortcuts *CTRL+* , so for terminal windows I use *ALT+*.  Do not override
 already two ALT [bash
 shortcut](http://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/)
 *Alt+F* *Alt+B* to move cursor one word (use capitalize F to not open File menu
@@ -150,19 +150,14 @@ Look my
   * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
   * find all html files `find . -name '*.html'`. Note that `find . -name *.html`
     will not work since wildcard will be changed to html file in current folder.
-  * `filter files based on their size: `find . -size -212c` show only small than
+  * filter files based on their size: `find . -size -212c` show only small than
     212 bytes
-* test the speed on remote server:
-  * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
-  * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
-  test upload link
 * you can put any shell (vim, rails s) to suspend state with `Control + z`. Than
 you can put it in background `bg` if needed. You can use that shell for
 inspection other things. When you are finished, you can switch back to vim, or
 rails s, with foreground `fg`
 * escape single quote `'` in linux scripts with `$'Hello I\'m here'`
 [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
-* curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
 "@reboot /home/orlovic/my.sh") | crontab -`
 * repeat last command with sudo `sudo !!`
@@ -263,6 +258,12 @@ To keep session in curl you can `-c` write and `-b` read from cookie file
 ~~~
 curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
 ~~~
+
+* test the speed on remote server:
+  * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
+  * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
+  test upload link
+* curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
 
 # SSH
 

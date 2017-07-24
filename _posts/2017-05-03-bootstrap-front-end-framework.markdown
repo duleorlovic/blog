@@ -160,6 +160,9 @@ Other helpers are:
 * `.clearfix`
 * `.text-center`, `.text-left`, `.text-nowrap`
 * `.show` and `.hidden`
+* I usually create my own `.hide-not-important { display: none; }` since
+bootstrap's `hide` and `hidden` are with `important` and if you want to use
+jQuery `$el.show()` than use my version.
 
 # Rails
 

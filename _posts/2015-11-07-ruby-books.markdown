@@ -160,7 +160,10 @@ Variables and scope
 Ruby define scope of variable using its name, precisely, first char:
 
   * `$` global `$FIRST_NAME` available on every scope
-  * `@` instance `@first_name`
+  * `@` instance `@first_name` you can list with `self.instance_variables` and
+  get value with `self.instance_variable_get :@first_name` (note that we need
+  both `:` and `@`) and set value `self.instance_variable_set :@first_name,
+  'me'`
   * `[a-z]|_` local `first_name` in every definition block: proc, loop, def end,
     class end, module end, and is reset on each call. Local variable is very
     scoped (you can not access in another nested method)
@@ -189,6 +192,18 @@ Ruby define scope of variable using its name, precisely, first char:
     It can be used in class definition, class methods and instance methods. It
     is shared with all ancestor classes so better is to store data at class
     object instance and create attr_accessor for that.
+    [class_variable_set](https://apidock.com/ruby/Module/class_variable_set)
+
+    ~~~
+    class Fred
+      @@foo = 99
+      def foo
+        @@foo
+      end
+    end
+    Fred.class_variable_set(:@@foo, 101)     #=> 101
+    Fred.new.foo                             #=> 101
+    ~~~
 
 Every method call create its own local scope. Ruby does some preprocessing
 compile time where it recognizes all local variables (class @@x instance @x and
@@ -354,6 +369,7 @@ will show `\n` and will insert spaces because text is indented. There is
   ~~~
 
 * `%x(pwd)` is used to call system bash commands
+* `%i(sym1 sym2)` is used to return array of symbols
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
@@ -411,6 +427,9 @@ will show `\n` and will insert spaces because text is indented. There is
   puts Thing.new.hello
   ~~~
 
+* get class based on string `klass = Object.const_get "User"`
+* get constant of class `User::MAX`, `User.const_get 'MAX'` or
+`user.class.const_get :MAX`. To check if exists use `const_defined?`
 * random number `[*1..100].sample`
 * iterate over elements until first match `a.take_while {|i| i < 3}`
 * get a class from value `my_string.constantize`
@@ -506,6 +525,7 @@ example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
 && user.name` can be written as `user&.name`. In rinu 2.3 there is also
 `Array#dig` and `Hash#dig` so instead of `params[:a].try(:[], :b)` you can
 `params.dig(:a, :b)`
+* you can count non nil values in array with `[nil, 1, 2].compact # => [1,2]`
 * you can call methods with dot but also with double colon `"a".size` or
 `"a"::size`. You can put spaces or new lines anywhere `a   .   size`.
 * destructuring block arguments (params), for example `a = [[1, 2], [3, 4]]` can
@@ -591,8 +611,9 @@ array. (note you can not use splat and last hash attribute)
   ~~~
 
   Similarly, using ampersand in method call for a Proc object, it will be
-  extrapolated/replaced with block `f &someBlock` for which you can use:
-  `def f; yield; end`
+  extrapolated/replaced with block `f2 &p` for which you can use:
+  `def f2; yield; end`. This `&p` exists inside method with code block
+  param.
 
 # Procs
 
@@ -695,10 +716,12 @@ upcase_words = words.map(&:upcase)
   * `method_missing(method, *args)` can be used to catch all missing methods
   * `initialize` to instantiate class
 
-* method can be called using 3 ways:
+* method can be called (invoked) using three (maybe four) ways:
   * dot notation `o.my_method`
-  * send `o.send :my_method`
+  * send `o.send :my_method` or `o.send :my_property=, 'some_value'`
   * grab method and call it `o.method(:my_method).call`
+  * interpolated method call is using send like `current_user.send
+  "is_#{@model}_admin?"`
 
   <https://gist.github.com/kidlab/72fff6e239b0af1dd3e5> for something that need
   test or we just want to showcase
@@ -794,7 +817,23 @@ end
 * `Time.parse('2001-01-01 06:06:06 UTC')` should be raplaced with
 `Time.at(999232123).utc)` since we do not need to parse every time
 * instead of `map(&:id)` use `pluck(:id)`
+* rails has hash except `my_hash.except :my_key` to ignore only my_key value and
+returns also the hash. Oposite direction is slice `my_hash.slice :my_key` to
+select keys
+* `map` and `collect` are the same methods
 
+# Rubocop
+
+In old project you can generate `.rubocop.yml` file that will ignore all
+offenses, than you can gradually fix one by one.
+
+~~~
+rubocop --auto-gen-config
+# this will generate .rubocop_todo.yml which you can include
+cat >> .rubocop.yml << HERE_DOC
+inherit_from: .rubocop_todo.yml
+HERE_DOC
+~~~
 
 todo
 
