@@ -290,6 +290,8 @@ http://thorstenball.com/blog/2014/03/12/watching-understanding-ruby-2.1-garbage-
 
 
 Gem rack-mini-profiler <https://github.com/MiniProfiler/rack-mini-profiler>
+I add simple widget on top left corner of the page. Does not work when `render
+json: data` (it has to be html).
 Add to your gemfile
 
 ~~~

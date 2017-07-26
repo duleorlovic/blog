@@ -70,14 +70,21 @@ How to generate Push Notification cert
 
 * developer.apple.com - account
 * Certificates, Identifiers, … App Ids
-* Push notifications -  DEV for testing, production for app store and test flight -> generate
-* Keychain -> Certificate assistant -> generate request for certificate with authority
-* Upload that file to push notification screen on generate Dev/Prod SSL client form
+* Push notifications -  DEV for testing, production for app store and test
+flight -> generate
+* Keychain -> Certificate assistant -> generate request for certificate with
+authority
+* Upload that file to push notification screen on generate Dev/Prod SSL client
+form
 * Follow steps to generate cert file
-* Import that file as a login keychain (Note that it has to have keychain linked to certificate to be able to export it as a .p12 file)
+* Import that file as a login keychain (Note that it has to have keychain linked
+to certificate to be able to export it as a .p12 file)
 * Export certificate as a .p12 file
 * Terminal, navigate to root folder of .p12
-* openssl pkcs12 -in yourcert.p12 -out yourcert.pem -nodes -clcerts
+
+  ~~~
+  openssl pkcs12 -in yourcert.p12 -out yourcert.pem -nodes -clcerts
+  ~~~
 
 # iPhone tips
 

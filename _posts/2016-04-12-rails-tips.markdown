@@ -363,7 +363,14 @@ sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations[
 ## Dump database
 
 Dump database from production for local inspection, you can download from
-heroku to dump file `tmp/b001.dump` and import in database
+heroku manually or using commands:
+
+~~~
+heroku pg:backups:capture # it will create b002.dump
+heroku pg:backups:download # it will download to latest.dump
+~~~
+
+Save it for example `tmp/b001.dump` and import in database using this commands:
 
 ~~~
 export DUMP_FILE=tmp/b001.dump
@@ -375,11 +382,10 @@ rake db:drop db:create
 sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
 ~~~
 
-Or you can use [my
+Or you can use [duleorlovic's load_dump
 helper](https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39)
-`load_dump`
 
-You can dump local database with
+You can dump LOCAL database with `pg_dump`
 
 ~~~
 pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump

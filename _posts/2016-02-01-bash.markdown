@@ -16,6 +16,17 @@ address=/dev/127.0.0.1\
 sudo service dnsmasq restart
 ~~~
 
+You can check your domain name resolutions with `nslookup`
+
+~~~
+nslookup asd.dev
+# Server:		127.0.0.1
+# Address:	127.0.0.1#53
+#
+# Name:	asd.dev
+# Address: 127.0.0.1
+~~~
+
 # Run commaind as another user
 
 In two ways

@@ -714,6 +714,9 @@ adb push hosts /system/etc
 adb shell 'cat /etc/hosts'
 ~~~
 
+# Root android device
+
+[xda root](https://www.xda-developers.com/root/).
 
 # Releasing the app and deploy to google play store
 
