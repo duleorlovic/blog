@@ -42,6 +42,9 @@ to actually receive registration email.
 
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
 add facebook and google authentication. It's easy installation.
+For facebook we use [omniauth-facebook](https://github.com/mkdynamic/omniauth-facebook)
+and excellent [rails casts
+#360](https://www.youtube.com/watch?v=E_XACDrZSiI)
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -87,6 +90,7 @@ sed -i app/models/user.rb -e '/end/i \
   def self.from_omniauth(auth)\
     user = find_by(email: auth.info.email)\
     return user if user\
+    # user changed his email on facebook\
     user = find_by(provider: auth.provider, uid: auth.uid)\
     return user if user\
     # create new user with some password
@@ -151,21 +155,26 @@ Note this situations:
 
 1. Create app on [developers.facebook.com](http://developers.facebook.com). By
    default fb app is in development mode and can only be used by app admins,
-   developers and testers.
+   developers and testers. Add Contact Email if not already there on
+   https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/
 
-1. Add Contact Email on
-   https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/ and toggle
-   switch on https://developers.facebook.com/apps/FACEBOOK_APP_ID/review-status/
+1. For production you need to go *App Review*
+   https://developers.facebook.com/apps/FACEBOOK_APP_ID/review-status/ and
+   toggle switch on
 
-1. Add https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced
-   *Valid OAuth redirect URIs* for all links that are redirected. You can find
-   the link on facebook error page url
+1. Add *Facebook Login* product and go to settings
+   https://developers.facebook.com/apps/FACEBOOK_APP_ID/fb-login/ (before it was
+   inside advance settings
+   https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced)
+   Find input for *Valid OAuth redirect URIs* and fill with all links that are
+   redirected. You can find the link on facebook error page url
    `www.facebook.com/dialog/oauth?client_id=...&redirect_uri=...`. You can add
    just domain (`/omniauth/facebook/callback` is not needed)
    Note that this are server url (not frontend url):
-   `http://localhost.dev:3003`,
-   `http://localhost:9000` and for https also
-   `https://localhost.dev:3003`
+
+   * `http://localhost.dev:3003`,
+   * `http://localhost:9000` and for https also
+   * `https://localhost.dev:3003`
 
 Changes are visible immediatelly.
 More on blog facebook share buttons.
