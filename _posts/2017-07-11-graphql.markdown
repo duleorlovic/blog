@@ -5,8 +5,78 @@ title: GraphQL
 We get data with GET request and send sada with POST request with `query` param.
 Only problem could be caching since we need different strategy for caching.
 
-Mutations:
+http://graphql.org/learn
 
+Fields can be string or array, or object (than you can make subselection).
+You can pass arguments to fields. Argument can be Enumeration type.
+
+~~~
+{
+  human(id: 1) {
+    name
+    height(unit: METER)
+  }
+}
+~~~
+
+If you need several items than you can use aliases `{ firsthuman: human(id:1)
+...`. For each alias you can include same set of fields with fragments
+
+~~~
+{ secondHuman: human(id: 2) { ...sameFields }}
+fragment sameFields on Character {
+  name
+}
+~~~
+
+# Variables
+
+Query can have dynamic params which are interpolated on server.
+
+~~~
+query HeroNameAndFriends($episode: Episode = 'Default Value')
+  hero(episode: $episode) {
+    name
+    friends {
+      name
+    }
+  }
+~~~
+
+Additional JSON
+
+~~~
+{
+  "episode": "My Episode"
+}
+~~~
+
+Episode is type, one of: scalar, enum or input object type.
+
+# Directives
+
+Conditionally include fields with `@include(if: $my_var)` or `@skip(if: ...)`
+
+~~~
+query Hero($episode: Episode, $withFriends: Boolean!) {
+  hero(episode: $episode) {
+    name
+    friends @include(if: $withFriends) {
+      name
+    }
+  }
+}
+~~~
+
+# Mutations
+When sending data, we should use `mutation`
+~~~
+mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
+  createReview(episode: $ep, review: $review) {
+    stars
+    commentary
+  }
+}
 Permissions:
 
 live queries
