@@ -161,8 +161,7 @@ Other helpers are:
 * `.text-center`, `.text-left`, `.text-nowrap`
 * `.show` and `.hidden`
 * I usually create my own `.hide-not-important` since bootstrap's `hide` and
-`hidden` are with `important` and if you want to use jQuery `$el.show()` or by
-adding `active` class, than use my version:
+`hidden` are with `important` and if you want to use jQuery `$el.show()` (hide) or `$el.slideDown()` (slideUp) than use my version.
 
   ~~~
   .hide-not-important {

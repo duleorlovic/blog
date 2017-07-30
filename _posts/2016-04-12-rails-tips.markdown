@@ -407,6 +407,28 @@ example AWS S3 and than run in console
 heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorlovic-test-us-east-1/b001.dump DATABASE_URL
 ~~~
 
+Upgrade heroku *hobby-dev* na **hobby-basic* ($9/month).
+
+~~~
+heroku addons:create heroku-postgresql:hobby-basic
+# Creating heroku-postgresql:hobby-basic on ⬢ myapp... $9/month
+# Database has been created and is available
+#  ! This database is empty. If upgrading, you can transfer
+#  ! data from another database with pg:copy
+# Created postgresql-defined-42601 as HEROKU_POSTGRESQL_CHARCOAL_URL
+# Use heroku addons:docs heroku-postgresql to view documentation
+
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
+# ▸    WARNING: Destructive action
+#  ▸    This command will remove all data from CHARCOAL
+#  ▸    Data from DATABASE will then be transferred to CHARCOAL
+#  ▸    To proceed, type myapp or re-run this command with --confirm myapp
+# 
+# > myapp
+# Starting copy of DATABASE to CHARCOAL... done
+# Copying... done
+~~~
+
 ## Postgres tips
 
 * you should explicitly add timestamps with `t.timestamps`
@@ -1526,6 +1548,8 @@ view you can use `company.document.url`.
     <%= f.check_box :remove_document %>
   <% end %>
   <%= f.file_field :document %>
+  <%# keep the file on reload in case of other validation errors %>
+  <%= f.hidden_field :document_cache %>
 
 # app/controllers/companies_controller.rb
   def company_params

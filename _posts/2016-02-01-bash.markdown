@@ -100,6 +100,11 @@ Here are all bash CTRL shortcuts:
 * ctrl+c (+z) : kill current process (send to background, use `fg` to restore)
 * ctrl+l : clear window, but I remaped to copy current line to clipboard
 
+ALT shortcuts:
+
+* alt+b (+f) : move cursor by one word to left (right). On mac Alt is Meta so
+  you need to disable in all your terminals in system preferences and restart.
+
 Here are some *Edit* -> *Keyboard Shortcuts*:
 
 * shoft+ctrl+t : open in new tab
