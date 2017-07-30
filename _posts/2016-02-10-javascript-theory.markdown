@@ -346,7 +346,7 @@ and it should be used for all non volatile variables
 
   ~~~
   var sayHello = (name) => `Hello ${name}!`;
-  var sayCiao = (name) => {
+  var sayCiao = name => {
     return `Ciao ${name}!`;
   }
   ~~~

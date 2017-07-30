@@ -43,8 +43,7 @@ to actually receive registration email.
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
 add facebook and google authentication. It's easy installation.
 For facebook we use [omniauth-facebook](https://github.com/mkdynamic/omniauth-facebook)
-and excellent [rails casts
-#360](https://www.youtube.com/watch?v=E_XACDrZSiI)
+and excellent [rails casts #360](https://www.youtube.com/watch?v=E_XACDrZSiI)
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -181,7 +180,22 @@ More on blog facebook share buttons.
 
 ## Koala gem
 
-[koala](https://github.com/arsduo/koala) 
+[koala](https://github.com/arsduo/koala).
+
+~~~
+cat >> Gemfile <<HERE_DOC
+# facebook graph api
+gem 'koala'
+HERE_DOC
+
+cat >> config/initializers/koala.rb <<HERE_DOC
+Koala.configure do |config|
+  config.app_id = Rails.application.secrets.facebook_app_id
+  config.app_secret = Rails.application.secrets.facebook_app_secret
+end
+HERE_DOC
+~~~
+
 I received error notification
 
 ~~~

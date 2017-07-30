@@ -1719,4 +1719,5 @@ https://robots.thoughtbot.com/headless-feature-specs-with-chrome
 https://building.buildkite.com/5-ways-weve-improved-flakey-test-debugging-4b3cfb9f27c8
 [aceptance
 testing](http://blog.arkency.com/2017/06/acceptance-testing-ruby-using-actors-personas)
+easy system testings https://rlafranchi.github.io/system_tester/
 

@@ -2,9 +2,6 @@
 title: GraphQL
 ---
 
-We get data with GET request and send sada with POST request with `query` param.
-Only problem could be caching since we need different strategy for caching.
-
 http://graphql.org/learn
 
 # Queries
@@ -45,40 +42,33 @@ If you need several items than you can use aliases
 }
 ~~~
 
-For each alias you can include same set of `credentialsFields` with fragments
+For each alias you can include same set of `credentialsFields` with named
+fragments
 
 ~~~
   niceHuman: human(id: 2) {
   ...credentialsFields
+  }
+  importantHuman: human(id:1) {
+    ... on Character {
+      name
+    }
   }
   fragment credentialsFields on Character {
     name
   }
 ~~~
 
-Inline fragments check if returned type is Droid or Human
-
-~~~
-query HeroForEpisode($ep: Episode!) {
-  hero(episode: $ep) {
-    name
-    ... on Droid {
-      primaryFunction
-    }
-    ... on Human {
-      height
-    }
-  }
-}
-~~~
+Named fragment `credentialsFields` is included only on type `Character` since it
+is defined on it. For importantHuman we used inline fragment.
 
 # Variables
 
 Query can have dynamic params which are interpolated on server. Variables has
 prefix $ and is followed by type.
 Type can be (`Episode` is type): scalar, enum or input object type.
-If type ends with `!` than variable is required. Otherwise optional. They can
-have default type.
+If type ends with `!` than variable is required (otherwise optional).
+Variables can have default type.
 
 ~~~
 query HeroNameAndFriends($episode: Episode = 'Default Value')
@@ -115,10 +105,202 @@ query Hero($episode: Episode, $withFriends: Boolean!) {
 }
 ~~~
 
+# Introspection
+
+[learn](http://graphql.org/learn/introspection/)
+When searching results could be union of types, so to determine which type you
+can request also `__typename` meta field which will show name of object type.
+
+~~~
+{
+  search(text: 'an') {
+    __typename
+    name
+    ... on Human {
+      name
+    }
+    ... on Droid {
+      name
+    }
+  }
+}
+~~~
+
+returns
+
+~~~
+{
+  "data": {
+    "search": [
+      {
+        "__typename": "Human",
+        "name": "My name"
+      },
+      {
+        "__typename": "Droid"
+        "name": "My droid name"
+      }
+    ]
+  }
+}
+~~~
+
+`__schema` is used to see what types are available:
+
+~~~
+{
+  __schema {
+    types {
+      name
+    }
+  }
+}
+~~~
+
+~~~
+{
+  "data": {
+    "__schema": {
+      "types": [
+        {
+          "name": "Query"
+        },
+        {
+          "name": "Episode"
+        },
+        {
+          "name": "__Schema"
+        }
+      }
+    }
+  }
+}
+~~~
+
+`queryType.name` will return root, probably `Query`.
+For `__type` we can ask:
+
+* `kind` returns `__TypeKind` enum: OBJECT, INTERFACE, SCALAR, NOT_NULL, LIST
+* `fields` returns list or fields, if you have `NOT_NULL` and `LIST` you can use
+`ofType` to get into exact type
+
+~~~
+~~~
+
+
+`__type, __fields`
+
+# Schemas and types
+
+~~~
+{
+  hero {
+    name
+    appearsIn
+  }
+}
+~~~
+
+Select `hero` field on `root` object and select `name` and `appearsIn` on
+`hero`.
+
+~~~
+type Character {
+  name: String!
+  appearsIn: [Episode]!
+  length(unit: LengthUnit = METER): Float
+}
+~~~
+
+`Character` is grapqh object type. `name` is fiels on `Character` type. With `!`
+means that it is not nullable, its always string. `appearsIn` is always array
+(could be empty). `length` field has argument `unit` and its optional (`METER`
+is default value).
+
+Scalar types are: `Int` (signed 32 bit integer), `Float`,`String`, `Boolean` and
+`ID`.
+Enumeration types (Enums) are restricted to a set of allowed values. Use string
+name, similar to constants.
+
+~~~
+enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
+~~~
+
+Object type, scalars and enums are only kind of types that you can define. There
+are two type modifiers that affect validation:
+
+* exclamation mark `!` (non null value) can be used also in query
+* list `[]`
+
+When writing query we need to go down to scalar types (can't ask for field
+`hero`).
+
+Interface is abstract type that includes set of fields that a type must include
+to implement interface. Beside fields, also return types must match.
+
+~~~
+interface Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+}
+~~~
+
+Example implementation
+
+~~~
+type Droid implements Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+  someOtherDroidField: String
+}
+~~~
+
+To ask specific object you need to use Inline fragments
+Inline fragments check if returned type of hero (hero is type `Character`) is
+Droid or Human. For `hero` you can only ask for fields that exists on
+`Character` interface. But for specific `Droid` fiels you can use inline
+framents
+
+~~~
+query HeroForEpisode($ep: Episode!) {
+  hero(episode: $ep) {
+    name
+    ... on Droid {
+      primaryFunction
+    }
+    ... on Human {
+      height
+    }
+  }
+}
+~~~
+
+Union type defines possible types. Note that you can't create union type out of
+other union type or interface.
+
+~~~
+union SearchResult = Human | Droid
+~~~
+
 # Mutations
 
-When sending data, we use `mutation`. They run in sequence, one by one (query
-run in parallel).
+Input types looks exactly the same as regular object types with keyword `input`.
+They are used as arguments in mutations
+
+~~~
+input ReviewInput {
+  stars: Int!
+  commentary: String
+}
+~~~
 
 ~~~
 mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
@@ -141,14 +323,44 @@ data
 }
 ~~~
 
-# Introspection
+Mutation run in sequence, one by one (query run in parallel). Data fields are
+without `$`.
 
-[learn](http://graphql.org/learn/introspection/)
-__type, __fields
+# Root fields and resolvers
+
+Root type or Query type represents all possible entry points. Resolver receive
+three params:
+
+* obj: previous object (not used on root Query type)
+* args: arguments provided in query
+* context: used for db and authentication
+
+~~~
+Query: {
+  human(obj, arg, context) {
+    return context.db.loadHumanById(agrs.id).then(
+      userData => new Human(userData)
+    }
+  }
+}
+~~~
+
+~~~
+Human: {
+  name(obj, args, context) {
+    return obj.name
+  }
+}
+~~~
+
 
 Permissions:
 
 live queries
+
+We get data with GET request and send sada with POST request with `query` param.
+Only problem could be caching since we need different strategy for caching.
+
 
 subscriptions
 https://www.netguru.co/blog/grapghql-vs-rest

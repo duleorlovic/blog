@@ -564,9 +564,9 @@ array. (note you can not use splat and last hash attribute)
   f(a: 1, b: 2) # { a: 1, b: 2 }
   ~~~
 
-  In ruby > 2.0 you can use keyword arguments (params are exploded), for which
-  you can define default values or they need to be required (hash key is
-  required)
+  In ruby > 2.0 you can use keyword arguments (params are exploded decomposed),
+  for which you can define default values or they need to be required (hash key
+  is required)
 
   ~~~
   def f(x, y, c: , d: 1)

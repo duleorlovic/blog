@@ -40,9 +40,20 @@ Use this helper in edit.html with form object, and on show page with object.
 You do not need to create input fields, it will do it (you can change
 `text_field` to `hidden_field` if you want to hide it).
 
-If you show/hide whole map, than you need to trigger resize with setCenter and
-setZoom or map.fitBounds (probably inside setTimeout if you are still in digest
-loop). Better is to use opacity 0, 1 and move element below.
+If you show/hide whole map (with `display: none`), than you need to trigger
+resize with setCenter and setZoom or map.fitBounds (probably inside setTimeout
+if you are still in digest loop). 
+Better is to use opacity 0, 1 and move element below.
+
+~~~
+.hide-with-opacity {
+  opacity: 0;
+  &.active {
+    opacity: 1;
+  }
+}
+~~~
+
 Note that when `resize` is triggered than center is changed, so you need to grab
 center before resize, than call resize (so map is actually shown) and than call
 setCenter or panTo the original center. To get map object we use mapObject data
