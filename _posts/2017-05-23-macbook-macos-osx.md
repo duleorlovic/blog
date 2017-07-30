@@ -85,6 +85,8 @@ brew info coreutils
 brew install bash-completion
 ~~~
 
+Install [meld for mac](https://yousseb.github.io/meld/)
+
 # iTerm2
 
 You can maps pageup in iterm.  Do `⌘ ,` to open Preferences -> Keys -> Key
@@ -155,7 +157,7 @@ EOF
 Test with
 
 ~~~
-# Make sure you haven't broken your DNS.
+# Make sure you haven not broken your DNS.
 ping -c 1 www.google.com
 # Check that .dev names work
 ping -c 1 this.is.a.test.dev

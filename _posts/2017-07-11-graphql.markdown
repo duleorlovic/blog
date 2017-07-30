@@ -7,11 +7,15 @@ Only problem could be caching since we need different strategy for caching.
 
 http://graphql.org/learn
 
+# Queries
+
 Fields can be string or array, or object (than you can make subselection).
-You can pass arguments to fields. Argument can be Enumeration type.
+You can pass arguments to fields (like `id: 1`). Argument can be Enumeration
+type.
 
 ~~~
 {
+  # queries can have comments
   human(id: 1) {
     name
     height(unit: METER)
@@ -19,19 +23,62 @@ You can pass arguments to fields. Argument can be Enumeration type.
 }
 ~~~
 
-If you need several items than you can use aliases `{ firsthuman: human(id:1)
-...`. For each alias you can include same set of fields with fragments
+response is
 
 ~~~
-{ secondHuman: human(id: 2) { ...sameFields }}
-fragment sameFields on Character {
-  name
+{
+  "data: {
+    "hero": {
+      "name": "My name",
+      "height": 4
+    }
+  }
+~~~
+
+If you need several items than you can use aliases
+
+~~~
+{
+  importantHuman: human(id:1) {
+    name
+  }
+}
+~~~
+
+For each alias you can include same set of `credentialsFields` with fragments
+
+~~~
+  niceHuman: human(id: 2) {
+  ...credentialsFields
+  }
+  fragment credentialsFields on Character {
+    name
+  }
+~~~
+
+Inline fragments check if returned type is Droid or Human
+
+~~~
+query HeroForEpisode($ep: Episode!) {
+  hero(episode: $ep) {
+    name
+    ... on Droid {
+      primaryFunction
+    }
+    ... on Human {
+      height
+    }
+  }
 }
 ~~~
 
 # Variables
 
-Query can have dynamic params which are interpolated on server.
+Query can have dynamic params which are interpolated on server. Variables has
+prefix $ and is followed by type.
+Type can be (`Episode` is type): scalar, enum or input object type.
+If type ends with `!` than variable is required. Otherwise optional. They can
+have default type.
 
 ~~~
 query HeroNameAndFriends($episode: Episode = 'Default Value')
@@ -51,11 +98,11 @@ Additional JSON
 }
 ~~~
 
-Episode is type, one of: scalar, enum or input object type.
 
 # Directives
 
-Conditionally include fields with `@include(if: $my_var)` or `@skip(if: ...)`
+Dinamically include fields with `@include(if: $my_var)` or `@skip(if: ...)`.
+This was we can conditionally add some fields.
 
 ~~~
 query Hero($episode: Episode, $withFriends: Boolean!) {
@@ -69,7 +116,10 @@ query Hero($episode: Episode, $withFriends: Boolean!) {
 ~~~
 
 # Mutations
-When sending data, we should use `mutation`
+
+When sending data, we use `mutation`. They run in sequence, one by one (query
+run in parallel).
+
 ~~~
 mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
   createReview(episode: $ep, review: $review) {
@@ -77,6 +127,25 @@ mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
     commentary
   }
 }
+~~~
+
+data
+
+~~~
+{
+  "ep": "Episode Jedi",
+  "review": {
+    "stars": 5,
+    "commentary": "My comment"
+  }
+}
+~~~
+
+# Introspection
+
+[learn](http://graphql.org/learn/introspection/)
+__type, __fields
+
 Permissions:
 
 live queries
