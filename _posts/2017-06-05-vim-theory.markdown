@@ -46,15 +46,15 @@ maping keys `:noremap <newkeys> <keynames>`
 
 * since mappings easilly could be broken, ALWAYS use `nore` non recursive
 variant `noremap`, `nnoremap` ... so it use default meanings of keynames
-* you can use control CTRL `:map <c-d> dd`
+* you can map control CTRL key, for example `:map <c-d> dd`
 * do not use comments `"` in mapping
-* `nmap` normal, `vmap` visual `imap` insert mode only mappings, for example
-in insert mode `:map <esc>ddi`
+* `nmap` normal, `vmap` visual, `imap` insert, `omap` operator mode.
+Dor example in insert mode `:imap <esc>ddi`
 * remove mappings `:unmap <key>` or `nunmap`
 * you can map two keys, for example `:map -d dd`
 * change leader key `:let mapleader = "-"` so you can write `:map <leader>d dd`
 (note that it does not have effect for already defined mappings)
-* `:let maplocalleader = "\\"` can be used for mapings only for local buffer.
+* `:let maplocalleader = "\"` can be used for mapings only for local buffer.
 Mapping can be for specific buffer (file) `:nnoremap <buffer> <leader>d dd`. You
 can use both `:nnoremap <buffer> <localleader>d dd`
 * `:setlocal nowrap` is only for current buffer (file), when you open another
@@ -65,8 +65,13 @@ than local will be chosen since it is more specific
 
 Abbreviations are similar to mappings but for insert, replace and command mode
 
-* `:iabbrev adn and` this will replace `adn<non-keyword-character>` with `and`
+`:iabbrev adn and` this will replace `adn<non-keyword-character>` with `and`
 Difference between `map` is that map does not count for non-keyword-character
+
+`:iabbrev <buffer> --- &mdash;` will replace `---` with `&mdash` but only for
+current buffer. It is buffer local abbreviation and is usefull when you want
+something only for specific type, for example `:autocmd FileType javascript
+:iabbrev <buffer> iff if ()<left>` will enable little snippet only for js.
 
 ## Autocommands
 
@@ -75,14 +80,44 @@ Autocommands are used to run commands on specific events
 `:autocmd BufNewFile * :write`.
 
 First param is event and can be something of: entering insert mode, not pressing
-a key for some time...
+a key for some time. It can can combine, usually `BufNewFile,BufRead` for all
+open files, existing or not. Some events `:help autocmd-events`
 
 * `BufNewFile` when you open new files not saved to disk
 * `BufRead` after you open existing file
+* `BufWritePre` just before write
 * `FileType` when vim sets filetype
   * `:autocmd FileType javascript nnoremap <buffer> <localleader>c I//<esc>`
 
 Second param is "pattern" that filter more specific: for example: `*.txt` is
 only triggered for txt files
 
-14
+Last part is command that is executed.
+
+You can group autocommands (`autocmd!` is to clear)
+
+~~~
+augroup filetype_html
+    autocmd!
+    autocmd FileType html nnoremap <buffer> <localleader>f Vatzf
+augroup END
+~~~
+
+# Operator pending mappings
+
+Operator is command waiting for movement command and than executes. For example
+`dt,` (delete till ,), `ci(` (change inner (), `yw` (yank word). We can remap
+keys for operator mode `:onoremap p i(` (inner braces, select parametars), or
+`:onoremap b /end<cr>` (block, until end). If you want to select also before
+current position you can visualy select and it will be executed on all.
+For example, change params while current is on current line before params.
+
+~~~
+onoremap in( :<c-u>normal! f(vi(<cr>
+~~~
+
+`normal!` means that it simulate pressing in normal mode.
+
+`:onoremap ih :<c-u>execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"<cr>`
+
+17

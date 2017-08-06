@@ -310,6 +310,11 @@ Preferences -> Shortcuts
 dates
 * for commands you can use `^d` to show all completion and `<tab>` to use it
 
+# Indent
+
+* `gq` in visual mode will format text to 80 char lines (good for markdown)
+* `gg=G` indent whole file
+
 # Usefull commands
 
 * Repeat last colon command `@:`, repeat last command `@@`
@@ -317,7 +322,6 @@ dates
 * `:nnoremap _ f_x~` find next `_`, remove and uppercase
   [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
   for moving underscore to CamelCase
-* `gq` in visual mode will format text to 80 char lines (good for markdown)
 * using vim inside irb or rails console with gem
   [interactive_editor](https://github.com/jberkel/interactive_editor). Its
   usefull since you can paste only limited number of chars to irb line. Now you
