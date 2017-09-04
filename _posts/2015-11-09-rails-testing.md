@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Testing in Rails
 ---
 
 Usually we start with integration test, than we go in details for frontend
@@ -29,10 +28,17 @@ Given [role and state]
 When [an event occurs]
 Then [the benefit]
 
+As a instructor
+I want to be able to sign in/sign/out/reset my password
+
+- Standard password reset via email
+- Login via social buttons
+
 or AAA:
-Arange - set data
-Act - run code
-Assert - verify that code did what is expected
+Arange - set data - SETUP
+Act - run code - EXERCISE
+Assert - verify that code did what is expected - VERIFICATION
+Teardown - eventual TEARDOWN
 # note that multiple assets is OK only if they are related
 ~~~
 
@@ -79,6 +85,8 @@ can use `let!`).
 Also you can use `before(:context) { Location.delete_all}` (this is run before
 `let` statements) to remove any test data, for example if you have fixtures,
 they will be loaded for every example.
+[thoughtbot](https://github.com/thoughtbot/guides/blob/master/style/testing/avoid_let_spec.rb)
+do not suggest using let, but to extract methods.
 
 ~~~
 # spec/location_spec.rb
@@ -114,26 +122,41 @@ describe Location do
 end
 ~~~
 
-* [rspec-core](http://www.relishapp.com/rspec/rspec-core/docs) define:
-  * example groups `describe "..." do` or `context "..." do`. `it "..." do`
-  define example. Example group is a class in which `describe` or `context` is
-  evaluated, and `it` is evaluated on instance of that class
-  * [subject](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/subject/explicit-subject)
-  is used in group scope (`describe`) to define value that is returned by
-  `subject` method in example (`it`) scope.
-  * [one liner it
-  syntax](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/subject/one-liner-syntax)
-  Instead of `it { expect(subject).to be_empty }` you can use
-  `it { is_expected.to be_empty }` or `it { should be_empty }` (deprecated). If
-  you need to access properties of an object for one liner syntax, than use `it
-  { is_expected.to have_attribute :name }`
-  * [let](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/helper-methods/let-and-let)
-  is used to memoize value so it is shared inside one example, but not between
-  examples
-  * [before](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/hooks/before-and-after-hooks)
-  and after hooks are used to execute arbitrary code before and after
-  example or context is run. You can use alias `before(:each)` is the same as
-  `before(:example)` and `before(:all) == before(:context)`
+[rspec-core](http://www.relishapp.com/rspec/rspec-core/docs) define:
+* example groups `describe "..." do` or `context "..." do`. `it "..." do`
+define example. Example group is a class in which `describe` or `context` is
+evaluated, and `it` is evaluated on instance of that class
+* [subject](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/subject/explicit-subject)
+is used in group scope (`describe`) to define value that is returned by
+`subject` method in example (`it`) scope.
+* [one liner it
+syntax](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/subject/one-liner-syntax)
+Instead of `it { expect(subject).to be_empty }` you can use
+`it { is_expected.to be_empty }` or `it { should be_empty }` (deprecated). If
+you need to access properties of an object for one liner syntax, than use `it
+{ is_expected.to have_attribute :name }`. So do not use `subject` inside `it`
+block.
+* [let](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/helper-methods/let-and-let)
+is used to memoize value so it is shared inside one example, but not between
+examples
+* [before](http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/hooks/before-and-after-hooks)
+and after hooks are used to execute arbitrary code before and after
+example or context is run. You can use alias `before(:each)` is the same as
+`before(:example)` and `before(:all) == before(:context)`
+
+DRY is accomplished with `shared_context` and `include_context`.
+
+~~~
+RSpec.describe User do
+  shared_context 'one user' do
+    let(:user) { create :user }
+  end
+
+  describe do
+    include_context 'one user'
+  end
+end
+~~~
 
 Some [rspec
 expectations](http://www.relishapp.com/rspec/rspec-expectations/docs) built in
@@ -145,7 +168,7 @@ matchers
   * `eq` is object equivalence with type conversion `a == b` (same value)
 * [predicate
 matchers](http://www.relishapp.com/rspec/rspec-expectations/docs) for any
-method that begin with`has_` or ends with `?` you can use `have_` and `be_`
+method that begin with `has_` or ends with `?` you can use `have_` and `be_`
 `expect(object).not_to be_empty` or `be_near near_location`
 * `expect { do_something }.to change { object.attribute }`
 [change](http://www.relishapp.com/rspec/rspec-expectations/v/3-5/docs/built-in-matchers/change-matcher)
@@ -221,6 +244,21 @@ For slow test you can mark with `:slow` so running rspec tests with `rspec --tag
 
 `rspec --profile` will give you list of 10 slowest tests.
 
+Rspect config before each example for particular group
+
+~~~
+# spec/rails_helper.rb
+RSpec.configure do |config|
+  config.before :each do
+    DatabaseCleaner.start
+  end
+  config.before :each, type: lambda {|v| v != :feature } do
+    allow_any_instance_of(Paperclip::Attachment).to receive(:save).and_return(true)
+  end
+  config.include Warden::Test::Helper, type: :features
+end
+~~~
+
 ## Rspec rails
 
 To install you need to add [rspec-rails](https://github.com/rspec/rspec-rails)
@@ -244,6 +282,9 @@ can add option to `.rspec` (this is perfomance penalty since some tests does not
 require rails can perform faster without this option).
 Once you put gem in gemfile inside development group, rspec generators will be
 available: `rails g model posts` will generate rspec instead of minitest.
+Also there are generators like `rails g integration_test` and rspec will
+generate `spec/requests/password_resets_spec.rb`
+
 Write test file that ends `_spec.rb` in particular folders (so it inherits type
 ).
 
@@ -314,7 +355,7 @@ triggers to services or model methods (using mocks) and check responses. Testing
 routes is done separately.
 
 Controller spec should be for each method (CRUD) in context of authorized and in
-context of unauthorized user (testin security), and for valid and some invalid
+context of unauthorized user (testing security), and for valid and some invalid
 requests.
 
 `get`, `delete`, `head`, `patch`, `post` and `put` takes 4 params, usually used
@@ -334,12 +375,23 @@ You can validate `response.status` or `expect(response).to
 have_http_status(:success)` matcher.  You can use `:success`, `:redirect`,
 `:missing`, `:error`.
 
+You can set host `request.host = 'my-domain.dev'`
+
 When you need to create params to for testing, you can use
 `ActionController::Parameters.new name: 'Duke'`
 
-## Rspec Requests specs
+~~~
+# spec/controllers/users_controller_spec.rb
+RSpec.describe UsersController do
+  describe 'new' do
+  end
 
-[request-spec](https://www.relishapp.com/rspec/rspec-rails/docs/request-specs/request-spec)
+end
+~~~
+
+## Rspec Request specs
+
+[requests spec](https://www.relishapp.com/rspec/rspec-rails/docs/request-specs/request-spec)
 are used for full stack testing without stubbing. Usually for oauth (doorkeeper
 gem)
 
@@ -502,7 +554,7 @@ line of content `email.html_part.body.to_s` matches title
 require 'rails_helper'
 
 RSpec.describe TasksController, type: :controller do
-  before(:example) { ActionMailer::Base.deliveries.clear }
+  before { ActionMailer::Base.deliveries.clear }
 
   describe "PATCH incomplete update" do
     let(:task) { Task.create! title: "Yo!" }
@@ -559,6 +611,8 @@ You can use
 If not defined, `subject` is an instance of the model.
 Usually have following parts: attributes, relationships, validations.
 
+[model cheatsheet](https://gist.github.com/kyletcarlson/6234923)
+
 ### Attributes
 
 It is good to write all column names at the top of the test so you can see what
@@ -598,13 +652,33 @@ For belongs_to validations it is advised to validate object (`user` not
 
 ### Validations
 
-You can use [shoulda matchers](https://github.com/thoughtbot/shoulda-matchers)
-for simple inline validations (presence for both not null and references
-fields), for example:
+You can install [shoulda
+matchers](https://github.com/thoughtbot/shoulda-matchers) for simple inline
+validations:
 
 ~~~
-  it { is_expected.to validate_presence_of :name }
-  it { is_expected.to validate_uniqueness_of :name }
+# Gemfile
+  gem 'shoulda-matchers', '~> 3.1'
+
+# spec/rails_helper.rb
+require 'shoulda/matchers'
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+~~~
+
+You should check for presence for both not null and references fields, with
+simple line:
+
+~~~
+  descibe 'validations' do
+    subject { build :sport } # we need to use factory girl since implicit subject is empty
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_uniqueness_of :name }
+  end
 ~~~
 
 For complex validation you can test validation as simply `l =
@@ -637,7 +711,7 @@ saved
     original = FactoryGirl.create :auction_admin
     duplicate = FactoryGirl.build :auction_admin, user: original.user, auction: original.auction
     duplicate.valid?
-    expect(duplicate.errors[:user_id]).to include "has already been taken"
+    expect(duplicate.errors[:email]).to include "has already been taken"
   end
 ~~~
 
@@ -651,8 +725,9 @@ can be created)
 
   # or more general
 
-  it "has a valid factory" do
-    expect(FactoryGirl.create(described_class.name.underscore)).to be_persisted
+  it 'has a valid factory' do
+    # expect(create(described_class.name.underscore)).to be_persisted
+    expect(build(described_class.name.underscore)).to be_valid
   end
 ~~~
 
@@ -673,7 +748,7 @@ Test default values from database and in after hooks.
 
 ~~~
 
-Usually we do not test migration files since we use them later and write test
+Usually we do not test migration since we use them later and write test
 for that usage.
 
 ### Refactoring
@@ -754,12 +829,12 @@ RSpec.describe "Post #create" do
 end
 ~~~
 
-# Capybara
+# Acceptance tests with Capybara - feature tests
 
 Instead of using `get` and `response.body` we can use only what end user see
 `visit`, `fill_in` and `page.should`. Also it can use the
-same DSL to drive browser (selenium-webdriver or capybara-webkit) or headless
-drivers (Rack::Test or phantomjs).
+same DSL to drive browser (selenium-webdriver, chrome-driver or capybara-webkit)
+or headless drivers (Rack::Test or phantomjs).
 To run in browser javascript use `js: true`. Note that in this mode, drop down
 links are not visible, you need to click on dropdown. Also `data-confirm` will
 be ignored.
@@ -767,6 +842,37 @@ Note that in this mode you can't use `rails-rspec` default
 `config.use_transactional_fixtures` since selenium can't know that refresh or
 navigation to another page should be in the same transaction, so you need to use
 `database_cleaner` as we do configuration below.
+<http://elementalselenium.com/tips/29-chrome-driver>
+<https://robots.thoughtbot.com/headless-feature-specs-with-chrome>
+~~~
+# spec/support/capybara.rb
+require "selenium/webdriver"
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu) }
+  )
+
+  Capybara::Selenium::Driver.new app,
+    browser: :chrome,
+    desired_capabilities: capabilities
+end
+
+Capybara.javascript_driver = :chrome
+
+# if you need to use custom domain , you can set host, but also set server port
+Capybara.app_host = "http://my-domain.dev:3333"
+Capybara.server_port = 3333
+# you can read host and port
+Capybara.current_session.server.host
+Capybara.current_session.server.port
+# normally chrome starts with url: data; and than redirects to app_host
+~~~
+
 For newer Firefox I needed to download
 [geckodriver](https://github.com/mozilla/geckodriver/releases) and put it
 somewhere like `/user/local/bin/geckodriver`. Also [Firefox
@@ -781,6 +887,7 @@ Just install the gem in require it:
 ~~~
 sed -i Gemfile -e '/group :development, :test do/a  \
   gem "capybara"\
+  gem "capybara-email"\
   gem "selenium-webdriver"\
   # for save_and_open_page in browser\
   gem "launchy"\
@@ -788,28 +895,63 @@ sed -i Gemfile -e '/group :development, :test do/a  \
   gem "database_cleaner"'
 bundle
 sed -i spec/rails_helper.rb -e '/require .rspec.rails/a  \
-require "capybara/rspec"'
+require "capybara/rspec"\
+require "capybara/email/rspec"'
+
+cat > spec/support/database_cleaner.rb << HERE_DOC
+RSpec.configure do |config|
+  # If you're not using ActiveRecord, or you'd prefer not to run
+  # each of your examples within a transaction, remove the following
+  # line or assign false instead of true.
+  config.use_transactional_fixtures = false
+
+  # Clean up and initialize database before
+  # running test exmaples
+  config.before(:suite) do
+    # Truncate database to clean up garbage from
+    # interrupted or badly written examples
+    DatabaseCleaner.clean_with(:truncation)
+
+    # Seed dataase. Use it only for essential
+    # to run application data.
+    load "#{Rails.root}/db/seeds.rb"
+  end
+
+  config.around(:each) do |example|
+    # Use really fast transaction strategy for all
+    # examples except 'js: true' capybara specs
+    # that is Capybara.current_driver != :rack_test
+    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+
+    # Start transaction
+    DatabaseCleaner.cleaning do
+
+      # Run example
+      example.run
+    end
+
+    load "#{Rails.root}/db/seeds.rb" if example.metadata[:js]
+
+    # Clear session data
+    Capybara.reset_sessions!
+  end
+end
+HERE_DOC
 
 sed -i spec/rails_helper.rb -e '/use_transactional_fixtures/c  \
-  # http://stackoverflow.com/questions/12326096/capybara-selenium-fault-and-redirect-example-com-when-without-everything-is-gre/12330557#12330557\
-  config.use_transactional_fixtures = false\
-  config.before :each do\
-    DatabaseCleaner.strategy = if Capybara.current_driver == :rack_test\
-                                 :transaction\
-                               else\
-                                 # this is when metadata js: true\
-                                 :truncation\
-                               end\
-    DatabaseCleaner.start\
-  end\
-  config.after do\
-    DatabaseCleaner.clean\
-  end'
+  config.use_transactional_fixtures = false'
+
+git add . && git commit -m "add capybara"
 ~~~
+
+[capybara-email](https://github.com/DockYard/capybara-email) is using
+`open_email 'my@email.com'` to set `current_email` for which you can
+`current_email.click_link`
 
 Capybara adds some aliases:
 
 * `feature` is alias for `describe ..., type: :feature`
+* `background` is alias for `before`
 * `scenario` is an alias for `it`
 * `given` is alias for `let`
 
@@ -817,29 +959,34 @@ Some of the most used capybara methods
 [link](https://gist.github.com/duleorlovic/042178b92f1badc09490) or [cheat
 sheet](https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf)
 
-* session methods you can set expectation for `current_path`
+* session methods. you can set expectation for `current_path` or `current_url`
   * `visit "/"`, `visit new_project_path`
   * `within "#login-form" do`
   * [more](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)
 * node actions target elements by their: id, name, label text, alt text, inner
-text. Note that it is case sensitive. You can use substring or you can define
-`exact: true`
+text. Note that locator is case sensitive. You can use substring or you can
+define `exact: true`
   * `click_on "Submit"` (both buttons and links) `click_button "Sign in"`,
   `click_link "Menu"`
   * `fill_in "email", with: 'asd@asd.asd'`
-  * `check(locator)`, `choose(locator)`, `select(value, from: locator)`, and
-  `uncheck`, `unselect`
+  * `check 'my checkbox'`, `choose 'my radio button'`, `select 'My Option or
+  Value', from: 'My Select Box'`, and `uncheck 'my checkbox'`, `unselect`,
+  `attach_file 'Image', '/path/to/image.jpg'`
   * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)
 * node finders
-  * `find('ng-model="newExpense.amount"').set('123')` [find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method) can use css or xpath (see some [xpath examples](scrapper post)) When 
+  * `find('ng-model="newExpense.amount"').set('123')` [find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method) can use css or xpath (see some [xpath examples](scrapper post)) When
   * `find_all('input').first.set(123)`
   * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders)
+  * find can be used for click, for example `find('.class').click` but I prefer
+  to enable aria labels and use that `Capybara.enable_aria_label = true` and
+  `click 'my-aria-label'`
 * node matchers and rspec matchers
   * `expect(page.has_css?('.asd')).to be true`
   * `expect(page).to have_css(".title", text: "my title")`, `have_text`,
-  `have_link`, `have_selector("#project_#{project.id} .name", text: 'duke')`
-  (`assert_selector` in minitest). `have_no_selector` for opposite. With all you
-  can use `text: '...'` and `count: 2` which is number of occurences
+  `have_content`, `have_link`, `have_selector("#project_#{project.id} .name",
+  text: 'duke')` (`assert_selector` in minitest). `have_no_selector` for
+  opposite. With all you can use `text: '...'` and `count: 2` which is number of
+  occurences
   * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers)
   * [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
 * node element
@@ -886,12 +1033,20 @@ RSpec.feature "Search recipes", js: true do
 end
 ~~~
 
+## Oauth specs
+
+https://github.com/elizabrock/coursewareofthefuture/blob/25372c671f73525e09927344d8f2031b6acf82d0/spec/support/features/authentication_helper.rb
+
+Controller tests https://gist.github.com/jittuu/792715
+Helper https://gist.github.com/spyou/1200365/b0bb95e5cf9144b5a9a58bb6c1fc33aee4c34e47
+
+
 # Debug with selenium
 
 
 # Rspec Helpers
 
-You an define your helpers and macros in separate file and include it in Rspec
+You an define your helpers in separate file and include it in Rspec
 config.
 
 Imporant note that helpers can be used only inside examples (not example groups)
@@ -934,60 +1089,122 @@ RSpec.describe ProjectsController, type: :controller do
 
 Alternatively, you can stub `current_user`.
 
+https://github.com/plataformatec/devise/wiki/How-To:-Test-controllers-with-Rails-3-and-4-(and-RSpec)#controller-specs
+
+Use [clearance
+backdoor](https://github.com/thoughtbot/clearance#fast-feature-specs) for
+bypassing login and simply `visit my_profile_path(as: user)`
+
+
 In feature tests there we can't use devise helpers but we can manually log in or
 use `login_as` warden method which is outside of rails stack
 
 ~~~
-# spec/support/login_helpers.rb
+# spec/support/features/authentication_helpers.rb
+module Features
+  module AuthenticationHelpers
+    def user_manual_sign_in(email, password)
+      visit new_user_session_path
+      fill_in 'Email', with: email
+      fill_in 'Password', with: password
+      click_button 'Sign In'
+    end
+
+    def create_logged_in_user
+      user = FactoryGirl.create(:user)
+      login_as user
+      user
+    end
+
+    def sign_into_facebook_as(user = {})
+      # example from https://github.com/mkdynamic/omniauth-facebook
+      auth = {
+        provider: 'facebook',
+        uid: user.try(:facebook_uid) || '1234567',
+        info: {
+          email: user.try(:email) || 'joe@bloggs.com',
+          name: user.try(:name) || 'Joe Bloggs',
+          first_name: 'Joe',
+          last_name: 'Bloggs',
+          image: 'http://graph.facebook.com/1234567/picture?type=square',
+          verified: true
+        },
+        credentials: {
+          token: 'ABCDEF...', # OAuth 2.0 access_token, which you may wish to store
+          expires_at: 1321747205, # when the access token expires (it always will)
+          expires: true # this will always be true
+        },
+      }
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:facebook, auth)
+    end
+
+    def sign_into_facebook_with_error
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:facebook] = :invalid_credentials
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.include Features::AuthenticationHelpers, type: :feature
+end
+~~~
+
+~~~
+# spec/support/devise.rb
 RSpec.configure do |config|
   # this enable sign_in, sign_out devise methods in controller and view specs
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
+  # for devise <= 4.1.0
+  # config.include Devise::TestHelpers
 end
-
-include Warden::Test::Helpers
-module LoginHelpers
-  def create_logged_in_user
-    user = FactoryGirl.create(:user)
-    # login_as is warden method
-    login_as user
-    user
-  end
-
-  def manually_log_in(user = FactoryGirl.create(:user))
-    visit new_user_session_path
-
-    within "#new_user" do
-      fill_in "Email", with: user.email
-      fill_in "Password", with: user.password
-    end
-
-    click_button 'Log in'
-  end
-end
+# configure only for features
 RSpec.configure do |config|
-  config.include LoginHelpers, type: :feature
+  # login_as is warden method
+  config.include Warden::Test::Helpers
 end
+~~~
+
+
+I got error: `UncaughtThrowError: uncaught throw :warden` and that is because
+user was unconfirmed. Better is be by default confirmed:
+
+~~~
+  factory :user do
+    sequence(:email) { |n| "email#{n}@trk.in.rs" }
+    password 'asdfasdf'
+    confirmed_at { Time.current }
+
+    factory :unconfirmed_user do
+      confirmed_at nil
+    end
+  end
 ~~~
 
 ## Mailer helper
 
 ~~~
-# spec/support/mailer_macros.rb
-module MailerMacros
-  def last_email
-    ActionMailer::Base.deliveries.last
-  end
+# spec/support/mailer_helpers.rb
+module MailerHelpers
+  # you should call this manually for specific test
+  # config.before(:each) { reset_email }
   def reset_email
     ActionMailer::Base.deliveries = []
   end
+  def last_email
+    ActionMailer::Base.deliveries.last
+  end
 end
 RSpec.configure do |config|
-  config.include(MailerMacros)
-  # you can call this manually for specific test
-  # config.before(:each) { reset_email }
+  config.include(MailerHelpers)
 end
 ~~~
+
+Testing emails rspec is different for Devise 3 and Devise 4 (there is a problem
+that I can't open regitration email in devise 4).
 
 ## Pause helpers
 
@@ -1003,6 +1220,38 @@ RSpec.configure do |config|
   config.include PauseHelpers, type: :feature
 end
 ~~~
+
+## Ajax
+
+Wait for ajax to finish
+
+~~~
+# spec/support/features/wait_for_ajax.rb
+# https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
+module WaitForAjax
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until finished_all_ajax_requests?
+    end
+  end
+
+  def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').zero?
+  end
+end
+
+RSpec.configure do |config|
+  config.include WaitForAjax, type: :feature
+end
+~~~
+
+This is not needed any more, also
+[wait_until](https://www.varvet.com/blog/why-wait_until-was-removed-from-capybara/)
+is removed from capybara.
+
+I see only problem with race condition is when you load the form using ajax, and
+you click on button to submit it immediatelly.
+
 
 # Fixtures
 
@@ -1052,7 +1301,7 @@ Cons:
 
 * fixtures are global so all edge cases will increase database data for each
  test
-* fixture files are for specific models, so sometime it is hard to track
+* fixture are for specific models, so sometime it is hard to track
  complex setup (comment for that task for this project for that owner)
 * fixtures are distant and far away of test so you need look into it to figure
  out actual test setup
@@ -1125,6 +1374,8 @@ name as usuall. In validation, you can validate presence for object but not id
     association :user, strategy: :build
     # you can define class and additional attributes
     association :updated_by, factory: :user, name: "Admin User"
+    # another form
+    user.association :user, name: 'My User'
   end
   ~~~
 
@@ -1152,9 +1403,43 @@ associations and *create_list* method
   end
   ~~~
 
-* callbacks `after(:create) do`, `after :build`, `before :create`, `after :stub`
+* callbacks `after(:create) do`, `after(:build)`, `before(:create)`,
+`after(:stub)`. Note that there is no `before(:build)`
+
 * inheritance: nest multiple `factory :user_with_posts` or use `parent: :user`
 attribute
+* if you need to use existing record and not create new, you can like this
+~~~
+factory :company do
+  country { Country.first || create(:country) }
+  created_by { User.first || create(:user) }
+end
+~~~
+* if you need polymorphic, than use `factory: :model` attribute. Also you can
+put params in `association`
+https://robots.thoughtbot.com/aint-no-calla-back-girl
+
+~~~
+factory :interest
+  interested factory: :user
+end
+factory :music_interest, class: 'Interest' do
+  topic.association(:topic, name: 'Music')
+end
+~~~
+
+* nested factory is usefull if you need different kind of objects
+
+~~~
+factory :user_without_profile do
+  factory :user do
+    after :create do |user|
+      create :profile, user: user
+    end
+  end
+end
+~~~
+
 * sequences are used to generate values (not AR objects) which will be
 incremented every time it is called during test (test sessions is whole `rake
 test` process or `rails c -e test` session). It is used for columns that
@@ -1213,10 +1498,16 @@ so you need to clean it manually
 
 ~~~
 RAILS_ENV=test rake db:drop db:create db:migrate
-rails c -e test
-require "factory_girl";include FactoryGirl::Syntax::Methods
-#  require "./spec/factories";
+rails c -e test # Better to work in test so you can drop db
+
+# require "factory_girl" no needed if you have gem factory_girl_rails
+require "./spec/factories"
+FactoryGirl.build :user
+
+include FactoryGirl::Syntax::Methods
 build :user, name: 'Dule'
+
+RAILS_ENV=test rake db:drop db:create db:migrate
 ~~~
 
 Factory girl can't be used as seed file as suggested [thoughtbot
@@ -1285,7 +1576,17 @@ teardown block,rollback fixtures.
 
 You can use `ActiveSupport::Test` or `ActionDispatch::IntegrationTest` which
 gives you `assert_redirected_to post_url(Post.last)` and `post`, `get`...
-methods. You have access to `@request`, `@controller` and `@response` object.
+methods. You have access to [available instance
+variables](http://guides.rubyonrails.org/testing.html#instance-variables-available):
+`@request`, `@controller` and `@response` object.
+To set a [host name](https://stackoverflow.com/a/29037481)
+* in controller specs use `@request.host = 'my.awesome.host'`.
+* in integration specs use [available
+helpers](http://guides.rubyonrails.org/testing.html#helpers-available-for-integration-tests)
+`host! "my.awesome.host"`
+* In view specs use `controller.request.host = "my.awesome.host"`
+* In capybara use `Capybara.default_host = "http://my.awesome.host"`,
+
 Also `assert_response :success` (for http codes 200-299), `:redirect` (300-399),
 `:missing` (404), `:error` (500-599). `assigns` and `assert_template` also
 exists.
@@ -1410,6 +1711,14 @@ require "mocha/mini_test"
 
 System tests are not included in default test suite, you should run `rake
 test:system`
+
+# Testing files
+
+~~~
+joe.photo = File.new(File.join(Rails.root, 'spec', 'support', 'files', 'pookie.jpg'))
+joe.save!
+joe.photo_before_type_cast.should == "pookie.jpg"
+~~~
 
 # Testing time and date
 
@@ -1566,6 +1875,27 @@ client and server, **fake server** returns a fake response
 * *integration test* is using fake server
 * *client unit test* ends at adapter
 
+# Testing Rails.cache
+
+If you have page caching that it is easier to set
+
+~~~
+# config/environments/test.rb
+Rails.application.configure do
+  config.cache_store = :null_store
+end
+~~~
+
+so caching is enabled but any write to cache is discarded.
+I you need to test some caching (if rails state depend on cache value) than you
+can clear (purge) cache before example
+
+~~~
+before :each do
+  Rails.cache.clear
+end
+~~~
+
 # When not to write tests
 
 * when things are too hard to test, for example setting up model that external
@@ -1635,10 +1965,6 @@ Antipaterns
 
 <http://code.tutsplus.com/articles/antipatterns-basics-rails-tests--cms-26011>
 
-Resources:
-
-* http://railscasts.com/episodes/275-how-i-test
-
 
 
 ~~~
@@ -1669,48 +1995,48 @@ In fixtures you should put only what is neccesarry to create object (only valida
 
 Some references:
 
-* guidlines [betterspecs](http://betterspecs.org/)
+guidlines [betterspecs](http://betterspecs.org/)
+[thoughtbot](https://github.com/thoughtbot/guides/tree/master/best-practices#testing)
+* avoid using instance variables in tests
+* do not test private methods
+* use [stubs and spies](https://robots.thoughtbot.com/spy-vs-spy) instead of
+mocks since it clearly separate SETUP, EXERSIZE and VERIFICATION phase.
 
-Devise 
 
-https://github.com/plataformatec/devise/wiki/How-To:-Test-controllers-with-Rails-3-and-4-(and-RSpec)#controller-specs
-
-
-Use [clearance backdoor](https://github.com/thoughtbot/clearance#fast-feature-specs) for bypassing login and simply `visit my_profile_path(as: user)`
-
-# Opensource examples for tests
+# Opensource examples with tests
 
 * <https://github.com/discourse/discourse>
 * <https://github.com/manshar/manshar> rails and angular
 * <https://github.com/scottwillson/racing_on_rails> minitests
 * <https://github.com/bikeindex/bike_index> rspec, api, swagger
+* <https://github.com/mabranches/Olympic> swagger, jsonapi
 * <http://stackoverflow.com/questions/4421174/what-are-some-good-example-open-source-ruby-projects-that-use-cucumber-and-rspec>
+* <https://github.com/eliotsykes/rspec-rails-examples>
 
-# some examples
+clean https://github.com/ni3t/tweetfire
+https://github.com/elizabrock/coursewareofthefuture
 
-https://gist.github.com/kyletcarlson/6234923
+# Live Coding and other video tutorials
 
-[olympic](https://github.com/mabranches/Olympic) swagger, jsonapi,
-
-[Mocking Luca Pradovera](https://www.youtube.com/watch?v=YjHKetQxk5I)
-[Carlos Souza](https://www.youtube.com/watch?v=CDC7zA8a-mA)
-
-# Live Coding
-
-* [Live coding Phil
+* [Advance API Phil
 Sturgeon list](https://www.youtube.com/watch?v=Q00H6BPVNQI&list=PL6XWIjBFDFOIiJyDK61thx6ILIbaUMEAb) author of Building APIs your won't hate
-* [gregg pollack](https://www.youtube.com/watch?v=jk016koiMAI)
-[carlos souza](https://www.youtube.com/watch?v=GV37oAofoak)
+* [gregg pollack and carlos souza](https://www.youtube.com/watch?v=jk016koiMAI)
+minispec rails api
 * [Sean Devine Live code a charity auction
 application](https://www.youtube.com/playlist?list=PL93_jRSrU7hzEUNmevlnMeUx6F35Za638)
-* [thoughbot workshop](https://www.youtube.com/watch?v=sj5TXzgZ1Sk) also https://www.youtube.com/watch?v=8368hGNIJMQ
+[source code](https://github.com/barelyknown/charity_auction-server)
+* [thoughbot workshop intro to tdd](https://www.youtube.com/watch?v=sj5TXzgZ1Sk) also [mocking](https://www.youtube.com/watch?v=8368hGNIJMQ)
 * [matt smith](https://www.youtube.com/watch?v=H1Czc3NL4c4)
 * [Paul Hiatt](https://www.youtube.com/watch?v=9f08KzNO4qo)
+* [Railscasts](http://railscasts.com/episodes?utf8=%E2%9C%93&search=test)
+* [Mocking Luca Pradovera](https://www.youtube.com/watch?v=YjHKetQxk5I)
+* [Carlos Souza](https://www.youtube.com/watch?v=CDC7zA8a-mA)
 
 Rspec book <http://www.betterspecs.org/>
 
 TODO
 
+https://player.fm/series/series-1401837/46-joe-ferris-test-driven-rails
 https://www.youtube.com/watch?v=yTkzNHF6rMs
 https://vimeo.com/44807822
 https://www.youtube.com/watch?v=9f08KzNO4qo

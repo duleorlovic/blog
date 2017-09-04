@@ -335,6 +335,3 @@ videos
 
 * <https://www.youtube.com/watch?v=yxhrYiqatdA>
 
-Heroku dyno puma settings
-
-<https://youtu.be/itbExaPqNAE>

@@ -16,16 +16,19 @@ Gmail smtp is the most easiest way to start
 ~~~
 # config/application.rb
   config.action_mailer.smtp_settings = {
-      address: "smtp.gmail.com",
-      port: 587,
-      domain: "gmail.com",
-      authentication: "plain",
-      enable_starttls_auto: true,
-      user_name: Rails.application.secrets.gmail_email,
-      password: Rails.application.secrets.gmail_password
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'gmail.com',
+    authentication: 'plain',
+    enable_starttls_auto: true,
+    user_name: Rails.application.secrets.smtp_username,
+    password: Rails.application.secrets.smtp_password
   }
+  config.action_mailer.delivery_method = :smtp
 
 # config/secrets.yml
+  smtp_username: <%= ENV["SMTP_USERNAME"] %>
+  smtp_password: <%= ENV["SMTP_PASSWORD"] %>
 ~~~
 
 ## Sendgrid
@@ -314,6 +317,28 @@ is what we can do with ActionMailer:
 * headers
 * attachments
 * mail
+
+# Dynamic smtp settings at runtime
+
+
+~~~
+class DeviseMailer < Devise::Mailer
+  after_action :set_smtp
+
+  def set_smtp
+    # determine smtp settings form @receiver or other
+    if receiver.use_my_smtp_server
+      mail.from = "#{receiver.smtp_from_name} <#{receiver.smtp_from_email}>"
+      mail.reply_to = "#{receiver.smtp_from_name} <#{receiver.smtp_from_email}>"
+      mail.delivery_method.settings.merge!(
+        address: receiver.smtp_host,
+        port: (receiver.smtp_port.present? ? receiver.smtp_port : 587),
+        user_name: receiver.smtp_username,
+        password: receiver.smtp_password,
+      )
+    end
+  end
+~~~
 
 # Interesting
 

@@ -190,6 +190,8 @@ to the provided example:
 This error also occurs when we mismatch bucket_name or region. To test if bucket
 is working, follow the link from the error.
 
+Note that only one host or all hosts `*` can be defined. You can not allow two
+hosts.
 
 # Tools
 

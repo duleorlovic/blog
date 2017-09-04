@@ -66,7 +66,7 @@ window.flash_alert = (message) ->
           close:'fadeOut'
         content: message
         color: 'red'
-    1
+    10 # tried with 0, 1, but it was triggered before page load and not working
   )
 window.flash_notice = (message) ->
   setTimeout(
@@ -82,7 +82,7 @@ window.flash_notice = (message) ->
           close:'fadeOut'
         content: message
         color: 'blue'
-    1
+    10 # tried with 0, 1, but it was triggered before page load and not working
   )
 ~~~
 
@@ -381,13 +381,14 @@ FA icons are very usefull for quick icons. Look for
 
 * free high resolution <https://unsplash.com/>
 * free online sample images https://unsplash.it/images
+* free stock photos <https://burst.shopify.com>
 * sample placeholder https://placeholder.com/
 
 # Graphs
 
 * [graphs
 gallery](https://github.com/mbostock/d3/wiki/Gallery) and
-[http://bl.ocks.org/mbostock](http://bl.ocks.org/mbostock)
+[bl.ocks.org/mbostock](http://bl.ocks.org/mbostock)
 [slider](http://square.github.io/crossfilter/)
 [people](http://www.findtheconversation.com/concept-map/#population)
 [parallel](http://exposedata.com/parallel/) and the best is
@@ -408,12 +409,24 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 
 * [user deck](https://userdeck.com)
 
+# User tracking services
+
+[mixpanel](https://mixpanel.com/)
+
+* create tracking plan that defines each event and its properties (name and
+type: string, number, boolean), In plan we should define: Event name,
+description, why this event and for each property: property name, property
+description, property type, why this property
+* call `identify` when user signup, or if there are existing users, when the
+logs in, or use the app
+* you can also send push notifications from mixpanel
+
 # User intro tour to website with help tips
 
 * [introjs](http://introjs.com/) commercial lincence after 2.1
 * [bootstrap-tour](https://github.com/sorich87/bootstrap-tour)
 
-# Visitor analytics
+# Visitor user analytics
 
 * <https://www.hotjar.com/tour>
 * <https://www.fullstory.com/features>
@@ -441,6 +454,11 @@ in modern browsers
 insights](https://developers.google.com/speed/pagespeed/insights/)
 [gtmetrix](https://gtmetrix.com/reports/www.scuddle.com/zP3xxAuZ)
 
+# Error tracking
+
+* airbrake
+* sentry
+
 # Payment
 
 * https://www.braintreepayments.com/
@@ -466,7 +484,7 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 [preview](https://colorlib.com/polygon/gentelella/index.html) [rails
 version](https://github.com/iogbole/gentelella_on_rails)
 * [adminLTE]( {{ site.baseurl }} {% post_url 2016-10-28-adminlte-free-template-on-rails %})
-* free templates <https://freehtml5.co>
+* free landing pages templates <https://freehtml5.co>
 [booster](https://freehtml5.co/booster-free-html5-bootstrap-template/) or
 [elate](https://freehtml5.co/demos/elate/)
 * [four images](http://barbajs.org/demo/grid/index.html)

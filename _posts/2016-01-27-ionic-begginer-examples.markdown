@@ -31,16 +31,17 @@ access](http://source.android.com/source/initializing.html#configuring-usb-acces
 "s/<username>/$USER/" | sudo tee >/dev/null /etc/udev/rules.d/51-android.rules;
 sudo udevadm control --reload-rules`
 
+On new device go to settings to enable USB Debugging. Settings is hidden by
+default, to enable go Settings -> About Phone -> Build number then tap 5 times.
+Then go to Settings -> Developer options and enable USB debugging. Also usefull
+is to enable Stay awake (screen will never sleep while charging).
+
 ~~~
 lsusb # find your model
 sudo vi /etc/udev/rules.d/51-android.rules
 # add your model with idVendor and idProduct
 sudo udevadm control --reload-rules
 # plug again your device
-# on device settings enable USB Debugging so `adb devices` show `device`
-# on Android > 4.2.2 usb debuggins is hidden, so go Settings -> About Phone ->
-# Build number then tap 5 times
-# instead of `offline`
 adb kill-server
 adb devices
 ~~~
@@ -627,13 +628,17 @@ so in your `config.xml` put
 
 On `adb install my_app.apk` you could get `Failure
 [INSTALL_FAILED_ALREADY_EXISTS] rm failed for -f, No such file or directory`.
-Or Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES] or [INSTALL_FAILED_UPDATE_INCOMPATIBLE]
+Or Failure `[INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES]` or
+`[INSTALL_FAILED_UPDATE_INCOMPATIBLE]`
 
-Solution is to remove old application.
+Solution is to remove old application. You can use my helper
+`ionic_find_package_name`
 
 ~~~
-~/Android/Sdk/build-tools/21.1.2/aapt dump badging my-app-debug.apk  | grep package # to find package name
-adb uninstall `ionic_find_package_name my_app.apk` # this will return package-name
+adb uninstall `ionic_find_package_name my_app.apk`
+
+# to find package name use ionic_find_package_name my_app.apk that is similar to
+~/Android/Sdk/build-tools/21.1.2/aapt dump badging my-app-debug.apk  | grep package
 ~~~
 
 You can start cordova app main activity from command line with

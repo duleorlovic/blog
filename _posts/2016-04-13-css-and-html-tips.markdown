@@ -99,6 +99,8 @@ title: CSS and HTML tips
   }
   ~~~
 
+* prefer mixins to `@extend`
+
 * chrome 39 for android use different color for toolbar, just add `<meta
   name="theme-color" content="#db5945">`
 
@@ -260,6 +262,29 @@ th.rotate > div > span {
 }
 ~~~
 
+# jQuery
+
+[some
+tips](https://code.tutsplus.com/tutorials/14-helpful-jquery-tricks-notes-and-best-practices--net-14405)
+
+* jquery selectors
+  * `$('thead th[data-searchable!="false"]')` select all th that do not have
+  `data-searchable` or have it but different than `false`
+* if jQuery finder returns `n,fn.init` that means it did not find DOM elemenent
+[link](http://stackoverflow.com/questions/34494873/why-is-my-jquery-selector-returning-a-n-fn-init0-and-what-is-it)
+
+> when found an element based on the selector criteria it returns the matched
+> elements; when the criteria does not match anything it returns the prototype
+> object of the function.
+
+With jquery you can create elements `$('<div>')`. If you want additional
+properties you can pass as additional params `var $div = $('<div>', { id: 'foo',
+class: 'my_class'})`.
+You can join elements with: append, prepend, after and before. Here you can use
+jquery objects or plain html: `$('#box').append($div).append('<div
+id="foo"></div>')`.
+
+
 # Tips
 
 * submit button outside of a form is
@@ -321,6 +346,12 @@ and values are successfully posted (disabled input is not send to server).
   ~~~
     <%= f.collection_select :user_id, User.all.unshift(User.new id: 0, name:
     "Please Select User"), :id, :name), {}  %>
+  ~~~
+
+  or `f.select`
+
+  ~~~
+    <%= f.select :shopify_custom_collection_id, [['Please select collection',0]] + @shopify_custom_collections.map { |shopify_custom_collection| [shopify_custom_collection.title, shopify_custom_collection.id] }, disabled: 0, selected: 0 %>
   ~~~
 
 

@@ -27,7 +27,7 @@ nslookup asd.dev
 # Address: 127.0.0.1
 ~~~
 
-# Run commaind as another user
+# Run command as another user
 
 In two ways
 
@@ -141,6 +141,15 @@ Intresting [devtools-cheatcheet](http://anti-code.com/devtools-cheatsheet/)
 Look my
 [xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
 
+# Tar
+
+comress folder: `tar -zcvf folder.tar.gz folder`
+extract folder: `tar -zxvf folder.tar.gz`
+
+compress file: `tar cvzf file_name.tar.gz file_name`
+Note that is file_name is relative to some subfolders (contains slash `/`) for
+example `/tmp/db.dump` than leading slash will be ignored and when you extract
+it will be in `tmp/db.dump`
 
 # Scrips and commands
 
@@ -275,12 +284,11 @@ ${#arr[0]}        # 4 Length of item zero
 
 # Curl
 
-To keep session in curl you can `-c` write and `-b` read from cookie file
-
-~~~
-curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
-~~~
-
+* to see response headers use `-i`
+* to keep session in curl you can `-c` write and `-b` read from cookie file
+  ~~~
+  curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
+  ~~~
 * test the speed on remote server:
   * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
   * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
@@ -295,6 +303,18 @@ enable with `ssh -A` option.
 
 ~~~
 ssh -A vagrant@127.0.0.1 -p 2222 'env | grep SSH_AUTH_SOCK'
+~~~
+
+Connect using pem or rsa key is
+~~
+ssh -i pem_file host
+~~~
+
+`Too many authentication failures for` error is caused by inadvertently offering
+multiple ssh keys to the server. You can limit to only one identity
+
+~~~
+ssh -i some_id_rsa -o -o IdentitiesOnly=yes host
 ~~~
 
 # Rsyslog
@@ -341,7 +361,11 @@ find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
 
 [xsel](https://linux.die.net/man/1/xsel) equivalent is
 [pbcopy](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/pbcopy.1.html)
-so I use` [is_mac_os]() to determine os.
+so I use [is_mac_os]() to determine os.
+
+I like mac Cmd key so to use that on ubuntu, I need to remap keys. One solution
+is to switch ctrl and alt keys, but problem is that Alt+Tab, Alt+1, Ctrl+C,
+Crtl+D, should stay as it was.
 
 # Tips
 
@@ -391,3 +415,8 @@ typing in
 so I need to run `reset` command
 * to select vim as default editor for root, run `update-alternatives --config
 editor` and choose vim.basic
+* files need bit `r` to be able to read, `w` to write and `x` to list, search or
+source included files.
+You can see permissions for particular directory with `ls -ld`. To set for
+example `chmod 644` is the same as `chmod u=rw,g=r,o=r`. To be able to source
+file, parent folder needs to have `x` flag enabled.

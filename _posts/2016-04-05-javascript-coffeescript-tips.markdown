@@ -324,7 +324,8 @@ bottom of the element.
 * global variables can be attached to `window` object like `window.my_var = 42`
 or you can use `@` syntax `@my_var = 42`
 * [iterate loops](http://coffeescript.org/#loops) over hash object `for k, v of
-my_object`
+my_object`. If you need index of array use also two params `for value, index of
+array`
 * you can call functions without parantesis but if you have params. But if you
 do not have params, that would be just a reference to a function, to call it you
 can use `do`
@@ -395,22 +396,6 @@ can use `do`
   </script>
   ~~~
 
-
-* disable turbolinks `document.body.setAttribute('data-no-turbolink','true')`
-* turbolinks are good if some of page content is changed using ajax.
-  Browser back button when turbolink is enabled shows last content
-  (not first that was fatched). When turbolinks is disabled, you can
-  force refreshing the page with set_cache_buster before filter.
-  Note that any input field stays populated (also hidden input field
-  which you eventually populated in javascript):
-
-  ~~~
-  def set_cache_buster
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
-  end
-  ~~~
 
 * submit button should be disabled when text input or textarea are blank. You
 can enable button on change, but it should listen [other
@@ -501,14 +486,4 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
     $('[data-user-preferences]').click (e) ->
       preference = e.currentTarget.dataset.dataUserPreferences
   ~~~
-
-* jquery selectors
-  * `$('thead th[data-searchable!="false"]')` select all th that do not have
-  `data-searchable` or have it but different than `false`
-* if jQuery finder returns `n,fn.init` that means it did not find DOM elemenent
-[link](http://stackoverflow.com/questions/34494873/why-is-my-jquery-selector-returning-a-n-fn-init0-and-what-is-it)
-
-> when found an element based on the selector criteria it returns the matched
-> elements; when the criteria does not match anything it returns the prototype
-> object of the function.
 

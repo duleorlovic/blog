@@ -106,3 +106,8 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 <https://responsivedesign.is/develop/getting-started-with-sass>
 
 * `@extend .email-container` will copy definitions from email container
+
+style guides
+
+* [collection of others](https://github.com/onishiweb/code-style)
+* [timharmann scss](https://github.com/timhartmann/Scss-Styleguide)

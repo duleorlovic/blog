@@ -119,6 +119,8 @@ as 3th param (options):
 * `include_blank: 'Please select'` this is shown always (even already have
 value)
 
+You should avoid saving without validation `save(validate: false)` or
+`update_attribute`.
 
 # Hooks
 
@@ -207,11 +209,15 @@ Write datetime in specific my_time format
 
 ~~~
 # config/initializers/mytime_formats.rb
+# all 3 classes
 # puts user.updated_at.to_s :myapp_time
 # puts Time.now.to_s :myapp_time
-# puts Date.today.to_time :myapp_time # Date object need to be type casted to Time
+# puts Date.today.to_time :myapp_time # Date need to be type casted to Time
 # puts Time.now.to_date :myapp_date # Time object to Date if we want myapp_date
+Time::DATE_FORMATS[:default] = "%d-%b-%Y %I:%M %p" # this is same as for
+# datepicker format = 'DD-MMM-YYYY h:mm A'
 Time::DATE_FORMATS[:at_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
+
 Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
 Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
 ~~~
@@ -223,6 +229,8 @@ need something from rails console, you need to set timezone manually.
 always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
 (`1.day.from_now`)
 
+* prefer using `Time.current` over `Time.now`, and `Date.current` over
+`Date.today`
 * to get weekday from `ActiveSupport::TimeWithZone` use
   [link](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html)
   `weekday = t.to_a[6]`
@@ -231,8 +239,6 @@ always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
   * get interval for previous month: `'Last Month':
   [Time.zone.today.prev_month.at_beginning_of_month,
   Time.zone.today.prev_month.at_end_of_month],`
-
-## Timezones
 
 Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
 tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
@@ -310,6 +316,18 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 
 # Database
 
+Show all databases in postgresql, first change user to postgres
+
+~~~
+sudo su - postgres
+~~~
+
+~~~
+\list
+\connect database_name
+\dt
+~~~
+
 ## Active record
 
 * union is not supported [issue 929](https://github.com/rails/rails/issues/939)
@@ -370,7 +388,21 @@ heroku pg:backups:capture # it will create b002.dump
 heroku pg:backups:download # it will download to latest.dump
 ~~~
 
-Save it for example `tmp/b001.dump` and import in database using this commands:
+Save it for example `tmp/b001.dump`.
+
+You can dump LOCAL database with `pg_dump`. Note that this is plain sql, but
+heroku dump is binary format (size is much smaller).
+
+~~~
+pg_dump $DATABASE_NAME > $DUMP_FILE
+#
+# or heroku style, replace: mypassword myuser and mydb
+# PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
+~~~
+
+## Restore database
+
+Restore from local textual and binary dump
 
 ~~~
 export DUMP_FILE=tmp/b001.dump
@@ -379,35 +411,27 @@ chmod a+r $DUMP_FILE
 
 rake db:drop db:create
 
+# textual dump
+psql $DATABASE_NAME < $DUMP_FILE
+
+# binary dump
 sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
 ~~~
 
 Or you can use [duleorlovic's load_dump
 helper](https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39)
 
-You can dump LOCAL database with `pg_dump`
 
-~~~
-pg_dump `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` > dump
-# pg_dump PlayCityServer_development > dump
-~~~
-
-Restore from local dump
-
-~~~
-rake db:drop
-rake db:create
-psql `rails runner 'puts  ActiveRecord::Base.configurations["development"]["database"]'` < dump
-~~~
-
-To restore on heroku you need to push the file somewhere on internet, for
-example AWS S3 and than run in console
+To restore on heroku you need to dump with same flags (dump is binary) and push
+the file somewhere on internet, for example AWS S3 and than run in console
 
 ~~~
 heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorlovic-test-us-east-1/b001.dump DATABASE_URL
 ~~~
 
-Upgrade heroku *hobby-dev* na **hobby-basic* ($9/month).
+## Heroku upgrade database plan
+
+Upgrade heroku *hobby-dev* na *hobby-basic* ($9/month max 10M rows).
 
 ~~~
 heroku addons:create heroku-postgresql:hobby-basic
@@ -428,6 +452,8 @@ heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
 # Starting copy of DATABASE to CHARCOAL... done
 # Copying... done
 ~~~
+
+Change DATABASE_URL
 
 ## Postgres tips
 
@@ -599,6 +625,8 @@ user.projects << project
 campaign:references template:references` and add `id: false` as
 [suggested](http://guides.rubyonrails.org/association_basics.html#updating-the-schema)
 Note that both model names are plural.
+But rubocop suggest to use separate model for habtm relation (in that case I use
+singular first model).
 
 ~~~
 class CreateCampaignsTemplates < ActiveRecord::Migration
@@ -642,8 +670,11 @@ add_foregn_key :donations, :users, column: :donor_id
 Also in model you need to write: `has_many :donations, foreign_key: :donor_id`
 and `belongs_to :donor, class_name: "User"`
 
+Note that `t.references` should be used with `foreign_key: true, null: false`
+since foreign_key is not automatically used (`t.references` automatically add
+`index`).
 Note that `t.belongs_to` by default use `index: false`, so you need to use
-`index: true` (or `add_index` later) But usually you use `add_foreign_key` that
+`index: true` (or `add_index` later). But usually you use `add_foreign_key` that
 will also add index (name will be like: `fk_rails_123123`) if it is not added by
 belongs_to, so you can safelly use `t.belongs_to ... index: false` if you are
 using `add_foregn_key`.
@@ -833,6 +864,22 @@ $(document).one('page:before-change',function() {
 </script>
 ~~~
 
+* disable turbolinks `document.body.setAttribute('data-no-turbolink','true')`
+* turbolinks are good if some of page content is changed using ajax.
+  Browser back button when turbolink is enabled shows last content
+  (not first that was fatched). When turbolinks is disabled, you can
+  force refreshing the page with set_cache_buster before filter.
+  Note that any input field stays populated (also hidden input field
+  which you eventually populated in javascript):
+
+  ~~~
+  def set_cache_buster
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+  ~~~
+
 # Seed
 
 If you want indempotent seeds data you should have some identifier (for example
@@ -853,17 +900,22 @@ Use `faker` gem to generate example strings:
 
 ~~~
 # db/seeds.rb
-# deterministic data
+# we keep all variables (defined as property var: :name) in global b hash
+# so you an access them later as `b[:name]`
+b = {}
+# rubocop:disable Rails/Output
+# JobType
 [
-  { name: "Admin/Office" }
+  { var: :my_job_type, name: 'Admin/Office' }
 ].each do |doc|
-  job_type = JobType.where(doc).first_or_create! do |job_type|
+  r = JobType.where(doc.except(:var)).first_or_create! do |job_type|
     # you do not need to call save! here
     # put common stuff here
     job_type.domain = 'my_domain'
     puts "JobType #{doc[:name]}"
   end
-end if Rails.env.development?
+  b[doc[:var]] = r if doc[:var]
+end
 
 # deterministic and random data
 1.upto(10).map do |i|
@@ -1036,7 +1088,10 @@ end
 
 # Sessions and share cookies on multiple subdomains
 
-If you use [sharing-cookies-across-subdomains-with-rails-3](http://makandracards.com/makandra/31381-sharing-cookies-across-subdomains-with-rails-3) or [what-does-rails-3-session-store-domain-all-really-do](http://stackoverflow.com/questions/4060333/what-does-rails-3-session-store-domain-all-really-do)
+If you use
+[sharing-cookies-across-subdomains-with-rails-3](http://makandracards.com/makandra/31381-sharing-cookies-across-subdomains-with-rails-3)
+or
+[what-does-rails-3-session-store-domain-all-really-do](http://stackoverflow.com/questions/4060333/what-does-rails-3-session-store-domain-all-really-do)
 
 ~~~
 # config/initializers/session_store.rb
@@ -1145,14 +1200,18 @@ or more complex with exception rescue.
 # app/services/my_service.rb
 class MyService
   class Result
-    attr_accessor :success, :message
-    def initialize(success, message)
-      @success = success
+    attr_reader :message
+    def initialize(message)
       @message = message
     end
-
     def success?
-      success
+      true
+    end
+  end
+
+  class Error < Result
+    def success?
+      false
     end
   end
 
@@ -1166,9 +1225,9 @@ class MyService
 
   def process(posts)
     success_message = do_something posts
-    Result.new true, success_message
+    Result.new success_message
   rescue ProcessException => e
-    Result.new false, e.message
+    Error.new e.message
   end
 
   private
@@ -1283,6 +1342,7 @@ end
 [DHH](https://signalvnoise.com/posts/3372-put-chubby-models-on-a-diet-with-concerns) and interesting is
 [trashable](https://github.com/discourse/discourse/blob/master/app/models/concerns/trashable.rb)
 [video](https://youtu.be/bHpVdOzrvkE?t=1640)
+[blog](http://www.monkeyandcrow.com/blog/reading_rails_concern/)
 
 ~~~
 module Someable
@@ -1290,7 +1350,8 @@ module Someable
 
   # access module variables @@my_module_variable or class variable
   # self.class.class_variable_get :@@someable_value
-  # you can define validations, assocications here
+  # you can define validations, callbacks and assocications here (before_ has_
+  * macros)
   included do
     has_many :something_else, as: :someable
     class_attribute :tag_limit
@@ -1320,7 +1381,7 @@ end
 
 We an use observable objects to send notifications [implementation in 3
 languages](http://www.diatomenterprises.com/observer-pattern-in-3-languages-ruby-c-and-elixir/)
-It could look like [action as a
+It could looks like [action as a
 distance](https://en.wikipedia.org/wiki/Action_at_a_distance_(computer_programming))
 antipattern but if we explicitly add than is it fine.
 
@@ -1457,18 +1518,6 @@ end
 You probably need to set up database user for production env.
 
 Also set `config.force_ssl = false` in *config/environments/production.rb*
-
-If you use canonical host you need to disable it `export
-DO_NOT_USE_CANONICAL_HOST=true` and remove eventual
-`config.action_controller.asset_host = asdasd`
-
-~~~
-RAILS_ENV=production rake db:create
-RAILS_ENV=production rake assets:precompile
-
-export RAILS_SERVE_STATIC_FILES=true
-rails s -b 0.0.0.0 -e production
-~~~
 
 # Get template name
 
@@ -1696,6 +1745,86 @@ File.open(File.join(Rails.root, 'public/my_image.png'))`. But if your storage is
 and uploaded to your aws bucket so better is to set `storage
 Rails.env.development? ? :file : :fog` and use first file.open method so it does
 not need to download file.
+
+# PDF
+
+## Wicked PDF
+
+<https://github.com/mileszs/wicked_pdf>
+
+## Prawn
+
+* if you need custom symbols in prawn than you need to use ttf fonts. Not all
+  contains every symbol. I downloaded from
+  [dejavu-fonts.org](http://dejavu-fonts.org/wiki/Download)
+
+  ~~~
+  # app/pdfs/common_pdf.rb
+  module CommonPdf
+    def h(amount)
+      ActionController::Base.helpers.humanized_money_with_symbol amount
+    end
+
+    def set_up_common_font
+      # http://dejavu-fonts.org/wiki/Download
+      font_families.update(
+        "DejaVu Sans" => {
+          normal: "#{Rails.root}/lib/DejaVuSans.ttf",
+          bold: "#{Rails.root}/lib/DejaVuSans-Bold.ttf",
+        }
+      )
+      font "DejaVu Sans"
+    end
+  end
+
+  # app/pdfs/my.pdf.rb
+  class MyPdf < Prawn::Document
+    include CommonPdf
+    set_up_common_font
+    text h 10
+  end
+  ~~~
+
+# Style guide
+
+[toughtbot style
+guide](https://github.com/thoughtbot/guides/tree/master/best-practices)
+
+* do not reference model class directly from a view (how to render counts than
+?)
+* do not use SQL outside of models
+* use `touch: true` on `belongs_to` associations
+* use `ENV.fetch` instead of `ENV[]` so it raises exception when env variable
+does not exists
+
+My style
+
+* in rails models use following order: associations-relations, enums,
+validations, callbacks declarations, scopes, method for scopes,
+class methods, instance methods, callbacks definitions
+
+# Geocoder
+
+If you need to search with association, for example [User has many
+locations](https://stackoverflow.com/questions/14188568/using-geocoder-on-a-child-association-how-to-find-all-parents-in-a-given-locati)
+you can with joins to geocoded model on which `near` is defined.
+
+~~~
+near = Location.near('Paris, France')
+users = User.joins(:locations).merge(near)
+~~~
+
+also if you need to get associated objects you can (location has many views)
+
+~~~
+near = Location.near([latitude, longitude], MAX_USER_DISTANCE_MILES)
+views.
+  joins(:location).
+  select("views.*"). # somehow we need this so we got views, instead of users
+  merge(near).
+  includes(:sport). # so we can get sport.name without N+1
+  where(sport: sport) # conditional on view
+~~~
 
 # Tips
 
@@ -1990,46 +2119,6 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
   so check if return value could be false and make sure before filters (like
   before_create) always return not false value (you can return true or nil).
 
-# PDF
-
-## Wicked PDF
-
-<https://github.com/mileszs/wicked_pdf>
-
-## Prawn
-
-* if you need custom symbols in prawn than you need to use ttf fonts. Not all
-  contains every symbol. I downloaded from
-  [dejavu-fonts.org](http://dejavu-fonts.org/wiki/Download)
-
-  ~~~
-  # app/pdfs/common_pdf.rb
-  module CommonPdf
-    def h(amount)
-      ActionController::Base.helpers.humanized_money_with_symbol amount
-    end
-
-    def set_up_common_font
-      # http://dejavu-fonts.org/wiki/Download
-      font_families.update(
-        "DejaVu Sans" => {
-          normal: "#{Rails.root}/lib/DejaVuSans.ttf",
-          bold: "#{Rails.root}/lib/DejaVuSans-Bold.ttf",
-        }
-      )
-      font "DejaVu Sans"
-    end
-  end
-
-  # app/pdfs/my.pdf.rb
-  class MyPdf < Prawn::Document
-    include CommonPdf
-    set_up_common_font
-    text h 10
-  end
-  ~~~
-
-# Tips
 
 * to start new project from specific rails, run `rails _4.2.7.1_ new myapp` .
   `gem list | grep rails` can show you installed versions
@@ -2155,16 +2244,37 @@ And if you use jQuery data method than you do not need to use JSON.parse.
 but if you want that recursively for nested hashes as well you can use
 `params[:some_pararam].deep_symbolize_keys`
 
-* memoization is nice if you have network calls
+* memoization is nice if you have network calls or sql calls. If the value is
+falsy `nil` or `false` than you should not use `||=` since it will have affect
+as `=`. You should check if instance variable is defined. You can also use
+`begin` `end` for multiline definition
 
 ~~~
 class User < ActiveRecord::Base
-  def twitter_followers
-    # assuming twitter_user.followers makes a network call
-    @twitter_followers ||= twitter_user.followers
+def main_address
+   return @main_address if defined? @main_address
+    @main_address = begin
+      main_address = home_address if prefers_home_address?
+      main_address ||= work_address
+      main_address ||= addresses.first # some semi-sensible default
+    end
   end
 end
 ~~~
 
+* read raw column value before typecast
+`task.read_attribute_before_type_cast('completed_on')`
+
+* chechbox change can activate ajax call, just define requect src and method
+Usefull inside form if you want to show validation errors before actual submit,
+or outside of foem if you want to submit change without form (no need to click
+on submit button). I do not know how to send value...
+
+~~~
+  <%= f.check_box :renew, data: { url: customer_path(@customer), remote: true, method: :patch } %>
+  <%= check_box_tag name, value, checked, data: { url: toggle_todo_path(todo), remote: true } %>
+~~~
+
 * single file rails application in one file
 <https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/>
+

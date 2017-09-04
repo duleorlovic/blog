@@ -400,6 +400,19 @@ class MyFormBuilder < BootstrapForm::FormBuilder
     end
   end
 
+  # this will overwrite all f.submit form helpers. data-disable-with does not
+  # work well when responding with csv so there you should explicitly disable:
+  # <%= f.submit "Generate CSV", 'data-disable-with': nil %>
+  def submit(name, options = {})
+    options.reverse_merge! 'data-disable-with': "<i class='fa fa-spinner fa-spin'></i> #{name}"
+    hidden_field_tag(:commit, name) +
+      button(name, options)
+  end
+
+  def single_image_upload(method, options = {})
+    
+  end
+
   private
 
   def form_group_builder_without_group(method, options, html_options = nil)

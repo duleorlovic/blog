@@ -1,0 +1,8 @@
+---
+layout: post
+---
+
+Test numbers `4242424242424242` or some of declined cards:
+  * incorrect_number `424242424242424241`
+
+<https://github.com/andrewculver/koudoku>

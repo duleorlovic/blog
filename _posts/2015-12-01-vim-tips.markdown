@@ -19,6 +19,10 @@ Use vim help, with:
 * `:help i_^i` what ctrl+i do in insert mode
 * `:help c_^i` what ctrl+i do in command mode
 
+Some keys:
+* `<c-o>` is ctrl-o , take to normal mode
+* `<s-o>` (i don't know)
+
 Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
 
 * You can press `<Enter>` anywhere inside line
@@ -223,13 +227,18 @@ you need to exit current visual area and than jump to first or last line/char
 # Copy paste
 
 * `"+y` copy visual selection to system clipboard, ubuntu should run `sudo
-  apt-get install vim-gtk`. You can select which register to use with `"add`
-  `"ap"`
+apt-get install vim-gtk`.
+* select which register to use with (use character not number) for example:
+yank link to register `a` and paste: `"add` `"ap"`
 * `%y+` copy all lines to clipboard
 * to move a line to buffer on the left you can record macro (something like
 `yy ^wh p ^wl`)
-* to paste with proper indend use [vim-unimpaired](https://github.com/tpope/vim-unimpaired) `]p`
-
+* to paste with proper indend use [vim-unimpaired](https://github.com/tpope/vim-unimpaired) `]p` , also from plugin `:help unimpaired`
+* `[l` `]l` errors
+* `]b` buffers
+* `]q` search Quick fix
+others are in `:help unimpaired-next`
+To close error window you need to `:lcl`
 
 # Exploring
 
@@ -255,6 +264,7 @@ Inside netrw:
 
 * to change current directory to selected folder, type in normal mode `cd`. It
 will change directory only in current buffer.
+* refresh with `r` (selected dir) or `R` (all)
 
 # Searching
 
@@ -331,6 +341,9 @@ dates
   very usefull when explaining to someone
 * snippet `nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a` [my
 snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
+* `K` in normal mode opens documentation for that keyword, for example
+`image_tag` or `select` will open documentation for all gems which defines that
+keyword
 
 # Books, videos tutorials
 
@@ -377,33 +390,36 @@ let g:syntastic_<filetype>_checkers = ['<checker-name>']
 let g:syntastic_<filetype>_<checker>_args = "--my --args --here"
 ~~~
 
-You can jump to next error or warning with `:lnext` or `:lpr` or using
-[vim-unimpaired](https://github.com/tpope/vim-unimpaired) `[l` `]l` (other
-shortcuts are `]b` (buffers) `]q` (search). To close error window you need to
-`:lcl`. Find all commands `:help unimpaired`
+You can jump to next error or warning with `:lnext` or `:lpr` or using `[l` `]l`
 
 Here is my configuration for syntastic and vim
 <https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim>
 You need to install this tools:
 
 * Markdown `gem install mdl`
-* Ruby, Rails `gem install rubocop`. To define quiet messges you can write in
+* Ruby, Rails `gem install rubocop`. You can automatically fix some errors with
+`rubocop --auto-correct Gemfile`
   * [.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
-    in $HOME or project root. To disable all write `.rubocop.yml`:
+  in $HOME or project root. You can disable `AllCops` or specific file paths,
+  for example BlockLength for rspec files
 
   ~~~
-  AllCops:
+  Metrics/BlockLength:
     Exclude:
-      - '**/*'
+      - "**/*_spec.rb"
   ~~~
 
-  * inline in comment `# rubocop:disable Metrics/AbcSize,
-    Metrics/MethodLength`
-  * define in `syntastic.vim`
-    [g:syntastic_eruby_ruby_quiet_message](https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21)
-  * fix `possibly useless use of a constant in void context` in erb is with
-  `<%= CONST.to_s %>`, when is problem with + than fix with assign `<%= total =
-  a + b; total %>`
+  * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
+  * gem 'rubocop-rspec' is nice linter for rspec.
+  You can run manually with `-D` param to see cop names.
+
+
+To disable some errors define quiet messages in `syntastic.vim` (`:help
+syntastic_quiet_messages`)
+  [g:syntastic_eruby_ruby_quiet_message](https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21)
+* fix `possibly useless use of a constant in void context` in erb is with
+`<%= CONST.to_s %>`, when is problem with + than fix with assign `<%= total =
+a + b; total %>`
 
 * Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
 * json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)
@@ -471,13 +487,16 @@ required`. Also problem with `:Eview another_`
 
 When looking at large files in small window (I have 4 vim windows in my single
 terminal window) than I want to see to which block current line belongs.
+In schema.rb, current line in which table ?
 
 ~~~
 ActiveRecord::Schema.define(version: 20170124131420) do
   create_table "projects", force: :cascade do |t|
     ... long ...
-    t,integer title
+    t.integer title
 ~~~
+
+In ability.rb, current ability to which user ?
 
 When I'm in long spec file, I want to see setup block for current example and
 all outer example groups (maybe to group all descriptions in one sentence).
@@ -500,3 +519,10 @@ classes and media queries.
 # Graph visualization in markdown
 
 <https://markvis-editor.js.org/>
+
+# Debug profile startup time
+
+* if vim does not show properly, blank or empty screen, try `:redraw!`
+<https://github.com/bchretien/vim-profiler>
+
+

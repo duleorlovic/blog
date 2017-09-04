@@ -39,6 +39,7 @@ HERE_DOC
 
 rails new myapp
 cd myapp
+rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ~~~
 
@@ -64,6 +65,9 @@ git commit -am "Update .gitignore"
 ~~~
 
 # Gemfile development & production tools
+
+Some of the gems could be found on [thoughtbot
+suspenders](https://github.com/thoughtbot/suspenders)
 
 ~~~
 rubocop --auto-correct # to correct some files if LineLength max is 115
@@ -298,13 +302,13 @@ development: &default
   smtp_password: <%= ENV["SMTP_PASSWORD"] %>
 
   # for all outgoing emails
-  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
+  mailer_sender: <%= ENV["mailer_sender"] || "My Company <support@example.com>" %>
 
   # default_url is required for links in email body or in links in controller
   # when url host is not available (for example rails console)
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
-    port: <%= ENV["DEFAULT_URL_PORT"] || Rails::Server.new.options[:Port] %>
+    port: <%= ENV["DEFAULT_URL_PORT"] || Rack::Server.new.options[:Port] %>
 
 test: *default
 production:
@@ -328,16 +332,19 @@ Change default from address:
 
 ~~~
 sed -i app/mailers/application_mailer.rb -e '/default/c \
-  default from: Rails.application.secrets.default_mailer_sender'
+  default from: Rails.application.secrets.mailer_sender'
 ~~~
 
 Set default url option, that is domain for `root_url`:
 
 ~~~
 #sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb
-# if you need to get from rails use { port: Rails::Server.new.options[:Port] }
+
+# if you need to get from rails 4 use { port: Rails::Server.new.options[:Port] }
 # in config/environments/development.rb and also include
 # require 'rails/commands/server` on the top of the file
+
+# for rails 5 you can use Rack::Server.new.options[:Port] and no need to require
 
 sed -i config/application.rb -e '/^  end$/i \
     # for link urls in emails\
@@ -354,7 +361,7 @@ you need to set default sender:
 ~~~
 # devise
 sed -i config/initializers/devise.rb -e '/mailer_sender/c \
-  config.mailer_sender = Rails.application.secrets.default_mailer_sender'
+  config.mailer_sender = Rails.application.secrets.mailer_sender'
 ~~~
 
 For local development use Letter opener:
@@ -425,11 +432,9 @@ sed -i '/companies/a \  root "companies#index"' config/routes.rb
 rake db:migrate && git add . && git commit -m "rails g scaffold company name:string user:references"
 ~~~
 
-# Production Heroku deploy
+# Puma
 
-Since you need to run separate command for background jobs, you need to write
-`Procfile`. By default heroku will run with WEBRICK, so it is advisable to use
-puma.
+Puma is now default webserver on rails.
 You can follow [heroku article](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server)
 
 ~~~
@@ -444,7 +449,7 @@ HERE_DOC
 
 cat >> config/puma.rb <<HERE_DOC
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
-threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
+threads_count = Integer(ENV['MAX_THREADS'] || 5)
 threads threads_count, threads_count
 
 preload_app!
@@ -461,8 +466,13 @@ end
 HERE_DOC
 ~~~
 
+# Production Heroku deploy
+
+If you need to run separate command for background jobs, you need to write
+`Procfile`.
+
 ~~~
-export MYAPP_NAME=air
+export MYAPP_NAME=my-app # only dash, not underscore
 # # postgresql on production
 # sed -i Gemfile -e "/gem 'sqlite3/c \
 # gem 'pg'"
@@ -473,21 +483,33 @@ export MYAPP_NAME=air
 #
 # rails in production use: production: url: <%= ENV['DATABASE_URL'] %>
 
-echo '
+cat >> Gemfile << HERE_DOC
 # heroku uses this 12 factor gem
-gem "rails_12factor", group: :production
-' >> Gemfile
+gem 'rails_12factor', group: :production
+HERE_DOC
 bundle
+git commit -am "Heroku uses 12factor gem"
 
-git commit -am "Heroku uses pg and 12factor gem"
 heroku apps:create $MYAPP_NAME
-heroku addons:create heroku-postgresql:hobby-dev
+heroku addons:create heroku-postgresql:hobby-dev # this will set DATABASE_URL
 git push heroku master --set-upstream
+
 # if you receive an error An error occurred while installing Ruby ruby-2.2.4
 # just try again
-git push heroku master --set-upstream
+
+heroku run rake db:migrate db:seed
+# if you have problem with DETAIL:  User does not have CONNECT privilege.
+# https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps try
+# heroku pg:reset DATABASE_URL --confirm $MYAPP_NAME
+# heroku restart
+
+# sometimes you need to recompile assets when you change secrets but assets are
+# not changed, and you need to purge cache, install plugin
+# https://github.com/heroku/heroku-repo
+# heroku plugins:install heroku-repo
+# heroku repo:purge_cache
+
 heroku open
-heroku run rake db:setup
 ~~~
 
 On heroku add *Papertrail* add-on and go to the
@@ -499,6 +521,21 @@ For custom domain just add on settings your domain name and create CNAME record
 for `www` with value `myapp.herokuapp.com`. If you need to match all subdomains,
 you can put *Domain Name* `*.kontakt.in.rs` and CNAME record for `*` with same
 value `myapp.herokuapp.com`.
+
+## Heroku dyno puma settings
+
+<https://youtu.be/itbExaPqNAE>
+Things in system = arrival rate X time spent in system
+requests in system = requests per second X average response time
+utilization = average requests in system / how many workers
+for example = 115 req/s X 147ms response / 45 workers = 37%
+Use 3 WEB_CONCURRENCY workers and 3-5 MAX_THREADS (not more since each thread
+need connection to database, and use some on memory).
+
+https://devcenter.heroku.com/articles/scaling#autoscaling
+
+Also increase database, redis and memcached connections.
+Heroku postgresql hobby-basic has limit of 20 connections (enought for 3x5=15)
 
 # Google app engine
 

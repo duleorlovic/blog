@@ -6,7 +6,8 @@ tags: angular devise oauth
 
 # Devise
 
-Basic example application with [Devise](https://github.com/plataformatec/devise) default signup/login views.
+Basic example application with [Devise](https://github.com/plataformatec/devise)
+default signup/login views.
 
 ~~~
 echo "gem 'devise'" >> Gemfile
@@ -37,12 +38,17 @@ redirect to `/users/sign_in`. You need to [set up
 emails]({{ site.baseurl }}{% post_url 2015-04-05-common-rails-bootstrap-snippets %})
 to actually receive registration email.
 
+If you enable `lockable` than user will be locked when number of failed login
+attempts reaches 20. You can send internal notification when that happens by
+overriding devise mailer and method `def unlock_instructions(record, token,
+opts={})`
 
 # Devise and Omniauth
 
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
 add facebook and google authentication. It's easy installation.
-For facebook we use [omniauth-facebook](https://github.com/mkdynamic/omniauth-facebook)
+For facebook we use
+[omniauth-facebook](https://github.com/mkdynamic/omniauth-facebook)
 and excellent [rails casts #360](https://www.youtube.com/watch?v=E_XACDrZSiI)
 
 ~~~
@@ -78,11 +84,16 @@ sed -i config/secrets.yml -e '/^test:/i \
 '
 ~~~
 
-Customization:
+If you need to send some params to callback (for example current user, or some
+other state) you can do it and access using `params['omniauth.params']` env
+field.  There are also: `["omniauth.strategy", "omniauth.origin",
+"omniauth.params", "omniauth.auth"]`. `omniauth.origin` is usefull to redirect
+back to the page on which he logs in.
 
 ~~~
 sed -i app/views/layouts/application.html.erb -e '/<body>/a \
-<%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>'
+<%= link_to "Sign in with Facebook",
+user_facebook_omniauth_authorize_path(my_param: 1) %>'
 
 sed -i app/models/user.rb -e '/end/i \
 \
@@ -106,7 +117,7 @@ sed -i app/models/user.rb -e '/end/i \
   end'
 
 vi app/models/user.rb # add :omniauthable
-# no need for , :omniauth_providers => [:facebook]
+# no need for , :omniauth_providers => [:facebook], but :omniauthable is needed
 
 sed -i config/routes.rb -e '/devise_for/c \
   devise_for :users,\
@@ -120,6 +131,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # data is in request.env["omniauth.auth"]
   [:facebook, :google_oauth2, :twitter].each do |provider| # yaho_oauth2
     define_method provider do
+      # use request.env["omniauth.params"]["my_param"]
       @user = User.from_omniauth(request.env["omniauth.auth"])
 
       if @user.persisted?
@@ -131,6 +143,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to new_user_registration_url
       end
     end
+  end
+  def failure
+    redirect_to root_path, alert: "Can't sign in. #{request.env['omniauth.error'].try(:message)} #{request.env['omniauth.error.type']}"
   end
 end
 HERE_DOC
@@ -152,6 +167,10 @@ Note this situations:
 
 # Facebook app
 
+Is you use `omniauth-facebook` alone than there are problems with devise (it
+double redirect and raise csrf exception). So do not use with devise, or
+configure devise to use facebook auth.
+
 1. Create app on [developers.facebook.com](http://developers.facebook.com). By
    default fb app is in development mode and can only be used by app admins,
    developers and testers. Add Contact Email if not already there on
@@ -171,12 +190,17 @@ Note this situations:
    just domain (`/omniauth/facebook/callback` is not needed)
    Note that this are server url (not frontend url):
 
-   * `http://localhost.dev:3003`,
+   * `http://localhost.dev:3003`
    * `http://localhost:9000` and for https also
    * `https://localhost.dev:3003`
 
 Changes are visible immediatelly.
 More on blog facebook share buttons.
+
+Notes:
+
+* no need to check if email is verified, since facebook will not allow
+unverified accounts to use oauth
 
 ## Koala gem
 
@@ -195,6 +219,61 @@ Koala.configure do |config|
 end
 HERE_DOC
 ~~~
+
+~~~
+# app/models/user.rb
+  def fb
+    @fb ||= Koala::Facebook::API.new(oauth_token)
+    block_given? ? yield(@fb) : @fb
+  rescue Koala::Facebook::APIError => e
+    logger.info e.to_s
+    nil # or consider a custom null object
+  end
+~~~
+
+You can `get_object id, fields`
+* first param is `id`
+* second param is `fields: ['message', 'link']`. You can also put inside first
+param `get_object "me?fields=link"` (copy from graph api explorer). `id` field
+is always returned. You can use edges here also.
+If some field is object than `"data"` object is returned. You can access those
+nested fields with curly braces `me?fields=picture{url},birthday`
+
+There exists also: `get_connections` or `put_connections`.
+
+Order can be `chronological` or `reverse_chronological` for example
+`some-picture-id?fields=comments.order(reverse_chronological)`
+
+Limit for each field `me?fields=albums.limit(5)`
+
+There are user access token, page access token. To get page access token you can
+navigate to `me/accounts` (with `manage_page` permission).
+You can extend short lived access token to long lived on
+<https://developers.facebook.com/tools/debug/accesstoken>
+<https://developers.facebook.com/docs/facebook-login/access-tokens>
+
+`me?metadata=1` will return all fields and connections
+
+`me?debug=all` will add `__debu__` field
+
+`user.fb.get_connection("me", "permissions")` to get a list of all
+permissions that are granted to this token
+  * `user_posts` to see all posts.
+  [post](https://developers.facebook.com/docs/graph-api/reference/v2.10/post) is
+  entry in profile's feed. Feed can be user, page, app or group.
+  Post has fields: story, message, created_time, id (id has format
+  `userid_postid`) and edges: likes, comments, insights, attachments
+  * `publish_actions` to be able to create or update or delete a post
+  * `publish_pages` when deleting page's post with page access token
+
+Interesting nodes:
+
+* `/me/accounts` to get page access tokens
+* `/page-id?fields=insights.metric(page_impressions)` and
+`/page-id/posts?fields=insights.metric(post_impressions,post_consumptions_unique)`
+get page and page posts insights [available
+metrics](https://developers.facebook.com/docs/graph-api/reference/v2.10/insights#availmetrics)
+
 
 I received error notification
 
@@ -857,6 +936,104 @@ angular.module 'starter'
 
 ~~~
 
+## Rails oauth provider doorkeeper
+
+[doorkeeper](https://github.com/doorkeeper-gem/doorkeeper) is rails engine that
+provides oauth 2 auth [railscasts #353](http://railscasts.com/episodes/353-oauth-with-doorkeeper)
+
+~~~
+cat >> Gemfile <<HERE_DOC
+# oauth provider
+gem 'doorkeeper', '~> 4.2.6'
+HERE_DOC
+rails g doorkeeper:install
+rails g doorkeeper:migration
+~~~
+
+Migration will generate three tables:
+
+* oauth_applications - store secret and redirect_uri
+* oauth_access_grants - tokens for each user and application
+* oauth_access_tokens - token, refresh_token
+
+You can list all routes with: `rails routes -g oauth`, for example:
+`/oauth/authorize`.
+First you need to set up one oauth application on `/oauth/applications` to get
+`client_id` and `client_secret`.
+
+There are 4 ways to use [oauth grant types](https://aaronparecki.com/oauth-2-simplified):
+* authorization_code: web server, browser based and mobile apps
+* password
+* client_credentials
+* imlicit: superceded by authorization code with no secret
+
+authorization_code is for web server where you navigate user to
+https://oauth2server.com/auth? with params:
+* response_type=code - give me auth_code
+* client_id=CLIENT_ID - client_id when you created application on oauth server
+* redirect_uri=REDIRECT_URI - where to redirect after authorization is complete
+* scope=photos - one or more scope values indicating which part of account you
+wish to access
+* state=1234zyx - random string which you will verify later
+
+When user allow access, oauth server redirects back with AUTH CODE
+https://oauth2client.com/cb?
+* code=AUTH_CODE_HERE - auth code is in query string
+* state=1234zyx - returns state that you passed
+
+Than your server exchange AUTH_CODE with token using `client_secret`
+POST https://api.oauth2server.com/token
+* grant_type=authorization_code - grant type for this flow is authorization_code
+* code=AUTH_CODE_HERE - code that you received in query string
+* redirect_uri=REDIRECT_URI - must be identical to REDIRECT_URI in first link
+* client_id=CLIENT_ID - client_id when you created application on oauth server
+* client_secret=CLIENT_SECRET - since this request is from server-side we
+include secret
+
+and oauth server replies with `access_token` and `expires_in` values.
+
+Browser based apps (single page apps) and mobile apps are exchanging AUTH_CODE
+with token without sending `client_secret` (since we cannot maintain the
+confidentiality of secret), In this case token expires after 2 hours.
+
+Password flow is used when your app owns oauth provider, since user is sending
+username and password to get token.
+POST https://api.oauth2server.com/token
+* grant_type=password - grant type for this flow is password
+* username=USERNAME - username as collected by the app
+* password=PASSWORD - password as collected by the app
+* client_id=CLIENT_ID - client_id when you created application on oauth server
+
+Server replies with `access_token`.
+
+client_credentials is usually for apps (not for users) to update their info
+(like icon, statistics...) outside of the context of any user. Post request with
+POST https://api.oauth2server.com/token
+* grant_type=client_credentials - grant type for this flow is client_credentials
+* client_id=CLIENT_ID - client_id when you created application on oauth server
+* client_secret=CLIENT_SECRET - this secret is only for application data (not
+user) so we can store it on webapp or mobile app
+
+To make authenticated request using header: `curl -H "Authorization: Bearer
+RsT5OjbzRn430zqMLgV3Ia" https://api.oauth2server.com/1/me`
+
+Some provider opensource exaples:
+<https://github.com/doorkeeper-gem/doorkeeper/wiki/Example-Applications>
+
+To test provider you can use [oauth2 client](https://github.com/intridea/oauth2)
+to generate `access_token`
+
+~~~
+gem install oauth2
+irb -r oauth2
+client_id = ''
+client_secret = ''
+redirect_uri = ''
+client = OAuth2::Client.new(client_id, client_secret, site: 'https://localhost:3000')
+
+client.auth_code.authorize_url redirect_uri: redirect_url
+
+~~~
 
 # Resend confirmation email on login
 
@@ -1011,6 +1188,8 @@ files and create that login helper.
 And you can use in your acceptance tests `login_as user` where `user =
 User.create email: 'asd@.asd.asd', password: 'asdasd'`
 
+
+
 # HTTP Basic auth
 
 You can use basic http auth but you should `config.force_ssl = true` for
@@ -1033,3 +1212,42 @@ module Admin
   end
 end
 ~~~
+
+# Sorcery
+
+<https://github.com/Sorcery/sorcery>
+
+# Oauth specification
+
+<https://tools.ietf.org/html/rfc6749>
+
+> Instead of using the resource owner's credentials to access protected
+> resources, the client obtains an access token -- a string denoting a specific
+> scope, lifetime, and other access attributes.  Access tokens are issued to
+> third-party clients by an authorization server with the approval of the
+> resource owner.
+
+Roles:
+* resource owner (end-user) capable of granting access to protected resource
+* client (web or server app) application that make protected resource requests
+* resource server: capable of responding to requests using access token
+on behalf of the resource owner and with its authorization
+* authorization server: server issuing access tokens after successfully
+authenticating the resource owner, and obtaining authorization
+
+Flow:
+* client gets authorization grant from resource owner, than using that grant get
+access token, and using that token get protected resource
+
+4 Grant types:
+* authorization code
+* implicit
+* resource owner password credentials
+* client credentials
+<https://tools.ietf.org/html/rfc6749#section-1.3.1>
+
+1. Authorization code is obtained by using authorization server as an
+   intermediary between the client and resource owner. Client directs resource
+   owner to authorization server (because this is direct, resource owner
+   credentials are never shared with a client) and back to the client with
+   authorization code.

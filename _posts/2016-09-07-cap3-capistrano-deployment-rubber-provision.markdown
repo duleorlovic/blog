@@ -651,8 +651,10 @@ Host key verification failed.
 
 Than just remove the key from known_hosts and it will resume without errors.
 
-To add secrets you can write them in a `keys.sh` file and source from
-`~/.bashrc` before return if not interactivelly.
+To add env secrets you can write them in a `keys.sh` file and source from
+`~/.bashrc` before return if not interactivelly. If you are using rubber than
+use system wide bash for example `/etc/profile` and put keys for example
+`/root/keys.sh`.
 
 ~~~
 # keys.sh

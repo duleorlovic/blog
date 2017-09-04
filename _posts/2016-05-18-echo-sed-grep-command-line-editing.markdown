@@ -153,7 +153,8 @@ Just a few command line options with grep
   * `find . -name *.yml -exec grep asd {} \;`
 * if you want to output only matching group than it is better to use `sed`
   * `sed -n 's/^.*[^0-9]\([0-9][0-9]*\).*/\1/p'` get only numbers
-  * `echo "asd123" | sed -n 's/asd/***/p'` replace asd with ***
+  * `echo "asd123" | sed -n 's/asd/***/p'` replace asd with `***`
+* exclude mathing with `grep -v` that is invert match
 
 Regex:
 

@@ -28,7 +28,7 @@ controller `Api::V1::ExpensesController`
 
 # JSONAPI
 
-[jsonapi-resources or jr](https://github.com/cerebris/jsonapi-resources) give us
+[jsonapi-resources](https://github.com/cerebris/jsonapi-resources) give us
 implementation of JSONAPI
 
 ~~~
@@ -53,11 +53,55 @@ JSONAPI.configure do |config|
 end
 ~~~
 
-Each resource can be configured with:
+Each [resource](http://jsonapi-resources.com/v0.9/guide/resources.html) can be
+configured with:
 
-* `attributes`
+* `attributes` `attribute`
+  * computed fields can use `@model`
+* `fetchable_fields`
+* `self.updatable_fields` `self.creatable_fields`
 * `has_many`
 * `filters`, `filter`
+
+# Test and Documentation from rspec
+
+rspec_api_documentations/dsl and generate api docs `rake docs:generate` and
+`gnome-open docs/`:
+* `resource` synonim for describe
+* `get`, `post`, `patch`, `delete`
+  * you can validate `response_status` and `response_body` which is
+  `JSON.parse(response.body)`
+* `parameter` used to define params
+* `example_request` is the same as colling `example` (synonim for `it`) and
+`do_request`
+* `send :name` to get value of `name`
+* `no_doc`
+
+
+If you got [415 error](http://www.rubydoc.info/gems/jsonapi-resources/JSONAPI)
+than set header.
+If you got `is not a valid resource` code 101, than you mispelled `type` member
+on [resource object](http://jsonapi.org/format/#document-resource-objects).
+If you for `does not contain a key` code 109, than you need to add `:id` to both
+"data" and url and use different name, for example this is duplication for
+update resources:
+
+~~~
+  patch '/v1/organizations/:organization_id' do
+    let(:organization) { create :organization, name: 'My Organization' }
+    let(:organization_id) { organization.id }
+    parameter :id, 'Id of the organization.', required: true
+    let(:id) { organization.id }
+  end
+~~~
+
+HTTP codes are standard (200 get, 201 created, 204 deleted).
+
+You can debug with:
+
+~~~
+tail -f log/test.log
+~~~
 
 # Postman
 
@@ -121,7 +165,7 @@ Success:
 * *200 OK* (for GET)
 * *201 Created* successful POST, login
 * *202 Accepted* Accepted but is being processed async
-* *204 No Content* `:no_content` success update or delete, log out, sign out
+* *204 No Content* `:no_content` success delete, log out, sign out
 
 For errors we could respond with `head :not_found` (and hide sensitive
 information) but its better to send the reason and some info:
@@ -363,6 +407,10 @@ module MyappExceptions
   end
 end
 ~~~
+
+# Guide
+
+<https://github.com/interagent/http-api-design>
 
 # JWT Json web tokens
 

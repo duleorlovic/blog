@@ -195,12 +195,13 @@ has example. Use small zone for far distances so percentage is same.
 
 * set A is full zone pixels
 * set B is Min/Max pixel Threshold: difference in color from previous
-  * also Min/Max alarmed Area: check if set B is at least/most of set A in %
+  * *Min/Max Alarmed Area*: check if set B is at least/most of set A in %
+  I used max 50% since a car is less than that.
 * set C is Filter Width/Height: check if 3x3 surround pixels (from set B) is
 also different in colors
-  * also Min/Max Filtered Area: check if C cover min/max of set A in %
-* set D is Min/Max blobs: number of blobs
-  * also Min/Max Blob area: check if cover at least/most of set A in %
+  * *Min/Max Filtered Area*: check if C cover min/max of set A in %
+* set D is *Min/Max Blobs*: number of blobs
+  * *Min/Max Blob area*: check if cover at least/most of set A in %
 
 To eliminate sun shadow, you can lower the *Max Alarmed Area* (50%) and use
 *Overload Frame Ignore Count* to ignore next 3 frames in that case of overload.
@@ -208,11 +209,18 @@ To eliminate sun shadow, you can lower the *Max Alarmed Area* (50%) and use
 To eliminate camera glitches, you can set in tab Source -> Monitor -> Buffers ->
 Alarm Frame Count to 2.
 
+To eliminate false alarm when half of the image is triggered than use *Max
+Alarmed Area* to 50% or less.
+
+Also you can set Preclusive zone so if sun or ir light triggers alarm on
+preclusive zone it will disable alarm in active zone.
+
 Also you are using old camera in snapshot mode, zoneminder is pulling for new
 images, you should limit Analysis FPS, Maximum FPS, and Alarm Maximum FPS in
 Source -> Monitor -> General tab
 
-You can see stats by clicking Frames -> last column is Score (on stills you can see only score on hover). For example:
+You can see stats by clicking Frames -> last column is Score (on stills you can
+see only score on hover). For example:
 
 |Zone|Pixel Diff|Alarm Px|Filter Px|Blob Px|Blobs|Blob Sizes|Alarm Limits|Score|
 |All|67|437 (5%)|97629 (5%)|96123 (5%)|1|96123 (5%)|813,0-1306,269|5|

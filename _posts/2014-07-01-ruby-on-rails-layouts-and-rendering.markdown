@@ -48,16 +48,6 @@ fingerprint, minification and precompilation of sass and coffeescript. That
 features are not used in development mode, but you can see it when you run in
 production environment.
 
-You need to enable `config.serve_static_assets` in
-*config/environments.production.rb* or use `RAILS_SERVE_STATIC_FILES=true`. If
-it is needed add `secret_key_base` in *config/secrets.yml*.
-
-{% highlight ruby %}
-RAILS_ENV=production rake assets:precompile
-RAILS_ENV=production rake db:setup
-RAILS_SERVE_STATIC_FILES=true rails s -e production
-{% endhighlight %}
-
 [Rails Asset Pipeline](http://guides.rubyonrails.org/asset_pipeline.html) hides
 (ignores) the first subfolder, for example *app/assets/javascrips/posts.js* will
 be overwritten by *app/assets/custom/posts.js* and served as *assets/posts.js*
@@ -96,6 +86,70 @@ All non js or css files are included automatically (images, text, pdf) along
 with applications.js and application.css by the default matcher for compiling:
 
     [ Proc.new { |path, fn| fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path)) }, /application.(css|js)$/ ]
+
+
+If you use canonical host you need to disable it `export
+DO_NOT_USE_CANONICAL_HOST=true` and remove eventual
+`config.action_controller.asset_host = asdasd`
+
+# Compile in production mode and Heroku
+
+~~~
+RAILS_ENV=production rake db:create
+RAILS_ENV=production rake assets:precompile
+
+export RAILS_SERVE_STATIC_FILES=true
+rails s -b 0.0.0.0 -e production
+~~~
+
+[One
+issue](https://devcenter.heroku.com/articles/rails-4-asset-pipeline#known-issues)
+with assets precompile is when you use erb in coffee and + secret. If
+you change secrets without touching javascript files, something old from tmp
+cache will be used. So always change js files when you change secrets, for
+example `echo " " >> app/assets/javascripts/a.coffee`.
+Similar dependcies could be for stylesheets scss + other asset, and you can use
+`depend_on_asset`
+
+~~~
+# config/secrets.yml
+a: <%= ENV["A"] || 'a' %>
+
+# app/assets/javascript/a.coffee
+a = '<%= Rails.application.secrets.a %>'
+
+# app/assets/stylesheets/common.scss
+.logo {
+  background-image:url('<%= asset_path("logo.png") %> ');
+}
+
+rake assets:precompile
+export A=b
+mv logo2.png app/assets/images/logo.png
+rake assets:precompile
+cat public/assets/*
+~~~
+
+For Heroku you can check assets
+
+~~~
+heroku run bash
+ls public/assets
+~~~
+
+in console you can see exact file name that rails believes it should serve
+
+~~~
+heroku run rails console
+puts helper.asset_path("application.js")
+~~~
+
+Sometimes on heroku still need to purge 50MB tmp cache
+
+~~~
+heroku plugins:install heroku-repo
+heroku repo:purge_cache
+~~~
 
 # Scss
 

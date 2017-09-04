@@ -33,6 +33,9 @@ function d {
 alias dim=d
 ~~~
 
+there is [f.lux](https://justgetflux.com/) software that can automate screen
+brighthness.
+
 * webcam does not work on chrome but works in firefox
 
 ~~~
@@ -67,6 +70,7 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 
 # Chrome chromium
 
+* take screenshot with `Ctrl + Shift + p` and search screenshot
 * [chrome scrambled](https://code.google.com/p/chromium/issues/detail?id=375957)
   can be solved with `sudo amdconfig --initial`
 * chrome flickers on resize
@@ -76,7 +80,11 @@ settings as *CM108 Audio Controller* than you need to comment out last line
   `--disable-gpu` in `/usr/share/applications/chromium-browser.desktop`). I try
   to disable only composition `--blacklist-accelerated-compositing` but still is
   enabled. Check that features is software only on <chrome://gpu/>.
-* you can open extension by going to `chrome://apps/`
+* you can open extension by going to <chrome://apps>
+* enable some flags on <chrome://flags>
+  * for example sound icon
+* dns or other network <chrome://net-internals>
+* T-rex game <chrome://network-error/-106>
 
 ## Chrome plugins and extensions
 
@@ -131,6 +139,19 @@ links will be provided, so you can navigate to them using tab.
 To enable ftp write you need to uncomment `sudo vi /etc/vsftpd.conf`
 `write_enable=YES` and restart `sudo service vsftpd restart`. You need to create
 folder (owner should be trkftp user).
+
+# Ngrok
+
+You can create local tunnel with ngrok.
+
+When you signup you can generate authtoken in your `~/.ngrok2/ngrok.yml`.
+
+You need to upgrade to use custom subdomains, but free domain is fine if you can
+use some of your dns.
+
+~~~
+ngrok http 3002
+~~~
 
 # TIPS
 

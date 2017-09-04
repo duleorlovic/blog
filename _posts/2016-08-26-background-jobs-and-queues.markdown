@@ -37,9 +37,11 @@ With ActiveJob you can pass entire ActiveRecord objects because GlobalID will
 deserialize for us. But if you are using directly some jobs (not inherited from
 ActiveJob::Base) than you should pass object_id.
 
-Rails provides in-process queuing (it keeps in memory) and you need some backend
-queuing library to store that to db and later execute. That process should be
-started separately from rails.
+Rails provides in-process queuing (it keeps in memory and is running with rails)
+so if you put byebug it will stop rails process.
+For production you need some
+backend queuing library to store that to db and later execute. That process
+should be started separately from rails.
 
 # Sidekiq
 
@@ -57,7 +59,10 @@ You need to install redis server
 Add resque by adding it to Gemfile, and you need to add some config files.
 
 ~~~
-echo "gem 'resque'" >> Gemfile
+cat >> Gemfile << HERE_DOC
+# background job using redis
+gem 'resque'
+HERE_DOC
 bundle
 
 sed -i config/application.rb -e '/^  end$/i \
@@ -65,15 +70,28 @@ sed -i config/application.rb -e '/^  end$/i \
 '
 
 cat >> lib/tasks/resque.rake << HERE_DOC
-require "resque/tasks"
+require 'resque/tasks'
 
 # we need to load our rails environment
 # without this, we can call: QUEUE=* rake environemt resque:work
-task "resque:setup" => :environment
+task 'resque:setup' => :environment
 HERE_DOC
 ~~~
 
-You need to install and configure redis
+Two configurations:
+
+~~~
+if ENV["REDISTOGO_URL"].present?
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
+else
+  REDIS = Redis.new(host: "localhost")
+end
+
+Resque.redis = REDIS
+~~~
+
+or
 
 ~~~
 cat >> config/redis.yml << HERE_DOC
@@ -146,6 +164,7 @@ worker: env TERM_CHILD=1 QUEUE=* bundle exec rake resque:work
 
 You can start both web and worker with `foreman start`
 `heroku addons:create redistogo` is needed to enable redis on heroku.
+`heroku addons:docs redistogo`
 
 # Resque scheduler for recurring tasks
 
@@ -200,6 +219,7 @@ need notification).
 
 If you want to run that on same dyno you can use
 [foreman](http://stackoverflow.com/questions/18176043/does-anyone-run-more-than-one-resque-worker-in-a-heroku-dyno)
+but on on heroku free hoby type, you can run both web and worker.
 
 ~~~
 // Procfile

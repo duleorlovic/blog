@@ -357,12 +357,12 @@ Human: {
 Permissions:
 
 live queries
+subscriptions
 
 We get data with GET request and send sada with POST request with `query` param.
 Only problem could be caching since we need different strategy for caching.
 
-
-subscriptions
+https://github.com/chentsulin/awesome-graphql
 https://www.netguru.co/blog/grapghql-vs-rest
 https://www.howtographql.com/
 https://www.compose.com/articles/use-all-the-databases-part-1/

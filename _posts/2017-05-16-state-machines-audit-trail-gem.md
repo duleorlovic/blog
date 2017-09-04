@@ -173,7 +173,8 @@ HERE_DOC
 ~~~
 
 New version `rails g state_machines:audit_trail Post status` will generate same
-migration with additional column: `t.string :namespace`
+migration with additional column: `t.string :namespace`. Note that you should
+use singular `Post` and not plural `Posts`
 
 For additional fiels that you want to store, you can use real columns, but its
 easier to use some `description` which you can generate from other fields.

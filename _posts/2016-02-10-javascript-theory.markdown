@@ -310,8 +310,13 @@ browsers](http://kangax.github.io/compat-table/es6/)
 * `use strict` mode by default (by this
   [info](http://arcturo.github.io/library/coffeescript/07_the_bad_parts.html)
   you should use in development but not on production
-* `let myVar;` has block scope like inside `if () { let myVar=1; }` (`var` has
-function scope). You can notice difference in
+* `let myVar;` has *block scope* like inside `if () { let myVar=1; }` (`myVar`
+is not accesible outside of if block, if it was `var` than it will have function
+scope. Also you can not use variable before we `let variable`. Also you can not
+redeclare same variable name (or if name is same as param declaration `function
+f(myName) { let myName; }`
+Also you can
+notice difference in
 
   ~~~
   for (var i = 1; i< 5; i++) {
@@ -323,10 +328,11 @@ function scope). You can notice difference in
   }
   ~~~
 
-* also `const myConst = document.querySelect(".my-class");` have block scope,
-and it should be used for all non volatile variables
-* template literals with backticks and curly braces (coffe version on "Hello
-#{name}")
+* `const MY_CONST = document.querySelect(".my-class");` have block scope,
+and it should be used for all non volatile variables. If you use object than
+nested values can change `const k = { a: 3 }; k.a = 4`
+* intepolation of template literals with backticks and curly braces (coffe
+version on "Hello #{name}")
 
   ~~~
   var name = "Duke";
@@ -367,23 +373,24 @@ and it should be used for all non volatile variables
 
 * destructuring with default values and renaming (also in coffescript
   `[_, month, date = 1] = ...`)
+  <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment>
 
   ~~~
   # destructuring arrays
   let [, month, date = 1] = '2010-10-11'.split('-')
   # month = '10' and date = '11'
   let [f, s, ...rest] = [1, 2, 3, 4]
-  # f=1, s=2, rest = [3,4[
+  # f=1, s=2, rest = [3,4]
 
   # destructuring objects
   let { name, age, gender:sex = 'male' } = { name: 'Duke', age: '33', gender: 'male' }
   # is the same as
   let name = o.name
   let age = o.age
-  let sex = o.gender # here we also renaming
+  let sex = o.gender # here we also renaming and have default value
   ~~~
 
-  You can also use descructuring when defining methods
+  You can also use destructuring when defining methods
 
   ~~~
   function call({
@@ -397,7 +404,7 @@ and it should be used for all non volatile variables
   There exists rest `...` parameter which convers to array
 
   ~~~
-  const sum = (...a) => a.raduce((sum, current) => sum + current, 0)
+  const sum = (...a) => a.reduce((sum, current) => sum + current, 0)
   ~~~
 
   and same operator `...` inside method call is called *spread* and it expands
@@ -410,7 +417,12 @@ and it should be used for all non volatile variables
   f(1, 2, 3)
   ~~~
 
-* default parameter values `function g(a=2){}` (the same for coffeescript)
+  you can also spread objects `let d = { a: 3}; let db = { ...d, b: 3}`. But if
+  objet has methods, it wont be expanded.
+
+* default parameter values `function g(a=2){}` (the same for coffeescript). It
+can be combined with default destructing params `function g({a=1, b}={b:2}){}`
+and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
 
 * `for(i=0;i<cars.loeght;i++) {}` is not concise `cars.forEach(myFunction)` is
   concise but can not break out of the loop. `for(let ... of ...)` is concise
@@ -429,9 +441,11 @@ and it should be used for all non volatile variables
 * new data structure called `Set` and `WeakSet`
 * new string functions
   `'asd'.startsWith('a');'asd'.endsWith('a');'asd'.includes('as');'a'.repeat(3);`
-* new array functions `Array.from([1,2,3], x => x + x)`
- and `Array.find( user => user.age > 15)` same as `Array.findIndex` but returns
+* new Array functions
+  * `Array.from([1,2,3], x => x + x)`
+  * `Array.find( user => user.age > 15)` same as `Array.findIndex` but returns
  object instead of index
+   * `[1,2,3].filter( (n) => n > 2 )`
 * modules like `import User from 'user';`
 [link](https://www.sitepoint.com/understanding-es6-modules/)
 

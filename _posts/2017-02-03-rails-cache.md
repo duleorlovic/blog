@@ -6,12 +6,9 @@ title: Rails cache
 [Guide](http://guides.rubyonrails.org/caching_with_rails.html) tells that page
 and action caching has been extracted to gems. Now we can use fragment caching
 
-You can enable with
-
-~~~
-  # config/environments/development.rb
-  config.action_controller.perform_caching = true
-~~~
+By default caching in rails development environment is disabled. To enable you
+need to `touch tmp/caching-dev.txt` and to comment `config.cache_store =
+:memory_store` from `config/environments/development.rb`
 
 # Install memcached
 
@@ -56,14 +53,14 @@ Rails.application.configure do
   config.cache_store = :dalli_store # this will use local memcached service
   if secrets.memcachier_servers.present?
     config.cache_store = :dalli_store,
-                          secrets.memcachier_servers.split(","),
+                         secrets.memcachier_servers.split(','),
                          {
                            username: secrets.memcachier_username,
                            password: secrets.memcachier_password,
                            failover: true,
                            socket_timeout: 1.5,
                            socket_failure_delay: 0.2,
-                           down_retry_delay: 60,
+                           down_retry_delay: 60
                          }
   end
 end
@@ -93,7 +90,7 @@ memcached_max_mem_hash:
   ...
 ~~~
 
-Also we need to enable listening on all 
+Also we need to enable listening on all required ports.
 
 To use in rails you need to add
 
@@ -110,9 +107,6 @@ end
 HERE_DOC
 ~~~
 
-By default caching in rails development environment is disabled. To enable you
-need to `touch tmp/caching-dev.txt` and to comment `config.cache_store =
-:memory_store` from `config/environments/development.rb`
 
 ## Install in plain irb
 
@@ -252,6 +246,7 @@ Rails.cache.fetch 'my_key' do
 end
 ~~~
 
+`fetch` will read from cache if exists or write to cache
 For any ActiveRecord instance, you have method `cache_key` which you can use
 for example in `fetch` block.
 
@@ -278,8 +273,8 @@ Note that [sql
 caching](http://guides.rubyonrails.org/caching_with_rails.html#sql-caching) is
 only inside one action. Usually rails do not perform sql query untill it is
 needed. If you only read `current_user` in before actions, that query will be
-cached. But if you update current_user, than next `current_user` is not reading
-from cache (on view, on other before actions).
+cached. But if you update current_user, than following `current_user` is not
+reading from cache (for example if you use current_user in view or in other before actions).
 
 You can use this [snippets
 ](http://vinsol.com/blog/2014/02/11/guide-to-caching-in-rails-using-memcache/)

@@ -63,7 +63,7 @@ methods as well. For example
 [Linkable](https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee)
 
 
-For rails concerns you can see [concerns]({{ site.baseurl }} 
+For rails concerns you can see [concerns]({{ site.baseurl }}
 {% post_url 2016-04-12-rails-tips %}#concerns)
 
 ~~~
@@ -349,7 +349,7 @@ will show `\n` and will insert spaces because text is indented. There is
   )
   ~~~
 
-  You can also write as single line strings, without new line `\n`
+  You can also write as single line strings (long line), without new line `\n`
 
   ~~~
   string = "this is a \
@@ -647,6 +647,9 @@ puts times5.call(5) # 5 * 5 * 2
 
 That is very similar to [closures]({{ site.baseurl }} {% post_url 2016-02-10-javascript-theory %})
 
+You can exit from proc with `next` (`return` exits from method, `break` exits
+from loop). Or you can raise exception.
+
 Proc object can be used as argument for functor (functor is higher-order
 function, ie takes function as argument).
 
@@ -820,8 +823,11 @@ end
 * instead of `map(&:id)` use `pluck(:id)`
 * rails has hash except `my_hash.except :my_key` to ignore only my_key value and
 returns also the hash. Oposite direction is slice `my_hash.slice :my_key` to
-select keys
+select my_key (also returns hash). If you need only values for specific keys use
+`my_hash.values_at :my_key, :my_other_key`
 * `map` and `collect` are the same methods
+* to check if string starts with or ends with some substring prefix sufix you
+can use `s.start_with? prefix` or `s.end_with? suffix`
 
 # Rubocop
 
@@ -835,6 +841,13 @@ cat >> .rubocop.yml << HERE_DOC
 inherit_from: .rubocop_todo.yml
 HERE_DOC
 ~~~
+
+# Url encode
+
+URI.escape has been deprecated in Ruby 1.9.2... so use CGI::escape or
+ERB::Util.url_encode.
+
+
 
 todo
 
