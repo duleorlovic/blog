@@ -50,6 +50,8 @@ You need to setup db with a command
 bin/rails db:environment:set RAILS_ENV=test
 ~~~
 
+or use `rake db:test:prepare`
+
 # Rspec
 
 ## Vanilla rspec
@@ -734,7 +736,7 @@ can be created)
 Test enum is with
 
 ~~~
-  it "has enum fulfillment_typs" do 
+  it "has enum fulfillment_typs" do
     expect(described_class.fulfillment_types).to eq({
       "item" => 0,
       "certificate" => 1,
@@ -1252,6 +1254,44 @@ is removed from capybara.
 I see only problem with race condition is when you load the form using ajax, and
 you click on button to submit it immediatelly.
 
+## Helpers inside spec file
+
+You can add methods to your spec file, usually for integration specs using
+`yield` (click some button on some page) that can be customized for each test
+example
+
+~~~
+# spec/features/user_forgot_password_spec.rb
+require 'rails_helper'
+
+RSpec.feature 'User forgot password' do
+  let(:email) { 'my@email.com' }
+  before do
+    create :user, email: email
+    reset_email
+    Rails.cache.clear
+  end
+
+  def request_forgot_password(&block)
+    visit new_user_session_path
+    click_link 'Forgot your password?'
+
+    fill_in 'Email', with: 'user@test.com'
+    yield if block_given?
+
+    click_button 'Send me reset password instructions'
+  end
+
+  scenario 'with existing email' do
+    request_forgot_password do
+      fill_in 'Email', with: email
+    end
+    expect(page).to have_content 'You will receive an email with instructions about how to reset your password in a few minutes.'
+    expect(last_email.to).to include email
+    expect(all_emails.size).to eq 1
+  end
+end
+~~~
 
 # Fixtures
 
@@ -1420,11 +1460,17 @@ put params in `association`
 https://robots.thoughtbot.com/aint-no-calla-back-girl
 
 ~~~
-factory :interest
-  interested factory: :user
+class SmsAlert < ActiveRecord::Base
+  belongs_to :smsable, polymorphic: true
 end
-factory :music_interest, class: 'Interest' do
-  topic.association(:topic, name: 'Music')
+class Customer < ActiveRecord::Base
+  has_many :sms_alerts, as: :smsable
+end
+factory :sms_alert do
+  message 'a'
+  factory :customer_sms_alert do
+    smsable factory: :customer
+  end
 end
 ~~~
 
@@ -1874,6 +1920,18 @@ client and server, **fake server** returns a fake response
 * *smoke test* is using real server, not used often, but could be helpfull
 * *integration test* is using fake server
 * *client unit test* ends at adapter
+
+## VCR
+
+~~~
+# spec/support/vcr.rb
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/vcr_cassettes"
+  config.hook_into :webmock
+  config.allow_http_connections_when_no_cassette = true
+  config.ignore_localhost = true
+end
+~~~
 
 # Testing Rails.cache
 

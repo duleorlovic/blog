@@ -822,9 +822,9 @@ end
 `Time.at(999232123).utc)` since we do not need to parse every time
 * instead of `map(&:id)` use `pluck(:id)`
 * rails has hash except `my_hash.except :my_key` to ignore only my_key value and
-returns also the hash. Oposite direction is slice `my_hash.slice :my_key` to
-select my_key (also returns hash). If you need only values for specific keys use
-`my_hash.values_at :my_key, :my_other_key`
+returns also the hash. Oposite select is slice `my_hash.slice :my_key` to
+pick `{my_key: 1}` (also returns hash). If you need only values for specific
+keys use `my_hash.values_at :my_key, :my_other_key`
 * `map` and `collect` are the same methods
 * to check if string starts with or ends with some substring prefix sufix you
 can use `s.start_with? prefix` or `s.end_with? suffix`

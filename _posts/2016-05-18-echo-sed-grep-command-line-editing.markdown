@@ -90,9 +90,9 @@ can try following command [inspiration](https://stackoverflow.com/questions/2677
 which will replace new lines with `ћ` (`N` means multiline match, `a` label... multiline match `:a;N;$!ba;s/\n/ћ/g`, note that `$` needs to be escaped if inside `""`) and than return back new line.
 
 Quote in `'HERE_DOC'` will not [substitute
-params](http://tldp.org/LDP/abs/html/here-docs.html#EX71C) so `$` `/` or `\`
-will remain in here doc. Instead of "<<" you can use "<<-" and closing HERE_DOC
-can be indented with *tab* character.  For regexp we need to escape `/` and `\`
+params](http://tldp.org/LDP/abs/html/here-docs.html#EX71C) so `$` `/` or \
+will remain in here doc. Instead of `<<` you can use `<<-` and closing HERE_DOC
+can be indented with *tab* character.  For regexp we need to escape `/` and *\*
 with `\/` and `\\` (`s:\\:\\\\:g;s:/:\\/:g`)
 
 ~~~
@@ -156,19 +156,27 @@ Just a few command line options with grep
   * `echo "asd123" | sed -n 's/asd/***/p'` replace asd with `***`
 * exclude mathing with `grep -v` that is invert match
 
-Regex:
+# Regex
 
-* OR is with `(|)`. Just you need to escape: `\(asd\|qwe\)`
-* find lines that contains asd but not qwe
+<https://regex101.com/> enable multiline flag if you are using `$` end of line
 
-In vim:
+* OR is with `(|)`. But you need to escape `|` for example: `\(asd\|qwe\)` lines
+that contains asd or qwe
+* contains asd but not qwe is `asd((?!qwe).)*$`
+* contains `asd` and `qwe` but not `zxc` in between `asd((?!qwe).)*zxc`
 
-* [vim pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html) search
-  inside buffer
-* if you type `\` from vim command line, than you need to escape it. In shell
-  `grep 'asd\|qwe' .` is  `grep 'asd\\|qwe'` in vim
-* note that `'regex'` is not the same as `"regex"` in terms of escaping so
-  * `'\(asd\\|qwe\)'` is the same as `"\\(asd\\\|qwe\\)"`
+When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
+That is needed for negative lookahead.
+When using `-P` than no need to escape.
+
+In bash you need to escape *()|\* (for both single and double quotes).
+In vim you also need to escape again (for both single and double quotes):
+`grep '\(asd\\|qwe\)'` is the same as in vim `:grep '\\(asd\\\|qwe\\)'`. Note
+When using `-P` than no need one escape (vim escape is still required).
+
+In vim [vim pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html) search
+inside buffer.
+
 
 # AWK
 

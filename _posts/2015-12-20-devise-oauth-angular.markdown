@@ -1180,7 +1180,7 @@ users after specific actions, you can implement your own
 # Testing
 
 You can use [test login helpers]( {{ site.baseurl }}
-{% post_url 2015-11-09-testing-in-rails %}
+{% post_url 2015-11-09-rails-testing %}
 #login-helper)
 In `spec/rails_helper.rb` uncomment line that require all `spec/support/**/*.rb`
 files and create that login helper.

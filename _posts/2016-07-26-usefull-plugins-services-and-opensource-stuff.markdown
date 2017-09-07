@@ -431,6 +431,18 @@ logs in, or use the app
 * <https://www.hotjar.com/tour>
 * <https://www.fullstory.com/features>
 
+To find new customers you can find sites that link to similar content. For
+example in google `link:kulakajak.org -site:kulakajak.org` will give all sites
+that links to kulakajak.org. You can scrape them to find admin contact email and
+suggest them to add your content that will be interesting to their audience
+
+> Do you feel it could be a good fit for your audience?  Might be worth a
+> mention :)
+> Here is the Link:
+> I'd love to know what you think!
+> Sincerely,
+
+
 ## Opensource heatmaps
 
 * example how to to track with firebase

@@ -463,48 +463,6 @@ install` and `gulp serve`
 
 If you want to completely split front end code, than use some [Gulp tasks]({% post_url 2016-03-02-gulp-tasks %})
 
-# Cors
-
-Allow cors on server so options request are resolved
-
-~~~
-echo "gem 'rack-cors', require: 'rack/cors'" >> Gemfile
-bundle
-
-sed -i config/application.rb -e '/^  end/i \
-\
-    config.middleware.insert_before 0, "Rack::Cors" do\
-      allow do\
-        origins "*"\
-        resource(\
-          "*",\
-          headers: :any,\
-          methods: :any,\
-          expose: [\
-            "access-token",\
-            "expiry",\
-            "token-type",\
-            "uid",\
-            "client",\
-            "Content-Range", # clean_pagination\
-            "Accept-Ranges", # clean_pagination\
-          ],\
-        )\
-      end\
-    end'
-
-~~~
-
-If your controller is protected from CSRF attack (it contains
-protect_from_forgery) than use null session instead of exception:
-
-~~~
-sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
-  # protect_from_forgery with: :exception\
-  protect_from_forgery with: :null_session'
-~~~
-
-
 # Angular httpProvider can't send json patch request
 
 Can't set `'Content-Type': 'application/json'` for angular `$http(method:

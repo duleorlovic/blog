@@ -202,10 +202,98 @@ Web browsers enforce strict separation between web sites. Only resources from
 *Same origin* can be accessed. But there are exceptions. Cross origin resource
 sharing [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS)
 
+Allow cors on server so options request are resolved
+
+~~~
+echo "gem 'rack-cors', require: 'rack/cors'" >> Gemfile
+bundle
+
+sed -i config/application.rb -e '/^  end/i \
+\
+    config.middleware.insert_before 0, "Rack::Cors" do\
+      allow do\
+        origins "*"\
+        resource(\
+          "*",\
+          headers: :any,\
+          methods: :any,\
+          expose: [\
+            "access-token",\
+            "expiry",\
+            "token-type",\
+            "uid",\
+            "client",\
+            "Content-Range", # clean_pagination\
+            "Accept-Ranges", # clean_pagination\
+          ],\
+        )\
+      end\
+    end'
+~~~
+
+You can enable CORS only for specific actions. For example if you are loading
+form on other sites to create and update, you can enable cors for that actions.
+When you are loading javascript from other domains like
+~~~
+<script type="text/javascript" src="//localhost:3002/widget/1"></script>
+~~~
+
+than on your server you will get error
+
+~~~
+ActionController::InvalidCrossOriginRequest (Security warning: an embedded <script> tag on another site requested protected JavaScript. If you know what you're doing, go ahead and disable forgery protection on this action to permit cross-origin JavaScript embedding.):
+~~~
+
+To solve that add
+
+~~~
+  skip_before_action :verify_authenticity_token, only: [:widget]
+~~~
+
+When you want to submit form from another domain you get this error
+
+~~~
+ActionController::InvalidAuthenticityToken (ActionController::InvalidAuthenticityToken):
+~~~
+
+To solve that add
+
+~~~
+  skip_before_action :verify_authenticity_token, only: [:widget, :create, :update]
+~~~
+
+To see response from submitted form request, you see in javascript console this
+warning and $.ajax success callback is never triggered
+
+~~~
+Failed to load http://localhost:3002/days/1: No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://localhost' is therefore not allowed access.
+~~~
+
+To solve that add
+
+~~~
+  after_action :set_access_control_headers, :only => [:create, :update]
+
+  def set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+  end
+~~~
+
+# CSP
+
 Content security policy
 [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 
 # CSRF
+
+If your controller is protected from CSRF attack (it contains
+protect_from_forgery) than use null session instead of exception:
+
+~~~
+sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
+  # protect_from_forgery with: :exception\
+  protect_from_forgery with: :null_session'
+~~~
 
 # Authentication
 

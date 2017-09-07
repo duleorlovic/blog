@@ -201,6 +201,13 @@ class UnscopedCustomer < Customer
   self.default_scopes = []
   self.table_name = "customers"
   belongs_to :unscoped_company, foreign_key: :company_id
+end
+
+class UnscopedCompany < Company
+  self.default_scopes = []
+  self.table_name = "companies"
+  has_many :customers, foreign_key: :company_id
+end
 ~~~
 
 # Format date
@@ -1250,6 +1257,42 @@ puts my_service.process(false).success? # false
 puts my_service.process(false).message # empty posts
 ~~~
 
+Even simpler Result class
+
+~~~
+# app/services/my_service.rb
+class MyService
+  class Result
+    attr_reader :error, :message
+    def initialize(error:, message:)
+      @error = error
+      @message = message
+    end
+    def success?
+      error.blank?
+    end
+  end
+
+  def initialize(h)
+    @user = h[:user]
+  end
+
+  def process(posts)
+    success_message = do_something posts
+    Result.new message: success_message
+  rescue ProcessException => e
+    Result.new error: e.mesage
+  end
+
+  private
+
+  def do_something(posts)
+    raise ProcessException, "Error: empty posts" unless posts
+    "Done with do_something"
+  end
+end
+~~~
+
 ## Form Objects
 
 form objects (query objects) for multiple in multiple out data
@@ -1982,6 +2025,7 @@ locales [look for adminlte example]( {{ site.baseurl }}
 
   ~~~
   ActionController::Base.helpers.pluralize(count, 'mystring')
+  ActionController::Base.helpers.strip_tags request.body
   ActionView::Base.new.number_to_human 123123
   Rails.application.routes.url_helpers.jobs_url
   ~~~

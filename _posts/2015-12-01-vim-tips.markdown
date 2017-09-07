@@ -404,6 +404,10 @@ You need to install this tools:
   for example BlockLength for rspec files
 
   ~~~
+  AllCops:
+    Exclude:
+      - '**/*'
+
   Metrics/BlockLength:
     Exclude:
       - "**/*_spec.rb"
