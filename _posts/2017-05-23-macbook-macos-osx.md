@@ -16,7 +16,13 @@ From terminal toolbar:
 * `⌘ T` new tab
 
 From System Preferences -> Keyboard -> Shortcuts
-* `⌘ space` spotlight search
+* -> Spotlight
+  * `⌘ space` spotlight search
+  * `⌥  ⌘ space` finder
+* -> Mission control
+  * `^ up` mission control
+  * `^ down` application windows in all workspaces, use arrow to focus, use tab
+    to select another application and view it's windows
 
 You can disable any special key for any app. From System Preferences ->
 Keyboard -> Shortcuts -> App Chortcuts -> +  than select the app and write exact
@@ -38,6 +44,7 @@ focus that new tab), download and open context menu (ctrl click also works for
 selected text).
 
 `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected area.
+Press space after that to select window. Screen shots will be on desktop.
 
 To show home folder in Finder, go to Finder Preferences -> Sidebar and enable
 home folder in sidebar.
@@ -48,6 +55,14 @@ I added to `.bash_profile`:
 
 To enable ssh server you need to go "System Preferences -> Sharing -> enable
 Remote login"
+
+Position windows using [spectacle](https://github.com/eczarny/spectacle)
+[video](https://www.youtube.com/watch?v=k1lmd2T5Z2A).
+Comparison of all
+[os-x-windoiw-manager](https://css-tricks.com/os-x-window-manager-apps/).
+I found interestin
+[hammerspoon](http://www.hammerspoon.org/go/)
+[blog](http://thume.ca/2016/07/16/advanced-hackery-with-the-hammerspoon-window-manager/)
 
 # Karabiner Elements to change keys
 

@@ -786,6 +786,15 @@ If you receive error `undefined method map for "'users' FORCE INDEX
   or directory -
   /home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2/mysql2.so
   (LoadError)` than try `gem uninstall mysql2;gem install mysql2`
+* on mac os if you have `Mysql2::Error: Can't connect to local MySQL server
+  through socket '/var/run/mysqld/mysqld.sock' (2)` than create a link to socket
+  file whish is located using `mysql_config --socket` or `mysqladmin variables`
+
+  ~~~
+  sudo mkdir /var/run/mysqld
+  sudo ln -s /tmp/mysql.sock /var/run/mysqld/mysqld.sock
+  ~~~
+
 * create mysql user
 
   ~~~

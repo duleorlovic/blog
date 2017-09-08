@@ -140,6 +140,7 @@ Intresting [devtools-cheatcheet](http://anti-code.com/devtools-cheatsheet/)
 
 Look my
 [xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
+There is very nice alternative [Xmonad](http://xmonad.org/)
 
 # Tar
 
