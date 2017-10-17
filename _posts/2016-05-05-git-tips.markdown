@@ -175,7 +175,32 @@ Add global gitignore for all projects
   brew install gtm
   ~~~
 
-* https://github.com/timeglass/glass
+## Glass
+
+https://github.com/timeglass/glass
+
+Download and create links in your `/usr/local/bin` and run `sudo glass install`
+<https://github.com/timeglass/glass/blob/master/docs/manual_installation.md>
+
+~~~
+glass init
+glass status
+git commit -am "Work"
+git log -n 1 --show-notes=time-spent
+~~~
+
+To disable adding commit message use space (not empty)
+
+~~~
+cat >> /var/lib/timeglass/timeglass.json << HERE_DOC
+{
+  "mbu": "1m",
+  "commit_message": " ",
+  "auto_push": false
+}
+HERE_DOC
+~~~
+
 
 
 # Github

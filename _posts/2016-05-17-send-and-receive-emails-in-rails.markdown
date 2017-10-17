@@ -15,16 +15,16 @@ Gmail smtp is the most easiest way to start
 
 ~~~
 # config/application.rb
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 587,
-    domain: 'gmail.com',
-    authentication: 'plain',
-    enable_starttls_auto: true,
-    user_name: Rails.application.secrets.smtp_username,
-    password: Rails.application.secrets.smtp_password
-  }
-  config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: 'smtp.gmail.com',
+      port: 587,
+      domain: 'gmail.com',
+      authentication: 'plain',
+      enable_starttls_auto: true,
+      user_name: Rails.application.secrets.smtp_username,
+      password: Rails.application.secrets.smtp_password
+    }
+    config.action_mailer.delivery_method = :smtp
 
 # config/secrets.yml
   smtp_username: <%= ENV["SMTP_USERNAME"] %>
@@ -110,7 +110,7 @@ sed -i config/secrets.yml -e '/^test:/i \
   # email provider\
   sparkpost_api_key: <%= ENV["SPARKPOST_API_KEY"] %>'
 
-vi config/secrets.yml # update default_mailer_sender to match your domain
+vi config/secrets.yml # update mailer_sender to match your domain
 ~~~
 
 # Letter opener for local preview
@@ -262,7 +262,7 @@ Those are usefull admin or devops notifications
 ~~~
 # config/secrets.yml
 development: &default
-  default_mailer_sender: <%= ENV["DEFAULT_MAILER_SENDER"] || "My Company <support@example.com>" %>
+  mailer_sender: <%= ENV["MAILER_SENDER"] || "My Company <support@example.com>" %>
   internal_notification_email: <%= ENV["INTERNAL_NOTIFICATION_EMAIL"] || "internal@example.com" %>
 ~~~
 
@@ -270,7 +270,7 @@ development: &default
 # mailers/application_mailer.rb
 class ApplicationMailer < ActionMailer::Base
   layout 'mailer'
-  default from: Rails.application.secrets.default_mailer_sender
+  default from: Rails.application.secrets.mailer_sender
 
   INTERNAL_NOTIFICATION_EMAIL = Rails.application.secrets.internal_notification_email
 
@@ -344,3 +344,6 @@ class DeviseMailer < Devise::Mailer
 
 You can include small giff that looks like screencast. Image should be less than
 1MB and included inline.
+
+Email gems <http://awesome-ruby.com/#-email> and
+[gmail](https://github.com/gmailgem/gmail)

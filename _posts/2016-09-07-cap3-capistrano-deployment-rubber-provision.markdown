@@ -433,7 +433,7 @@ ssh -p 2222 deploy@127.0.0.1
 
 # Logs
 
-See multiple logs in one terminal window
+See multiple logs (like multilog or multi tail) in one terminal window
 
 ~~~
 vagrant ssh

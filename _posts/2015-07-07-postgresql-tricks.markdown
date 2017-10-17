@@ -16,12 +16,31 @@ that is:
 
 * `FROM products p INNER JOIN sales s ON p.id = s.product_id` where *p* and *s*
   are aliases. In following sql you need to use those aliases `p` instead
-  `produts`
+  `products`
 * You can create column aliases for columns `SELECT *, t.lat AS latitude`
   but you can not use in `where` clause since where clause is logically before
   select clause (and before alias is created). If you need to use, you need to
   write that statement twice, or use sql wrapper wich will contain only that
-  `where`
+  `where`, this example is using concat:
+
+  ~~~
+  # this does not work
+  SELECT neededfield, CONCAT(firstname, ' ', lastname) as firstlast
+  FROM users
+  WHERE firstlast = "Bob Michael Jones"
+
+  # contact needs to be written twice: in SELECT and WHERE
+  SELECT neededfield, CONCAT(firstname, ' ', lastname) as firstlast
+  FROM users
+  WHERE CONCAT(firstname, ' ', lastname) = "Bob Michael Jones"
+
+  # or select wrapped
+  SELECT * FROM (
+    SELECT neededfield, CONCAT(firstname, ' ', lastname) as firstlast
+    FROM users) base
+  WHERE firstLast = "Bob Michael Jones"
+  ~~~
+
 * after processing *FROM* clause, thie new virtual table is checked against
   search conditions *WHERE*, for example: `WHERE s.date > CURRENT_DATE -
   INTERVAL '4 weeks'` This filtering is done *before* processing with *GROUP BY*

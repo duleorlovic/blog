@@ -98,6 +98,13 @@ gem "autoprefixer-rails"
 gem "browser-timezone-rails"
 HERE_DOC
 
+# need some js for timezone
+cat >> app/assets/javascripts/application.js << HERE_DOC
+//= require js.cookie
+//= require jstz
+//= require browser_timezone_rails/set_time_zone
+HERE_DOC
+
 bundle
 guard init livereload
 sed -i config/environments/development.rb -e '/^end/i \
@@ -302,13 +309,13 @@ development: &default
   smtp_password: <%= ENV["SMTP_PASSWORD"] %>
 
   # for all outgoing emails
-  mailer_sender: <%= ENV["mailer_sender"] || "My Company <support@example.com>" %>
+  mailer_sender: <%= ENV["MAILER_SENDER"] || "My Company <support@example.com>" %>
 
   # default_url is required for links in email body or in links in controller
   # when url host is not available (for example rails console)
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
-    port: <%= ENV["DEFAULT_URL_PORT"] || Rack::Server.new.options[:Port] %>
+    port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : 80) %>
 
 test: *default
 production:

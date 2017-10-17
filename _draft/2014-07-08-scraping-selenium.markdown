@@ -307,3 +307,5 @@ end
   </script>
 <% end %>
 ~~~
+
+* some sites provide nice rss feed, for example elance https://www.elance.com/php/search/main/resultsproject.php?matchType=project&rss=1&matchKeywords=rails+-php&statusFilter=10037&sortBy=timelistedSort&sortOrder=1

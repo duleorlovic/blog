@@ -39,9 +39,14 @@ ActiveJob::Base) than you should pass object_id.
 
 Rails provides in-process queuing (it keeps in memory and is running with rails)
 so if you put byebug it will stop rails process.
-For production you need some
-backend queuing library to store that to db and later execute. That process
-should be started separately from rails.
+By default `config.active_job.queue_adapter = :inline` it better is to use
+`:async`.  Both inline and async Active Job do not support priority, timeout and
+retry. You can find all adapter http://api.rubyonrails.org/v5.1/classes/ActiveJob/QueueAdapters.html
+For testing there are `:test` queue adapter which is used "only" for testing
+[more]( {{ site.baseurl }} {% post_url 2015-11-09-rails-testing %}#rspec-jobs-spec)
+
+For production you need some backend queuing library to store that to db and
+later execute. That process should be started separately from rails.
 
 # Sidekiq
 
@@ -107,7 +112,12 @@ Resque.redis = config[Rails.env]
 HERE_DOC
 ~~~
 
-You can use Rails ActiveJob or any class module that responds to `perform`
+# Define jobs
+
+You can use Rails `ActiveJob` (so you can use `perform_later`) or any class
+module that responds to `perform` (but than you need to use
+`Resque.enqueue(SimpleJob,i)`, or `Delayed::Job.enqueue SimpleJob` or
+`SimpleJob.delay.perform` to enqueue)
 
 ~~~
 mkdir app/jobs
@@ -243,22 +253,30 @@ immediatelly and in background with rake jobs:work)
 Running is using gem `daemons` (so put it in your Gemfile) and then `rails g
 delayed_job` will generate script file `bin/delayed_job` which you can use
 
-* `RAILS_ENV=production bin/delayed_job start`
-* `RAILS_ENV=production bin/delayed_job start --queues=webapp,jobs`
+* `RAILS_ENV=production bin/delayed_job start` to run all queues
+* `RAILS_ENV=production bin/delayed_job start --queues=webapp,jobs` set specific
+queue (QUEUE=webapp env does not work for delayed job)
 * `RAILS_ENV=production bin/delayed_job start --exit-on-complete` exit when
   there are not more jobs
 * `RAILS_ENV=production bin/delayed_job run` is to run in foreground
 * `RAILS_ENV=production bin/delayed_job restart`
 * `RAILS_ENV=production bin/delayed_job status`
-* rails ways is `rake jobs:work`, also `rake jobs:workoff` to exit after is done
-with all jobs, `rake jobs:clear` to delete all jobs, `QUEUES=webapp,jobs rake
-jobs:work`
+* `cat tmp/pids/delayed_job.pid` can give you process id
+
+The Rails way is:
+* `rake jobs:work`
+* `rake jobs:workoff` to exit after is done with all jobs
+* `rake jobs:clear` to delete all jobs
+* `QUEUES=webapp,jobs rake jobs:work` to set specific queue (by default it runs
+all)
 
 Note that email letter opener does not work when you run with `rake jobs:work`,
 but works when `bin/delayed_job run` (Launchy works in both cases, this
 difference is only for mailer).
 
 Workers will check database every 5 seconds.
+Note that you do not need to refresh the runner when you update the code. Kill
+and restart is only required if you update some of the initializers files.
 
 Jobs are objects with a method called `perform`. Also you can override
 `Delayed::Worker.max_attempts` with your method `max_attempts` (you can find
@@ -276,6 +294,29 @@ Also you can see all jobs in console:
 
 ~~~
 Delayed::Job.all
+job = Delayed::Job.find 10 # 10 is job.id
+
+job.handler # to see how job will be called
+job.last_error # to see backtrace of error
+
+# to invoke job you can
+job.invoke_job # this does not remove job if successfully
+job.destroy # so you need to do that manually
+# or
+Delayed::Worker.new.run job # this runs in current process (not in
+# bin/delayed_job run) and will remove if successfully
+# or
+job.update_attributes(:attempts=>0, :run_at=>Time.now, :failed_at => nil, :locked_by=>nil, :locked_at=>nil)
+# job.failed_at = nil; job.save!
+
+~~~
+
+To invoke jobs you can do that in three ways (all three ways support queue name)
+
+~~~
+object.delay(queue: 'tracking').method
+Delayed::Job.enqueue job, queue: 'tracking'
+handle_asynchronously :tweet_later, queue: 'tweets'
 ~~~
 
 Usage is simply with inserting `delay` method and it will run in background. So
@@ -296,8 +337,13 @@ than you can assign priority for each queue:
   }
   ~~~
 
-For mailer we need to remove `.deliver` method and use `.delay` in prefix, like
-`MyMailer.delay(run_at: 5.minutes.from_now).welcome(user)`
+For mailer instead of `.deliver` method we can also use `.delay` in prefix, like
+`MyMailer.delay(run_at: 5.minutes.from_now).welcome(user)`. Or use rails 5
+`deliver_now` or `deliver_later`.
+Mailer `queue` is by default `mailers`. For other jobs `queue` is `nil`.
+In Rails 5 you can rename to `config.action_mailer.deliver_later_queue_name =
+'default_mailer_queue'`.
+
 
 Another way to run background jobs is with `Delayed::Job.enqueue CleanJob.new,
 queue: 'import'`. Note that for ActiveJob instances it runs immediatelly

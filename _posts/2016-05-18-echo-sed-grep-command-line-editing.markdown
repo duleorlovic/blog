@@ -11,7 +11,8 @@ filename). You can use single quotes so you do not need to write `-e` and `\n`
 in multiline text but you need to escape other `'`. The best was to write
 multiline text is with `cat > filename << HERE_DOC ... some lines with ' or "
 ...  HERE_DOC`. First `\HERE_DOC` or `'HERE_DOC'` when no parametar expanded.
-Remember to use double `<<` not single `<` redirection.
+Remember to use double `<<` not single `<` redirection. Inside `HERE_DOC` there
+should not be backtick  \`\` since it will be evaluated as shell command.
 
 ~~~
 cat > my.txt << 'HERE_DOC'
@@ -30,14 +31,15 @@ trailing backslash). You can use `sed -i "// a" file.txt` but then you need
 after last `\`.
 
 Most common usage is to add before some line, for example line begins with
-`test`. If you need really need `'` for example `'a'` than you can replace it
-with `'"'a'"'`. If you need `\"` than put `\\"` so backslash survive bash
-command.
+`test`. If you need single quote `'` for example `'a'` than you need to use
+prefix `$` and escape quote with single backslash ` \ `. You could also use
+string concatenation: single with double quote string `'"'a'"'`.
+If you need `\"` than put `\\"` so backslash survive bash command.
 
 ~~~
-sed -i config/secrets.yml -e '/^test:/i \
+sed -i config/secrets.yml -e $'/^test:/i \
   # aws s3\
-  aws_bucket_name: <%= ENV["AWS_BUCKET_NAME"] %>'
+  aws_bucket_name: <%= ENV[\'AWS_BUCKET_NAME\'] %>'
 ~~~
 
 Instead of search, you can append on line numbers `3,6aTEXT` or at the last line

@@ -412,7 +412,13 @@ end
 
 <https://github.com/interagent/http-api-design>
 
+# Tips
+
+* model skill level as string, but consider using array. For example if someone
+wants to cover all skill levels.
+
 # JWT Json web tokens
+
 
 <https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two>
 

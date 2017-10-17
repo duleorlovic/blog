@@ -116,6 +116,7 @@ the same using Elements, Event Listeners tab, click, and jump to source where
 you want breakpoint)
   * to show some value in log you can add Conditional breakport with
   `console.log(varname);`
+* thre dots -> Coverage can give how much of css or js is used on the page
 * on elements panel
   * `h` to hide element (`visibility: hidden`)
 
@@ -157,3 +158,33 @@ ngrok http 3002
 
 * to change default program open with file type, you can right click,
 properties, set default.
+* read only usb, can't create file since usb is readonly https://askubuntu.com/questions/781223/physical-block-size-is-2048-bytes-but-linux-says-it-is-512-when-formatting-us
+
+~~~
+df -Th
+umount /media/duleusb
+sudo fdisk -l
+#
+udisksctl unmount -b /dev/sdc1
+sudo sgdisk --zap-all /dev/sdc
+sudo sgdisk --new=1:0:0 --typecode=1:ef00 /dev/sdc
+sudo mkfs.vfat -F32 /dev/sdc1
+~~~
+
+use `disks` application to erase and format usb flash drive.
+If it is not mountable than try
+[forum](https://ubuntuforums.org/showthread.php?t=2153643) but change number of
+KB 1024, 2048 ...
+
+~~~
+sudo dd if=/dev/zero bs=4096 of=/dev/sdc
+sudo apt-get install gparted
+# Device -> Create partition table.
+# format to fat32
+~~~
+
+* to backup external usb, you can sync files. With rsync files are not deleted,
+just added, or overwritten if same filename. `cd
+/media/orlovic/bf12a7e5-a5d4-4532-8612-a3984f90b56c/backup` and `rsync -r
+/media/dusan/EKSTERNIUSB/ EXTERNIUSB`
+

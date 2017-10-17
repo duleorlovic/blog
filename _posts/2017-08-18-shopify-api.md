@@ -84,7 +84,7 @@ heroku config:set SHOPIFY_API_KEY=$SHOPIFY_API_KEY SHOPIFY_SECRET_KEY=$SHOPIFY_S
 Remember to reinstall application after the assets compliation is finished.
 Also you can force oauth simply going on `/login` page, but this helps only with
 webhooks. Script tags need reinstall. NOTE THAT USUALLY NEED TO RESTART RAILS
-SERVER BEFORE THAT SO IT PICK UP NEW DIGEST.
+SERVER BEFORE THAT SO IT PICKS UP NEW DIGEST.
 
 Use force ssl, so it is always using https (redirect url will be the same
 protocol from which we started auth).
@@ -279,4 +279,11 @@ https://help.shopify.com/api/tutorials/application-proxies#proxy-response
     return [403, "Authentication failed. Digest provided was: #{digest}"]
   end
 ~~~
+
+# Apps
+
+* multistore forum discussion: https://ecommerce.shopify.com/c/shopify-discussion/t/multiple-domain-under-one-account-140477
+* one store multi users/vendors discussion https://ecommerce.shopify.com/c/shopify-discussion/t/user-level-accounts-366021
+* supplier offering storefronts to distributors/end_stores. not possible with
+one store since price should be different to each distributor.
 

@@ -5,20 +5,34 @@ title: SEO advices
 
 Test your site on
 <https://developers.google.com/speed/pagespeed/insights/>
+Free trial seo report rank <https://www.woorank.com/>
 
 
 # General Tips
 
-* Be sure that each page has a unique `<title>Nice page</title>`, 10-70 chars,
-  with keywords
+* Be sure that each page has a unique title on each page `<title>Nice
+page</title>`, 10-70 chars, with keywords
 * also `<meta name="description" content="It's really nice page <%=
   @user.name if @user.present? %>">` should be 70-160 chars, uniq per page
-* use one `<h1>` per page with keywords but do not duplicate title, use h2-h6 for
-  other keywords.
-* use alt atribute for images
-* 25-70% treba da bude cist text a ne html tags
+* use one `<h1>` per page with keywords but do not duplicate title, use h2-h6
+for other keywords.
+* use alt atribute for description of images, but also image source link should
+we unique and self explanatory
+* Links within your content tend to carry more weight than links within a
+sidebar or footer.
+* try to have more and more inbound links from other sites. Increase link count
+using: social media, directories, some sites links to competition, try to write
+them explaining why your site is better
+* if your content expires (like job posts, wheater data) than link old pages to
+category pages (group of similar results)
+* outbound links can be no-follow, especially outgoing links that are not
+relevant (do not have quality content). For example, links to a Feedburner page.
+* anchor text plays the most important role in link building. If you want to
+rank for 'blue widget' then you want the anchor text of the link to be `<a>blue
+widget</a>`
+* 25-70% should be only text (not html markup tags)
 * add [XML sitemap](#sitemap) (with correct protocol http/s, subdomain,
-  trailing slash)
+  trailing slash) if more than 100 than only most popular
 * use 301 redirect from root to www domain (or vice versa) do not split value to
   two different domains (also from IP address)
 * replace undrescore _ with dash (hyphens) - in urls

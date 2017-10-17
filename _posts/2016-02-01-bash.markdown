@@ -199,8 +199,6 @@ rails s, with foreground `fg`
 Note `.` after folder name.
 * preserve env variables with sudo `sudo -E ruby some_script.rb`, but `rvmsudo
   ruby some_script.rb` works better
-* `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
-  to go to copy mode.
 * `ps aux | grep process_name` will return always the grep process because it
   match. But you can use regex so it is not matched `ps aux | grep
   [p]rocess_name`
@@ -421,3 +419,15 @@ source included files.
 You can see permissions for particular directory with `ls -ld`. To set for
 example `chmod 644` is the same as `chmod u=rw,g=r,o=r`. To be able to source
 file, parent folder needs to have `x` flag enabled.
+* to detect if it is linux or MacOS you can use
+~~~
+if [ "$(uname -s)" = "Darwin" ]; then
+  echo "==> Bootstrapping Homebrew OSX environment"
+fi
+~~~
+* screen command
+  * `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
+  to go to copy mode.
+* send desktop notifications with `notify-send` but need urgency critical, so I
+made alias `alert`
+* chearsheet https://devhints.io/bash

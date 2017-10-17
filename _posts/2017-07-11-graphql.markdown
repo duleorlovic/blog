@@ -367,3 +367,5 @@ https://www.netguru.co/blog/grapghql-vs-rest
 https://www.howtographql.com/
 https://www.compose.com/articles/use-all-the-databases-part-1/
 https://www.youtube.com/watch?v=UBGzsb2UkeY&feature=youtu.be
+https://blog.codeship.com/how-to-implement-a-graphql-api-in-rails/
+http://graphqlme.com/2017/09/16/upload-images-to-s3-in-graphql-using-rails-and-paperclip/

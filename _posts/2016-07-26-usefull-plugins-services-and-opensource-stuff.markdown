@@ -3,13 +3,9 @@ layout: post
 title: Usefull plugins, services and opensource stuff
 ---
 
-# Javascript helpers
+# Misc
 
 * [fastclick](https://github.com/ftlabs/fastclick)
-* "One minute ago" can be updated automatically in this
-  [timeago](http://timeago.yarp.com/) plugin. Similarly,
-  [jquery.countdown](https://github.com/hilios/jQuery.countdown) for future
-  dates
 * [zeroclipboard](https://github.com/zeroclipboard/zeroclipboard) to copy some
 text on click
 * [jsPDF](https://github.com/MrRio/jsPDF) pdf generator
@@ -20,6 +16,15 @@ text on click
   switch](http://www.bootstrap-switch.org/examples.html)
   * [abpetkov/switchery](https://github.com/abpetkov/switchery)
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
+* drag and drop elements <https://shopify.github.io/draggable/>
+
+
+# Time
+
+* "One minute ago" can be updated automatically in this
+  [timeago](http://timeago.yarp.com/) plugin. Similarly,
+  [jquery.countdown](https://github.com/hilios/jQuery.countdown) for future
+  dates
 
 # Alerts and notifications
 
@@ -207,17 +212,16 @@ used for singleDatePicker, dateTime picker
 * [jQuery-File-Upload](https://blueimp.github.io/jQuery-File-Upload/)
 * [browser-camera](https://davidwalsh.name/browser-camera) html5 getUserMedia
 
-# Editors
+# Rich text editors wyswyg
 
-## Wiki style
+list:
 
-<http://wagn.org> is whole project
-
-## Rich text editors wyswyg
-
+* <http://wagn.org> wiki with cards with interesting editor
+* <https://beefree.io/>
 * [fireEdit](https://github.com/coltaemanuela/FireEdit)
-
 * quill
+
+## Quil
 
 [quill](https://quilljs.com/) [examples](https://quilljs.com/playground)
 You can edit by selecting content
@@ -377,6 +381,8 @@ FA icons are very usefull for quick icons. Look for
 * color can be set with `bg-red`
 * spinner `<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>`
 
+* page loader progress bar <http://ricostacruz.com/nprogress/>
+
 # Images
 
 * free high resolution <https://unsplash.com/>
@@ -424,7 +430,51 @@ logs in, or use the app
 # User intro tour to website with help tips
 
 * [introjs](http://introjs.com/) commercial lincence after 2.1
-* [bootstrap-tour](https://github.com/sorich87/bootstrap-tour)
+* <http://bootstraptour.com>
+[source](https://github.com/sorich87/bootstrap-tour)
+  * intersting value is `backdrop: true` so element is highlighted `reflex:
+  true`  so click on target element dismiss page tour
+  * if you want to repeat tour you can use `yield` and `content_for`
+  ~~~
+    <%# somewhere in support dropdown menu %>
+    <% if content_for? :page_tour_script %>
+      <li>
+        <%= yield :page_tour_script %>
+        <a href="#" onclick="startTour()">
+          Start Page Tour
+        </a>
+      </li>
+    <% end %>
+  ~~~
+
+  ~~~
+  <%# on a page where we need tour %>
+  <% content_for :page_tour_script do %>
+    <script>
+      function startTour() {
+        // http://bootstraptour.com/api/
+        var tour = new Tour({
+          storage: false,
+          steps: [
+          {
+            element: "[data-target='#publish-location-package-modal']",
+            title: "Publish Package",
+            content: "You can publish package using this button",
+            placement: 'right',
+            backdrop: true,
+            reflex: true,
+          },
+        ]});
+
+        // Initialize the tour
+        tour.init();
+
+        // Start the tour
+        tour.start();
+      }
+    </script>
+  <% end %>
+  ~~~
 
 # Visitor user analytics
 
@@ -507,11 +557,15 @@ version](https://github.com/iogbole/gentelella_on_rails)
 
 * [granim.js](https://sarcadass.github.io/granim.js/examples.html)
 * [DemoHouse](https://airen.github.io/DemoHouse/)
+* CSS Tricks button rotate on lost hover
+<https://css-tricks.com/examples/DifferentTransitionsOnOff/>
+* split cards <https://designshack.net/tutorialexamples/splitreveal/index.html>
+* nice project portfolio showcase <https://madewithenvy.com/>
 
 # Fonts and icons
 
 * [ico Moon Free](https://github.com/Keyamoon/IcoMoon-Free)
-<https://icomoon.io/#preview-free>
+   <https://icomoon.io/#preview-free>
 * [simple-line-icons](http://simplelineicons.com/)
 * [bootstrap glyphs](http://getbootstrap.com/components/)
 

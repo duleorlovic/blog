@@ -146,7 +146,8 @@ and after hooks are used to execute arbitrary code before and after
 example or context is run. You can use alias `before(:each)` is the same as
 `before(:example)` and `before(:all) == before(:context)`
 
-DRY is accomplished with `shared_context` and `include_context`.
+DRY is accomplished with `shared_context` and `include_context` (also shared
+examples).
 
 ~~~
 RSpec.describe User do
@@ -158,6 +159,25 @@ RSpec.describe User do
     include_context 'one user'
   end
 end
+~~~
+
+Testing included modules and concerns is done with
+[shared_examples](https://www.relishapp.com/rspec/rspec-core/docs/example-groups/shared-examples)
+so we test with `it_behaves_like "linkable"` or `include_examples 'linkable'`
+
+~~~
+RSpec.shared_examples 'payment check_no' do
+  it 'allows long check_no' do
+    check_no = '356431 575017004 201705 11'
+    customer_payment = create :customer_payment, check_no: check_no
+    expect(customer_payment.new_record?).to be_falsy
+  end
+end
+
+RSpec.describe CustomerPayment do
+  describe 'validations' do
+    it_behaves_like 'payment check_no'
+  end
 ~~~
 
 Some [rspec
@@ -246,7 +266,7 @@ For slow test you can mark with `:slow` so running rspec tests with `rspec --tag
 
 `rspec --profile` will give you list of 10 slowest tests.
 
-Rspect config before each example for particular group
+Rspec config before each example for particular group
 
 ~~~
 # spec/rails_helper.rb
@@ -260,6 +280,23 @@ RSpec.configure do |config|
   config.include Warden::Test::Helper, type: :features
 end
 ~~~
+
+Better is you include `config.before` only for specific tests using filter
+symbols
+https://relishapp.com/rspec/rspec-core/v/3-6/docs/hooks/filters#filtering-hooks-using-symbols
+
+~~~
+RSpec.configure do |config|
+  config.before :example, :setup_xxx do
+    xxx
+  end
+end
+RSpec.describe 'invoke xxx', :setup_xxx do
+  it 'in all nested examples' do
+  end
+end
+~~~
+
 
 ## Rspec rails
 
@@ -301,6 +338,10 @@ git add . && git commit -m "Adding guard init rspec"
 ~~~
 
 You can run `guard` that will run your specs.
+
+More options for
+[guard](https://github.com/guard/guard-rspec#list-of-available-options)
+My favorite is `failed_mode: :focus` which reruns last failed test.
 
 You can use [spring for
 rspec](https://github.com/jonleighton/spring-commands-rspec)
@@ -753,7 +794,12 @@ Test default values from database and in after hooks.
 Usually we do not test migration since we use them later and write test
 for that usage.
 
-### Refactoring
+## RSpec jobs spec
+
+`ActiveJob::Base.queue_adapter = :test` will change queue adapter for all
+folloring test so no need that.
+
+# Refactoring
 
 Refactoring in 3 types:
 
@@ -804,9 +850,6 @@ end
 
   * when testing sort method, create three objects with first in the middle
 
-* testing included modules and concerns is done with [shared
-examples](https://www.relishapp.com/rspec/rspec-core/docs/example-groups/shared-examples)
-so we test with `it_behaves_like "linkable"` or `include_examples 'linkable'`
 * class methods could be stubbed
 
 ~~~
@@ -836,7 +879,8 @@ end
 Instead of using `get` and `response.body` we can use only what end user see
 `visit`, `fill_in` and `page.should`. Also it can use the
 same DSL to drive browser (selenium-webdriver, chrome-driver or capybara-webkit)
-or headless drivers (Rack::Test or phantomjs).
+or headless drivers (`:rack_test` or phantomjs). `Capybara.current_driver` could
+be `:rack_test` or `:headless_chrome` or `':chrome`.
 To run in browser javascript use `js: true`. Note that in this mode, drop down
 links are not visible, you need to click on dropdown. Also `data-confirm` will
 be ignored.
@@ -846,6 +890,7 @@ navigation to another page should be in the same transaction, so you need to use
 `database_cleaner` as we do configuration below.
 <http://elementalselenium.com/tips/29-chrome-driver>
 <https://robots.thoughtbot.com/headless-feature-specs-with-chrome>
+
 ~~~
 # spec/support/capybara.rb
 require "selenium/webdriver"
@@ -863,8 +908,10 @@ Capybara.register_driver :headless_chrome do |app|
     browser: :chrome,
     desired_capabilities: capabilities
 end
+Capybara.enable_aria_label = true
 
-Capybara.javascript_driver = :chrome
+Capybara.javascript_driver = :headless_chrome
+# Capybara.javascript_driver = :chrome
 
 # if you need to use custom domain , you can set host, but also set server port
 Capybara.app_host = "http://my-domain.dev:3333"
@@ -923,6 +970,7 @@ RSpec.configure do |config|
     # Use really fast transaction strategy for all
     # examples except 'js: true' capybara specs
     # that is Capybara.current_driver != :rack_test
+    # https://github.com/DatabaseCleaner/database_cleaner#what-strategy-is-fastest
     DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
 
     # Start transaction
@@ -966,29 +1014,34 @@ sheet](https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf)
   * `within "#login-form" do`
   * [more](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)
 * node actions target elements by their: id, name, label text, alt text, inner
-text. Note that locator is case sensitive. You can use substring or you can
-define `exact: true`
+text [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)
+Note that locator is case sensitive. You can NOT use css or xpath (this is
+only for finders). You can use substring or you can define `exact: true`
   * `click_on "Submit"` (both buttons and links) `click_button "Sign in"`,
-  `click_link "Menu"`
-  * `fill_in "email", with: 'asd@asd.asd'`
+  `click_link "Menu"`. Find can be used for click, for example
+  `find('.class').click` but I prefer to enable aria labels and use that
+  `Capybara.enable_aria_label = true` and `click 'my-aria-label'`
+  * `fill_in "email", with: 'asd@asd.asd'` (alternative is
+  `find("input[name='cc']").set 'asd@asd.asd'`, or using `page.execute_script
+  "$('#my-id').val('asd@asd.asd')"`
   * `check 'my checkbox'`, `choose 'my radio button'`, `select 'My Option or
   Value', from: 'My Select Box'`, and `uncheck 'my checkbox'`, `unselect`,
   `attach_file 'Image', '/path/to/image.jpg'`
-  * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions)
-* node finders
-  * `find('ng-model="newExpense.amount"').set('123')` [find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method) can use css or xpath (see some [xpath examples](scrapper post)) When
+* node finders [find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method) can use css, xpath, or text (see some [xpath examples](scrapper post))
+  * `find 'th', text: 'Total Customers'`
+  * `find('ng-model="newExpense.amount"').set('123')`
   * `find_all('input').first.set(123)`
-  * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Finders)
-  * find can be used for click, for example `find('.class').click` but I prefer
-  to enable aria labels and use that `Capybara.enable_aria_label = true` and
-  `click 'my-aria-label'`
 * node matchers and rspec matchers
   * `expect(page.has_css?('.asd')).to be true`
   * `expect(page).to have_css(".title", text: "my title")`, `have_text`,
   `have_content`, `have_link`, `have_selector("#project_#{project.id} .name",
   text: 'duke')` (`assert_selector` in minitest). `have_no_selector` for
   opposite. With all you can use `text: '...'` and `count: 2` which is number of
-  occurences
+  occurences. If element is not visible, you can provide `visible: false` (does
+  not work with `have_content "d", visible: false` but works with `have_css
+  'div', text: 'd', visible: false`
+  * test sort order is with regex `expect(page).to have_text
+  /first.*second.*third/`
   * [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers)
   * [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
 * node element
@@ -1170,7 +1223,6 @@ RSpec.configure do |config|
 end
 ~~~
 
-
 I got error: `UncaughtThrowError: uncaught throw :warden` and that is because
 user was unconfirmed. Better is be by default confirmed:
 
@@ -1186,13 +1238,19 @@ user was unconfirmed. Better is be by default confirmed:
   end
 ~~~
 
+Note that devise confirmation email is sent
+[after_commit](https://github.com/plataformatec/devise/blob/4-1-stable/lib/devise/models/confirmable.rb#L48)
+which is not happen if you are using database_cleaner. Solution is to jump to
+`js` or manually initiate sending email confirmation after create
+[link](https://github.com/plataformatec/devise/issues/2688#issuecomment-187173433)
+
 ## Mailer helper
 
 ~~~
 # spec/support/mailer_helpers.rb
 module MailerHelpers
   # you should call this manually for specific test
-  # config.before(:each) { reset_email }
+  # not for all tests like: config.before(:each) { reset_email }
   def reset_email
     ActionMailer::Base.deliveries = []
   end
@@ -1410,7 +1468,7 @@ name as usuall. In validation, you can validate presence for object but not id
     user
     # or
     association :user
-    # if you want that user is build but not save to database
+    # if you want that user is built but not save to database
     association :user, strategy: :build
     # you can define class and additional attributes
     association :updated_by, factory: :user, name: "Admin User"
@@ -1515,8 +1573,11 @@ can be used with hash also `build :user, :admin, name: 'Mike'`
       is_admin true
     end
 
-    factory :user_admin do
-      admin
+    # do not create profile for all users since that is not required in all test
+    trait :with_profile do
+      after :create do |user|
+        create :user_profile, user: user
+      end
     end
   end
   ~~~
@@ -1921,21 +1982,86 @@ client and server, **fake server** returns a fake response
 * *integration test* is using fake server
 * *client unit test* ends at adapter
 
-## VCR
+## Webmock VCR
+
+After installing and requiring webmock
+
+~~~
+sed -i Gemfile -e $'/group :development, :test do/a  \
+  gem \'rspec-rails\''
+bundle
+sed -i spec/rails_helper.rb -e '/require .spec_helper/a  \
+require \'support/factory_girl\''
+~~~
+
+you can not make any external request `WebMock::NetConnectNotAllowedError:` will
+be raised and information how to stub requests will be shown which you can use
+in your `before` of `setup` block, or in some helper like
+https://github.com/nebulab/cangaroo/blob/4effc172c6ee36ccf2b844e90dcc7041035d49cc/spec/support/spec_helpers.rb#L11-L30
+You can match partial query
+[hash_including](https://github.com/bblimke/webmock#matching-partial-query-params-using-hash)
+
+~~~
+# spec/a/webmock_helper.rb
+module WebmockHelper
+  def stub_sms_to(mobile = "1111111111")
+    url = "https://control.msg91.com/api/sendhttp.php"
+    stub_request(:get, url).
+      with(query: hash_including(mobiles: mobile)).
+      to_return(status: 200, body: "376967743076313037373133", headers: {})
+  end
+end
+RSpec.configure do |config|
+  config.include(WebmockHelper)
+end
+~~~
+
+VCR is using cassetes so you do not need to manualy stub requests.
 
 ~~~
 # spec/support/vcr.rb
 VCR.configure do |config|
   config.cassette_library_dir = "spec/vcr_cassettes"
   config.hook_into :webmock
-  config.allow_http_connections_when_no_cassette = true
+  # config.allow_http_connections_when_no_cassette = true
   config.ignore_localhost = true
+
+  # custom matcher ignore message
+  config.default_cassette_options = {
+    match_requests_on: [ :method,
+      VCR.request_matchers.uri_without_params(:message)]
+  }
+end
+
+# we can use implicit form with macros use_vcr_cassete, but that is deprecated,
+# use metadata
+# https://relishapp.com/vcr/vcr/v/3-0-3/docs/test-frameworks/usage-with-rspec-metadata
+~~~
+
+If you really need external requests you can
+
+~~~
+# spec/a/webmock.rb
+require 'webmock/rspec'
+WebMock.disable_net_connect!
+RSpec.configure do |config|
+  config.around :example, :live do |example|
+    WebMock.allow_net_connect!
+    VCR.turn_off!
+    example.run
+    VCR.turn_on!
+    WebMock.disable_net_connect!
+  end
 end
 ~~~
 
 # Testing Rails.cache
 
-If you have page caching that it is easier to set
+By default in `config/environments/test.rb` we have
+`config.action_controller.perform_caching = false`. Note that this applies only
+for `action_controller` so any page, fragment or custom caching still works.
+You can disable all caching, ie caching is enabled but any write to cache is
+discarded with:
 
 ~~~
 # config/environments/test.rb
@@ -1944,7 +2070,6 @@ Rails.application.configure do
 end
 ~~~
 
-so caching is enabled but any write to cache is discarded.
 I you need to test some caching (if rails state depend on cache value) than you
 can clear (purge) cache before example
 

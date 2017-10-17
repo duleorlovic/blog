@@ -119,8 +119,31 @@ as 3th param (options):
 * `include_blank: 'Please select'` this is shown always (even already have
 value)
 
+as 4th params (html options)
+* `multiple: true` so it is multi_select (instead of dropdown). Multi select
+will be shown with its own scrollbar (use `size: 5` to limit the size). In
+controller you need to allow arrays
+
+  ~~~
+  def event_params
+    params.require(:event).permit(
+      :title, skills: []
+    )
+  end
+  ~~~
+
+  And in model you need to clean empty strings `[""]` when nothing is selected
+
+  ~~~
+  before_validation :clean_empty_skills
+  def clean_empty_skills
+    self.skills = skills.select &:present?
+  end
+  ~~~
+
 You should avoid saving without validation `save(validate: false)` or
-`update_attribute`.
+`update_attribute :name, 'my name'`. It is risky to save without callbacks and
+validations.
 
 # Hooks
 
@@ -213,6 +236,7 @@ end
 # Format date
 
 Write datetime in specific my_time format
+https://apidock.com/ruby/DateTime/strftime
 
 ~~~
 # config/initializers/mytime_formats.rb
@@ -338,6 +362,8 @@ sudo su - postgres
 ## Active record
 
 * union is not supported [issue 929](https://github.com/rails/rails/issues/939)
+* execute sql with `ActiveRecord::Base.connection.execute("SELECT * FROM
+users")`. Result is iteratable (array of arrays of selected fields).
 
 
 ## Add json and hstore
@@ -608,9 +634,11 @@ different name NOTE that you need to use exact column name (with `_id`)
   (select box, customer plans)
 * when you restore database you can see that list of performed migrations `rake
 db:migrate:status` does not show that any migration was perfomed. You can
-manually perform specific migration `rake db:migrate:up VERSION=20161114162031`.
+manually perform specific single migration `rake db:migrate:up
+VERSION=20161114162031`. if you want to redo migration you should use `redo`
+instead of `up`
 * you can use `rake db:migrate:redo STEP=2` to redo last two migrations, or you
-can run all migratio to certain point with `rake db:migrate
+can run all migrations to certain point with `rake db:migrate
 VERSION=20161114162031` (note that `:up` `:down` only run one migration)
 * `rake db:migrate` will also invoke `db:schema:dump` task
   [link](http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations)
@@ -661,8 +689,12 @@ true, null: false` but donor is actually in users table, than you need to change
 foreign key
 
 ~~~
-# to_table is in rails 5
+# to_table is in rails5
 t.references :donor, foreign_key: { to_table: :users }, null: false
+# in rails4 use references keyword also as parameter, not that foreight key
+# constrains need to be added in separate command. note suffix "_id"
+t.references :donor, foreign_key: false, null: false, references: :users
+add_foreign_key :table, :users, column: :donor_id
 ~~~
 
 or manually write relation
@@ -1308,9 +1340,7 @@ form objects (query objects) for multiple in multiple out data
 
 ~~~
 class Search
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  extend ActiveModel::Naming
+  include ActiveModel::Model
 
   # input
   attr_accessor :address, :food, :pure_vegetarian, :cuisines
@@ -1328,6 +1358,7 @@ class Search
   end
 
   def perform
+    return unless valid?
     filter_users_by_address
     filter_by_pure_vegetarian if pure_vegetarian.present?
     filter_by_any_cuisine if cuisines.present?
@@ -1388,6 +1419,18 @@ class Search
   end
 end
 ~~~
+
+Also you can use
+
+~~~
+class AtomPayment
+  include Rails.application.routes.url_helpers
+  delegate :form_tag, :text_field_tag, to: 'ActionController::Base.helpers'
+  def form
+  end
+end
+~~~
+
 
 ## Concerns
 
@@ -1989,8 +2032,9 @@ locales [look for adminlte example]( {{ site.baseurl }}
   new (build is deprecated) json except. If you use method `as_json.exept "id"`
   than pass string arguments (or splat array `(*%(id))`), if it is param
   `as_json except: [:id]` than you can use symbols. Please note that `as_json`
-  returns has with string keys so if you merge something you should use string
-  `chat.as_json(except: [:id]).merge("sport_id" => view.sport.id)`
+  returns hash with string keys so if you merge something you should use string
+  `chat.as_json(except: [:id]).merge("sport_id" => view.sport.id)`. `to_json`
+  returns string, so `as_json` it much better.
 
   ~~~
   # http://stackoverflow.com/questions/5976684/cloning-a-record-in-rails-is-it-possible-to-clone-associations-and-deep-copy
@@ -2056,8 +2100,9 @@ locales [look for adminlte example]( {{ site.baseurl }}
 
   ~~~
     delegate :url_helpers, to: 'Rails.application.routes'
-
     # call with `url_helpers.jobs_url` in you class
+
+
   ~~~
 
 
@@ -2113,7 +2158,9 @@ locales [look for adminlte example]( {{ site.baseurl }}
   add a line in model `acts_as_list scope: :post, column: :priority` and to use
   that priority in associations `has_many :comments, -> { order priority: :asc
   }, dependent: :destroy`
-* `enum status: [:paused]` should be type integer, or it will return nil
+* `enum status: [:paused]` should be type integer, or it will return nil. Use
+synonim for new, like unproccessed, draft. You can access values with symbols
+`:drat` and outside of class with `Class.statuses`.
 
 * params usually need to be striped, so you can use this code to get rid of all
   unnecessary spaces
@@ -2328,6 +2375,16 @@ on submit button). I do not know how to send value...
   <%= check_box_tag name, value, checked, data: { url: toggle_todo_path(todo), remote: true } %>
 ~~~
 
+* if you need snake case from class name, you can
+`described_class.name.underscore`
+* `printf '.'` if you need to print single dot
+* turn of sql debug log messages in console `ActiveRecord::Base.logger = nil`
+* put `gem 'irbtools', require: 'irbtools/binding'` in Gemfile so you can load
+scripts in rails console: `vi 'tmp/my_script.rb'` and later you can use just
+`vi`. Do not exit with `<leader>q`. but use `:wq`.
 * single file rails application in one file
 <https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/>
+<https://gist.github.com/kidlab/72fff6e239b0af1dd3e5> for something that need
+test or we just want to showcase in one file onepage rails
+
 

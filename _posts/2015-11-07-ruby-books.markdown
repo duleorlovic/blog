@@ -32,6 +32,7 @@ Bundle
 
 * http://www.railsbookbundle.com/
 * http://rubybookbundle.com/
+* awesome coding style guides <http://awesome-ruby.com/#-coding-style-guides>
 
 Questions
 
@@ -241,7 +242,10 @@ ruby> reader.call
 ~~~
 
 * `attr_accessor :price` creates getter and setter method. its better to write
-  all instance variable like that at beggining so we know what defines state
+all instance variable like that at beggining so we know what defines state
+(in rails when including `ActiveModel::Model` you can call `Model.new
+model_params` and those accessor will be assigned, ie no need to write
+initialized and manually assign)
 * required and optional arguments for methods `def f(a, b=1, *c, d)` prefix
   asterix means that all other arguments will be sponged up an array `c`. `a`
   and `d` are required, ie you can not call `f(1)`. `b` has default value
@@ -494,128 +498,6 @@ than it means we are not going to use it.
   a.rb:4:in `<main>': Not handled (RuntimeError)
   ~~~
 
-# Tips
-
-* Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`
-* insert in strings with percentage `"Nums are %f %f" % [1, 2]`
-* [101 ruby code factoids](http://6ftdan.com/allyourdev/2016/01/13/101-ruby-code-factoids/)
-* you can return only from methods, but not from `do end` blocks
-* method default parameters can be set using ruby 2.0 keyword arguments `def
-my_method(name:, position: 1);end` They looks better than position arguments. It
-will be an error if we call without required arguments, for example `my_method
-position: 2`. It will be an error if we call with non existing arg `my_method
-name: 'me', date: 3`. You can mix with position arguments. It does not work if
-you instead of hash use object `ActionController::Parameters.new name: 'me'` so
-you need to call with `my_method name: ActionController::Parameters.new(name:
-'me').name`
-* ruby regex match will return
-[matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) for which you can
-call `captures` to get matched groups. You can use block instead of `if`
-
-  ~~~
-  exception.message.match(/for column (.*) at row/) do |match_data|
-    detail += " for the field #{match_data.captures.first}"
-  end
-  ~~~
-
-* decorators poro presenters
-[thoughtbot](https://robots.thoughtbot.com/evaluating-alternative-decorator-implementations-in)
-example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
-[video railsconf](https://www.youtube.com/watch?v=bHpVdOzrvkE)
-* safe navigation operator `&.` can be used instead of `.try` for example: `user
-&& user.name` can be written as `user&.name`. In rinu 2.3 there is also
-`Array#dig` and `Hash#dig` so instead of `params[:a].try(:[], :b)` you can
-`params.dig(:a, :b)`
-* you can count non nil values in array with `[nil, 1, 2].compact # => [1,2]`
-* you can call methods with dot but also with double colon `"a".size` or
-`"a"::size`. You can put spaces or new lines anywhere `a   .   size`.
-* destructuring block arguments (params), for example `a = [[1, 2], [3, 4]]` can
-be iterated with `a.each_with_index do |(first, last), i|`
-
-* if you see error `method_missing': undefined method this` than you need to
-reinstall ruby `rvm reinstall 2.3.1`. But is related to rubygems
-[1420](https://github.com/rubygems/rubygems/issues/1420) and best patch is
-[tenderlove
-comment](https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431)
-* argument list length could be variable, there is
-[splat](https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator)
-star/asterix/expand `*` operator, where all other parameters are collected in
-array. (note you can not use splat and last hash attribute)
-
-  ~~~
-  def f(x, y, *allOtherValues)
-  end
-  f(1, 2, 3, c: 4) # allOtherValues = [3, { c: 4} ]
-  ~~~
-
-  If it is used in method call than it is oposed:
-
-  ~~~
-  a = [1, 2]
-  f(*a) # is the same as f(1, 2)
-  ~~~
-
-  Last argument could be hash so it can grab all params
-
-  ~~~
-  def f(args)
-    puts args.inspect
-  end
-  f(a: 1, b: 2) # { a: 1, b: 2 }
-  ~~~
-
-  In ruby > 2.0 you can use keyword arguments (params are exploded decomposed),
-  for which you can define default values or they need to be required (hash key
-  is required)
-
-  ~~~
-  def f(x, y, c: , d: 1)
-  end
-  f(1, 2, c: 1, d: 2)
-  f(1, 2) # ArgumentError: missing keyword: c
-  ~~~
-
-  There exists double splats (**) which is used for hashes
-  [link](https://alexcastano.com/everything-about-ruby-splats/)
-  Single splat convert to array, but double splat convert to hash. Note that it
-  only takes symbol keys (and leave string keys). And double splat differs from
-  hash last arg since hash can have default value, but it can be overwritten
-  with some non hash. So use splat if you really need last param to be hash
-
-  ~~~
-  def f_with_hash(a, h = {})
-  end
-  def f_with_double(a, **d)
-  end
-  f_with_hash 1, 2 # => h = 2
-  f_with_double 1, 2 # => ArgumentError: wrong number of arguments (given 2, expected 1)
-  ~~~
-
-  To see parameters of some function you can use
-
-  ~~~
-  Object.instance_method(:f).parameters
-  ~~~
-
-  Similar to asteriks, last parameter can be prefixed with ampersand (&) which
-  means function expect a code block. A Proc object will be created and assigned
-  to parameter.
-
-  ~~~
-  def f(a, &p)
-    p.call a
-  end
-  # parenthesis for method params are required when passing using {}
-  f(1) { |i| puts i } # output: 1
-  # parenthesis are not required for do end
-  f 1 do |i| puts i; end # output: 1
-  ~~~
-
-  Similarly, using ampersand in method call for a Proc object, it will be
-  extrapolated/replaced with block `f2 &p` for which you can use:
-  `def f2; yield; end`. This `&p` exists inside method with code block
-  param.
-
 # Procs
 
 <https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Understanding_blocks.2C_Procs_and_methods>
@@ -787,6 +669,11 @@ List of methods that are faster than other methods
 
 * `enum.map { }.flatten(1)` should be replaced with `enum.flat_map {}` since we
 do not need to traverse twice
+* `[1,2,3].map{ |n| next if n.even? ; 2*n }` will return `[2, nil, 6]` so if you
+need to filter you can apply `.compact`
+* for big arrays you can use rails `User.find_each do |user| end` so it loads in
+batch of 1000 (It returns `nil`). You can use map, `User.find_each.map ` but
+than you again load all users at once.
 * use mutation methods (with !) so you do not need to create new objects. For
 example `return hash.merge a: 1` should be replaced with `return hash.merge! a:
 1` but for hash we can also use `hash[:a] = 1` whih is faster.
@@ -794,7 +681,8 @@ example `return hash.merge a: 1` should be replaced with `return hash.merge! a:
 exists. You can use block instead of second argument to define default value,
 and it is faster since block is not called if key is not found so
 `hash.fetch(:foo, :my_default_value_computation)` should be replaced with
-`hash.fetch(:foo) { my_default_value_computation }`
+`hash.fetch(:foo) { my_default_value_computation }` so
+my_default_value_computation is only evaluated when `hash[:foo]` is nil
 * `string.gsub("asd", "qwe")` should be replaced with `string.sub("asd", "qwe")`
 if we need to replace only first occurence, so no need to scan string to the
 end. Also you can use `string.tr(" ", "_")`
@@ -821,10 +709,21 @@ end
 * `Time.parse('2001-01-01 06:06:06 UTC')` should be raplaced with
 `Time.at(999232123).utc)` since we do not need to parse every time
 * instead of `map(&:id)` use `pluck(:id)`
+* safe navigation operator `&.` can be used instead of `.try` for example: `user
+&& user.name` can be written as `user&.name`. It is usefull with find_by for
+example `User.find_by(email: 'a@b.c')&.tap { |u| }`
+* In ruby 2.3 there is also `Array#dig` and `Hash#dig` so instead of
+`params[:a].try(:[], :b)` you can `params.dig(:a, :b)`
 * rails has hash except `my_hash.except :my_key` to ignore only my_key value and
-returns also the hash. Oposite select is slice `my_hash.slice :my_key` to
-pick `{my_key: 1}` (also returns hash). If you need only values for specific
-keys use `my_hash.values_at :my_key, :my_other_key`
+returns also the hash. Also oposite select is slice `my_hash.slice :my_key` to
+pick `{my_key: 1}` (also returns hash)
+* If you need only values for specific keys use `my_hash.values_at :my_key,
+:my_other_key`. Also given some value you can find key `my_hash.key some_value`
+* rails has
+[deep_transform_keys](https://apidock.com/rails/v4.0.2/Hash/deep_transform_keys)
+that can transform keys for your select `hash.deep_transform_keys{ |key|
+key.to_s.titleize }`
+* ruby has `Hash#invert` which will replace keys and values.
 * `map` and `collect` are the same methods
 * to check if string starts with or ends with some substring prefix sufix you
 can use `s.start_with? prefix` or `s.end_with? suffix`
@@ -847,6 +746,147 @@ HERE_DOC
 URI.escape has been deprecated in Ruby 1.9.2... so use CGI::escape or
 ERB::Util.url_encode.
 
+# Tips
+
+* Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`
+* insert in strings with percentage `"Nums are %f %f" % [1, 2]`
+* [101 ruby code factoids](http://6ftdan.com/allyourdev/2016/01/13/101-ruby-code-factoids/)
+* you can return only from methods, but not from `do end` blocks
+* method default parameters can be set using ruby 2.0 keyword arguments `def
+my_method(name:, position: 1);end` They looks better than position arguments. It
+will be an error if we call without required arguments, for example `my_method
+position: 2`. It will be an error if we call with non existing arg `my_method
+name: 'me', date: 3`. You can mix with position arguments. It does not work if
+you instead of hash use object `ActionController::Parameters.new name: 'me'` so
+you need to call with `my_method name: ActionController::Parameters.new(name:
+'me').name`
+* ruby regex match will return
+[matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) for which you can
+call `captures` to get matched groups. You can use block instead of `if`
+
+  ~~~
+  exception.message.match(/for column (.*) at row/) do |match_data|
+    detail += " for the field #{match_data.captures.first}"
+  end
+  ~~~
+
+* decorators poro presenters
+[thoughtbot](https://robots.thoughtbot.com/evaluating-alternative-decorator-implementations-in)
+example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
+[video railsconf](https://www.youtube.com/watch?v=bHpVdOzrvkE)
+* you can count non nil values in array with `[nil, 1, 2].compact # => [1,2]`
+* you can call methods with dot but also with double colon `"a".size` or
+`"a"::size`. You can put spaces or new lines anywhere `a   .   size`.
+* destructuring block arguments (params), for example `a = [[1, 2], [3, 4]]` can
+be iterated with `a.each_with_index do |(first, last), i|`
+
+* if you see error `method_missing': undefined method this` than you need to
+reinstall ruby `rvm reinstall 2.3.1`. But is related to rubygems
+[1420](https://github.com/rubygems/rubygems/issues/1420) and best patch is
+[tenderlove
+comment](https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431)
+* argument list length could be variable, there is
+[splat](https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator)
+star/asterix/expand `*` operator, where all other parameters are collected in
+array. (note you can not use splat and last hash attribute)
+
+  ~~~
+  def f(x, y, *allOtherValues)
+  end
+  f(1, 2, 3, c: 4) # allOtherValues = [3, { c: 4} ]
+  ~~~
+
+  If it is used in method call than it is oposed:
+
+  ~~~
+  a = [1, 2]
+  f(*a) # is the same as f(1, 2)
+  ~~~
+
+  Last argument could be hash so it can grab all params
+
+  ~~~
+  def f(args)
+    puts args.inspect
+  end
+  f(a: 1, b: 2) # { a: 1, b: 2 }
+  ~~~
+
+  In ruby > 2.0 you can use keyword arguments (params are exploded decomposed),
+  for which you can define default values or they need to be required (hash key
+  is required)
+
+  ~~~
+  def f(x, y, c: , d: 1)
+  end
+  f(1, 2, c: 1, d: 2)
+  f(1, 2) # ArgumentError: missing keyword: c
+  ~~~
+
+  There exists double splats (**) which is used for hashes
+  [link](https://alexcastano.com/everything-about-ruby-splats/)
+  Single splat convert to array, but double splat convert to hash. Note that it
+  only takes symbol keys (and leave string keys). And double splat differs from
+  hash last arg since hash can have default value, but it can be overwritten
+  with some non hash. So use splat if you really need last param to be hash
+
+  ~~~
+  def f_with_hash(a, h = {})
+  end
+  def f_with_double(a, **d)
+  end
+  f_with_hash 1, 2 # => h = 2
+  f_with_double 1, 2 # => ArgumentError: wrong number of arguments (given 2, expected 1)
+  ~~~
+
+  To see parameters of some function you can use
+
+  ~~~
+  Object.instance_method(:f).parameters
+  ~~~
+
+  Similar to asteriks, last parameter can be prefixed with ampersand (&) which
+  means function expect a code block. A Proc object will be created and assigned
+  to parameter.
+
+  ~~~
+  def f(a, &p)
+    p.call a
+  end
+  # parenthesis for method params are required when passing using {}
+  f(1) { |i| puts i } # output: 1
+  # parenthesis are not required for do end
+  f 1 do |i| puts i; end # output: 1
+  ~~~
+
+  Similarly, using ampersand in method call for a Proc object, it will be
+  extrapolated/replaced with block `f2 &p` for which you can use:
+  `def f2; yield; end`. This `&p` exists inside method with code block
+  param.
+
+* sort hash by keys with `h.sort` and by values with `h.sort {|a,b|
+a[1]<=>b[1]}`
+
+~~~
+h = { "a" => 20, "b" => 30, "c" => 10  }
+h.sort                       #=> [["a", 20], ["b", 30], ["c", 10]]
+h.sort {|a,b| a[1]<=>b[1]}   #=> [["c", 10], ["a", 20], ["b", 30]]
+~~~
+
+in rails you can get from ActiveRecord some objects by array of ids and if you
+want to keep order you can with `index_by(&:id)` that will create hash of `{3:
+user3, 8: user8, 1: user1}` but with no order, so you can sort that or slice
+
+~~~
+Something.find(array_of_ids).index_by(&:id).slice(*array_of_ids).values
+
+# or
+people_by_id = Person.find(ids).index_by(&:id) # Gives you a hash indexed by ID
+ids.map {|id| people_by_id[id] }
+~~~
+
+But also ordering and other filtering can be done in sql
+https://stackoverflow.com/questions/10150152/find-model-records-by-id-in-the-order-the-array-of-ids-were-given/38378457#38378457
 
 
 todo
@@ -856,4 +896,5 @@ https://www.amazon.com/Eloquent-Ruby-Addison-Wesley-Professional/dp/0321584104
 http://www.confidentruby.com/
 http://www.poodr.com/
 http://poignant.guide/book/chapter-5.html
+https://prograils.com/posts/ruby-on-rails-books-experienced-level
 
