@@ -424,11 +424,31 @@ version on "Hello #{name}")
 can be combined with default destructing params `function g({a=1, b}={b:2}){}`
 and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
 
-* `for(i=0;i<cars.loeght;i++) {}` is not concise `cars.forEach(myFunction)` is
+* `for(i=0;i<cars.length;i++) {}` is not concise `cars.forEach(myFunction)` is
   concise but can not break out of the loop. `for(let ... of ...)` is concise
   and can break `for(let car of cars) { }` (coffee script has `.each`)
 * extend classes `class Employee extends Person {}` so we don't need to write
-  `Employee.prototype = new Person`
+  `Employee.prototype = new Person`. We can define instance and static methods.
+  We can use `super` and define `constructor`. In hash, instead of `full_name:
+  function() {}` we can write `full_name(){}`
+
+  ~~~
+  class Empoyee extends Person {
+    constructor(name) {
+      super(name);
+
+      this.proffessional_name = name;
+    }
+    full_name() {
+      return this.name;
+    }
+
+    static myUtilityFunction(uppercase) {
+      return uppercase;
+    }
+  }
+  ~~~
+
 * new data structure called `Map` and `WeakMap` (keys are objects, not plain
   values like number, string or symbol)
 

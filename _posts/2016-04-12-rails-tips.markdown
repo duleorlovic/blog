@@ -187,6 +187,8 @@ def default_values_on_create
 end
 ~~~
 
+TO calculate some files you can use `after_save :update_total`. Do not use
+`after_update :update_total` since you can not update in that method.
 # Default Order
 
 ~~~
@@ -265,11 +267,16 @@ always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
 * to get weekday from `ActiveSupport::TimeWithZone` use
   [link](http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html)
   `weekday = t.to_a[6]`
+* to get a weekday from a date use
+<https://ruby-doc.org/stdlib-2.4.2/libdoc/date/rdoc/Date.html#method-i-cwday>
+  * `d.wday` (0-6, Sunday is zero)
+  * `d.cwday` (1-7. Sunday is 7, Moday is 1)
 * to get first calendar date `Time.zone.today.beginning_of_month` or
 `Time.zone.today.end_of_month`
   * get interval for previous month: `'Last Month':
   [Time.zone.today.prev_month.at_beginning_of_month,
   Time.zone.today.prev_month.at_end_of_month],`
+* to get month date use `d.day`
 
 Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
 tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
@@ -350,13 +357,19 @@ $(document).on 'change', '[data-upload-file]', (e) ->
 Show all databases in postgresql, first change user to postgres
 
 ~~~
-sudo su - postgres
+sudo su -l postgres
+psql
+
+# or in one command
+sudo -u postgres psql
 ~~~
 
 ~~~
 \list
 \connect database_name
 \dt
+
+CREATE USER orlovic WITH CREATEDB PASSWORD '<password>';
 ~~~
 
 ## Active record
@@ -507,7 +520,8 @@ Change DATABASE_URL
   sudo pg_dropcluster 9.3 main
   ~~~
 
-* To disable sql log in rails logger put this in initializer file:
+* To disable sql logs in rails logger put this in initializer file (simillar to
+quiet assets)
 
   ~~~
   # config/initializers/silent_sql_log.rb
@@ -594,11 +608,12 @@ false` because name is too long (error like `Index name 'index_table_column' on
 table 'table' is too long; the limit is 64 characters`) than you can use
 different name NOTE that you need to use exact column name (with `_id`)
 `add_index :users, :company_id, name: 'index company on users'`
-* if we call `Products.update_all fuzz: 'fuzzy'` in migration, it will
-  probably break in the future, because *Products* will be validated for
-  something that we did not know on that time. Better is to create local class
-  and call reset column information. Also if we are adding not null column we
-  need to do it in two steps to populate existing records.
+* we can call `Products.update_all fuzz: 'fuzzy'` (to update all records in
+single sql query, without triggering callbacks or validations. In migration
+Product.save will probably break in the future, because *Product* will be
+validated for something that we did not know on that time. Better is to create
+local class and call reset column information. Also if we are adding not null
+column we need to do it in two steps to populate existing records.
 
   ~~~
   # db/migrate/20161010121212_update_fuzz.rb
@@ -634,9 +649,10 @@ different name NOTE that you need to use exact column name (with `_id`)
   (select box, customer plans)
 * when you restore database you can see that list of performed migrations `rake
 db:migrate:status` does not show that any migration was perfomed. You can
-manually perform specific single migration `rake db:migrate:up
+manually perform run specific single migration `rake db:migrate:up
 VERSION=20161114162031`. if you want to redo migration you should use `redo`
-instead of `up`
+instead of `up`. To drop database in console you can
+`ActiveRecord::Migration.drop_table(:users)`
 * you can use `rake db:migrate:redo STEP=2` to redo last two migrations, or you
 can run all migrations to certain point with `rake db:migrate
 VERSION=20161114162031` (note that `:up` `:down` only run one migration)
@@ -809,6 +825,65 @@ If you receive error `undefined method map for "'users' FORCE INDEX
 (my_user_index)":Arel::Nodes::SqlLiteral` than you can try to replace
 `includes/references` with `joins`.
 
+## Deadlocks
+
+<https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlock-example.html>
+<http://api.rubyonrails.org/v5.1/classes/ActiveRecord/Locking/Pessimistic.html>
+<http://www.chriscalender.com/advanced-innodb-deadlock-troubleshooting-what-show-innodb-status-doesnt-tell-you-and-what-diagnostics-you-should-be-looking-at/>
+
+<https://vimeo.com/12941188>
+
+Siimulate `Mysql2::Error: Lock wait timeout exceeded; try restarting transaction
+` with this examples. You can use rails `destroy` or sql execute
+
+~~~
+namespace :demo do
+  task first: :environment do
+    Farmer.transaction do
+      retries ||= 0
+      begin
+        puts "start"
+        bob = Farmer.find_by! name: 'Bob'
+        conn = ActiveRecord::Base.connection
+        # conn.execute "SELECT * FROM farmers WHERE id = #{bob.id}"
+        puts "bob coin #{bob.coin}. start another transaction that will lock this"
+        sleep 10
+        puts "destroy"
+        # conn.execute "DELETE FROM farmers WHERE id = #{bob.id}"
+        bob.destroy
+        puts "finish"
+      rescue ActiveRecord::StatementInvalid => e
+        puts e.message
+        retry if (retries += 1) < 3
+      end
+    end
+  end
+  task del: :environment do
+    Farmer.transaction do
+      puts "start del"
+      bob = Farmer.find_by! name: 'Bob'
+      conn = ActiveRecord::Base.connection
+      puts "execute"
+      # conn.execute "DELETE FROM farmers WHERE id = #{bob.id}"
+      bob.destroy
+      puts "sleep"
+      sleep 100
+    end
+  end
+end
+~~~
+
+~~~
+rails new deadlock_mysql --database mysql
+cd deadlock_mysql
+rails g model farmer name coin:integer
+rails g model tractor farmer:references model
+rake db:create db:migrate
+~~~
+
+`SHOW ENGINE INNODB STATUS`
+
+`Farmer.lock.find` will wait untill it is free to lock this farmer.
 
 # MySql
 
@@ -832,6 +907,11 @@ If you receive error `undefined method map for "'users' FORCE INDEX
   ~~~
   mysql -u root -p
   CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'asdf';
+
+  # list all
+  SELECT User FROM mysql.user;
+  # change password
+  SET PASSWORD FOR 'user-name-here'@'hostname-name-here' = PASSWORD('new-password-here');
   ~~~
 
 * restore mysql sql dump
@@ -867,15 +947,47 @@ more MB in for free usage.
 
 # Turbolinks
 
-With turbolinks rails acts as single page application. So if you want to do
-something on every page and on first load than you need to bind on two events
-`ready page:load`:
+`$(function)` is shorthand for `$(document),ready(function(){})` (and is not the
+same as `$(document).on('ready', function(){})`) and it is when DOM is ready. If
+you need to know when all images and iframes are loaded than use
+`$(window).on('load', function() {})`.
+Turbolinks is installed with adding `gem 'turbolinks'` and include in
+application.js `//= require turbolinks`.
+
+> Turbolinks intercepts all clicks on <a href> links to the same domain. When
+> you click an eligible link, Turbolinks prevents the browser from following it.
+> Instead, Turbolinks changes the browser’s URL using the History API, requests
+> the new page using XMLHttpRequest, and then renders the HTML response.
+
+> During rendering, Turbolinks replaces the current <body> element outright and
+> merges the contents of the <head> element. The JavaScript window and document
+> objects, and the HTML <html> element, persist from one rendering to the next.
+
+With turbolinks rails acts as single page application. It will intercept `<a>`
+links, but if you want to redirect using javascript `window.location` than you
+can use `Turbolinks.visit link`, for example
 
 ~~~
-// app/assets/javascripts/ready_page_load.coffee
-$(document).on('ready page:load', ->
-  console.log "document on ready page:load"
-  # Activating Best In Place 
+$(document).on 'click', '[data-click]', (e) ->
+  Turbolinks.visit $(this).data('click')
+~~~
+
+Each visit can be `advance` or `replace`, than can be set with
+`data-turbolinks-action="replace"` or `Turbolinks.visit link, { action:
+'replace' })`.
+`restore` visit is when we click `Back` and can not be canceled.
+You can disable turbolink on specific link with `data-turbolinks="false"`
+
+Since `window` and `document` remains, all objects remain in memory.
+
+So if you want to do something on every page and on first load than you need to
+bind on `turbolinks:load`
+
+~~~
+// app/assets/javascripts/turbolinks_load.coffee
+$(document).on('turbolinks:load', ->
+  console.log "document on turbolinks:load"
+  # Activating Best In Place
   jQuery(".best_in_place").best_in_place()
   autosize $('textarea')
 
@@ -892,11 +1004,46 @@ $(document).on('ready page:load', ->
     $(this).parents('form').first().submit()
 ~~~
 
+When you are using `data-remote-true` for show edit form than request is JS and
+any javascript inside `js.erb` or inside partial `$('#id').replaceWith('<%= j
+render 'partial' %>');` is executed every time. Problem is with bootstrap
+modals where request is HTML. remote modal content is deprecated in
+[v4](https://getbootstrap.com/docs/3.3/javascript/#modals-options) so it's
+better to use custom implementation
+
+~~~
+# app/assets/javascripts/document_on.coffee
+$(document).on 'click', '[data-js-modal]', (e) ->
+  target = this.dataset.jsModal
+  remote_link = this.href || this.dataset.jsModalHref
+  $(target).modal('show')
+  # use $.ajax and replaceWith since $.load use .html which discard scripts
+  $.ajax(
+    url: remote_link
+  ).done (responseText) ->
+    $(target + " .modal-content").replaceWith responseText
+  e.preventDefault()
+~~~
+
+
+and trigger turbolinks load so it can catch new items. Instead of triggering,
+you can call `initializeDatepicker()`. That is also needed below the
+forms since ajax request in remote-true forms also need to run the initializaion
+scripts.
+
+~~~
+# app/assets/javascripts/initialize_datepicker.coffee
+window.initializeDatepicker = ->
+  $date_elements = $('.date')
+  return unless $date_elements
+  ...
+~~~
+
 If you want to perform something on click for existing and new elements, but
 only on particular page, you can bind bind click on document on that page inside
 body. But when you navigate 10 times, it will trigger 10 times. So you can
 unbind on `page:before-change`. Note that you should write that after function
-declaration because when you click on paga again, it will assign "on" on
+declaration because when you click on page again, it will assign "on" on
 previous version, and unassign latest version of your_function
 
 ~~~
@@ -1213,10 +1360,13 @@ ActionDispatch::Http::URL.url_for host: 'dule.asd.zxc.com', subdomain: 'sub'
 
 # Text syntax on buttons and messages
 
-* labels on buttons, titles,...
-  * should be upper case with no period: `This Job Is Paused`
-* sentences on error messages, flash messages...
-  * should have period at the end: `Job has been copied.`
+* labels on buttons, titles,...  should be upper case with no period: `This Job
+Is Paused`
+* sentences on error messages, flash messages...  should have period at the end:
+`Job has been copied.`
+
+Use "Register" or "Sign up" for registrations and "Log in" and "Log out" for
+sessions (since it is easy to differentiate from "sign up").
 
 # 7 patterns
 
@@ -1229,6 +1379,8 @@ You can organize domain (controller, model and view) into separate folders
 [drawers](https://github.com/NullVoxPopuli/drawers)
 
 ## Service objects
+
+Always define only one public method: `call`, `perform` or `process`
 
 ~~~
 # app/services/match_posts.rb
@@ -1298,11 +1450,9 @@ puts my_service.process(false).success? # false
 puts my_service.process(false).message # empty posts
 ~~~
 
-Even simpler Result class
+Even simpler Result class (not using Error class) but not recomended.
 
 ~~~
-# app/services/my_service.rb
-class MyService
   class Result
     attr_reader :error, :message
     def initialize(error:, message:)
@@ -1314,24 +1464,8 @@ class MyService
     end
   end
 
-  def initialize(h)
-    @user = h[:user]
-  end
-
-  def process(posts)
-    success_message = do_something posts
-    Result.new message: success_message
-  rescue ProcessException => e
-    Result.new error: e.mesage
-  end
-
-  private
-
-  def do_something(posts)
-    raise ProcessException, "Error: empty posts" unless posts
-    "Done with do_something"
-  end
-end
+  Result.new message: success_message
+  Result.new error: e.mesage
 ~~~
 
 ## Form Objects
@@ -1847,6 +1981,104 @@ not need to download file.
 
 <https://github.com/mileszs/wicked_pdf>
 
+Generate pdf from html files.
+Just put in gemfile
+
+~~~
+cat >> Gemfile << HERE_DOC
+# pdf generation from html
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+HERE_DOC
+~~~
+
+And in your controller put the name of the downloaded file
+
+~~~
+class ThingsController < ApplicationController
+  def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "thing-#{params[:id]}"   # Excluding ".pdf" extension.
+      end
+    end
+  end
+end
+~~~
+
+You can also set template to another file, layout to pdf and header
+
+~~~
+render template: 'periods/visits', pdf: "visits-#{@period.end_date}", layout: 'pdf', header: { right: '[page] of [topage]' }
+~~~
+
+Template
+
+~~~
+# app/views/things/show.pdf.erb
+<h1>Hi</h1>
+<div class="alwaysbreak"></div>
+<h1>Second page</h1>
+~~~
+
+Layout
+
+~~~
+<%# app/views/layouts/pdf.pdf.erb
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= stylesheet_link_tag wicked_pdf_asset_base64("pdf") %>
+  </head>
+  <body>
+    <div id="content">
+      <%= yield %>
+    </div>
+  </body>
+</html>
+~~~
+
+Styles
+
+~~~
+// app/assets/stylesheets/pdf.scss
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: center;
+}
+* {
+  font-size: 12px;
+}
+div.alwaysbreak { page-break-before: always; }
+~~~
+
+Since we did not include this style in asset pipeline, we need to precompile it:
+
+~~~
+# config/initializers/assets.rb
+Rails.application.config.assets.precompile += ['pdf.css']
+~~~
+
+If you want to use existing html template than use param `render pdf: 'name',
+template: 'show.html'` and create `app/views/layouts/pdf.html.erb` and use
+helper classes to show hide content:
+
+~~~
+.pdf-hidden {
+  display: none;
+}
+~~~
+
+~~~
+.html-hidden {
+  display: none;
+}
+~~~
+
 ## Prawn
 
 * if you need custom symbols in prawn than you need to use ttf fonts. Not all
@@ -1921,12 +2153,32 @@ views.
   where(sport: sport) # conditional on view
 ~~~
 
+# Localisation
+
+To translate active record messages for specific attributes, you can use
+<https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23>
+
+~~~
+
+en:
+  activerecord:
+    errors:
+      messages:
+        models:
+         user:
+           blank: "Polje "%{attribute}" ne sme biti prazno"
+           attributes:
+              ime:
+                blank: "Bez imena? Ne, nikako."
+~~~
+
 # Tips
 
 * parse url to get where user come from `URI.parse(request.referrer).host`
 * always use `@post.destroy` instead of `@post.delete` because it propagates
   to all `has_many :comments, dependent: :destroy` (also need to define this
-  dependent param)
+  dependent param). In other hand `Item.all.destroy_all` will run one by one,
+  instead of one query `Item.all.delete_all`
 * `spring stop` in many cases:
   * when you export some ENV and use them in `config/secrets.yml` but can't see
     in `rails c`
@@ -2078,7 +2330,7 @@ locales [look for adminlte example]( {{ site.baseurl }}
 
   ~~~
   ActionController::Base.helpers.pluralize(count, 'mystring')
-  ActionController::Base.helpers.strip_tags request.body
+  ActionController::Base.helpers.strip_tags request.body # html to text
   ActionView::Base.new.number_to_human 123123
   Rails.application.routes.url_helpers.jobs_url
   ~~~
@@ -2317,6 +2569,19 @@ to iterate...
 
 * to count by grouping you can group_by specific column
 `User.group(:company_id).count.values.max`
+if you want to order in sql, than you need to name the count and order by that
+name (note that we need to use string not symbol for `'count_id'`:
+`User.group(:company_id).order('count_id desc').count(:id)`.
+Maybe find can help
+~~~
+Mail.find(
+    :all, 
+    :select => 'count(*) count, country', 
+    :group => 'country', 
+    :conditions => ['validated = ?', 't' ], 
+    :order => 'count DESC',
+    :limit => 5)
+~~~
 
 * to run ruby script with rails you can include
 
@@ -2386,5 +2651,17 @@ scripts in rails console: `vi 'tmp/my_script.rb'` and later you can use just
 <https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/>
 <https://gist.github.com/kidlab/72fff6e239b0af1dd3e5> for something that need
 test or we just want to showcase in one file onepage rails
+* use `.blank?` instead of `.empty?` since it will work for `nil` and `""`
+* rails has `attribute_was` to get original value of some field. That previous
+value can be read in any hook, for example `after_validation` you can read for
+`operator_id && operator_id_was`.
+* reject empty associated params `params.require(:visit).permit(:post_id).reject
+{ |_, v| v.blank? }`
+* debug network request <https://github.com/aderyabin/sniffer>
+* use <https://github.com/burke/zeus> gem to speed up preload rails like spring
 
-
+~~~
+zeus init
+zeus start
+touch config/boot
+~~~

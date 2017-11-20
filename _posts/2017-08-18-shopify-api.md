@@ -2,17 +2,19 @@
 layout: post
 ---
 
-<https://help.shopify.com/api/getting-started>
-
-On <https://partners.shopify.com> create account and development store, for
-example <https://duleorlovic-test.myshopify.com/>.
-Also create an App and get credentials from Apps -> App info -> App credentials
-and store them in `SHOPIFY_API_KEY` and `SHOPIFY_SECRET_KEY`.
-
-Since shopify from september uses only https, you can not use localhost as App
-url. You need to start ngrok and than update in Apps -> App Info -> App
+<https://help.shopify.com/api/getting-started> On <https://partners.shopify.com>
+create account and development store, for example
+<https://duleorlovic-test.myshopify.com/>.
+Also create an App (url could be your local ngrok tunnel). Since shopify from
+september uses only https, you need to use https ngrok url.
+You need to start ngrok and than update in Apps -> App Info -> App
 information App URL as <https://159abd37.ngrok.io/> and Whitelisted redirection
 URL <https://159abd37.ngrok.io/auth/shopify/callback>
+Use ngrok url when installing the app, since if you install from `<localhost>`
+then `Oauth error invalid_request: The redirect_uri is not whitelisted` is
+raised. This is also raised when you use `http` instead `https`.
+Copy credentials from Apps -> App info -> App credentials and store them in
+`SHOPIFY_API_KEY` and `SHOPIFY_SECRET_KEY`.
 
 Note that protocoll should be https (admin store is always redirected to https),
 because if we use `http://159abd37.ngrok.io` there will be a warning:
@@ -31,20 +33,29 @@ cd shopify_test
 rake db:create
 git init . && git add . && git commit -am "rails new"
 cat > config/secrets.yml << HERE_DOC
-development: &default
+shared:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] || 'some_secret' %>
 
   shopify_api_key: <%= ENV["SHOPIFY_API_KEY"] %>
   shopify_secret_key: <%= ENV["SHOPIFY_SECRET_KEY"] %>
-
-test: *default
-production:
-  <<: *default
 HERE_DOC
 echo "gem 'shopify_app'" >> Gemfile
 bundle
 
 rails generate shopify_app
+#    generate  shopify_app:install
+#      create  config/initializers/shopify_app.rb
+#      create  config/initializers/omniauth.rb
+#      insert  config/initializers/omniauth.rb
+#      create  app/views/layouts/embedded_app.html.erb
+#      create  app/views/layouts/_flash_messages.html.erb
+#       route  mount ShopifyApp::Engine, at: '/'
+#    generate  shopify_app:shop_model
+#      create  app/models/shop.rb
+#      create  db/migrate/20171103082230_create_shops.rb
+#        gsub  config/initializers/shopify_app.rb
+#      create  test/fixtures/shops.yml
+#    generate  shopify_app:home_controller
 rake db:migrate
 sed -i config/initializers/shopify_app.rb -e '/<api_key>/c \
   config.api_key = Rails.application.secrets.shopify_api_key'
@@ -53,9 +64,9 @@ sed -i config/initializers/shopify_app.rb -e '/<secret>/c \
 git add . && git commit -m "rails g shopify_app"
 ~~~
 
-When you navigate to <http://localhost:3002/> for the first time you will be
-asked for shop url, so enter <https://duleorlovic-test.myshopify.com/> and
-install our app. Than enable Apps -> App info ->
+When you navigate to <https://159abd37.ngrok.io> for the first time you will be
+asked for shop url, so enter <https://duleorlovic-test.myshopify.com/> or just a
+name `duleorlovic-test` to install our app. Than enable Apps -> App info ->
 Extensions -> "Embed in Shopify admin".
 
 You can use `ngrok http 3003` while you are developing.
@@ -75,13 +86,14 @@ not application layout).
 
 # Heroku
 
-When you deploy to heroku you need to update Redirection URL.
+When you deploy to heroku you need to update Redirection URL or create another
+app
 
 ~~~
-heroku config:set SHOPIFY_API_KEY=$SHOPIFY_API_KEY SHOPIFY_SECRET_KEY=$SHOPIFY_SECRET_KEY
+heroku config:set SHOPIFY_API_KEY=$SHOPIFY_API_KEY SHOPIFY_SECRET_KEY=$SHOPIFY_SECRET_KEY SERVER_URL=https://`heroku domains | sed -n 2p`
 ~~~
 
-Remember to reinstall application after the assets compliation is finished.
+Remember to reinstall application after the assets compilation is finished.
 Also you can force oauth simply going on `/login` page, but this helps only with
 webhooks. Script tags need reinstall. NOTE THAT USUALLY NEED TO RESTART RAILS
 SERVER BEFORE THAT SO IT PICKS UP NEW DIGEST.
@@ -133,6 +145,7 @@ Also, you can use postman to access requests.
 
 # API
 
+<https://help.shopify.com/api/reference>
 When using api you can call `find` on two ways: `:all` or specific id.
 When find is used with specific id it will raise exception if it is not found.
 ~~~
@@ -177,11 +190,36 @@ item_action.
 rails g shopify_app:add_webhook -t carts/update -a https://example.com/webhooks/carts_update
 ~~~
 
-This will generate something like
+This will generate something but you can add server url config:
+
+~~~
+  config.webhooks = [
+    {
+      topic: 'carts/update',
+      address: Rails.application.secrets.server_url.to_S +
+        '/webhooks/carts_update',
+      format: 'json'
+    },
+  ]
+~~~
 
 Webhook is hash, so you need to access like `webhook[:line_items]`
 Webhooks are regenerated by uninstalling and installing again the app. Also
-retriggering the oauth flow also update webhooks (so no need to uninstall)
+retriggering the oauth flow also update webhooks (so no need to uninstall).
+Job is created
+
+~~~
+# app/jobs/carts_update_job.rb
+class CartsUpdateJob < ActiveJob::Base
+  def perform(shop_domain:, webhook:)
+    shop = Shop.find_by(shopify_domain: shop_domain)
+
+    shop.with_shopify_session do
+      # do something with webhook hash
+    end
+  end
+end
+~~~
 
 # Application proxy
 
@@ -287,3 +325,101 @@ https://help.shopify.com/api/tutorials/application-proxies#proxy-response
 * supplier offering storefronts to distributors/end_stores. not possible with
 one store since price should be different to each distributor.
 
+MULTI VENDOR LOKAL SELLER
+
+
+# Theme customizations with ThemeKit
+
+Install with commands from <https://shopify.github.io/themekit/>. Create private
+app for your store and add read/write access to Theme templates and theme
+assets. Save password to `SHOPIFY_PRIVATE_APP_PASSWORD`. Find theme id and save
+to `SHOPIFY_THEME_ID`. We will use it to create config.yml.
+
+~~~
+theme configure --password=$SHOPIFY_PRIVATE_APP_PASSWORD --store=$SHOPIFY_STORE_URL --themeid=$SHOPIFY_THEME_ID
+theme download
+theme upload
+theme open
+theme watch
+~~~
+
+Sections for other pages than home (static sections)  should be uncluded in a
+code, for example on cart page in `templates/cart.liquid` we can insert `{ %
+section 'my-section' %}`.
+
+~~~
+# sections/my-section.liquid
+<div id="my-section">
+  <h1>{{ section.settings.header-id }}</h1>
+  <h3>{{ section.settings.content-id }}</h3>
+</div>
+{ % schema %}
+  {
+    "name" : "My Section",
+    "settings": [
+      {
+        "id": "header-id",
+        "label": "Header text",
+        "type": "text",
+        "default": "Header text here"
+      },
+      {
+        "id": "content-id",
+        "label": "Content text",
+        "type": "richtext",
+        "default": "<p>Add here</p>"
+      }
+    ]
+  }
+{ % endschema %}
+
+{ % stylesheet %}
+{ % endstylesheet %}
+
+{ % javascript %}
+{ % endjavascript %}
+~~~
+
+For home page (dynamic section) we need to define additional property `presets`.
+There is also a `block` type of sections.
+
+~~~
+{ % schema %}
+  {
+    "name" : "My Section",
+    "settings": [
+    ],
+    "presets": [
+      {
+        "name": "Call to action",
+        "category": "Call to action"
+      }
+    ]
+  }
+{ % endschema %}
+~~~
+
+We can have several types:
+<https://help.shopify.com/themes/development/theme-editor/settings-schema#input-setting-types>
+simple: text, richtext, image_picker, radio, select, checkbox, range
+special: product, url, page, collection (it contains 'Edit collection' link) ...
+
+# Adding custom properties
+
+You need to pass `properties[name-of-property]` to the `/card/add`. If the
+`name-of-property` starts with underscore `_` than it wont be shown on checkout.
+You can use
+<https://ui-elements-generator.myshopify.com/pages/line-item-property>
+to generate something like
+
+~~~
+<p class="line-item-property__field">
+  <label>Layout</label><br>
+  <input required class="required" type="radio" name="properties[Layout]" value="left"> <span>left</span><br>
+  <input required class="required" type="radio" name="properties[Layout]" value="right"> <span>right</span><br>
+</p>
+~~~
+
+# Opensource examples
+
+<https://github.com/julionc/awesome-shopify>

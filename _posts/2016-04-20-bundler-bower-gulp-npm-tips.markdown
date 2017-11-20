@@ -3,14 +3,14 @@ layout: post
 title: Bundler bower gulp npm tips
 ---
 
-# Bundler
+# Bundler and Gemfile
 
 When you install another version of existing gem, for example `gem install rails
 -v 4.2.0`, than you can find it with `gem list rails` and use it with `rails
 _4.2.0_ new mystore`
 
 To rebuild Gemfile.lock you can run `bundle update`
-
+To install specific groups in Gemfile run `bundle install --with postgresql`.
 To specify github source of gem use
 
 ~~~
@@ -99,6 +99,17 @@ get fresh copy of the package.
   /etc/sysctl.conf && sudo sysctl -p`
   [link](http://stackoverflow.com/questions/16748737/grunt-watch-error-waiting-fatal-error-watch-enospc)
 
+# Yarn
+
+~~~
+yarn init # to generate package.json
+yarn add [package] --dev # to add to devDependencies
+yarn # to install dependencies
+~~~
+
+You can add `package@version` vesion could be `"^1.0.0"`
+<https://yarnpkg.com/en/docs/dependency-versions> When you `yarn
+upgrade` it will upgrade version to next, for example `"^2.0.0"`.
 
 # Webpack
 

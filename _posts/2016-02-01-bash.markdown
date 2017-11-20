@@ -293,6 +293,8 @@ ${#arr[0]}        # 4 Length of item zero
   * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
   test upload link
 * curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
+* to get json request use header tag Accept `curl  -H "Accept: application/json"
+http://localhost:3001/`
 
 # SSH
 

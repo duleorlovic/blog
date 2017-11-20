@@ -18,12 +18,13 @@ gnome-open index.html
 gnome-open documentations/index.html
 ~~~
 
+Latest version is 2.4.2 uses bootstrap 3 and jquery 3.
 To install to existing rails project you can use [bower inside rails](
-{{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}
+{{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}
 #bower) and than add admin-lte
 
 ~~~
-bower install --save admin-lte boostrap#3.3.6 font-awesome
+bower install --save admin-lte boostrap font-awesome ionicons
 ~~~
 
 I use separated bootstrap (not from admin-lte package) because "Glyphicons" are
@@ -31,149 +32,453 @@ properly linked. Also I use latest font awesome.
 There is [admin-lte.scss](https://github.com/aguegu/AdminLTE) version but not
 updated.
 
-# Using with existing template
-
-To add new template while keeping existing you can use different layout base on
-locale. You can set new layout with option `?layout=true`
-So if you add param `?layout=true` it will render `index.in.html.erb` variant
-using new layout and put that in session (so all form submittions also use new
-layout). You can disable new_layout with `?layout=false`. If you have locale
-files (probably `devise.en.yml`) than you need to copy to `:in`
+We can use [starter.html](https://adminlte.io/themes/AdminLTE/starter.html) for
+testing, just copy from `vendor/assets/bower_components/admin-lte/starter.html`
+select `<div class="wrapper">` and put on your page. CSS and js will we using
+sprockets and compiled in one big application.css/.js file. Since
+adminlte is using less we will use two wrappers.
 
 ~~~
-# app/controllers/application_controller.rb
-  layout proc { |controller| controller.new_layout? ? 'adminlte' : 'application' }
-  before_filter :set_locale_for_layout
-
-  def new_layout?
-    I18n.locale == :rs
-  end
-
-  def set_locale_for_layout
-    if session[:layout] == true
-      if params[:layout] == "false"
-        # disable new layout
-        session[:layout] = false
-        I18n.locale = 'en'
-        logger.debug "layout became false"
-      else
-        logger.debug "layout still true"
-        I18n.locale = 'rs'
-      end
-    else
-      # session[:layout] == false
-      if params[:layout] == "true"
-        # enable new layout
-        session[:layout] = true
-        logger.debug "layout became true"
-        I18n.locale = 'rs'
-      else
-        I18n.locale = 'rs'
-        logger.debug "layout still false"
-      end
-    end
-  end
-~~~
-
-Also we need to make changes on other places
-
-~~~
-# config/application.rb
-    config.i18n.available_locales = [:en, :rs]
-
-# config/locales/en.yml
-# config/locales/devise.en.yml
-en: &default
-rs:
-  <<: *default
-
-# app/views/pages/sample_page.in.html.erb
-I'm from adminlte layout
-
-
-<!-- above Main content in app/views/layouts/adminlte.html.erb -->
-    <div class="new-layout-switch">
-      <%= link_to "Go Back To Old Layout", params.merge(layout: false) %>
-    </div>
-
-// app/assets/stylesheets/application_adminlte.scss
-.m-b-10 {
-  margin-bottom: 10px;
-}
-
-// similar to pull-right just without float
-.text-align-right {
-  text-align: right;
-}
-
-.new-layout-switch {
-  position: absolute;
-  padding-left: 4px;
-  top: 50px;
-  right: 0px;
-  border-bottom-left-radius: 5px;
-  background: #3C8DBC;
-  a {
-    color: white;
-  }
-}
-~~~
-
-We will use `starter.html` for initial layout.
-If you do not use turbolinks you can link assets in your
-`vendor/assets/bower_components/` and precompile them in
-`config/initializers/assets.rb` with `Rails.application.config.assets.precompile
-<< /AdminLTE\/.*/`
-
-Note that you need to precompile only files that are not used in your
-application.js/css (but you link them separatelly).
-
-~~~
-# app/layouts/adminlte.html
-  <link rel="stylesheet" href="<%= asset_path 'AdminLTE/bootstrap/css/bootstrap.min.css' %>">
-  <link rel="stylesheet" href="<%= asset_path 'AdminLTE/dist/css/AdminLTE.min.css' %>">
-  <link rel="stylesheet" href="<%= asset_path 'AdminLTE/dist/css/skins/skin-blue.min.css' %>">
-
-<!-- use the same version of jquery that you found on vendor/assets/bower_components/AdminLTE/... -->
-<script src="<%= asset_path 'AdminLTE/plugins/jQuery/jquery-2.2.3.min.js' %>"></script>
-<script src="<%= asset_path 'AdminLTE/bootstrap/js/bootstrap.min.js' %>"></script>
-<script src="<%= asset_path 'AdminLTE/dist/js/app.min.js' %>"></script>
-~~~
-
-## With turbolinks
-
-You can use assets pipeline to combine all files to one .css and .js file
-
-~~~
-// app/assets/stylesheets/application_adminlte.scss
+// app/assets/application.css
 /*
- *
- *= require bootstrap/dist/css/bootstrap
- *= require font-awesome/css/font-awesome
- *
- * AdminLTE stuff need to be after bootstrap (which includes normalize.scss)
- *= require AdminLTE/dist/css/AdminLTE.min
- *= require AdminLTE/dist/css/skins/skin-blue.min
- *
- * Rails stuff
- *= require rails_bootstrap_forms
+ * load bootstrap here since importing in less will use css import file command
+ *= require bootstrap/dist/css/bootstrap.css
+ *= require application_less_wrapper
+ *= require application_scss_wrapper
  */
 ~~~
 
 ~~~
+# Gemfile, belowe sass-rails
+# Also need less for adminlte
+gem 'less-rails', '~> 3.0.0'
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'therubyracer'
+~~~
+
+~~~
+# config/initializers/assets.rb
+
+# We need to add also subpaths admin-lte and admin-lte/skins since there is
+# relative reference for bootstrap in skins less files
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'admin-lte')
+Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components', 'admin-lte', 'skins')
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
+~~~
+
+Copy some header from starter.html to your layout file
+
+~~~
+# app/views/layouts/applicantion.html.erb
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= content_for?(:page_title) ? yield(:page_title) : default_page_title %></title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  </head>
+
+  <body class="hold-transition skin-blue sidebar-mini <%= sidebar_collapse %>">
+    <div class="wrapper">
+
+      <!-- Main Header -->
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="/" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini">
+            <b>ST</b>
+          </span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg">
+            <b>Stuff</b>Timesheet
+          </span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" data-server-url="<%= preferences_path %>">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <!-- Navbar Right Menu -->
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less-->
+              <li class="dropdown messages-menu">
+                <!-- Menu toggle button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="label label-success">4</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 4 messages</li>
+                  <li>
+                    <!-- inner menu: contains the messages -->
+                    <ul class="menu">
+                      <li><!-- start message -->
+                        <a href="#">
+                          <div class="pull-left">
+                            <!-- User Image -->
+                            <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                          </div>
+                          <!-- Message title and timestamp -->
+                          <h4>
+                            Support Team
+                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                          </h4>
+                          <!-- The message -->
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <!-- end message -->
+                    </ul>
+                    <!-- /.menu -->
+                  </li>
+                  <li class="footer"><a href="#">See All Messages</a></li>
+                </ul>
+              </li>
+              <!-- /.messages-menu -->
+
+              <!-- Notifications Menu -->
+              <li class="dropdown notifications-menu">
+                <!-- Menu toggle button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span class="label label-warning">10</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 10 notifications</li>
+                  <li>
+                    <!-- Inner Menu: contains the notifications -->
+                    <ul class="menu">
+                      <li><!-- start notification -->
+                        <a href="#">
+                          <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                        </a>
+                      </li>
+                      <!-- end notification -->
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">View all</a></li>
+                </ul>
+              </li>
+              <!-- Tasks Menu -->
+              <li class="dropdown tasks-menu">
+                <!-- Menu Toggle Button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-flag-o"></i>
+                  <span class="label label-danger">9</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 9 tasks</li>
+                  <li>
+                    <!-- Inner menu: contains the tasks -->
+                    <ul class="menu">
+                      <li><!-- Task item -->
+                        <a href="#">
+                          <!-- Task title and progress text -->
+                          <h3>
+                            Design some buttons
+                            <small class="pull-right">20%</small>
+                          </h3>
+                          <!-- The progress bar -->
+                          <div class="progress xs">
+                            <!-- Change the css width attribute to simulate progress -->
+                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
+                                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">20% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      <!-- end task item -->
+                    </ul>
+                  </li>
+                  <li class="footer">
+                    <a href="#">View all tasks</a>
+                  </li>
+                </ul>
+              </li>
+              <!-- User Account Menu -->
+              <li class="dropdown user user-menu">
+                <!-- Menu Toggle Button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <!-- The user image in the navbar-->
+                  <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                  <span class="hidden-xs">Alexander Pierce</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- The user image in the menu -->
+                  <li class="user-header">
+                    <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                    <p>
+                      Alexander Pierce - Web Developer
+                      <small>Member since Nov. 2012</small>
+                    </p>
+                  </li>
+                  <!-- Menu Body -->
+                  <li class="user-body">
+                    <div class="row">
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Followers</a>
+                      </div>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Sales</a>
+                      </div>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Friends</a>
+                      </div>
+                    </div>
+                    <!-- /.row -->
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    </div>
+                    <div class="pull-right">
+                      <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <!-- Control Sidebar Toggle Button -->
+              <li>
+                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+          <!-- Sidebar user panel (optional) -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+              <p>Alexander Pierce</p>
+              <!-- Status -->
+              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+
+          <!-- search form (Optional) -->
+          <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+              <input type="text" name="q" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                  </button>
+                </span>
+            </div>
+          </form>
+          <!-- /.search form -->
+
+          <!-- Sidebar Menu -->
+          <ul class="sidebar-menu" data-widget="tree">
+            <li class="header">HEADER</li>
+            <!-- Optionally, you can add icons to the links -->
+            <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+            <li class="treeview">
+              <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="#">Link in level 2</a></li>
+                <li><a href="#">Link in level 2</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <%= yield :page_header %>
+            <small><%= yield :page_description %></small>
+          </h1>
+          <ol class="breadcrumb">
+            <% get_breadcrumb_list.each_with_index do |(text, link), i| %>
+              <li class="<%= 'active' if i == get_breadcrumb_list.length - 1 %>">
+                <% if link.present? %>
+                  <%= link_to link do %>
+                    <% if i == 0 %>
+                      <i class="fa fa-dashboard"></i>
+                    <% end %>
+                    <%= text %>
+                  <% end %>
+                <% else %>
+                  <% if i == 0 %>
+                    <i class="fa fa-dashboard"></i>
+                  <% end %>
+                  <%= text %>
+                <% end %>
+              </li>
+            <% end %>
+
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+          <% if notice %>
+            <div class="hide-to-up"><%= notice %></div>
+            <script>
+              flash_notice('<%= j notice %>');
+            </script>
+          <% end %>
+
+          <% if alert %>
+            <div class="hide-to-up"><%= alert %></div>
+            <script>
+              flash_alert('<%= j alert %>');
+            </script>
+          <% end %>
+
+          <!-- Your Page Content Here -->
+          <%= yield %>
+
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+          Anything you want
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+      </footer>
+
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+      </aside>
+      <!-- /.control-sidebar -->
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+    </div>
+    <script>
+      <%= yield :javascript %>
+    </script>
+
+  </body>
+</html>
+~~~
+
+Some helpers
+
+~~~
+# app/helpers/page_helper.rb
+module PageHelper
+  def sidebar_collapse
+    if current_user&.sidebar_collapse
+      'sidebar-collapse'
+    end
+  end
+
+  def preferences_path
+    '/'
+  end
+
+  # use in view: page_title "Home"
+  def page_title(title)
+    # this will add both page title and header below topnav
+    content_for(:page_title) { title }
+    content_for(:page_header) { title }
+  end
+
+  def default_page_title
+    add_location_to_title(
+      "Internet Subscriber Management"
+    )
+  end
+
+  # use in view: page_description "Dashboard"
+  def page_description(description)
+    content_for(:page_description) { description.html_safe }
+  end
+
+  # use in view: breadcrumb "Home": root_path, "Dashboard": nil
+  def breadcrumb(list)
+    @breadcrumb = list
+  end
+
+  def get_breadcrumb_list
+    @breadcrumb || []
+  end
+end
+~~~
+
+~~~
+// app/assets/stylesheets/application_less_wrapper.less
+@import "Ionicons/less/ionicons";
+// AdminLTE.less stuff need to be after bootstrap which includes normalize.scss
+@import "AdminLTE/build/less/AdminLTE";
+@import "AdminLTE/build/less/skins/skin-blue";
+
+// default sidebar width is 230px
+@sidebar-width: 170px;
+~~~
+
+~~~
+// app/assets/stylesheets/application_scss_wrapper.scss
+// on production all assets gets fingerprint, but here we can define only path
+// $fa-font-path: 'font-awesome/fonts';
+// so use Bootstrap CDN for font files
+$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default;
+@import 'font-awesome/scss/font-awesome';
+~~~
+
+~~~
 // app/assets/javascript/application_adminlte.js
-//  AdminLTE stuff
-//= require AdminLTE/plugins/jQuery/jquery-2.2.3.min
-//= require AdminLTE/dist/js/app.min
+//= require rails-ujs
+//= require turbolinks
+//= require_tree .
+//= require js.cookie
+//= require jstz
+//= require browser_timezone_rails/set_time_zone
 //
-//= require bootstrap/dist/js/bootstrap
-//
-// Rails stuff
-//= require jquery_ujs
-//
-// All layout stuff
-//
-// Our adminlte related stuff (filename ends with _adminlte)
+// AdminLTE stuff
+//= require jquery/dist/jquery.min
+//= require bootstrap/dist/js/bootstrap.min
+//= require admin-lte/dist/js/adminlte
 ~~~
 
 Also you need to exclude those `_adminlte` files in original sprockets:
@@ -192,13 +497,8 @@ libraries also](https://github.com/sstephenson/sprockets/issues/467). Also if
 use use `require_tree .` than you can inadvertently add some libs to some
 layout which you have not consider in that moment.
 
-Better approach is to create new folder `app/assets/adminlte`.
-Add it to asset pipeline paths:
-
-~~~
-# config/initializers/assets.rb
-Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'adminlte')
-~~~
+Better approach is to create new folder `app/assets/adminlte` and add it to
+asset pipeline paths.
 
 Since asset pipeline [ignore first subfolders]( {{ site.baseurl }}
 {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}) you need to take
@@ -246,6 +546,16 @@ class ActionView::TemplateRenderer
     result
   end
 end
+~~~
+
+# Turbolinks
+
+<https://github.com/almasaeed2010/AdminLTE/issues/563>
+
+~~~
+$(document).on 'turbolinks:load', ->
+  console.log 'turbolinks:load'
+  $(window).trigger('resize')
 ~~~
 
 # Configuration
@@ -344,3 +654,92 @@ and sizes.
 My prefered setup is to use ajax for edit/update form, use modal for create
 (with prefilled form, without ajax, since in case of success it should
 redirect).
+
+# Using with existing template
+
+To add new template while keeping existing you can use different layout base on
+locale. You can set new layout with option `?layout=true`
+So if you add param `?layout=true` it will render `index.in.html.erb` variant
+using new layout and put that in session (so all form submittions also use new
+layout). You can disable new_layout with `?layout=false`. If you have locale
+files (probably `devise.en.yml`) than you need to copy to `:in`
+
+~~~
+# app/controllers/application_controller.rb
+  layout proc { |controller| controller.new_layout? ? 'adminlte' : 'application' }
+  before_filter :set_locale_for_layout
+
+  def new_layout?
+    I18n.locale == :rs
+  end
+
+  def set_locale_for_layout
+    if session[:layout] == true
+      if params[:layout] == "false"
+        # disable new layout
+        session[:layout] = false
+        I18n.locale = 'en'
+        logger.debug "layout became false"
+      else
+        logger.debug "layout still true"
+        I18n.locale = 'rs'
+      end
+    else
+      # session[:layout] == false
+      if params[:layout] == "true"
+        # enable new layout
+        session[:layout] = true
+        logger.debug "layout became true"
+        I18n.locale = 'rs'
+      else
+        I18n.locale = 'rs'
+        logger.debug "layout still false"
+      end
+    end
+  end
+~~~
+
+Also we need to make changes on other places
+
+~~~
+# config/application.rb
+    config.i18n.available_locales = [:en, :rs]
+
+# config/locales/en.yml
+# config/locales/devise.en.yml
+en: &default
+rs:
+  <<: *default
+
+# app/views/pages/sample_page.in.html.erb
+I'm from adminlte layout
+
+
+<!-- above Main content in app/views/layouts/adminlte.html.erb -->
+    <div class="new-layout-switch">
+      <%= link_to "Go Back To Old Layout", params.merge(layout: false) %>
+    </div>
+
+// app/assets/stylesheets/application_adminlte.scss
+.m-b-10 {
+  margin-bottom: 10px;
+}
+
+// similar to pull-right just without float
+.text-align-right {
+  text-align: right;
+}
+
+.new-layout-switch {
+  position: absolute;
+  padding-left: 4px;
+  top: 50px;
+  right: 0px;
+  border-bottom-left-radius: 5px;
+  background: #3C8DBC;
+  a {
+    color: white;
+  }
+}
+~~~
+

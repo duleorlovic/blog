@@ -6,6 +6,7 @@ title: SEO advices
 Test your site on
 <https://developers.google.com/speed/pagespeed/insights/>
 Free trial seo report rank <https://www.woorank.com/>
+Also on <https://www.webpagetest.org/>
 
 
 # General Tips
@@ -59,7 +60,7 @@ widget</a>`
 * add favicon
 * custom 404 error page
 * add language `<html lang="en">`
-* SSL secure (http should redirect to https), add STS in header, update robots,
+* SSL secure (http should redirect to https), add STS in header,
   xml sitemap, link to css files to use https
 * social media
 
@@ -78,10 +79,26 @@ gem 'heroku-deflater', :group => :production
 ~~~
 
 
-# Meta tags
+# Robots
 
-* add `<meta name="robots" content="noodp,noydir">` to disable Open Directory 
-  Project and Yahoo Directory to provide description for your site
+https://en.wikipedia.org/wiki/Robots_exclusion_standard
+
+`/robots.txt` is used to tell some good crawlers wheter they should read or not.
+Bad crawlers will read the site anyway.
+
+~~~
+# public/robots.txt
+# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+#
+# To ban all spiders from the entire site uncomment the next two lines:
+# User-agent: *
+# Disallow: /
+# Sitemap: http://www.example.com/sitemap.xml.gz
+~~~
+
+You can use meta tags to disable some well known robots. Add `<meta
+name="robots" content="noodp,noydir">` to disable Open Directory Project and
+Yahoo Directory to provide description for your site
 
 
 # Sitemap
@@ -167,12 +184,6 @@ Than you need robots txt to point to that sitemap url (
 
 ~~~
 # public/robots.txt
-# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
-#
-# To ban all spiders from the entire site uncomment the next two lines:
-# User-agent: *
-# Disallow: /
-# Sitemap: http://www.example.com/sitemap.xml.gz
 Sitemap: http://s3.amazonaws.com/my-site/my-folder/sitemap_index.xml.gz
 ~~~
 
@@ -204,7 +215,7 @@ Or you can add to https://www.google.rs/search?q=site:`www.my-site.com`
   can execute javascript. You can submit to index on the page, but even google
   renders it properly (with ajax/angular data) it will not add to index for some
   other reasons.
-  
+
 Some reasons could be
 [post](https://moz.com/ugc/8-reasons-why-your-site-might-not-get-indexed)
 
@@ -252,10 +263,30 @@ Rails it will be like:
 You can enable `Destination URL Auto-tagging. Automatically tag my ad
 destination URLs` in Account Settings -> Preferences
 
+# User mailing list
+
+If someone is linking your site or your competitor site, you can email the site
+owner (need a script that will search for email address on that site) saying
+that you have some new content, video or other material that will be interesting
+for his audience.
 
 # Customer Analitics
 
 You can use some of the services: Google Analytics, Firebase anal, Amazon anal,
 Fabric Answers, Mixpanel, Keen, Segment, Amplitude, Localytics, Ionic Analytics
 
-  To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
+To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
+
+# SEO search enginge optimization
+
+hangouts tutorials <https://plus.google.com/collection/oSHR9>
+
+* subdomain is not bad for rank, since google can treat as two different sites
+<https://www.youtube.com/watch?v=onNwqFa-e_s#t=2904>
+* url is most important and should point to single state (not multiple states).
+After hash `#` usually everythings is ignored so that should not be a router for
+your app. Do not use secret stuff in url like `/session=1234/...?user=john`
+* canonical url is the main key for this content, and can be defined using link
+rel canonical, redirects, sitemaps
+* imporant content that needs to be indexed should be on visible part of the
+page, not on ajax call since crawl will be able to index that

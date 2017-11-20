@@ -50,7 +50,14 @@ You need to setup db with a command
 bin/rails db:environment:set RAILS_ENV=test
 ~~~
 
-or use `rake db:test:prepare`
+or use `rake db:test:prepare`. I was trying to do `RAILS_ENV=test rake db:drop
+db:create db:migrate` but it did not work because of some missing tables.
+
+Capybara javascript test also rely on precompiled assets so you need to run
+`rake assets:precompile` or put `config.assets.compile = true` in
+`conig/environments/test.rb` (this could slow down).
+Somehow when running with headless driver than I do not need to precompile
+assets for those js tests.
 
 # Rspec
 
@@ -77,6 +84,7 @@ You can run simple test example with
 
 ~~~
 rspec spec/simple_test_spec.rb
+rspec -b # to show full backtrace in case of exceptions
 ~~~
 
 Rspec examples are written using `describe` (ExampleGroup, you can nest multuple
@@ -192,8 +200,17 @@ matchers
 matchers](http://www.relishapp.com/rspec/rspec-expectations/docs) for any
 method that begin with `has_` or ends with `?` you can use `have_` and `be_`
 `expect(object).not_to be_empty` or `be_near near_location`
-* `expect { do_something }.to change { object.attribute }`
-[change](http://www.relishapp.com/rspec/rspec-expectations/v/3-5/docs/built-in-matchers/change-matcher)
+* `expect { do_something }.to change { object.attribute }`. It is also possible
+to detect changes in two tables
+  <http://www.relishapp.com/rspec/rspec-expectations/v/3-5/docs/built-in-matchers/change-matcher>
+
+  ~~~
+  it "should increment the counters" do
+    expect { Foo.bar }.to change { Counter,        :count }.by(1).and \
+                          change { AnotherCounter, :count }.by(1)
+  end
+  ~~~
+
 * `expect(object).to have_attributes name: 'duke'`
 [have_attributes](https://www.relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/have-attributes-matcher#basic-usage) to check values
 * `expect(object).to have_attribute :name` to check just attribute (no value)
@@ -263,6 +280,10 @@ end
 
 For slow test you can mark with `:slow` so running rspec tests with `rspec --tag
 ~slow` will run only fast tests.
+You can exclude specific folder
+<https://relishapp.com/rspec/rspec-core/v/3-3/docs/configuration/exclude-pattern>
+`rspec --exclude-pattern "spec/features/*"` I do not know why quotes are needed
+here, but it works only with quotes.
 
 `rspec --profile` will give you list of 10 slowest tests.
 
@@ -797,7 +818,11 @@ for that usage.
 ## RSpec jobs spec
 
 `ActiveJob::Base.queue_adapter = :test` will change queue adapter for all
-folloring test so no need that.
+following test.
+There is test helper
+[assert_performed_with](http://api.rubyonrails.org/classes/ActiveJob/TestHelper.html#method-i-assert_performed_with)
+example of use is
+<https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb>
 
 # Refactoring
 
@@ -881,6 +906,11 @@ Instead of using `get` and `response.body` we can use only what end user see
 same DSL to drive browser (selenium-webdriver, chrome-driver or capybara-webkit)
 or headless drivers (`:rack_test` or phantomjs). `Capybara.current_driver` could
 be `:rack_test` or `:headless_chrome` or `':chrome`.
+
+If you see error `unable to obtain stable firefox connection in 60 seconds
+(127.0.0.1:7055) (Selenium::WebDriver::Error::WebDriverError)` you need to `gem
+update selenium-webdriver` or to install matched version.
+
 To run in browser javascript use `js: true`. Note that in this mode, drop down
 links are not visible, you need to click on dropdown. Also `data-confirm` will
 be ignored.
@@ -908,10 +938,17 @@ Capybara.register_driver :headless_chrome do |app|
     browser: :chrome,
     desired_capabilities: capabilities
 end
+RSpec.configure do |config|
+  files = config.instance_variable_get :@files_or_directories_to_run
+  if files == ["spec"]
+    # when run all spec use headless
+    Capybara.javascript_driver = :headless_chrome
+  else
+   Capybara.javascript_driver = :chrome
+  end
+end
 Capybara.enable_aria_label = true
 
-Capybara.javascript_driver = :headless_chrome
-# Capybara.javascript_driver = :chrome
 
 # if you need to use custom domain , you can set host, but also set server port
 Capybara.app_host = "http://my-domain.dev:3333"
@@ -1031,6 +1068,8 @@ only for finders). You can use substring or you can define `exact: true`
   * `find 'th', text: 'Total Customers'`
   * `find('ng-model="newExpense.amount"').set('123')`
   * `find_all('input').first.set(123)`
+  * `find('#selector').find(:xpath, '..')` find parent node of selector
+  `.find(:xpath, '../..')` is parent of parent (grandparent).
 * node matchers and rspec matchers
   * `expect(page.has_css?('.asd')).to be true`
   * `expect(page).to have_css(".title", text: "my title")`, `have_text`,
@@ -1271,8 +1310,10 @@ that I can't open regitration email in devise 4).
 ~~~
 # spec/support/pause_helpers.rb
 module PauseHelpers
+  # you can use byebug, but it will stop rails so you can not navigate to other
+  # pages or make another requests in chrome while testing
   def pause
-    $stderr.write 'Press enter to continue'
+    $stderr.write 'Press ENTER to continue'
     $stdin.gets
   end
 end
@@ -1360,7 +1401,7 @@ test (if you do not want transaction you can disable
 `config.use_transactional_fixtures = false`)
 
 We define it using [yml file](
-{{ site.baseurl }} {% post_url 2017-01-10-get-syntax-right-in-jade-yaml %}#yaml)
+{{ site.baseurl }} {% post_url 2017-01-10-get-syntax-right-in-jade-yaml-haml %}#yaml)
 
 ~~~
 # test/fixtures/projects.yml
@@ -1474,6 +1515,46 @@ name as usuall. In validation, you can validate presence for object but not id
     association :updated_by, factory: :user, name: "Admin User"
     # another form
     user.association :user, name: 'My User'
+  end
+  ~~~
+
+  If you have circular dependency ie two associations that are not independent,
+  than you can setup object in after build block (one of them is less important
+  and another is more, which will always used as parameter and not used as
+  generated, for example it will not happen `create :location_ticket, location:
+  location` without customer it will generate customer from some other
+  location).
+
+  ~~~
+  # location_ticket --------> location
+  #                 --> customer --^
+  factory :location_ticket do
+    # location - we set in after build because of circular dependency
+    customer
+    after(:build) do |location_ticket|
+      location_ticket.location = location_ticket.customer.location
+    end
+  end
+
+  # if you have three dependencies than you can set both in after block.
+  factory :location_package_sale do
+    # location - we set in after build because of circular dependency
+    # customer - we set in after build because of circular dependency
+    # location_package - we set in after build because of circular dependency
+    after(:build) do |location_package_sale|
+      location = location_package_sale.location_package&.location
+      location ||= location_package_sale.customer&.location
+      unless location
+        location = create :location
+      end
+      location_package_sale.location = location
+      unless location_package_sale.customer.present?
+        location_package_sale.customer = create :customer, location: location
+      end
+      unless location_package_sale.location_package.present?
+        location_package_sale.location_package = create :location_package, location: location
+      end
+    end
   end
   ~~~
 
@@ -1591,7 +1672,7 @@ hash attributes `build(:user, name: 'My Name')`
   `build_stubbed` or do not define association at all and define them in tests
   (code need to be testable without associations)
   * `create(:user)` it is saved. Use this only when need to test find/query db.
-  * `attributes_for(:user)` get hash of attributes
+  * `attributes_for(:user)` get hash of attributes so you can use in params_for
   * `build_stubbed(:user)` object with all AR attributes stubbed out (like
   `save`). It will raise an exception if they are called. Very fast since we do
   not create AR objects. It has rails ID and we can use associations. This is
@@ -1600,8 +1681,8 @@ hash attributes `build(:user, name: 'My Name')`
 * multiple records can be `build_list :user, 25` or `create_list :user, 25` or
 `build_stubbed_list :user, 25`
 
-You can debug in rails console. After debugging test data will stay in database
-so you need to clean it manually
+You can debug factory girl in rails console. After debugging test data will stay
+in database so you need to clean it manually
 
 ~~~
 RAILS_ENV=test rake db:drop db:create db:migrate
@@ -1627,7 +1708,10 @@ tests.
 
 # Minitest
 
-Minitest is included in ruby.
+Minitest is included in ruby and also in rails. If your system tests shows error
+"Selenium::WebDriver::Error::WebDriverError: unable to connect to chromedriver
+127.0.0.1:9515" than add gem `gem 'chromedriver-helper'` to your development and
+test group.
 
 Rails `TestCase`s (like `ActiveSupport::TestCase`) inherits from
 `Minitest::Test` so you can use it `def test_password`, but Rails adds `test`
@@ -1814,12 +1898,19 @@ require "mocha/mini_test"
   end
 ~~~
 
-# System testing
+# System specs
+
+<http://rspec.info/blog/2017/10/rspec-3-7-has-been-released/>
+Feature tests are run in different process than rails so we need database
+cleaner gem. With system tests, we can use rspec mechanism to roll back db
+changes.
+Before we used feature specs for full application integration testing, but now
+we should use system specs (which uses capybara and webdriver with chrome).
 
 System tests are not included in default test suite, you should run `rake
 test:system`
 
-# Testing files
+# Testing uploading files
 
 ~~~
 joe.photo = File.new(File.join(Rails.root, 'spec', 'support', 'files', 'pookie.jpg'))
@@ -1846,35 +1937,75 @@ true`
 
 # Using test doubles as mocks and stubs
 
-A test double is fake object or method used in place of real when it is:
+<https://relishapp.com/rspec/rspec-mocks>
+A test double is fake object (`double`) or method (`allow` and
+`receive`) used in place of real when it is:
 
 * difficult to create it (network failure)
 * to isolate env so it tests only specific method
 * to test behavior during this test (what is called and how) and not just end
 results.
 
-A **STUB** is test double that returns predetermined value for a method call
-(without calling actual method on actual object). It is defined using
-`allow().to receive().and_return()`. It can also use `and_raise(Exception,
-"message")`.
+We can set expectation on arguments with `with` methods.
+
+A **TEST DOUBLE** (serbian "kaskader" or "dvojnik") is a term for any object
+that stands in for a real object. You can create with `double` method and by
+default they are strict: any message you have not allowed or expected will
+trigger an error.  If you do not want that exception is raised when some other
+method is called than you can `double(:user).as_null_object` or `spy(:user)`.
+
+~~~
+# this will raise exception for user.country, but not for user.name
+user = double(:user, name: 'Duke')
+# this will not raise exception for user.country
+user = spy(:user)
+~~~
+
+**VERYFING DOUBLE** is used to mimic specific object and check if message passed
+to double is actually real method on real object and that arguments arity is the
+same.
+
+~~~
+instance_user = instance_double(User)
+~~~
+
+There are also `class_double(User)` and `object_double(User.new)`.
+
+All those have spy forms `instance_spy`, `class_spy` and `object_spy` giving
+verification that message exists without having to specify a return value.
+
+In RSpec 3 configuration `mocks.verify_partial_doubles = true` will verify all
+partial doubles so you can not stub non existing method.
+
+A **STUB** is test double that returns predetermined preconfigured value for a
+method call (without calling actual method on actual object). It is defined
+using `allow().to receive().and_return()`. It can also use `and_raise(Exception,
+"message")` or to provide a block to specify return value, verify arguments,
+perform calculation.
+<https://relishapp.com/rspec/rspec-mocks/v/3-7/docs/configuring-responses>
 
 ~~~
 allow(thing).to receive(:name).and_return("Duke")
+# you can define methods and return values in bulk
+allow(thing).to receive(first_name: 'Duke', last_name: 'Orl')
 ~~~
 
-A **MOCK** is similar to stub, but it sets expectation that method will actually
-be called. It use `expect().to receive.and_return`. If it is not called mock
-object triggers test failure. We can also set with which arguments it should be
-called ([more about with
-arguments](https://relishapp.com/rspec/rspec-mocks/v/3-5/docs/setting-constraints/matching-arguments))
+Stubs are used to prepare test data, and mocks are used to expect some calls.
+A **MOCK** is similar to stub, but it sets expectation (`expect` instead
+`allow`) that method will actually **be called** till the end of a example. It
+use `expect().to receive.and_return`. If it is not called, mock object triggers
+test failure. We can also set with **which arguments it should be called**
+<https://relishapp.com/rspec/rspec-mocks/v/3-5/docs/setting-constraints/matching-arguments>
 
 ~~~
 expect(thing).to receive(:name).and_return("Duke")
 
 service_double = instance_double(CreatesProject, create: true)
+
 expect(CreatesProject).to receive(:new)
   .with(name: 'Duke', tasks_string: nil)
   .and_return(service_double)
+post ...
 ~~~
 
 A **SPY** is similar to mock but we set expectation later using `allow().to
@@ -1889,37 +2020,11 @@ expect(thing).to have_received(:name)
 
 **PARTIAL DOUBLE** is when you stub particular methods of real object, a **FULL
 DOUBLE** is when you use totally fake object that responds only to specified API
-(so we do not care about behavior, only about public interface). RSpec defines
-full double with `double`. If you do not want that exception is raised when some
-other method is called than you can `double(:user).as_null_object` or
-`spy(:user)`
-
-~~~
-# this will raise exception for user.country
-user = double(:user, name: 'Duke')
-# this will not raise exception for user.country
-user = spy(:user)
-~~~
-
-When you want to mimic specific object you can use **VERYFING DOUBLE** to check
-if message passed to double is actually real method on real object.
-
-~~~
-instance_user = instance_double(User) # only `method_defined?` messages
-class_user = class_double(User) # only `repond_to?` messages
-object_user = object_double(User.new) # only `respond_to?` messages
-# usefull since it see dynamically defined methods with `method_missing`
-~~~
-
-All those have spy forms `instance_spy`, `class_spy` and `object_spy` giving
-verification that message exists without having to specify a return value.
-
-In RSpec 3 configuration `mocks.verify_partial_doubles = true` will verify all
-partial doubles so you can not stub non existing method.
+(`double`) (so we do not care about behavior, only about public interface).
 
 You can use mocks for controller tests, so you do not need to know valid and
 invalid params and a bug in CreatesProject will not fail this test. Usually when
-I use double to mock some class, than use small integration test I cover both
+I use double to mock some class, than use small integration test to cover both
 classes (so I know that change of class API is not an issue here). It is fine
 that stubbed method returns a stub or double, but is not recomended that double
 contains other stub or doubles (`double(create: true, project: double(name:
@@ -1974,6 +2079,19 @@ not need to set expectation for current test (cover that object separatelly). We
 just stub external call and use some returned value. Use mock only when you need
 to trigger sending email.
 
+* if you need to change behavior of real objects, and can't do dependency
+injection (`process(date, validator)` and stub/mock on `validator`, than you can
+use `allow_any_instance_of` and `expect_any_instance_of`:
+
+~~~
+  context 'with invalid data' do
+    it 'raises Error' do
+      allow_any_instance_of(Validator).to receive(:valid?).and_return(false)
+      expect { processor.process('foo') }.to raise_error(DataProcessor::Error)
+    end
+  end
+~~~
+
 # Testing External service
 
 * **client** is our app, **server** is external service, **adapter** is between
@@ -1984,11 +2102,12 @@ client and server, **fake server** returns a fake response
 
 ## Webmock VCR
 
-After installing and requiring webmock
+After installing and requiring [webmock](https://github.com/bblimke/webmock)
 
 ~~~
 sed -i Gemfile -e $'/group :development, :test do/a  \
-  gem \'rspec-rails\''
+  gem \'rspec-rails\'\
+  gem \'webmock\''
 bundle
 sed -i spec/rails_helper.rb -e '/require .spec_helper/a  \
 require \'support/factory_girl\''
@@ -2086,6 +2205,10 @@ services need to use
 * too trivial tests
 * overtesting when we use same model method on severall controllers
 * exploratory coding (code that will not go to production)
+
+# Coverage
+
+<https://github.com/colszowka/simplecov>
 
 # Tips
 
@@ -2188,16 +2311,20 @@ mocks since it clearly separate SETUP, EXERSIZE and VERIFICATION phase.
 
 # Opensource examples with tests
 
+Best source is real word rails applications
+<https://github.com/eliotsykes/real-world-rails>
+and real world rspec examples
+<https://github.com/eliotsykes/rspec-rails-examples>
+
 * <https://github.com/discourse/discourse>
 * <https://github.com/manshar/manshar> rails and angular
 * <https://github.com/scottwillson/racing_on_rails> minitests
 * <https://github.com/bikeindex/bike_index> rspec, api, swagger
 * <https://github.com/mabranches/Olympic> swagger, jsonapi
 * <http://stackoverflow.com/questions/4421174/what-are-some-good-example-open-source-ruby-projects-that-use-cucumber-and-rspec>
-* <https://github.com/eliotsykes/rspec-rails-examples>
 
 clean https://github.com/ni3t/tweetfire
-https://github.com/elizabrock/coursewareofthefuture
+https://github.com/elizabrock/coursewareofthefuture exaples for all tests
 
 # Live Coding and other video tutorials
 

@@ -746,6 +746,23 @@ HERE_DOC
 URI.escape has been deprecated in Ruby 1.9.2... so use CGI::escape or
 ERB::Util.url_encode.
 
+# Retry from rescue
+
+~~~
+begin
+  retries ||= 0
+  puts "try ##{ retries }"
+  raise "the roof"
+rescue
+  retry if (retries += 1) < 3
+end
+
+# output:
+# try #0
+# try #1
+# try #2
+~~~
+
 # Tips
 
 * Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`

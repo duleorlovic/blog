@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Get syntax right in jade, yaml
 ---
 
 # Jade
@@ -58,6 +57,63 @@ sport:
   kayak: |
     It is nice sport
     to play around
+~~~
+
+# Haml
+
+
+* html tags are written with `%`, and attributes is hash `{src: post.image}` but
+for class you can use css notation `.class` and `#id` (and `%div` is not
+needed), and for content from ruby code use `=` immediatelly or idented in new
+line, like: `%div.col-md-6= @user.name`
+* if you need more nested content, use tabs
+* if ruby line spans multiple lines than use
 
 ~~~
+= link_to "Add",
+  url: posts_url
+~~~
+
+* plain text is without `%` or `=`
+* excaping html `&= "Me & you"` will sanitize HTML sensitive characters `Me
+&amp; you`, unescaping HTML `!= <br>` will output `<br>` instead of `&lt;br&gt;`
+* if conditional classes is false, than it is ignored `.item{class: @item.empty?
+&& "empty"}` can be `<div class="item">` or `<div class="item empty">`
+* whitespace can be removed immediatelly within the tag `<` (or surrounding the
+tag `>`), for example
+
+  ~~~
+  %blockquoute<
+    %div
+      Foo
+  ~~~
+
+  is
+
+  ~~~
+  <blockqoute><div>
+    Foo
+  </blockquote></div>
+  ~~~
+* HTML comments `<!-- -->` is with `/`
+* ruby code which is not inserted `-` like `- title = 'home'`. Iteration and
+other blocks use indent
+
+  ~~~
+  - case 2
+  - when 1
+    = "1"
+  - when 2
+    = "2?"
+  ~~~
+
+* ruby comments `-# this is a comment`
+* filters like `:javascript`, `:coffeescript`, `:scss`
+
+  ~~~
+  :javascript
+    $(document).ready(function() {
+      alert("hi");
+    });
+  ~~~
 

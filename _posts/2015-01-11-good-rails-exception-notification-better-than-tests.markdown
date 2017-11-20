@@ -34,7 +34,7 @@ bundle
 set email receivers in your secrets:
 
 ~~~
-sed -i config/secrets.yml -e '/^test:/i \
+sed -i config/secrets.yml -e '/^shared:/a \
   # for all outgoing emails\
   mailer_sender: <%= ENV["MAILER_SENDER"] || "My Company <support@example.com>" %>\
 \
@@ -138,12 +138,27 @@ As delivery method you can use very nice [letter_opener]( {{ site.baseurl }}
 {% post_url 2016-05-17-send-and-receive-emails-in-rails %}#letter-opener-for-local-preview)
 for development.
 
+If you keep receiving unknown `(ActionView::MissingTemplate) "Missing template`
+for json request (but you only consider html) or for html (but you only consider
+js), you should add something like
+
+~~~
+  def index
+    respond_to do |format|
+      format.html
+      format.any { redirect_to root_path }
+    end
+  end
+~~~
+
 You can test if it properly ignore by setting curl headers
 
 ~~~
 curl http://localhost:3000/sample-error # this should open letter opener
 curl http://localhost:3000/sample-error -A 'Googlebot' # this is ignored
 curl http://localhost:3000/sample-error -H 'Accept: Agent-007' # this is ignored
+curl  -H "Accept: application/json" http://localhost:3000/ # could trigger
+# MissingTemplate error
 ~~~
 
 # Javascript notification and example error pages
@@ -156,7 +171,8 @@ to have some pages for test if this notification works. First create routes
 get 'sample-error', to: 'pages#sample_error'
 get 'sample-error-in-resque', to: 'pages#sample_error_in_resque'
 get 'sample-error-in-javascript', to: 'pages#sample_error_in_javascript'
-get 'sample-error-in-javascript-ajax', to: 'pages#sample_error_in_javascript'
+get 'sample-error-in-javascript-ajax', to:
+'pages#sample_error_in_javascript_ajax'
 post 'notify-javascript-error', to: 'pages#notify_javascript_error'
 {% endhighlight %}
 
@@ -172,11 +188,12 @@ class MyMailer < ActionMailer::Base
     mail to: INTERNAL_NOTIFICATION_EMAIL,
          subject: "[MyApp info] #{subject}",
          body: "<h1>#{subject}</h1><strong>Details:</strong>" +
-           item.inspect
-             .gsub(', ', ",<br>")
-             .gsub('{', '<br>{<br>')
-             .gsub('}', '<br>}<br>'),
-         content_type: "text/html"
+               item
+               .inspect
+               .gsub(', ', ',<br>')
+               .gsub('{', '<br>{<br>')
+               .gsub('}', '<br>}<br>'),
+         content_type: 'text/html'
   end
 end
 ~~~
@@ -194,12 +211,17 @@ Here is what I use:
 {% highlight ruby %}
 # app/controllers/pages_controller.rb
 class PagesController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: %i[
+    sample_error_in_javascript notify_javascript_error
+  ]
+
   def sample_error
     raise 'This is sample_error on server'
   end
 
+  # rubocop:disable Metrics/LineLength
   def sample_error_in_javascript
-    render layout: true, text: %(
+    render layout: true, html: %(
       Calling manual_js_error_now
       <script>
         function manual_js_error_now_function() {
@@ -212,7 +234,7 @@ class PagesController < ApplicationController
       <br>
       <button onclick="trigger_js_error_on_click">Trigger error on click</button>
       <a href="/sample-error-in-javascript-ajax" data-remote="true" id="l">Trigger error in ajax</a>
-    )
+    ).html_safe
   end
 
   def sample_error_in_javascript_ajax
@@ -233,15 +255,14 @@ class PagesController < ApplicationController
         # contains backtrace, so I use different key (stack) to avoid duplicate)
         # data section is always shown if exists
         # sections: %w(request message),
-        exception_recipients: "#{js_receivers}".split(','),
+        exception_recipients: js_receivers.to_s.split(','),
         data: {
           current_user: current_user,
-          params: params,
-          stack: e.backtrace,
-        },
+          params: params
+        }
       )
     end
-    render nothing: true
+    head :ok
   end
 
   def sample_error_in_resque
@@ -268,7 +289,7 @@ There is non jQuery fallback but loaded jQuery is preferred.
 You should create separate file that will be loaded in `<head>` and before
 application.js so it is loaded before any other js code.
 
-{% highlight javascript %}
+~~~
 // app/assets/javascripts/exception_notification.js.erb
 // This should be loaded in <head> and separatelly from application.js
 // notification will not work if some error exist in this file
@@ -449,24 +470,25 @@ window.console = window.console || (function(){
     var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
     return c;
 })();
-{% endhighlight %}
+~~~
 
-* if your javascript asset `application.js` is at the end of <body> (not
-included in `<head>`) than you need to include this exception notification so it
-is available before any other js code. In this case you need to stub it so it is
-not included twice
+* if your use javascript assets that put all js to `application.js` or your js
+is loaded at the end of <body> (not included in `<head>`) than you need to
+include this exception notification so it is available **BEFORE** any other js
+code. In this case you need to stub it so it is not included twice
 
   ~~~
   # app/views/layouts/application.html.erb
     <head>
       <%= javascript_include_tag :exception_notification %>
+      <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     </head>
 
   // app/assets/javascripts/application.js
   //= stub exception_notification
 
   # config/initializers/assets.rb
-  Rails.application.config.assets.precompile += %w( exception_notification.js )
+  config.assets.precompile += %w[exception_notification.js]
   ~~~
 
 Do not forget to define javascript receivers
@@ -478,15 +500,28 @@ Do not forget to define javascript receivers
   javascript_error_recipients: <%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %>
 {% endhighlight %}
 
+NOTE that when you `export JAVASCRIPT_ERROR_RECIPIENTS` than you need also to
+change `app/assets/javascripts/exception_notification.js.erb` so it is
+recompiled (touch does not trigger recompilation).
+
+CSP can help your site to prevent loading external js for extensions. Fine grane
+can enable loading google maps, facebook buttons on specific pages.
+
+~~~
+Content-Security-Policy: default-src
+~~~
+
+
 # Custom Templates
 
 You can also set some nice looking text with [custom
 sections](https://github.com/smartinez87/exception_notification#sections). You
 can set sections in manual notification or inside settings->email.  You need to
 write text partial (html is not supported) in which you can access to
-`@data`,`@request`... variables.
+`@data`,`@request`... variables, which you can list with `<%= instance_variables
+%>`
 
-{% highlight html %}
+~~~
 # app/views/exception_notifier/_message.text.erb
 Javascript error params
 <%=raw @data[:params].inspect %>
@@ -497,8 +532,13 @@ HTTP_ACCEPT=<%= @request.env["HTTP_ACCEPT"] %>
 <br>
 REMOTE_ADDR=<%= @request.env["REMOTE_ADDR"] %>
 session
+~~~
 
-{% endhighlight %}
+~~~
+# app/views/exception_notifier/_delayed_job.text.erb
+JOB
+<%= instance_variable_get(:@job).inspect %>
+~~~
 
 # Render custom error pages
 
@@ -540,7 +580,8 @@ from all StandardError exceptions.
   end
 {% endhighlight %}
 
-And you should create routes for those *page_not_found_path* and *error_page_path* and nice templates as well.
+And you should create routes for those *page_not_found_path* and
+*error_page_path* and nice templates as well.
 
 {% highlight ruby %}
 # config/routes.rb
@@ -598,7 +639,12 @@ Note that this notifications will be triggered for jobs that are inserted using
 # Delayed job
 
 {% highlight ruby %}
-# config/initializers/delay_job.rb
+# config/initializers/delayed_job.rb
+Delayed::Worker.destroy_failed_jobs = false
+Delayed::Worker.max_attempts = 3
+Delayed::Worker.delay_jobs = !Rails.env.test?
+
+Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
 
 # when you change this file, make sure that you restart delayed_job process
 # bin/delayed_job stop && bin/delayed_job start
@@ -607,14 +653,18 @@ Note that this notifications will be triggered for jobs that are inserted using
 # do not rescue in worker because no notification email will be send
 # http://andyatkinson.com/blog/2014/05/03/delayed-job-exception-notification-integration
 
+class Exception
+  attr_accessor :ignore_please
+end
+
 # Chain delayed job's handle_failed_job method to do exception notification
 Delayed::Worker.class_eval do
   def handle_failed_job_with_notification(job, error)
     handle_failed_job_without_notification(job, error)
 
-    # rescue if ExceptionNotifier fails for some reason
     begin
       # ExceptionNotifier.notify_exception(error) do not use standard notification, use delayed_job partial
+      return if error.ignore_please && job.attempts < Delayed::Worker.max_attempts
       env = {}
       env['exception_notifier.options'] = {
         sections: %w(backtrace delayed_job),
@@ -623,13 +673,12 @@ Delayed::Worker.class_eval do
       env['exception_notifier.exception_data'] = {job: job}
       ExceptionNotifier::Notifier.exception_notification(env, error).deliver
 
+    # rescue if ExceptionNotifier fails for some reason
     rescue Exception => e
       Rails.logger.error "ExceptionNotifier failed: #{e.class.name}: #{e.message}"
-
       e.backtrace.each do |f|
         Rails.logger.error "  #{f}"
       end
-
       Rails.logger.flush
     end
   end
@@ -637,6 +686,23 @@ Delayed::Worker.class_eval do
   alias_method_chain :handle_failed_job, :notification
 end
 {% endhighlight %}
+
+If you want to ignore specific timeout exception than use something like
+
+~~~
+# app/jobs/send_sms_job.rb
+class SendSmsJob < ActiveJob::Base
+  queue_as :webapp
+
+  rescue_from Net::ReadTimeout, SocketError do |e|
+    e.ignore_please = true
+    # re-raise so job is retried
+    raise e
+  end
+  def perform()
+  end
+end
+~~~
 
 # Rake
 

@@ -31,6 +31,9 @@ You can use that with `wait` and `wait_until`
 MyTodoJob.perform_later args
 MyTodoJob.set(wait: 1.week).perform_later args
 MyTodoJob.set(wait_until: Date.tomorrow.noon).perform_later args
+
+# or
+MyTodoJob.perform_now args
 ~~~
 
 With ActiveJob you can pass entire ActiveRecord objects because GlobalID will
@@ -39,7 +42,7 @@ ActiveJob::Base) than you should pass object_id.
 
 Rails provides in-process queuing (it keeps in memory and is running with rails)
 so if you put byebug it will stop rails process.
-By default `config.active_job.queue_adapter = :inline` it better is to use
+By default `config.active_job.queue_adapter = :inline` better is to use
 `:async`.  Both inline and async Active Job do not support priority, timeout and
 retry. You can find all adapter http://api.rubyonrails.org/v5.1/classes/ActiveJob/QueueAdapters.html
 For testing there are `:test` queue adapter which is used "only" for testing
@@ -298,10 +301,11 @@ job = Delayed::Job.find 10 # 10 is job.id
 
 job.handler # to see how job will be called
 job.last_error # to see backtrace of error
+job.failed_at # time when last failed
 
-# to invoke job you can
-job.invoke_job # this does not remove job if successfully
-job.destroy # so you need to do that manually
+# rerun, re run, invoke job you can
+job.invoke_job # this does not remove job if successfully, so you need to do
+job.destroy # that manually
 # or
 Delayed::Worker.new.run job # this runs in current process (not in
 # bin/delayed_job run) and will remove if successfully
@@ -355,3 +359,9 @@ Sample worker
 
 `User.find(1).with_lock do sleep(10); puts "worker 1 done" end`
 `User.find(1).with_lock do sleep(1); puts "worker 2 done" end`
+
+# TIPS
+
+* Always check if job is eligible to run , world changes, it could be already
+run bu some error.
+* Test if job is added and if it added only once.

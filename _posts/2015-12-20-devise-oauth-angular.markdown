@@ -43,6 +43,10 @@ attempts reaches 20. You can send internal notification when that happens by
 overriding devise mailer and method `def unlock_instructions(record, token,
 opts={})`
 
+When user is logged in, than in session there is a id of current_user
+`session['warden.user.user.key'] # => [[9], "$2a$10$TUfyHaPAWV.A1/6JLuCTGO"]`
+
+
 # Devise and Omniauth
 
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to

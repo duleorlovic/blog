@@ -31,6 +31,8 @@ Gmail smtp is the most easiest way to start
   smtp_password: <%= ENV["SMTP_PASSWORD"] %>
 ~~~
 
+If you receive error `SocketError: getaddrinfo: Name or service not known` than
+
 ## Sendgrid
 
 Sendgrid is simple to start on heroku. Just add new add-on free plan with

@@ -164,8 +164,12 @@ Just a few command line options with grep
 
 * OR is with `(|)`. But you need to escape `|` for example: `\(asd\|qwe\)` lines
 that contains asd or qwe
-* contains asd but not qwe is `asd((?!qwe).)*$`
+* contains asd but not qwe is `asd((?!qwe).)*$`. Oposite not containing.
 * contains `asd` and `qwe` but not `zxc` in between `asd((?!qwe).)*zxc`
+* include end of line for multiline search, use matcher `\_.` finds any
+character including end-of-line. Use `\n` for new line character. `\{-}`
+stopping at first occurence (`*` is too greedy and would stop at last
+occurence).
 
 When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
 That is needed for negative lookahead.

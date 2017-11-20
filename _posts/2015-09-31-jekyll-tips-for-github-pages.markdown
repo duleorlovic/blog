@@ -39,18 +39,6 @@ plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcge
 enable it and activate by clicking on icon when you open a page. Or you can use
 javascript version.
 
-# Liquid tips
-
-* to show `{{ '{{ ' }} }}` using *markdown* you need to escape them like
-`{{ "{{ '{{ " }} ' }} }}` first closing brackets will close everything that
-comes after first opening brackets. All other closing brackets are simply
-rendered. This does not work if that line breaks in mutliple lines (probably
-string need + or something). To simplify I just put space between first
-`{{ '{ {' }} }}`
-* similar to show `{ % bla_tag %}`
-* if you need to show **\`** than use backslash or put a space ` so it
-wont be applied`
-
 # Custom domain
 
 If your repo is the only or is primary, you can use <duleorlovic.github.io> url
@@ -602,18 +590,31 @@ Another theme example is
 highlight ruby %}`, `{{ '{%' }} highlight bash %}`
 
 
-# Tags
+# Liquid in markdown
+
+* to show `{{ '{{ ' }} }}` using *markdown* you need to escape them like
+`{{ "{{ '{{ " }} ' }} }}` first closing brackets will close everything that
+comes after first opening brackets. All other closing brackets are simply
+rendered. This does not work if that line breaks in mutliple lines (probably
+string need + or something). To simplify I just put space between first
+`{{ '{ {' }} }}`
+* similar to show `{ % bla_tag %}`
+* if you need to show **\`** than use backslash or put a space ` so it
+wont be applied`
+
+# Liquid Tags
 
 [Liquid for
 designers](https://github.com/Shopify/liquid/wiki/Liquid-for-Designers) and
 <http://shopify.github.io/liquid/> are all docs you need.
+<http://cheat.markdunkley.com/>
 
 * `{ % assign my_var = [1, 2] %}` assigns some value to variable
 * `{ % capture my_id %} name-{ { item.name | handleize }} { % endcapture %}`
   captures block text
-* `{ % include some_file id="some_value" %}` you can pass arguments to include
-and use it inside like `{ % if include.id %} { % assign target_page =
-  page.[include.id] %} { % endif %}`
+* `{ % include some_file id="some_value" %}` include snippet, you can pass
+arguments to include and use it inside like `{ % if include.id %} { % assign
+target_page = page.[include.id] %} { % endif %}`
 * `{ % comment %} my comment { % endcomment %}`
 * `{ % if statement %} { % elsif false %} { % endif %}` where statement can be
   * comparison `==`, `!=`, `<=`
@@ -665,7 +666,7 @@ relative_url }}`
   * integer can be incremented `{ % increment my_int %}` or `{ % decrement
   my_int %}`
   * range is defined similar to ruby `{ % for i in (1..my_int) %}`
-  * to use operation sumarize, for exaple add two number you can use
+  * to use sum operation, for example add two number you can use
 
   ~~~
   {% assign number_of_columns = 3 | minus: site.data.footer_links.size %}

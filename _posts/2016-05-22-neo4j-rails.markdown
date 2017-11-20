@@ -1,0 +1,287 @@
+--
+layout: post
+---
+
+Thanks to the workshop I started using Neo4j
+
+# Installing
+
+~~~
+update-java-alternatives --list
+sudo apt install default-jre default-jre-headless
+sudo apt-get install openjdk-8-jdk
+wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
+sudo apt-get update
+sudo apt-get install neo4j=3.3.0
+sudo neo4j start
+# sudo mkdir /var/run/neo4j # this is needed if permission denied
+# cat /etc/neo4j/neo4j.conf
+# server will accepts connection on bolt://localhost:7687
+# user:password neo4j:neo4j but it has to be changed
+# reset password with: sudo rm /var/lib/neo4j/data/dbms/auth  or
+# sudo neo4j-admin set-initial-password ...
+sudo service neo4j status
+sudo service neo4j start
+~~~
+
+Open browser on <http://localhost:7474/>
+
+Learn from examples in browser, type `:play movies`.
+
+# Cypher commands
+
+`:play_cypher`
+
+* create node `()` and relationship `[]`. In CREATE only directed
+relationships. Nodes can have 0 or more labels `:Person` and can have different
+properties (strings, numbers or booleans). Relationships always have a direction
+and have a single type (`:KNOWS`) and also properties.
+
+  ~~~
+  CREATE (d:Covek { name: 'Dusan' }), (m:Covek { name: 'Milan' }),
+  (s:Covek { name: 'Srdjan' }),
+  (d)-[:TWIN_BRO]->(m),
+  (m)-[:TWIN_BRO]->(s),
+  (m)-[:BRO]->(s),
+  (d)-[:BRO]->(s)
+  ~~~
+
+* RETURN matched nodes and relationships, WHERE filter and what to RETURN, with
+eventual: LIMIT 10.
+  ~~~
+  MATCH (n:Covek) WHERE n.name = 'Dusan' RETURN n;
+  ~~~
+
+  * match relationships by type `[edge:BRO]`. You can write long edges
+  ~~~
+  MATCH (n)-[:BRO]->()<-[:BRO]-(m) RETURN n, m
+  ~~~
+
+  * instead writting two edges `MATCH (n)-[]->(t), (t)-[]->(m)` you can write
+  number of edges `[*2]` or even interval of number `[*1..4]`
+  * if direction is ommited it will return twice (one in both directions)
+  ~~~
+  MATCH (n)-[:BRO]-(m) RETURN n, m;
+  ~~~
+
+  * WHERE can be moved inside node or edge declaration `MATCH (n:Covek { name:
+  'Dusan' }) RETURN n;` so WHERE is usualy used with `WHERE NOT`. For example
+  cocoautors which are not coauthors
+
+  ~~~
+  MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
+        (coActors)-[:ACTED_IN]->(m2)<-[:ACTED_IN]-(cocoActors)
+  WHERE NOT (tom)-[:ACTED_IN]->()<-[:ACTED_IN]-(cocoActors) AND tom <> cocoActors
+  RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC
+  ~~~
+
+  * RETURN can be node or edge, `Type()`, `DISTINCT()`,
+
+* delete all nodes for `>2.3.0`
+
+  ~~~
+  MATCH (n) DETACH DELETE n
+  ~~~
+
+* `EXPLAIN` and `PROFILE` will give more info about query
+
+# Neo4jrb
+
+Follow <https://neo4j.com/developer/ruby-course/> to create example app
+`asset_portal`, there is [screen
+cast](https://www.youtube.com/watch?v=n0P0pOP34Mw&list=PL5klM3mD6alLUhNTPTbj5a3GBjU7oZN0t)
+
+~~~
+rails new asset_portal -m http://neo4jrb.io/neo4j/neo4j.rb -O
+# this will add gem neo4j and neo4j-rake_tasks
+# config/neo4j,yml
+# db/neo4j folder
+# config/application.rb uncomment server url with
+config.neo4j.session.type = :bolt
+config.neo4j.session.url = 'bolt://neo4j:dusan10@localhost:7687'
+
+rails generate scaffold User name:string email:string
+rails s
+gnome-open http://localhost:3000/users
+~~~
+
+Model are defined with <http://neo4jrb.readthedocs.io/en/9.0.x/ActiveNode.html>
+
+~~~
+class User
+  include Neo4j::ActiveNode
+  has_many :out, :assets, type: :OWNS
+end
+
+class Asset
+  include Neo4j::ActiveNode
+  property :created_at, type: DateTime
+  property :updated_at, type: DateTime
+  has_one :in, :user, oposite: :assets
+end
+~~~
+
+* properties are declared with `property :name`. It can also define
+  * `default: 'default_value'` is set when property is `nil` so for existing and
+  new object it will be `'default_value'`
+  * index and constraints are defined in migration
+  * `type: Integer` define property type in ruby: integer, float, string, time,
+  date, datetime, boolean, BigDecimal. Istead of DateTime, if you need some
+  expensive query, better is to use `type: Integer` and store as unix timestamp
+  * `serialize: :name` so we can put any hash or array
+
+* `enum status: [:draft, :published]` maps integer in db to strings in rails
+  * you can use `user.draft!`, `user.draft?` or `User.draft`
+  * `_default: :draft` to define default value
+  * usually you need to add index on enum column but you can disable `_index:
+  false`
+  * validation like `validates :name, presence: true`, or
+  `validates_uniqueness_of :name`
+  * you can pass undeclared properties if you insert the line `include
+    Neo4j::UndeclaredProperties`
+
+* relationship: `has_many :in, :posts`
+  * first parameter can be `:in`, `:out`, `:both`
+  * second set the association name (that is expected `:model_class` and
+  association name `:type`)
+  * `has_one` should be used with singular and `.first` is automatically called
+  so result is non chainable (unless you call `comment.post(chainable: true)`
+  * `:type` override association name in Neo4j (Rails uses asociation name).
+  `type: false` match all relationships
+  * `:model_class` is NODE model on other end of association, usualy resolved
+  from second parametar - association name, `model_class: false` will match any
+  node on other end. Value can be a symbol with class name: `model_class:
+  :Asset`, or can be array in case of polymorphic association `has_many :in,
+  :written_post_or_comments, type: :WROTE, model_class: [:Post, :Comment]`.
+  When using polymorphic than chains will not work unless `proxy_as` and
+  `query_as` are used
+  <http://neo4jrb.readthedocs.io/en/9.0.x/ActiveNode.html#polymorphic-associations>
+  * `:rel_class` is REL model
+  * `:origin` name of association in oposite model so you don't need to
+  write `:type` in both classes, often used in `:in` relationships. Value is the
+  association name in reciprocal model, `origin: :user`
+  * `dependent: delete` to delete all associated nodes in cypher
+  (`:destroy` will call `.each` and `.destroy` with callbacks).
+  `:delete_orphans` delete associated records that have no other relationships
+  of the same type (`:destroy_orphans` do that in Ruby and callbacks will be
+  called).
+  * `unique: true` will use `CREATE UNIQUE` relationship (only one). `unique:
+  :all` will create unless all nodes, type, direction and rel properties are
+  matched. `unique: { on: [keys] }` is looking only on keys to determine if
+  already exists.
+  * eager loading is implicit, but if you need explicit you can use
+  `.with_associations(:tags, :comments)` to generate `COLLECT()`
+
+  ~~~
+  # create and remove relationships
+  post.comments << comment3             # Creates new relationship
+  post.comments = [comment1, comment2]  # Removes all existing relationships
+  comment.post = post1                  # Removes all existing relationships
+  post.comments.create comment3, posted_by: 'me' # text property on relationship
+  Comment.create text: '', post: post1  # create comment and relationship
+
+  # update nodes
+  post.comments.update_all flagged: true
+  # update relationships
+  post.comments.update_all_rels flagged: true
+
+  # iterate over relationships
+  post.comments.each_rel.map &:neo_id
+  post.comments.each_with_rel { |node, rel| }
+
+  # custom query_as match pluck
+  post.query_as(:p).match('(p)-[rel1:CONTAINS]->(n2)').pluck(:rel1)
+  ~~~
+
+* when comment is destroyed than you can not get it's post, it is better to get
+  it's post before
+
+  ~~~
+  def destroy
+    post = @comment.post
+    @comment.destroy
+    redirect_to post_path post
+  end
+  ~~~
+* callbacks like `before_save`
+
+Relationships is defined <http://neo4jrb.readthedocs.io/en/9.0.x/ActiveRel.html>
+
+~~~
+class Knows
+  include Neo4j::ActiveRel
+  from_class :user
+  to_class :any
+  property :created_at, type: DateTime
+  property :updated_at, type: DateTime
+end
+~~~
+
+* it is not able to access relationships directly, always using a node
+* properties are the same as for nodes
+* usefull for polymophic, for example User knowns companies, places, ... so it
+  contains different logic for each relation.
+
+# Query
+
+Debug with `user.assets.categories.assets.print_cypher`.
+
+Error `defined for a second time. Associations can only be defined once` is when
+you name the associataion with already used name. Please use different name and
+same model_class.
+
+Query on property `User.where(name: ?)` parametar `?` can be: string, nil,
+array, regular expression `User.where(name: /.*dule.*/i)`, range
+`User.where(age: 1..2)`.
+
+There is `neo_id` on each node and relationships but are somewhat volatile so do
+not use it. Instead, each new node requires primary key `uuid` property which is
+also accessed using `.id` method. Rels do not have ids since they are traversed
+by nodes. SecureRandom uuid is generated in migration `rake
+neo4j:generate_schema_migration[constraint,Model,uuid]` and `rake neo4j:migrate`
+
+Raw query can be done using `Neo4j::ActiveBase.current_session.query('MATCH (n)
+RETURN n LIMIT {limit}', limit: 10)`.
+But it is better to use `ActiveNode` finders: `.find my_uuid` find be
+id_property, `.find_by name: 'Dule'` find by property
+
+Queries can be chained in 3 ways: `Model.all`, `Model.association`,
+`model_object.association`. It returns `AssociationProxy`.
+If `where` is used, than `QueryProxy` is returned.
+
+Query object is used to simplify on which fields is used:
+`User.query_as(:user).where(user: { age: 1..2 })`
+
+You can use `where` or `rel_where` in the middle of a chain (it is applied to
+last) for example `user.created_assets.where(public: true).categories`.
+Also `.order`, `.limit` and `.skip`.
+You can pass single attribute to assign variable in cypher, so we can pluck on
+it `user.created_assets.categories(:category).pluck('category.name',
+'count(*)')`
+
+
+# Heroku
+
+~~~
+heroku addons:create graphenedb
+~~~
+
+# Tips
+
+* use node instead of relationship in all cases where you need to add another
+  relationships to it. For example instead of property `user_id` on relationship
+  you should use node with `:OWNS` relationship to it
+* instead to name relationship with `:BELONGS_TO` use something more meaningfull
+to businness, for something belongs to Category use
+`something-[:IN_CATEGORY]->category`, or for review `[:REVIEW_FOR]`.
+  For has_many use verb `()-[:POSTS]->(:Post)`, or `[:CONTAINS]`, `[:USING]`,
+  `[:MENTIONS]`
+  For has_and_belongs_to_many use whatever `(:User)-[:FRIENDS]->(:User)`, `(Tweet)-[:RETWEETS]->(:Tweet)`
+
+# Links
+
+* http://neo4jrb.io/ and differences with sql http://neo4j.com/product/
+* http://neo4jrb.readthedocs.io/en/7.0.x/
+* youtube series https://www.youtube.com/watch?v=n0P0pOP34Mw
+* https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood

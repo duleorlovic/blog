@@ -112,7 +112,7 @@ $(document).on 'hidden.bs.modal', '.modal', ->
   console.log "remove boostrap modal"
 ~~~
 
-You can hide modal with `$('#my-modal').modal('toggle');`
+You can hide close modal with `$('#my-modal').modal('toggle');`
 
 ## Bootstrap tooltip
 

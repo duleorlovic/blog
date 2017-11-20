@@ -6,3 +6,7 @@ title: Move Index opensource
 
 android ethernet so battery lasts longer without wifi
 <https://play.google.com/store/apps/details?id=xda.usbhost.test&hl=en>
+
+codeclimate is free for opensource.
+
+https://medium.com/libraries-io/what-does-a-sustainable-open-source-project-look-like-bf9b8cf824f8

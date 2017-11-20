@@ -35,9 +35,9 @@ special variables
 * print variables on command line: `:echo $MYVIMRC`, `:echom` will save output
   into `:messages` so you can view later
 * to set variables you can use `:set xxx` or `:set xxx=value`. To unset `:set
-  noxxx` or `:set xxx!`.  To check if it is set `:set xxx?`. To see current
-  value you can use `=` and `<TAB>` for example `:set xxx=` and press tab so vim
-  autocomplete the value so you can edit it
+noxxx` or `:set xxx!`.  To check if it is set `:set xxx?`.
+* to get current value you can use `=` and `<TAB>` for example `:set xxx=` and
+press tab so vim autocomplete the value so you can edit it
 * `:help xxx` or `:help 'xxx'`
 
 ## Mappings

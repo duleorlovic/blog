@@ -4,11 +4,21 @@ title:  Free SSL for https on apache or nginx
 tags: https ssl apache nginx
 ---
 
+# Lets encrypt for heroku
+
+https://letsencrypt.org/
+https://github.com/pixielabs/letsencrypt-rails-heroku
+
 Following [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-with-a-free-signed-ssl-certificate-on-a-vps) here are some screenshots from Startssl how I registered [www.kontakt.in.rs](http://www.kontakt.in.rs).
 
-Go to the [http://www.startssl.com/](http://www.startssl.com/) and on left menu find: *StartSSL Products* > *StartSSL Free* . Before you can get the keys, you need to authenticate yourself. Go to [Certificate Control Panel](https://www.startssl.com/?app=12). There are links for login using existing keys, but we will use signup.
+# StartSSL
 
-# Signup and install browser certificate 
+StartSSL is not working since they issues certs for sites that did not check.
+Here is example only for reference.
+
+Go to the [www.startssl.com](http://www.startssl.com/) and on left menu find: *StartSSL Products* > *StartSSL Free* . Before you can get the keys, you need to authenticate yourself. Go to [Certificate Control Panel](https://www.startssl.com/?app=12). There are links for login using existing keys, but we will use signup.
+
+# Signup and install browser certificate
 
 ![Sign up form]({{ site.baseurl }}/assets/post_free_ssl/1_signup_form.jpg)
 
@@ -199,7 +209,3 @@ On ubuntu, you can rename `ssl.crt` to `ssl.crt.p12` (or ssl.crt.key) and double
 details of certificate.
 
 For heroku you can follow <https://gist.github.com/meskyanichi/3354578>
-
-# Lets encrypt for heroku
-
-https://github.com/pixielabs/letsencrypt-rails-heroku

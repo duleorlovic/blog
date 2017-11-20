@@ -116,7 +116,7 @@ the same using Elements, Event Listeners tab, click, and jump to source where
 you want breakpoint)
   * to show some value in log you can add Conditional breakport with
   `console.log(varname);`
-* thre dots -> Coverage can give how much of css or js is used on the page
+* three dots -> Coverage can give how much of css or js is used on the page
 * on elements panel
   * `h` to hide element (`visibility: hidden`)
 
@@ -128,6 +128,18 @@ you want breakpoint)
  * `^shift+o` find functions in the current file
  * `^shift+p` chrome shortcuts
 
+Enable experiments with <chrome://flags/#enable-devtools-experiments> and go to
+Experiments menu in Settings (F1 or Ctrl+P+Settings)
+
+In console you can call
+
+~~~
+url="http://numbersapi.com/5/math"
+await fetch(url)
+await r.text()
+~~~
+
+Audit tab can give you broken best practices and explanations.
 
 # Firefox
 
@@ -188,3 +200,14 @@ just added, or overwritten if same filename. `cd
 /media/orlovic/bf12a7e5-a5d4-4532-8612-a3984f90b56c/backup` and `rsync -r
 /media/dusan/EKSTERNIUSB/ EXTERNIUSB`
 
+* suspend recovery <https://wiki.ubuntu.com/DebuggingKernelSuspend>
+
+~~~
+# enable trace and log
+sudo sh -c "sync && echo 1 > /sys/power/pm_trace && pm-suspend"
+
+# enable log in command env
+sudo PM_DEBUG=true pm-suspend
+
+less /var/log/pm-suspend.log
+~~~

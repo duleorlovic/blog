@@ -11,20 +11,19 @@ text on click
 * [jsPDF](https://github.com/MrRio/jsPDF) pdf generator
   [examples](http://mrrio.github.io/jsPDF/#)
 * number input field [spinner](https://github.com/vsn4ik/jquery.spinner)
-* toggle checkbox:
-  * [draggable
-  switch](http://www.bootstrap-switch.org/examples.html)
+* toggle checkbox: [bootstrap
+  switch](http://bootstrapswitch.com/examples.html)
+
+  ~~~
+  bower install bootstrap-switch
+  //= require bootstrap-switch/dist/js/bootstrap-switch.js
+   *= require bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css
+  ~~~
+
   * [abpetkov/switchery](https://github.com/abpetkov/switchery)
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
 * drag and drop elements <https://shopify.github.io/draggable/>
 
-
-# Time
-
-* "One minute ago" can be updated automatically in this
-  [timeago](http://timeago.yarp.com/) plugin. Similarly,
-  [jquery.countdown](https://github.com/hilios/jQuery.countdown) for future
-  dates
 
 # Alerts and notifications
 
@@ -204,6 +203,13 @@ used for singleDatePicker, dateTime picker
   [link](http://stackoverflow.com/questions/16890376/chrome-type-date-and-jquery-ui-date-picker-clashing)
   so use `type=text`
 * [bootstrap-datepicker](https://bootstrap-datepicker.readthedocs.io/en/latest/index.html)
+* time picker <http://jonthornton.github.io/jquery-timepicker/>
+
+* "One minute ago" can be updated automatically in this
+  [timeago](http://timeago.yarp.com/) plugin. Similarly,
+  [jquery.countdown](https://github.com/hilios/jQuery.countdown) for future
+  dates
+
 
 # Image file upload drag and drop crop
 
@@ -538,7 +544,10 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 # Rails
 
 * crowdsourcing [catarse](https://github.com/catarse/catarse) [tilt](https://github.com/crowdtilt/crowdtiltopen/) is not actually opensource, since their api should be used
-* opensource market peer-to-peer marketplace [sharetribe](https://github.com/sharetribe/sharetribe)
+* opensource market peer-to-peer marketplace [sharetribe]({{ site.baseurl }} {% post_url 2017-11-17-sharetribe %})
+* diaspora
+  * when you run localy, you can import new contacts and their posts, for
+  example: hq@pod.diaspora.software
 
 # Templates
 
@@ -552,6 +561,15 @@ version](https://github.com/iogbole/gentelella_on_rails)
 * [four images](http://barbajs.org/demo/grid/index.html)
 * [trophy jekyll](http://thomasvaeth.com/trophy-jekyll/) nice template for jekyll
 
+# Animations
+
+* <http://animejs.com/>
+* <http://daneden.me/animate>
+
+* star heart animation with morphing
+https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
+* detect element visibility and start animating when it is visible
+<https://xtianmiller.github.io/emergence.js/>
 
 # Nice design and ui tools
 
@@ -560,6 +578,7 @@ version](https://github.com/iogbole/gentelella_on_rails)
 * CSS Tricks button rotate on lost hover
 <https://css-tricks.com/examples/DifferentTransitionsOnOff/>
 * split cards <https://designshack.net/tutorialexamples/splitreveal/index.html>
+* cards which you can click (mobile) or hover (desktop) http://devjam.com/
 * nice project portfolio showcase <https://madewithenvy.com/>
 
 # Fonts and icons

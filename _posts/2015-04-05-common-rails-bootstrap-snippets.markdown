@@ -109,6 +109,9 @@ bundle
 guard init livereload
 sed -i config/environments/development.rb -e '/^end/i \
   # livereload\
+  # if guard is not running, there is an error in js console\
+  # Cross-origin plugin content from  must have a visible size larger than 400 x\
+  # 300 pixels, or it will be blocked. Invisible content is always blocked.\
   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
   # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
   config.web_console.whiny_requests = false'
@@ -121,7 +124,7 @@ if defined? Bullet
 end
 HERE_DOC
 
-git add . && git commit -m "Adding useful development & production gems"
+git add . && git commit -m "Adding guard and other useful gems"
 
 # to run guard live reload, first increase max watches than just run guard
 # https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
@@ -170,6 +173,11 @@ to find last pull request id
 
 # Sample page
 
+Button should we blue and Fa camera icon should be shown after installing
+[bootstrap and fontawesome inside rails](
+{{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}
+#fontawesome)
+
 ~~~
 rails g controller pages index --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
 echo '<button class="btn btn-primary">
@@ -194,7 +202,7 @@ sed -i app/views/layouts/application.html.erb -e '/title/a \
 ## Adding flash (both from server and client)
 
 You can use [text-center](http://getbootstrap.com/css/#type-alignment) bootstrap
-helper (ie `text-align: center;`). Also the collors 
+helper (ie `text-align: center;`). Also the collors
 
 ~~~
 sed -i app/views/layouts/application.html.erb -e '/yield/c \
@@ -293,15 +301,26 @@ For various ways of integrating Angular look at
 YML file can use anchor (`&`) and reference (`*`) so you do not repeat the code.
 When you use reference `*` (as for testing) you can not add or update keys, but
 with `<<` you can (as for production) (more on [get syntax right](
-{{ site.baseurl }} {% post_url 2017-01-10-get-syntax-right-in-jade-yaml %}#yaml))
+{{ site.baseurl }} {% post_url 2017-01-10-get-syntax-right-in-jade-yaml-haml %}#yaml))
 Note that you can use default values for env variables but only for those
 strings. Do not use boolean since `<%= ENV['MY_VAR'} || true %>` will always
 resolve to true.
+Instead of this
+~~~
+development: &default
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] || 'some_secret' %>
+
+test: *default
+production:
+  <<: *default
+  monitor_mode: true
+~~~
+
+In rails 5 there are `shared` key which will use all stuff.
 
 ~~~
 cat > config/secrets.yml << HERE_DOC
-# export keys in your .profile file
-development: &default
+shared:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] || 'some_secret' %>
 
   # sending emails
@@ -314,13 +333,8 @@ development: &default
   # default_url is required for links in email body or in links in controller
   # when url host is not available (for example rails console)
   default_url:
-    host: <%= ENV["DEFAULT_URL_HOST"] || "example.com" %>
+    host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.development? ? "localhost" : "example.com") %>
     port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : 80) %>
-
-test: *default
-production:
-  <<: *default
-  monitor_mode: true
 HERE_DOC
 
 git add . && git commit -m "Simplify secrets"
@@ -345,13 +359,14 @@ sed -i app/mailers/application_mailer.rb -e '/default/c \
 Set default url option, that is domain for `root_url`:
 
 ~~~
-#sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb
+# sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb
 
 # if you need to get from rails 4 use { port: Rails::Server.new.options[:Port] }
 # in config/environments/development.rb and also include
 # require 'rails/commands/server` on the top of the file
 
-# for rails 5 you can use Rack::Server.new.options[:Port] and no need to require
+# for rails 5 you can use Rack::Server.new.options[:Port] and no need to
+# require anything, but it works only if you provide -p param to rails s
 
 sed -i config/application.rb -e '/^  end$/i \
     # for link urls in emails\
@@ -505,7 +520,9 @@ git push heroku master --set-upstream
 # just try again
 
 heroku run rake db:migrate db:seed
-# if you have problem with DETAIL:  User does not have CONNECT privilege.
+# heroku run rake db:setup will raise error:
+# PG::ConnectionBad: FATAL:  permission denied for database "postgres"
+# DETAIL:  User does not have CONNECT privilege
 # https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps try
 # heroku pg:reset DATABASE_URL --confirm $MYAPP_NAME
 # heroku restart
@@ -528,6 +545,8 @@ For custom domain just add on settings your domain name and create CNAME record
 for `www` with value `myapp.herokuapp.com`. If you need to match all subdomains,
 you can put *Domain Name* `*.kontakt.in.rs` and CNAME record for `*` with same
 value `myapp.herokuapp.com`.
+
+## Deploy javascript npm required tasks
 
 ## Heroku dyno puma settings
 

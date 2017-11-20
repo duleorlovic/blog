@@ -182,6 +182,7 @@ augroup END
 
 # Movements and Navigation
 
+* `gj` `gk` for long lines that are wrapped to multiple lines, it will go up and down
 * `$` end of line, `0` start of line (or `^`)
 * `+` and `-` move line up or down on the first letter
 * `{` and `}` move on paragraph (empty line)
@@ -191,7 +192,7 @@ augroup END
 buffer), `:marks` gives the jump location, two ' `''` is jump back, `'.` jump to
 last change
 * `^o` and `^i` will jump to previos and next location. `^]` to jump to section
-under cursor - hyperlink
+under cursor - hyperlink - ctags
 * `%` jump closing brackets or other matching brace
 * `5G` or `:5` goes to the line 5
 * `gg` goes top, `G` goes bottom
@@ -202,7 +203,6 @@ scrolling with `:set scb!`
 shorter `:set rnu`
 * show approx position in text `^G`
 * `gf` follow that file
-* `^]` open ctag
 
 # Motions and selections
 
@@ -220,9 +220,10 @@ shorter `:set rnu`
 
 * `'<` to the first line (`\`<` char) of last selected visual area. Note that
 you need to exit current visual area and than jump to first or last line/char
-* `vit` inner or `vat` outer (including tag) visual select tag `:h tag-blocks`
+* `vit` inner or `vat` outer visual select (including html tag) `:h tag-blocks`
   * repeat `at` to select wraped tag
-  * jump with `o` more on `:help visual-operators` `:help v_it`
+  * jump to closing (Oposite) html tag with `o`. more on `:help
+  visual-operators` `:help v_it`
   * `vap` select paragraph (until next empty line, including that empty line)
   * `dst` delete surround tag with vim surround plugin
 * `va'` visually select all inside ' including '
@@ -244,6 +245,7 @@ yank link to register `a` and paste: `"add` `"ap"`
 * `]q` search Quick fix
 others are in `:help unimpaired-next`
 To close error window you need to `:lcl`
+* insert text from external command is with `:read !date`
 
 # Exploring
 
@@ -275,7 +277,12 @@ will change directory only in current buffer.
 
 * `/` for searching, to search in oposite direction `?` (`n` and `N` for next
 and previous result)
-* `:grep subject -R * --exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I`
+* `:grep subject -R *
+--exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I`. Instead of
+`:grep` I use `:Ack` (which uses ag)
+<https://github.com/ggreer/the_silver_searcher>. It will ignore all from
+`.gitignore` so no need to exclude dir. Here are some ack.vim helpers:
+  * `?` quick summary of keys, `h` open in horizontal split
 * grep end of the word `/usan\>` help with `:h /\>`
 * `:%s/old/new/gc`
 * `q:` shows history of commands
@@ -304,7 +311,8 @@ possible (instead of `*` which will stop at last occurrence).
 * `:tabe file` open file in new tab, `gt` switch between tabs
 * `:help Ctrl-W_T` move current buffer in new tab, Disable default Terminal ->
 Preferences -> Shortcuts
-* `gx` open link under cursor with `gnome-open`
+* `gx` open link under cursor with `gnome-open`.
+[Issue #1386](https://github.com/vim/vim/issues/1386)
 * `:vsp #1`  vertically split window with file #1
 * `:on` or `Ctrl+W+o` closes all windord except current
 * `:buffers`, `:b1`, `:bun` closes the buffer
@@ -318,8 +326,9 @@ Quickfix window can be opened with `:copen`
 
 # Completion
 
-* `^n` or `^p` in insert mode to autocomplete strings
+* `^n` or `^p` in insert mode to autocomplete strings and get next/previous item
 * `^x^n` only strings from current file
+* `^x^l` complete whole lines
 * `^x^f` to complete filename (keep `^x^f` when you navigate subfolders)
 * `^x^]` for tags find other shortcuts with `:help ins-completion`
 * `^a` and `^x` to increment and decrement numbers
@@ -366,18 +375,73 @@ without vimrc initialization `vim -u NONE`
   find *-vim #
   ~~~
 
-  ~~~
-  # ctags
-  # need to generate tags file with `ctags -R .`
-  # since I override Ctrl+] to be page up, run `pkill xbindkeys first`
-  ^] # jump to tag under cursos
-  g] # list all ambiguous tags: same method could be defined in multiple classes
-  ^t # jump back in tags stack
-  ^x^] # autocomplete tags
-  ~~~
+# CTAGS
+
+You need to generate tags file with `ctags -R .`. You can use default params.
+~~~
+# ~/.ctags
+--recurse=yes
+--exclude=.git
+--exclude=log
+--languages=ruby
+~~~
+
+Some vim keys:
+
+~~~
+^] # ctrl + ] : jump to tag under cursos
+^t # jump back in tags stack (stack is when you go into definition with ^])
+^o ^i # similar move back and forward, but all jumps (not just tags)
+^x^] # autocomplete tags
+g] # list all ambiguous tags: same method could be defined in multiple classes
+
+:ts my_met # select tags for this search, also ctrp tags
+~~~
+
+To generate tags for all gems install <https://github.com/tpope/gem-ctags>
+
+~~~
+gem install gem-ctags
+gem ctags
+~~~
+
+Create template to git hook
+<http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html>
+
+~~~
+~~~
+
+Also use CtrlPTag so you can navigate to tag
 
 
 # Syntastic checker
+
+Instead of synstastic I use ALE <https://github.com/w0rp/ale>
+Results are put in location list so you can navigate with `] l`.
+
+~~~
+" config/vim/ale.vim
+" change message
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+" disable linter on change
+let g:ale_lint_on_text_changed = 'never'
+
+" use only erubylint
+let g:ale_linters = {'eruby': ['erubylint']}
+
+" enable airline
+let g:airline#extensions#ale#enabled = 1
+
+" use less invansive color for warnings
+highlight ALEWarning ctermbg=DarkMagenta
+~~~
+
+You can disable ALE with `ALEToggle`. You can see error message `ALEDetail`. Yo
+see all configuration options `ALEInfo`.
+There was issue with erb <https://github.com/w0rp/ale/issues/580>.
+
+## Syntastic (deprecated)
 
 [syntastic](https://github.com/scrooloose/syntastic) vim plugin is great to
 write your code. Just need to install external syntac checkers and they will be
@@ -414,12 +478,16 @@ You need to install this tools:
 
   ~~~
   AllCops:
+    TargetRubyVersion: 2.3
     Exclude:
       - '**/*'
 
   Metrics/BlockLength:
     Exclude:
       - "**/*_spec.rb"
+
+  Style/Documentation:
+    Enabled: false
   ~~~
 
   * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
@@ -499,8 +567,16 @@ required`. Also problem with `:Eview another_`
 # Create scripts for vim
 
 `help usr_41.txt` is Write a vim script in user manual.
+<https://en.wikibooks.org/wiki/Learning_the_vi_Editor/Vim/VimL_Script_language>
 
-# My plugin: Show dedented lines
+## Vim scripts in ruby:
+
+https://subvisual.co/blog/posts/139-how-to-program-vim-using-ruby/
+Some integrated stuff in vim
+https://github.com/vim-ruby/vim-ruby/blob/master/doc/vim-ruby.txt
+`:help ruby`
+
+# WHEREAMI my plugin to show dedented lines
 
 When looking at large files in small window (I have 4 vim windows in my single
 terminal window) than I want to see to which block current line belongs.
@@ -541,6 +617,7 @@ classes and media queries.
 
 * if vim does not show properly, blank or empty screen, try `:redraw!`
 <https://github.com/bchretien/vim-profiler>
+* <https://github.com/vim-scripts/Decho>
 
 # Undo
 
@@ -581,9 +658,52 @@ expected `#<User id: 1061, email: "my-user@asd.asd", created_at: "2017-09-23 09|
 spec/features/user_confirmation_spec.rb|25| in `block (2 levels) in <top (required)>'
 ~~~
 
-# Vim scripts in ruby
+# Vim plugin
 
-https://subvisual.co/blog/posts/139-how-to-program-vim-using-ruby/
-Some integrated stuff in vim
-https://github.com/vim-ruby/vim-ruby/blob/master/doc/vim-ruby.txt
-`:help ruby`
+<https://github.com/junegunn/vim-plug> vim plugin manager is installed with one
+command `curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim` and setup
+in .vimrc
+
+~~~
+call plug#begin('~/.vim/plugged')
+" Make sure you use single quotes
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+Plug 'junegunn/vim-easy-align'
+call plug#end()
+~~~
+
+And install with `PlugInstall`
+
+# Vim Color Scheme
+
+<https://github.com/nightsense/vimspectr> is installed using vim-plug
+
+~~~
+Plug 'nightsense/vimspectr'
+colorscheme vimspectr60flat-dark
+~~~
+
+but I prefer to tweek one by one color
+
+~~~
+highlight Comment cterm=underline ctermbg=Blue ctermfg=White
+~~~
+
+`cterm` accepts `bold` `underline` `reverse` `italic` but no colors.
+`ctermfg` and `ctermbg` accepts colors, list of all on `:help cterm-color`
+Highlight groups can be found on
+[highlight-groups](http://vimdoc.sourceforge.net/htmldoc/syntax.html#highlight-groups)
+
+To see where the color is defined use `verbose`, for example
+
+~~~
+verbose hi Comment
+~~~
+
+Using ALE I see `:help g:ale_set_highlights` that groups are `ALEError`,
+`ALEWarning` ... so I use less invasive color:
+
+~~~
+hi ALEWarning m
+~~~

@@ -11,7 +11,7 @@ tags: layout render ruby-on-rails
 For example `render "edit" #or :edit`  will change default rendering from *show.html.erb* to *edit.html.erb* (in the same controller). We we can render template from another controller, for example *carts* controller with command `render "carts/edit"`. It should be explicited with parameter `render template: "edit"`so we know what is going on (it will render edit template not partial). Another examples of *ActionController::Base#render*:
 
 {% highlight ruby %}
-render plain: "OK" 
+render plain: "OK"
 render html: "<strong>OK</strong>".html_safe 
 render xml: @product # automatically calls .to_xml
 render json: @product # no need for .to_json
@@ -279,7 +279,10 @@ heroku buildpacks # should return  1.nodejs  2.ruby (latest will run process)
 git push heroku master --set-upstream
 ~~~
 
-Example adding bootstrap:
+## Boostrap
+
+You can include bootstrap (which is written in less) or bootstrap-sass (if you
+want modifications in scss).
 
 ~~~
 bower install bootstrap --save
@@ -292,8 +295,7 @@ git commit -am "Adding bootstrap"
 ~~~
 
 Adding css and js files is working fine. There is a problem when some image/font
-files are hardcoded in css files. Hopefully there is scss verion of your
-library and you can override some variables. When filename is fixed and you can
+files are hardcoded in css files. When filename is fixed and you can
 not include digest sha than you need to deploy files without fingerprint.
 
 So first solution is with help of
@@ -306,6 +308,8 @@ Sprockets `require` concatenates after sass compilation. So it's advices to use
 `application.css` but variable definition won't (like `$var: 1;`), so we need
 to move `css -> scss`.
 
+## Fontawesome
+
 Here is example adding [fontawesome](http://fontawesome.io/examples/)
 
 ~~~
@@ -315,9 +319,10 @@ cat >> app/assets/stylesheets/application.scss << \HERE_DOC
 $fa-font-path: 'font-awesome/fonts';
 @import 'font-awesome/scss/font-awesome';
 HERE_DOC
-cat >> Gemfile << HERE_DOC
-gem "non-stupid-digest-assets"
-HERE_DOC
+# don't know if this is needed for some assets
+# cat >> Gemfile << HERE_DOC
+# gem "non-stupid-digest-assets"
+# HERE_DOC
 
 cat >> config/initializers/assets.rb << \HERE_DOC
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
@@ -391,3 +396,8 @@ you can add `action_name` class.
 
 *content_for* can be controller method with this
 [gist](https://gist.github.com/hiroshi/985457)
+
+# Errors
+
+If you see error `ActionView::Template::Error (Unrecognised input):`  than you
+might forget semicolon `;` in your less file.

@@ -25,7 +25,7 @@ Inside definition you can use:
 
 In transitions you can use keyword `all` or `any` to match all/any states, and
 `same` to match same state (usefull when you have list of matched states).
-You can use `object.my_state?` to check if it is currenlty in that `my_state`.
+You can use `object.my_state?` to check if it is currently in that `my_state`.
 Also you can use `object.can_my_event?` to check if it can change state using
 this event. Also `object.fire_state_event(:my_event)` and
 `object.state?(:my_state)`. You can use bang method to raise error if event
@@ -253,3 +253,20 @@ And controller
 You can use `Constant.POST_STATUSES # { CREATED_NEW: "Created new" }` to list
 all statuses and events in one file. Than in transition you can use `transition
 all - Constant.POST_STATUSES.slice(:CREATED_NEW) => same`
+
+Validation callbacks hooks works fine if it is rails `validates` but if it is
+customer validation `validate :my_method` than it won't work in multiple states
+<https://github.com/state-machines/state_machines-activerecord#state-driven-validations>
+so instead of
+
+~~~
+state :first_gear, :second_gear do
+  validate :speed_is_legal
+end
+~~~
+
+~~~
+state :first_gear, :second_gear do
+  validate {|vehicle| vehicle.speed_is_legal}
+end
+~~~

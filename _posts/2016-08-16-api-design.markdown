@@ -26,7 +26,7 @@ end
 If you use jbuilder, than create folder `app/views/api/v1/expenses` for view and
 controller `Api::V1::ExpensesController`
 
-# JSONAPI
+# JSONAPI Resources JR
 
 [jsonapi-resources](https://github.com/cerebris/jsonapi-resources) give us
 implementation of JSONAPI
@@ -57,9 +57,29 @@ Each [resource](http://jsonapi-resources.com/v0.9/guide/resources.html) can be
 configured with:
 
 * `attributes` `attribute`
-  * computed fields can use `@model`
-* `fetchable_fields`
-* `self.updatable_fields` `self.creatable_fields`
+  * there are also `id` and `type`. Computed fields can use `@model` but also
+  need to be defined with `attribute`
+  * `fetchable_fields` all attributes are fetchable, and if you want to remove
+  some than override method
+  * `self.updatable_fields`, `self.creatable_fields` to override use class methods
+  ~~~
+  class ContactResource < JSONAPI::Resource
+    attributes :name_first, :name_last, :full_name
+    def full_name
+      "#{@model.name_first}, #{@model.name_last}"
+    end
+    def self.updatable_fields(context)
+      super - [:full_name]
+    end
+    # class method can be defines inside class <<
+    class << self
+      def creatable_fields(context)
+        super - [:full_name]
+      end
+    end
+  end
+  ~~~
+
 * `has_many`
 * `filters`, `filter`
 
@@ -78,12 +98,15 @@ rspec_api_documentations/dsl and generate api docs `rake docs:generate` and
 * `no_doc`
 
 
-If you got [415 error](http://www.rubydoc.info/gems/jsonapi-resources/JSONAPI)
-than set header.
-If you got `is not a valid resource` code 101, than you mispelled `type` member
-on [resource object](http://jsonapi.org/format/#document-resource-objects).
+If you got [415 error UNSUPPORTED_MEDIA_TYPE
+](http://www.rubydoc.info/gems/jsonapi-resources/JSONAPI) than set header.
+If you got `is not a valid resource` code 101, than you mispelled `type` top
+level attribute (for example `users`) on [resource
+object](http://jsonapi.org/format/#document-resource-objects).
+If you got `"no implicit conversion of nil into Hash"` than problem is that we
+need to declare `attribute` on the resource.
 If you for `does not contain a key` code 109, than you need to add `:id` to both
-"data" and url and use different name, for example this is duplication for
+"data" and "url" and use different name, for example this is duplication for
 update resources:
 
 ~~~

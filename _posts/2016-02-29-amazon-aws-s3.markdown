@@ -67,6 +67,7 @@ for CNAME
 List of regions you
 can find on [website
 endpoints](http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html).
+or <http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region>
 For frankfurt would be `some.domain.com.s3-website.eu-central-1.amazonaws.com`
 For southeast region is `ap-southeast-1`.
 Your bucket-name can not be different than your domain name!
@@ -206,6 +207,21 @@ To check your DNS you can use linux command `host`:
 
 You can use aws-sdk for simple uploading
 <https://github.com/duleorlovic/securiPi/blob/master/s3.rb>
+
+~~~
+# you can override global config
+Aws.config.update(
+  credentials: Aws::Credentials.new(credentials[:aws_access_key_id], credentials[:aws_secret_access_key]),
+)
+
+# if bucket is from different region than you will get error like
+# ActionView::Template::Error (The bucket you are attempting to access must be addressed using the specified endpoint. Please send all future requests to this endpoint.):
+
+# or use s3 directly
+s3 = Aws::S3::Resource.new region: credentials[:aws_region]
+bucket = s3.bucket credentials[:aws_bucket_name]
+bucket.objects(prefix: 'assets').map {|o| o.public_url}
+~~~
 
 # Elastic Beanstalk
 
