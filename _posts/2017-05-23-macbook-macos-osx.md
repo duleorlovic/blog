@@ -18,7 +18,8 @@ From terminal toolbar:
 From System Preferences -> Keyboard -> Shortcuts
 * -> Spotlight
   * `⌘ space` spotlight search
-  * `⌥  ⌘ space` finder
+  * `⌥  ⌘ space` finder : inside finder you can open files with `⌘ o` (enter
+    just renames the file)
 * -> Mission control
   * `^ up` mission control
   * `^ down` application windows in all workspaces, use arrow to focus, use tab
@@ -48,6 +49,9 @@ Press space after that to select window. Screen shots will be on desktop.
 
 To show home folder in Finder, go to Finder Preferences -> Sidebar and enable
 home folder in sidebar.
+Inside Finder Go menu you can hold ⌥  key to show `Library` folder. Some app
+data can be
+`~/Library/Containers/com.mydomain.myaoo/Data/Library/Application%20Support/myapp/`
 
 I added to `.bash_profile`:
 
@@ -60,7 +64,7 @@ Position windows using [spectacle](https://github.com/eczarny/spectacle)
 [video](https://www.youtube.com/watch?v=k1lmd2T5Z2A).
 Comparison of all
 [os-x-windoiw-manager](https://css-tricks.com/os-x-window-manager-apps/).
-I found interestin
+I found interesting
 [hammerspoon](http://www.hammerspoon.org/go/)
 [blog](http://thume.ca/2016/07/16/advanced-hackery-with-the-hammerspoon-window-manager/)
 
@@ -119,6 +123,42 @@ Full screen apps open their own space.
 
 # AppleScript
 
+~~~
+# comments
+-- this is comment
+
+# continuation character Option l
+dialog "This is long line" ¬
+buttons { "Great", "OK" }
+
+# Boolean
+true, false
+# Text
+"Hi"
+# List
+{ 1, "Duke" }
+# Record
+{name: "Duke", age: 35}
+
+# Operators
+"a" & "b"
+
+# variables
+set myName to "John"
+copy 33 to myAge
+~~~
+
+Statements can include all above. Simple statement is single line, multiline is
+compound statements
+~~~
+tell application "Finder"
+    set savedName to name of front window
+end tell
+~~~
+
+Command is series of words that request an action. Command is directed to a
+target.
+
 You can run scripts inside bash with `osascript -e 'display dialog "Hi"'` or for
 shell scripts (you need to `chmod +x filename.txt`
 
@@ -126,6 +166,14 @@ shell scripts (you need to `chmod +x filename.txt`
 #!/usr/bin/osascript
 display dialog "Hi"
 ~~~
+
+You can run and edit scripts in `Script Editor`. Open `Dictionary` in File->Open
+Dictionary or drag application icon to Script Editor application icon.
+
+Object has
+* property 
+
+TODO: https://developer.apple.com/library/content/documentation/AppleScript/Conceptual/AppleScriptLangGuide/conceptual/ASLR_fundamentals.html#//apple_ref/doc/uid/TP40000983-CH218-SW1
 
 # Rails
 
@@ -183,3 +231,14 @@ ping -c 1 this.is.a.test.dev
 Download <http://www.joshuawise.com/horndis> driver (right click open with) to
 enable usb tethering from android phone (wireless thethering will consume
 batery). I needed to restart mac to find my phone in network preferences.
+
+# Defaults
+
+Mac user defaults system
+
+~~~
+defaults read com.mydomain.myapp
+defaults read com.mydomain.myapp "MyKey"
+defaults write com.mydomain.myapp "MyKey" myvalue
+defaults delete com.mydomain.myapp
+~~~
