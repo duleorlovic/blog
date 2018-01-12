@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Bundler bower gulp npm tips
 ---
 
 # Bundler and Gemfile
@@ -49,7 +48,12 @@ rvm gemset empty
 # Bower
 
 [bower](http://bower.io)  Adding new package will be saved in `bower.json` if
-you add option `--save` or `--save-dev`
+you add option `--save` or `--save-dev`. To generate bower.json run
+
+~~~
+bower init
+~~~
+
 
 With [install](https://bower.io/docs/api/#install) you can use package name, git
 url, local folder, with a version like `#v3.0.x`
@@ -101,16 +105,106 @@ get fresh copy of the package.
 
 # Yarn
 
+Yarn will install packages to `node_modules` folder.
+
 ~~~
 yarn init # to generate package.json
-yarn add [package] --dev # to add to devDependencies
+yarn remove [package]
 yarn # to install dependencies
+yarn run build # to run "scripts" -> "build"
 ~~~
 
 You can add `package@version` vesion could be `"^1.0.0"`
 <https://yarnpkg.com/en/docs/dependency-versions> When you `yarn
 upgrade` it will upgrade version to next, for example `"^2.0.0"`.
 
+Example adding jquery 3, bootstrap 3, fontawesome 4
+
+~~~
+yarn add jquery bootstrap font-awesome
+~~~
+
+Since we need to change font path for bootstrap glyphicons and fontawesome, we
+need to use scss and less. You can point to CDN or use stupid assets and point
+to the local fonts. Bootstrap use same name `@icon-font-name:
+"glyphicons-halflings-regular";` just adding extension
+`url('@{ison-font-path}@{icon-font-name}.eot`
+`url('@{ison-font-path}@{icon-font-name}.woff` so we can't use fingerprinted
+name since it is different for different files. We could also overwrite
+css definitions like for example in [layouts and rendering]({{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}#fonts)
+
+
+~~~
+// app/assets/stylesheets/application.css
+ *= require_tree .
+ * or explicitly
+ *= require application_less
+ *= require application_scss
+~~~
+
+~~~
+// app/assets/stylesheets/application_scss.scss
+$fa-font-path: "font-awesome/fonts";
+// $fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default; // for referencing Bootstrap CDN font files directly
+@import "font-awesome/scss/font-awesome";
+~~~
+
+~~~
+// app/assets/stylesheets/application_less.less
+@icon-font-path: "bootstrap/fonts/";
+@import "bootstrap/less/bootstrap";
+~~~
+
+~~~
+// app/assets/stylesheets/application.js
+//= require jquery/dist/jquery
+//= require bootstrap/dist/js/bootstrap
+~~~
+
+~~~
+# app/config/initializers/assets.rb
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|woff2|ttf)$/
+NonStupidDigestAssets.whitelist += [
+  /\.(?:svg|eot|woff|woff2|ttf)$/
+]
+~~~
+
 # Webpack
 
 <https://medium.com/statuscode/introducing-webpacker-7136d66cddfb>
+
+Webpack uses `webpack.config.js` and compile for your using Loaders and Plugins.
+Insteal loaders with `yarn add --dev webpack babel-core babel-loader
+babel-preset-react babel-preset-es2015 node-sass css-loader sass-loader
+style-loader` and use with:
+
+~~~
+// webpack.config.js
+// This library allows us to combine paths easily
+const path = require('path');
+module.exports = {
+   entry: path.resolve(__dirname, 'src', 'index.jsx'),
+   output: {
+      path: path.resolve(__dirname, 'output'),
+      filename: 'bundle.js'
+   },
+   resolve: {
+      extensions: ['.js', '.jsx']
+   },
+   module: {
+      rules: [
+         {
+             test: /\.jsx/,
+             use: {
+                loader: 'babel-loader',
+                options: { presets: ['react', 'es2015'] }
+             }
+         },
+         {
+            test: /\.scss/,
+            use: ['style-loader', 'css-loader', 'sass-loader']
+         }
+      ]
+   }
+};
+~~~

@@ -78,6 +78,7 @@ if (receivers = Rails.application.secrets.exception_recipients).present?
     # Ignore crawlers
     IGNORE_HTTP_USER_AGENT = %w[
       Googlebot bingbot linkdexbot Baiduspider YandexBot panscient.com MJ12bot
+      SeznamBot
     ].freeze
     config.ignore_if do |_exception, options|
       options[:env] && Array(IGNORE_HTTP_USER_AGENT).any? do |crawler|
@@ -119,6 +120,16 @@ if (receivers = Rails.application.secrets.exception_recipients).present?
         # it is ok to notify
         false
       end
+    end
+
+    # Ignore specific exceptions that are marked to be ignored
+    # begin
+    # rescue StandardError => e
+    #   e.ignore_please = true
+    #   raise e
+    # end
+    config.ignore_if do |exception|
+      exception.ignore_please
     end
 
     # Notifiers ================================================================

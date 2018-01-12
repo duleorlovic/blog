@@ -32,6 +32,10 @@ Gmail smtp is the most easiest way to start
 ~~~
 
 If you receive error `SocketError: getaddrinfo: Name or service not known` than
+you probably miss the `address` field. If there is error `with EOFError: end of
+file reached` than you need to change `domain` field (should not be
+`localhost`, but the domain part of the sender email, for example `gmail.com`).
+
 
 ## Sendgrid
 
@@ -153,7 +157,8 @@ Just put in your Gemfile under development `gem "letter_opener"` and in
 
 # Style
 
-For easier styling, you should use *roadie* gem, put in Gemfile
+For easier styling, you should use *roadie* gem that will generate all inline
+style from your head styles.
 
 ~~~
 # Attach css classes to emails
@@ -161,17 +166,22 @@ gem 'roadie'
 gem 'roadie-rails'
 ~~~
 
-[Official gmail styles](https://developers.google.com/gmail/design/css) supports
-`<style>` in head and media queries, but this gem will support more (it will
-copy and duplicate all styles to inline style).
+Another gem is <https://github.com/fphilipe/premailer-rails> which can also
+generate text part so you do not need to maintain it. Just add the gem and you
+are good to go.
 
-To preview emails create new file:
+[Official gmail styles](https://developers.google.com/gmail/design/css) supports
+`<style>` in head and media queries, but this gem will support more clients
+since it will copy and duplicate all styles from head to inline styles.
+
+To preview emails use generated preview files in
+`test/mailers/previews/my_mailer_preview.rb` or create new file:
 
 ~~~
 # app/mailer_previews/application_mailer_preview.rb
 class ApplicationMailerPreview < ActionMailer::Preview
   def new_message_from_client
-    message = Message.last
+    message = Message.first || FactoryBot.create :message
     ApplicationMailer.new_message_from_client message
   end
 end
@@ -181,15 +191,26 @@ add a line `config.action_mailer.preview_path =
 "#{Rails.root}/app/mailer_previews"` to *config/environments/development.rb* and
 go to [rails/mailers](http://localhost:3000/rails/mailers).
 
+Another gem to preview emails <https://github.com/markets/maily>
+
 Here is example of style:
 
 ~~~
-# app/mailers/applicaion_mailer/new_message_from_client.html.erb
+# app/mailers/applicaion_mailer.rb
+class ApplicationMailer < ActionMailer::Base
+  default from: 'from@example.com'
+  layout 'mailer'
+  add_template_helper MailerHelper
+end
+~~~
+
+~~~
+# app/views/layouts/mailer.html.erb
 <!DOCTYPE html>
 <html>
   <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-    <style type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
       .email-container {
         max-width: 500px;
       }
@@ -204,20 +225,33 @@ Here is example of style:
       }
     </style>
   </head>
+
   <body>
     <div class="email-container">
       <div class="pre-header">
-        <%= @message %>
+        <%= yield :subject_line %>
       </div>
-      <p>
-        Hi <%= @receiver_name %>,
-        <br><br>
-        Message is: <%= @message %>
-        </dd>
-      </div>
+      <%= yield %>
     </div>
   </body>
 </html>
+~~~
+
+~~~
+# app/helpers/mailer_helper.rb
+module MailerHelper
+  def subject_line(message)
+    content_for :subject_line, message
+  end
+end
+~~~
+
+~~~
+# app/mailers/user_mailer/contact.html.erb
+<%
+  subject_line @user.name
+%>
+<h1><%= t "user_mailer.landing_signup.title", name: @user.email %></h1>
 ~~~
 
 # Receiving emails
@@ -263,7 +297,7 @@ Those are usefull admin or devops notifications
 
 ~~~
 # config/secrets.yml
-development: &default
+shared:
   mailer_sender: <%= ENV["MAILER_SENDER"] || "My Company <support@example.com>" %>
   internal_notification_email: <%= ENV["INTERNAL_NOTIFICATION_EMAIL"] || "internal@example.com" %>
 ~~~
@@ -349,3 +383,8 @@ You can include small giff that looks like screencast. Image should be less than
 
 Email gems <http://awesome-ruby.com/#-email> and
 [gmail](https://github.com/gmailgem/gmail)
+
+# Gmail Go To Action
+
+Using some header json you can set button in gmail subject line "Quick Actions".
+<https://stackoverflow.com/questions/22318432/how-do-i-add-go-to-action-in-gmail-subject-line-using-schema-org>

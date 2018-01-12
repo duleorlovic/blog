@@ -397,66 +397,6 @@ cd .. # back to root
 git add . && git commit -m "Adding angular Article resource and show on main page"
 ~~~
 
-  To deploy on heroku we need custom
-  [buildpack](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process).
-  We could use 3th party gulp buildpacks but default
-  [node](https://docs.npmjs.com/misc/config)
-  [buildpack](https://github.com/heroku/heroku-buildpack-nodejs) works fine.
-  
-  `devDependencies` need to be renamed to `dependecies` since it runs node
-  production mode (I tried to disable production mode using NPM_CONFIG_ONLY but
-  than other thinks does not work). Imporant is
-  [NODE_MODULES_CACHE](https://devcenter.heroku.com/articles/nodejs-support#cache-behavior).
-  If we (by default) cache `/node_modules` it will not build new version to
-  public folder.
-
-~~~
-# deploy to heroku
-heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
-heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
-
-heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
-# alternativelly, we can define then in file .buildpacks
-# echo 'https://github.com/heroku/heroku-buildpack-ruby
-# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
-# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
-
-git rm -rf public
-echo '/public
-/node_modules' >> .gitignore
-git add .gitignore
-git commit -m "Remove public folder from git repo"
-
-echo '{
-  "name": "rootApp",
-  "scripts": {
-  },
-  "dependencies": {
-    "myappAngular": "file:./client"
-  },
-  "cacheDirectories": [
-    "client/node_modules",
-    "client/bower_components"
-  ]
-}
-' > package.json
-git add package.json && git commit -m "Add package.json for nodejs buildpack detect"
-
-cd client
-sed -i "/dist: 'dist/c \  dist: '../../public'," gulp/conf.js
-sed -i '/"scripts":/a \    "postinstall": "bower install && gulp build",' package.json
-sed -i '/"devDependencies":/c \  "dependencies": {\
-    "bower": "*",' package.json
-git add . && git commit -m "Configure postinstall gulp build"
-cd ..
-
-git push heroku
-heroku config # NPM_CONFIG_PRODUCTION=true NODE_ENV=production NODE_MODULES_CACHE=true
-heroku open
-# usefull command to test is `npm install` or `
-# git add . && git commit --amend --no-edit && git push heroku -f > o 2>&1 && heroku run bash -c 'ls public'
-~~~
-
 To run on linux/windows, install git (Use Git from the Windows Command Prompt)
 and nodejs.  Run in windows command line cmd: `npm install -g gulp` and `npm
 install` and `gulp serve`

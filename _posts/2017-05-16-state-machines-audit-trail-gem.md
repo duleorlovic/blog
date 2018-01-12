@@ -254,8 +254,9 @@ You can use `Constant.POST_STATUSES # { CREATED_NEW: "Created new" }` to list
 all statuses and events in one file. Than in transition you can use `transition
 all - Constant.POST_STATUSES.slice(:CREATED_NEW) => same`
 
-Validation callbacks hooks works fine if it is rails `validates` but if it is
-customer validation `validate :my_method` than it won't work in multiple states
+Conditional validation callbacks hooks works fine if it is rails `validates` but
+if it is customer validation `validate :my_method` than it won't work in
+multiple states
 <https://github.com/state-machines/state_machines-activerecord#state-driven-validations>
 so instead of
 
@@ -270,3 +271,5 @@ state :first_gear, :second_gear do
   validate {|vehicle| vehicle.speed_is_legal}
 end
 ~~~
+
+`before_transition`  and `after_transition` callbacks

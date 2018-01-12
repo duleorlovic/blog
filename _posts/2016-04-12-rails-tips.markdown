@@ -84,7 +84,7 @@ post](https://www.sitepoint.com/better-nested-attributes-in-rails-with-the-cocoo
 
 # Validations
 
-Some usefull validations
+Some usefull validations, like validate email regexp
 
 ~~~
 validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
@@ -100,14 +100,16 @@ error will not be shown on `:job_type_id`).
 validates :job_type_id, presence: true
 
 <%= f.select :job_type_id, Job.all.map { |job| [job.name, job.id] }, {
-include_blank: true }, class: 'my-class' %>
+prompt: true }, class: 'my-class' %>
 ~~~
 
 [form
 select](https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select)
 can accept as 2th param (choices) two variant:
 
-* flat collection `options_for_select`
+* flat collection `[['name', 123],...]`
+* if you need manual tags `<select><option></option></select>` than you can use
+`<%= select tag "statuses[]", options_for_select([[]], selected: 1) %>`
 * nested collection `grouped_options_for_select()`
 
 as 3th param (options):
@@ -117,7 +119,11 @@ as 3th param (options):
 * `label: 'My label'`
 * `prompt: 'Please select'` this is shown only if not already have some value
 * `include_blank: 'Please select'` this is shown always (even already have
-value)
+value) I found usefull only with select2 where we use custom placeholder and
+blank option is not selectable `<%= f.select :customer_name_and_username,
+options_from_collection_for_select(current_location.customers, 'id',
+'name_and_username'),  { include_blank: true, label: 'Customer' },
+'data-select2': true, placeholder: 'Search by Customer Name or Username' %>`
 
 as 4th params (html options)
 * `multiple: true` so it is multi_select (instead of dropdown). Multi select
@@ -189,6 +195,22 @@ end
 
 TO calculate some files you can use `after_save :update_total`. Do not use
 `after_update :update_total` since you can not update in that method.
+
+Custom validations `validate :my_method` or `validate { |customer|
+customer.check_permissions }` should add `errors` to the object (return value is
+not important and could be false).
+
+~~~
+class Customer
+  def my_method
+    errors.add(:name) if name != 'Duke'
+  end
+  def check_permissions
+    errors.add(:name) if name != 'Duke'
+  end
+end
+~~~
+
 # Default Order
 
 ~~~
@@ -300,6 +322,18 @@ format.js do
 end
 ~~~
 
+If you receive a lot of errors `An ActionView::MissingTemplate occurred in` and
+`Missing template customer/sessions/new, customer_application/new,
+application/new with {:locale=>[:in, :en], :formats=>["Application/*"],
+:variants=>[], :handlers=>[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}.
+Searched in:` on some landing or login pages than simply add:
+
+~~~
+respond_to do |format|
+  format.any { redirect_to root_path }
+end
+~~~
+
 # Autosize
 
 Textarea should be [autosized](http://www.jacklmoore.com/autosize/) (download
@@ -378,6 +412,24 @@ CREATE USER orlovic WITH CREATEDB PASSWORD '<password>';
 * execute sql with `ActiveRecord::Base.connection.execute("SELECT * FROM
 users")`. Result is iteratable (array of arrays of selected fields).
 
+* for single item, always use `@post.destroy` instead of `@post.delete` because
+it propagates to all `has_many :comments, dependent: :destroy` (also need to
+define this dependent param). If you use delete or use destroy without
+`has_many dependent: destroy` than `ActiveRecord::InvalidForeignKey:
+SQLite3::ConstraintException: FOREIGN KEY constraint failed` for sqlite db...
+For mysql and postgres, error will be triggered if there are foreign keys
+defined.
+* for multiple items `Post.destroy_all` will run one by one (triggering
+callbacks) so it is probably slow, so it is better to use `Post.delete_all`
+which will remove in single sql query. To prevent foreign keys errors, you
+should first `Comment.where(post: Post.all).delete_all` and than call
+`Post.delete_all`. Watch out if you call delete_all on collection proxy
+`post.comments.delete_all`
+<https://stackoverflow.com/questions/23879841/activerecord-delete-all-method-updating-instead-of-deleting>
+Default strategy is `:nullify` ie keep row, but set `post_id = nil`. So always
+use `has_many :association, dependent: :destroy` so it will not use `nullify`
+but `delete_all` strategy
+[link](http://api.rubyonrails.org/classes/ActiveRecord/Associations/CollectionProxy.html#method-i-delete_all)
 
 ## Add json and hstore
 
@@ -608,12 +660,14 @@ false` because name is too long (error like `Index name 'index_table_column' on
 table 'table' is too long; the limit is 64 characters`) than you can use
 different name NOTE that you need to use exact column name (with `_id`)
 `add_index :users, :company_id, name: 'index company on users'`
-* we can call `Products.update_all fuzz: 'fuzzy'` (to update all records in
-single sql query, without triggering callbacks or validations. In migration
-Product.save will probably break in the future, because *Product* will be
-validated for something that we did not know on that time. Better is to create
-local class and call reset column information. Also if we are adding not null
-column we need to do it in two steps to populate existing records.
+* In migration Product.save will probably break in the future, because *Product*
+will be validated for something that we did not know on that time.
+We can call `Product.update_all fuzz: 'fuzzy'` or `Product.update_all 'new_col =
+old_col'` to update all records in single sql query, without triggering
+callbacks or validations.
+Better is to create local class and call reset column information. Also if we
+are adding not null column we need to do it in two steps to populate existing
+records.
 
   ~~~
   # db/migrate/20161010121212_update_fuzz.rb
@@ -702,7 +756,7 @@ campaign.templates << template unless campaign.templates.include? template
 
 If you have different name of the table: `t.references :donor, foreign_key:
 true, null: false` but donor is actually in users table, than you need to change
-foreign key
+foreign key (note that `add_foreign_key` params are in plurals!)
 
 ~~~
 # to_table is in rails5
@@ -1176,7 +1230,8 @@ seeds.rb).
 ~~~
 begin
 # code
-rescue Exception => e
+# never rescue from Exception, but use Standard error
+rescue StandardError => e
   puts e.backtrace.reverse
   puts e.class, e.message
 end
@@ -1230,13 +1285,13 @@ end
 
 You can write tasks with arguments [rails
 rake](http://guides.rubyonrails.org/command_line.html#custom-rake-tasks)
-Instead of `:env` or `:environment` you can use other tasks on which it depents.
+Instead of `:env` or `:environment` you can use other tasks on which it depends.
 
 ~~~
 # lib/tasks/update_subdomain.rake
 namespace :update_subdomain do
   desc "update subdomains for my-user. default value is 'my_subdomain'"
-  task :my_user, [:subdomain] => :environment do |t, args|
+  task :my_user, [:subdomain] => :environment do |task, args|
     args.with_defaults subdomain: 'my_subdomain'
     user = User.find_by name: 'my-user'
     fail "Can't find user 'my-user'" unless user
@@ -1468,101 +1523,31 @@ Even simpler Result class (not using Error class) but not recomended.
   Result.new error: e.mesage
 ~~~
 
+Service object is similar to Command pattern which is implemented in gem
+<https://github.com/collectiveidea/interactor>
+
 ## Form Objects
 
 form objects (query objects) for multiple in multiple out data
 
 ~~~
-class Search
+class LandingSignup
   include ActiveModel::Model
+  FIELDS = %i[ current_city current_location current_group prefered_group email].freeze
+  attr_accessor(*FIELDS)
 
-  # input
-  attr_accessor :address, :food, :pure_vegetarian, :cuisines
+  validates :email, presence: true
 
-  # output
-  attr_accessor :target_location, :users, :menu_items, :tag_counts
-
-  validates :address, presence: true
-
-  def initialize(h)
-    @address = h.try :[], :address
-    @food = h[:food]
-    @pure_vegetarian = h[:pure_vegetarian]
-    @cuisines = h[:cuisines] || []
+  def save
   end
 
-  def perform
-    return unless valid?
-    filter_users_by_address
-    filter_by_pure_vegetarian if pure_vegetarian.present?
-    filter_by_any_cuisine if cuisines.present?
-    filter_by_food if food.present?
-    generate_tag_counts
-  end
-
-  private
-
-  DISTANCE_IN_MILES = 10 # 50
-  def filter_users_by_address
-    self.target_location = Geocoder.search(address).first
-    if target_location.present?
-      self.users = User.active.near(
-        [target_location.latitude, target_location.longitude],
-        DISTANCE_IN_MILES
-      )
-    else
-      self.users = User.active.near(address, DISTANCE_IN_MILES)
-    end
-  end
-
-  def filter_by_pure_vegetarian
-    self.users = users.where(pure_vegetarian: true)
-  end
-
-  def filter_by_any_cuisine
-    # we use filter
-    # http://stackoverflow.com/questions/17496629/fuzzy-tag-matching-with-acts-as-taggable
-    self.users = users.tagged_with(cuisines, any: true)
-    # http://stackoverflow.com/questions/4665979/how-to-find-number-of-tag-matches-in-acts-as-taggable-on
-    # @users = @users.tagged_with(params[:cuisines], any: true).all.to_a
-    # @users.sort_by! { |o| -(params[:cuisines] & o.cuisine_list).length }
-  end
-
-  def filter_by_food
-    # TODO: this does not return relation
-    # User need to have at least one MenuItem
-    search_param = "%#{food}%"
-    # we need those @menu_items results
-    @menu_items = MenuItem.joins(:user)
-                  .where(user: users.map(&:id))
-                  .where("users.business_name ILIKE ? OR "\
-                           "menu_items.name ILIKE ? " \
-                           " OR menu_items.description ILIKE ?",
-                         search_param, search_param, search_param)
-                  .limit(5)
-    self.users = users.where(id: menu_items.map(&:user).uniq)
-  end
-
-  def generate_tag_counts
-    # https://github.com/mbleigh/acts-as-taggable-on/blob/master/lib/acts_as_taggable_on/taggable/collection.rb#L90
-    # since we need relation and filter_by_food does not return relation
-    # and there is PG::SyntaxError: ERROR:  subquery has too many columns
-    # we will load users and use their ids
-    users_for_tags = User.where(id: users.map(&:id))
-    self.tag_counts = users_for_tags.tag_counts_on :cuisines
-  end
+  # no need for initialize since AR will pick from params
 end
 ~~~
 
-Also you can use
+Usage
 
 ~~~
-class AtomPayment
-  include Rails.application.routes.url_helpers
-  delegate :form_tag, :text_field_tag, to: 'ActionController::Base.helpers'
-  def form
-  end
-end
 ~~~
 
 
@@ -1605,6 +1590,9 @@ module Someable
   end
 end
 ~~~
+
+My implementation of friendly_id gem
+<script src="https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee.js"></script>
 
 ## Observable
 
@@ -1789,10 +1777,6 @@ class ActionView::TemplateRenderer
   end
 end
 ~~~
-
-# Email Style
-
-<https://github.com/Mange/roadie>
 
 # Money
 
@@ -2155,30 +2139,55 @@ views.
 
 # Localisation
 
-To translate active record messages for specific attributes, you can use
+To translate active record messages for specific attributes, you can overwrite
+messages for specific model and attributes (default ActiveRecord messages taken)
 <https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23>
+<https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message>
+
+Also you can change format `errors.format: Polje "%{attribute}" %{message}`
+https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
+You can also see some default en translations.
+
+And you can change attribute name `activerecord.attributes.user.email: имејл`
+
+Example for Serbian localizations translations:
 
 ~~~
-
-en:
+# config/locales/sr.yml
+sr:
+  errors:
+    format: Polje "%{attribute}" %{message}
+    messages:
+      blank: ne sme biti prazno
   activerecord:
     errors:
-      messages:
-        models:
-         user:
-           blank: "Polje "%{attribute}" ne sme biti prazno"
-           attributes:
-              ime:
-                blank: "Bez imena? Ne, nikako."
+      models:
+        user:
+          blank: bas "%{attribute}" je vazan
+          attributes:
+            email:
+              blank: "Bez imena? Ne, nikako."
+    attributes:
+      user:
+        email: Имејл
 ~~~
+
+# Devise
+
+use cancancan and define all your actions in app/models/ability. If you want to
+use
+[load_resource](https://github.com/ryanb/cancan/wiki/authorizing-controller-actions#load_resource),
+you should separately define: index (with hash), show/edit/update/destroy (with
+block or hash), new/create (with hash). For nested resources just write parent
+association
+
+Note that following next `cannot` rule will override a previous `can` rule, so
+it is enough to set `can :manage, :all` and than write what `cannot :destroy,
+Project`
 
 # Tips
 
 * parse url to get where user come from `URI.parse(request.referrer).host`
-* always use `@post.destroy` instead of `@post.delete` because it propagates
-  to all `has_many :comments, dependent: :destroy` (also need to define this
-  dependent param). In other hand `Item.all.destroy_all` will run one by one,
-  instead of one query `Item.all.delete_all`
 * `spring stop` in many cases:
   * when you export some ENV and use them in `config/secrets.yml` but can't see
     in `rails c`
@@ -2239,7 +2248,10 @@ Post.includes(:comments).find params[:id]`
   [decomposition
   array](http://docs.ruby-lang.org/en/2.1.0/syntax/assignment_rdoc.html#label-Array+Decomposition)
   to some variables, you can use parenthesis.
-* fake objects could be generated with `OpenStruct.new name: 'Dule'`
+* fake objects could be generated with `OpenStruct.new name: 'Dule'`. If you
+need recursively generated OpenStruct than you can convert to json and parse
+with Open struct class: `h = { a: 1, b: { c: 1 }}; o=JSON.parse(h.to_json,
+object_class: OpenStruct); o.b.c # => '1'`
 * long output of a command (for example segmentation fault) can be catched with
   `rails s 2>&1 | less -R`
 * use different layout and template based on different params is easy using
@@ -2353,8 +2365,7 @@ locales [look for adminlte example]( {{ site.baseurl }}
   ~~~
     delegate :url_helpers, to: 'Rails.application.routes'
     # call with `url_helpers.jobs_url` in you class
-
-
+    delegate :form_tag, :text_field_tag, to: 'ActionController::Base.helpers'
   ~~~
 
 
@@ -2444,14 +2455,6 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
 * if you notice in logs double requests (messages are double rendered) it is
   probably that you use `gem 'rails_12factor'` which should be only on
   production `group: :production`
-* use cancancan and define all your actions in app/models/ability. If you want
-  to use
-  [load_resource](https://github.com/ryanb/cancan/wiki/authorizing-controller-actions#load_resource),
-  you should separately define: index (with hash), show/edit/update/destroy
-  (with block or hash), new/create (with hash). For nested resources just write
-  parent association
-  * next `cannot` rule will override a previous `can` rule, so it is enough to
-  set `can :manage, :all` and than write what `cannot :destroy, Project`
 * when we use CDN for assets, in root folder it should contain crossdomain.xml
   file so flash recorder works nice.
 
@@ -2470,6 +2473,8 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
   execution](http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution)
   so check if return value could be false and make sure before filters (like
   before_create) always return not false value (you can return true or nil).
+  I noticed that if you raise validation exception in `before_` callbacks than
+  exception will be ignored, but `before_` block will return false
 
 
 * to start new project from specific rails, run `rails _4.2.7.1_ new myapp` .
@@ -2560,13 +2565,6 @@ to iterate...
   end
   ~~~
 
-* to assign multiple attributes to active record object you can use `slice`
-(`pluck` is for database query) and `assign_attributes` to self
-
-  ~~~
-  user.assign_attributes other_user.slice :email, :phone
-  ~~~
-
 * to count by grouping you can group_by specific column
 `User.group(:company_id).count.values.max`
 if you want to order in sql, than you need to name the count and order by that
@@ -2590,16 +2588,30 @@ require File.expand_path('/home/orlovic/rails/myApp/config/environment', __FILE_
 puts User.all
 ~~~
 
-* if you are using rails data attritubes than you to not need to use `to_json`.
+* even when you are using rails data attritubes you have to use `to_json` (as
+you need in html).
 And if you use jQuery data method than you do not need to use JSON.parse.
 
   ~~~
   <%= f.text_field :name, "data-predefined-range": {a: 3} %>
   <input data-predefined-rage="<%= {a: 3}.to_json %>">
+  <%= f.select :current_city, options_from_collection_for_select(City.all, :uuid, :name), {}, 'data-select-target': '#current-location', 'data-select-options': Location.all_by_city_uuid.to_json %>
 
   <script>
   range = JSON.parse(input.dataset.predefinedRange);
   range = $(input).data("predefinedRage");
+
+  <model>
+  # return hash {city_uuid: [{id: l1.id, name: l1.name}, ...], ...}
+  def self.all_by_city_uuid
+    Location.all.each_with_object({}) do |location, result|
+      if result[location.city_id].present?
+        result[location.city_id].append(id: location.id, name: location.name)
+      else
+        result[location.city_id] = [{ id: location.id, name: location.name }]
+      end
+    end
+  end
   ~~~
 
 * security tips
@@ -2665,3 +2677,11 @@ zeus init
 zeus start
 touch config/boot
 ~~~
+
+* [simple captcha 2](https://github.com/kikyous/simple-captcha2) is
+[generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
+a key (6 chars) and session idhttps://github.com/kikyous/simple-captcha2) is
+[generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
+a key (6 chars) and session idhttps://github.com/kikyous/simple-captcha2) is
+[generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
+a key (session id) and value (6 chars) when `view.show_simple_captcha` is called.

@@ -1,4 +1,4 @@
---
+---
 layout: post
 ---
 
@@ -17,6 +17,7 @@ sudo apt-get install neo4j=3.3.0
 sudo neo4j start
 # sudo mkdir /var/run/neo4j # this is needed if permission denied
 # cat /etc/neo4j/neo4j.conf
+# cat /var/log/neo4j/neo4j.log
 # server will accepts connection on bolt://localhost:7687
 # user:password neo4j:neo4j but it has to be changed
 # reset password with: sudo rm /var/lib/neo4j/data/dbms/auth  or
@@ -26,6 +27,50 @@ sudo service neo4j start
 ~~~
 
 Open browser on <http://localhost:7474/>
+Since communications is over http/bold, you need to create new neo4j instance
+for each your project and environment. Use
+<https://github.com/cohesivestack/ineo> and install with the script
+
+~~~
+ineo instances
+ineo status
+ineo create -v 3.1.0 -p 7004 my_app_development
+ineo create -p7006 my_app_test
+ineo set-port my_app_development 7000 # this will change only http port
+ineo destroy my_app_test
+ineo delete-db my_app_test # this will clear only database
+ineo versions
+~~~
+
+But I think [bolt is not supported](https://stackoverflow.com/questions/43344087/neo4jmigrationerror-duplicate-constraint-for-person/47485163#47485163)
+
+Alternativelly you can use <https://github.com/neo4jrb/neo4j-rake_tasks>. Add
+`gem 'neo4j-rake_tasks'`. Note that there is no authentication enabled so do not
+use on production.
+
+~~~
+# install neo4j to db/neo4j/development`
+rake neo4j:install[community-latest,development]
+rake neo4j:install[community-latest,test]
+# To change the server port (default is 7474) type:
+rails neo4j:config[development,$(expr $NEO4J_BOLT_PORT + 2)]
+rails neo4j:config[test,$(expr $NEO4J_TEST_BOLT_PORT + 2)]
+
+# vi db/neo4j/development/conf/neo4j.conf
+~~~
+
+~~~
+rake neo4j:start[development]
+echo http://localhost:$(expr $NEO4J_BOLT_PORT + 2)
+rake neo4j:start[test]
+echo http://localhost:$(expr $NEO4J_TEST_BOLT_PORT + 2)
+
+rails neo4j:stop[development]
+kill -9 `cat db/neo4j/development/run/neo4j.pid`
+~~~
+
+Note that when you are changing the ports, then run `spring stop` to reload new
+env.
 
 Learn from examples in browser, type `:play movies`.
 
@@ -90,7 +135,9 @@ eventual: LIMIT 10.
 
 Follow <https://neo4j.com/developer/ruby-course/> to create example app
 `asset_portal`, there is [screen
-cast](https://www.youtube.com/watch?v=n0P0pOP34Mw&list=PL5klM3mD6alLUhNTPTbj5a3GBjU7oZN0t)
+cast](https://www.youtube.com/watch?v=n0P0pOP34Mw&list=PL5klM3mD6alLUhNTPTbj5a3GBjU7oZN0t) episode 6 is advance
+and links
+<https://gist.github.com/cheerfulstoic/3142ed2e15ad08ef6631>
 
 ~~~
 rails new asset_portal -m http://neo4jrb.io/neo4j/neo4j.rb -O
@@ -125,7 +172,6 @@ end
 * properties are declared with `property :name`. It can also define
   * `default: 'default_value'` is set when property is `nil` so for existing and
   new object it will be `'default_value'`
-  * index and constraints are defined in migration
   * `type: Integer` define property type in ruby: integer, float, string, time,
   date, datetime, boolean, BigDecimal. Istead of DateTime, if you need some
   expensive query, better is to use `type: Integer` and store as unix timestamp
@@ -143,7 +189,7 @@ end
 
 * relationship: `has_many :in, :posts`
   * first parameter can be `:in`, `:out`, `:both`
-  * second set the association name (that is expected `:model_class` and
+  * second set the association name (can be overriden with `:model_class` and
   association name `:type`)
   * `has_one` should be used with singular and `.first` is automatically called
   so result is non chainable (unless you call `comment.post(chainable: true)`
@@ -223,13 +269,195 @@ end
 * usefull for polymophic, for example User knowns companies, places, ... so it
   contains different logic for each relation.
 
+# Schema
+
+<http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/>
+
+Index and constraints are defined in migrations. To generate use
+'rake neo4j:generate_schema_migration[`index|constraint`,`Label`,`property`]'
+for example:
+`rake neo4j:generate_schema_migration[constraint,Person,uuid]` will generate
+<http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/>
+<https://github.com/neo4jrb/neo4j/blob/5e0127f4bb3f3b523cf3f5a515f36e0468c287c5/docs/Migrations.rst#add_constraint>
+
+~~~
+class ForceCreatePersonUuidConstraint < Neo4j::Migrations::Base
+  def up
+    add_constraint :Person, :uuid, force: true
+  end
+
+  def down
+    drop_constraint :Person, :uuid
+  end
+end
+~~~
+
+[code](https://github.com/neo4jrb/neo4j/blob/master/lib/neo4j/migrations/helpers/schema.rb#L12)
+This will add uniqueness constrain `ASSERT person.uuid IS UNIQUE`, I think in
+[neo4j-core](https://github.com/neo4jrb/neo4j-core/blob/master/lib/neo4j/label.rb#L43)
+implement that. I see in `:schema` that we alse got a index.
+
+Not sure how to generate existence `ASSERT exists(person.uuid)` constraint.
+
+<http://neo4j.com/docs/developer-manual/current/cypher/schema/index/>
+Also you can `add_index :Person, :email, force: true`.
+Run migrations with
+
+~~~
+rake neo4j:migrate
+~~~
+
+Or use my shortcut `rake db:migrate`, `RAILS_ENV=test rake db:drop` and `rake
+db:seed`
+
+~~~
+# lib/tasks/db.rake
+namespace :db do
+  desc 'seed'
+  task seed: :environment do
+    b = {}
+    # User
+    [
+      { var: :user1, email: 'asdf1@asdf.asdf' },
+      { var: :user2, email: 'asdf2@asdf.asdf' },
+      { var: :user3, email: 'asdf3@asdf.asdf' },
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      user = User.find_by params
+      unless user.present?
+        user = User.create! params.merge(password: 'asdfasdf', confirmed_at: Time.zone.now)
+        puts "User #{user.email}"
+      end
+      b[doc[:var]] = user if doc[:var]
+    end
+
+    # Location
+    [
+      { var: :location1 },
+      { var: :location2 },
+      { var: :location3 },
+      { var: :location4 },
+      { var: :location5 },
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      location = Location.find_by params
+      if location.blank?
+        location = Location.create! params
+        puts "Location #{location.name}"
+      end
+      b[doc[:var]] = location if doc[:var]
+    end
+
+    # Group
+    [
+      { var: :g2_l1, location: b[:location1], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l2, location: b[:location2], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l3, location: b[:location3], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l4, location: b[:location4], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l5, location: b[:location5], age_min: 2,
+        age_max: 2 },
+      { var: :g4_l1, location: b[:location1], age_min: 4,
+        age_max: 4 },
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      group = Group.find_by params
+      unless group.present?
+        group = Group.create! params
+        puts "Group #{group.name}"
+      end
+      b[doc[:var]] = group if doc[:var]
+    end
+
+    # Move
+    [
+      { var: :m1_l1_l2, from_group: b[:g2_l1], prefered_groups: b[:g2_l2],
+        user: b[:user1] },
+      { var: :m1_l1_l3, from_group: b[:g2_l1], prefered_groups: b[:g2_l3],
+        user: b[:user1] },
+      { var: :m2_l3_l4, from_group: b[:g2_l3], prefered_groups: b[:g2_l4],
+        user: b[:user2], available_from_date:
+        Date.today.end_of_month },
+      { var: :m3_l4_l1, from_group: b[:g2_l4], prefered_groups: b[:g2_l1],
+        user: b[:user3], }
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      move = Move.find_by params
+      unless move.present?
+        move = Move.create! params
+        puts "Move #{move.name}"
+      end
+    end
+  end
+
+  desc 'drop'
+  task drop: :environment do
+    Rake::Task["neo4j:stop"].invoke Rails.env
+    puts sh "rm -rf db/neo4j/#{Rails.env}/data/databases/graph.db"
+    Rake::Task["neo4j:start"].invoke Rails.env
+    puts "Find database on http://" +
+         Rails.application.secrets.neo4j_host.to_s + ":" +
+         (Rails.application.secrets.neo4j_bolt_port.to_i + 2).to_s
+  end
+
+  desc 'migrate'
+  task migrate: :environment do
+    puts "running neo4j:migrate"
+    Rake::Task["neo4j:migrate"].invoke Rails.env
+  end
+
+  desc 'setup = drop, migrate and seed'
+  task setup: :environment do
+    puts 'this is not implemented'
+    puts 'since drop need some time to bootup, and migrate raises exception'
+  end
+end
+~~~
+
+In migration `def change` should be replaced with `def up` and `def down` since
+there is an error:
+
+~~~
+rake aborted!
+NotImplementedError: NotImplementedError
+~~~
+
+If using the bold, in migrations there are exception
+<https://github.com/neo4jrb/neo4j-core/issues/303>
+
+~~~
+rake aborted!
+should be implemented!
+~~~
+
+Test data should be wiped manually
+<http://neo4jrb.readthedocs.io/en/8.0.x/Miscellany.html#cleaning-your-database-for-testing>
+There are attempts to use database_cleaner gem
+<https://github.com/neo4jrb/neo4j/issues/1368>
+<https://github.com/DatabaseCleaner/database_cleaner/issues?utf8=%E2%9C%93&q=Neo4j>
+<https://github.com/DatabaseCleaner/database_cleaner/pull/481/files>
+
+~~~
+# test/test_helper.rb
+class ActiveSupport::TestCase
+  # http://neo4jrb.readthedocs.io/en/8.0.x/Miscellany.html#cleaning-your-database-for-testing
+  teardown do
+    Neo4j::ActiveBase.current_session.query %(
+      MATCH (n)
+      WHERE NOT (n:`Neo4j::Migrations::SchemaMigration`)
+      DETACH
+      DELETE n
+    )
+  end
+end
+~~~
+
 # Query
 
 Debug with `user.assets.categories.assets.print_cypher`.
-
-Error `defined for a second time. Associations can only be defined once` is when
-you name the associataion with already used name. Please use different name and
-same model_class.
 
 Query on property `User.where(name: ?)` parametar `?` can be: string, nil,
 array, regular expression `User.where(name: /.*dule.*/i)`, range
@@ -260,24 +488,114 @@ You can pass single attribute to assign variable in cypher, so we can pluck on
 it `user.created_assets.categories(:category).pluck('category.name',
 'count(*)')`
 
+# Devise
+
+
+~~~
+gem 'devise-neo4j'
+bundle
+rails g devise:install --orm=neo4j
+rails g neo4j:devise User
+~~~
 
 # Heroku
 
 ~~~
+export MYAPP_NAME=my-app # only dash, not underscore
+heroku apps:create $MYAPP_NAME
 heroku addons:create graphenedb
+
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
+
+heroku config # copy all GRAPHENEDB_BOLT... variables
+# use http, not bolt port
+heroku config:set NEO4J_TYPE=https NEO4J_HOST= NEO4J_PORT= NEO4J_USERNAME= NEO4J_PASSWORD=
+heroku run rake db:migrate
+heroku run rake db:seed
 ~~~
 
 # Tips
 
-* use node instead of relationship in all cases where you need to add another
-  relationships to it. For example instead of property `user_id` on relationship
-  you should use node with `:OWNS` relationship to it
-* instead to name relationship with `:BELONGS_TO` use something more meaningfull
-to businness, for something belongs to Category use
-`something-[:IN_CATEGORY]->category`, or for review `[:REVIEW_FOR]`.
-  For has_many use verb `()-[:POSTS]->(:Post)`, or `[:CONTAINS]`, `[:USING]`,
+Model your entity attribute as property on a node if
+* it is simple value and there is no need to qualify relationship.
+
+Otherwise:
+* use relationship to a new node instead of property of a node in cases where
+  you need to add another relationships to it. For example instead of property
+  `user_id` on relationship you should use `User` node with `:OWNS` relationship
+  to it, since you will probably add another relation to that `User`
+* use relationship if there is a need to specify something relationship
+  (for example *profiency in a skill*)
+* use relationship if its a complex property like multiple fields (address)
+So rule is to use node if you need start a query from this entity like skill
+ruby -> users.
+
+Instead to name relationship with `:BELONGS_TO` use something more meaningfull
+to businness so you know what it is about:
+* something belongs to Category use `something-[:IN_CATEGORY]->category`
+* for review `[:REVIEW_FOR]`.
+* For has_many use verb `()-[:POSTS]->(:Post)`, or `[:CONTAINS]`, `[:USING]`,
   `[:MENTIONS]`
-  For has_and_belongs_to_many use whatever `(:User)-[:FRIENDS]->(:User)`, `(Tweet)-[:RETWEETS]->(:Tweet)`
+* For has_and_belongs_to_many use whatever `(:User)-[:FRIENDS]->(:User)`, `(Tweet)-[:RETWEETS]->(:Tweet)`
+
+Common Graph stuctures:
+* Intermediate Nodes: when when you have three or more entity in single context:
+  'Ian bought a book in Mercator', 'Patrick work at Trk in role Designer' ...
+* Linked List: entities are linked as sequence, you need to traverse:
+  'Job history', 'Broadcast or Production of Movies'
+* Versioning Graphs: time based
+  * structure: we have idendtity nodes as placeholders and timestamped
+  relationships.
+  * state: every note is snapshot, 
+
+# Errors
+
+Error `defined for a second time. Associations can only be defined once` is when
+you name the associataion with already used name. Please use different name and
+same model_class.
+
+In migration `rails aborted!  Neo4j::MigrationError: Duplicate constraint for
+Location` means that there exists in schema so you need to manually remove.
+You can use `:schema` or `CALL db.constraints` to see all constrains and you can
+drop with
+
+~~~
+DROP CONSTRAINT ON (l:Location) ASSERT l.uuid IS UNIQUE
+~~~
+
+To wipe all data, destroy clear database, remove graph.db and restart.
+
+~~~
+rake neo4j:stop[development]
+rm -rf db/neo4j/development/data/databases/graph.db
+rake neo4j:start[development]
+~~~
+
+`ArgumentError: Invalid value for 'city' condition` is error in seed task when
+you assign symbol `:city1` instead of object `b[:city1]`
+
+If you open `rails c` console1 and than `rails c` console2, and `exit` in
+console1, it will not exit. You need to `exit` console2 to release something and
+both consoles exists...
+
+# Todo
+
+`rails g model` will generate model files with rubocop offencies
+
+`rails neo4j:migrate` event it is successfull, generate error message:
+
+~~~
+should be implemented!
+~~~
+<https://github.com/neo4jrb/neo4j-core/issues/303>
+
+device-neo4j generate two migrations with same id... Best solution is to rename
+migration and clear database.
+
+
+Errors format should be used:
 
 # Links
 
@@ -285,3 +603,7 @@ to businness, for something belongs to Category use
 * http://neo4jrb.readthedocs.io/en/7.0.x/
 * youtube series https://www.youtube.com/watch?v=n0P0pOP34Mw
 * https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood
+
+Todo
+https://youtu.be/78r0MgH0u0w 42min time versioned graphs
+https://youtu.be/AaJS-DGBQX4

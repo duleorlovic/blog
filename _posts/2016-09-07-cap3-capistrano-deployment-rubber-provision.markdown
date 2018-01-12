@@ -183,9 +183,7 @@ end
 You can use `puts` and `run` to run command in shell. If you use sudo, than you
 should enable `default_run_options[:pty] = true` so when he ask for password it
 prompts in current shell. Also helpfull is `ssh_options[:forward_agent] = true`
-which uses you keys on remote server to download private repositories.. Also
-helpfull is `ssh_options[:forward_agent] = true` which uses you keys on remote
-server to download private repositories.
+which uses your keys on remote server to download private repositories.
 
 ~~~
 task :hello do
@@ -446,7 +444,7 @@ multitail /var/log/nginx/* /home/deploy/myapp/current/log/*
 This gem is used just as wrapper for common stack, like passenger_postgresql,
 targeting EC2 instances and do all provision stepts.
 It depends on capistrano 2.
-[railscast](http://railscasts.com/episodes/347-rubber-and-amazon-ec2?autoplay=true)
+[railscast](http://railscasts.com/episodes/347-rubber-and-amazon-ec2)
 
 ~~~
 cat >> Gemfile << HERE_DOC

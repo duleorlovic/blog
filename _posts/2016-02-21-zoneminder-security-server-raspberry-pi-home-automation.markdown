@@ -230,6 +230,14 @@ In filter window you can see Max score frame (last column)
 To enable authentication and admin password go to options -> System ->
 OPT_USE_AUTH checked. Default is admin/admin.
 
+To change password use:
+
+~~~
+mysql -u root -p
+use zm
+update Users set Password=PASSWORD("admin") where Username="admin";
+~~~
+
 # China IP cam
 
 When I look at the source I see
@@ -278,11 +286,25 @@ You can change ip with "EditDevice"
 
 # Dahua IP Cam
 
-IPC-HDW4300C default IP address 192.168.1.108 media port 3777 MAC
+IPC-HDW4300C Dahua IP dome 3MP Camera HDW4300C Built-in MIC Metal body POE CMOS IR 30m IK10 1080p IP66 security cctv Camera IPC-HDW4300C
+Lens (mm):3.6mm
+default IP address 192.168.1.108 media port 3777 MAC
 3c:ef:8c:a3:c9:6b, vendor Dahua, username: admin, password: admin. Also have
 RTSP port 554.
 
 Zoneminder ONVIF rtsp://admin:admin@192.168.3.5:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
+
+# IP Dom
+
+KIP-200SHT30H
+<http://www.elementa.rs/proizvod/57087/ip-dom-kamera>
+Objektiv: varifokalni, 2.8-12mm
+Horizontalni ugao vidljivosti: 21° do 81°
+You need to 192.168.1.168 and change admin/admin password to admin dule...10.
+Than on configuration there is basic setup, to set up manual IP address.
+Under System there is Time Settings to set TimeZone.
+
+
 
 # Lead acid
 

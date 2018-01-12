@@ -46,7 +46,7 @@ By default `config.active_job.queue_adapter = :inline` better is to use
 `:async`.  Both inline and async Active Job do not support priority, timeout and
 retry. You can find all adapter http://api.rubyonrails.org/v5.1/classes/ActiveJob/QueueAdapters.html
 For testing there are `:test` queue adapter which is used "only" for testing
-[more]( {{ site.baseurl }} {% post_url 2015-11-09-rails-testing %}#rspec-jobs-spec)
+[more]( {{ site.baseurl }} {% post_url 2015-11-09-rails-testing %}#rspec-background-jobs-spec)
 
 For production you need some backend queuing library to store that to db and
 later execute. That process should be started separately from rails.
@@ -261,7 +261,8 @@ delayed_job` will generate script file `bin/delayed_job` which you can use
 queue (QUEUE=webapp env does not work for delayed job)
 * `RAILS_ENV=production bin/delayed_job start --exit-on-complete` exit when
   there are not more jobs
-* `RAILS_ENV=production bin/delayed_job run` is to run in foreground
+* `RAILS_ENV=production bin/delayed_job run` is to run in foreground (sometimes
+byebug does not work, so I use `rake jobs:work` when debugging)
 * `RAILS_ENV=production bin/delayed_job restart`
 * `RAILS_ENV=production bin/delayed_job status`
 * `cat tmp/pids/delayed_job.pid` can give you process id

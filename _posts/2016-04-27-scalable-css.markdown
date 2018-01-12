@@ -74,6 +74,10 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
   list-style-image: url(blah) }` its enough to write `#bookmarkMenuItem {
   list-style-image: url(bla) }`
 
+# ABEM
+
+<https://css-tricks.com/abem-useful-adaptation-bem/>
+
 # CSS variables
 
 * you can set to `:root { --my-var: red; }` and than use later with `p { color:

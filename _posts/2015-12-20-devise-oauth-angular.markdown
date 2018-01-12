@@ -21,13 +21,13 @@ git add . && git commit -m "rails g devise user"
 # optional
 # rails g devise:views && git add . && git commit -m "rails g devise:views"
 sed -i app/views/layouts/application.html.erb -e '/<body>/a \
-  <% if current_user %>\
-    <strong><%= current_user.email %></strong>\
-    <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a>\
-  <% else %>\
-    <a href="<%= new_user_registration_path %>">Sign up</a>\
-    <a href="<%= new_user_session_path %>">Log in</a>\
-  <% end %>'
+    <% if current_user %>\
+      <strong><%= current_user.email %></strong>\
+      <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a>\
+    <% else %>\
+      <a href="<%= new_user_registration_path %>">Sign up</a>\
+      <a href="<%= new_user_session_path %>">Log in</a>\
+    <% end %>'
 git add . && git commit -m "Adding login/logout header in layout"
 ~~~
 
@@ -46,6 +46,10 @@ opts={})`
 When user is logged in, than in session there is a id of current_user
 `session['warden.user.user.key'] # => [[9], "$2a$10$TUfyHaPAWV.A1/6JLuCTGO"]`
 
+Errors like `ActionView::Template::Error (undefined method new_confirmation_path
+for Did you mean?  new_user_confirmation_path user_confirmation_path):` occurs
+when you add, for example `confirmable` in model, but gem are already loaded in
+spring, so you need to `spring stop` and restart rails server.
 
 # Devise and Omniauth
 
@@ -59,7 +63,10 @@ and excellent [rails casts #360](https://www.youtube.com/watch?v=E_XACDrZSiI)
 cat >> Gemfile <<HERE_DOC
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2', '0.2.5'
-gem "omniauth-oauth2", '1.2.0' # skip_jwt issue
+# https://github.com/zquestz/omniauth-google-oauth2/issues/204
+# fix to 1.3.1 because of redirect_uri_mismatch
+gem "omniauth-oauth2", '1.3.1'
+# 1.2.1 to skip_jwt issue
 # Could not find a valid mapping for path "/omniauth/google_oauth2/callback"
 HERE_DOC
 bundle
@@ -294,10 +301,11 @@ This means that server is on facebook banned list. `heroku restart` can help.
 
 # Google console
 
-Create a project in google console and enable *Google+ API*. Create *OAuth 2.0
-client ID* (or edit exists one clicking on its name) and set *Authorized
-redirect URIs* to all urls that will be used (not just domain like for facebook,
-we need whole url path), like
+Create a project in <https://console.developers.google.com/apis/> and enable
+*Google+ API*.
+Create *OAuth 2.0 client ID* (or edit exists one clicking on its
+name) and set *Authorized redirect URIs* to all urls that will be used (not just
+domain like for facebook, we need whole url path), like
 
 * `http://localhost:3000/users/auth/google_oauth2/callback` this is default
   `devise_for :users`
@@ -311,7 +319,19 @@ Dont forget to save **Changes needs 5 min to propagate**
 # Twitter app
 
 On <https://apps.twitter.com/> you can create application.
+Setup callbacks urls to point to you server, but this is not required with
+twitter.
 `app/{{APP_ID}}/keys` will give you TWITTER_API_KEY and TWITTER_API_SECRET
+
+Twitter
+[response](https://github.com/arunagw/omniauth-twitter#authentication-hash) do
+not provide user's email address.
+
+# Linkedin
+
+Create app on <https://www.linkedin.com/developer/apps> and save to
+LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET.
+Add `gem 'omniauth-linkedin'`
 
 # Angular authentication
 
@@ -986,10 +1006,29 @@ Problem with `ng-token` is that is returns user object with snake
 `user.first_name` instead of camelCase `user.firstName` as it is for Rails
 Resources
 
+# Sign in after user click on confirmation link
+
+~~~
+# app/controllers/confirmations_controller.rb
+class ConfirmationsController < Devise::ConfirmationsController
+  def show
+    super
+    sign_in resource if resource.confirmed?
+  end
+end
+~~~
+
+~~~
+# config/routes.rb
+  devise_for :users, controllers: {
+    confirmations: :confirmations
+  }
+~~~
+
 # Admin sign in as another user
 
-If admin wants to become some other user he can use `sign_in(:user, @user, {
-:bypass => true })`.  With ng-token is similar
+If admin wants to become some other user `login_as` he can use `sign_in(:user,
+@user, { :bypass => true })`.  With ng-token is similar
 
 ~~~
 def sign_in_as

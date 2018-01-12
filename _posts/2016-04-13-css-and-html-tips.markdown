@@ -198,6 +198,23 @@ title: CSS and HTML tips
 }
 ~~~
 
+~~~
+// expand on hover
+// used on index tables when some data is too long to be always shown
+//
+// <td class="expand-on-hover"><%= account.uuid %></td>
+
+.expand-on-hover {
+  width: 20px;
+  height: 10px;
+  overflow: hidden;
+  float: left;
+}
+.expand-on-hover:hover {
+  width: inherit;
+}
+~~~
+
 # Design
 
 * when you are asking user to select items from long lists, you should have
@@ -354,6 +371,12 @@ and values are successfully posted (disabled input is not send to server).
     <%= f.select :shopify_custom_collection_id, [['Please select collection',0]] + @shopify_custom_collections.map { |shopify_custom_collection| [shopify_custom_collection.title, shopify_custom_collection.id] }, disabled: 0, selected: 0 %>
   ~~~
 
+* if you want to filet group select based on first option than use something
+like
+<https://stackoverflow.com/questions/32405077/show-second-dropdown-options-based-on-first-dropdown-selection-jquery>
+
+  ~~~
+  ~~~
 
 * `<a href="javascript:void(0)">` is required when you use `onclick=` and do not
   want page to reload

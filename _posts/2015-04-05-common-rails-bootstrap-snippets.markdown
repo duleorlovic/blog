@@ -43,6 +43,39 @@ rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ~~~
 
+# UUID
+
+~~~
+bin/rails g migration enable_extension_for_uuid
+# add following line to migration
+  def change
+    enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
+  end
+
+cat >> config/initializers/generators.rb << HERE_DOC
+Rails.application.config.generators do |g|
+  g.orm :active_record, primary_key_type: :uuid
+end
+HERE_DOC
+~~~
+
+Later, if you add some references, you need to specify `type: :uuid` like:
+
+~~~
+  t.references :post, type: :uuid, index: true
+~~~
+
+or error will be raised:
+
+~~~
+DETAIL:  Key columns "post_id" and "id" are of incompatible types: bigint and uuid.
+~~~
+
+Note that ordering by id, uuid is not possible. It is hard to implement on
+existing projects and on MySQL db.
+
+
+
 # Gitignore
 
 ~~~
@@ -70,7 +103,9 @@ Some of the gems could be found on [thoughtbot
 suspenders](https://github.com/thoughtbot/suspenders)
 
 ~~~
-rubocop --auto-correct # to correct some files if LineLength max is 115
+rubocop --auto-correct # to autocorrent correct some files (except lineLength)
+rubocop --auto-gen-config # generate .rubocop_todo.yml
+echo 'inherit_from: .rubocop_todo.yml' > .rubocop.yml # create .rubocop.yml
 sed -i Gemfile -e '/group :development do/a  \
   # to detect N+1 sql queries\
   gem "bullet"\
@@ -109,7 +144,8 @@ bundle
 guard init livereload
 sed -i config/environments/development.rb -e '/^end/i \
   # livereload\
-  # if guard is not running, there is an error in js console\
+  # use rack-livereload or browser extension\
+  # if guard is not running, there is an error in js console:\
   # Cross-origin plugin content from  must have a visible size larger than 400 x\
   # 300 pixels, or it will be blocked. Invisible content is always blocked.\
   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
@@ -130,7 +166,9 @@ git add . && git commit -m "Adding guard and other useful gems"
 # https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
 # echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo
 sysctl -p
-# guard
+guard -d
+# livereload debug with `guard -d`. Error if you also run it on another project
+# there should not be eventmachine.rb:530:in `start_tcp_server': no acceptor (port is in use or requires root privileges) (RuntimeError)
 ~~~
 
 ## Pronto
@@ -333,8 +371,8 @@ shared:
   # default_url is required for links in email body or in links in controller
   # when url host is not available (for example rails console)
   default_url:
-    host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.development? ? "localhost" : "example.com") %>
-    port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : 80) %>
+    host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "localhost") %>
+    port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : nil) %>
 HERE_DOC
 
 git add . && git commit -m "Simplify secrets"
@@ -359,8 +397,6 @@ sed -i app/mailers/application_mailer.rb -e '/default/c \
 Set default url option, that is domain for `root_url`:
 
 ~~~
-# sed -i '/^  end$/i \\n \   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }' config/environments/development.rb
-
 # if you need to get from rails 4 use { port: Rails::Server.new.options[:Port] }
 # in config/environments/development.rb and also include
 # require 'rails/commands/server` on the top of the file
@@ -456,7 +492,27 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 
 # Puma
 
-Puma is now default webserver on rails.
+Puma is now default webserver on rails. But by default it runs in single mode
+WEB_CONCURRENCY=1 so on heroku it will allow MAX_THREADS connections if GIL is
+not trigered.
+You can simulate slow connection with `sleep 10`, it does not triggel GIL.
+
+~~~
+export MAX_THREADS=1
+curl $u/action_with_sleep_10 &
+curl $u/action_with_sleep_10 &
+# real 10s
+# real 20s
+
+
+export MAX_THREADS=2
+curl $u/action_with_sleep_10 &
+curl $u/action_with_sleep_10 &
+# real 10s
+# real 10s
+~~~
+
+
 You can follow [heroku article](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server)
 
 ~~~
@@ -465,9 +521,10 @@ gem 'puma'
 HERE_DOC
 bundle
 
-cat >> Procfile <<HERE_DOC
-web: bundle exec puma -C config/puma.rb
-HERE_DOC
+# Rails 5 puma is default, and config/puma.rb is used, so do not need Procfile
+# cat >> Procfile <<HERE_DOC
+# web: bundle exec puma -C config/puma.rb
+# HERE_DOC
 
 cat >> config/puma.rb <<HERE_DOC
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
@@ -488,7 +545,7 @@ end
 HERE_DOC
 ~~~
 
-# Production Heroku deploy
+# Heroku deploy
 
 If you need to run separate command for background jobs, you need to write
 `Procfile`.
@@ -536,27 +593,104 @@ heroku run rake db:migrate db:seed
 heroku open
 ~~~
 
+If you need to compile node packages than you need need custom
+[buildpack](https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process).
+We could use 3th party gulp buildpacks but default
+[node](https://docs.npmjs.com/misc/config)
+[buildpack](https://github.com/heroku/heroku-buildpack-nodejs) works fine.
+
+There is also for mysql <https://github.com/Shopify/heroku-buildpack-mysql> or
+<https://github.com/din-co/heroku-buildpack-mysql>
+
+
+`devDependencies` need to be renamed to `dependecies` since it runs node
+production mode (I tried to disable production mode using NPM_CONFIG_ONLY but
+than other thinks does not work). Imporant is
+[NODE_MODULES_CACHE](https://devcenter.heroku.com/articles/nodejs-support#cache-behavior).
+If we (by default) cache `/node_modules` it will not build new version to public
+folder.
+
+~~~
+# deploy to heroku
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+
+heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
+# alternativelly, we can define then in file .buildpacks
+# echo 'https://github.com/heroku/heroku-buildpack-ruby
+# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
+# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+
+git rm -rf public
+echo '/public
+/node_modules' >> .gitignore
+git add .gitignore
+git commit -m "Remove public folder from git repo"
+
+echo '{
+  "name": "rootApp",
+  "scripts": {
+  },
+  "dependencies": {
+    "myappAngular": "file:./client"
+  },
+  "cacheDirectories": [
+    "client/node_modules",
+    "client/bower_components"
+  ]
+}
+' > package.json
+git add package.json && git commit -m "Add package.json for nodejs buildpack detect"
+
+cd client
+sed -i "/dist: 'dist/c \  dist: '../../public'," gulp/conf.js
+sed -i '/"scripts":/a \    "postinstall": "bower install && gulp build",' package.json
+sed -i '/"devDependencies":/c \  "dependencies": {\
+    "bower": "*",' package.json
+git add . && git commit -m "Configure postinstall gulp build"
+cd ..
+
+git push heroku
+heroku config # NPM_CONFIG_PRODUCTION=true NODE_ENV=production NODE_MODULES_CACHE=true
+heroku open
+# usefull command to test is `npm install`
+# git commit --amend --allow-empty --no-edit && echo "output is saved: cat log/heroku.log" && git push heroku -f > log/heroku.log 2>&1 && heroku run bash -c 'mysql -v'
+~~~
+
 On heroku add *Papertrail* add-on and go to the
 <https://papertrailapp.com/events> and search
 for "Started GET" , save and create email alert or [add internal
 notification]({{ site.baseurl }}{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
 
+<https://devcenter.heroku.com/articles/custom-domains>
 For custom domain just add on settings your domain name and create CNAME record
-for `www` with value `myapp.herokuapp.com`. If you need to match all subdomains,
-you can put *Domain Name* `*.kontakt.in.rs` and CNAME record for `*` with same
-value `myapp.herokuapp.com`.
+for `www` with value `myapp.herokuapp.com`.
+If you need to match all subdomains (wildcard), you can put *Domain Name*
+`*.kontakt.in.rs` and CNAME record for `*` with same value
+`myapp.herokuapp.com`.
+If you need to add root domain (naked, bare, zone apex) than you can't use
+loopia but some other suggested domain name providers.
 
 ## Deploy javascript npm required tasks
 
 ## Heroku dyno puma settings
 
 <https://youtu.be/itbExaPqNAE>
-Things in system = arrival rate X time spent in system
-requests in system = requests per second X average response time
-utilization = average requests in system / how many workers
+Some Things in system = arrival rate X time spent in system so for server it is:
+hequests_in_system = requests per second X average_response_time (115 req/s *
+0.147s = 16 request in system, so we need at leat 16 workers in same time).
+utilization = requests_in_system / how_many_workers
 for example = 115 req/s X 147ms response / 45 workers = 37%
+
 Use 3 WEB_CONCURRENCY workers and 3-5 MAX_THREADS (not more since each thread
 need connection to database, and use some on memory).
+https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#workers suggests 2-4 workers
+`sleep` also do not lock GIL (so all threads are working).
+> On MRI, there is a Global Interpreter Lock (GIL) that ensures only one thread
+> can be run at any time. IO operations such as database calls, interacting with
+> the file system, or making external http calls will not lock the GIL. Most
+> Rails applications heavily use IO, so adding additional threads will allow
+> Puma to process multiple threads, gaining you more throughput. `
 
 https://devcenter.heroku.com/articles/scaling#autoscaling
 

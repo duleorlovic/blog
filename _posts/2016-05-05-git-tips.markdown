@@ -72,6 +72,11 @@ If you need to push to two remote repositories, you can do it in one command
     git push all master --set-upstream
     git push
 
+To push to heroku without changes, try
+
+    git commit --allow-empty -m "empty commit"
+    git push heroku master
+
 Versioning [SEMVER](http://semver.org/)
 
 # Multiple accounts
@@ -200,7 +205,6 @@ cat >> /var/lib/timeglass/timeglass.json << HERE_DOC
 }
 HERE_DOC
 ~~~
-
 
 
 # Github

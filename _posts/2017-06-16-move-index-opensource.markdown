@@ -10,3 +10,6 @@ android ethernet so battery lasts longer without wifi
 codeclimate is free for opensource.
 
 https://medium.com/libraries-io/what-does-a-sustainable-open-source-project-look-like-bf9b8cf824f8
+
+Show our API using PostMan
+http://pages.getpostman.com/API-Network-Inclusion_Join.html

@@ -106,8 +106,8 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 * to stop on some page that redirects immediatelly, you can go `Sources` tab and
   *Event Listener Breakpoints* and *Load -> beforeunload* or *Script -> Script
   first statement*
-* to use selected element in console use `$0` (`$1` previous selected and so
-on), for xpath use `$x()`. Use `$_` for last returned value in console.
+* to use current selected element in console use `$0` (`$1` previous selected
+and so on), for xpath use `$x()`. Use `$_` for last returned value in console.
 [link](https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference)
 * use can use `monitor(function)`, `monitorEvents($0, "key");`
 * `debug(function)` or `undebug(function)`. Usefull when you want to stop on
@@ -211,3 +211,12 @@ sudo PM_DEBUG=true pm-suspend
 
 less /var/log/pm-suspend.log
 ~~~
+
+* instead of double click .deb file to install you can use command line `sudo
+dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
+
+
+# Canon camera wifi
+
+<http://www.testcams.com/airnef/> is used to download files from Canon camera.
+

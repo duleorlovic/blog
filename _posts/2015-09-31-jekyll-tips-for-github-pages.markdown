@@ -214,6 +214,12 @@ all files. Nice [example of
 prose](https://github.com/ccppbrasil/ccppbrasil.github.io/blob/master/_config.yml).
 
 
+# Heroku
+
+There is heroku buildpack than can build jekyll for you and serve static site so
+you can use any plugins.
+https://blog.heroku.com/jekyll-on-heroku
+
 # Serve under subfolder
 
 Since github pages serve your project under subfolder

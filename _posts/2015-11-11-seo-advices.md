@@ -233,6 +233,12 @@ If you have more domains on same server than you need to iterate for each
 (since by default is to ping when whole sitemap process finishes, so than it
 will ping only last one).
 
+# Other tools
+
+Chrome plugins
+
+* <https://chrome.google.com/webstore/detail/browserstack-local/mfiddfehmfdojjfdpfngagldgaaafcfo?utm_source=chrome-app-launcher-info-dialog>
+* <https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk?utm_source=chrome-app-launcher-info-dialog>
 
 # Schema.org
 

@@ -135,18 +135,18 @@ or [Postman REST
 client](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en)
 to send API requests.
 
+If you want to send json request from Postman than use header `Accept:
+application/json`. If server responds with json, it can set header
+`Content-type: Application/json`.
+
 Nice extension is [JSON
 Formatter](https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa)
 that will render json response in readable way.
 
+
 Curl commands:
 
-~~~
-export U=http://localhost:3000/api/v1/
-curl ${U}/expenses
-curl ${U}/expenses -I # or --head show only header
-curl ${U}/expenses -H 'Authorization: Token token="c576f0136149a2e2d9127b3901015545"'
-~~~
+[curl commands]({{ site.baseurl }} {% post_url 2016-02-01-bash %}#curl)
 
 # Current user or me
 

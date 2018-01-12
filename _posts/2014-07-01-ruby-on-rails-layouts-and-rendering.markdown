@@ -82,6 +82,11 @@ and include them in a view or layout file
     <%= javascript_include_tag params[:controller] %>
     <%= stylesheet_link_tag params[:controller] %>
 
+Note that is `posts.js` is inside another folder, for example
+`app/assets/landing/posts,js` than you need to add that folder to asset paths
+`Rails.application.config.assets.paths << Rails.root.join('app', 'assets',
+'landing')`. If not found, it will be ignored and not precompiled.
+
 All non js or css files are included automatically (images, text, pdf) along
 with applications.js and application.css by the default matcher for compiling:
 
@@ -279,6 +284,9 @@ heroku buildpacks # should return  1.nodejs  2.ruby (latest will run process)
 git push heroku master --set-upstream
 ~~~
 
+More info on [heroku deploy]({{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}#heroku-deploy)
+
+
 ## Boostrap
 
 You can include bootstrap (which is written in less) or bootstrap-sass (if you
@@ -325,12 +333,10 @@ HERE_DOC
 # HERE_DOC
 
 cat >> config/initializers/assets.rb << \HERE_DOC
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
-HERE_DOC
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|woff2|ttf)$/
 
-cat >> config/initializers/non_digest_assets.rb << \HERE_DOC
 NonStupidDigestAssets.whitelist += [
-  /\.(?:svg|eot|woff|ttf)$/
+  /\.(?:svg|eot|woff|woff2|ttf)$/
 ]
 HERE_DOC
 ~~~

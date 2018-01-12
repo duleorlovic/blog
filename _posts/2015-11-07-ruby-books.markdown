@@ -637,6 +637,35 @@ merge](https://apidock.com/rails/Hash/reverse_merge)
   options = { size: 25, velocity: 10 }.merge(options)
   ~~~
 
+* to merge hash in conditional way you can use:
+  ~~~
+  hash = {
+    a: 1
+  }.merge(condition ? {b: 2} : {})
+  ~~~
+
+  ~~~
+  hash.tap do |h|
+    h[:b] = 2 if condition
+  end
+  ~~~
+
+  ~~~
+  hash = {
+    a: 1,
+    b: (2 if condition),
+  }.reject { |k, v| v.nil? }
+  # or in Ruby 2.4
+  }.compact
+  ~~~
+
+  ~~~
+  hash = {
+    a: 1,
+    **(condition ? {b: 2} : {})
+  }
+  ~~~
+
 * to run script and require byebug you can use
 
   ~~~
@@ -709,6 +738,15 @@ end
 * `Time.parse('2001-01-01 06:06:06 UTC')` should be raplaced with
 `Time.at(999232123).utc)` since we do not need to parse every time
 * instead of `map(&:id)` use `pluck(:id)`
+* to assign multiple attributes to active record object you can use `Hash.slice`
+(`pluck` is for database query) and `assign_attributes` to self
+
+  ~~~
+  user.assign_attributes other_user.slice :email, :phone
+  ~~~
+
+  On hash there is `values_at` but that is only values.
+
 * safe navigation operator `&.` can be used instead of `.try` for example: `user
 && user.name` can be written as `user&.name`. It is usefull with find_by for
 example `User.find_by(email: 'a@b.c')&.tap { |u| }`
@@ -762,6 +800,34 @@ end
 # try #1
 # try #2
 ~~~
+
+# Pry
+
+https://github.com/pry/pry
+Instert a line `binding.pry` (or `binding.irb` if you want irb)
+
+~~~
+pry
+u = User.last
+cd u
+
+ls # list all methods, constants and variables for this user object
+show-method full_name # or aliases: show-source or $
+find-method xpath Nokogiri
+stat Nokogiri::CSS.xpath_for
+edit full_name # edit the source and reload utomatically
+full_name
+
+play -l 123 # run line 123
+
+wtf? # show stack trace of last exception
+wtf??? # more lines
+cat --ex # show exact line of exception
+
+.git diff # run linux commands, just add prefix .
+~~~
+
+todo https://www.youtube.com/watch?v=4hfMUP5iTq8
 
 # Tips
 
@@ -905,6 +971,43 @@ ids.map {|id| people_by_id[id] }
 But also ordering and other filtering can be done in sql
 https://stackoverflow.com/questions/10150152/find-model-records-by-id-in-the-order-the-array-of-ids-were-given/38378457#38378457
 
+* switch case example
+
+~~~
+case a
+when 1..5
+  "between 1 and 5"
+else
+  "other"
+end
+~~~
+
+New in  Ruby 2.5
+* `Module#attr, attr_accessor, attr_reader, attr_writer, define_method,
+alias_method, undef_method` and `remove_method` are now all public.
+
+  ~~~
+  class A
+    def initialize
+      @some_instance = 1
+    end
+  end
+
+  a = A.new # <A: @some_instance=1>
+  A.attr_accessor :some_instance
+  a.some_instance = 2
+  ~~~
+* rescue/else/ensure are allowed inside do/end blocks (without begin/end)
+* bundler is standard library
+* `Hash#transform_keys`
+* yield_self (similar to rails's `try`) (`tap` returns object instead of last
+line of the block).
+
+~~~
+to_upper = -> (str) { str.upcase }
+"string".yield_self(&to_upper)
+        .yield_self(&add_greeting)`
+~~~
 
 todo
 

@@ -283,18 +283,49 @@ ${#arr[0]}        # 4 Length of item zero
 
 # Curl
 
-* to see response headers use `-i`
+* same url to some variable
+~~~
+export u=http://localhost:3000/api/v1/
+curl $u/expenses
+~~~
+
+* you can add `-v` `--verbose` option to see more info or save all
+communications with `url $u --trace-ascii dump.txt`
+
+* see headers
+
+~~~
+curl $u/expenses -I # or --head fetch the headers only
+curl $u/expenses -i # or --include show also the response headers
+~~~
+
 * to keep session in curl you can `-c` write and `-b` read from cookie file
   ~~~
   curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
   ~~~
-* test the speed on remote server:
+* test the speed on ssh on remote server:
   * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
   * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
   test upload link
+* limit the speed to simulate slow connections `curl $u limit-rate 100` or using
+<https://github.com/bcoe/crapify>. But this is only for downloading, server
+renders quickly. Only way to simulate high response time is with `sleep 5`
 * curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
-* to get json request use header tag Accept `curl  -H "Accept: application/json"
+* to get json request use header tag Accept `curl -H "Accept: application/json"
 http://localhost:3001/`
+* set authorization header `curl $u/expenses -H 'Authorization: Token token="c576f0136149a2e2d9127b3901015545"'`
+* user agent `curl --user-agent "Mozilla/4.73 [en] (X11; U; Linux 2.2.15 i686)" $u`
+* http basic auth `curl $u -u username:password` or `curl $u -u $ADMIN_USERNAME:$ADMIN_PASSWORD'`. Another format is inside uri `curl http://$username:$password@localhost:3000`
+* follow redirection `curl $u --location` (it works also when performing POST,
+since it will perfome GET to redirected url).
+* referrer `curl $u --referer http://google.com`
+* domain name resolution could be using resolve `curl http://a.b:3000 --resolve
+a.b:3000:127.0.0.1` so in rails `request.host == 'a.b'`
+* POST request is with `--data` `curl $u --data "name=my name"` (recent curl
+will encode post data for you). To see how actual form sends data, save the page
+localy and change method to `GET` so when you submit you can see data separated
+with `?` and `&`
+
 
 # SSH
 

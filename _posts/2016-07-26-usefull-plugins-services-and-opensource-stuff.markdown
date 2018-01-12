@@ -90,6 +90,10 @@ window.flash_notice = (message) ->
   )
 ~~~
 
+# Input mask
+
+* <https://unmanner.github.io/imaskjs/>
+
 # Select something
 
 * [tokenize](http://zellerda.com/projects/jquery/tokenize) for tags,
@@ -222,7 +226,7 @@ used for singleDatePicker, dateTime picker
 
 list:
 
-* <http://wagn.org> wiki with cards with interesting editor
+* <http://wagn.org> wiki with cards with editor
 * <https://beefree.io/>
 * [fireEdit](https://github.com/coltaemanuela/FireEdit)
 * quill
@@ -416,24 +420,31 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 # Email services
 
 * [formspree](http://formspree.io/) sending emails in javascript
-
-# User support services
-
-* [user deck](https://userdeck.com)
+* <http://www.freecontactform.com/free.php> free contact form
 
 # User tracking services
 
 [mixpanel](https://mixpanel.com/)
 
-* create tracking plan that defines each event and its properties (name and
-type: string, number, boolean), In plan we should define: Event name,
-description, why this event and for each property: property name, property
-description, property type, why this property
-* call `identify` when user signup, or if there are existing users, when the
-logs in, or use the app
-* you can also send push notifications from mixpanel
+  * create tracking plan that defines each event and its properties (name and
+  type: string, number, boolean), In plan we should define: Event name,
+  description, why this event and for each property: property name, property
+  description, property type, why this property
+  * call `identify` when user signup, or if there are existing users, when the
+  logs in, or use the app
+  * you can also send push notifications from mixpanel
 
-# User intro tour to website with help tips
+# User support services
+
+* intercom <https://demos.intercom.com/>
+* [user deck](https://userdeck.com)
+
+
+# User intro tour
+
+User navigation to website with help tips should be only one, when user clicks
+something (so help is to interactivelly show tips, not on page load). Users will
+not remeber if you show them 8 steps for the page they just arrived.
 
 * [introjs](http://introjs.com/) commercial lincence after 2.1
 * <http://bootstraptour.com>
@@ -543,11 +554,18 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 
 # Rails
 
+<https://github.com/eliotsykes/real-world-rails> realworldrails
+more are using rspec than test: `cd real-world-rails/apps` and `find . -name
+spec -maxdepth 2 | wc -l # 134` and `find . -name test -maxdepth 2 | wc -l # 52`
+
+Those are nice to explore:
 * crowdsourcing [catarse](https://github.com/catarse/catarse) [tilt](https://github.com/crowdtilt/crowdtiltopen/) is not actually opensource, since their api should be used
-* opensource market peer-to-peer marketplace [sharetribe]({{ site.baseurl }} {% post_url 2017-11-17-sharetribe %})
+* [sharetribe]({{ site.baseurl }} {% post_url 2017-11-17-sharetribe %})
+opensource market peer-to-peer marketplace
 * diaspora
   * when you run localy, you can import new contacts and their posts, for
   example: hq@pod.diaspora.software
+* openstreetmap
 
 # Templates
 
@@ -561,6 +579,16 @@ version](https://github.com/iogbole/gentelella_on_rails)
 * [four images](http://barbajs.org/demo/grid/index.html)
 * [trophy jekyll](http://thomasvaeth.com/trophy-jekyll/) nice template for jekyll
 
+Email templates
+
+* responsive <https://github.com/InterNations/antwort> documentation
+<http://internations.github.io/antwort/> guides
+<https://github.com/InterNations/antwort/wiki/HTML-Styleguide-for-Email>
+* three templates <https://github.com/mailgun/transactional-email-templates>
+[example](http://mailgun.github.io/transactional-email-templates/action.html)
+
+
+
 # Animations
 
 * <http://animejs.com/>
@@ -571,6 +599,15 @@ https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>
 
+* <https://tympanus.net/Development/PerspectivePageViewNavigation/index6.html#>
+* <https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#>
+* <https://tympanus.net/Tutorials/3DShadingWithBoxShadows/>
+
+# Scroll
+
+* <https://russellgoldenberg.github.io/scrollama/basic/> scrolling and changing
+the content
+
 # Nice design and ui tools
 
 * [granim.js](https://sarcadass.github.io/granim.js/examples.html)
@@ -580,6 +617,10 @@ https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
 * split cards <https://designshack.net/tutorialexamples/splitreveal/index.html>
 * cards which you can click (mobile) or hover (desktop) http://devjam.com/
 * nice project portfolio showcase <https://madewithenvy.com/>
+* nice example site sith custom drawings <http://www.parkrun.com/>
+* animations <https://www.kronologic.ai/>
+* red bull <https://www.bullandbeard.com/>
+
 
 # Fonts and icons
 
@@ -587,6 +628,8 @@ https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
    <https://icomoon.io/#preview-free>
 * [simple-line-icons](http://simplelineicons.com/)
 * [bootstrap glyphs](http://getbootstrap.com/components/)
+* [google webfonts](https://fonts.google.com/)
+  * [cabin sketch](https://fonts.google.com/specimen/Cabin+Sketch)
 
 * set specific font styles <http://www.cssfontstack.com/Arial-Narrow>
 
@@ -599,3 +642,10 @@ https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
 
 * [shellckeck](https://github.com/koalaman/shellcheck) static analysis tool for
 shell scripts
+
+# Local PaaS
+
+* <https://github.com/dokku/dokku> heroku like serverice
+* <https://flynn.io/>
+* others <https://news.ycombinator.com/item?id=12703121>
+

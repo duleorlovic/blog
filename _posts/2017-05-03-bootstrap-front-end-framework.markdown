@@ -174,7 +174,9 @@ Other helpers are:
 
 # Rails
 
-## Quick Installation
+## Bootstrap generators
+
+This provides scaffold files
 
 ~~~
 cat >> Gemfile << HERE_DOC
@@ -193,10 +195,12 @@ git add app/assets/stylesheets/application.scss
 
 ## Sass installation
 
+This is original twitter bootstrap sass port
+
 ~~~
 cat >> Gemfile << HERE_DOC
 # twitter boostrap sass https://github.com/twbs/bootstrap-sass
-gem "bootstrap-sass" #, :git => "https://github.com/twbs/bootstrap-sass.git", :branch => "next"
+gem "bootstrap-sass", '~> 3.3.7'
 HERE_DOC
 bundle
 

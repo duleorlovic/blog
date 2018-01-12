@@ -74,8 +74,28 @@ plugins](https://github.com/duleorlovic/config/blob/master/vim/update_vim_bundle
   folder so `:Espec` works
   * run `<leader>s` to run nearest spec (also `t,l,a` for file, last and all
   specs)
+  * there are mappings for minitests: `Efunctionaltest` are controller tests,
+  `Eunittest` are model tests, `Eintegrationtest` are integration between
+  controllers. Do not know how to jump system tests.
+  * use projections to add custom commands, for example `app/services`
+
+  ~~~
+  let g:rails_projections = {
+      \ "app/services/*.rb": {
+      \   "command": "service",
+      \   "template":
+      \     ["class {camelcase|capitalize|colons}", "end"],
+      \   "test": [
+      \     "test/services/{}_test.rb",
+      \     "spec/models/{}_spec.rb"
+      \   ],
+      \ }}
+  ~~~
+
 * ctrlp
   * to seach already opened buffers, hit `<c-p>` and than `<c-f>`
+* [splitjoin](https://github.com/AndrewRadev/splitjoin.vim) for inline ruby
+blocks `{ }` to convert do multiline `do\n end`.
 
 Some not used anymore
 
@@ -240,7 +260,7 @@ yank link to register `a` and paste: `"add` `"ap"`
 * to move a line to buffer on the left you can record macro (something like
 `yy ^wh p ^wl`)
 * to paste with proper indend use [vim-unimpaired](https://github.com/tpope/vim-unimpaired) `]p` , also from plugin `:help unimpaired`
-* `[l` `]l` errors
+* `[l` `]l` ale errors
 * `]b` buffers
 * `]q` search Quick fix
 others are in `:help unimpaired-next`
@@ -283,6 +303,12 @@ and previous result)
 <https://github.com/ggreer/the_silver_searcher>. It will ignore all from
 `.gitignore` so no need to exclude dir. Here are some ack.vim helpers:
   * `?` quick summary of keys, `h` open in horizontal split
+  * `ag pattern -G show` will search only filenames like `show.html.erb` (`-G`
+  is short for `--file-search-regex patter`), `-i` ignore case, `-l` show only
+  filenames. `--ignore-dir=lib` will ignore specific folders (regex not
+  supported). Filter only specific file type `ag --list-file-types| less` you
+  can use `ag MyClass --ruby`.
+
 * grep end of the word `/usan\>` help with `:h /\>`
 * `:%s/old/new/gc`
 * `q:` shows history of commands
@@ -365,7 +391,7 @@ keyword
 
 * [vim theory]({{ site.baseurl }} {% post_url 2017-06-05-vim-theory %})
 * <https://www.youtube.com/watch?v=5r6yzFEXajQ>
-* start vim without plugin
+* start vim without plugin , no plugins
 [--noplugin](https://www.youtube.com/watch?v=XA2WjJbmmoM) or start vanila vim
 without vimrc initialization `vim -u NONE`
 
@@ -378,6 +404,7 @@ without vimrc initialization `vim -u NONE`
 # CTAGS
 
 You need to generate tags file with `ctags -R .`. You can use default params.
+
 ~~~
 # ~/.ctags
 --recurse=yes
@@ -435,11 +462,17 @@ let g:airline#extensions#ale#enabled = 1
 
 " use less invansive color for warnings
 highlight ALEWarning ctermbg=DarkMagenta
+
+" disable ale for all subrepositories under real-world-rails
+let g:ale_pattern_options = {
+\ '.*real-world-rails.*': { 'ale_enabled': 0},
+\}
 ~~~
 
 You can disable ALE with `ALEToggle`. You can see error message `ALEDetail`. Yo
 see all configuration options `ALEInfo`.
-There was issue with erb <https://github.com/w0rp/ale/issues/580>.
+There was issue with erb <https://github.com/w0rp/ale/issues/580> but this
+erubylint was recently removed from ale linters.
 
 ## Syntastic (deprecated)
 
@@ -472,23 +505,45 @@ You need to install this tools:
 * Markdown `gem install mdl`
 * Ruby, Rails `gem install rubocop`. You can automatically fix some errors with
 `rubocop --auto-correct Gemfile`
-  * [.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
+[.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
   in $HOME or project root. You can disable `AllCops` or specific file paths,
   for example BlockLength for rspec files
 
-  ~~~
-  AllCops:
-    TargetRubyVersion: 2.3
-    Exclude:
-      - '**/*'
+~~~
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - '**/*'
 
-  Metrics/BlockLength:
-    Exclude:
-      - "**/*_spec.rb"
+Style/Documentation:
+  Enabled: false
 
-  Style/Documentation:
-    Enabled: false
-  ~~~
+# it is ok to write 'string' and "string"
+Style/StringLiterals:
+  Enabled: false
+
+# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# tasks for setup data could be very long
+Metrics/BlockLength:
+  Exclude:
+    - "lib/tasks/*"
+    - "**/*_spec.rb"
+
+# I like to put comma after each line
+Style/TrailingCommaInLiteral:
+  Enabled: false
+# also in arguments
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+# I like methods in 10 lines but some are bigger
+Metrics/MethodLength:
+  Max: 15
+
+~~~
 
   * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
   * gem 'rubocop-rspec' is nice linter for rspec.
@@ -552,17 +607,19 @@ corner)
 
 Some todos:
 
-## Pluralize
+Pluralize
 
-When I type `:Rcontroller customer` it should go to `:Rcontroller customers`
+* When I type `:Rcontroller customer` it should go to `:Rcontroller customers`
 instead of error: `No such controller customer`. This usually happens when I
 have a lot of models `customer_invoices`, `customer_payments` and `customers`.
 
-## Localize
+Localize
 
-When I'm in `index.html.erb` and I type `:Rcontroller` than I jump to
+* When I'm in `index.html.erb` and I type `:Rcontroller` than I jump to
 controller, but if I'm on `index.in.html.erb` than there is an error `Argument
 required`. Also problem with `:Eview another_`
+
+Jump to system tests
 
 # Create scripts for vim
 
