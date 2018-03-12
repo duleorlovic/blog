@@ -55,6 +55,9 @@ that is:
   FROM users GROUP BY date_trunc('hour', created_at) ORDER BY date_trunc('hour',
   created_at);`. You can reference columns by select position `SELECT
   date_trunc('hour', created_at), count(*) FROM users GROUP BY 1 ORDER BY 1;`
+* you can group by several columns and select count > 2 and get only first
+item.id `a=Item.reorder("").select('max("id") as max_id').group([:url, :title,
+:feed_id]).having('count("id") > 1')`
 
 I found very interesting paragraph in [tutorial for aggregate
 functions](http://www.postgresql.org/docs/devel/static/tutorial-agg.html).

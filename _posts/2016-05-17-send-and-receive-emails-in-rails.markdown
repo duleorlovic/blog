@@ -9,6 +9,36 @@ tags: rails emails
 There is nice table of [main
 providers](http://socialcompare.com/en/comparison/transactional-emailing-providers-mailjet-sendgrid-critsend)
 
+## Testing SMTP
+
+If you need to test smtp use <https://debugmail.io/> free service, just use port
+9025 instead 25 since ISP is blocking 25.
+For command line you can use `swaks` like `swaks --to duleorlovic@gmail.com
+--server $SERVER --port $PORT --auth-user $AUTH_USER --auth-password
+$AUTH_PASSWORD --auth-plaintext --auth-hide-password`
+so in autout you can see all telnet communications:
+
+~~~
+# generate base64 encoding
+# special characters need to have \ in front
+perl -MMIME::Base64 -e 'print encode_base64("duleorlovic\@gmx.com");'
+perl -MMIME::Base64 -e 'print encode_base64("password");'
+
+telnet debugmail.io 9025
+EHLO main
+AUTH LOGIN
+<paste encoded username>
+<paste encoded password>
+
+ctrl + ]
+ctrl + d
+~~~
+
+If you want to inspect how rails action_mailer sends and receive tcp messages
+than put byebug in net smtp class on line 940 `get_response` `recv_response`
+`/home/orlovic/.rvm/rubies/ruby-2.3.3/lib/ruby/2.3.0/net/smtp.rb`
+
+
 ## Gmail
 
 Gmail smtp is the most easiest way to start
@@ -96,8 +126,8 @@ will trigger any webhooks that you have set up.
 ## Sparkpost
 
 Sparkpost offer a lot of free usage (mandrill requires subscription) so
-currenlty it is my best option. You need first to validate your domain, so you
-can send with `from` field with that domain. You need also to 
+currently it is my best option. You need first to validate your domain, so you
+can send with `from` field with that domain. You need also to
 
 ~~~
 echo "gem 'sparkpost_rails'" >> Gemfile
@@ -106,8 +136,8 @@ sed -i config/environments/production.rb -e '/^end$/i \
   config.action_mailer.delivery_method = :sparkpost'
 
 cat > config/initializers/sparkpostrails.rb << HERE_DOC
+# https://github.com/the-refinery/sparkpost_rails#additional-configuration
 SparkPostRails.configure do |c|
-  c.sandbox = false
   c.api_key = Rails.application.secrets.sparkpost_api_key
 end
 HERE_DOC
@@ -117,6 +147,23 @@ sed -i config/secrets.yml -e '/^test:/i \
   sparkpost_api_key: <%= ENV["SPARKPOST_API_KEY"] %>'
 
 vi config/secrets.yml # update mailer_sender to match your domain
+~~~
+
+You can also use smtp with SPARK_POST but it is two times slower
+
+~~~
+# config/application.rb
+    config.action_mailer.smtp_settings = {
+      address: 'smtp.sparkpostmail.com',
+      port: 587,
+      enable_starttls_auto: true,
+      user_name: 'SMTP_Injection',
+      password: Rails.application.secrets.sparkpost_api_key,
+    }
+    config.action_mailer.delivery_method = :smtp # sparkpost
+
+time rails runner 'UserMailer.signup.deliver_now!' # ~5sec with smtp
+time rails runner 'UserMailer.signup.deliver_now!' # ~2.5sec with sparkpost
 ~~~
 
 # Letter opener for local preview
@@ -363,7 +410,7 @@ class DeviseMailer < Devise::Mailer
 
   def set_smtp
     # determine smtp settings form @receiver or other
-    if receiver.use_my_smtp_server
+    if isp.use_my_smtp_server && @_mail_was_called # spam could ignore mail
       mail.from = "#{receiver.smtp_from_name} <#{receiver.smtp_from_email}>"
       mail.reply_to = "#{receiver.smtp_from_name} <#{receiver.smtp_from_email}>"
       mail.delivery_method.settings.merge!(

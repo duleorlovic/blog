@@ -249,8 +249,8 @@ sed -i app/views/layouts/application.html.erb -e '/yield/c \
     <span class="alert text-danger" id="alert"></span>\
   </div>\
   <script>\
-    <%=raw "flash_notice('"'#{j notice}'"');" if notice %>\
-    <%=raw "flash_notice('"'#{j alert}'"');" if alert %>\
+    <%=raw "flash_message(document.getElementById('notice'), '#{j notice}');" if notice %>\
+    <%=raw "flash_message(document.getElementById('alert'), '#{j alert}');" if alert %>\
   </script>\
 \
   <article>\
@@ -258,35 +258,32 @@ sed -i app/views/layouts/application.html.erb -e '/yield/c \
   </article>'
 
 cat > app/assets/javascripts/main.js.erb << 'HERE_DOC'
-var FLASH_LETTER_STEP = 5;
+var FLASH_LETTER_STEP = 10;
 var FLASH_DURATION = 5000;
-function flash_appear($element, message, i) {
+function flash_appear(element, message, i) {
   if (i == undefined)
     i = 0;
-  $element.text(message.substring(0,i));
+  element.innerText = message.substring(0,i);
   setTimeout(function(){ 
     if (i<message.length)
-      flash_appear($element,message,i+1);
+      flash_appear(element, message, i+1);
   }, FLASH_LETTER_STEP);
 }
-function flash_dissapear($element, message, i) {
+function flash_dissapear(element, message, i) {
   if (message == undefined)
-    message = $element.text();
+    message = element.innerText;
   if (i == undefined)
     i = message.length-1;
-  $element.text(message.substring(0,i));
+  element.innerText = message.substring(0,i);
   setTimeout(function(){ 
     if (i>0)
-      flash_dissapear($element,message,i-1);
+      flash_dissapear(element, message,i-1);
   }, FLASH_LETTER_STEP);
 }
-function flash_alert(message) {
-  flash_appear($('#alert'),message);
-  setTimeout(function(){ flash_dissapear($('#alert')); }, FLASH_DURATION);
-}
-function flash_notice(message) {
-  flash_appear($('#notice'),message);
-  setTimeout(function(){ flash_dissapear($('#notice')); }, FLASH_DURATION);
+
+function flash_message(element, message) {
+  flash_appear(element, message);
+  setTimeout(function(){ flash_dissapear(element); }, FLASH_DURATION);
 }
 HERE_DOC
 git add . && git commit -m "Adding flash to layout"
@@ -493,19 +490,19 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 # Puma
 
 Puma is now default webserver on rails. But by default it runs in single mode
-WEB_CONCURRENCY=1 so on heroku it will allow MAX_THREADS connections if GIL is
+WEB_CONCURRENCY=1 so on heroku it will allow RAILS_MAX_THREADS connections if GIL is
 not trigered.
 You can simulate slow connection with `sleep 10`, it does not triggel GIL.
 
 ~~~
-export MAX_THREADS=1
+export RAILS_MAX_THREADS=1
 curl $u/action_with_sleep_10 &
 curl $u/action_with_sleep_10 &
 # real 10s
 # real 20s
 
 
-export MAX_THREADS=2
+export RAILS_MAX_THREADS=2
 curl $u/action_with_sleep_10 &
 curl $u/action_with_sleep_10 &
 # real 10s
@@ -528,7 +525,7 @@ bundle
 
 cat >> config/puma.rb <<HERE_DOC
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
-threads_count = Integer(ENV['MAX_THREADS'] || 5)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count
 
 preload_app!
@@ -682,7 +679,7 @@ hequests_in_system = requests per second X average_response_time (115 req/s *
 utilization = requests_in_system / how_many_workers
 for example = 115 req/s X 147ms response / 45 workers = 37%
 
-Use 3 WEB_CONCURRENCY workers and 3-5 MAX_THREADS (not more since each thread
+Use 3 WEB_CONCURRENCY workers and 3-5 RAILS_MAX_THREADS (not more since each thread
 need connection to database, and use some on memory).
 https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#workers suggests 2-4 workers
 `sleep` also do not lock GIL (so all threads are working).

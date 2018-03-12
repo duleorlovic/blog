@@ -188,6 +188,17 @@ To trigger some functions you can run script with
 
 or event server as in ZMNinja
 
+You can export images for event: Export -> check Export Image Files and check
+Export File Format Tar. When you extract you can create video file with command:
+`ffmpeg -i %05d-capture.jpg output.mp4`
+
+Zoneminder service starts automatically using `/etc/init.d/zoneminder`.
+If you want to prevent automatical start on boot, you can disable using:
+
+~~~
+sudo update-rc.d zoneminder remove
+~~~
+
 ## Zones
 
 [wiki](https://wiki.zoneminder.com/Understanding_ZoneMinder's_Zoning_system_for_Dummies)
@@ -305,6 +316,16 @@ Than on configuration there is basic setup, to set up manual IP address.
 Under System there is Time Settings to set TimeZone.
 
 
+# China IP camera $23
+
+[JIENU 1280*960P ip camera CCTV Security Home Surveillance Indoor White Dome Mini Ipcam p2p System Infrared HD Cam Support ONVIF](https://www.aliexpress.com/item/JIENU-1280-960P-ip-camera-CCTV-Security-Home-Surveillance-Indoor-White-Dome-Mini-Ipcam-p2p-System/32828747430.html)
+
+Find camera ip address using `nmap 192.168.2.-` or Zoneminder ON/VIF.
+Connect using Windows IE (install plugins, chose english, username: 'admin',
+password: '' empty)
+
+* set timezone
+* set fix ip address 192.168.3.6
 
 # Lead acid
 

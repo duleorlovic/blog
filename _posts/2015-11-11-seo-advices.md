@@ -57,7 +57,9 @@ widget</a>`
   content to some `app/assets/stylesheets/popins.scss` file and include in
   `applications.scss` with `@import 'popins';`
 
-* add favicon
+* add favicon. It is fine just to add to the root of web site
+  (for rails just copy your png to `public/favicon.ico`)
+  https://en.wikipedia.org/wiki/Favicon#How_to_use
 * custom 404 error page
 * add language `<html lang="en">`
 * SSL secure (http should redirect to https), add STS in header,

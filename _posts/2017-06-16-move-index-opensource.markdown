@@ -13,3 +13,6 @@ https://medium.com/libraries-io/what-does-a-sustainable-open-source-project-look
 
 Show our API using PostMan
 http://pages.getpostman.com/API-Network-Inclusion_Join.html
+
+Three ways to improve the sustainability of open source projects
+https://tidelift.com/blog/2018/1/8/three-ways-to-improve-the-sustainability-of-open-source-projects

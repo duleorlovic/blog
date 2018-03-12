@@ -226,6 +226,8 @@ end
   comment.post = post1                  # Removes all existing relationships
   post.comments.create comment3, posted_by: 'me' # text property on relationship
   Comment.create text: '', post: post1  # create comment and relationship
+  # can not create like post1.comments.new text: '' since comment.post will not
+  # be defined
 
   # update nodes
   post.comments.update_all flagged: true
@@ -476,10 +478,11 @@ id_property, `.find_by name: 'Dule'` find by property
 
 Queries can be chained in 3 ways: `Model.all`, `Model.association`,
 `model_object.association`. It returns `AssociationProxy`.
+
 If `where` is used, than `QueryProxy` is returned.
 
 Query object is used to simplify on which fields is used:
-`User.query_as(:user).where(user: { age: 1..2 })`
+`User.query_as(:user).where(user: { age: 1..2 }).pluck(:user)`
 
 You can use `where` or `rel_where` in the middle of a chain (it is applied to
 last) for example `user.created_assets.where(public: true).categories`.
@@ -487,6 +490,12 @@ Also `.order`, `.limit` and `.skip`.
 You can pass single attribute to assign variable in cypher, so we can pluck on
 it `user.created_assets.categories(:category).pluck('category.name',
 'count(*)')`
+
+# Regular expression
+
+You can search with case insensitive regex
+https://neo4j.com/docs/developer-manual/current/cypher/clauses/where/#case-insensitive-regular-expressions
+
 
 # Devise
 
@@ -515,6 +524,10 @@ heroku config:set NEO4J_TYPE=https NEO4J_HOST= NEO4J_PORT= NEO4J_USERNAME= NEO4J
 heroku run rake db:migrate
 heroku run rake db:seed
 ~~~
+
+You can export from Graphenedb `graphdb.zip`
+<https://docs.graphenedb.com/docs/importing-and-exporting-databases>. To restore
+localy you need to copy files to `neo4j/data/graph.db/`
 
 # Tips
 
@@ -578,7 +591,17 @@ you assign symbol `:city1` instead of object `b[:city1]`
 
 If you open `rails c` console1 and than `rails c` console2, and `exit` in
 console1, it will not exit. You need to `exit` console2 to release something and
-both consoles exists...
+both consoles exists... When rails console hangs than `spring stop` helps.
+
+I got some error:
+
+~~~
+Neo4j::Core::CypherSession::CypherError (  Cypher error:
+  Neo.DatabaseError.Transaction.TransactionStartFailed: Database has encountered some problem, please perform necessary action (tx recovery/restart)
+):
+~~~
+
+For which I restart my machine to recover from this error.
 
 # Todo
 

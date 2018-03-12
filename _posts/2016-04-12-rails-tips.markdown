@@ -114,7 +114,12 @@ can accept as 2th param (choices) two variant:
 
 as 3th param (options):
 
-* `select: value` if you need selected value be different than `job.job_type_id`
+* `selected: value` if you need selected value be different than
+`job.job_type_id`. Sometimes when options do not include value that you want to
+set and you use prompt to be shown, please preform check `{ prompt: 'Select
+package' }.merge( options.present? ? { selected: @customer.some_other_package.id
+} : {} )`. If target selected value is not in options, that first option will be
+used, or prompt is shown when options is empty.
 * `disabled: [values]` to disable some options
 * `label: 'My label'`
 * `prompt: 'Please select'` this is shown only if not already have some value
@@ -150,6 +155,13 @@ controller you need to allow arrays
 You should avoid saving without validation `save(validate: false)` or
 `update_attribute :name, 'my name'`. It is risky to save without callbacks and
 validations.
+
+Conditional validations can be used with proc new like if: -> { }
+
+~~~
+validates :password, confirmation: true, if: Proc.new { |a|
+a.password.present?}
+~~~
 
 # Hooks
 
@@ -530,6 +542,7 @@ heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorl
 ## Heroku upgrade database plan
 
 Upgrade heroku *hobby-dev* na *hobby-basic* ($9/month max 10M rows).
+All plans https://elements.heroku.com/addons/heroku-postgresql
 
 ~~~
 heroku addons:create heroku-postgresql:hobby-basic
@@ -552,6 +565,20 @@ heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
 ~~~
 
 Change DATABASE_URL
+
+Upgrading from hobby-basic to standard-0
+
+~~~
+heroku pg:info
+heroku addons:create heroku-postgresql:standard-0
+# save the variable name HEROKU_POSTGRESQL_{some color}_URL
+heroku maintenance:on
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_color_URL
+heroku pg:promote HEROKU_POSTGRESQL_color_URL
+heroku maintenance:off
+heroku config:set DATABASE_URL=....url from config
+heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
+~~~
 
 ## Postgres tips
 
@@ -1001,7 +1028,7 @@ more MB in for free usage.
 
 # Turbolinks
 
-`$(function)` is shorthand for `$(document),ready(function(){})` (and is not the
+`$(function)` is shorthand for `$(document).ready(function(){})` (and is not the
 same as `$(document).on('ready', function(){})`) and it is when DOM is ready. If
 you need to know when all images and iframes are loaded than use
 `$(window).on('load', function() {})`.
@@ -1040,6 +1067,7 @@ bind on `turbolinks:load`
 ~~~
 // app/assets/javascripts/turbolinks_load.coffee
 $(document).on('turbolinks:load', ->
+  # in previous rails we used to catch up on 'ready page:load'
   console.log "document on turbolinks:load"
   # Activating Best In Place
   jQuery(".best_in_place").best_in_place()
@@ -2137,8 +2165,9 @@ views.
   where(sport: sport) # conditional on view
 ~~~
 
-# Localisation
+# Localisation i18n
 
+Tips <https://devhints.io/rails-i18n>
 To translate active record messages for specific attributes, you can overwrite
 messages for specific model and attributes (default ActiveRecord messages taken)
 <https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23>
@@ -2149,28 +2178,58 @@ https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/e
 You can also see some default en translations.
 
 And you can change attribute name `activerecord.attributes.user.email: имејл`
+To translate also plurals you can use `User.model_name.human(count: 2)`. For
+attributes you can use `User.human_attribute_name("email")`
+[link](http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models)
 
+~~~
+en:
+  activerecord:
+    models:
+      user:
+        one: Dude
+        other: Dudes
+~~~
+
+Separate translations for models `config/locales/sr.yml` and views
+`config/locales/views/sr.yml` and include them with:
+
+~~~
+# config/application.rb
+config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+~~~
 Example for Serbian localizations translations:
 
 ~~~
 # config/locales/sr.yml
 sr:
+  # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L8
   errors:
-    format: Polje "%{attribute}" %{message}
+    format: Поље "%{attribute}" %{message}
     messages:
-      blank: ne sme biti prazno
-  activerecord:
+      blank: не сме бити празно
+      invalid: није исправно
+  neo4j:
     errors:
-      models:
-        user:
-          blank: bas "%{attribute}" je vazan
-          attributes:
-            email:
-              blank: "Bez imena? Ne, nikako."
+      messages:
+        required: мора постојати
+        taken: је већ заузет
+    models:
+      user: корисник
+      location:
+        one: локација
+        other: локације
     attributes:
       user:
         email: Имејл
+        password: Лозинка
+        password_confirmation: Потврда лозинке
+        remember_me: Запамти ме
 ~~~
+
+When you use `.capitalize` than you need first to call `.mb_chars.capitalize`
+Some common words translations can be found
+<https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml>
 
 # Devise
 
@@ -2185,12 +2244,27 @@ Note that following next `cannot` rule will override a previous `can` rule, so
 it is enough to set `can :manage, :all` and than write what `cannot :destroy,
 Project`
 
+# Autoloading
+
+<https://www.bigbinary.com/videos/learn-ruby-on-rails/how-autoloading-works-in-rails>
+In development rails uses Constant Missing hooks to auto load new files from
+`app/controllers helpers mailers and models`
+If you need to load files from lib, you can `config.autoload_paths +=
+%W(#{config.root}/lib)`. Rails look for file name that is snake case of constant
+name, for example `SeniorDeveloper` should be defined in `senior_developer.rb`.
+You can `require_dependency 'not_conventional_file_name'`
+
+There is ruby `autoload :Jeep, 'Jeep'` which is usefull since it will not
+`require 'jeep'` if `Jeep` is not used. If we use `Jeep` in a file, than it will
+required.
+
 # Tips
 
 * parse url to get where user come from `URI.parse(request.referrer).host`
 * `spring stop` in many cases:
   * when you export some ENV and use them in `config/secrets.yml` but can't see
     in `rails c`
+  * when you put `byebug` in some of the gem source
 * load databe from `db/schema.rb` (instead of `rake db:migrate`) is with `rake
   db:schema:load`.
 * run at port 80 `sudo service apache2 stop` and `rvmsudo rails s -p 80`. Note
@@ -2207,8 +2281,6 @@ Project`
   models. Both are using INNER JOIN
   * `Comment.all(include: :user, conditions: { users: { admin: true}})` will
     load also the user model
-  * `User.all(joins: :comments, select: "users.*, count(comments.id) as
-    comments_count", group: "users.id")` you can output just specific value
 * [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
   problem is solved with `includes(:associated_table)` wich is actually LEFT
   OUTER JOINS, but `joins(:associated_table)` is INNER JOIN. Works also for
@@ -2331,7 +2403,10 @@ locales [look for adminlte example]( {{ site.baseurl }}
   ~~~
 
 * if you put `byebug` inside `User.first_or_initialize` than you will see empty
-  for `User.all`
+  for `User.all`. Notice that if you use
+  `User.where(params.slice(:mobile)).first_or_initialize` than it is a problem
+  when `params[:mobile]` does not exists, and first User fill be used (not new
+  user)
 * for `gon` gem you should `include_gon` before other javascript files. Note
   that `if gon` will still raise error if `gon` is not called in controller (so
   `gon` is undefined)
@@ -2344,7 +2419,8 @@ locales [look for adminlte example]( {{ site.baseurl }}
   ActionController::Base.helpers.pluralize(count, 'mystring')
   ActionController::Base.helpers.strip_tags request.body # html to text
   ActionView::Base.new.number_to_human 123123
-  Rails.application.routes.url_helpers.jobs_url
+  Rails.application.routes.url_helpers.jobs_path
+  ActionController::Base.helpers.link_to 'name', link
   ~~~
 
   * if it your custom helper you can call from *ApplicationController*
@@ -2368,7 +2444,8 @@ locales [look for adminlte example]( {{ site.baseurl }}
     delegate :form_tag, :text_field_tag, to: 'ActionController::Base.helpers'
   ~~~
 
-
+* do not use `form_tag path` without block, since chrome will autoclose tags,
+but IE10 wont.
 * do not name your model with `Template` since there is module `Template`
   somewhere.
 * request object contains a lot of data:
@@ -2471,10 +2548,53 @@ simple_format @contact.text %>`).  Example is with nested associated elements:
 * very nasty issue is when your before action returns
   false [halting
   execution](http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution)
-  so check if return value could be false and make sure before filters (like
-  before_create) always return not false value (you can return true or nil).
+  so check if return value could be `false` and make sure before filters (like
+  before_create) always return not false value (you can return `true` or `nil`).
   I noticed that if you raise validation exception in `before_` callbacks than
   exception will be ignored, but `before_` block will return false
+* callbacks are defined executed in the order they are defined, or you can use
+  `:prepend` option
+* in callbacks should only be some value format correction or other simple task.
+Do not put Mailer to send email or other external task since it will be
+triggered even in you test when you prepare some data
+* in action pack (action controller) if you `render` something in before_filter
+  than execution will be halted (return value is not important for
+  ActionController callbacks)
+* subclasses can use `skip_callback` if you want to skip callback
+* do not use callbacks, expecially after_callbacks since it ties with save, for
+  example, you should be able to repeat some actions (sending email, charging)
+  without saving. Use delegator instead
+
+  ~~~
+  class FacebookNotifyComment < SimpleDelegator
+    def initialize(comment)
+      super(comment)
+    end
+
+    def save
+      if __getobj__save
+        post_to_wall
+      end
+    end
+
+    private
+
+    def post_to_wall
+      Facebook.post(title: title)
+    end
+  end
+
+  class CommentsController < ApplicationController
+    def create
+      @comment = FacebookNotifyComment.new(Comment.new(comments_params))
+      if @comment.save
+        redirect_to blog_path, notice: "Comment was posted'
+      else
+       render 'new'
+      end
+    end
+  end
+  ~~~
 
 
 * to start new project from specific rails, run `rails _4.2.7.1_ new myapp` .
@@ -2565,11 +2685,21 @@ to iterate...
   end
   ~~~
 
+* you can iterate in groups batches `<% company.jobs.group_by(&:user).each do
+  |user, jobs| %>`
 * to count by grouping you can group_by specific column
 `User.group(:company_id).count.values.max`
 if you want to order in sql, than you need to name the count and order by that
 name (note that we need to use string not symbol for `'count_id'`:
 `User.group(:company_id).order('count_id desc').count(:id)`.
+* `User.all(joins: :comments, select: "users.*, count(comments.id) as
+comments_count", group: "users.id")` you can provide string to select and output
+just specific value like comments_count.
+* you can use `.having` with rails just write before `.count`, like
+`c=Item.reorder("").group([:url, :title, :feed_id]).having('COUNT(*) >
+1').count(:id)`
+
+
 Maybe find can help
 ~~~
 Mail.find(
@@ -2685,3 +2815,42 @@ a key (6 chars) and session idhttps://github.com/kikyous/simple-captcha2) is
 a key (6 chars) and session idhttps://github.com/kikyous/simple-captcha2) is
 [generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
 a key (session id) and value (6 chars) when `view.show_simple_captcha` is called.
+* instead of guard clauses `errors.add :name, 'is invalid' and return false
+unless item.save` you can move important things in front `item.save ||
+(errors.add :name, 'is invalid' and return false)`
+* [dhh tips for rails](https://www.youtube.com/watch?v=D7zUOtlpUPw)
+* translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> just
+  set language in your `config/initializers/cyrillizer.rb` `Cyrillizer.language
+  = :serbian`
+* if you need to manually escape query params you can use
+
+  ~~~
+  require 'uri'
+
+  enc_uri = URI.escape("http://example.com/?a=\11\15")
+  p enc_uri
+  # => "http://example.com/?a=%09%0D"
+
+  p URI.unescape(enc_uri)
+  # => "http://example.com/?a=\t\r"
+  ~~~
+
+  Some common escaped characters are: blank, slash `URI.escape " /" # %20%2f`
+  but `escape` does not convert `/` to `%2f`
+
+* gem [countries](https://github.com/hexorx/countries) uses
+  [money](https://github.com/RubyMoney/money) gem.
+
+  ~~~
+  <%= f.form_group :country, label: { text: 'Country' } do %>
+    <%= f.country_select :country, { iso_codes: true, include_blank: 'Select Country'}, class: 'form-control', 'data-select-currency-based-on-country': '#currency-select', 'data-countries-and-currency-codes': ISO3166::Country.all.inject({}) {|a,c| a[c.alpha2]=c.currency&.code;a }.to_json %>
+  <% end %>
+  <%= f.select :currency, [['Currency based on country', 0]] + Money::Currency.table.values.map {|currency| [currency[:name] + ' (' + currency[:iso_code] + ')', currency[:iso_code]] }, { disabled: 0, selected: (f.object.currency.present? ? f.object.currency : 0) }, id: 'currency-select' %>
+  <script>
+    $('[data-select-currency-based-on-country]').on('change', function() {
+      var $target = $($(this).data('selectCurrencyBasedOnCountry'));
+      var options = $(this).data('countriesAndCurrencyCodes');
+      $target.val(options[$(this).val()]);
+    });
+  </script>
+  ~~~

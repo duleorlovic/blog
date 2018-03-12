@@ -55,7 +55,7 @@ informational)
 > Using Http headers (not available in Http/0.9) we can set varius properties of
 > request and response.
 
-Header syntaxt is: case insensitive string followed by colon and value on single
+Header syntax is: case insensitive string followed by colon and value on single
 line. They can be:
 
 * general headers: like `via`, `connection`, `upgrade-insecure-requests`

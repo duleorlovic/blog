@@ -27,6 +27,12 @@ nslookup asd.dev
 # Address: 127.0.0.1
 ~~~
 
+On linux you can update `/etc/hosts` with you custom domain name and use it
+instead of IP address.
+On window it is `c:\Windows\System32\Drivers\etc` . Just edit with notepad and
+save. No need to restart (maybe it will be cleared on restart).
+
+
 # Run command as another user
 
 In two ways
@@ -97,7 +103,13 @@ Here are all bash CTRL shortcuts:
   position) [yank cutted text]
 * ctrl+p (+n) : go to previous (next) command
 * ctrl+r : search
-* ctrl+c (+z) : kill current process (send to background, use `fg` to restore)
+* ctrl+c (+z) : kill current process (send to background and suspend, use `fg`
+to restore).  You can put any shell (vim, rails s) to suspend state with
+`Control + z`. Than you can put it in background `bg` if needed. You can use
+that shell for inspection other things. When you are finished, you can switch
+back to vim, or rails s, with foreground `fg` (from both suspend and background
+state) see all background and suspended processes in current bash session `jobs
+-l`
 * ctrl+l : clear window, but I remaped to copy current line to clipboard
 
 ALT shortcuts:
@@ -184,10 +196,6 @@ it will be in `tmp/db.dump`
     will not work since wildcard will be changed to html file in current folder.
   * filter files based on their size: `find . -size -212c` show only small than
     212 bytes
-* you can put any shell (vim, rails s) to suspend state with `Control + z`. Than
-you can put it in background `bg` if needed. You can use that shell for
-inspection other things. When you are finished, you can switch back to vim, or
-rails s, with foreground `fg`
 * escape single quote `'` in linux scripts with `$'Hello I\'m here'`
 [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
@@ -259,6 +267,12 @@ Note `.` after folder name.
 * for redirection standard error to standard output ` 2>&1 |` there is shorthand
   `|&` version.
 * last command exit status `echo $?` (`0` is success)
+* current script pid `echo $$`
+* last background process id `sleep 100 &` `echo $!`
+* `jobs -l` is a list of processes in current bash session (it is `Running` if
+in background with `cmd &`, or `Stopped` if `Ctrl+z` or `Terminated` when we
+kill and until it dissapear). Kill first of them with `kill %1`. If process id
+is saved in pid file than you can kill with `pkill -F tmp/pids/server.pid -9`
 
 # Parameter expansion
 
@@ -463,4 +477,7 @@ fi
   to go to copy mode.
 * send desktop notifications with `notify-send` but need urgency critical, so I
 made alias `alert`
-* chearsheet https://devhints.io/bash
+* cheatsheet https://devhints.io/bash
+* `pbcopy` is only on mac
+* to prevent `ctrl-d` to exit terminal bash you can set `IGNOREEOF=3` so shell
+  only exists after the 3 consecutive Ctrl-d.

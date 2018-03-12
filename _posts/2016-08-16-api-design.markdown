@@ -319,7 +319,6 @@ views.
 
 If you use rspec then go with
 [rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation),
-minitest try [apipie-rails](https://github.com/Apipie/apipie-rails)
 or swagger
 
 ## Swagger ui grape
@@ -392,6 +391,20 @@ Copy `dist` content to your `public/apidocs` and update all paths in
 * default sort is alphabetical for path and methods (delete, get, path...). You
 can provide a function for `apisSorter` `operationsSorter` but too complicated.
 Order in server response if not supported.
+
+# Apipie rails
+
+If you are using minitest there is not automatic way to generate docs, so you
+can use [apipie-rails](https://github.com/Apipie/apipie-rails) for
+documentation.
+
+~~~
+echo "gem 'apipie-rails'" >> Gemfile
+bundle install
+rails g apipie:install # this will generate config/initializers/apipie.rb and update routes
+~~~
+
+Jus add option `config.translate = false`
 
 # Grape
 

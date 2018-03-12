@@ -25,7 +25,7 @@ class MyTodoJob < ActiveJob::Base
 end
 ~~~
 
-You can use that with `wait` and `wait_until`
+Usage of jobs is with attributes `wait` and `wait_until`
 
 ~~~
 MyTodoJob.perform_later args
@@ -53,6 +53,8 @@ later execute. That process should be started separately from rails.
 
 # Sidekiq
 
+Add `gem 'sidekiq'` to Gemfile.
+
 ~~~
 # config/application.rb
     config.active_job.queue_adapter = :sidekiq
@@ -60,7 +62,61 @@ later execute. That process should be started separately from rails.
 
 Sidekiq is faster but requires thread safe code.
 
-You need to install redis server
+You need to install redis server, which is simply adding Heroku redis addon.
+Since it allows only 20 connections you need to limit connections for sidekiq.
+It requires usually concurrency + 5 connections to Redis.
+https://github.com/mperham/sidekiq/issues/117
+
+~~~
+# Procfile
+web: bundle exec puma -C config/puma.rb
+worker: bundle exec sidekiq -C config/sidekiq.yml
+~~~
+
+~~~
+# config/sidekiq.yml
+:concurrency:  3
+~~~
+
+Concurrency is a number which are used by sidekiq server to create redis
+connections (=concurrency + 5 per one process).
+Sidekiq client defaults to 5 connections per process but this can be limited to
+1 per process (it does not use `concurrency`)
+So for max 10 redis connections you can use:
+
+~~~
+# three unicorns = 3 connections
+Sidekiq.configure_client do |config|
+  config.redis = { :size => 1 }
+end
+# so one sidekiq can have 7 connections
+Sidekiq.configure_server do |config|
+  # only 2 connections are for workers
+  config.redis = { :size => 7 }
+end
+~~~
+
+You can limit connection pool to 3 so all threads will use only those
+connections. Concurrency is less than (server pool size - 5)*2. At least
+`concurrency` connections to database is also required.
+Puma threads share client connections per process. so if size is 3, all threads
+will use only those 3 connections.
+Dyno count is important, so if you have 4 dynos of one sidekiq and 1 dyno of
+another sidekig queue, that is 5 * (concurrency + 5) connections.
+
+To see how many jobs is in default queue:
+
+~~~
+Sidekiq::Queue.new.size
+~~~
+
+To see dashboard add two lines to routes
+
+~~~
+require 'sidekiq/web'
+Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
+~~~
 
 # Resque
 

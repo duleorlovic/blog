@@ -55,7 +55,11 @@ sudo apt-get install vim
 
 # Plugins
 
-Install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting plugins:
+Pathogen is no longer needed since you can install packages to
+`.vim/pack/my-packages/start`.
+
+Install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting
+plugins:
 
 ~~~
 mkdir -p ~/.vim/autoload ~/.vim/bundle && \
@@ -202,8 +206,10 @@ augroup END
 
 # Movements and Navigation
 
-* `gj` `gk` for long lines that are wrapped to multiple lines, it will go up and down
-* `$` end of line, `0` start of line (or `^`)
+* `gj` `gk` for long lines that are wrapped to multiple lines, it will go up and
+down
+* `$` end of line, `0` start of line (or `^`), use `_` to select end of line
+  before new line character
 * `+` and `-` move line up or down on the first letter
 * `{` and `}` move on paragraph (empty line)
 * `^B`(`^U`) or `^F` (`^D`) scroll up (half) or down (half) page
@@ -313,7 +319,7 @@ and previous result)
 * `:%s/old/new/gc`
 * `q:` shows history of commands
 * `q/` shows history of searches
-* `:argdo %s/foo/bar/ge | update`  replace in all arg
+* `:argdo %s/foo/bar/ge | update`  replace (substitute) in all arg
 * `:set nowrapscan` is usefull when you want to stop search when you hit bottom
   of a file. With `gg` you can jump to begging. `:set wrapscan` when you want to
   back to wrapped search
@@ -626,6 +632,16 @@ Jump to system tests
 `help usr_41.txt` is Write a vim script in user manual.
 <https://en.wikibooks.org/wiki/Learning_the_vi_Editor/Vim/VimL_Script_language>
 
+Detect if some features are enabled, for example only on macOS `:help
+feature-list`:
+
+~~~
+" copy to clipboard on macOS need to use pbcopy
+if has('macunix')
+  vnoremap "+y :w !pbcopy<cr><cr>
+endif
+~~~
+
 ## Vim scripts in ruby:
 
 https://subvisual.co/blog/posts/139-how-to-program-vim-using-ruby/
@@ -696,15 +712,16 @@ nnoremap <leader>rs :execute "!rspec %:" . line(".")<cr>
 
 Place language specific (file type) plugins inside `~/.vim/ftplugin/ruby.vim`
 
-Use https://github.com/janko-m/vim-test and short cuts `<leader>t` test nearest
-spec to the line (if not inside example, whole file will be run). Also
-* `<leader>T` test whole file
-* `<leader>a` test whole suite
+Use https://github.com/janko-m/vim-test
+* `<leader>t` test nearest spec to the line (if not inside example, whole file
+  will be run) `:TestNearest`
+* `<leader>T` test whole file `:TestFile`
+* `<leader>a` test whole suite `:TestSuite`
 * `<leader>l` test last, usefull if you navigate to the code and see if test
-pass
-* `<leader>g` visit test, jump back to the test to write more tests
+pass `:TestLast`
+* `<leader>g` visit test, jump back to the test to write more tests `:TestVisit`
 
-I use strategy `let test#strategy = "dispatch"`. Asyncrun will not collectly
+I use strategy `let test#strategy = "dispatch"`. Asyncrun will not correctly
 parse errors:
 
 ~~~
@@ -763,4 +780,31 @@ Using ALE I see `:help g:ale_set_highlights` that groups are `ALEError`,
 
 ~~~
 hi ALEWarning m
+~~~
+
+# Folding
+
+You can hide copy right sections of other comments.
+
+~~~
+" .vimrc
+" https://stackoverflow.com/questions/2250011/can-i-have-vim-ignore-a-license-block-at-the-top-of-a-file
+function! FoldCopyright()
+  if !exists( "b:foldedCopyright" )
+    let b:foldedCopyright = 1
+    silent! 1,/# Copyright/;/USA\.$/fold
+  endif
+endfunction
+autocmd BufNewFile,BufRead *.rb call FoldCopyright()
+~~~
+
+If you use `autocmd FileType vim setlocal foldmethod=marker` marker method than
+any lines that starts and ends with `{{{ .... }}}` can be toggled with `za`
+
+# Database
+
+Use https://github.com/tpope/vim-db and access with
+
+~~~
+:DB mysql://username:password@localhost/my_db_test
 ~~~

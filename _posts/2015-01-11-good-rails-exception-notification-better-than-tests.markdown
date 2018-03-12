@@ -180,11 +180,12 @@ to have some pages for test if this notification works. First create routes
 {% highlight ruby %}
 # config/routes.rb
 get 'sample-error', to: 'pages#sample_error'
-get 'sample-error-in-resque', to: 'pages#sample_error_in_resque'
 get 'sample-error-in-javascript', to: 'pages#sample_error_in_javascript'
 get 'sample-error-in-javascript-ajax', to:
 'pages#sample_error_in_javascript_ajax'
 post 'notify-javascript-error', to: 'pages#notify_javascript_error'
+get 'sample-error-in-resque', to: 'pages#sample_error_in_resque'
+get 'sample-error-in-delayed-job', to: 'pages#sample_error_in_delayed_job'
 {% endhighlight %}
 
 than controller method that we will use for manual notification
@@ -280,6 +281,11 @@ class PagesController < ApplicationController
     Resque.enqueue(TaskWithError)
     render plain: 'TaskWithError in queue, please run: QUEUE=* rake resque:work'
   end
+
+  def sample_error_in_delayed_job
+    SampleErrorJob.perform_later
+    render plain: 'SampleErrorJob in queue, please run: QUEUE=* rake jobs:work'
+  end
 end
 
 class TaskWithError
@@ -289,6 +295,17 @@ class TaskWithError
   end
 end
 {% endhighlight %}
+
+~~~
+# app/jobs/sample_error_job.rb
+class SampleErrorJob < ActiveJob::Base
+  queue_as :default
+
+  def perform
+    raise 'This is sample_error_in_delayed_job'
+  end
+end
+~~~
 
 If error occurs in ajax reponse, or in some of your javascript code, we will
 send another request to server to trigger javascript notification. Note that you

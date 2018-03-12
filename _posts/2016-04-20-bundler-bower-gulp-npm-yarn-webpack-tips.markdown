@@ -95,6 +95,14 @@ Note that if you remove some files from package folder (for example
 that is was removed. You need to `rm -rf folder` so than `bower install` will
 get fresh copy of the package.
 
+# NPM
+
+To show all versions and install specific version you can
+
+~~~
+npm info ionic
+npm install ionic@1.4.0
+~~~
 # Gulp
 
 * if you have error `'watch' errored after Error: watch
@@ -208,3 +216,11 @@ module.exports = {
    }
 };
 ~~~
+
+From sprockets to webpacker
+
+https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79
+
+# Parcel
+
+Install with `yarn global add parcel-bundler'

@@ -77,6 +77,13 @@ serverd under HTTP. To enable HTTPS for custom domains tiy beed to use
 On cloudflare you can use universal SSL service, or you can sign up for free 90
 days <https://letsencrypt.org/> certificate.
 
+# Loopia
+
+If you want redirection from non www to www, than use Forwatd -> Url redirect
+(301 or 302) but uncheck "Synchronize the domain and subdomain www"
+![loopia dns]({{ site.base_url }}/assets/posts/loopia_dns.png "Loopia DNS")
+
+
 # Travis
 
 This [gist](https://gist.github.com/domenic/ec8b0fc8ab45f39403dd) explain what

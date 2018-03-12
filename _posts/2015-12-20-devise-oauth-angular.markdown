@@ -51,6 +51,21 @@ for Did you mean?  new_user_confirmation_path user_confirmation_path):` occurs
 when you add, for example `confirmable` in model, but gem are already loaded in
 spring, so you need to `spring stop` and restart rails server.
 
+To enable additional fields to be permited attributes for new columns, for
+example `:username`
+
+~~~
+class ApplicationController < ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
+  end
+end
+~~~
+
 # Devise and Omniauth
 
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
@@ -1134,6 +1149,20 @@ files and create that login helper.
 And you can use in your acceptance tests `login_as user` where `user =
 User.create email: 'asd@.asd.asd', password: 'asdasd'`
 
+To suppress error in tests `ERROR -- omniauth: (facebook) Authentication
+failure! invalid_credentials encountered.  ` you can use this helper
+
+~~~
+  def silence_omniauth
+    previous_logger = OmniAuth.config.logger
+    OmniAuth.config.logger = Logger.new("/dev/null")
+    yield
+  ensure
+    OmniAuth.config.logger = previous_logger
+  end
+
+  silence_omniauth { click_link 'Sign in using Facebook' }
+~~~
 
 
 # HTTP Basic auth
@@ -1155,6 +1184,26 @@ end
 # app/controllers/admin/users_controller.rb
 module Admin
   class UsersController < Admin::AdminController
+  end
+end
+~~~
+
+If you want different password for different request type
+
+~~~
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token, if: :json_request?
+
+  before_action :authenticate
+
+  def authenticate
+    return true if Rails.env.test?
+    authenticate_or_request_with_http_basic do |username, password|
+      return true if request.format.html? && username == Rails.application.secrets.admin_username && password == Rails.application.secrets.admin_password
+      return true if request.format.json? && username == Rails.application.secrets.admin_json_username && password == Rails.application.secrets.admin_json_password
+      false
+    end
   end
 end
 ~~~
@@ -1663,7 +1712,7 @@ curl -H "Authorization: Bearer RsT5OjbzRn430zqMLgV3Ia" https://api.oauth2server.
 
 [Using scopes](https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes)
 
-Some provider opensource exaples:
+Some provider opensource examples:
 <https://github.com/doorkeeper-gem/doorkeeper/wiki/Example-Applications>
 
 To test provider you can use [oauth2 client](https://github.com/intridea/oauth2)

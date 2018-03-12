@@ -596,7 +596,8 @@ variable with same same as key, you can use
 * `jQuery.data()` is different than plain javascript `this.dataset` because
   javascript always returns string `this.dataset.a // "[1]"` but jQuery use
   JSON.parse and returns string in case it is not valid json `$(this).data('a')
-  // [1]`.
+  // [1]`. Note that integers will be integers not strings.
+  Also IE10 does not support dataset, so better is to use `$(this).data().a`.
 * if variable point to the same array or object, than it will be the same
   `a=[1];b=a;a==b//true`. But if it different object (event with same data)
   variables will not have the same value. `a=[1];b=[1];a==b//false` or

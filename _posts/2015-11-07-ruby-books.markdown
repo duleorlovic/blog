@@ -161,51 +161,54 @@ Variables and scope
 
 Ruby define scope of variable using its name, precisely, first char:
 
-  * `$` global `$FIRST_NAME` available on every scope
-  * `@` instance `@first_name` you can list with `self.instance_variables` and
-  get value with `self.instance_variable_get :@first_name` (note that we need
-  both `:` and `@`) and set value `self.instance_variable_set :@first_name,
-  'me'`
-  * `[a-z]|_` local `first_name` in every definition block: proc, loop, def end,
-    class end, module end, and is reset on each call. Local variable is very
-    scoped (you can not access in another nested method)
+* `$` global `$FIRST_NAME` available on every scope
+* `@` instance `@first_name` you can list with `self.instance_variables` and
+get value with `self.instance_variable_get :@first_name` (note that we need
+both `:` and `@`) and set value `self.instance_variable_set :@first_name,
+'me'`
+* `[a-z]|_` local `first_name` in every definition block: proc, loop, def end,
+  class end, module end, and is reset on each call. Local variable is very
+  scoped (you can not access in another nested method)
 
-    ~~~
-    a = 1
-    def p
-      puts a
+  ~~~
+  a = 1
+  def p
+    puts a
+  end
+  p # NameError: undefined local variable 'a'
+  ~~~
+
+  but you can access from closure definitions such: `define_method`, `proc` or
+  `lambda` or plain old `begin end` block
+
+* `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and
+  `self` which is global maintaned by interpreter). Constant can be changed
+  (with warning) so you can include one file several times. Object that
+  constant reffers can be changed freely. Constant has global reachability
+  when you know the chain of nested definition `C::M::X`, absolute path is
+  `::String`
+* `@@` class variable `@@class_variable` are shared only between class and all
+  instances of that class. Instance variable for class object are not
+  available in instances of class so can not be shared between instances :(
+  also globals and constants can be changed everywhere so that's bad too.
+  It can be used in class definition, class methods and instance methods. It
+  is shared with all ancestor classes so better is to store data at class
+  object instance and create attr_accessor for that.
+  [class_variable_set](https://apidock.com/ruby/Module/class_variable_set)
+
+  ~~~
+  class Fred
+    @@foo = 99
+    def foo
+      @@foo
     end
-    p # NameError: undefined local variable 'a'
-    ~~~
+  end
+  Fred.class_variable_set(:@@foo, 101)     #=> 101
+  Fred.new.foo                             #=> 101
+  ~~~
 
-    but you can access from closure definitions such: `define_method`, `proc` or
-    `lambda` or plain old `begin end` block
-
-  * `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and
-    `self` which is global maintaned by interpreter). Constant can be changed
-    (with warning) so you can include one file several times. Object that
-    constant reffers can be changed freely. Constant has global reachability
-    when you know the chain of nested definition `C::M::X`, absolute path is
-    `::String`
-  * `@@` class variable `@@class_variable` are shared only between class and all
-    instances of that class. Instance variable for class object are not
-    available in instances of class so can not be shared between instances :(
-    also globals and constants can be changed everywhere so that's bad too.
-    It can be used in class definition, class methods and instance methods. It
-    is shared with all ancestor classes so better is to store data at class
-    object instance and create attr_accessor for that.
-    [class_variable_set](https://apidock.com/ruby/Module/class_variable_set)
-
-    ~~~
-    class Fred
-      @@foo = 99
-      def foo
-        @@foo
-      end
-    end
-    Fred.class_variable_set(:@@foo, 101)     #=> 101
-    Fred.new.foo                             #=> 101
-    ~~~
+  In rails 5.2 we can have `class_attribute :settings, default: {}` so you can
+  use `MyClass.settings = 'asd'` which will set `@@settings = 'asd'`.
 
 Every method call create its own local scope. Ruby does some preprocessing
 compile time where it recognizes all local variables (class @@x instance @x and
@@ -602,7 +605,7 @@ upcase_words = words.map(&:upcase)
   * `method_missing(method, *args)` can be used to catch all missing methods
   * `initialize` to instantiate class
 
-* method can be called (invoked) using three (maybe four) ways:
+* call method can be called (invoked) using three (maybe four) ways:
   * dot notation `o.my_method`
   * send `o.send :my_method` or `o.send :my_property=, 'some_value'`
   * grab method and call it `o.method(:my_method).call`
@@ -871,7 +874,8 @@ comment](https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431
 * argument list length could be variable, there is
 [splat](https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator)
 star/asterix/expand `*` operator, where all other parameters are collected in
-array. (note you can not use splat and last hash attribute)
+array (note you can not use splat and last hash attribute) (splat is only for
+assignment for function parameters)
 
   ~~~
   def f(x, y, *allOtherValues)

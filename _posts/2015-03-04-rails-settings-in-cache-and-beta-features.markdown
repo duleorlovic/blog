@@ -89,11 +89,14 @@ end
 ~~~
 
 
-In all places in my rails application I use this `beta` helper method that uses two MySetting variable. `live_features` are comma separated list of feature names that are live, and `beta_users` are emails for users that can see non live features (of course only when they are logged in).
+In all places in my rails application I use this `beta` helper method that uses
+two MySetting variable. `live_features` are comma separated list of feature
+names that are live, and `beta_users` are emails for users that can see non live
+features (of course only when they are logged in).
 
 ~~~
-# app/helpers/application_helper.rb
-module ApplicationHelper
+# app/helpers/beta_helper.rb
+module BetaHelper
   # example of usage:
   # <% if beta :name_of_feature %>
   #   <div>Something</div>

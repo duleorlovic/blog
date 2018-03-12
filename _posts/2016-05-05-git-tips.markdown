@@ -121,7 +121,7 @@ will be also applied to those hidden changes.
     # then to track changes again
     git update-index --no-assume-unchanged config/database.yml
 
-If you want to add folder to git structure but include all its content (like
+If you want to add folder to git structure but ignore all its content (like
 `backup` or `tmp` folder) you can do with three steps
 
     mkdir tmp
@@ -151,7 +151,7 @@ Count files in staging
 
 Rebase branches
 
-     git pull --rebase # pull remote changes and rebase you local commits
+     git pull --rebase # pull remote changes and rebase your local commits
      git rebase master # call this while you are on some feature branch
 
 Interactivelly rebase pull request
@@ -169,6 +169,40 @@ To find if given commit hash is incuded on some release (release is a tag)
 Add global gitignore for all projects
 
     git config --global core.excludesfile ~/.gitignore
+
+Tutorials
+
+    git help tutorial-2
+    git help everyday
+    git help workflows
+
+Use pre commit hooks to check for something before commit happens, for example
+do not commit secret keys instead of `DO_NOT_COMMIT` tag. You can
+`git commit --no-verify` to ignore hooks.
+
+~~~
+#!/bin/sh
+# .git/hooks/pre-commit
+# Redirect output to stderr.
+exec 1>&2
+# enable user input
+exec < /dev/tty
+
+grep_reg='-.*DO_NOT_COMMIT'
+# CHECK
+if test $(git diff --cached | grep -e $grep_reg | wc -l) != 0
+then 
+  exec git diff --cached | grep -ne $grep_reg
+  read -p "There are some occurrences of DO_NOT_COMMIT at your modification. Are you sure want to continue? (y/n)" yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    exit 0; #THE USER WANTS TO CONTINUE
+  else
+    exit 1; # THE USER DONT WANT TO CONTINUE SO ROLLBACK
+  fi
+fi
+~~~
 
 # Time tracking
 
@@ -220,3 +254,27 @@ Use labels:
 * `devops` for CI tasks
 * `missing_requirements` and `ready` for status of issue
 * `feature`, `bug` for type of issue
+
+Use [gitleaks](https://github.com/zricethezav/gitleaks) to search history for
+secret keys, so you can remove them.
+
+# Hub
+
+<https://hub.github.com/>
+Download release for linux arm 64 <https://github.com/github/hub/releases> and
+run `sudo ./install`. To create alias, run and copy output `hub alias -s`
+
+Hub add new commands:
+
+* `git browse` open current project github page in the default browser `git
+browse -- issues` to open issues. `git browse user/repo` to open user/repo
+* `git create` create this repository on GitHub and add GitHub as origin. After
+  you create, you need to push
+* ci-status      Show the CI status of a commit
+* compare        Open a compare page on GitHub
+* fork           Make a fork of a remote repository on GitHub and add as remote
+* issue          List or create issues
+* pr             Work with pull requests
+* pull-request   Open a pull request on GitHub
+* release        List or create releases
+

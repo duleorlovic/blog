@@ -20,7 +20,8 @@ Inside definition you can use:
 * `after_failure on: :my_state`
 * `around_transition`
 
-* `event :my_event { transition :my_state, :my_other_state }`
+* `event :my_event { transition :my_state, :my_other_state, if: Proc.new {
+|my_object| my_object.valid? } }`
 * `state :my_state do end`
 
 In transitions you can use keyword `all` or `any` to match all/any states, and
@@ -271,5 +272,17 @@ state :first_gear, :second_gear do
   validate {|vehicle| vehicle.speed_is_legal}
 end
 ~~~
+
+Note that whole event change is wrapped in transaction, so if state validation
+fails everything will be rolledback.
+
+If you want to validate specific event `advance_renewal` (event without
+corresponding state) so you can not use `event :advance_renewal; transition all
+=> same, if: Proc.new { |m| m.has_advance_package? }` since at the show time if
+does not have advance package so `m.can_advance_renewal #=> false`. So you need
+to use rails validate `validate  :advance_renewal_settings, on: [:update], if:
+:advance_renewal?` and `def advance_renewal_settings;
+errors.add(:advance_renewal_package, "Please select Advance Renewal
+Package.")unless advance_renewal_package.present?; end`.
 
 `before_transition`  and `after_transition` callbacks

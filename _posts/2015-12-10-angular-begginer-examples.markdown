@@ -278,7 +278,7 @@ Factory has more flexibility since they can return functions which can be
     .run(['CONFIG','$rootScope',function(CONFIG, $rootScope) { 
       // in html use $root.CONFIG.USER_ROLES.ADMIN
       $rootScope.CONFIG = CONFIG
-    }])
+  }])
   ~~~
 
 # RootScope
@@ -715,3 +715,5 @@ $scope.$on 'pagination:loadPage', (event, status, config) ->
   only usage is that directive link function is not called until we add new
   items or updateId [look console log](http://jsfiddle.net/6k834fzx/4). If we
   update title Link function will not be called although DOM will be updated.
+
+* sample app https://angular-expenses.herokuapp.com/

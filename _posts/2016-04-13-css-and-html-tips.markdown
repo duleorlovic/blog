@@ -60,6 +60,17 @@ title: CSS and HTML tips
   can set `rows="30"` (and `cols="150"`) or use
   [autosize](http://www.jacklmoore.com/autosize/)
 
+* when you use padding than child with `width: 100%` it is calculated based on
+  parent content (parent border and padding is added). Solution is to use
+  `box-sizing: border-box` in which calculated size will include border and
+  padding <https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing>. This is
+  usually included in bootstrap. Problem with padding arise when you use
+  `position: relative` on parent and `position: absolute` on child
+  <https://stackoverflow.com/questions/17115344/absolute-positioning-ignoring-padding-of-parent>
+  Solution is to add relatively position div with no padding around absolutely
+  position div. So when you are using padding and absolute position child,
+  always add child relative wrapper with no padding.
+  Another solution is to use `left: 0;` on absolutively child.
 
 # Examples
 
@@ -79,6 +90,13 @@ title: CSS and HTML tips
 
 * hide something but still occupy space you can use `visibility: hidden` and
   `visibility: visible`
+
+# Tricks
+
+* letter effects short to long words <https://codepen.io/duleorlovic/pen/mXwyGj>
+* infinite loader <https://codepen.io/duleorlovic/pen/rJwaZL>
+* animated download button
+  <https://scotch.io/tutorials/build-a-download-button-full-of-micro-interactions>
 
 # SCSS Sass
 
@@ -215,6 +233,14 @@ title: CSS and HTML tips
 }
 ~~~
 
+To expand block on click use input checkbox
+https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
+
+~~~
+~~~
+
+To show active on click in pure css use `li:hover { color: blue }`
+
 # Design
 
 * when you are asking user to select items from long lists, you should have
@@ -245,6 +271,16 @@ to cut the image and add animations.
   </svg>
 </div>
 ~~~
+
+# Layout
+
+https://hacks.mozilla.org/2018/01/new-flexbox-guides-on-mdn/
+
+Flexbox
+
+Used in layout in one dimension at a time (either row or column).
+
+CSS Grid https://mozilladevelopers.github.io/playground/css-grid
 
 # Table
 

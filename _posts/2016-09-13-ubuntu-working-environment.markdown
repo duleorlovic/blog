@@ -7,9 +7,10 @@ title: Ubuntu working environment
 
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
-tunel `ssh -C -D 1080 server`, than in firefox <about:preferences#advanced>
-Networktab -> Settings choose "Manual proxy configuration" and type SOCKS Host:
-localhost, and port 1080. Do not write anyting in HTTP proxy... 
+tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
+<about:preferences#advanced> Networktab -> Settings choose "Manual proxy
+configuration" and type SOCKS Host: localhost, and port 1080. Do not write
+anyting in HTTP proxy... 
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
 guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
@@ -89,6 +90,8 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 ## Chrome plugins and extensions
 
 * [user agent switcher](https://github.com/chrispederick/user-agent-switcher/)
+* to check which browsers was used by useragent string
+[parse user agent strings](https://developers.whatismybrowser.com/useragents/parse)
 * [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 
 
@@ -216,7 +219,39 @@ less /var/log/pm-suspend.log
 dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
 
 
+# PDF
+
+Merge several pdf files
+
+~~~
+pdftk * cat output ../p.pdf
+~~~
+
 # Canon camera wifi
 
 <http://www.testcams.com/airnef/> is used to download files from Canon camera.
 
+# Network
+
+`ifconfig` is a tool to change network configuration, but changes are not
+persisted unless you save them in `/etc/network/interfaces`
+
+~~~
+ifconfig eth0
+~~~
+
+To configure default dateway gw you can use `route` command
+
+~~~
+sudo route add default gw 10.0.0.1 eth1
+route -n
+~~~
+
+To configure DNS you can edit `/etc/resolv.conf`.
+To purge all configuration you can `ip addr flush eth0`
+
+To prevent Network manager to use connection as default route, you can edit
+connections -> IPv4 Settings -> Routes -> check "Use this connection only for
+resources on its network"
+
+To remove docker bridge you can run `ip link del docker0`

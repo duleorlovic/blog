@@ -60,7 +60,7 @@ sleep rand(8..15) if SIMULATE_REAL_USER_DELAY
 
 # Mechanize
 
-If you have simple site without fancy ajax than you can use
+If you have simple site without ajax than you can use
 [Mechanize](http://docs.seattlerb.org/mechanize/GUIDE_rdoc.html). It uses
 nokogiri and `automatically stores and sends cookies, follows redirects, and can
 follow links and submit forms`. It provides
@@ -79,8 +79,22 @@ page.search('#updates div a:first-child') # css match
 
 # Selenium
 
-Some sites require full javascript to be loaded and waiting for ajax results
-should be implemented. I used three steps
+<https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings>
+Selenium for ruby use gem `selenium-webdriver`. You also need executables for
+firefox `geckodriver` (just download from
+<https://github.com/mozilla/geckodriver/releases> to `/usr/local/bin`) and for
+chrome `chromedriver` (download from
+<https://sites.google.com/a/chromium.org/chromedriver/downloads> to
+`/usr/local/bin`) and also `gem 'chromedriver-helper'`. Make sure you have version of firefox and chrome that matches
+drivers.
+
+You can controll remote selenium server. Download
+[selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run 
+`java -jar selenium-server-standalone.jar`. For error `Unsupported major.minor
+version 52.0` you need to update java: 51 -> java7, 52 -> java8, 53 -> java9.
+
+For using plain selenium (not capybara) you need to implement waiting for ajax
+results. I used three steps
 
 ~~~
 element = nil
@@ -177,7 +191,7 @@ with `$x('//*[po-my-button]')` in console, or with *CTRL+f* search in elements
 panel.
 In ruby you can parse some text with nokogiri `data = Nokogiri::HTML(html_page)`
 
-* [http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)
+* <http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)>
 * [usefull selectors](http://ejohn.org/blog/xpath-css-selectors)
 
 * find by id  `//*[@id='my_id']` (note that it needs quotes inside
@@ -309,3 +323,27 @@ end
 ~~~
 
 * some sites provide nice rss feed, for example elance https://www.elance.com/php/search/main/resultsproject.php?matchType=project&rss=1&matchKeywords=rails+-php&statusFilter=10037&sortBy=timelistedSort&sortOrder=1
+
+# Headless chrome on heroku
+
+To run chrome on heroku you need chrome and chromedriver
+<https://github.com/heroku/heroku-buildpack-google-chrome>
+<https://github.com/heroku/heroku-buildpack-chromedriver>
+After adding buildpacks you need to initialize Selenium with correct path to
+google chrome
+
+~~~
+options = Selenium::WebDriver::Chrome::Options.new
+options.add_argument('--headless')
+if chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+  options.binary = chrome_bin
+end
+driver = Selenium::WebDriver.for :chrome, options: options
+~~~
+
+One alternative solution, which does not rely on selenium
+<https://github.com/yujiosaka/headless-chrome-crawler>
+
+# Scraper
+
+Find selectors using javascript https://github.com/cantino/selectorgadget

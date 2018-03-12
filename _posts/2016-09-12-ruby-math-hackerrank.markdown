@@ -50,12 +50,23 @@ Codility Solutions
 
 # Just enough ruby
 
-* read from STDIN
+* read from STDIN or from a file if you run with `ruby script.rb my_data`
 
   ~~~
   n = gets.to_i
   array = gets.strip.split(' ').map(&:to_i)
   ~~~
+
+* write to a file
+
+  ~~~
+  File.open "my_file_name", 'w' do |file|
+    file.puts "first line (no need for new line char \ n)"
+    file << "second line \n"
+    file.write "third line \n"
+  end
+  ~~~
+
 * division is integer division, so that `1/2 == 0` in ruby. You need to convert
   to float `x = x.to_f`
 * iterate range `(1..10).each` or `1.upto(10).each`
@@ -91,7 +102,10 @@ def puts_array(x)
 end
 ~~~
 
-Here is example task solution. It contains description, stdin input and test.
+Here is example for one solution that is submitted on site (it can not
+`require byebug`) so it use constant PRODUCTION. Test are in the same file.
+If the task is to read from file and to submit generated file, than use second
+tempalte.
 
 ~~~
 # 0_short_palindrome.rb
@@ -167,6 +181,56 @@ class Test < Minitest::Test
 end
 ~~~
 
+This template has separate test and actual code
+
+~~~
+# my_script.rb
+# description of a problem
+require 'pp'
+require './ppp'
+require 'byebug'
+
+def solution(aa:, l:, h:)
+end
+
+# when we run: ruby my_script.rb data/example.in
+# output is saved in data/example.out
+if ARGV.length == 1
+  file_name = ARGV.last.split('.').first
+  r, _c, l, h = gets.split(' ').map(&:to_i)
+  aa = []
+  r.times do
+    # strip is needed since on hackerrank, new line is at the end of gets
+    aa << gets.strip.split('').map { |c| c == 'M' ? 1 : 0 }
+  end
+  results = solution(aa: aa, l: l, h: h)
+  File.open "#{file_name}.out", 'w' do |file|
+    # puts results.length
+    file.puts results.length
+    results.each do |row|
+      # puts row.join(' ')
+      file.puts row.join(' ')
+    end
+  end
+end
+~~~
+
+~~~
+# test_my_script.rb
+require 'minitest/autorun'
+require './pizza'
+class Test < Minitest::Test
+  def test_solution
+    a =
+    [
+      1,
+    ]
+    res = 1
+    assert_equal res, solution(a)
+  end
+end
+~~~
+
 If you want to run only one test, than run `ruby 0_short_palindrome.rb --name
 test_sample`
 
@@ -196,9 +260,32 @@ TIPS:
 # Complexity
 
 Ruby `Array#find` method has O(n) complexity. If array is big, you should use
-[bsearch](http://ruby-doc.org/core-2.1.5/Array.html#method-i-bsearch) O(log(n))
-Also `include?` is O(n) but hash `key?` is O(1). So instead of big time, you can
-use big space by using Hashtables.
+[bsearch](http://ruby-doc.org/core-2.1.5/Array.html#method-i-bsearch) O(log(n)).
+Array needs to be sorted. Binary search works in two modes:
+* find minimum: block must return true or false and there must be an index `i`
+  so that: block returns false elements whose index is less than `i`, block
+  returns true for any element whose index is greater than or equal to `i`.
+  This method returns `i`-th element.
+* find any: block returns number and there are must be two indices `i` and `j`
+  (`0<=i<=j<=ary.size`) so that: block returns positive number for `0<=k<i`,
+  returns zero for `i<=k<j` and negative for `j<=k<ary.size`.
+  This method returns any element whose index is within `i..j`.
+
+~~~
+a = [1, 4, 7, 10]
+# find minimum that satisfy block
+a.bsearch { |x| x >= 6 } #=> 7
+
+# find any
+ary = [0, 4, 7, 10, 12]
+# try to find v such that 4 <= v < 8
+ary.bsearch {|x| 1 - x / 4 } #=> 4 or 7
+# try to find v such that 8 <= v < 10
+ary.bsearch {|x| 4 - x / 2 } #=> nil
+~~~
+
+Array `a.include?` is O(n) but hash `a.key?` (or `a.include?`) is O(1). So
+instead of big time, you can use big space by using Hashtables.
 
 # Counting of elements
 
@@ -220,10 +307,12 @@ counting[2] == 0 # true in constant time
 can calculate p_1, ...p_n, where p_k= a_0+a_1+...+a_(k-1). Note that p_k does
 not use a_k, and p_0 == 0 Than we can calculate sum of any slice (x,y) in
 constant time instead of O(y-x) (that is usually needed for query several
-results).  Slice is could be defined on 1..n (index starts from 1 and include
-bounds), slice(x,y) = prefix_sum[y] - prefix_sum[x-1] slice(a_0,a_0) =
-slice(1,1) = prefix_sum[1]-prefix_sum[0] slice(a_1,a_3) = slice(2,4) =
-prefix_sum[4]-prefix_sum[1]
+results).  Slice could be defined on 1..n (index starts from 1 and include
+bounds), slice(x,y) = prefix_sum[y] - prefix_sum[x-1] for example
+~~~
+slice(a_0,a_0) = slice(1,1) = prefix_sum[1]-prefix_sum[0]
+slice(a_1,a_3) = slice(2,4) = prefix_sum[4]-prefix_sum[1]
+~~~
 
 ~~~
 a = [1, 4, 0, 4, 2]
@@ -289,7 +378,7 @@ sort(a) # => [0, 2, 2, 3, 4]
 
 * leader (value on more than half elements) is the same when we remove pair of
   different items
-* maximum slice is a slice (a_p..a_q) with max sum, can be computed in 
+* maximum slice is a slice (a_p..a_q) with max sum, can be computed in O(n^2)
 
   ~~~
   # max_slice O(n^2)
@@ -325,25 +414,25 @@ sort(a) # => [0, 2, 2, 3, 4]
 # Prime Numbers
 
 * count number of divisors of N is O(sqrt(N)) since every divisor a has symetric
-  divisor b, n = a*b
+  divisor b, `n = a * b`
 
-  ~~~
-  n = 30
-  i = 1
-  result = 0
-  while i * i < n
-    result += 2 if n % i == 0
-    i += 1 
-  end
-  result += 1 if i * i == n
-  ~~~
+~~~
+n = 30
+i = 1
+result = 0
+while i * i < n
+  result += 2 if n % i == 0
+  i += 1
+end
+result += 1 if i * i == n
+~~~
 
 * finding all primes less than N is in O(N*log(log(N))) Sieve of Eratosthenes.
 Find first prime (until sqrt(N) since we do not need to mark greater than N) and
 mark all multiplies of prime, starting from prime*prime (since i*prime will be
 marked with prime divisor of i) untill N, that is n/2 + n/3+ n/5 ... =
 n*log(log(n)
-Rembember that largest prime factor of N can't be greated than Math.sqrt(N).
+Rembember that largest prime factor of N can not be greated than Math.sqrt(N).
 0, 1 are not prime numbers.
 
   ~~~
@@ -434,8 +523,8 @@ The: for a, b nonzero integer, their gcd(a,b) is linear combination of a and b
 ie: exists s and t such that s*a+t*b=gcd(a,b)
 Proof: let d be least positive linear combination d = s*a+t*b . We can show that
 d|a.
-We can write a = d*q+r (0 <= r < d ) so r = a - d*q = a - (s*a + t*b)*q = (1 -
-q*s)*a + (-qt)*b. Since d is least positive and r<d that means r = 0.
+We can write `a = d*q+r (0 <= r < d )` so `r = a - d*q = a - (s*a + t*b)*q = (1
+- q*s)*a + (-qt)*b`. Since d is least positive and `r<d` that means `r = 0`.
 Similarly d|b. We can show it is the greatest common divisor because if
 d1=gcd(a,b) < d it will be that d1|a d1|b and from d=s*a+t*b that d1|d which is
 contradiction so d1==d

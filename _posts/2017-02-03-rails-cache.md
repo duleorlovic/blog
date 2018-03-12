@@ -7,8 +7,16 @@ title: Rails cache
 and action caching has been extracted to gems. Now we can use fragment caching
 
 By default caching in rails development environment is disabled. To enable you
-need to `touch tmp/caching-dev.txt` and to comment `config.cache_store =
-:memory_store` from `config/environments/development.rb`
+need to `touch tmp/caching-dev.txt` AND to comment out `config.cache_store =
+:memory_store` from `config/environments/development.rb` so it use
+`ActiveSupport::Cache::FileStore`. Instead of file you should use
+`dalli+memcached` or `redis`  (you already have redis you use background jobs
+like Sidekiq).
+Filestore will create files on `tmp/cache/:rand/:rand/cache_key` so you can find
+them `ls -R tmp/cache/`. If cache_key is array, it is joined with `/`.
+On heroku `heroku run bash` I do not see cache files `ls tmp/cache` probably
+because heroku is read only system (only buildpack can add stuff) so it is
+better to use memcached.
 
 # Install memcached
 
@@ -274,7 +282,8 @@ caching](http://guides.rubyonrails.org/caching_with_rails.html#sql-caching) is
 only inside one action. Usually rails do not perform sql query untill it is
 needed. If you only read `current_user` in before actions, that query will be
 cached. But if you update current_user, than following `current_user` is not
-reading from cache (for example if you use current_user in view or in other before actions).
+reading from cache (for example if you use current_user in view or in other
+before actions).
 
 You can use this [snippets
 ](http://vinsol.com/blog/2014/02/11/guide-to-caching-in-rails-using-memcache/)

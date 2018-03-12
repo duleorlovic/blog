@@ -158,8 +158,26 @@ You can use `data-(any option)` so for example you can use
 accept multiple options)
 
 I use this initializer `data-select2-initialize` (do not use `data-select2`
-since it is used already)
+since it is used already) and if you use turbolinks and have all select elements
+on main page
 
+~~~
+# app/assets/javascripts/turbolinks_load.coffee.rb
+$(document).on 'turbolinks:load', ->
+  console.log 'turbolinks:load'
+  $('[data-select2-initialize]').each ->
+    options = {}
+    if $(this).attr 'placeholder'
+      options['placeholder'] = $(this).attr 'placeholder'
+    else
+      options['placeholder'] = '<%= I18n.translate 'please_select' %>'
+
+    options['language'] = determine_language()
+    $(this).select2 options
+~~~
+
+or without turbolinks or if you have select elements on some ajax responses, you
+can manually call `<script>initializeSelect2()</script>`)
 ~~~
 # app/assets/javascripts/data_select2_initialize.coffee
 @initializeSelect2 = ->
@@ -643,9 +661,11 @@ the content
 * [shellckeck](https://github.com/koalaman/shellcheck) static analysis tool for
 shell scripts
 
-# Local PaaS
+# Local PaaS, ci
 
 * <https://github.com/dokku/dokku> heroku like serverice
 * <https://flynn.io/>
+* <https://github.com/fastlane/ci> Open source, self hosted, mobile optimized CI
+powered by fastlane
 * others <https://news.ycombinator.com/item?id=12703121>
 

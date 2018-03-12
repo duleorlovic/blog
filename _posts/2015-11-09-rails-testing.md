@@ -334,6 +334,15 @@ RSpec.describe 'invoke xxx', :setup_xxx do
 end
 ~~~
 
+Change capybara driver for specific tests
+
+~~~
+RSpec.configure do |config|
+  config.before(:each, remote_selenium: true) do
+    Capybara.current_driver     = :remote_selenium
+  end
+end
+~~~
 
 ## Rspec rails
 
@@ -394,20 +403,6 @@ bundle exec spring binstub rspec
 
 Now you can run tests with `bin/rspec` which will be faster than `rspec`. If you
 are using guard, update `guard :rspec, cmd: "bundle exec bin/rspec" do`
-
-For guard minitest use `guard-minitest`
-
-~~~
-sed -i Gemfile -e '/group :development do/a  \
-  gem 'guard'
-  gem 'guard-minitest'
-bundle
-guard init minitest
-vi Guardfile
-# uncomment rails section
-# change some lines in Guardfile
-guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
-~~~
 
 ## Shoulda matchers
 
@@ -1131,6 +1126,17 @@ sheet](https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf)
 **Session methods** you can set expectation for `current_path` or `current_url`
 * `visit "/"`, `visit new_project_path`
 * `within "#login-form" do`
+* generate capybara post request using submit (this does not work for `js: true`)
+
+  ~~~
+    session = Capybara.current_session.driver
+    session.submit :post, customer_sign_up_path, mac: mac
+  ~~~
+
+* scroll to the bottom of the page since since elements needs to be visible when
+`js: true` you can use `page.execute_script "window.scrollBy(0,10000)"` or make
+anchor and use hash url `url/#my-form` since execute script is not available
+when not `js: true`
 * [more](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)
 
 **Node actions** target elements by their: id (without `#`), name, label text,
@@ -1163,11 +1169,13 @@ Value', from: 'My Select Box'`, and `uncheck 'my checkbox'`, `unselect`,
 * `expect(page.has_css?('.asd')).to be true`
 * `expect(page).to have_css(".title", text: "my title")`, `have_text`,
 `have_content`, `have_link`, `have_selector("#project_#{project.id} .name",
-text: 'duke')` (`assert_selector` in minitest). `have_no_selector` for opposite.
+text: 'duke')` . `have_no_selector` for opposite.
 With all you can use `text: '...'` and `count: 2` which is number of occurences.
 * If element is not visible, you can provide `visible: false` (does not work
 with `have_content "d", visible: false` but works with `have_css 'div', text:
-'d', visible: false`
+'d', visible: false`. Note that this is triggered only if `js: true` (and pass
+if `js: false`) so it is better to allways use visible: false for some elements
+in popups.
 * test sort order is with regex `expect(page).to have_text
 /first.*second.*third/`
 * test if input has value:
@@ -1334,6 +1342,14 @@ module Features
       OmniAuth.config.test_mode = true
       OmniAuth.config.mock_auth[:facebook] = :invalid_credentials
     end
+
+    def silence_omniauth
+      previous_logger = OmniAuth.config.logger
+      OmniAuth.config.logger = Logger.new("/dev/null")
+      yield
+    ensure
+      OmniAuth.config.logger = previous_logger
+    end
   end
 end
 
@@ -1446,6 +1462,15 @@ end
 Capybara::Screenshot.after_save_screenshot do |path|
   Launchy.open path
 end
+~~~
+
+You can create gifs from test in two steps. First capture all pages that you are
+interested with manual screenshot `screenshot_and_save_page`, review them and
+rename last one to `final.png` and than create animated gif
+with a http://www.imagemagick.org/Usage/anim_basics
+
+~~~
+convert -delay 50 -loop 0 tmp/capybara/m/screenshot_2018-*.png -delay 400 tmp/capybara/m/final.png animated.gif
 ~~~
 
 If you want to show immediatelly errors while whole test suite is running you
@@ -1664,6 +1689,8 @@ HERE_DOC
 sed -i spec/rails_helper.rb -e '/require .spec_helper/a  \
 require "support/factory_bot"'
 ~~~
+
+To use factories in console you can simply use: `FactoryBot.create :user`
 
 You can create factories in `spec/factories.rb` or `spec/factories/*.rb`. It is
 recomended to use only one file since it should be bare minimum, and should not
@@ -1905,263 +1932,6 @@ do should not define all attributes.
 
 Use fixtures for integration or complex controller tests. Use factories for unit
 tests.
-
-# Minitest
-
-Minitest real test examples: openstreetmap, redmine
-
-Mini test for rails `TestCase`s (like `ActiveSupport::TestCase`) inherits from
-`Minitest::Test` so you can use it `def test_password`, but Rails adds `test`
-method so it can be used like `test "my password" do`.  In minitests you can not
-have same test descriptions since it will be converted to same
-`test_my_password`.
-
-To run specific test use ENV variables `rake test
-TEST=test/machine_with_callbacks_test.rb
-TESTOPTS="--name=test_should_run_validations_for_specific_state -v"`
-You can run specific line `rails test test/models/article_test.rb:6` or name
-`rails test -n test_example` using <https://github.com/qrush/m>
-
-Each test run will load all fixture data, run setup blocks, run test method, run
-teardown block, rollback fixtures.
-
-To see all 6 base test clases go
-<http://guides.rubyonrails.org/testing.html#a-brief-note-about-test-cases>
-ActiveSupport::TestCase
-ActionMailer::TestCase
-ActionView::TestCase
-ActionDispatch::IntegrationTest
-ActiveJob::TestCase
-ActionDispatch::SystemTestCase
-
-## Minitest model
-
-~~~
-require 'test_helper'
-
-class MyClassTest < ActiveSupport::TestCase
-  test "a completed" do
-    task = Task.new
-    refute(task.complete?)
-    task.mark_completed
-    assert(task.complete?)
-  end
-
-  def test_that_is_skipped
-    skip "later"
-  end
-end
-~~~
-
-Assertions
-[all](http://docs.seattlerb.org/minitest/Minitest/Assertions.html)
-
-* `assert true` or `assert_block do end`
-* `assert_nil`
-* `assert_empty`
-* `assert_raises(NameError) do end`
-* `assert_match regex, actual_string`
-* `assert_includes(collection, object)`
-* `assert_equal(expected, actual)`
-
-They all have oposite `refute_` methods, or `assert_not`
-They all accept additional string param that will be error message.
-
-<http://guides.rubyonrails.org/testing.html#rails-specific-assertions>
-Rails also defines `assert_difference`, `assert_blank`, `assert_presence`,
-`assert_response`, `assert_redirected_to`
-
-~~~
-    assert_difference "User.count", 1 do
-    end
-~~~
-
-## Minitest controllers
-
-Deprecated, use minitest integration tests
-
-## Minitest integration
-
-For integration we use `ActionDispatch::IntegrationTest` which gives methods:
-* `get '/'`, `post path, params: {}` (params is required in rails_post_5),
-`put`, `patch`, `head`, `delete`
-* `follow_redirect!`
-
-* `assert_redirected_to post_url(Post.last)`
-* `assert_response :success` (for http codes 200-299), `:redirect` (300-399), `:missing` (404), `:error` (500-599).
-* `assert_select 'h1', user.email`
-* `assert_difference expessions`
-* You have access to `@request`, `@controller` and `@response` object.
-[available instance
-variables](http://guides.rubyonrails.org/testing.html#instance-variables-available):
-
-`assigns` and `assert_template` are moved to separated template.
-Those are similar to Rspec request spec, and works full stack with no use of
-capybara.
-
-~~~
-# test/controllers/projects_controller_test.rb
-require 'test_helper'
-
-class ProjectsControllerTest < ActionDispatch::IntegrationTest
-  test "the create method creates project" do
-    post projects_url, params: { project: { name: 'Duke' } }
-    assert_redirected_to projects_path
-    # also available: assert_response :redirect
-    follow_redirect!
-    assert_select 'span', 'Dule'
-  end
-end
-~~~
-
-## Minitest views
-
-View can be tested with `assert_select` similar to capybara `have_selector` but
-separate implementation `html selector`.
-<http://www.rubydoc.info/github/rails/rails-dom-testing/Rails%2FDom%2FTesting%2FAssertions%2FSelectorAssertions%3Aassert_select>
-Assert_select second param can be
-* Integer so assertion is true if exactly that number of elements
-* string/regexp so it is true if text value of at least one element matches
-
-Hash also can be used:
-* `text: 'Hi'`
-* `count: 1`
-
-## Minitest routing
-
-It uses `assert_routing`.
-
-## Minitest helper
-
-Uses `assert_dom_equal`
-
-~~~
-# test/helpers/projects_helper_test.rb
-require 'test_helper'
-class ProjectsHelperTest < ActionView::TestCase
-  test "project on schedule" do
-    project = Project.new name: 'Duke'
-    project.stubs(:on_schedule?).returns(true)
-    actual= name_with_status(project)
-    expected = "<span class='on-schedule'>Duke</span>"
-    assert_dom_equal expected, actual
-  end
-end
-~~~
-
-## Minitest system
-
-Feature tests are run in different process than rails so we need database
-cleaner gem. With system tests, we can use internal mechanism to roll back db
-changes.
-Before we used feature specs for full application integration testing, but now
-we should use system specs (which also uses capybara and webdriver with chrome).
-
-System tests are not included in default test suite, you should run `rake
-test:system`.
-In system test you can't mock OmniAuth.mock_auth so use integration test for
-that.
-
-Capybara assertions
-<http://www.rubydoc.info/gems/capybara/Capybara/Minitest/Assertions>
-
-* `assert_text /dule/`
-* `assert_selector 'a', text: 'duke'`
-
-## Minitest helpers
-
-Add a line in `test/test_helper.rb` to include support
-`Dir[Rails.root.join('test/support/**/*.rb')].each { |f| require f }` files.
-
-~~~
-# test/support/pause_helper.rb
-module PauseHelper
-  # you can use byebug, but it will stop rails so you can not navigate to other
-  # pages or make another requests in chrome while testing
-  def pause
-    $stderr.write('Press ENTER to continue') && $stdin.gets
-  end
-end
-
-class ActionDispatch::SystemTestCase
-  include PauseHelper
-end
-~~~
-
-## Minitest mocha feature tests
-
-Rails calls "integration tests" as "request tests" and it covers both controller
-and view code. If logic is more complex, it should be written in model anyway,
-and use lower level tests.
-
-With capybara:
-
-~~~
-# Gemfile
-  gem "minitest-rails-capybara"
-  gem "mocha", require: false
-
-# test/test_helper.rb
-require "minitest/rails/capybara"
-require "mocha/mini_test"
-~~~
-
-
-~~~
-  test "full double" do
-    stubby = stub(name: "Dule", wight: 100)
-    assert_equal("Dule", stubby.name)
-  end
-
-  test "verifying double" do
-    stubby = stub(name: "Dule", weight: 100)
-    stubby.responds_like(Project.new)
-    # or
-    stubby.responds_like_instance_of(Project)
-    # this is find since project.name exists
-    stubby.name
-    # this will raise error
-    skip
-    stubby.weight
-  end
-
-  test "partial double" do
-    project = Project.new name: 'Dule'
-    # we can stub method on any ruby object
-    project.stubs(:name)
-    # returns nothing unless we use returns
-    assert_nil(project.name)
-    # we can stub non existing methods
-    project.stubs(:asd)
-    assert_nil(project.asd)
-    # we can define return
-    project.stubs(:due_date).returns(Date.today)
-    assert_equal(project.due_date, Date.today)
-    # we can stub classes
-    Project.stubs(:find).returns(Project.new(name: 'dule'))
-    project = Projet.find(1)
-    assert_equal('dule', project.name)
-    # we can stub any instance
-    Project.any_instance.stubs(:save).returns(false)
-  end
-
-  test "mock expectation" do
-    mock_project = Project.new name: 'Not important since expect returns'
-    mock_project.expects(:name).returns('Duke')
-    # previous expectation will fail if we have not called it
-    assert_equal('Duke', mock_project.name)
-    # we can set number of times it is called
-    mock_project.expects(:name).twice
-    mock_project.name
-    mock_project.name
-    # we can set arguments
-    mock_task = Task.new
-    mock_task.expects(:mark_as_completed).with(instance_of(Date)).returns(instance_of(Date))
-    mock_task.mark_as_completed Date.today
-    mock_task.expects(:mark_as_completed).with(instance_of(String)).returns(nil)
-    mock_task.mark_as_completed "bla"
-  end
-~~~
 
 
 # Testing uploading files
@@ -2525,6 +2295,8 @@ services need to use
 
 <https://github.com/colszowka/simplecov>
 
+`rake stats` can give you LOC  Code to Test ratio, which should be 1:2 - 1:3.
+
 # Tips
 
 * write tests that descibe behavior not implementation, so it does not change
@@ -2628,7 +2400,7 @@ mocks since it clearly separate SETUP, EXERSIZE and VERIFICATION phase.
 
 Best source is real word rails applications
 <https://github.com/eliotsykes/real-world-rails>
-and real world rspec examples
+and real world rspec examples with prescriptions
 <https://github.com/eliotsykes/rspec-rails-examples>
 
 * <https://github.com/discourse/discourse>
@@ -2658,6 +2430,8 @@ application](https://www.youtube.com/playlist?list=PL93_jRSrU7hzEUNmevlnMeUx6F35
 * [Carlos Souza](https://www.youtube.com/watch?v=CDC7zA8a-mA)
 
 Rspec book <http://www.betterspecs.org/>
+
+* [sandy metz](https://www.youtube.com/watch?v=URSWYvyc42M)
 
 TODO
 

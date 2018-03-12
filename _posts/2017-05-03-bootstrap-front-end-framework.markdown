@@ -114,6 +114,9 @@ $(document).on 'hidden.bs.modal', '.modal', ->
 
 You can hide close modal with `$('#my-modal').modal('toggle');`
 
+Usually `fade` makes some problem with positioning so you should not use fadding
+for custom modals.
+
 ## Bootstrap tooltip
 
 To inspect `data-toggle="tooltip"` you need to find it's selector and

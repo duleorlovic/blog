@@ -157,7 +157,8 @@ C followed with S `S x2 y2, x y` is shorten version of C which is reflection.
 Q quadratic curve `Q x1 y1, x y` is simpler since both slopes are equal. Also it
 could be followed with T `T x y` which will use same reflection.
 
-Arcs are complex to write.
+Elliptical arcs are complex to write `A rx ry x-axis-rotation large-arc-flag
+sweep-flag x y`
 
 Reuse components with `<defs>` and `<simbol>`.
 <http://vanseodesign.com/web-design/svg-definition-reuse/>
@@ -165,14 +166,16 @@ Reuse components with `<defs>` and `<simbol>`.
 Attach another element with `<marker>`
 <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker>
 
-Animate with `<animateMotion>`
-<https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion>
 
-It is hard but feasible to move arrow along the path with
-[snap.svg](https://github.com/adobe-webplatform/Snap.svg)
-<https://codepen.io/mattsince87/pen/snqLy>
+# CSS Animations
 
-Custom css, it can be inline like `fill="blue"` or in css
+You can animate using 3 ways: with css, with `<animate>` and with javascript.
+[video](https://www.youtube.com/watch?v=lM7cuk5DPgc&feature=youtu.be)
+
+
+## SVG Animate with css
+
+For SVG there are custom css which can be inline like `fill="blue"` or in css
 
 * `fill: blue` color of element area
 * `stroke: pink` color of line, text or outline
@@ -181,6 +184,25 @@ Custom css, it can be inline like `fill="blue"` or in css
 * `stroke-dasharray: 10` length of dashes and spaces
 * `stroke-dashoffset: 10` when to start dash or space
 * `transform:rotate(20deg)` `translate(x,y)`
+
+## Animate with <animateMotion>
+
+<https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion>
+Examples can be seen on https://css-tricks.com/guide-svg-animations-smil/
+
+To move along the path but only on portion of the path, use:
+
+~~~
+<animateMotion calcMode="linear" keyPoints="0;0.5" keyTimes="0;1"/>
+~~~
+
+## Animate SVG with javascript
+
+To move arrow and increase line you can also use js libraries:
+[snap.svg](https://github.com/adobe-webplatform/Snap.svg)
+<https://codepen.io/mattsince87/pen/snqLy>
+<https://codepen.io/duleorlovic/pen/zpmXOw>
+[animejs](http://animejs.com/)
 
 SVG tips:
 
