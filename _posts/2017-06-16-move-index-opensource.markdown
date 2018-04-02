@@ -16,3 +16,5 @@ http://pages.getpostman.com/API-Network-Inclusion_Join.html
 
 Three ways to improve the sustainability of open source projects
 https://tidelift.com/blog/2018/1/8/three-ways-to-improve-the-sustainability-of-open-source-projects
+
+https://blog.phusion.nl/2018/03/21/how-to-win-friends-and-open-source-your-software/

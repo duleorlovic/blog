@@ -44,14 +44,17 @@ that is:
 * after processing *FROM* clause, thie new virtual table is checked against
   search conditions *WHERE*, for example: `WHERE s.date > CURRENT_DATE -
   INTERVAL '4 weeks'` This filtering is done *before* processing with *GROUP BY*
-  and *HAVING*
+  and *HAVING*. Also you can not use alias in WHERE `SELECT id as as_id FROM
+  table WHERE as_id = 1`. You should use `SELECT id AS as_id FROM table HAVING
+  as_id = 1`.
 * `GROUP BY product_id, p.name, p.price, p.cost` and `HAVING sum(p.price *
   s.units) > 5000;`. If you group by primary key column than you can *SELECT*
   any column, but if you group by non primary than you need some [9.20.
   Aggregate
   Functions](http://www.postgresql.org/docs/9.4/static/functions-aggregate.html)
   since those columns can be merged.
-  * you can group by hour with `SELECT date_trunc('hour', created_at), count(*)
+  * you can group by hour with `SELECT date_trunc('hour', created_at),  (which
+      can becount(*)
   FROM users GROUP BY date_trunc('hour', created_at) ORDER BY date_trunc('hour',
   created_at);`. You can reference columns by select position `SELECT
   date_trunc('hour', created_at), count(*) FROM users GROUP BY 1 ORDER BY 1;`

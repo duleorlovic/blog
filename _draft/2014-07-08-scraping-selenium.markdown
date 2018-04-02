@@ -185,6 +185,65 @@ driver.switch_to.frame driver.find_elements( :tag_name, 'iframe').last
 
 # XPath
 
+Xpath is nice since it can traverse back up the dom tree with `..` and that can
+select element based on existence of a child `//p[a]` (all `p` with `a` child)
+
+https://www.w3schools.com/xml/xpath_intro.asp
+7 type of nodes: element, attribute, text, namespace, processing-instructions,
+comment and document node. *Atomic values* are nodes with no children or parent.
+Items are Atomic values or nodes.
+Each element and attribute has one parent. Element nodes may have zero, one or
+more children. Sibling nodes are nodes with same parent. Ancestors are node's
+parent and parent's parent etc... Descendant are node's children, children's
+children etc...
+Selecting node by:
+* `nodename` selects all nodes with the name nodename
+* `/` selects from the root (if path starts with `/` than it is absolute path).
+  `bookstore/book` selects all book elements that are children of bookstore
+* `//` select nodes from the current node that match the selection no matter
+  where they are. `bookstore//book` selects all book elements that are
+  descentant from bookstore
+* `.` selects the current node
+* `..` selects parent of the current node
+* `@` selects attributes `//@lang` selects all attributes that are named lang
+
+Predicates are used to find specific node `[1]` or that contains specific value.
+Predicates are always in square brackets
+* `/bookstore/book[1]` first book that is child of bookstore
+* `/bookstore/book[last()]` last book that is child of bookstore
+* `/bookstore/book[position()<3]` first two book elements that are child of
+  bookstore
+* `//title[@lang]` selects all title elements that have attribute named lang
+* `//title[@lang='en']` selects all title elements that have attribute lang with
+  value en
+* `/bookstore/book[price>35]/title` selects title elements of book element
+  which have price element with value (inner text) greater than 35
+
+If we use `/bookstore/book/price[text()]` than it will select all text from
+price nodes.
+
+
+Wildcards can be used to select unknown nodes
+* `*` matches any element node `/bookstore/*` select all child elements of
+  bookstore
+* `@*` matches any attribute node. `//title[@*]` select title elements which
+  have at least one attribute
+* `node()` matches any kind of node
+
+Several path can be selected using pipe `|` (or operator) `//title | //price`
+select all title and price elements. You can use also `=` equal, `+` addition,
+`div` division operators...
+
+Axes can be used to traverse (in addition to simply child `/`)
+* `child::book`, `descentant::`, `descentant-or-self::`
+* `ancestor::`, `ancestor-or-self::`, `parent::`
+* `attribute::`
+* `namespace::`
+* `following::`, `following-sibling::` after current node
+* `preceding::`, `preceding-sibling::` before current node except ancestors,
+  attribute and namespace nodes
+* `self::` current node
+
 You can check in [developer
 tools](http://stackoverflow.com/questions/22571267/how-to-verify-an-xpath-expression-in-chrome-developers-tool-or-firefoxs-firebug)
 with `$x('//*[po-my-button]')` in console, or with *CTRL+f* search in elements
@@ -195,7 +254,7 @@ In ruby you can parse some text with nokogiri `data = Nokogiri::HTML(html_page)`
 * [usefull selectors](http://ejohn.org/blog/xpath-css-selectors)
 
 * find by id  `//*[@id='my_id']` (note that it needs quotes inside
-  squarebrackets
+  squarebrackets)
 * by class `//*a[contains(@class,'my_class')]`
 * text `//*[contains(text(),'ABC')]`
 * parrent `../`

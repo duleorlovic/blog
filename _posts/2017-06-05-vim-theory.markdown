@@ -3,33 +3,6 @@ layout: post
 title: Vim theory
 ---
 
-# Internals
-
-keynames:
-
-* `<c-d>` is control Ctrl + d, in help it can be written as `CTRL-D`
-* `<esc>` is escape key
-* `<space>` space
-* `<cr>` sometimes it is `<Enter>`
-* `<bs>` backspace
-* `<left>` left arrow
-* `<s-left>` shift left
-* `<c-left>` control left
-* `^I` is when we insert `<tab>`
-* `<nl>` new line. If you use `echom "a\nb"` you will see `a^@b` (`CTRL-v` +
-  `CTRL-j`)
-* `<tab>` tab
-
-special variables
-
-* `<leader>` by default is `\ ` but I use `<space>`. To check current value use:
-`:echo mapleader`, to set use `:let mapleader=" "`
-* `<localleader>`
-* `<non-keyword-character>` maps all non keyword chars: `:set iskeyword?`
-  returns `iskeyword=@,48-57,_,192-255,-` ie alphabetic ascii, digits 0-9, _ ,
-  and some special chars
-* `<nop>` no operation, usefull when you want to disable some keys
-
 # Lean Vim Script The Hard Way
 
 <http://learnvimscriptthehardway.stevelosh.com/>
@@ -61,7 +34,7 @@ Abbreviations are similar to mappings but for insert, replace and command mode
 Difference between `map` is that map does not count for non-keyword-character
 
 `:iabbrev <buffer> --- &mdash;` will replace `---` with `&mdash` but only for
-current buffer. It is buffer local abbreviation and is usefull when you want
+current buffer. It is `<buffer>` local abbreviation and is usefull when you want
 something only for specific type, for example `:autocmd FileType javascript
 :iabbrev <buffer> iff if ()<left>` will enable little snippet only for js.
 
@@ -137,8 +110,8 @@ For example change current title header in markdown text with `cih`:
 
 ## Variables
 
-* print env variables on command line: `:echo $MYVIMRC`, `:echom $PATH` will
-save output into `:messages` so you can view later
+* print env variables on command line: `:echo $MYVIMRC` or `:echo filetype?`.
+ `:echom $PATH` will save output into `:messages` so you can view later
 * to set variable use `:let foo = "bar"` and pring `:echo foo`
 * to set option you can use `:set xxx` or `:set xxx=value` or `:let &xxx=value`
   To unset `:set noxxx` or `:set xxx!`. To check if it is set `:set xxx?` or

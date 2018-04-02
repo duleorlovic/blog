@@ -142,6 +142,21 @@ Mime sniffing is used when client believes that mime type is incorrect, so they
 try to guess the correct value by looking at the resource. Server can block
 sniffing by sending `X-Content-Type-Options`.
 
+You can use mime url data inside inline html and css, for example:
+
+~~~
+<a href="data:text/plain;base64,SGVsbG8sIFdvcmxkIQ%3D%3D" download>Click here to
+download file</a>
+
+<img alt="Embedded Image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA..." />
+
+div.image {
+  width:100px;
+  height:100px;
+  background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA...);
+}
+~~~
+
 If you chose that apex domain is your canonical location, than you need to add
 http 301 redirection for `www.example.com` to `example.com`. Or you can use
 special link element in head part of the page: `<link

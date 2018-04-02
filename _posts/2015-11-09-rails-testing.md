@@ -57,7 +57,10 @@ Capybara javascript test also rely on precompiled assets so you need to run
 `rake assets:precompile` or put `config.assets.compile = true` in
 `conig/environments/test.rb` (this could slow down).
 Somehow when running with headless driver than I do not need to precompile
-assets for those js tests.
+assets for those js tests (this is when I run `rake`).
+But when I run single test `rspec ./spec/features/my_spec.rb` I need to `rm -rf
+public/assets` (do not know how they appear here) and also `spring stop` so than
+it will use fresh code (not precompiled)
 
 # Rspec
 
@@ -286,6 +289,9 @@ For pending tests, you can write empty it blocks or just add `skip` or prefix
 `x` like `xit` or `xdescribe`
 
 ~~~
+it '...', :skip do
+end
+
 it "..." do
   skip "pending"
 end
@@ -294,8 +300,14 @@ xit "skipped" do
 end
 ~~~
 
-For slow test you can mark with `:slow` so running rspec tests with `rspec --tag
-~slow` will run only fast tests.
+For slow test you can mark with `:really_slow` and add to `spec/spec_helper.rs`
+
+~~~
+  config.filter_run_excluding really_slow: true
+~~~
+
+If you really want to run then than add tag `rspec --tag really_slow`.
+
 You can exclude specific folder
 <https://relishapp.com/rspec/rspec-core/v/3-3/docs/configuration/exclude-pattern>
 `rspec --exclude-pattern "spec/features/*"` I do not know why quotes are needed
@@ -390,8 +402,7 @@ You can run `guard` that will run your specs.
 More options for
 [guard](https://github.com/guard/guard-rspec#list-of-available-options)
 My favorite is `failed_mode: :focus` which reruns last failed test.
-
-You can use [spring for
+Also you can use [spring for
 rspec](https://github.com/jonleighton/spring-commands-rspec)
 
 ~~~
@@ -402,7 +413,14 @@ bundle exec spring binstub rspec
 ~~~
 
 Now you can run tests with `bin/rspec` which will be faster than `rspec`. If you
-are using guard, update `guard :rspec, cmd: "bundle exec bin/rspec" do`
+are using guard, use this line
+
+~~~
+# Guardfile
+guard :rspec, cmd: "bundle exec bin/rspec", failed_mode: :focus do
+end
+~~~
+
 
 ## Shoulda matchers
 
@@ -485,7 +503,6 @@ When you need to create params to for testing, you can use
 RSpec.describe UsersController do
   describe 'new' do
   end
-
 end
 ~~~
 
@@ -497,6 +514,7 @@ It is faster than system but can not use capybara...
 Usually for oauth (doorkeeper gem).
 If request is not performed (`get` `xhr`) than something is different (current
 user is not initialized, or something).
+`post url, name: 'my name'` is used without `params` key
 
 ~~~
 # spec/requests/oauth_password_flow_spec.rb
@@ -538,9 +556,13 @@ expect(response.body).to include 'Logout'
 expect(response.body).to include ERB::Util.html_escape "Some text with ' quote"
 expect(response.body.scan(/<tr>/).size).to be 3
 expect(response.body).to match /button.*Publish Package.*\/button/
+# for multiline math you can use modifier m
+expect(response.body).to match /dl.*dl/m
 ~~~
 
-If you need to set up session
+Sometimes I get error if you use `sign_in user` but do not perform `get` or
+`post` requests, ie you use empty `it 'bla bla' do;end`. Than it pass when
+specific tests are run, but fail when all test from file are run.
 
 ## RSpec Router specs
 
@@ -732,11 +754,11 @@ it is about
 # spec/models/auction_spec.rb
 RSpec.describe Auction do
   describe "attributes" do
-    %w(
+    %w[
       user_id
       ends_at
       time_zone_id
-    ).each do |attribute|
+    ].each do |attribute|
       it { is_expected.to have_attribute attribute }
     end
 
@@ -872,6 +894,22 @@ There is test helper
 example of use is
 <https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb>
 
+IF you use Delayed::Job you can test in three ways:
+First is `Delayed::Worker.delay_jobs = true`
+
+~~~
+expect do
+  post url, params
+end.to change { Delayed::Job.count }.by(1)
+
+expect do
+  Delayed::Worker.new.work_off
+end.to change(Delayed::Job, :count).by(-1)
+~~~
+
+Second is `Delayed::Worker.delay_jobs = false` so job is performed inline ie
+invoked immediatelly.
+
 # Refactoring
 
 Refactoring in 3 types:
@@ -962,8 +1000,8 @@ If you see error `unable to obtain stable firefox connection in 60 seconds
 update selenium-webdriver` or to install matched version.
 
 Minitest is included in ruby and also in rails. If your system tests shows error
-"Selenium::WebDriver::Error::WebDriverError: unable to connect to chromedriver
-127.0.0.1:9515" than add gem `gem 'chromedriver-helper'` to your development and
+`Selenium::WebDriver::Error::WebDriverError: unable to connect to chromedriver
+127.0.0.1:9515` than add gem `gem 'chromedriver-helper'` to your development and
 test group.
 
 If you see `KeyError: key not found: 102` than upgrade chromedriver to 2.33 by
@@ -1002,18 +1040,29 @@ navigation to another page should be in the same transaction, so you need to use
 require "selenium/webdriver"
 
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome)
+  # set download directory using Profile (can be set using :prefs in options)
+  profile = Selenium::WebDriver::Chrome::Profile.new
+  profile["download.default_directory"] = DownloadFeatureHelpers::PATH.to_s
+  Capybara::Selenium::Driver.new(app, browser: :chrome, profile: profile)
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: { args: %w(headless disable-gpu window-size=1024,768) }
+# I prefer to use Options instead Capabilities
+#   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+#     chromeOptions: { args: %w(headless disable-gpu window-size=1024,768) }
+#   )
+#   Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities
+  options = Selenium::WebDriver::Chrome::Options.new(
+    args: %w[headless disable-gpu window-size=1024,768],
+    # can not use prefs for headless driver since it is not supported
+    # prefs: {
+    #   "download.default_directory": DownloadFeatureHelpers::PATH.to_s,
+    # }
   )
 
-  Capybara::Selenium::Driver.new app,
-    browser: :chrome,
-    desired_capabilities: capabilities
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
+
 RSpec.configure do |config|
   files = config.instance_variable_get :@files_or_directories_to_run
   if files == ["spec"]
@@ -1152,15 +1201,21 @@ only for finders). You can use substring or you can define `exact: true`
 * `fill_in "email", with: 'asd@asd.asd'` (alternative is
 `find("input[name='cc']").set 'asd@asd.asd'`, or using `page.execute_script
 "$('#my-id').val('asd@asd.asd')"`
-* `check 'my checkbox'`, `choose 'my radio button'`, `select 'My Option or
-Value', from: 'My Select Box'`, and `uncheck 'my checkbox'`, `unselect`,
-`attach_file 'Image', '/path/to/image.jpg'`
+* to click on select2 I use `find('#original-select-id+span').click` so we find
+  first next sibling of original select which was disabled and replaced by
+  select2 spans. Also works `find('li', text: select.label).click` but I can not
+  find that `li` in dom.
+* `check 'my checkbox'` (or by id but without # `check 'my_check_id'`), `choose
+ 'my radio button'`, `select 'My Option or Value', from: 'My Select Box'`, also
+ uncheck `uncheck 'my checkbox'`, `unselect`, `attach_file 'Image',
+ '/path/to/image.jpg'`
 
 **Node finders** [find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method) can use css, xpath, or text (see some [xpath examples](scrapper post))
 
 * `find 'th', text: 'Total Customers'`
 * `find('ng-model="newExpense.amount"').set('123')`
-* `find_all('input').first.set(123)`
+* `find_all('input').first.set(123)` but I think it is better to use
+  `find('input', match: :first)` since it do not need to find all
 * `find('#selector').find(:xpath, '..')` find parent node of selector
   `.find(:xpath, '../..')` is parent of parent (grandparent).
 
@@ -1169,7 +1224,9 @@ Value', from: 'My Select Box'`, and `uncheck 'my checkbox'`, `unselect`,
 * `expect(page.has_css?('.asd')).to be true`
 * `expect(page).to have_css(".title", text: "my title")`, `have_text`,
 `have_content`, `have_link`, `have_selector("#project_#{project.id} .name",
-text: 'duke')` . `have_no_selector` for opposite.
+text: 'duke')` . `have_no_selector` for opposite. It is not same
+`expect(page).not_to have_text` and `expect(page).to have_no_text` since in
+later case it will wait until it tries to fulfill expectation.
 With all you can use `text: '...'` and `count: 2` which is number of occurences.
 * If element is not visible, you can provide `visible: false` (does not work
 with `have_content "d", visible: false` but works with `have_css 'div', text:
@@ -1434,9 +1491,95 @@ RSpec.configure do |config|
 end
 ~~~
 
+## Download helpers
+
+Inspect file that is downloaded like `respond_to do |format| format.csv { render
+text: CSV.generate { |csv| csv << [1,2] } } end`
+
+~~~
+# spec/support/download_feature_helpers.rb
+# https://collectiveidea.com/blog/archives/2012/01/27/testing-file-downloads-with-capybara-and-chromedriver
+#
+#    csv_content = DownloadHelpers.download_content
+#    expect(csv_content.count("\n")).to eq 3
+#    expect(csv_content).to include first_customer.name
+#
+module DownloadFeatureHelpers
+  TIMEOUT = 10
+  PATH    = Rails.root.join("tmp/downloads")
+
+  extend self
+
+  def downloads
+    Dir[PATH.join("*")]
+  end
+
+  def download
+    downloads.first
+  end
+
+  def download_content
+    wait_for_download
+    File.read(download)
+  end
+
+  def wait_for_download
+    Timeout.timeout(TIMEOUT) do
+      sleep 0.1 until downloaded?
+    end
+  end
+
+  def downloaded?
+    !downloading? && downloads.any?
+  end
+
+  def downloading?
+    downloads.grep(/\.crdownload$/).any?
+  end
+
+  def clear_downloads
+    FileUtils.rm_f(downloads)
+  end
+end
+
+RSpec.configure do |config|
+  config.include DownloadFeatureHelpers, type: :feature
+end
+~~~
+
+~~~
+require "selenium/webdriver"
+Capybara.register_driver :chrome do |app|
+  profile = Selenium::WebDriver::Chrome::Profile.new
+  profile["download.default_directory"] = DownloadFeatureHelpers::PATH.to_s
+  Capybara::Selenium::Driver.new(app, browser: :chrome, profile: profile)
+end
+
+# another way to set profile is with prefs in desired_capabilities
+# Currently it does not work if you use headless chrome since it is not
+# supported <https://github.com/SeleniumHQ/selenium/issues/4437>
+# Probably works in headless firefox.
+
+Capybara.register_driver :headless_chrome do |app|
+  desired_capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu window-size=1024,768) },
+    prefs: {
+      "download.default_directory": DownloadFeatureHelpers::PATH.to_s,
+    }
+  )
+
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: desired_capabilities,
+  )
+end
+~~~
+
+
 ## Debug
 
-Debug capubara
+Debug capybara
 * `save_and_open_page` to visually inspect the page. It works when `js: false`
 and uses `lunchy` gem. It does not load images with relative path (images on
 your server).
@@ -1446,8 +1589,13 @@ not `selenium` than register with
 <https://github.com/mattheworiordan/capybara-screenshot/issues/84>
 <https://github.com/mattheworiordan/capybara-screenshot/blob/master/lib/capybara-screenshot.rb#L159>
 
+Also if you use system test you will see screenshot in terminal. to disable you
+can `export RAILS_SYSTEM_TESTING_SCREENSHOT=simple` or set ENV
+https://github.com/rails/rails/blob/5-1-stable/actionpack/lib/action_dispatch/system_testing/test_helpers/screenshot_helper.rb#L58
+
 ~~~
 # spec/support/capybara_screenshot.rb
+ENV["RAILS_SYSTEM_TESTING_SCREENSHOT"] = 'simple'
 Capybara::Screenshot.register_driver(:chrome) do |driver, path|
   driver.browser.save_screenshot(path)
 end

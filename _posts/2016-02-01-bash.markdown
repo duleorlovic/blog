@@ -55,9 +55,6 @@ Very usefull shortcuts to activate certain windows.
 * [wmctrl](http://helpdeskgeek.com/linux-tips/resize-a-window-to-a-specific-size-in-ubuntu/)
 * `xwininfo` to click on window to find it's `0x440003d` which we can use to
   create shortcut `xdotool windowactivate 0x440003d`. 
-  Go to Settings -> Keyboard -> Shortcuts -> Custom Schortcuts -> + .
-  Name: *main editor* command `xdotool windowsactivate 0x123123` shortcut
-  *Alt+M*.
 * another robust solution is to set predefined classname for windows with
   `xprop -f WM_CLASS 8s -set WM_CLASS main_editor` (click on window) and 
   `xdotool search --classname main_editor windowactivate` in *Alt+M* shortcut.
@@ -154,6 +151,52 @@ Look my
 [xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
 There is very nice alternative [Xmonad](http://xmonad.org/)
 
+To start command programs on startup you can use `ctrontab -r` and `@reboot`,
+but for gui programs use ubunt Startup Applications.
+Output (from crontab or gui) should be redirected to system log, for example
+
+~~~
+/home/orlovic/config/bashrc/ctrl_on_window_focus.sh 2>&1 | /usr/bin/logger -t ctrl_on_window_focus
+~~~
+
+so you can see output with `tail -f /var/log/syslog`.
+You can also redirect output to a file withing the script itself (but
+redirecting to syslog does not work)
+
+~~~
+#!/bin/bash
+exec >> /home/orlovic/Downloads/output.log
+exec 2>&1
+
+echo this will go to /home/orlovic/Downloads/output.log
+~~~
+
+For gui debugging you can use this command to log message from scripts:
+`notify-send $USER --urgency critical` Create desktop notifications with
+`notify-send` but need urgency critical, so I made alias `alert`.
+You can debug with `sleep` and `echo` redirection.
+
+Since `ctrl+w` and `ctrl+r` in chrome firefox browsers will close and reload the
+page, it is much easier to use alt (like on mac), so I created shortcuts
+
+To run script on keyboad shortcut go to Settings -> Keyboard -> Shortcuts ->
+Custom Schortcuts -> + 
+* name: this is description
+* command: should be path to the executable script... Directly writting commands
+  here might not work
+
+If you are mapping `Alt+W` to send another key `Ctrl+W` you need to release
+`Alt` first. To release all modifiers
+you can use
+
+~~~
+#!/bin/bash
+# release all modifiers
+# https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers
+xdotool keyup Shift_L Shift_R Control_L Control_R Meta_L Meta_R Alt_L Alt_R Super_L Super_R Hyper_L Hyper_R ISO_Level2_Latch ISO_Level3_Shift ISO_Level3_Latch ISO_Level3_Lock ISO_Level5_Shift ISO_Level5_Latch ISO_Level5_Lock
+xdotool key Ctrl+w
+~~~
+
 # Tar
 
 comress folder: `tar -zcvf folder.tar.gz folder`
@@ -166,11 +209,53 @@ it will be in `tmp/db.dump`
 
 # Scrips and commands
 
+* nice tutorial [Bash Begginers
+  Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
 * input params `$1`
 * exit from script with `exit 1`
-* function and [default
+* functions and [default
   parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
   with `:-` syntax, example `echo first param is $(1:-not defined)`
+* always use double square brackets `[[ ]]` instead of single `[ ]` since it is
+  extension and support using `||` instead of `-o`, or regex match `=~`
+* with [comparison operators](http://tldp.org/LDP/abs/html/comparison-ops.html)
+  you should use quotes since something could not be defined `if [ -n "$a" ]`.
+  If you use double brackets you do not need quotes around variable name.
+
+  ~~~
+  # if conditional to check if string is substring
+  string='my long string'
+  if [[ $string = *"long"* ]]; then
+    echo "its here"
+  fi
+
+  # string equal
+  if [[ $a != $b ]]; then
+    echo string a is not equal to string b
+  fi
+
+  # integer equal
+  if [[ $a -eq $b ]]; then
+    echo number a is equal to number b
+  fi
+  ~~~
+
+  Use conditional `or ||` and `and &&` and `group ()`
+
+  ~~~
+  if [[ $a -eq $b || ($a -eq 2 && $b > 2) ]] ; then
+    echo number a is equal to number b
+  fi
+  ~~~
+
+  Use regular expression matching (not supported with `[ ]` single quote)
+
+  ~~~
+  w_name="Mozzila Firefox and Chrome"
+  if [[ $w_name =~ 'Mozilla Firefox'|Chrome ]] ; then
+  fi
+  ~~~
+
 * loops and expressions example
 
   ~~~
@@ -185,11 +270,6 @@ it will be in `tmp/db.dump`
   echo move and mark window_id=$window_id
   ~~~
 
-* with [comparison operators](http://tldp.org/LDP/abs/html/comparison-ops.html)
-  you should use quotes since something could not be defined `if [ -n "$a" ]`
-
-* nice tutorial [Bash Begginers
-  Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
 * find
   * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
   * find all html files `find . -name '*.html'`. Note that `find . -name *.html`
@@ -200,6 +280,11 @@ it will be in `tmp/db.dump`
 [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
 "@reboot /home/orlovic/my.sh") | crontab -`
+  cron format `Minute Hour Day_of_the_Month Month_of_the_Year Day_of_the_Week`
+  and also `Year` as 6th field.
+  For multiple values you can separate with comma, use dash or use slash, for
+  example `0,15,30,45 0,6,12,18 1,15,31 * 1-5 *` is the same as `*/15 */6
+  1,15,31 * 1-5 *`.
 * repeat last command with sudo `sudo !!`
 * DDNS
   * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
@@ -209,7 +294,8 @@ Note `.` after folder name.
   ruby some_script.rb` works better
 * `ps aux | grep process_name` will return always the grep process because it
   match. But you can use regex so it is not matched `ps aux | grep
-  [p]rocess_name`
+  [p]rocess_name`. to show full command for process id you can use `ps -fp
+  <pid>`. You can kill one by one using `top` and `k`
 * edit long commands in bash `set -o vi` and than press Esc, and v (visual).
   Don't recomment to put in bashrc since it will disable bash shortcuts like:
   ctrp+p, bind, ....
@@ -266,6 +352,13 @@ Note `.` after folder name.
 
 * for redirection standard error to standard output ` 2>&1 |` there is shorthand
   `|&` version.
+* if you need to redirect all script output to a file use `exec`
+  ~~~
+  #!/bin/bash
+  exec >> my_script.log
+  exec 2>&1
+  echo "This will be saved in a log when you run the script"
+  ~~~
 * last command exit status `echo $?` (`0` is success)
 * current script pid `echo $$`
 * last background process id `sleep 100 &` `echo $!`
@@ -293,9 +386,20 @@ ${arr[*]}         # Dule Orlovic All of the items in the array
 ${!arr[*]}        # 0 1 All of the indexes in the array
 ${#arr[*]}        # 2 Number of items in the array
 ${#arr[0]}        # 4 Length of item zero
+
+# iterate array in for loog
+for var in "${arr[@]}"
+do
+  echo "${var}"
+done
+
+# iterate over sequence
+for i in {1..5}; do echo $i; done
 ~~~
 
 # Curl
+
+https://gist.github.com/subfuzion/08c5d85437d5d4f00e58
 
 * same url to some variable
 ~~~
@@ -339,7 +443,7 @@ a.b:3000:127.0.0.1` so in rails `request.host == 'a.b'`
 will encode post data for you). To see how actual form sends data, save the page
 localy and change method to `GET` so when you submit you can see data separated
 with `?` and `&`
-
+* patch request on rails is done with `--request PATCH` option
 
 # SSH
 
@@ -475,9 +579,9 @@ fi
 * screen command
   * `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
   to go to copy mode.
-* send desktop notifications with `notify-send` but need urgency critical, so I
-made alias `alert`
 * cheatsheet https://devhints.io/bash
 * `pbcopy` is only on mac
 * to prevent `ctrl-d` to exit terminal bash you can set `IGNOREEOF=3` so shell
   only exists after the 3 consecutive Ctrl-d.
+* https://github.com/wting/autojump use j or autojump instead of cd change
+  directory

@@ -376,6 +376,12 @@ end
 }
 ~~~
 
+# Stimulus and man in bootstrap 4 modal
+
+
+~~~
+~~~
+
 # Location search field
 
 ~~~

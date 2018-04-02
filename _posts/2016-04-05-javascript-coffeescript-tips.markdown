@@ -78,7 +78,7 @@ There is nice plugin [stickyjs](http://stickyjs.com/) but for simple scroll you
 can use this
 [answer](http://stackoverflow.com/questions/2177983/how-to-make-div-follow-scrolling-smoothly-with-jquery)
 First version is enought if you do not need to scroll big elements. Note that
-calculation of `originalTop` could be wrong if there are some not images and
+calculation of `originalTop` could be wrong if there are some images and
 their parent does not have fixed height.
 
 ~~~
@@ -118,7 +118,7 @@ There are two approaches. First is symetric which do not scroll if current view
 is inside element. Scroll only when user see's top or bottom or does not see
 element.
 
-* Symretic rules are:
+* Symetric rules are:
   * if I scroll down and I see bottom and top is about to hide
     * if I see whole element than follow with top of the element
     * if I don't see whole element than follow with bottom
@@ -236,7 +236,7 @@ function follow_scroll_smoothly(elementSelector, footerSelector) {
 ~~~
 
 Another approach is to keep top as much as he can (until bottom reaches bottom).
-When element is bigget than page, user needs to scrol down to the bottom to see
+When element is bigger than page, user needs to scroll down to the bottom to see
 bottom of the element.
 
 <iframe width="100%" height="300" src="//jsfiddle.net/duleorlovic/ffbnr62f/8/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
@@ -446,6 +446,25 @@ version on "Hello #{name}")
   }
   ~~~
 
+  You can also destructure nested objects in function params
+
+  ~~~
+  var car = {
+    model: 'bmw 2018',
+    engine: {
+      turbo: true,
+      vin: 12345
+    }
+  }
+
+  // es6 shorthand instead of {vin: vin} -> {vin}
+  const modelAndVIN = ({model, engine: {vin}}) => {
+    console.log(`model: ${model} vin: ${vin}`);
+  }
+
+  modelAndVIN(car); // => model: bmw 2018  vin: 12345
+  ~~~
+
   There exists rest `...` parameter which convers to array
 
   ~~~
@@ -463,19 +482,54 @@ version on "Hello #{name}")
   ~~~
 
   you can also spread objects `let d = { a: 3}; let db = { ...d, b: 3}`. But if
-  objet has methods, it wont be expanded.
+  object has methods, it wont be expanded. If you spread two objects, later will
+  override: `let object1 = { a:1, b:2 }; let object2 = { b:30, c:40}; let merged
+  = {…object1, …object2} // {a:1, b:30, c:40}`. You can de duplicate array with
+  `let arr = [1, 1, 2, 2, 3, 3]; let deduped = [...new Set(arr)] // [1, 2, 3]`
 
 * default parameter values `function g(a=2){}` (the same for coffeescript). It
 can be combined with default destructing params `function g({a=1, b}={b:2}){}`
 and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
+* if you need some param to be required you can use this trick
+
+  ~~~
+  const required = () => {throw new Error('Missing parameter')};
+
+  //The below function will trow an error if either "a" or "b" is missing.
+  const add = (a = required(), b = required()) => a + b;
+
+  add(1, 2) //3
+  add(1) // Error: Missing parameter.
+  ~~~
 
 * `for(i=0;i<cars.length;i++) {}` is not concise `cars.forEach(myFunction)` is
   concise but can not break out of the loop. `for(let ... of ...)` is concise
   and can break `for(let car of cars) { }` (coffee script has `.each`)
+* `array.reduce(function, init_value)` can be used as filtering if `init_value`
+  is array, than function takes two arguments (init_value, array_item)
+  ~~~
+  const numbers = [10, 20, 30, 40];
+
+  const doubledOver50 = numbers.reduce((finalList, num) => {
+    num = num * 2; //double each number (i.e. map)
+    //filter number > 50
+    if (num > 50) {
+      finalList.push(num);
+    }
+    return finalList;
+  }, []);
+  doubledOver50; // [60, 80]
+  ~~~
 * extend classes `class Employee extends Person {}` so we don't need to write
-  `Employee.prototype = new Person`. We can define instance and static methods.
-  We can use `super` and define `constructor`. In hash, instead of `full_name:
-  function() {}` we can write `full_name(){}`
+  `Employee.prototype = new Person`.
+  Inside `class` we can define instance and `static` methods. Static methods are
+  called without instantiating their class (used for utility functions).
+  We can use `super.m()` in any method and define `constructor() {this.a=1}`.
+  In hash, instead of `full_name: function() {}` we can write `full_name(){}`
+  Multiple inheritance can be achieved with mix-ins https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins
+  You can use getter (or setter) which binds an object property to a function
+  that will be called when that property is looked up (or attempt to set that
+  property)
 
   ~~~
   class Empoyee extends Person {
@@ -484,8 +538,11 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
 
       this.proffessional_name = name;
     }
-    full_name() {
+    get full_name() {
       return this.name;
+    }
+    set full_name(name) {
+      this.name = name;
     }
 
     static myUtilityFunction(uppercase) {
@@ -511,18 +568,33 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
   * `Array.find( user => user.age > 15)` same as `Array.findIndex` but returns
  object instead of index
    * `[1,2,3].filter( (n) => n > 2 )`
-* modules `import User from 'user';`
-[link](https://www.sitepoint.com/understanding-es6-modules/)
-Export can be *named* and *default*.
+* import bindings which are exported by another module (js file). Module is just
+  js script (no need for special keyword) but everything defined inside module
+  is local to the module, except when you use `export`.
+  <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import>
 
   ~~~
-  // lim/math.js
-  export function sum(x, y) {
-    return x + y;
-  }
-  export let pi = 3.141593;
+  // import default export as bind to defaultExport
+  import defaultExport from "module-name";
+  // this is shorthand of
+  import { default as defaultExport } from 'module-name';
+
+
+  // namespace import
+  import * as name from "module-name";
+  // named import
+  import { export } from "module-name";
+  import { export as alias } from "module-name";
+  import { export1 , export2 } from "module-name";
+  import { export1 , export2 as alias2 , [...] } from "module-name";
+  // combination of default import and named or namespaces import
+  import defaultExport, { export [ , [...] ] } from "module-name";
+  import defaultExport, * as name from "module-name";
+  // just run the code, not importing anything
+  import "module-name";
   ~~~
 
+  module-name is relative or abosulte path name to the `.js` file
   ~~~
   import * as math from "lib/math";
   console.log("2pi = " + math.sum(math.pi, math.pi));
@@ -531,6 +603,34 @@ Export can be *named* and *default*.
   import { pi, sum } from "lib/math";
   console.log("2pi = " + sum(pi, pi));
   ~~~
+
+  You can export any top level function, class, var, let or const.
+
+  ~~~
+  // lim/math.js
+  export function sum(x, y) {
+    return x + y;
+  }
+  export let pi = 3.141593;
+
+  // or you could use export list
+  export { sum, pi };
+  ~~~
+  You can name the export as `default`
+
+  ~~~
+  let myObject = {
+    field1: value1,
+    field2: value2
+  };
+  export {myObject as default};
+  // or better use shorthand
+  export default {
+    field1: value1,
+    field2: value2
+  };
+  ~~~
+
 * property value shorthands, when you define object and you already have
 variable with same same as key, you can use
 
@@ -712,7 +812,8 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
   <button type="button" class="btn btn-box-tool" data-widget="collapse" data-user-preferences="expand_location_reports_customers"><i class="fa fa-minus"></i>
   ~~~
 
-  target will will be inner `<i>` and currentTarget will be `<button>`
+  target will will be inner `<i>` and currentTarget will be `<button>` so
+  targetElement (e.target) should be e.currentTarget
 
   ~~~
   @initializeUserPreferences = ->

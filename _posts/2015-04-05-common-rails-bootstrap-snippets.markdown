@@ -540,6 +540,12 @@ on_worker_boot do
   ActiveRecord::Base.establish_connection
 end
 HERE_DOC
+
+# on development always use single mode
+mkdir config/puma
+cat >> config/puma/development.rb <<HERE_DOC
+workers 0
+HERE_DOC
 ~~~
 
 # Heroku deploy

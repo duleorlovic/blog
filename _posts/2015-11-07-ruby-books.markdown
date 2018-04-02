@@ -50,8 +50,10 @@ ie `A.class.superclass #=> Module`. That is why classes has more features than
 modules (can be instantied, can be extended by other classes). On other side,
 module can be included (ie all module's instance methods become avaiable as
 instance methods in the class) very similar to inheritance. Module can also be
-extended (ie all module's instance methods become class methods). You can see
-all superclasses and mixin modules with
+extended (ie all module's instance methods become class methods). Also usefull
+is that module extends self `module M; extend self; def m;end;end` so you can
+use `M.m` instead of `M::m`.
+You can see all superclasses and mixin modules with
 [A.ancestors](http://ruby-doc.com/docs/ProgrammingRuby/html/ospace.html).
 Module class object have `new` method, but it's instance (Module instance) does
 not have (on other hand `Class` object `a = Class.new` have `a.new` method).
@@ -376,7 +378,8 @@ will show `\n` and will insert spaces because text is indented. There is
   => ["\#{foo}", "Bar", "Bar with space"]
   ~~~
 
-* `%x(pwd)` is used to call system bash commands
+* `%x(pwd)` is used to call system bash commands. Use Open3 to call system shell
+  commands, like `stdout, stderr, status = Open3.capture3("ls")`
 * `%i(sym1 sym2)` is used to return array of symbols
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
@@ -1011,6 +1014,58 @@ line of the block).
 to_upper = -> (str) { str.upcase }
 "string".yield_self(&to_upper)
         .yield_self(&add_greeting)`
+~~~
+
+* colorize matching string in console
+~~~
+class String
+  COLOR = 31 # red
+
+  def red
+    "\e[#{COLOR}m#{self}\e[0m"
+  end
+
+  def colorize(string, return_result = false)
+    last_index = 0
+    res = ""
+    while new_index = self[last_index..-1].index(string) do
+      res += self[last_index..last_index + new_index - 1] if last_index + new_index - 1 > -1
+      res += string.red
+      last_index = last_index + new_index + string.length
+    end
+    res += self[last_index..-1]
+    puts res
+    res if return_result
+  end
+end
+
+require 'minitest/autorun'
+class Test < Minitest::Test
+  def test_one_substring
+    s = 'My name is Duke.'
+    assert_equal "My name is \e[31mDuke\e[0m.", s.colorize("Duke", true)
+  end
+
+  def test_two_substrings
+    s = 'Duke is my name, Duke.'
+    assert_equal "\e[31mDuke\e[0m is my name, \e[31mDuke\e[0m.", s.colorize("Duke", true)
+  end
+
+  def test_no_found
+    s = 'My name is Duke.'
+    assert_equal "My name is Duke.", s.colorize("Mike", true)
+  end
+
+  def test_whole
+    s = 'My name is Duke.'
+    assert_equal "\e[31mMy name is Duke.\e[0m", s.colorize(s, true)
+  end
+
+  def test_return
+    s = 'My name is Duke.'
+    assert_equal nil, s.colorize('Duke')
+  end
+end
 ~~~
 
 todo

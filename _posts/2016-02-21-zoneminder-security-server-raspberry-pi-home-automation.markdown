@@ -31,22 +31,83 @@ sudo mkfs.vfat /dev/mmcblk0p1
 
 Than just extract zip to the card.
 
-Run `sudo raspi-config` to change Boot Options
-to `B1 Consolle Autologin`. This is important since we will run script from
-bash_profile.
+On MAC download "SD Memory Card formatter" and do formating. Than extract and
+copy all content from NOOBS_v2_7_0 folder to the root of the card.
+
+Run `sudo raspi-config` (or find in Top Left Icon -> Preferences -> Raspberry Pi
+Coonfiguration) -> Tab System to change `Boot` options to `To Cli` instead of
+`To Desktop` (old version is `B1 Consolle Autologin`). This is important since
+we will run script from bash_profile. Also on tab Interfaces enable SSH.
+If you want to enable Desktop again, run `startx` when you are logged in and
+attaced keyboard (can not run start remotelly from ssh).
 
 Find ip address with `nmap 192.168.0.-`. Connect from your desktop `ssh
-pi@192.168.0.11` and run: `host google.com`.
+pi@192.168.0.11` (password raspberry).
 
 If something is not working than check
 `/etc/network/interfaces` and `/etc/dhcpcd.conf` (you can manually get dns with
-`sudo dhclient eth0`)
+`sudo dhclient eth0`).
 
-## Set up static IP address
+Set up static IP address using GUI, right click on Network Icon -> Wireless and
+wired network setting -> Configure Interface -> Select eth0 -> IPv4 address `192.168.2.6`, disable IPv6, Router `192.168.2.1` DNS servers `8.8,8,8`.
+or using command line edit `/etc/dhcpcd.conf`.
 
-Edit `/etc/network/interfaces`
+~~~
+# /etc/dhcpcd.conf
+interface eth0
+inform 192.168.2.6
+static routers=192.168.2.1
+static domain_name_servers=8.8.8.8
+noipv6
+~~~
+
+Leave `/etc/network/interfaces` as default.
+Some posts about all network configuration that you need to know
+https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address
+https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address/74428#74428
+https://wiki.debian.org/NetworkConfiguration
+https://wiki.debian.org/NetworkManager
+
+~~~
+# find ip address and network mask
+ip -4 addr show | grep global
+#    inet 192.168.2.6/24 brd 192.168.2.255 scope global eth0
+
+# find default route
+ip route | grep default | awk '{print $3}'
+# 192.168.2.1
+
+# find dns server (usually same as router)
+cat /etc/resolv.conf
+# nameserver 8.8.8.8
+# /etc/resolv.conf is overwritten by resolvconf, network-manager and other dhcp
+# clients.
+
+# list interfaces event they are not connected
+ls /sys/class/net/
+
+# to set static ip address you can edit either /etc/dhcpcd.conf
+interface eth0
+   static ip_address=192.168.2.6/24
+   static routers=192.168.2.1
+   static domain_name_servers=192.168.2.1
+
+# or edit /etc/network/interfaces
+auto eth0
+iface eth0 inet static
+        address 192.168.2.6
+        netmask 255.255.255.0
+        gateway 192.168.2.1
+
+~~~
 
 Copy ssh keys with `ssh-copy-id pi@192.168.0.11`.
+
+Check internet connecction with
+
+~~~
+host google.com
+~~~
 
 # Ruby
 

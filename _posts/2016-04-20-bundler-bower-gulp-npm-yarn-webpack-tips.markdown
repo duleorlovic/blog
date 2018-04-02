@@ -47,6 +47,8 @@ rvm gemset empty
 
 # Bower
 
+Bower is deprecated https://github.com/bower/bower/issues/2298
+
 [bower](http://bower.io)  Adding new package will be saved in `bower.json` if
 you add option `--save` or `--save-dev`. To generate bower.json run
 
@@ -95,14 +97,6 @@ Note that if you remove some files from package folder (for example
 that is was removed. You need to `rm -rf folder` so than `bower install` will
 get fresh copy of the package.
 
-# NPM
-
-To show all versions and install specific version you can
-
-~~~
-npm info ionic
-npm install ionic@1.4.0
-~~~
 # Gulp
 
 * if you have error `'watch' errored after Error: watch
@@ -177,12 +171,110 @@ NonStupidDigestAssets.whitelist += [
 ]
 ~~~
 
+# NPM
+
+To create package.json in current folder run `npm init -y`
+
+To show all versions and install specific version you can
+
+~~~
+npm info ionic
+npm install ionic@1.4.0
+npm uninstall ionic
+~~~
+
+You can install packages localy (recommended) so you can access them
+`node_modules/.bin/` or using `npx webpack` or with `npm run build` if inside
+package.json `"scripts":{ "build": "webpack"}`. If you need to pass additional
+params to build command you can use two dashes `npm run build -- --colors`
+If you need to access from command line than install globaly `-g`
+Use `--save` if package is used on production env, and `--save-dev` if it is
+only on development (like linters or testing tools).
+
 # Webpack
+
+<https://webpack.js.org/guides/getting-started/>
+
+~~~
+npm init -y
+npm install webpack webpack-cli --save-dev
+~~~
+
+Entry point is module for which webpack start building out dependency graph and
+create bundles.
+Output is where to emit the bundles (`path` is `./dist`).
+Loader is used to process webpack modules (files that use `import`, `require()`,
+`@import`, `url()`) and use coffescript, typescript, sass processors. It has
+`test` property (which files should be transformed) and `use` which loader.
+Plugins are use to perform wider range of tasks like uglify.
+
+~~~
+// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+}
+~~~
+
+Asset Management with loaders
+
+*  `style-loader` will in javascript create and attach to head as inline `<style
+  type="text/css">.my-style-from-file{}</style>`. It needs to used in js `import
+  './my_style.css'` to define which file will be imported.
+* `css-loader` will interprets `@import` and `url()` and copy file using random
+  file name
+  ~~~
+  // src/style.css
+  .background {
+    background: url('./img.png');
+  }
+  ~~~
+* `file-loader` handles files
+  ~~~
+  import myImage from './img.png'
+  myImage // random-name-of-image.png
+  ~~~
+* `html-loader` handles `<img src="./my-image.png">`.
+
+~~~
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader'
+        ]
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          'file-loader'
+        ]
+      }
+    ]
+  }
+~~~
+
+Todo
+https://webpack.js.org/guides/output-management/
+/home/orlovic/rails_temp/webpack_guide
 
 <https://medium.com/statuscode/introducing-webpacker-7136d66cddfb>
 
 Webpack uses `webpack.config.js` and compile for your using Loaders and Plugins.
-Insteal loaders with `yarn add --dev webpack babel-core babel-loader
+Install loaders with `yarn add --dev webpack babel-core babel-loader
 babel-preset-react babel-preset-es2015 node-sass css-loader sass-loader
 style-loader` and use with:
 

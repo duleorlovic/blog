@@ -5,6 +5,8 @@ title: Ubuntu working environment
 
 # Ubuntu stuff
 
+* taks screenshot: fullsize `Print`, currently active window `Alt+Print`, area
+  `Shift+Print`. Use `ctrl` instead of alt if you want to copy to clipboard
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
 tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
@@ -71,7 +73,7 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 
 # Chrome chromium
 
-* take screenshot with `Ctrl + Shift + p` and search screenshot
+* take screenshot with `ctrl+Shift + p` and search screenshot
 * [chrome scrambled](https://code.google.com/p/chromium/issues/detail?id=375957)
   can be solved with `sudo amdconfig --initial`
 * chrome flickers on resize
@@ -95,44 +97,57 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 * [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 
 
-## Developer tools
+## Chrome Developer tools
 
+* open developer tools on last tab that was used is with `F12` or
+  `ctrl+shift+i`. Switch to next and prev panel with `ctrl+]` and `ctrl+[`.
+  `ctrl+shift+d` dock undock. Open drawer with `ESC`
+* on drawer three dots, you can
+  * to search file in google developer tools you can open console window (not
+  console tab with console input, window can be opened on any tab with ESC key
+  in dev tools). Than on three dots, open dropdown menu and find *Search*
+  (keyboard shortcut is `ctrl+shift+f`). To search current panel use `ctrl+f`
+* three dots -> Coverage can give how much of css or js is used on the page
 * [network tab filter
   request](https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/resource-loading#filter-requests)
   will filter by filename containg the string `posts`. But it also supports
   keywords with autosuggestions. Examples: `domain:*.com`, `larger-than:1K`, 
-* to clear autofill suggestions you can use keyboard shortcut. First select
-  suggestion with UP or Down arrows than press Shift + Delete
-  [answer](https://support.google.com/chrome/answer/142893?p=settings_autofill&rd=1)
-* to search file in google developer tools you can open console window (with
-  ESC) than on three dots, open dropdown menu and find *Search*
 * to stop on some page that redirects immediatelly, you can go `Sources` tab and
   *Event Listener Breakpoints* and *Load -> beforeunload* or *Script -> Script
-  first statement*
-* to use current selected element in console use `$0` (`$1` previous selected
-and so on), for xpath use `$x()`. Use `$_` for last returned value in console.
-[link](https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference)
-* use can use `monitor(function)`, `monitorEvents($0, "key");`
-* `debug(function)` or `undebug(function)`. Usefull when you want to stop on
-some event listener `debug(getEventListeners($0).click[0].listener)` (you can do
-the same using Elements, Event Listeners tab, click, and jump to source where
-you want breakpoint)
-  * to show some value in log you can add Conditional breakport with
-  `console.log(varname);`
-* three dots -> Coverage can give how much of css or js is used on the page
-* on elements panel
-  * `h` to hide element (`visibility: hidden`)
+  first statement*.
+  To stop on XHR/Fetch call you can set breakpoint on Sources -> XHR breakpoint
+* to search all files `ctrl+o`
+* to open **command menu** use `ctrl+shift+p`
+  * `screenshot`
+* to open **Console panel** you can use `ctrl+shift+j` (also on a page). You can
+ use `monitor(function)`, `monitorEvents($0, "key");` `debug(function)` or
+  `undebug(function)`. Usefull when you want to stop on some event listener
+  `debug(getEventListeners($0).click[0].listener)` (you can do the same using
+  Elements, Event Listeners tab, click, and jump to source where you want
+  breakpoint). To show some value in log you can add Conditional breakport with
+  `console.log(varname);` to use current selected element in console use `$0`
+  (`$1` previous selected and so on), for xpath use `$x()`. Use `$_` for last
+  returned value in console.
+  [link](https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference)
+* to open **Elements panel** (if developer tools is not yet opened) is
+  `ctrl+shift+c`. You can use `h` to hide element (`visibility: hidden`). Use
+  `ctrl+f` to find element (`enter` to find next). You can use `.class` to
+  locate by css class.
 
-* `Ctrl + Shift + m` to toggle mobile responsive view
-* `Ctrl + o` find filename
-* `Ctrl + shift + `
+* `ctrl+Shift + m` to toggle mobile responsive view
+* `ctrl+o` find filename
+* `ctrl+shift+`
  * `^shift+c` to click and locate element
  * `^shift+f` to find string in all files
- * `^shift+o` find functions in the current file
+ * `^shift+o` find functions in the current js file
  * `^shift+p` chrome shortcuts
 
 Enable experiments with <chrome://flags/#enable-devtools-experiments> and go to
 Experiments menu in Settings (F1 or Ctrl+P+Settings)
+
+To clear autofill suggestions you can use keyboard shortcut. First select
+  suggestion with UP or Down arrows than press Shift + Delete
+  [answer](https://support.google.com/chrome/answer/142893?p=settings_autofill&rd=1)
 
 In console you can call
 
@@ -149,6 +164,40 @@ Audit tab can give you broken best practices and explanations.
 url suggestion does not use port number, so it is advised to disable it on
 `about:config` for `browser.urlbar.autoFill` to false. That way only history
 links will be provided, so you can navigate to them using tab.
+
+## Firefox developer tools and navigations
+
+like vim
+* `ctrl+[` back
+* `ctrl+]` forward
+* `ctrl+f` find (`F3` and `shift+F3` find next and prev)
+* `/` quick find, `'` find only in links
+* `ctrl+j` focus search bar
+* `ctrl+shift+i` toggle developer tools (`F12`), `ctrl+shift+k` console,
+  `ctrl+shift+c` inspector, `shift+F7` style, `ctrl+shift+m` mobile responsive,
+  `ctrl+shift+j` browser console
+* `shift+f4` scratchpad and run with `ctrl+r`
+* `shift+f2` developer toolbar
+* `ctrl+i` page info (content-type, referring url, size...)
+* `f7` carret browsing so you can navigate cursor with shift arrow and ctrl+c
+
+# Opera
+
+Download for ubuntu https://www.opera.com/
+Download mobile browser Opera mobile emulator https://www.opera.com/developer/mobile-emulator
+
+~~~
+./opera-mobile-emulator
+# error while loading shared libraries: libQtGui.so.4: cannot open shared object file: No such file or directory
+
+# to find in which package this file belongs use
+# apt-file search libQtGui.so
+
+sudo apt install libqtwebkit4
+./opera-mobile-emulator
+# still same error
+~~~
+
 
 # FTP
 

@@ -25,13 +25,21 @@ title: CSS and HTML tips
   elements
 * use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
 * use relative units instead of absolute
-  <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 { font-size: 20vh;}`
+  <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 {
+  font-size: 20vh;}`. vh is 1% of vertical heigh of view port (window size, not
+  page size). For width you can use horizontal width for example `width: 80vw;`
+  another relative unit is `em` (1em is default font size usually 16px,
+  bootstrap was 14px now is 16px)
+
 * you can not set the width of inline elements, so to set width of `span` you
   need to make it `display:inline-block; width: 100px`
 * also top and bottom padding has no efect for label since it is an inline
   element
   [link](http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements).
   You need to make the label a block level element for it to work.
+* to make vertical align you need parent to be `position: relative`, and target
+  to be `position:absolute; top: 50%; margin-top: -1rem;` (if you show text
+  1rem).
 * for block elemenent with `margin: auto` (bootstrap
   [center-block](http://getbootstrap.com/css/#helper-classes-center) helper)
   does not have effect unless the element has the width (because it can not
@@ -90,18 +98,17 @@ title: CSS and HTML tips
 
 * hide something but still occupy space you can use `visibility: hidden` and
   `visibility: visible`
-
-# Tricks
-
-* letter effects short to long words <https://codepen.io/duleorlovic/pen/mXwyGj>
-* infinite loader <https://codepen.io/duleorlovic/pen/rJwaZL>
-* animated download button
-  <https://scotch.io/tutorials/build-a-download-button-full-of-micro-interactions>
+* glitch efect <https://tympanus.net/Development/GlitchSlideshow/index2.html>
 
 # SCSS Sass
 
 * you can set default value of variable `$my-var: 123 !default;`. This has no
   effect if variable is already defined.
+  In CSS you can define var with `--main-color: black;` and use with `color:
+  var(--main-color);`. Var are usually decraler on pseudo class `:root {
+  --main-color: black; }` so it is accessible everywhere, instead of local scope
+  (since this is custom property, it is accessible only on matching selector and
+  its descendants) which is used only for specific elements like BEM
 * <https://responsivedesign.is/develop/getting-started-with-sass>
 * you can select `this` using `&`
 
@@ -236,7 +243,26 @@ title: CSS and HTML tips
 To expand block on click use input checkbox
 https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
 
+Note that input is before label, which is before target
+
 ~~~
+// toggle active without javascript
+// <input type="checkbox" id="toggle-active" class="toggle-active" />
+// <label for="toggle-active"><%= t('add') %></label>
+// <div class="toggle-active-target hide-not-important">
+// </div>
+// https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
+.toggle-active {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+
+  &:checked ~ .toggle-active-target {
+    display: initial;
+  }
+}
+label[for="toggle-active"] {
+  cursor: pointer;
+}
 ~~~
 
 To show active on click in pure css use `li:hover { color: blue }`
@@ -259,18 +285,9 @@ To show active on click in pure css use `li:hover { color: blue }`
   }
   ~~~
 
-# Pizza cut
+# Image
 
-Interesting design <http://hmfaysal.me/hmfaysal-omega-theme/> since it uses svg
-to cut the image and add animations.
-
-~~~
-<div class="decor-wrapper">
-  <svg id="header-decor" class="decor bottom" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <path class="large left" d="M0 0 L50 50 L0 100" fill="rgba(255,255,255, .1)"></path>
-  </svg>
-</div>
-~~~
+Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/
 
 # Layout
 
@@ -459,3 +476,13 @@ relative and defined after cover to stand out of that cover.
 link_to "+123-123", "tel:123123" %>`)
 * for mail `<a href="mailto:asd@asdasd">asd@asd.asd</a>` (rails `<%= mail_to
 "asd@asd.asd", "asd@asd.asd" %>`)
+* for event listeners always use `e.currentTarget` since it is element on which
+  listener was bound. Do not use `e.target` since it could be child element.
+  Example `$('[data-user-preferences]').click(function(e) {
+  e.currentTarget.dataset.userPreferences
+  })`
+* if you need to click on the underlying elements under other, you can use
+  <https://stackoverflow.com/questions/3680429/click-through-a-div-to-underlying-elements>
+  ~~~
+  pointer-events: none
+  ~~~

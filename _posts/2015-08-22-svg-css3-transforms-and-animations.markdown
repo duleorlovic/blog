@@ -182,45 +182,62 @@ For SVG there are custom css which can be inline like `fill="blue"` or in css
 * `stroke-width: 5` thickness or line, text or outline
 * `stroke-linecap: butt` `round` `square` ending of open path
 * `stroke-dasharray: 10` length of dashes and spaces
-* `stroke-dashoffset: 10` when to start dash or space
+* `stroke-dashoffset: 10` when to start dash or space, this is used for
+  line animation along the path
 * `transform:rotate(20deg)` `translate(x,y)`
 
-## Animate with <animateMotion>
+Here is some example of text shadows:
+https://www.w3.org/People/Dean/svg/texteffects/index.html
+https://www.w3schools.com/graphics/svg_feoffset.asp
+* to add blur
+~~~
+  <defs>
+    <filter id="f1" x="0" y="0">
+      <feGaussianBlur stdDeviation="0.1" />
+    </filter>
+  </defs>
+  <text filter="url(#f1)">asd</text>
+</degs>
+~~~
 
-<https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion>
-Examples can be seen on https://css-tricks.com/guide-svg-animations-smil/
+But better is to add another original item after filtered (so filtered is in
+background).
 
-To move along the path but only on portion of the path, use:
+If you want to apply multiple times (so it is bolder) you can use `feMergeNode`
 
 ~~~
-<animateMotion calcMode="linear" keyPoints="0;0.5" keyTimes="0;1"/>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+  <feGaussianBlur stdDeviation="1" result="glow"/>
+  <feMerge>
+    <feMergeNode in="glow"/>
+    <feMergeNode in="glow"/>
+    <feMergeNode in="glow"/>
+  </feMerge>
+</filter>
+</defs>
+<text style="filter: url(#glow); fill: #0c9" x="5" y="5">Simple Glow</text>
+<text x="5" y="5" style="fill: white">Simple Glow</text>
 ~~~
 
-## Animate SVG with javascript
+* to show text along the path use
 
-To move arrow and increase line you can also use js libraries:
-[snap.svg](https://github.com/adobe-webplatform/Snap.svg)
-<https://codepen.io/mattsince87/pen/snqLy>
-<https://codepen.io/duleorlovic/pen/zpmXOw>
-[animejs](http://animejs.com/)
+~~~
+<path id="ca" class="abc__color-c" d="M 3 90 Q 3 3, 47 3 "/>
+<text class="abc__title--ca abc__color-multistroke-3"><textPath xlink:href="#ca" startOffset="80%"><%= t 'site_title' %></textPath></text>
+~~~
 
-SVG tips:
+![text along path]({{ site.base_url }}/assets/text_along_path.png "Text along
+path")
 
-* [scalling](https://css-tricks.com/scale-svg/)
-  raster images like jpg, png and gif have defined size and aspect ratio of
-  width to height. You can auto scale to cover `width="100%"` (or to cover
-  `height="100%"`). all images has default size 300px wide 150px tail.
-  if we change width or heigh of svg, inner image will stay the same (similar
-  that font is the same if we scale div).
-  We can scale to fit with and without distorting. CSS `width: 100%` will
-  overwrite width attribute on top svg element.
-  `viewBox="x y width height"` for example `viewBox="0 0 100 100"` defined top
-  left corner as (0,0) and bottom right as (100,100).
-  `preserveAspectRatio="xMidYMin slice"` or `preserveAspectRatio="none"` if you
-  want to preserve aspect ratio.
+* pure text in pure css can be different color with help of fill transparend and
+  background 
+  https://mawla.io/team/
+
+# SVG Mask
 
 * jpeg does not support mask (png does but is not optimized for big images), to
 use jpeg and png mask and one svg to combine them
+
 ~~~
 <mask id="mars-mask">
   <image width="1" heigh="1" xlink:href="images/mars-mask.png">
@@ -268,6 +285,7 @@ use jpeg and png mask and one svg to combine them
 except text, that fill rectangle and keep text as black (transparent).
 <https://codepen.io/SimonEvans/pen/weoLLB>
 * curved text
+
 ~~~
     <svg id="a" width="100%" height="100%" viewBox="0 0 500 500">
       <path id="path12" d="M17.413 103.763a86.935 65.39 0 0 1 33.07-49.74 86.935 65.39 0 0 1 72.012-12.602" fill="transparent" />
@@ -278,6 +296,48 @@ except text, that fill rectangle and keep text as black (transparent).
       </text>
     </svg>
 ~~~
+
+# Animate with <animateMotion>
+
+<https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion>
+Examples can be seen on https://css-tricks.com/guide-svg-animations-smil/
+
+To move along the path but only on portion of the path, use:
+
+~~~
+<animateMotion calcMode="linear" keyPoints="0;0.5" keyTimes="0;1"/>
+~~~
+
+## Animate SVG with javascript
+
+There is nice library to move elements along path
+<https://github.com/lmgonzalves/path-slider>
+
+To move arrow and increase line you can also use js libraries:
+[snap.svg](https://github.com/adobe-webplatform/Snap.svg)
+<https://codepen.io/mattsince87/pen/snqLy>
+<https://codepen.io/duleorlovic/pen/zpmXOw>
+[animejs](http://animejs.com/)
+<https://maxwellito.github.io/vivus/>
+<https://codepen.io/Zaku/pen/ALChE>
+
+
+# Example of nice landing page with animation
+
+* https://scrumpy.io cat is working on laptop
+
+# Tips
+
+[scalling](https://css-tricks.com/scale-svg/) raster images like jpg, png and
+gif have defined size and aspect ratio of width to height. You can auto scale to
+cover `width="100%"` (or to cover `height="100%"`). all images has default size
+300px wide 150px tail.  if we change width or heigh of svg, inner image will
+stay the same (similar that font is the same if we scale div).  We can scale to
+fit with and without distorting. CSS `width: 100%` will overwrite width
+attribute on top svg element.  `viewBox="x y width height"` for example
+`viewBox="0 0 100 100"` defined top left corner as (0,0) and bottom right as
+(100,100).  `preserveAspectRatio="xMidYMin slice"` or
+`preserveAspectRatio="none"` if you want to preserve aspect ratio.
 
 
 # Angular
@@ -302,11 +362,29 @@ any css properties (opacity, color), transforms (translate, rotate), any dom
 attribute with numberical value (svg points).
 
 
-# Examples
+# Examples and Tricks
 
-decorative text animations
-<https://tympanus.net/Development/DecorativeLetterAnimations/>
+* decorative text animations <https://tympanus.net/Development/DecorativeLetterAnimations/>
+* letter effects short to long words <https://codepen.io/duleorlovic/pen/mXwyGj>
+* infinite loader <https://codepen.io/duleorlovic/pen/rJwaZL>
+* animated download button
+  <https://scotch.io/tutorials/build-a-download-button-full-of-micro-interactions>
+* indent list items
+  ~~~
+  ul {
+    list-style: none;
+  }
+  li {
+    transition: all 0.1s ease-out;
+  }
+  li:hover {
+    margin-left: 8px;
+  }
+  ~~~
 
+
+UI animation tips
+https://uxdesign.cc/good-to-great-ui-animation-tips-7850805c12e5
 
 https://24ways.org/2010/intro-to-css-3d-transforms/
 https://www.youtube.com/watch?v=aVcs-zQ1q4U

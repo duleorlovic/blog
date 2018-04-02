@@ -435,3 +435,12 @@ Email gems <http://awesome-ruby.com/#-email> and
 
 Using some header json you can set button in gmail subject line "Quick Actions".
 <https://stackoverflow.com/questions/22318432/how-do-i-add-go-to-action-in-gmail-subject-line-using-schema-org>
+
+# Spam detection
+
+You can disable registering specific email domains using this list
+https://github.com/FGRibreau/mailchecker
+
+# Testing emails
+
+https://www.engineyard.com/blog/testing-async-emails-rails-42

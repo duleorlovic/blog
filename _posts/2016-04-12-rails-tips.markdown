@@ -176,7 +176,7 @@ on update and create.
 Note that business logic could be that some fields could be cleared. For example
 some logo is default value, but someone could completely remove logo.
 So you need to separate `default_values_on_create` and
-`default_values_on_updarte` (which could get `nil` on update some fields)
+`default_values_on_update` (which could get `nil` on update some fields)
 
 ~~~
 after_initialize :default_values_on_initialize
@@ -599,12 +599,17 @@ heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
   sudo pg_dropcluster 9.3 main
   ~~~
 
-* To disable sql logs in rails logger put this in initializer file (simillar to
-quiet assets)
+* To disable sql logs in rails logger put this in initializer file
 
   ~~~
   # config/initializers/silent_sql_log.rb
   ActiveRecord::Base.logger.level = Logger::INFO
+  ~~~
+* to disable assets logs use this
+
+  ~~~
+  # config/environments/development.rb
+  config.assets.quiet = true
   ~~~
 
 * to allow any user to log in to database, ie any user in config/database.yml
@@ -966,6 +971,18 @@ rake db:create db:migrate
 
 `Farmer.lock.find` will wait untill it is free to lock this farmer.
 
+~~~
+alert = nil
+ActiveRecord::Base.transaction do
+  if something_wrong?
+    alert = 'Can not ...'
+    raise ActiveRecord::Rollback
+  end
+end
+if alert
+~~~
+
+
 # MySql
 
 * if you have
@@ -1096,7 +1113,7 @@ better to use custom implementation
 ~~~
 # app/assets/javascripts/document_on.coffee
 $(document).on 'click', '[data-js-modal]', (e) ->
-  target = this.dataset.jsModal
+  arget = this.dataset.jsModal
   remote_link = this.href || this.dataset.jsModalHref
   $(target).modal('show')
   # use $.ajax and replaceWith since $.load use .html which discard scripts
@@ -2309,6 +2326,31 @@ same columns (you can use it for different columns). Joins
 could be replaced with `references`. But I have some problems with `references`
 since it remove my custom selected data, so instead `references` I use
 `joins('LEFT OUTER JOIN sports ON sports.id = users.sport_id')` and `distinct`.
+Here is example of how includes/references do not let me use counts as
+calculated columns, but joins let works fine (event .to_sql is similar)
+~~~
+all = Model
+  .select(%(
+    users.id,
+    COUNT(projects.id) as projects_count
+  ))
+  .includes(:projects)
+  .references(:projects)
+all.last.projects_count # does not work
+all = Model
+  .select(%(
+    users.id,
+    COUNT(projects.id) as projects_count
+  ))
+  .joins(%(
+    LEFT JOIN projects ON user_id = users.id
+  ))
+
+  # do not use .joins(:projects) since it will inner join, ie you will get rows
+  # for each user and each project.
+  # It is fine if it is belongs_to relation (only one corresponding project)
+  all.last.projects_count # here it works
+~~~
 Rails 5 has method
 [left_outer_joins](http://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins)
 * when you need to eager load for a single object (show action) than you can
@@ -2810,11 +2852,8 @@ touch config/boot
 
 * [simple captcha 2](https://github.com/kikyous/simple-captcha2) is
 [generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
-a key (6 chars) and session idhttps://github.com/kikyous/simple-captcha2) is
-[generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
-a key (6 chars) and session idhttps://github.com/kikyous/simple-captcha2) is
-[generating](https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119)
-a key (session id) and value (6 chars) when `view.show_simple_captcha` is called.
+a key (session id) and value (6 chars) when `view.show_simple_captcha` is
+called.
 * instead of guard clauses `errors.add :name, 'is invalid' and return false
 unless item.save` you can move important things in front `item.save ||
 (errors.add :name, 'is invalid' and return false)`
@@ -2822,22 +2861,6 @@ unless item.save` you can move important things in front `item.save ||
 * translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> just
   set language in your `config/initializers/cyrillizer.rb` `Cyrillizer.language
   = :serbian`
-* if you need to manually escape query params you can use
-
-  ~~~
-  require 'uri'
-
-  enc_uri = URI.escape("http://example.com/?a=\11\15")
-  p enc_uri
-  # => "http://example.com/?a=%09%0D"
-
-  p URI.unescape(enc_uri)
-  # => "http://example.com/?a=\t\r"
-  ~~~
-
-  Some common escaped characters are: blank, slash `URI.escape " /" # %20%2f`
-  but `escape` does not convert `/` to `%2f`
-
 * gem [countries](https://github.com/hexorx/countries) uses
   [money](https://github.com/RubyMoney/money) gem.
 

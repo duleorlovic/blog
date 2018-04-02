@@ -71,11 +71,9 @@ try with ANAME record (not supported in loopia), or use Cloudflare
 [flattening](https://support.cloudflare.com/hc/en-us/articles/200169056-CNAME-Flattening-RFC-compliant-support-for-CNAME-at-the-root)
 
 Default `duleorlovic.github.io` is serverd under HTTPS, but custom domain is
-serverd under HTTP. To enable HTTPS for custom domains tiy beed to use
-[cloudflare](https://www.cloudflare.com/)
-
-On cloudflare you can use universal SSL service, or you can sign up for free 90
-days <https://letsencrypt.org/> certificate.
+serverd under HTTP. To enable HTTPS for custom domains you can try
+[cloudflare](https://www.cloudflare.com/) but recently, all github pages are
+enypted with free <https://letsencrypt.org/> certificate.
 
 # Loopia
 

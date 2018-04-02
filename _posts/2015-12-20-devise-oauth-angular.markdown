@@ -1728,3 +1728,7 @@ client = OAuth2::Client.new(client_id, client_secret, site: 'https://localhost:3
 
 client.auth_code.authorize_url redirect_uri: redirect_url
 ~~~
+
+# Detect if already signed in to social sites
+
+http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/

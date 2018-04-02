@@ -21,6 +21,7 @@ text on click
   ~~~
 
   * [abpetkov/switchery](https://github.com/abpetkov/switchery)
+  * [animated smile checkbox](https://codepen.io/Rplus/pen/LdjwZz)
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
 * drag and drop elements <https://shopify.github.io/draggable/>
 
@@ -207,6 +208,19 @@ $.fn.select2.defaults.set("width", "100%")
 
 Problem is when select2 is inside modal with `tabindex="-1"`
 [example](https://github.com/select2/select2/issues/119)
+
+To select item on select2 with ajax source, you need to initialize with data and
+keep ajax source
+
+~~~
+    $(selectTarget).select2({
+      data: [{id: selectValue, text: selectText}],
+      ajax: {
+        url: $(selectTarget).data('select2AjaxInitialize'),
+        dataType: 'json'
+      }
+    });
+~~~
 
 # Calendar date and time picker
 
@@ -417,6 +431,7 @@ FA icons are very usefull for quick icons. Look for
 * free online sample images https://unsplash.it/images
 * free stock photos <https://burst.shopify.com>
 * sample placeholder https://placeholder.com/
+* free vector images kajak pictogram https://pixabay.com/en/sport-pictogram-olympia-water-swim-1580667/
 
 # Graphs
 
@@ -594,6 +609,9 @@ version](https://github.com/iogbole/gentelella_on_rails)
 * free landing pages templates <https://freehtml5.co>
 [booster](https://freehtml5.co/booster-free-html5-bootstrap-template/) or
 [elate](https://freehtml5.co/demos/elate/)
+* bootstrap 4
+  <https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio> 
+  <https://blackrockdigital.github.io/startbootstrap-freelancer/>
 * [four images](http://barbajs.org/demo/grid/index.html)
 * [trophy jekyll](http://thomasvaeth.com/trophy-jekyll/) nice template for jekyll
 

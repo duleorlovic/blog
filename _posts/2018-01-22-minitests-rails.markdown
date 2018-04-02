@@ -12,11 +12,18 @@ method so it can be used like `test "my password" do`.  In minitests you can not
 have same test descriptions since it will be converted to same
 `test_my_password`.
 
-To run specific test use ENV variables `rake test
+You can run specific test use `:line` or `-n test_name`.
+This also works for system test (you do not need `system` in `rails
+test:system`)
+
+~~~
+rails test test/models/article_test.rb:6 or name
+rails test -n test_example
+~~~
+
+You could also use ENV variables `rails test
 TEST=test/machine_with_callbacks_test.rb
 TESTOPTS="--name=test_should_run_validations_for_specific_state -v"`
-You can run specific line `rails test test/models/article_test.rb:6` or name
-`rails test -n test_example` using <https://github.com/qrush/m>
 
 Each test run will load all fixture data, run setup blocks, run test method, run
 teardown block, rollback fixtures.
@@ -190,8 +197,14 @@ changes.
 Before we used feature specs for full application integration testing, but now
 we should use system specs (which also uses capybara and webdriver with chrome).
 
-System tests are not included in default test suite, you should run `rake
-test:system`.
+System tests are not included in default test suite if you run `rails test` (you
+should run `rake test:system`), but if you run specific test than it will be run
+`rails test test/system/my_test.rb`.
+
+Note that if you use puma with multiple workers than
+`ActionMailer::Base.deliveries.size` could be different in rails process and in
+test process, so use `workers 0` in `config/puma/test.rb`.
+
 In system test you can't mock OmniAuth.mock_auth so use integration test for
 that.
 

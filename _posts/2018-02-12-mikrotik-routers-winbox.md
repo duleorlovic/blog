@@ -220,20 +220,26 @@ To call another function from inside function, you need to declare it
 
 Parse can be used to define functions: `:global myFunc [:parse ":put hello!"];`
 
-Logs
+Logs and debug
 
 <https://wiki.mikrotik.com/wiki/Manual:System/Log>
 `:log warning "My message"` write to topic: `error`, `info` and `warning`. You
 can define topis on `/system logging` and which action to perform. Actions could
-be `memory` (show in `/log print`), `echo` (show in console), `disk` (write to
+be `memory` (shows in `/log print`), `echo` (show in console), `disk` (write to
 file), `email` and `remote` (from webproxy to Kiwi server). Topics could be for
-example `hotspot`, `pppoe`. To set `warnings` to write to file (any way it will
+example `hotspot`, `pppoe`. To set `warnings` to write to file (anyway it will
 show in `/log` just if we need to save for later use)
 
 ~~~
 # set warning to disk
 /system logging set [find topics="warning"] action=disk
 :log warning "WAN started "
+~~~
+
+to see all logs on host you can run
+
+~~~
+ssh admin@$MIKROTIK_IP log print follow
 ~~~
 
 `:put [:time { :delay 100ms }]` show time needed to execute command
@@ -588,12 +594,20 @@ There are several pages that are rendered on mikrotik:
 
 * `redirect.html` immediatelly redirect with http status (also with meta but
   I think that is not used). When I remove first two lines that perform
-  http-status and http-header than it will use some other default template. If I
-  change `$(link-redirect)` to google, it will redirect to google
+  http-status and http-header
+
+  ~~~
+  $(if http-status == 302)Hotspot redirect$(endif)
+  $(if http-header == "Location")$(link-redirect)$(endif)
+  ~~~
+
+  than it will use some other default template which redirects. If I
+  change `$(link-redirect)` to google, it will redirect to google. So you can
+  not override this file to not perform redirect.
 
 GET `/login`
 * if user is not authenticated than renders `login.html` to ask user for
-  username and password. Can be provided with
+  username and password. Parameters on this url can be:
   * `username`, `password` (plain for PAP or md5 hash of chap-id, password and
   challenge  for CHAP)
   * `dst` original requested url before redirect
@@ -602,7 +616,7 @@ GET `/login`
 POST & GET `/login`
 * if user is successfully authenticated or already authenticated than it
   renders `alogin.html` page. It redirects in javascript or meta to
-  link-redirect=http://10.5.50.1/status
+  link-redirect (it is external page or http://10.5.50.1/status)
 * if not successfull auth (wrong password or username) it renders `flogin.html`
   if exists or redirect with http status 302 to login
 
@@ -621,7 +635,7 @@ GET `/logout`
 * `error.html` show fatal errors
 
 GET external page
-* if user is not auth it renders `rlogin.html` if exists or redirect to
+* if user is not auth it renders `rlogin.html` if exists or redirect 302 to
   `/login?dst=target_page`
 
 GET "/"on hotspot
@@ -632,17 +646,27 @@ You can have different pages for different `/ip hotspot profile print where
 html-directory=hotspot`. You can create subfolder for translation (`lv`) and use
 parametar `target=lv`. Other links will stay in that subfolder.
 
-Some variables which can be used like `$(varName)`:
+Links variables which can be used like `$(varName)`:
 * `link-login` link to login page including original URL requested
   http://10.5.50.1/login?dst=http://www.example.com/
 * `link-login-only` link to login page, not including original URL requested
   http://10.5.50.1/login
 * `link-orig` original url requested http://yahoo.com
+* `link-logout` link to logout http://10.5.50.1/logout
+* `link-status` link to status
 
+General variables:
 * `logged-in` "yes" is user is logged in, otherwise "no"
 * `mac` MAC of the user
 * `username` name of the user
 * `error` error message
+* `hostname` DNS or IP address of hostspot servlet
+* `server-address` hostspot server address with port
+* `ssl-login` "yes" if https methods was used to access this page
+* `interface-name` bridge or interface name
+* `ip` ip address of the client
+* `host-ip` client ip address from `/ip hotspot host`
+
 
 Inside templates `$(if varName) ... $(elif varName) ... $(else) ... $(endif)`
 can be used for conditionals.
@@ -728,9 +752,80 @@ https://wiki.mikrotik.com/wiki/Manual:Customizing_Hotspot#Firewall_customization
   dst-port=443 protocol=tcp`
 
 Redirection in NAT should be done in `dstnat` chain with `dst-nat` action, which
-can accept `address-to=
-Redirect facebook with
+can accept `address-to=`
 
+## IP Proxy
+
+Proxy can be used for increasing web speed or for firewall, when we redirect
+users to the proxy and show them local page.
+https://wiki.mikrotik.com/wiki/Manual:IP/Proxy#Proxy_based_firewall_.E2.80.93_Access_List
+For example when Radius assign user some ip UNAUTHORIZED_IP we can redirect all
+trafic from that UNAUTHORIZED_IP to our hotspot page `unauthorized.html`
+
+~~~
+# assign address to interface
+/ip address
+add address=UNAUTHORIZED_IP_with_0_1/16 interface=ether3
+
+# redirect all requests to 8080
+/ip firewall nat
+add action=redirect chain=dstnat protocol=tcp \
+src-address=UNAUTHORIZED_IP_with_0_1/16 to-ports=8080
+
+# enable ip proxy
+/ip proxy
+set enabled=yes
+
+# redirect path
+/ip proxy access
+print detail
+# you can redirect specific sites like facebook
+add action=deny dst-host=www.facebook.com redirect-to=10.5.50.1/unauthorized.html
+# you can allow specific sites
+add action=allow dst-host=*.trk.in.rs
+~~~
+
+## HTTPS and redirect
+
+https://wiki.mikrotik.com/wiki/Manual:Hotspot_HTTPS_example
+Https use secure connection (SSL/TLS handshake) with a server so request to
+https://www.google.com which is redirected at firewall level will not work with
+your server/proxy/router.
+Only think that user can do is to add Exception to install your certificate and
+use transparent web proxy.
+
+Even it is not possible to redirect https without warning, modern browsers
+(firefox 58) will show login button (link to 10.5.50.1/login) for hsts and non
+hsts site, so users can continue with login.
+
+> Log in to network
+
+> You must log in to this network before you can access the Internet.
+
+> This site uses HTTP Strict Transport Security (HSTS) to specify that Firefox
+> may only connect to it securely. As a result, it is not possible to add an
+> exception for this certificate.
+
+![https redirect non hsts site]({{ site.base_url }}/assets/posts/https%20redirect%20for%20non%20hsts%20site.png)
+![https redirect hsts site]({{ site.base_url }}/assets/posts/https%20redirect%20for%20hsts%20site.png)
+
+Lets encrypt can be used to generate certs.
+https://www.ollegustafsson.com/en/letsencrypt-routeros/
+
+~~~
+# get acme
+curl https://get.acme.sh | sh
+# issue a cert
+acme.sh --issue --dns -d router.mydomain.com
+# check if record exists
+host -t txt _acme-challenge.router.trk.in.rs
+# renew when txt record is available
+acme.sh --renew -d router.mydomain.com
+
+~~~
+
+https://github.com/gitpel/letsencrypt-routeros
+https://github.com/Neilpang/acme.sh/pull/706/files
 
 NAT
 https://mikrotik.com/testdocs/ros/3.0/qos/filter.php
@@ -749,10 +844,11 @@ add list=my_site.com address=my_site.com
 ~~~
 
 
-todo:
+Mangle mark routing
 https://www.youtube.com/watch?v=q13z9_dmmyA
-https://wiki.mikrotik.com/wiki/Firewall
-https://wiki.mikrotik.com/wiki/Manual:Customizing_Hotspot#Firewall_customizations
+
+Microtik youtube tutorials
+https://www.youtube.com/user/rodrick4u/playlists
 
 # Tips
 

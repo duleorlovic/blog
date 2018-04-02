@@ -3,20 +3,43 @@ layout: post
 title: Bootstrap front-end framerwork
 ---
 
+# Bootstrap 4
+
 # Bootstrap
 
 Bootstrap grid is mobile first, so three `.col-md-4` will be stacked until
 desktop and large desktop, where it will be three equal width columns.
+You do not need to define all, `.col` will occupy rest of place.
 Bootstrap Media queries:
 
 * xs - phones (no need for media queary since this is default)
-* sm - tablets `@media (min-width: @screen-sm-min) { // 768px and up`
-* md - desktops `@media (min-width: @screen-md-min) { // 992px and up`
-* lg - larger desktops `@media (min-width: @screen-lg-min) { // 1200px and up`
+* sm - tablets `@media (min-width: @screen-sm-min) { // 576px (Bv3 768px) and up`
+* md - desktops `@media (min-width: @screen-md-min) { // 768px (Bv3 992px)`
+* lg - larger desktops `@media (min-width: @screen-lg-min) { // 992px (Bv3 1200px)`
+* xl - extra lage `@media (min-width: @screen-xl-min) { // 1200pxa`
 
 So when you specify for sm, you do not need to specify for md or lg.
 
-With Bootstrap you can use their predefined media queries with `min-width`
+With bootstra4 you can use mixins for media queries:
+~~~
+@include media-breakpoint-up(sm) {
+  .some-class {
+    display: block;
+  }
+}
+
+// or other direction (given and smaller)
+@include media-breakpoint-down(sm) {}
+
+// only given size
+@include media-breakpoint-only(sm) {}
+
+// multiple sizes
+@include media-breakpoint-between(md, xl) {}
+@media (min-width: 768px) and (max-width: 1199.98px) { ... }
+~~~
+
+With Bootstrap3 you can use their predefined media queries with `min-width`
 (mobile first), for example
 
 ~~~
@@ -27,19 +50,24 @@ With Bootstrap you can use their predefined media queries with `min-width`
     right: 20px;
   }
 }
+
+// or in other direction (given and smaller)
+@media(max-width: $screen-sm) { }
+// or better do not use boundary
+@media(max-width: 575.98px) { }
 ~~~
 
 Bootstrap `container` has fixed width for big devices.
 
-You can use [responsive available
+Boostrap 3 you can use [responsive available
 classes](http://getbootstrap.com/css/#responsive-utilities-classes) to toggle
 between `display: block, inline, inline-block` or to hide, for specific viewport
-size:
+size `.visibe-sm-block .hidden-md .hidden-sm-up`
 
-~~~
-.visibe-sm-block
-.hidden-md
-~~~
+In Bootstrap 4 you can use `d-*-none` class
+<https://getbootstrap.com/docs/4.0/utilities/display/#hiding-elements>
+For example to hide on smaller than md use `d-none d-md-block`
+
 
 You can write your own to match all greater (or smaller) sizes:
 
@@ -164,7 +192,11 @@ Other helpers are:
 * `.text-center`, `.text-left`, `.text-nowrap`
 * `.show` and `.hidden`
 * I usually create my own `.hide-not-important` since bootstrap's `hide` and
-`hidden` are with `important` and if you want to use jQuery `$el.show()` (hide) or `$el.slideDown()` (slideUp) than use my version.
+`hidden` are with `important`. Do not use jQuery `$el.show()` (hide) or
+`$el.slideDown()` (slideUp) since they use `display: block` which does not work
+well with `display: flex` elements, better is to use
+`$(el).addClass('hide-not-important')`. There is also
+[hidden](https://getbootstrap.com/docs/4.0/content/reboot/#html5-hidden-attribute)
 
   ~~~
   .hide-not-important {
@@ -174,6 +206,15 @@ Other helpers are:
     }
   }
   ~~~
+* margin and padding helpers `1..5` like `p-0`, `p-0-25` ... `p-3`, margin top
+  `mt-5`.
+
+# Flex
+
+You can use `d-flex` class to convert to flexbox container.
+Other position and alignment helpers https://getbootstrap.com/docs/4.0/utilities/flex/
+
+* to align to the right use `ml-auto`
 
 # Rails
 
@@ -497,4 +538,3 @@ class MyFormBuilder < BootstrapForm::FormBuilder
 end
 end
 ~~~
-

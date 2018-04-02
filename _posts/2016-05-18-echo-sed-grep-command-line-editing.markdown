@@ -173,9 +173,10 @@ boundaries like `^([0-9]|[1-9][0-9])$` (0..99, but not 0asd, or asd9
 * contains asd but not qwe is `asd((?!qwe).)*$`. Oposite not containing.
 * contains `asd` and `qwe` but not `zxc` in between `asd((?!qwe).)*zxc`
 * include end of line for multiline search, use matcher `\_.` finds any
-character including end-of-line. Use `\n` for new line character. `\{-}`
-stopping at first occurence (`*` is too greedy and would stop at last
-occurence).
+character including end-of-line. Use `\n` for new
+line character. `\{-}` stopping at first occurence (`*` is too greedy and would
+stop at last occurence). If you want ruby regex ignore new line you can use
+modifier `m`, like match all dl `s.match /dl.*dl/m`
 * match start of line with lowercase `^[a-z]` (but one string could have
 multiple lines). Better is to check start of string with lowercase `\A[a-z]` (in
 ruby example) `"123\ntest".match /^[a-z]/` will return `t`... (you can use

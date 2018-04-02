@@ -23,7 +23,8 @@ we unique and self explanatory
 sidebar or footer.
 * try to have more and more inbound links from other sites. Increase link count
 using: social media, directories, some sites links to competition, try to write
-them explaining why your site is better
+them explaining why your site is better. To find inbound links use google
+webmaster tools, <https://moz.com/researchtools/ose/>
 * if your content expires (like job posts, wheater data) than link old pages to
 category pages (group of similar results)
 * outbound links can be no-follow, especially outgoing links that are not
@@ -211,7 +212,8 @@ Or you can add to https://www.google.rs/search?q=site:`www.my-site.com`
 
 * site: search only for this domain or even subdirectory. You can use this to
   see if some page is indexed, just add uniq part of page url
-* link: find links for specific domain or subdirectory or pages
+* link: find links for specific domain or subdirectory or pages (this is no
+  longer supported as of Jan 2017)
 * cache: see current archived copy of domain or page. It is better to use
   <https://www.google.com/webmasters/tools/googlebot-fetch> since google crawler
   can execute javascript. You can submit to index on the page, but even google
