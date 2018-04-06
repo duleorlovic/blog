@@ -379,7 +379,11 @@ will show `\n` and will insert spaces because text is indented. There is
   ~~~
 
 * `%x(pwd)` is used to call system bash commands. Use Open3 to call system shell
-  commands, like `stdout, stderr, status = Open3.capture3("ls")`
+  commands
+  ~~~
+  require 'open3'
+  stdout, stderr, status = Open3.capture3("ls")
+  ~~~
 * `%i(sym1 sym2)` is used to return array of symbols
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,

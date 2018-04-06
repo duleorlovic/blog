@@ -8,7 +8,11 @@ When you install another version of existing gem, for example `gem install rails
 -v 4.2.0`, than you can find it with `gem list rails` and use it with `rails
 _4.2.0_ new mystore`
 
-To rebuild Gemfile.lock you can run `bundle update`
+To rebuild Gemfile.lock you can run `bundle update`. You can upgrade specific
+gem `bundle update rails` and only patch version of rails and its dependencies
+will be updated in Gemfile.lock. You should also update gemfile to point to new
+patch version. If you want to update minor version than you
+need to change in Gemfile, like `gem 'rails', '~>5.2.0'`
 To install specific groups in Gemfile run `bundle install --with postgresql`.
 To specify github source of gem use
 
@@ -120,55 +124,20 @@ You can add `package@version` vesion could be `"^1.0.0"`
 <https://yarnpkg.com/en/docs/dependency-versions> When you `yarn
 upgrade` it will upgrade version to next, for example `"^2.0.0"`.
 
-Example adding jquery 3, bootstrap 3, fontawesome 4
+Example adding jquery 3, bootstrap 4, fontawesome 4
 
 ~~~
-yarn add jquery bootstrap font-awesome
+yarn add jquery bootstrap font-awesome popper.js
 ~~~
 
-Since we need to change font path for bootstrap glyphicons and fontawesome, we
-need to use scss and less. You can point to CDN or use stupid assets and point
-to the local fonts. Bootstrap use same name `@icon-font-name:
-"glyphicons-halflings-regular";` just adding extension
-`url('@{ison-font-path}@{icon-font-name}.eot`
-`url('@{ison-font-path}@{icon-font-name}.woff` so we can't use fingerprinted
-name since it is different for different files. We could also overwrite
-css definitions like for example in [layouts and rendering]({{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}#fonts)
-
+If you want to install to specific folder instead of `node_modules` than use
+`yarn install --modules-folder ./public/assets` or add to
+[.yarnrc](https://yarnpkg.com/lang/en/docs/yarnrc/#toc-cli-arguments)
 
 ~~~
-// app/assets/stylesheets/application.css
- *= require_tree .
- * or explicitly
- *= require application_less
- *= require application_scss
-~~~
-
-~~~
-// app/assets/stylesheets/application_scss.scss
-$fa-font-path: "font-awesome/fonts";
-// $fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default; // for referencing Bootstrap CDN font files directly
-@import "font-awesome/scss/font-awesome";
-~~~
-
-~~~
-// app/assets/stylesheets/application_less.less
-@icon-font-path: "bootstrap/fonts/";
-@import "bootstrap/less/bootstrap";
-~~~
-
-~~~
-// app/assets/stylesheets/application.js
-//= require jquery/dist/jquery
-//= require bootstrap/dist/js/bootstrap
-~~~
-
-~~~
-# app/config/initializers/assets.rb
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|woff2|ttf)$/
-NonStupidDigestAssets.whitelist += [
-  /\.(?:svg|eot|woff|woff2|ttf)$/
-]
+# .yarnrc
+--install.modules-folder "./public/assets"
+--add.modules-folder "./public/assets"
 ~~~
 
 # NPM
@@ -200,6 +169,21 @@ npm init -y
 npm install webpack webpack-cli --save-dev
 ~~~
 
+Add to `package.json` build command so you can run
+
+~~~
+// package.json
+  "scripts"; {
+    "build"; "webpack"
+  }
+
+// run build with
+npm run build
+
+// if webpack is installed globally than you can use directly
+webpack # not recomended to use as global
+~~~
+
 Entry point is module for which webpack start building out dependency graph and
 create bundles.
 Output is where to emit the bundles (`path` is `./dist`).
@@ -207,6 +191,9 @@ Loader is used to process webpack modules (files that use `import`, `require()`,
 `@import`, `url()`) and use coffescript, typescript, sass processors. It has
 `test` property (which files should be transformed) and `use` which loader.
 Plugins are use to perform wider range of tasks like uglify.
+`./dist/` is default output path folder, and you can open `gnome-open
+dist/index.html`
+
 
 ~~~
 // webpack.config.js
@@ -221,11 +208,12 @@ module.exports = {
 }
 ~~~
 
-Asset Management with loaders
+Asset Management with loaders (`npm install --save-dev style-loader`)
 
 *  `style-loader` will in javascript create and attach to head as inline `<style
   type="text/css">.my-style-from-file{}</style>`. It needs to used in js `import
   './my_style.css'` to define which file will be imported.
+
 * `css-loader` will interprets `@import` and `url()` and copy file using random
   file name
   ~~~
@@ -234,14 +222,16 @@ Asset Management with loaders
     background: url('./img.png');
   }
   ~~~
+
 * `file-loader` handles files
   ~~~
   import myImage from './img.png'
   myImage // random-name-of-image.png
   ~~~
+
 * `html-loader` handles `<img src="./my-image.png">`.
 
-~~~
+  ~~~
   module: {
     rules: [
       {
@@ -265,9 +255,41 @@ Asset Management with loaders
       }
     ]
   }
+  ~~~
+
+https://github.com/jantimon/html-webpack-plugin
+Output management is needed to automatically include compiled assets (which are
+fingerprinted) using `HtmlWebpackPlugin` installed with `npm install --save-dev
+html-webpack-plugin` and it will generate `dist/index.html` which includes all
+generated stuff.
+
+~~~
+// webpack.config.js
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Output management'
+    })
+  ],
+~~~
+https://www.npmjs.com/package/clean-webpack-plugin
+You can clean dist folder before each build
+~~~
+npm install clean-webpack-plugin --save-dev
+
+# webpack.config.js
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
 ~~~
 
-Todo
+Use
+[WebpackManifestPlugin](https://github.com/danethurber/webpack-manifest-plugin)
+for manifest about what is included in build.
+
+Add `devtool: 'inline-source-map',` to provide source maps
+
+
 https://webpack.js.org/guides/output-management/
 /home/orlovic/rails_temp/webpack_guide
 

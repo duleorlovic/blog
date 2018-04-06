@@ -6,11 +6,24 @@ title: CSS and HTML tips
 * when you want to have smaller input field type number (smaller in terms of
   width) you need to provide both `min` and `max`, like `<input type="number"
   min="0" max="99">`
-* to hide long text on div/dt `float: left; width: 100px` than:
-  * text can be on one line `white-space: nowrap;overflow: hidden;text-overflow:
-  ellipsis;` no wrap means it will no go to the next line
-  * multiple lines `white-space: normal`
-  * `word-wrap: break-word`
+* to hide long text on div/dt `width: 100px` than you can:
+  * long string  `overflow: hidden; text-overflow: ellipsis;` To show on hover,
+  focus or active (when selecting text) use this helper
+  ~~~
+  .long-string-three-dots {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    &:active, &:hover, &:focus {
+      text-overflow: initial;
+      overflow: auto;
+    }
+  }
+  ~~~
+
+  * long text can be in one line `white-space: nowrap;` no wrap means it will no
+  go to the next line even for white space.
+  * long strings can be shown on multiple lines with `word-wrap: break-word`
+  this will break long string to multiple lines (for text `white-space: normal`)
 
 * if you have `<small>` position relative, and apply left -100px, it will still
   occupy the space where it was. It is better to use `position: absolute`
@@ -485,4 +498,27 @@ link_to "+123-123", "tel:123123" %>`)
   <https://stackoverflow.com/questions/3680429/click-through-a-div-to-underlying-elements>
   ~~~
   pointer-events: none
+  ~~~
+* accordion is native in html (you do not need bootstrap accordion collapse in
+  javascript)
+
+  ~~~
+  <details>
+    <summary>Hi</summary>
+    Bye
+  </details>
+
+  <details>
+    <summary>How do I get to New Orleans?</summary>
+    Use Google Maps.
+  </details>
+  ~~~
+
+  ~~~
+  details {
+    margin: 1rem;
+  }
+  summary {
+    font-weight: bold;
+  }
   ~~~

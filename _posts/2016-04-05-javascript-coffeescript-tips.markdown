@@ -574,7 +574,7 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
   <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import>
 
   ~~~
-  // import default export as bind to defaultExport
+  // import what is default exported and bind bind to defaultExport
   import defaultExport from "module-name";
   // this is shorthand of
   import { default as defaultExport } from 'module-name';
@@ -594,7 +594,8 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
   import "module-name";
   ~~~
 
-  module-name is relative or abosulte path name to the `.js` file
+  module-name is relative (`./lib/math` or `lib/math`) or abosulte path name to
+  the `.js` file
   ~~~
   import * as math from "lib/math";
   console.log("2pi = " + math.sum(math.pi, math.pi));

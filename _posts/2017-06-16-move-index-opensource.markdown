@@ -2,6 +2,32 @@
 title: Move Index opensource
 ---
 
+# Opensource
+
+[README template](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
+From it link to CONTRIBUTING and LICENSE files.
+
+~~~
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of
+conduct, and the process for submitting pull requests to us.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+~~~
+
+Look for example
+https://github.com/duleorlovic/premesti.se/blob/master/CONTRIBUTING.md
+
+You can create ISSUE_TEMPLATE and PULL_REQUEST_TEMPLATE files so they have
+similar title, body labels... Also you can use ISSUE_TEMPLATE folder with custom
+template file which is referenced in URL query.
+<https://help.github.com/articles/about-automation-for-issues-and-pull-requests-with-query-parameters/>
+
+# TODO
+
 <https://opensource.guide/starting-a-project/#launching-your-own-open-source-project>
 
 android ethernet so battery lasts longer without wifi

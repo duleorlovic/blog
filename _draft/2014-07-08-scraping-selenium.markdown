@@ -77,22 +77,6 @@ page.link_with text: 'Next' # exact match
 page.search('#updates div a:first-child') # css match
 ~~~
 
-# Selenium
-
-<https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings>
-Selenium for ruby use gem `selenium-webdriver`. You also need executables for
-firefox `geckodriver` (just download from
-<https://github.com/mozilla/geckodriver/releases> to `/usr/local/bin`) and for
-chrome `chromedriver` (download from
-<https://sites.google.com/a/chromium.org/chromedriver/downloads> to
-`/usr/local/bin`) and also `gem 'chromedriver-helper'`. Make sure you have version of firefox and chrome that matches
-drivers.
-
-You can controll remote selenium server. Download
-[selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run 
-`java -jar selenium-server-standalone.jar`. For error `Unsupported major.minor
-version 52.0` you need to update java: 51 -> java7, 52 -> java8, 53 -> java9.
-
 For using plain selenium (not capybara) you need to implement waiting for ajax
 results. I used three steps
 

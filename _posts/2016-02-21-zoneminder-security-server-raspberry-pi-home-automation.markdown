@@ -7,9 +7,9 @@ title:  Zoneminder security server and Raspberry Pi home automation
 
 On my board PCB says: `Raspberry Pi (c)2011.12` so [it
 is](http://www.raspberry-projects.com/pi/pi-hardware/raspberry-pi-pcb-versions)
-Model B Revision 2.0 (512MB).
+Pi 1 Model B Revision 2.0 (512MB).
+`cat /proc/cpuinfo` says it is Hardware revision 000e.
 [Pinouts](http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto)
-
 
 Start with [NOOBS](https://www.raspberrypi.org/downloads/noobs/) (which is based
 on Raspbian) to create SD card.
@@ -103,13 +103,47 @@ iface eth0 inet static
 
 Copy ssh keys with `ssh-copy-id pi@192.168.0.11`.
 
-Check internet connecction with
+Check internet connection with
 
 ~~~
 host google.com
 ~~~
 
+# WiringPi
+
+http://wiringpi.com/download-and-install/
+
+~~~
+~~~
+
 # Ruby
+
+Check if ruby is already installed in latest Raspian. 
+
+~~~
+sudo gem install bundler
+cat > Gemfile << HERE_DOC
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'sinatra-param'
+gem 'pi_piper'
+HER_DOC
+
+bundle
+# I got error installing gems
+# mkmf.rb can't find header files for ruby at /usr/lib/ruby/include/ruby.h
+sudo apt-get install ruby-dev
+
+# I got error
+# project.h:116:25: fatal error: openssl/ssl.h: No such file or directory
+gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
+
+# update your Gemfile to include installed eventmachine
+# gem 'eventmachine', '1.2.5'
+
+bundle
+~~~
 
 [rvm](https://rvm.io/rvm/install)
 
@@ -124,6 +158,52 @@ This takes too much time, so you can revert to
 ~~~
 sudo apt-get install ruby ruby1.9.1-dev libssl-dev
 sudo gem install pi_piper
+~~~
+
+# Bash
+
+<https://raspberrypi-aa.github.io/session2/bash.html>
+
+~~~
+#   Exports pin to userspace
+echo "18" > /sys/class/gpio/export
+
+# Sets pin 18 as an output
+echo "out" > /sys/class/gpio/gpio18/direction
+
+# Sets pin 18 to high
+echo "1" > /sys/class/gpio/gpio18/value
+
+# Sets pin 18 to low
+echo "0" > /sys/class/gpio/gpio18/value
+~~~
+
+<https://projects.drogon.net/raspberry-pi/wiringpi/the-gpio-utility/>
+
+~~~
+gpio readall
+# use wPi numbers so instead PIN 26 use 11
+gpio mode 11 out
+# same as -g 7
+# gpio -g mode 7 out
+gpio write 11 1
+
+# pull up resistor
+gpio mode 12 up
+~~~
+
+Dallas DS18B20 sensor
+
+~~~
+sudo vi /boot/config.txt
+dtoverlay=w1-gpio
+sudo reboot
+sudo modprobe w1-gpio
+sudo modprobe w1-therm
+cd /sys/bus/w1/devices
+ls
+cd 28-xxxx (change this to match what serial number pops up)
+cat w1_slave
 ~~~
 
 # PiPiper
@@ -152,6 +232,84 @@ We use prefix `rvm` so `rvmsudo` pass that env variable to
 [child](https://github.com/rvm/rvm/blob/master/bin/rvmsudo#L84) and unbuffer so
 we can read long and not wait buffer to fill in. For this command we need to
 `sudo apt-get install expect-dev`.
+
+# Sinatra
+
+Default folder for partials is `views/` and name is with `.erb` extension.
+Default layout file is `views/layout.erb`. Always use symbols when referencing
+templates, event with subfolder `erb :'subdir/home'`. Instance variables are
+accessible in templates.
+Static files are server from `public/` folder.
+For stylesheet use `scss :stylesheet, style: :expanded`
+For coffescript `coffee :index`
+
+~~~
+# to change default views folder
+set :views, settings.root + '/templates'
+~~~
+
+Filter can be used to modify request and response, set instance variable.
+
+~~~
+before '/protected/*' do
+  authenticate!
+end
+~~~
+
+Session and other configuration options
+
+~~~
+require 'securerandom'
+
+enable :sessions
+set :session_secret, ENV.fetch('SESSION_SECRET') { SecureRandom.hex(64) }
+
+# to be able to access from other computers
+set :bind, '0.0.0.0'
+
+get '/:value' do
+  session['val'] = params['value']
+end
+~~~
+
+Log is with `logger.info 'some data'`.
+Redirect with `redirect to('/foo?bar=42')`.
+Cache-control header is set with `cache_control :public`. Rack cache can be used
+for caching.
+
+Top level application assumes a micro app style configuration (a single app
+file, public and views folders). This is classic style.
+If you want modular (run is disabled by default) style you can inherit from
+`Sinatra::Base` (logging and inline templates disabled by default) or
+`Sinatra::Application`.
+
+## Sinatra Sass
+
+To add support to scss you can add `gem 'sass'` and if using modular style
+
+~~~
+# config.ru
+require 'sass/plugin/rack'
+
+Sass::Plugin.options[:style] = :compressed
+use Sass::Plugin::Rack
+~~~
+
+or is using classis style, run
+
+~~~
+sass --watch public/assets/stylesheets/sass:public/assets/stylesheets
+~~~
+
+and include in layout
+
+~~~
+<link rel="stylesheet" href="/assets/stylesheets/switch.css">
+~~~
+
+
+# Home automation
+
 
 # Disk errors
 

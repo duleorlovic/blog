@@ -1396,9 +1396,9 @@ domain: :all, expire_after: 60.minutes
 
 This works fine for top level domains and subdomains for them.
 
-For example if you have `domain: :all` and you sign in at `asd.dev`, than you
-will be signed in also on `asd.asd.dev` and `asd.asd.asd.dev` and so on...
-Cookie will be with domain `.asd.dev` for all those sites.
+For example if you have `domain: :all` and you sign in at `asd.local`, than you
+will be signed in also on `asd.asd.local` and `asd.asd.asd.local` and so on...
+Cookie will be with domain `.asd.local` for all those sites.
 
 You need to know that some domains like `herokuapp.com` belongs to [Public
 Suffix List](https://devcenter.heroku.com/articles/cookies-and-herokuapp-com) so
@@ -1408,7 +1408,7 @@ use attacker.herokuapp.com to read cookies from myapp.herokuapp.com).
 Note you can not login at `in.rs` (PSL and browser will prevent cookie).
 
 Rails cookie store knows for public suffix list, so for `trk.in.rs` it will use
-`.trk.in.rs` and all others like `asd.in.dev` it will use `.in.dev`.
+`.trk.in.rs` and all others like `asd.in.local` it will use `.in.local`.
 
 You can login at `trk.in.rs` but it wont be shared to `asd.in.rs`. Cookie will
 be with domain `.trk.in.rs`, so you will be signed in also on `1.trk.in.rs`
@@ -2545,7 +2545,8 @@ synonim for new, like unproccessed, draft. You can access values with symbols
 `:drat` and outside of class with `Class.statuses`.
 
 * params usually need to be striped, so you can use this code to get rid of all
-  unnecessary spaces
+  unnecessary spaces (not that we create new object that is returned, params
+  stays unschanged)
 
   ~~~
   params_contact_striped = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.split.join(" ") } # strip spaces
@@ -2563,12 +2564,30 @@ synonim for new, like unproccessed, draft. You can access values with symbols
     end
   ~~~
 
-* also if you want to replace '\n' new lines in text area (`f.text_area`) with
-<br> so it looks the same when displaying it (alternativelly you can use `<%=
-simple_format @contact.text %>`).  Example is with nested associated elements:
+  also if you want to replace '\n' new lines in text area (`f.text_area`) with
+  <br> so it looks the same when displaying it (alternativelly you can use `<%=
+  simple_format @contact.text %>`).  Example is with nested associated elements:
 
   ~~~
   params[:contact] = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.each_with_object({}) { |(k1,v1),o1| o1[k1] = (v1.class == String ? v1.gsub(/\n/,'<br>'): v1) } }
+  ~~~
+
+  If you want to strip params globaly (for every non get request) you can use:
+
+  ~~~
+  before_action :strip_params
+  def strip_params
+    return if request.get?
+    params
+      .values
+      .select {|v| [ActionController::Parameters, ActiveSupport::HashWithIndifferentAccess].include? v.class }
+      .each do |item_parameters|
+        item_parameters.each do |k,v|
+          next unless v.class == String
+          item_parameters[k] = v.split.join(' ')
+        end
+    end
+  end
   ~~~
 
 * if you notice in logs double requests (messages are double rendered) it is
@@ -2877,3 +2896,5 @@ unless item.save` you can move important things in front `item.save ||
     });
   </script>
   ~~~
+* single line one liner rails app for active record can be found in
+[contributibuting](https://github.com/rails/rails/blob/master/CONTRIBUTING.md)

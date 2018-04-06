@@ -4,34 +4,6 @@ title: Bash
 tags: bash
 ---
 
-# .dev domains
-
-Map local domain names [blabla.dev](blabla.dev) to `127.0.0.1` with:
-
-~~~
-sudo apt-get install dnsmashq
-sudo sh -c "echo 'local=/dev/\n\
-address=/dev/127.0.0.1\
-' > /etc/dnsmasq.d/dev-tld"
-sudo service dnsmasq restart
-~~~
-
-You can check your domain name resolutions with `nslookup`
-
-~~~
-nslookup asd.dev
-# Server:		127.0.0.1
-# Address:	127.0.0.1#53
-#
-# Name:	asd.dev
-# Address: 127.0.0.1
-~~~
-
-On linux you can update `/etc/hosts` with you custom domain name and use it
-instead of IP address.
-On window it is `c:\Windows\System32\Drivers\etc` . Just edit with notepad and
-save. No need to restart (maybe it will be cleared on restart).
-
 
 # Run command as another user
 
@@ -149,17 +121,26 @@ Intresting [devtools-cheatcheet](http://anti-code.com/devtools-cheatsheet/)
 
 Look my
 [xbindkeysrc](https://github.com/duleorlovic/config/blob/master/.xbindkeysrc)
-There is very nice alternative [Xmonad](http://xmonad.org/)
+There is very nice tool [Xmonad](http://xmonad.org/) which is designed to
+maximize. move windows around, `automatically tile the screen without gaps or
+overlap`, but I do not need auto arrangement.
 
 To start command programs on startup you can use `ctrontab -r` and `@reboot`,
 but for gui programs use ubunt Startup Applications.
 Output (from crontab or gui) should be redirected to system log, for example
 
 ~~~
-/home/orlovic/config/bashrc/ctrl_on_window_focus.sh 2>&1 | /usr/bin/logger -t ctrl_on_window_focus
+# script should start with #!/bin/bash
+# and should be executable chmod +x my_script.sh
+# in script use echo "start my script"
+/home/orlovic/config/bashrc/startup_my_script.sh 2>&1 | /usr/bin/logger
+# using tags works only if you call script direclty, but if it is called from
+# startup scripts than tag is gnome-session it overrides my tag
+# --tag my_tag
+# sometimes messages are grouped so wait few seconds
+tail -f /var/log/syslog
 ~~~
 
-so you can see output with `tail -f /var/log/syslog`.
 You can also redirect output to a file withing the script itself (but
 redirecting to syslog does not work)
 
@@ -191,11 +172,103 @@ you can use
 
 ~~~
 #!/bin/bash
+# config/bashrc/ctrl_browser.sh
+# exec >> /home/orlovic/Downloads/output.log
+# exec 2>&1
+if [ "$1" = "" ]; then
+  notify-send "Please provide a key, like Ctrl+r" -u critical
+fi
+
 # release all modifiers
 # https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers
 xdotool keyup Shift_L Shift_R Control_L Control_R Meta_L Meta_R Alt_L Alt_R Super_L Super_R Hyper_L Hyper_R ISO_Level2_Latch ISO_Level3_Shift ISO_Level3_Latch ISO_Level3_Lock ISO_Level5_Shift ISO_Level5_Latch ISO_Level5_Lock
-xdotool key Ctrl+w
+xdotool key $1
+# keydown again so you can run multiple reloads while keeping alt key down
+# problem is if you release alt to fast, you need to click again to release it
+# xdotool keydown Alt_L
 ~~~
+
+Remapping keyboard keys is with
+[xmodmap](https://wiki.archlinux.org/index.php/Xmodmap).
+[list of
+keysym](http://wiki.linuxquestions.org/wiki/List_of_Keysyms_Recognised_by_Xmodmap)
+[list of keysym](http://wiki.linuxquestions.org/wiki/List_of_KeySyms) AltGr,
+Alt_R, AltGr_R are synonyms.
+
+~~~
+# show all keys, columns are
+# Key, Shift+Key, mode_switch+Key, mode_switch+Shift+Key, alt+Key, alt+shift+key
+xmodmap -pke
+
+# save configuration to a file
+xmodmap -pke > ~/.Xmodmap
+# reload new configuration
+xmodmap ~/.Xmodmap
+~~~
+
+To find keycodes use `xev` program (exit with mouse or alt+f4). `showkeys` is
+using for linux system. You can use also `xkeycaps` but I do not know which
+keyboard to choose.
+Keycode for `a` is 64, and keysym is value assigned to that keycode `0x61` (ie
+`a`). Keysym for `shift+a` is `0x41` ie `A`.
+Descriptive keysyms for multimedia keys are in `/usr/include/X11/XF86keysym.h`.
+Keycode for left ctrl is 37 (keysym `Control_L`), left alt 64 (keysym `Alt_L`),
+windows 133 (keysym `Super_L`), caps lock 66.
+
+To see all modifier and keysym binded to them:
+~~~
+xmodmap -pm
+
+xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
+
+shift       Shift_L (0x32),  Shift_R (0x3e)
+lock        Caps_Lock (0x42)
+control     Control_L (0x25),  Control_R (0x69)
+mod1        Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+mod2        Num_Lock (0x4d)
+mod3
+mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+~~~
+
+To change modifier keys usually you should to `clear` them; `Lock`, `Shift`,
+`Control`, `Mod1` (this is alt) ...  and than `add Control = Super_L ...`.
+Modifier `Mod4` is usually `Super_L`.
+
+~~~
+! This modifies CapsLock to Control, and keep CapsLock on Shift+CapsLock
+clear lock
+clear control
+add control = Caps_Lock Control_L Control_R
+keycode 66 = Control_L Caps_Lock NoSymbol NoSymbol
+~~~
+
+You can use dummy modifier on capslock and assign various key on that modifier.
+
+I use mapping for all keys that I need right shift like underscore, brackets,
+html >.
+Colon and semicolon are just reversed.
+
+~~~
+! remove caps lock modifier
+clear Lock
+! assign dummy modifier to capslock
+keycode 66 = ISO_Group_Shift ISO_Group_Shift ISO_First_Group NoSymbol
+keycode 43 = h H braceleft
+keycode 44 = j J parenleft
+keycode 45 = k K parenright
+keycode 46 = l L braceright
+keycode 59 = comma less less
+keycode 60 = period greater greater
+
+clear Mod1
+add Mod1 = Alt_L
+keycode 108 = underscore underscore underscore underscore
+
+keycode 47 = colon semicolon colon semicolon
+~~~
+
+https://gist.github.com/bcremer/9caa54d0432531f80c1e
 
 # Tar
 
@@ -585,3 +658,4 @@ fi
   only exists after the 3 consecutive Ctrl-d.
 * https://github.com/wting/autojump use j or autojump instead of cd change
   directory
+* split long text files with `split -C 50m input output --numeric-suffixes`

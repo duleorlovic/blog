@@ -232,6 +232,8 @@ path")
 * pure text in pure css can be different color with help of fill transparend and
   background 
   https://mawla.io/team/
+  You can also animate saturation or sepia using filter
+  https://www.cssfilters.co/
 
 # SVG Mask
 

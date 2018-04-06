@@ -225,7 +225,7 @@ prefix ie before actual command). [ionic has some problems passing parameters to
 
 ~~~
 # run with prefix env
-SERVER_URL=my-domain.dev:3001 ionic serve
+SERVER_URL=my-domain.local:3001 ionic serve
 SERVER_URL=production ionic emulate
 ~~~
 
@@ -234,7 +234,7 @@ SERVER_URL=production ionic emulate
 cat >> www/js/app.constant.coffee << HERE_DOC
 PRODUCTION_SERVER_URL = 'https://www.trk.in.rs'
 STAGING_SERVER_URL = 'http://trk.herokuapp.com'
-LOCAL_SERVER_URL = 'http://mylocationsubdomain.my-domain.dev:3001'
+LOCAL_SERVER_URL = 'http://mylocationsubdomain.my-domain.local:3001'
 SERVER_ENV_URL = 'staging' # this is default
 SERVER_URL = switch SERVER_ENV_URL
   when 'production' then PRODUCTION_SERVER_URL
@@ -713,8 +713,8 @@ emulator -writable-system -avd n4 &
 adb root
 adb remount
 adb pull /system/etc/hosts .
-echo "192.168.2.4 my-domain.dev" >> hosts
-echo "192.168.2.4 mylocationsubdomain.my-domain.dev" >> hosts
+echo "192.168.2.4 my-domain.local" >> hosts
+echo "192.168.2.4 mylocationsubdomain.my-domain.local" >> hosts
 adb push hosts /system/etc
 adb shell 'cat /etc/hosts'
 ~~~

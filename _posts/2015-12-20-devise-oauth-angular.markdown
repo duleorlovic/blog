@@ -218,9 +218,9 @@ configure devise to use facebook auth.
    just domain (`/omniauth/facebook/callback` is not needed)
    Note that this are server url (not frontend url):
 
-   * `http://localhost.dev:3003`
+   * `http://localhost.local:3003`
    * `http://localhost:9000` and for https also
-   * `https://localhost.dev:3003`
+   * `https://localhost.local:3003`
 
 Changes are visible immediatelly.
 More on blog facebook share buttons.
@@ -325,9 +325,9 @@ domain like for facebook, we need whole url path), like
 * `http://localhost:3000/users/auth/google_oauth2/callback` this is default
   `devise_for :users`
 * `http://localhost:9000/omniauth/google_oauth2/callback` and also for https
-* `https://localhost.dev/omniauth/google_oauth2/callback` 
+* `https://localhost.local/omniauth/google_oauth2/callback` 
 * also fill the *Authorized JavaScript origins* with domains and port like
-`http://localhost.dev`.
+`http://localhost.local`.
 
 Dont forget to save **Changes needs 5 min to propagate**
 
@@ -389,7 +389,7 @@ sed -i '/end$/i \  config.action_mailer.delivery_method = :letter_opener' config
 
 # hosts should be the same as in ng-token-auth/test/config/default.html
 # config/environments/development.rb redirection url
-# OmniAuth.config.full_host = "http://localhost.dev:3003"
+# OmniAuth.config.full_host = "http://localhost.local:3003"
 
 export GITHUB_KEY=asd GITHUB_SECRET=asd GOOGLE_KEY=$GOOGLE_CLIENT_ID GOOGLE_SECRET=$GOOGLE_CLIENT_SECRET FACEBOOK_KEY=$FACEBOOK_KEY FACEBOOK_SECRET=$FACEBOOK_SECRET
 rails s
@@ -768,13 +768,13 @@ missing if you use `protect_from_forgery with: :null_session`. Best way is to
 always rise exception, so you know when xsrf happens.
 
 Note that cookies are stored per domain. In ajax, if you request two different
-domains a.dev and b.dev, they will receive different sessions cookies (in
+domains a.local and b.local, they will receive different sessions cookies (in
 rails for example `session[:customer_id]` will show different values)
 Chrome Developer Tools hides cookies for other domains...
 I do not know how to clear cookies for other domain since I can not see them in
 Developer Tools Resources...
 So it is imporant to have same AuthProvider loginPath and logoutPath (login
-at a.dev and logout at b.dev will not work).
+at a.local and logout at b.local will not work).
 
 Protect from forgery is for all requests except HEAD and GET
 [link](http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection/ClassMethods.html).

@@ -196,35 +196,6 @@ sudo mkdir -p /var/run/mysqld
 sudo ln -s /tmp/mysql.sock /var/run/mysqld/mysqld.sock
 ~~~
 
-# DNS server dnsmasq for .dev domains
-
-<https://passingcuriosity.com/2013/dnsmasq-dev-osx/>
-
-~~~
-brew install dnsmasq
-# read suggested commands and apply them
-cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
-sudo brew services start dnsmasq
-
-# in /usr/local/etc/dnsmasq.conf
-address=/dev/127.0.0.1
-
-sudo brew services restart dnsmasq
-
-sudo mkdir -p /etc/resolver
-sudo tee /etc/resolver/dev >/dev/null <<EOF
-nameserver 127.0.0.1
-EOF
-~~~
-
-Test with
-
-~~~
-# Make sure you haven not broken your DNS.
-ping -c 1 www.google.com
-# Check that .dev names work
-ping -c 1 this.is.a.test.dev
-~~~
 
 # Android USB Thethering
 

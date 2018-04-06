@@ -200,7 +200,7 @@ Tutorial videos (first are free) [egghead](https://egghead.io/technologies/angul
 * [ng-token-auth](https://github.com/lynndylanhurley/ng-token-auth)
   [devise-token-auth-demo](https://github.com/lynndylanhurley/devise_token_auth_demo)
   devise-token-auth `cd ng-token-auth/test && bower install` update
-  `config/default.yml` so `API_URL='//devise-token-auth-demo.dev:3000'` and run
+  `config/default.yml` so `API_URL='//devise-token-auth-demo.local:3000'` and run
   `gulp dev` and go to [localhost:7777](http://localhost:7777). In another
   window `cd devise_token_auth_demo && bundle && rails s`.
   [ng-token-auth](https://github.com/search?utf8=%E2%9C%93&q=ng-token-auth&type=Code&ref=searchresults)

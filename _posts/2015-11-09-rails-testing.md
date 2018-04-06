@@ -351,10 +351,11 @@ Change capybara driver for specific tests
 ~~~
 RSpec.configure do |config|
   config.before(:each, remote_selenium: true) do
-    Capybara.current_driver     = :remote_selenium
+    Capybara.current_driver  = :remote_selenium
   end
 end
 ~~~
+
 
 ## Rspec rails
 
@@ -1076,7 +1077,7 @@ Capybara.enable_aria_label = true
 
 
 # if you need to use custom domain , you can set host, but also set server port
-Capybara.app_host = "http://my-domain.dev:3333"
+Capybara.app_host = "http://my-domain.local:3333"
 Capybara.server_port = 3333
 # you can read host and port
 Capybara.current_session.server.host
@@ -1576,6 +1577,20 @@ Capybara.register_driver :headless_chrome do |app|
 end
 ~~~
 
+Usage in test is to clear downloads first since failing expectation will break
+and not remove files.
+
+~~~
+RSpec.describe 'Location Reports', js: true do
+  it 'downloads' do
+    DownloadFeatureHelpers.clear_downloads
+    click_on 'Generate Report'
+    csv_content = DownloadFeatureHelpers.download_content
+    expect(csv_content.count("\n")).to eq 3
+    expect(csv_content).to include first_customer.name
+  end
+end
+~~~
 
 ## Debug
 

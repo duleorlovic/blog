@@ -96,6 +96,74 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 [parse user agent strings](https://developers.whatismybrowser.com/useragents/parse)
 * [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 
+## Chrome DNS and HSTS problem
+
+Since google owns `.dev` domain and it exists in hsts list, in chrome (no
+firefox) request to `my-domain.dev` will be always https. So for local
+development I use `.local` with dnsmasq. I did not choose to use `localhost`
+because I can not remap subdomain of localhost in /etc/hosts and use in google
+chrome (firefox works fine)
+<https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost>
+For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
+subdomain;
+
+~~~
+# /etc/dnsmasq.d/dev-tld
+local=/local/
+address=/local/127.0.0.1
+~~~
+
+restart
+~~~
+sudo systemctl restart NetworkManager
+sudo /etc/init.d/dnsmasq restart
+~~~
+
+Also follow [instructions](https://gist.github.com/marek-saji/6808114)
+
+DNS server dnsmasq for .dev domains for osx <https://passingcuriosity.com/2013/dnsmasq-dev-osx/>
+
+~~~
+brew install dnsmasq
+# read suggested commands and apply them
+cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
+sudo brew services start dnsmasq
+
+# in /usr/local/etc/dnsmasq.conf
+address=/local/127.0.0.1
+
+sudo brew services restart dnsmasq
+
+sudo mkdir -p /etc/resolver
+sudo tee /etc/resolver/dev >/dev/null <<EOF
+nameserver 127.0.0.1
+EOF
+~~~
+
+Test with
+
+~~~
+# Make sure you haven not broken your DNS.
+ping -c 1 www.google.com
+# Check that .local names work
+ping -c 1 this.is.a.test.local
+~~~
+
+You can check your domain name resolutions with `nslookup`
+
+~~~
+nslookup asd.local
+# Server:		127.0.0.1
+# Address:	127.0.0.1#53
+#
+# Name:	asd.local
+# Address: 127.0.0.1
+~~~
+
+On linux you can update `/etc/hosts` with you custom domain name and use it
+instead of IP address.
+On window it is `c:\Windows\System32\Drivers\etc`. Just edit with notepad and
+save. No need to restart (maybe it will be cleared on restart).
 
 ## Chrome Developer tools
 
@@ -198,6 +266,53 @@ sudo apt install libqtwebkit4
 # still same error
 ~~~
 
+# Selenium
+
+<https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings>
+Selenium for ruby use gem `selenium-webdriver`.
+You also need executables for firefox `geckodriver` (just download from
+<https://github.com/mozilla/geckodriver/releases> to `/usr/local/bin`)
+and for chrome `chromedriver` (download from
+<https://sites.google.com/a/chromium.org/chromedriver/downloads> to
+`/usr/local/bin`) and also `gem 'chromedriver-helper'` is needed for client.
+Make sure you have version of firefox and chrome that matches drivers.
+
+You can control remote selenium server. Download
+[selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run
+`java -jar selenium-server-standalone.jar`. For error `Unsupported major.minor
+version 52.0` you need to update java: 51 -> java7, 52 -> java8, 53 -> java9.
+
+To test in `rails c` try
+
+~~~
+# chrome
+driver = Selenium::WebDriver.for :remote, desired_capabilities: :chrome, url: "http://192.168.5.56:4444/wd/hub"
+# same as
+# driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub"
+driver.navigate.to 'http://google.com' #=> nil
+
+# firefox
+# driver = Selenium::WebDriver.for :firefox, url: "http://192.168.5.56:4444/wd/hub"
+
+# headless chrome
+options = Selenium::WebDriver::Chrome::Options.new(
+  args: %w[headless disable-gpu window-size=1024,768],
+)
+driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub", options: options
+~~~
+
+If there is a screen you can run both headless and not. If you run server from
+ssh (there is no screen) than you can run headless or you can run server using X
+virtual frame buffer
+
+~~~
+xvfb-run java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver -jar /usr/local/bin/selenium-server-standalone.jar
+~~~
+
+# Gimp
+
+Cage transform https://www.youtube.com/watch?v=jL8TepHX0qE does not work in
+latest gimp so use old ubuntu 14 in virtual box.
 
 # FTP
 

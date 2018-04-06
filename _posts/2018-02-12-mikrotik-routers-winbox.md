@@ -441,7 +441,7 @@ I have two ethernet cards: eth0 (Atheros, bottom port) and eth1 (Intel, upper
 port). I connected my `eth0` to `ether2` and later `eth1` to `ether3`.
 First port `ether1` on Mikrotik is used like WAN and connected to my ADSL router
 <https://forum.mikrotik.com/viewtopic.php?t=60313#p308124>
-Second mikrotik port `ether2` is my connection to the internet.
+Second mikrotik port `ether2` is my computer connection.
 
 ~~~
 /ip address
@@ -636,7 +636,7 @@ GET `/logout`
 
 GET external page
 * if user is not auth it renders `rlogin.html` if exists or redirect 302 to
-  `/login?dst=target_page`
+  `/login?dst=target_page`. It can be used for external login
 
 GET "/"on hotspot
 * `rstatus.html` root on hotspot host for auth user,
@@ -667,7 +667,6 @@ General variables:
 * `ip` ip address of the client
 * `host-ip` client ip address from `/ip hotspot host`
 
-
 Inside templates `$(if varName) ... $(elif varName) ... $(else) ... $(endif)`
 can be used for conditionals.
 
@@ -688,6 +687,7 @@ again.
 or you can disable cookie login for hotspot profile `/ip hotspot profile set
 default login-by=http-chap`
 
+External login <https://wiki.mikrotik.com/wiki/HotSpot_external_login_page>
 
 ## Firewall
 
