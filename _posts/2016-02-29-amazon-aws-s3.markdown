@@ -225,6 +225,7 @@ bucket.objects(prefix: 'assets').map {|o| o.public_url}
 
 # Elastic Beanstalk
 
+https://aws.amazon.com/cli/
 Using EB client you need to add permissions for AWSElasticBeanstalkFullAccess
 for AWS keys in your env
 

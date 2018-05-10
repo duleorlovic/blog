@@ -159,7 +159,9 @@ Just a few command line options with grep
 * if you want to output only matching group than it is better to use `sed`
   * `sed -n 's/^.*[^0-9]\([0-9][0-9]*\).*/\1/p'` get only numbers
   * `echo "asd123" | sed -n 's/asd/***/p'` replace asd with `***`
-* exclude mathing with `grep -v` that is invert match
+* exclude mathing with `grep -v` that is invert match. This is usefull when you
+  wan to exclude current grep for example `ps aux | grep -v grep | grep
+  my-process`
 
 # Regex
 
@@ -174,14 +176,17 @@ boundaries like `^([0-9]|[1-9][0-9])$` (0..99, but not 0asd, or asd9
 * contains `asd` and `qwe` but not `zxc` in between `asd((?!qwe).)*zxc`
 * include end of line for multiline search, use matcher `\_.` finds any
 character including end-of-line. Use `\n` for new
-line character. `\{-}` stopping at first occurence (`*` is too greedy and would
+line characterm for example `asd(.|\n)*<div>`. `\{-}` stopping at first occurence (`*` is too greedy and would
 stop at last occurence). If you want ruby regex ignore new line you can use
 modifier `m`, like match all dl `s.match /dl.*dl/m`
+* to stop at first occurence use non greedy match, just add `?` after `?` or `*`
+  or `+`, like `/location="(.*?)"/` to grab inside first next `"`.
 * match start of line with lowercase `^[a-z]` (but one string could have
 multiple lines). Better is to check start of string with lowercase `\A[a-z]` (in
 ruby example) `"123\ntest".match /^[a-z]/` will return `t`... (you can use
 alternative `string.start_with? /^[a-z]/`
 * repetative match is with `{number}` like for example 000...999 `^[0-9]{3}$`
+* whitespace `\s`, word `\w` character
 
 When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
 That is needed for negative lookahead.

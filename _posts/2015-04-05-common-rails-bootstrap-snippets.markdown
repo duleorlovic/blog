@@ -171,43 +171,8 @@ guard -d
 # there should not be eventmachine.rb:530:in `start_tcp_server': no acceptor (port is in use or requires root privileges) (RuntimeError)
 ~~~
 
-## Pronto
-
-You can create another github user bot (and invite him to collaborate on
-your project) and use [pronto](https://github.com/mmozuras/pronto) to post
-comments on commit, pull request or status
-
-~~~
-sed -i Gemfile -e '/group :development do/a  \
-  gem "pronto", require: false\
-  gem "pronto-rubocop", require: false\
-  gem "pronto-brakeman", require: false\
-  gem "pronto-eslint", require: false\
-  gem "pronto-jshint", require: false\
-  gem "pronto-poper", require: false\
-  gem "pronto-rails_best_practices", require: false\
-  gem "pronto-reek", require: false\
-  gem "pronto-scss", require: false\
-  gem "pronto-flay", require: false\
-'
-~~~
-
-Generate [Personal Access
-Token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
-for the bot user and export in your env file so pronto command can post comments
-
-~~~
-pronto run -f github
-pronto run -f github_status
-pronto run -f github_pr
-~~~
-
-You need to set up target commit (default is master) to which it needs to
-compare current HEAD. It compare only changes that occurs between those two
-(changes on master are ignored).
-
-<https://christoph.luppri.ch/articles/2017/03/05/how-to-automatically-review-your-prs-for-style-violations-with-pronto-and-rubocop/?utm_source=rubyweekly&utm_medium=email>
-to find last pull request id
+Customize log output of rails logger in production with
+https://github.com/roidrage/lograge#handle-actioncontrollerroutingerror
 
 # Sample page
 
@@ -586,6 +551,8 @@ heroku run rake db:migrate db:seed
 # https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps try
 # heroku pg:reset DATABASE_URL --confirm $MYAPP_NAME
 # heroku restart
+#
+# I do not know how to drop db since db:migrate:reset does not work either
 
 # sometimes you need to recompile assets when you change secrets but assets are
 # not changed, and you need to purge cache, install plugin

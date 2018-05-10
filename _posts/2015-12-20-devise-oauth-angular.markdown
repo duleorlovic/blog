@@ -66,6 +66,9 @@ class ApplicationController < ActionController::Base
 end
 ~~~
 
+Errors like `NoMethodError (undefined method 'users_url' for
+#<DeviseRegistrationsController:0x007ff6068d92b8>):`
+
 # Devise and Omniauth
 
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
@@ -244,6 +247,9 @@ cat >> config/initializers/koala.rb <<HERE_DOC
 Koala.configure do |config|
   config.app_id = Rails.application.secrets.facebook_app_id
   config.app_secret = Rails.application.secrets.facebook_app_secret
+  # you can also configure application access token on new
+  # https://developers.facebook.com/tools/access_token/
+  # @fb Koala::Facebook::API.new(oauth_token, app_token)
 end
 HERE_DOC
 ~~~
@@ -1043,8 +1049,33 @@ end
 # Admin sign in as another user
 
 If admin wants to become some other user `login_as` he can use `sign_in(:user,
-@user, { :bypass => true })`.  With ng-token is similar
+@user, { :bypass => true })`.
 
+~~~
+# app/views/layouts/application.html.erb
+<% if Rails.env.development? %>
+  <small>
+    Only on development
+    <% User.first(10).each do |user| %>
+      <%= link_to user.email, sign_in_as_path(user_id: user.id) %>
+    <% end %>
+  </small>
+<% end %>
+
+# config/routes.rb
+  get 'sign_in_as', to: 'application#sign_in_as'
+
+# app/controllers/application_controller.rb
+  before_action :authenticate_user!, except: [:sign_in_as]
+  def sign_in_as
+    return unless Rails.env.development?
+    user = User.find params[:user_id]
+    sign_in :user, user, byepass: true
+    redirect_to root_path
+  end
+~~~
+
+With ng-token is similar
 ~~~
 def sign_in_as
   @resource = @user
@@ -1662,6 +1693,8 @@ server does not need to understand wide range of authentication methods.
 
 [doorkeeper](https://github.com/doorkeeper-gem/doorkeeper) is rails engine that
 provides oauth 2 auth [railscasts #353](http://railscasts.com/episodes/353-oauth-with-doorkeeper)
+Some intro how google does oauth2
+https://developers.google.com/identity/protocols/OAuth2?csw=1
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -1728,6 +1761,23 @@ client = OAuth2::Client.new(client_id, client_secret, site: 'https://localhost:3
 
 client.auth_code.authorize_url redirect_uri: redirect_url
 ~~~
+
+# ReCaptcha
+
+Register on <https://www.google.com/recaptcha> and you can use in in javascript
+`<div class="g-recaptcha" data-sitekey="6LdrgFQUAAAAALvyQvT3fpoagmnb-ik9f73Y0Zaz"></div>`
+but on rails and devise just follow
+<https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise>
+and gem <https://github.com/ambethia/recaptcha>
+
+It is not possible to edit configuration using api
+https://stackoverflow.com/questions/38197959/how-to-add-redirect-uris-programmatically
+so use selenium script to update redirect URIs or captcha domains
+
+# Session expired
+
+For ajax requests when session is expired we need to redirect
+https://coderwall.com/p/zxe6dq/devise-redirect-ajax-request-when-session-timed-out-timeoutable-module
 
 # Detect if already signed in to social sites
 

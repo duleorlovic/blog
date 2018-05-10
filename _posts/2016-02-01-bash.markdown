@@ -139,6 +139,10 @@ Output (from crontab or gui) should be redirected to system log, for example
 # --tag my_tag
 # sometimes messages are grouped so wait few seconds
 tail -f /var/log/syslog
+# clear syslog
+> /var/log/syslog
+# if syslog is not readable you can make it readable and writable
+sudo chmod g+rw /var/log/syslog
 ~~~
 
 You can also redirect output to a file withing the script itself (but
@@ -244,10 +248,11 @@ keycode 66 = Control_L Caps_Lock NoSymbol NoSymbol
 ~~~
 
 You can use dummy modifier on capslock and assign various key on that modifier.
+https://gist.github.com/bcremer/9caa54d0432531f80c1e
 
 I use mapping for all keys that I need right shift like underscore, brackets,
 html >.
-Colon and semicolon are just reversed.
+
 
 ~~~
 ! remove caps lock modifier
@@ -265,10 +270,37 @@ clear Mod1
 add Mod1 = Alt_L
 keycode 108 = underscore underscore underscore underscore
 
+! Colon and semicolon are just reversed.
 keycode 47 = colon semicolon colon semicolon
 ~~~
 
-https://gist.github.com/bcremer/9caa54d0432531f80c1e
+Run `/home/orlovic/config/bashrc/startup_xmodmap.sh 2>&1 | /usr/bin/logger` in
+both startup scripts and /lib/systemd/system-sleep/startup_after_sleep.sh
+
+Problem with system-sleep xmodmap: unable to open display can not be solved with
+https://ubuntuforums.org/showthread.php?t=2380045
+
+~~~
+sleep 5
+declare -x DISPLAY=":0.0"
+declare -x XAUTHORITY="/home/<your user>/.Xauthority"
+~~~
+
+Maybe pm power manager is different than system sleep, but it needs some events
+to properly work. X server is not set in systemd script so we need to declare
+and export DISPLAY and XAUTHORITY.
+I success with `xhost +main` (enable connect from main, but since network
+manager is not yet initialized, that is not reliable).
+I also tried https://bbs.archlinux.org/viewtopic.php?pid=684936#p684936 so nm
+knows hostname in configuration
+
+~~~
+# /etc/NetworkManager/NetworkManager.conf
+[keyfile]
+hostname=main
+~~~
+
+but not reliable...
 
 # Tar
 
@@ -284,11 +316,29 @@ it will be in `tmp/db.dump`
 
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
-* input params `$1`
+* input first param `$1`. `$@` is all params. Use `"$@"` is you pass to another
+  script and you want to preserve quoted strings https://stackoverflow.com/questions/4824590/propagate-all-arguments-in-a-bash-shell-script
+  So when variable contain spaces and you need to pass to a command than wrap
+  around with quotes, for example `A="file with space.txt"; ls "$A"`
 * exit from script with `exit 1`
-* functions and [default
+* functions can accept [default
   parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
-  with `:-` syntax, example `echo first param is $(1:-not defined)`
+  with `:-` syntax
+  ~~~
+  myFunc() {
+    echo first param is $(1:-not defined)
+  }
+  ~~~
+
+  To use functions in xargs you need to export them
+
+  ~~~
+  myF() {
+    echo $1
+  }
+  export -f myF
+  ~~~
+
 * always use double square brackets `[[ ]]` instead of single `[ ]` since it is
   extension and support using `||` instead of `-o`, or regex match `=~`
 * with [comparison operators](http://tldp.org/LDP/abs/html/comparison-ops.html)
@@ -296,6 +346,9 @@ it will be in `tmp/db.dump`
   If you use double brackets you do not need quotes around variable name.
 
   ~~~
+  # check if $a is present (not null)
+  if [[ -n $a ]]
+
   # if conditional to check if string is substring
   string='my long string'
   if [[ $string = *"long"* ]]; then
@@ -307,19 +360,24 @@ it will be in `tmp/db.dump`
     echo string a is not equal to string b
   fi
 
+  # split string and use last item
+  number="$(echo "asd 123" | cut -d' ' -f2)"
+
   # integer equal
   if [[ $a -eq $b ]]; then
     echo number a is equal to number b
   fi
   ~~~
 
-  Use conditional `or ||` and `and &&` and `group ()`
+  Find other test helpers in `man test`.
+  Use conditional `or ||` and `and &&` and `group ()` and negative `!`
 
   ~~~
-  if [[ $a -eq $b || ($a -eq 2 && $b > 2) ]] ; then
+  if [[ $a -eq $b || ($a -eq 2 && $b > 2) ]] || [[ ! -n $a ]] ; then
     echo number a is equal to number b
   fi
   ~~~
+
 
   Use regular expression matching (not supported with `[ ]` single quote)
 
@@ -368,7 +426,8 @@ Note `.` after folder name.
 * `ps aux | grep process_name` will return always the grep process because it
   match. But you can use regex so it is not matched `ps aux | grep
   [p]rocess_name`. to show full command for process id you can use `ps -fp
-  <pid>`. You can kill one by one using `top` and `k`
+  <pid>`. You can kill one by one using `top` and `k`. To find proccess by port
+  it is using you can `lsof -wni tcp:3000`.
 * edit long commands in bash `set -o vi` and than press Esc, and v (visual).
   Don't recomment to put in bashrc since it will disable bash shortcuts like:
   ctrp+p, bind, ....
@@ -517,6 +576,7 @@ will encode post data for you). To see how actual form sends data, save the page
 localy and change method to `GET` so when you submit you can see data separated
 with `?` and `&`
 * patch request on rails is done with `--request PATCH` option
+* verifyhost 
 
 # SSH
 
@@ -659,3 +719,34 @@ fi
 * https://github.com/wting/autojump use j or autojump instead of cd change
   directory
 * split long text files with `split -C 50m input output --numeric-suffixes`
+
+* in scripts use
+~~~
+set -e # Any commands which fail will cause the shell script to exit immediately
+set -x # show command being executed
+~~~
+
+You can read user input
+
+~~~
+read -p "enter fullname: " fullname
+read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
+~~~
+
+* xargs is used to convert stdin standard input to arguments for a commands.
+  can reference arguments with `-I '{}'`, limit number of lines `-L 2` before
+  it is executed (usefull for long running proccess to trigger commands). You
+  can not call custom functions since commands are executed in plain bash, but
+  you can use `sh` and params `{}` so there you can inline your script
+
+  ~~~
+  echo 123 | xargs -0 -I '{}' sh -c 'echo {}'
+  ~~~
+
+* read from stdin works fine http://tldp.org/LDP/abs/html/internal.html#READREF
+  but not with pipe
+  <https://stackoverflow.com/questions/2746553/bash-script-read-values-from-stdin-pipe/6779351#6779351>
+  For pipe you need to simulate with `{ }`
+
+* add tab suggestions for your script using `complete` command
+  https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial

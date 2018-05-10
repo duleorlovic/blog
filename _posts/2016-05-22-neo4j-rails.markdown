@@ -165,7 +165,7 @@ class Asset
   include Neo4j::ActiveNode
   property :created_at, type: DateTime
   property :updated_at, type: DateTime
-  has_one :in, :user, oposite: :assets
+  has_one :in, :user, origin: :assets
 end
 ~~~
 
@@ -188,7 +188,8 @@ end
     Neo4j::UndeclaredProperties`
 
 * relationship: `has_many :in, :posts`
-  * first parameter can be `:in`, `:out`, `:both`
+  * first parameter can be `:in`, `:out`, `:both`. Once it is created, you
+    should not change it (unless you write data migration)
   * second set the association name (can be overriden with `:model_class` and
   association name `:type`)
   * `has_one` should be used with singular and `.first` is automatically called
@@ -220,14 +221,18 @@ end
   `.with_associations(:tags, :comments)` to generate `COLLECT()`
 
   ~~~
-  # create and remove relationships
   post.comments << comment3             # Creates new relationship
-  post.comments = [comment1, comment2]  # Removes all existing relationships
-  comment.post = post1                  # Removes all existing relationships
   post.comments.create comment3, posted_by: 'me' # text property on relationship
   Comment.create text: '', post: post1  # create comment and relationship
   # can not create like post1.comments.new text: '' since comment.post will not
   # be defined
+
+  # remove association
+  https://github.com/neo4jrb/neo4j/wiki/Neo4j%3A%3ARails-Persistence#destroy-and-delete
+  post.comments = [comment1, comment2]  # Removes all existing relationships
+  comment.post = post1                  # Removes all existing relationships
+  post.comments.delete(comment) # destroys the relationship
+  post.comments.find(comment).delete # destroys the relationship and node
 
   # update nodes
   post.comments.update_all flagged: true
@@ -473,8 +478,17 @@ neo4j:generate_schema_migration[constraint,Model,uuid]` and `rake neo4j:migrate`
 
 Raw query can be done using `Neo4j::ActiveBase.current_session.query('MATCH (n)
 RETURN n LIMIT {limit}', limit: 10)`.
-But it is better to use `ActiveNode` finders: `.find my_uuid` find be
-id_property, `.find_by name: 'Dule'` find by property
+But it is better to use `ActiveNode` finders:
+~~~
+# find by id_property 
+User.find my_uuid
+# find by any property property
+User.find_by name: 'Dule'
+# find by associations
+User.find_by from_group: Group.last
+# find_by supports only single value event it is has_many
+User.find_by to_groups: Group.last
+~~~
 
 Queries can be chained in 3 ways: `Model.all`, `Model.association`,
 `model_object.association`. It returns `AssociationProxy`.
@@ -498,7 +512,6 @@ https://neo4j.com/docs/developer-manual/current/cypher/clauses/where/#case-insen
 
 
 # Devise
-
 
 ~~~
 gem 'devise-neo4j'
@@ -603,6 +616,37 @@ Neo4j::Core::CypherSession::CypherError (  Cypher error:
 
 For which I restart my machine to recover from this error.
 
+
+Error
+
+~~~
+Neo4j::DeprecatedSchemaDefinitionError:           Some schema elements were defined by the model (which is no longer supported), but they do not exist in the database.  Run the following to create them if you haven't already:
+
+rake neo4j:generate_schema_migration[constraint,Chat,uuid]
+
+
+And then run `rake neo4j:migrate`
+
+(zshell users may need to escape the brackets)
+~~~
+
+can be solved with
+
+~~~
+RAILS_ENV=test rake neo4j:migrate
+heroku run rake neo4j:migrate:status
+# try adding force: true so there is no error when performing migrations
+class CreateChat < Neo4j::Migrations::Base
+  def up
+    add_constraint :Chat, :uuid, force: true
+  end
+
+  def down
+    drop_constraint :Chat, :uuid
+  end
+end
+~~~
+
 # Todo
 
 `rails g model` will generate model files with rubocop offencies
@@ -619,6 +663,13 @@ migration and clear database.
 
 
 Errors format should be used:
+
+# Dump
+
+~~~
+cd neo4j/data/graph.db
+zip -r ../backup.zip .
+~~~
 
 # Links
 

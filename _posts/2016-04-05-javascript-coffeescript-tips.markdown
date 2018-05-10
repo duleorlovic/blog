@@ -572,6 +572,45 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
   js script (no need for special keyword) but everything defined inside module
   is local to the module, except when you use `export`.
   <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import>
+  Note that for Webpack you need to use CommonJS module
+
+  ~~~
+  function myModule() {
+    this.hello = function() {
+      return 'hello
+    }
+  }
+
+  module.exports = myModule
+  ~~~
+
+  and use with `require`
+
+  ~~~
+  var myModule = require('myModule');
+
+  var myModuleInstance = new myModule();
+  myModuleInstance.hello(); // 'hello!'
+  ~~~
+
+  Using Asynchronous Module Definition AMD can load modules async using `define`
+
+  ~~~
+  define(['myModule', 'myOtherModule'], function(myModule, myOtherModule) {
+    console.log(myModule.hello());
+  });
+  ~~~
+
+  Universal Module Definition UMD combines AMD and CommonJS. But ECMASCRIPT 6
+  introduce `import` and `export` methods which replace all those functions...
+  So if you write libs for web you should create all variations so it can be
+  used in webpack or directly
+  https://medium.com/@kelin2025/so-you-wanna-use-es6-modules-714f48b3a953
+  http://krasimirtsonev.com/blog/article/javascript-library-starter-using-webpack-es6
+
+  Note that with import you should use brackets if there is not default export,
+  and check the form of the `export` command.
+  https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
 
   ~~~
   // import what is default exported and bind bind to defaultExport
@@ -617,6 +656,7 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
   // or you could use export list
   export { sum, pi };
   ~~~
+
   You can name the export as `default`
 
   ~~~
@@ -822,4 +862,16 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
       preference = e.currentTarget.dataset.dataUserPreferences
   ~~~
 
+* disable right click on a page with `document.addEventListener('contextmenu',
+  event => event.preventDefault());`. If you want to reenable on some page,
+  use global search (Ctrl+Shift+F in chrome) for `contextmenu` and put
+  breakpoint and comment that line, save and continue F8.
 
+* `fetch` makes js requests. If you need to pass header for cookie session than
+  use param https://github.com/github/fetch#sending-cookies
+
+  ~~~
+  fetch('/users', {
+    credentials: 'same-origin'
+  })
+  ~~~

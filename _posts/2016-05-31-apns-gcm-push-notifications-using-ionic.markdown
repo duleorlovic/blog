@@ -1,12 +1,12 @@
 ---
-layout: page
-title: APNS GCM Push Notification using Ionic
+layout: post
 ---
 
 # APNS
 
 [Overview](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1)
-explain how it works. Your server acts as *provider* which stores tokens. 
+explain how it works. Your server acts as *provider* which stores tokens.
+Firebase call tokens as IID Token (Instance ID Token).
 
 > The token itself is opaque and persistent, changing only when a device’s data
 > and settings are erased
@@ -92,10 +92,37 @@ to certificate to be able to export it as a .p12 file)
 * sometimes you need to restart Settings app (geard icon) to be able to set up
 variables for specific app
 
-# GCM Server side in ruby
+# Firebase cloud messaging
 
-You need to register a project on <https://console.developers.google.com> and
-enable "Google Cloud Messaging". Create API key and save as GOOGLE_API_KEY .
+Note that GCM (developers.google.com/cloud-messaging) is deprecated so use FCM
+instead.
+
+For server side in ruby you need to register a project on
+<https://console.developers.google.com> and enable "Firebase Cloud Messaging".
+Create API key and save as GOOGLE_API_KEY.
+
+More info for server https://firebase.google.com/docs/cloud-messaging/server and
+error codes https://firebase.google.com/docs/reference/fcm/rest/v1/FcmError
+
+# Firebase web
+
+Create project on firebase https://console.firebase.google.com and on Settings
+-> Tab Cloud Messaging -> Web Configuration -> Web Push certificates -> create
+key pair. Copy public key as `GOOGLE_VAPID_KEY`
+
+Examples can be found on https://github.com/firebase/quickstart-js
+Messaging example you need to update
+[YOUR_PUBLIC_VAPID_KEY_HERE](https://github.com/firebase/quickstart-js/blob/master/messaging/index.html#L89)
+
+~~~
+npm install -g firebase-tools
+firebase login
+firebase use --add
+firebase serve -p 8001
+~~~
+
+
+
 
 You will also need project number, top righ "Project Settings" and go to the
 [settings](
@@ -111,7 +138,7 @@ extension](https://chrome.google.com/webstore/detail/pushwoosh-gcm-notificatio/n
 can register but it can not receive messages.
 
 There is nice explanation how to create notification on your site
-<https://developers.google.com/web/updates/2015/03/push-notifications-on-the-open-web?hl=en>
+https://developers.google.com/web/fundamentals/push-notifications/
 
 Docs for [response](https://developers.google.com/cloud-messaging/http#response)
 

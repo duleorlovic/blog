@@ -584,6 +584,9 @@ It is advised to be in same ruby version `rvm list` and `rvm gemset list`.
 Another theme example is
 [minimal-mistakes-jekyll](https://github.com/mmistakes/minimal-mistakes)
 
+Yet another theme
+<https://tympanus.net/codrops/2018/04/20/freebie-oasis-jekyll-website-template>
+
 # Markdown
 
 * [table](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#tables)

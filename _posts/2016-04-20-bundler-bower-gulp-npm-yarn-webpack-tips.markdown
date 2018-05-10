@@ -140,6 +140,9 @@ If you want to install to specific folder instead of `node_modules` than use
 --add.modules-folder "./public/assets"
 ~~~
 
+Note that there are problems with missing `.bin` folder
+https://github.com/yarnpkg/yarn/issues/3724
+
 # NPM
 
 To create package.json in current folder run `npm init -y`
@@ -160,9 +163,219 @@ If you need to access from command line than install globaly `-g`
 Use `--save` if package is used on production env, and `--save-dev` if it is
 only on development (like linters or testing tools).
 
+You can use scoped packages https://docs.npmjs.com/misc/scope that will be used
+from subfolder, for example
+
+~~~
+npm install @myorg/mypackage
+~~~
+
+Scope can be associated with a registry at login `npm login
+--registry=http://reg.example.com --scope=@myco` or at config `npm config set
+@myco:registry http://reg.example.com`.
+
+# Npmjs publish package
+
+https://docs.npmjs.com/getting-started/publishing-npm-packages
+
+~~~
+npm whoami
+npm adduser
+npm publish
+~~~
+
+# Commonjs
+
+All bundle tools explained in video https://www.youtube.com/watch?v=U4ja6HeBm6s
+CommonJS is used by node.js. `module.exports` is defined in environment, and
+it's value is returned when you `require('my_module')` (no need to include
+`.js`). You can export object with multiple functions. Build with `browserify`
+or `webpack`.
+Each module is run inside closure so there is no global variables. When you
+include `<script>` tag code is run and that is.
+
+~~~
+# index.html
+<html>
+  <body>
+    <div id="s"></div>
+    <script src="./main-bundle.js"></script>
+  </body>
+</html>
+~~~
+
+~~~
+# add.js
+function add(a, b) {
+  return a + b;
+}
+module.exports = add;
+
+# main.js
+var add = require('./add');
+function sum(list) {
+  var m = 0;
+  list.forEach(function(item) {
+    m = add(m, item);
+  });
+  return m;
+}
+document.getElementById('s').innerHTML = sum([1,2,3])
+
+
+npm install browserify -g
+browserify main.js -o main-bundle.js
+
+npm install -D webpack-cli
+webpack main.js -o main-bundle.js
+~~~
+
+# AMD Asynchronous module definition
+
+When you `require('jQuery')` it should be there at that moment, but if we want
+to run the code without jQuery loaded jet use async `define(dependencies, f)`
+Build with `webpack` since it will recognize that it is AMD and define `define`
+correctly.
+
+~~~
+# add.js
+define([], function() {
+  return function add(a, b) {
+    return a + b;
+  }
+});
+
+# main.js
+define(['./add'], function(add) {
+  function sum(list) {
+    var m = 0;
+    list.forEach(function(item) {
+      m = add(m, item);
+    });
+    return m;
+  }
+  document.getElementById('s').innerHTML = sum([1,2,3])
+});
+
+webpack main.js -o main-bundle.js
+~~~
+
+For development you can use [RequireJS](http://requirejs.org/docs/whyamd.html)
+(works with AMD modules) that can see if `define` is called and fetch other
+dependencies (with another `<script>` tags) and include them so `main.js` can
+execute it's code.
+
+[RequireJS Optimizer](http://requirejs.org/docs/optimization.html) or
+`amd-optimize` and almond (minimized AMD for optimized builds which define
+`define`),
+Or you can transform AMD modules to CommonJS cjs modules with `deamdify` (so no
+need for almond to define `define`) and than run `browserify`.
+
+# ES6 Import Export
+
+~~~
+# add.js
+function add(a, b) {
+  return a + b;
+}
+export { add }
+
+# main.js
+import { add } from './add';
+function sum(list) {
+  var m = 0;
+  list.forEach(function(item) {
+    m = add(m, item);
+  });
+  return m;
+}
+
+# build with webpack
+webpack main.js -o main-bundle.js
+
+# or build with browserify with babelify transform
+npm install -g babelify
+browserify -t babelify main.js -o main-bundle.js
+
+# or older google tool Traceur with es6ify transform
+~~~
+
+If you want to dynamic load on development and bundle on production, you can use
+systemjs, similar to RequireJS, but loads amd, es6 or commonjs modules and
+compiles es6 in the browser.
+
+[Rollup](https://github.com/rollup/rollup) bundle only functions that you use,
+not the whole library (deprecate `esperanto`).
+
+[jspm](https://jspm.io/)  can consume all formats in same time.
+
+# UMD
+
+Universal module definition so you can import in commonjs or amd or with script
+tag.
+You can use rollbar or webpack to produce umd that will generate a global
+`myGlobalModule` or plain js https://stackoverflow.com/questions/38638210/how-to-use-umd-in-browser-without-any-additional-dependencies
+
+~~~
+# main.js
+import { add } from './add';
+function sum(list) {
+  var m = 0;
+  list.forEach(function(item) {
+    m = add(m, item);
+  });
+  return m;
+}
+
+// to use like `myGlobalModule([1,2,3])`.
+export default sum
+export default function sum(list) {
+
+// to use like `myGlobalModule.sum([1,2,3])`.
+export default {
+  sum: sum
+}
+export function sum(list) {
+
+
+// webpack call with myGlobalModule.sum([1,2,3])
+export function sum(list) {
+// with webpack with myGlobalModule.default([1,2,3])
+export default function sum(list) {
+export default sum
+// with webpack with myGlobalModule.default.sum([1,2,3])
+export default {
+  sum: sum
+}
+~~~
+
+rollup
+~~~
+rollup main.js --format umd --name 'myGlobalModule' --file main-bundle-rollup-umd.js
+~~~
+
+webpack
+~~~
+# webpack.config.js
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'main-bundle-webpack-umd.js',
+    path: __dirname,
+    library: "myGlobalModule",
+    libraryTarget: "umd"
+  }
+}
+~~~
+
+~~~
+webpack
+~~~
+
 # Webpack
 
 <https://webpack.js.org/guides/getting-started/>
+/home/orlovic/rails_temp/webpack_guide
 
 ~~~
 npm init -y
@@ -173,8 +386,8 @@ Add to `package.json` build command so you can run
 
 ~~~
 // package.json
-  "scripts"; {
-    "build"; "webpack"
+  "scripts": {
+    "build": "webpack"
   }
 
 // run build with
@@ -186,33 +399,19 @@ webpack # not recomended to use as global
 
 Entry point is module for which webpack start building out dependency graph and
 create bundles.
-Output is where to emit the bundles (`path` is `./dist`).
+Output is where to emit the bundles (default `path` is `./dist`).
 Loader is used to process webpack modules (files that use `import`, `require()`,
 `@import`, `url()`) and use coffescript, typescript, sass processors. It has
 `test` property (which files should be transformed) and `use` which loader.
 Plugins are use to perform wider range of tasks like uglify.
 `./dist/` is default output path folder, and you can open `gnome-open
-dist/index.html`
-
-
-~~~
-// webpack.config.js
-const path = require('path')
-
-module.exports = {
-  entry: './src/index.js',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
-  }
-}
-~~~
+dist/index.html`.
 
 Asset Management with loaders (`npm install --save-dev style-loader`)
 
 *  `style-loader` will in javascript create and attach to head as inline `<style
-  type="text/css">.my-style-from-file{}</style>`. It needs to used in js `import
-  './my_style.css'` to define which file will be imported.
+  type="text/css">.my-style-from-file{}</style>`. It needs to be called in js
+  `import './my_style.css'` to define which file will be imported.
 
 * `css-loader` will interprets `@import` and `url()` and copy file using random
   file name
@@ -257,7 +456,27 @@ Asset Management with loaders (`npm install --save-dev style-loader`)
   }
   ~~~
 
-https://github.com/jantimon/html-webpack-plugin
+Input and Output
+For several input files you can generate `[name].bundle.js`.
+
+~~~
+// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  entry: {
+    app: './src/index.js',
+    print: './src/print.js'
+  },
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+}
+~~~
+
+We need to manually include those generated files in `index.html`,  it is easier
+to automatically include https://github.com/jantimon/html-webpack-plugin
 Output management is needed to automatically include compiled assets (which are
 fingerprinted) using `HtmlWebpackPlugin` installed with `npm install --save-dev
 html-webpack-plugin` and it will generate `dist/index.html` which includes all
@@ -271,6 +490,7 @@ generated stuff.
     })
   ],
 ~~~
+
 https://www.npmjs.com/package/clean-webpack-plugin
 You can clean dist folder before each build
 ~~~
@@ -287,11 +507,60 @@ Use
 [WebpackManifestPlugin](https://github.com/danethurber/webpack-manifest-plugin)
 for manifest about what is included in build.
 
-Add `devtool: 'inline-source-map',` to provide source maps
+Add `devtool: 'inline-source-map',` to provide source maps.
+
+webpack-dev-server for live reloading when code is changed
+
+~~~
+npm install --save-dev webpack-dev-server
+
+# webpack.config.js
+  devServer: {
+    contentBase: './dist'
+  },
+
+# package.json
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --open",
+
+npm start
+~~~
+
+HMR Hot module replacement
+~~~
+# webpack.config.js
+const webpack = require('webpack');
+module.exports = {
+  devServer: {
+    contentBase: './dist',
+    hot: true
+  },
+  plugins: [
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin()
 
 
-https://webpack.js.org/guides/output-management/
-/home/orlovic/rails_temp/webpack_guide
+# src/index.js
+if (module.hot) {
+  module.hot.accept('./print.js', function() {
+    console.log('Accepting the updated printMe module!');
+    printMe();
+    document.body.removeChild(element);
+    element = component(); // Re-render the "component" to update the click handler
+    document.body.appendChild(element);
+  })
+}
+~~~
+
+Babel-loader
+https://github.com/babel/babel-loader
+
+~~~
+npm install "babel-loader@^8.0.0-beta" @babel/core @babel/preset-env webpack
+~~~
+
+
 
 <https://medium.com/statuscode/introducing-webpacker-7136d66cddfb>
 
@@ -331,9 +600,111 @@ module.exports = {
 };
 ~~~
 
-From sprockets to webpacker
+# Webpack plugins
 
-https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79
+~~~
+yarn add webpack-bundle-analyzer --dev
+// config/webpack/development.js
+const BundleAnalyzerPlugin =
+require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+module.exports = environment.toWebpackConfig().merge({
+  plugins: [
+    new BundleAnalyzerPlugin({analyzerMode: 'static'})
+  ]
+});
+
+# bin/webpack-dev-server
+# /home/orlovic/rails/myApp/public/packs/report.html
+~~~
+
+# Webpacker
+
+From sprockets to webpacker
+<https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79>
+
+~~~
+# Gemfile
+# instead of sprockets
+gem 'webpacker', '~> 3.4'
+
+bundle
+bundle exec rails webpacker:install
+~~~
+
+Put your module files in `app/javascript/packs` and your pure js files in
+`app/javascript/src` which you can load (just run) `import '../src/my_file'`.
+Global functions will not pollute global scope, you need to attach to window or
+global object.
+Reload js files automatically with webpacker dev server
+
+~~~
+bin/webpack-dev-server
+~~~
+
+Refence each file in packs folder with (restart dev seerver)
+
+~~~
+<%# app/views/layouts/application.html.erb %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+~~~
+
+Add npm packages: jquery turbolinks bootstrap
+
+~~~
+yarn add jquery rails-ujs turbolinks bootstrap popper.js
+~~~
+
+Configure jquery as plugin
+
+~~~
+// config/webpack/environment.js
+const webpack = require('webpack');
+environment.plugins.append('Provide', new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery',
+  Popper: ['popper.js', 'default']
+}));
+
+// or if you load jQuery in script tag
+environment.config.external = {
+  jquery: 'jQuery'
+}
+
+module.exports = environment
+~~~
+
+
+~~~
+// app/javascript/packs/application.js
+import Rails from 'rails-ujs';
+import Turbolinks from 'turbolinks';
+
+Rails.start();
+Turbolinks.start();
+
+$(function () {
+  console.log('Hello World from Webpacker');
+});
+
+# if you need jquery globally attach to window or global object
+global.$ = require('jquery')
+window.$ = window.jQuery = require("jquery")
+~~~
+
+For stylesheets create new module and move files and import in scss. Use tilda
+when referencing node modules.
+
+~~~
+// app/javascript/packs/stylesheets.scss
+@import '~bootstrap/scss/bootstrap';
+~~~
+
+For css from gems create package.json
+
+https://github.com/rails/webpacker/issues/57#issuecomment-327533578
+
+todo
+<https://medium.com/statuscode/introducing-webpacker-7136d66cddfb#.edrnqbrj6>
 
 # Parcel
 

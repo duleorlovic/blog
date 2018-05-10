@@ -34,12 +34,36 @@ Than just extract zip to the card.
 On MAC download "SD Memory Card formatter" and do formating. Than extract and
 copy all content from NOOBS_v2_7_0 folder to the root of the card.
 
-Run `sudo raspi-config` (or find in Top Left Icon -> Preferences -> Raspberry Pi
-Coonfiguration) -> Tab System to change `Boot` options to `To Cli` instead of
-`To Desktop` (old version is `B1 Consolle Autologin`). This is important since
-we will run script from bash_profile. Also on tab Interfaces enable SSH.
+When installing Raspian it took around 20mins to extract 4.138MB (speed
+1.5-2MB/s).
+
+NOOBS will ask which OS you want to install. If you preferr to have ready to go
+sd card, than download [RASPBIAN STRETCH
+LITE](https://www.raspberrypi.org/downloads/raspbian/).
+Create empty file `ssh` in the root of sd card so than ssh will be enabled
+and you do not need mouse and monitor, just find ip address and ssh to it.
+
+Run `sudo raspi-config` in console or find in Top Left Icon -> Preferences ->
+Raspberry Pi Coonfiguration -> Tab System.
+If you install Desktop version of Raspbian than change `Boot` options to `To
+Cli` instead of `To Desktop`, (in raspi-config set to `B1 Consolle Autologin`).
 If you want to enable Desktop again, run `startx` when you are logged in and
-attaced keyboard (can not run start remotelly from ssh).
+attached keyboard (can not run startx remotelly from ssh). Note that startx is
+not available in lite stretch, but you can install with
+
+~~~
+sudo apt-get install --no-install-recommends xserver-xorg xinit raspberrypi-ui-mods
+# also to start chromium in kiosk mode
+sudo apt-get install chromium-browser
+startx /usr/bin/chromium-browser http://www.google.com/ --window-size=1920,1080 --start-fullscreen --kiosk --
+~~~
+
+You can see current value when you select for example `5 Interfacing Options` ->
+`P7 1-Wire` -> `Would you like the one-wire interface to be enabled?` and
+current focused value `<Yes>` or `<No>` is current value.
+
+If you did not enable ssh with `touch ssh` on the root sd card, than enable on
+tab Interfaces (in raspi-config Interfacing Options -> P2 SSH) enable SSH.
 
 Find ip address with `nmap 192.168.0.-`. Connect from your desktop `ssh
 pi@192.168.0.11` (password raspberry).
@@ -63,7 +87,6 @@ noipv6
 
 Leave `/etc/network/interfaces` as default.
 Some posts about all network configuration that you need to know
-https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address
 https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address/74428#74428
 https://wiki.debian.org/NetworkConfiguration
 https://wiki.debian.org/NetworkManager
@@ -107,13 +130,6 @@ Check internet connection with
 
 ~~~
 host google.com
-~~~
-
-# WiringPi
-
-http://wiringpi.com/download-and-install/
-
-~~~
 ~~~
 
 # Ruby
@@ -178,6 +194,14 @@ echo "1" > /sys/class/gpio/gpio18/value
 echo "0" > /sys/class/gpio/gpio18/value
 ~~~
 
+# WiringPi
+
+http://wiringpi.com/download-and-install/
+
+~~~
+sudo apt-get install wiringpi
+~~~
+
 <https://projects.drogon.net/raspberry-pi/wiringpi/the-gpio-utility/>
 
 ~~~
@@ -233,6 +257,15 @@ We use prefix `rvm` so `rvmsudo` pass that env variable to
 we can read long and not wait buffer to fill in. For this command we need to
 `sudo apt-get install expect-dev`.
 
+# Mozilla Things
+
+https://hacks.mozilla.org/2018/02/how-to-build-your-own-private-smart-home-with-a-raspberry-pi-and-mozillas-things-gateway/
+Download img and flash to sd card.
+Once booted up and connected to the lan, you can connect <gateway.local> or find
+ip address and go <http://192.168.2.111/wifi-setup>
+
+https://hacks.mozilla.org/2018/02/making-a-clap-sensing-web-thing/
+
 # Sinatra
 
 Default folder for partials is `views/` and name is with `.erb` extension.
@@ -279,9 +312,14 @@ for caching.
 
 Top level application assumes a micro app style configuration (a single app
 file, public and views folders). This is classic style.
-If you want modular (run is disabled by default) style you can inherit from
+If you want modular style (run is disabled by default) you can inherit from
 `Sinatra::Base` (logging and inline templates disabled by default) or
 `Sinatra::Application`.
+
+Run with
+~~~
+bundle exec rackup
+~~~
 
 ## Sinatra Sass
 
@@ -307,9 +345,19 @@ and include in layout
 <link rel="stylesheet" href="/assets/stylesheets/switch.css">
 ~~~
 
+# Sinatra tests
+
+https://www.sitepoint.com/build-sinatra-api-using-tdd-heroku-continuous-integration-travis/
+
+# Webpack
+
+Follow [Webpack]({{ site.baseurl }} {% post_url 2016-04-20-bundler-bower-gulp-npm-yarn-webpack-tips %})
+
+
 
 # Home automation
 
+Example https://github.com/yovasx2/sinatra-raspberry-pi
 
 # Disk errors
 

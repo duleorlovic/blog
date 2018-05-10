@@ -230,8 +230,16 @@ If you want to apply multiple times (so it is bolder) you can use `feMergeNode`
 path")
 
 * pure text in pure css can be different color with help of fill transparend and
-  background 
+  background
   https://mawla.io/team/
+
+  ~~~
+  .colorize-text-background
+    background: radial-gradient($color-a, $color-b 60%, $color-c %20)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+  ~~~
+
   You can also animate saturation or sepia using filter
   https://www.cssfilters.co/
 
@@ -286,6 +294,7 @@ use jpeg and png mask and one svg to combine them
 * default color is black and that means it is transparent. To cover everything
 except text, that fill rectangle and keep text as black (transparent).
 <https://codepen.io/SimonEvans/pen/weoLLB>
+* another example of video inside text https://css-tricks.com/responsive-knockout-text-with-looping-video/
 * curved text
 
 ~~~
@@ -322,6 +331,15 @@ To move arrow and increase line you can also use js libraries:
 [animejs](http://animejs.com/)
 <https://maxwellito.github.io/vivus/>
 <https://codepen.io/Zaku/pen/ALChE>
+
+live coding https://www.youtube.com/watch?v=-zLiw1GeEGo
+
+* smooth transitions between different svg
+[flubber](https://github.com/veltman/flubber)
+* radial or any path progress bars
+  <https://daverupert.com/2018/03/animated-svg-radial-progress-bars>
+* star heart animation with morphing
+https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
 
 
 # Example of nice landing page with animation
@@ -362,6 +380,8 @@ fx-ease-sin fx-stagger-10")`
 [Animejs](http://animejs.com/documentation/) is nice tool that can animate
 any css properties (opacity, color), transforms (translate, rotate), any dom
 attribute with numberical value (svg points).
+
+http://bouncejs.com/
 
 
 # Examples and Tricks

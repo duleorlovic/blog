@@ -5,6 +5,14 @@ title: Ubuntu working environment
 
 # Ubuntu stuff
 
+* find ubuntu and linux version
+
+  ~~~
+  lsb_release -a
+  cat /proc/version
+  uname -a
+  ~~~
+
 * taks screenshot: fullsize `Print`, currently active window `Alt+Print`, area
   `Shift+Print`. Use `ctrl` instead of alt if you want to copy to clipboard
 * [port
@@ -96,24 +104,27 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 [parse user agent strings](https://developers.whatismybrowser.com/useragents/parse)
 * [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
 
-## Chrome DNS and HSTS problem
+## Chrome DNS and HSTS problem for .localhost and .dev
 
 Since google owns `.dev` domain and it exists in hsts list, in chrome (no
 firefox) request to `my-domain.dev` will be always https. So for local
-development I use `.local` with dnsmasq. I did not choose to use `localhost`
+development I use `.loc` with dnsmasq. I did not choose to use `localhost`
 because I can not remap subdomain of localhost in /etc/hosts and use in google
-chrome (firefox works fine)
+chrome (firefox works fine) for some pathetic reason
 <https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost>
+You can also use `lvh.me` since it always resolves to 127.0.0.1.
+
 For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
-subdomain;
+subdomain:
 
 ~~~
 # /etc/dnsmasq.d/dev-tld
-local=/local/
-address=/local/127.0.0.1
+local=/loc/
+address=/loc/127.0.0.1
 ~~~
 
-restart
+restart with
+
 ~~~
 sudo systemctl restart NetworkManager
 sudo /etc/init.d/dnsmasq restart
@@ -130,7 +141,7 @@ cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
 sudo brew services start dnsmasq
 
 # in /usr/local/etc/dnsmasq.conf
-address=/local/127.0.0.1
+address=/loc/127.0.0.1
 
 sudo brew services restart dnsmasq
 
@@ -145,18 +156,18 @@ Test with
 ~~~
 # Make sure you haven not broken your DNS.
 ping -c 1 www.google.com
-# Check that .local names work
-ping -c 1 this.is.a.test.local
+# Check that .loc names work
+ping -c 1 this.is.a.test.loc
 ~~~
 
 You can check your domain name resolutions with `nslookup`
 
 ~~~
-nslookup asd.local
+nslookup asd.loc
 # Server:		127.0.0.1
 # Address:	127.0.0.1#53
 #
-# Name:	asd.local
+# Name:	asd.loc
 # Address: 127.0.0.1
 ~~~
 
@@ -249,6 +260,19 @@ like vim
 * `ctrl+i` page info (content-type, referring url, size...)
 * `f7` carret browsing so you can navigate cursor with shift arrow and ctrl+c
 
+## Firefox WebIDE
+
+You can remotelly debug a page on your phone. Start
+https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging Enable Developer
+mode on Android: Settings -> About Phone -> Build Number -> Tap 10 times and you
+will see parent Setting menu -> Developer Options -> enable USB Debugging.
+
+On desktop Firefox open Settings -> Web Developer -> WebIDE (shift+F8).
+On android Firefox open Settings -> Advanced -> enable Remote Debugging via USB.
+
+Android Firefox needs to confirm Incomming connection: Allow USB debugging
+connection ?.  Also the app needs to be opened (in focus).
+
 # Opera
 
 Download for ubuntu https://www.opera.com/
@@ -264,49 +288,6 @@ Download mobile browser Opera mobile emulator https://www.opera.com/developer/mo
 sudo apt install libqtwebkit4
 ./opera-mobile-emulator
 # still same error
-~~~
-
-# Selenium
-
-<https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings>
-Selenium for ruby use gem `selenium-webdriver`.
-You also need executables for firefox `geckodriver` (just download from
-<https://github.com/mozilla/geckodriver/releases> to `/usr/local/bin`)
-and for chrome `chromedriver` (download from
-<https://sites.google.com/a/chromium.org/chromedriver/downloads> to
-`/usr/local/bin`) and also `gem 'chromedriver-helper'` is needed for client.
-Make sure you have version of firefox and chrome that matches drivers.
-
-You can control remote selenium server. Download
-[selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run
-`java -jar selenium-server-standalone.jar`. For error `Unsupported major.minor
-version 52.0` you need to update java: 51 -> java7, 52 -> java8, 53 -> java9.
-
-To test in `rails c` try
-
-~~~
-# chrome
-driver = Selenium::WebDriver.for :remote, desired_capabilities: :chrome, url: "http://192.168.5.56:4444/wd/hub"
-# same as
-# driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub"
-driver.navigate.to 'http://google.com' #=> nil
-
-# firefox
-# driver = Selenium::WebDriver.for :firefox, url: "http://192.168.5.56:4444/wd/hub"
-
-# headless chrome
-options = Selenium::WebDriver::Chrome::Options.new(
-  args: %w[headless disable-gpu window-size=1024,768],
-)
-driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub", options: options
-~~~
-
-If there is a screen you can run both headless and not. If you run server from
-ssh (there is no screen) than you can run headless or you can run server using X
-virtual frame buffer
-
-~~~
-xvfb-run java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver -jar /usr/local/bin/selenium-server-standalone.jar
 ~~~
 
 # Gimp
@@ -419,3 +400,56 @@ connections -> IPv4 Settings -> Routes -> check "Use this connection only for
 resources on its network"
 
 To remove docker bridge you can run `ip link del docker0`
+
+* resize mp4 video with avconv
+
+~~~
+avconv -i input.mp4 -s 640x480 -strict -2 output.mp4
+for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
+~~~
+
+* default gnome screenshot folder `dconf-editor` find
+  `org->gnome->gnome-screenshot-> auto-save-directory ->
+  file:///home/user/Download/`
+
+* install Oracle Java instead of OpenJDK http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html
+
+  ~~~
+  sudo add-apt-repository ppa:webupd8team/java
+  sudo apt-get update
+  sudo apt-get install oracle-java8-installer
+  sudo update-alternatives --config java
+  java -version
+  javac -version
+  ~~~
+
+* bluetooth
+
+  https://forums.bunsenlabs.org/viewtopic.php?id=4375
+  ~~~
+  systemctl status bluetooth.service
+  sudo systemctl restart bluetooth.service
+  lsusb
+  lspci -knn
+
+  bluetoothctl
+  list
+  show
+  agen on
+  power on
+  scan on
+  ~~~
+
+  My is
+
+  ~~~
+  04:00.0 Network controller [0280]: Qualcomm Atheros AR9462 Wireless Network Adapter [168c:0034] (rev 01)
+    Subsystem: Lite-On Communications Inc AR9462 Wireless Network Adapter [11ad:6621]
+  ~~~
+
+  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1394368
+
+  ~~~
+  sudo -i
+  echo "options ath9k btcoex_enable=1"  >  /etc/modprobe.d/ath9k.conf
+  ~~~

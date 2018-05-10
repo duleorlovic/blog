@@ -52,7 +52,7 @@ cat > config/initializers/exception_notification.rb << HERE_DOC
 require 'exception_notification/rails'
 
 class Notify
-  def self.exception(message, data)
+  def self.exception(message, data = nil)
     ExceptionNotifier.notify_exception(Exception.new(message), data: data)
   end
 
@@ -66,11 +66,10 @@ class Notify
       exception_recipients: args[:exception_recipients],
       email_prefix: args[:email_prefix],
       data: args[:data],
-    }.delete_if {|k,v| v.nil?}
+    }.delete_if { |_k, v| v.nil? }
     ExceptionNotifier.notify_exception(Exception.new(message), params)
   end
 end
-
 
 # rubocop:disable Metrics/BlockLength
 if (receivers = Rails.application.secrets.exception_recipients).present?
@@ -130,13 +129,8 @@ if (receivers = Rails.application.secrets.exception_recipients).present?
         Rails.cache.write cache_key,
                           already + 1,
                           expires_in: THROTTLE_INTERVAL_SECONDS
-        if already >= THROTTLE_LIMIT
-          # do not notify
-          true
-        else
-          # it is ok to notify
-          false
-        end
+        # do not notify if already send max number of times, return val is true
+        already >= THROTTLE_LIMIT
       else
         Rails.cache.write cache_key, 1, expires_in: THROTTLE_INTERVAL_SECONDS
         # it is ok to notify
@@ -150,9 +144,7 @@ if (receivers = Rails.application.secrets.exception_recipients).present?
     #   e.ignore_please = true
     #   raise e
     # end
-    config.ignore_if do |exception|
-      exception.ignore_please
-    end
+    config.ignore_if(&:ignore_please)
 
     # Notifiers ================================================================
 

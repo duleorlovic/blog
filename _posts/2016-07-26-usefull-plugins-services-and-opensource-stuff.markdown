@@ -222,6 +222,26 @@ keep ajax source
     });
 ~~~
 
+or for all
+
+~~~
+$(document).on 'turbolinks:load', ->
+  $('[data-select2-ajax-initialize]').each ->
+    url = $(this).data('select2AjaxInitialize')
+    options = {
+      ajax: {
+        url: url
+        dataType: 'json'
+      }
+    }
+    $(this).select2 options
+    # using label for select does not open select2 on focus, so on label click
+    # we should trigger open
+    # https://github.com/select2/select2/issues/2311#issuecomment-180666626
+    $(this).focus ->
+      $(this).select2('open')
+~~~
+
 # Calendar date and time picker
 
 * Best option is [daterangepicker](http://www.daterangepicker.com/) it can be
@@ -424,6 +444,7 @@ FA icons are very usefull for quick icons. Look for
 * spinner `<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>`
 
 * page loader progress bar <http://ricostacruz.com/nprogress/>
+* page loader car <https://codepen.io/igor0ser/pen/amJkvp>
 
 # Images
 
@@ -432,6 +453,12 @@ FA icons are very usefull for quick icons. Look for
 * free stock photos <https://burst.shopify.com>
 * sample placeholder https://placeholder.com/
 * free vector images kajak pictogram https://pixabay.com/en/sport-pictogram-olympia-water-swim-1580667/
+
+# Slides
+
+* <https://github.com/jaredwilli/io-slides> presentations
+ https://code.google.com/archive/p/io-2012-slides/
+ [video](https://www.youtube.com/watch?feature=player_embedded&v=WRvECXyWj80)
 
 # Graphs
 
@@ -446,9 +473,6 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 * [chartjs](http://www.chartjs.org/)
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
-
-* smooth transitions between different svg
-[flubber](https://github.com/veltman/flubber)
 
 # Email services
 
@@ -630,8 +654,6 @@ Email templates
 * <http://animejs.com/>
 * <http://daneden.me/animate>
 
-* star heart animation with morphing
-https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>
 
@@ -656,6 +678,7 @@ the content
 * nice example site sith custom drawings <http://www.parkrun.com/>
 * animations <https://www.kronologic.ai/>
 * red bull <https://www.bullandbeard.com/>
+* project portfolio animated <http://celialopez.fr/>
 
 
 # Fonts and icons
@@ -679,11 +702,24 @@ the content
 * [shellckeck](https://github.com/koalaman/shellcheck) static analysis tool for
 shell scripts
 
-# Local PaaS, ci
+# Mockups and wireframes
 
-* <https://github.com/dokku/dokku> heroku like serverice
+* https://balsamiq.com/products/ trial one month
+* https://moqups.com/ free up to 300 objects
+* https://wireframe.cc/ free for public one page
+
+To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
+# Continuous integration
+
 * <https://flynn.io/>
 * <https://github.com/fastlane/ci> Open source, self hosted, mobile optimized CI
 powered by fastlane
 * others <https://news.ycombinator.com/item?id=12703121>
 
+
+# Dokku
+
+Heroku-like self hosted platform as a service
+
+https://pawelurbanek.com/rails-heroku-dokku-migration
+<https://github.com/dokku/dokku>

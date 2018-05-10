@@ -17,7 +17,9 @@ This also works for system test (you do not need `system` in `rails
 test:system`)
 
 ~~~
-rails test test/models/article_test.rb:6 or name
+# invoke test by line
+rails test test/models/article_test.rb:6
+# or name
 rails test -n test_example
 ~~~
 
@@ -140,7 +142,7 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to projects_path
     # also available: assert_response :redirect
     follow_redirect!
-    assert_select 'span', 'Dule'
+    assert_select '#my-id', /dule/
   end
 end
 ~~~

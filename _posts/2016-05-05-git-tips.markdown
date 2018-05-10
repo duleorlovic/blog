@@ -61,6 +61,10 @@ Find difference of current file with some point
 
     git diff 123123123 -- index.html
 
+Find difference of all files and folders with meld diff tool
+
+    git difftool master --dir-diff
+
 Find bug using bisect on specific folder or file
 
      git bisect start -- app/controllers/registration_controller.rb
@@ -156,7 +160,7 @@ Rebase branches
 
 Interactivelly rebase pull request
 
-     git rebase -i HEAD~2 # rebase last two commits
+     git rebase -i HEAD~2 # rebase last two commits, or use origin/master
      # pick : use same commit
      # squash : meld with previous commit (on this list is previous)
      # reword : change commit message

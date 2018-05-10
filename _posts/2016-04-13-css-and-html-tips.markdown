@@ -10,9 +10,11 @@ title: CSS and HTML tips
   * long string  `overflow: hidden; text-overflow: ellipsis;` To show on hover,
   focus or active (when selecting text) use this helper
   ~~~
+  // <div class='long-string-three-dots'>long long</div>
   .long-string-three-dots {
     text-overflow: ellipsis;
     overflow: hidden;
+    // white-space: nowrap;
     &:active, &:hover, &:focus {
       text-overflow: initial;
       overflow: auto;
@@ -40,9 +42,11 @@ title: CSS and HTML tips
 * use relative units instead of absolute
   <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 {
   font-size: 20vh;}`. vh is 1% of vertical heigh of view port (window size, not
-  page size). For width you can use horizontal width for example `width: 80vw;`
-  another relative unit is `em` (1em is default font size usually 16px,
-  bootstrap was 14px now is 16px)
+  page size). For width you can use horizontal width for example `width: 80vw;`.
+  You should use relative size `rem` (to the html el) or `em` (to the current
+  font) since you might want to change font size on whole page, and you do not
+  need to go to all nested components to update that. 1rem is default font size
+  usually 16px, bootstrap was 14px now is also 16px.
 
 * you can not set the width of inline elements, so to set width of `span` you
   need to make it `display:inline-block; width: 100px`
@@ -137,15 +141,47 @@ title: CSS and HTML tips
   }
   ~~~
 
-* prefer mixins to `@extend`
+* prefer mixins to `@extend`. You can pass parameter to mixin and set default
+  value
 
-* chrome 39 for android use different color for toolbar, just add `<meta
-  name="theme-color" content="#db5945">`
+  ~~~
+  @mixin grid($my_var: true) {
+    // code here
+  }
+  ~~~
+
+Sass is shorter since it uses indent, and do not require semicolon.
+Atomatic convert scss to sass
+~~~
+sass-convert -F scss -T sass application_styles.css.scss application_styles.css.sass
+~~~
+
+Instead of scss
+~~~
+# scss
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+
+.box {
+  @include border-radius(10px);
+}
+
+# sass
+=border-radius($radius)
+  border-radius: $radius
+
+.box
+  +border-radius(10px)
+~~~
 
 
 # Head meta tags
 
 * here is a list of used tags [HEAD](https://github.com/joshbuchea/HEAD)
+* chrome 39 for android use different color for toolbar, just add `<meta
+  name="theme-color" content="#db5945">`
+
 
 # Css helper classes
 
@@ -304,7 +340,80 @@ Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/
 
 # Layout
 
+https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background
+
+Parent element if flex container, and children as flex items. `flex-direction`
+determines main axis on which items will be laid out from `main-start`
+(`flex-start`) to `main-end` (`flex-end`), that is total `main-size`.
+Perpendicular to the main axis is `cross` axis with its `cross-start`
+`cross-end` and `cross-size`.
+
+on container we can have:
+* `display: flex` (synonim is `inline-flex`)
+* `flex-direction: row | row-reverse | column | column-reverse`
+* `flex-wrap: nowrap | wrap | wrap-reverse` default is no wrap so in single
+  line, wrap means that it is allowed to go onto multiple lines. This two
+  properites can be shorhanded in one `flex-flow: row nowrap`
+* `justify-content: flex-start | flex-end | center | space-between |
+  space-around | space-evenly` aligment when items are inflexible. space around
+  means that all items have same space around (before first there is no items so
+  that's why it is single space) if you need exactly same space from start to
+  first and first to second, use space-evenly.
+* `align-items: flex-start | flex-end | center | stretch | baseline` behavior
+  along CROSS AXIS on current line. `stretch` is from `cross-start` to
+  `cross-end` still respect min-width/max-width. similar to `justify-content`
+  but for cross axis
+* `align-content: flex-start | flex-end | center | stretch | space-between |
+  space-around` behavior of LINES when there is extra space in cross-axis (no
+  effect is single line) similar to `justify-content` for main axis, but for
+  lines.
+
+on items https://www.w3.org/TR/css-flexbox-1/#flexibility
+* `flex-grow: 0` ability to grow as proportion. If one has 2 and all others have
+  1, first will be twice bigger
+* `flex-shrink: 1`
+* `flex-basis: 20% | auto` default size before remaining space is distributed.
+  This three items have shorthand `flex: 0 1 auto`. So use this if you want
+  items to use space between (on container clear `justify-content`)
+  `flex: auto` is eq to `flex: 1 1 auto` bigger item will take bigger space,
+  auto means that if item can use space it will use space.
+  `flex: 1` is eq to `flex: 1 1 0` all items same width (flex-basis 0 so their
+  content is not taken into consideration)
+* `align-self: flex-start | flex-end | center | stretch | baseline` override
+  `align-items` for specific item, on cross axis
+* `order: 0`
+
+* [justify-items](https://developer.mozilla.org/en-US/docs/Web/CSS/justify-items)
+ property defines the default justify-self for all items for a `display: grid`.
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox
+You can use `margin-left: auto` to separate group of items since auto margin
+will took as much space as it can. So you can align first three on left and last
+two on right by adding `.push` on firt right item.
+
+~~~
+.box {
+  display: flex;
+}
+.push {
+    margin-left: auto;
+}
+
+<div class="box">
+  <div>One</div>
+  <div>Two</div>
+  <div>Three</div>
+  <div class="push">Four</div>
+  <div>Five</div>
+</div>
+~~~
+
+Om mobile you probably want all buttons to take all space so use `flex: auto` or
+`flex: 1` if you want same size buttons.
+
 https://hacks.mozilla.org/2018/01/new-flexbox-guides-on-mdn/
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox
+
 
 Flexbox
 
@@ -455,6 +564,7 @@ size, use `style="width: 100%"`
 * if you want background image to be blured, you can use overlay with opacity
 position absolute that cover whole area. Your element should be position
 relative and defined after cover to stand out of that cover.
+https://css-tricks.com/snippets/css/transparent-background-images/
 
 ~~~
 <body>
@@ -474,8 +584,12 @@ relative and defined after cover to stand out of that cover.
   left: 0;
   right: 0;
   opacity: .7;
-  -webkit-backface-visibility: hidden;
   background-color: #52d3aa;
+  // use image
+  background-image: asset-url("cityscape.png")
+
+  // or gradient
+  -webkit-backface-visibility: hidden;
   background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0, #3f95ea), color-stop(1, #52d3aa));
   /* Android 2.3 */
   background-image: -webkit-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);

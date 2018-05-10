@@ -1068,3 +1068,67 @@ Deploy, Code Push, PhoneGap ContentSync, PhoneGap hydration.
 * use authentication can we implemented with 3th party service: Firebase Auth,
 GCP Auth, Auth.io, Auth0, Stormpath, Fabric Digits, Amazon Cognito, Azure Auth,
 Ionic Auth
+
+# Android studio
+
+if you receive error
+~~~
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:transformClassesAndResourcesWithProguardForDebug'.
+~~~
+
+than disable minify
+
+~~~
+# app/build.gradle
+#android {
+#  buildTypes {
+#    debug {
+-      minifyEnabled true
++     minifyEnabled false
+~~~
+
+if you receive error
+
+~~~
+java.lang.RuntimeException: com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives:
+~~~
+
+than
+~~~
+# app/build.gradle
+# android {
+#   defaultConfig {
++     multiDexEnabled true //important
+~~~
+
+if you receive error
+
+~~~
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:transformClassesWithMultidexlistForDebug'.
+~~~
+
+than you need to increase memory for dex
+https://stackoverflow.com/questions/32807587/com-android-build-transform-api-transformexception
+
+~~~
+# local.properties
++ org.gradle.jvmargs=-XX:MaxHeapSize\=512m -Xmx512m
+
+# maybe this could help, but not neccessary
+# app/build.gradle
+# android {
++    dexOptions {
++        javaMaxHeapSize "4g" //specify the heap size for the dex process
++    }
+~~~
+
+To Invalidate gradle cache you should go to File -> Invalidate Caches /
+Restart...
+
+
+Build -> Clean Project
+
+rm -rf .gradle/ app/build
+~~~
+
+

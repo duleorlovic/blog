@@ -25,7 +25,7 @@ class MyTodoJob < ActiveJob::Base
 end
 ~~~
 
-Usage of jobs is with attributes `wait` and `wait_until`
+Invoke jobs with attributes `wait` and `wait_until`
 
 ~~~
 MyTodoJob.perform_later args

@@ -70,7 +70,3 @@ https://developers.google.com/api-client-library/ruby/apis/gmail/v1
 
 Someone can break to your account simple by adding his email as recovery email.
 Than he can easily change password.
-
-# CAPTCHA
-
-<http://www.thegreatcodeadventure.com/google-recaptcha-ruby>

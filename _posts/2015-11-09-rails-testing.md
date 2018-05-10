@@ -201,6 +201,25 @@ RSpec.describe CustomerPayment do
 end
 ~~~
 
+Also valid factory can be shared between tests
+
+~~~
+# spe/models/user_spec.rb
+RSpec.describe User do
+  it_behaves_like 'has_valid_factory'
+end
+
+# spec/support/factory_bot.rb
+RSpec.shared_examples 'has_valid_factory' do
+  it 'has a valid factory' do
+    expect(create(described_class.name.underscore)).to be_valid
+  end
+end
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+end
+~~~
+
 Some [rspec
 expectations](http://www.relishapp.com/rspec/rspec-expectations/docs) built in
 matchers
@@ -300,13 +319,37 @@ xit "skipped" do
 end
 ~~~
 
-For slow test you can mark with `:really_slow` and add to `spec/spec_helper.rs`
+For slow test you can mark with `:really_slow` and exclude specific tags with
+`rspec --tag ~really_slow`. Or you can add to add to `spec/spec_helper.rs`
 
 ~~~
-  config.filter_run_excluding really_slow: true
+# spec/spec_helper.rb
+RSpec.configure do |config|
+  config.filter_run_excluding(really_slow: true)
+end
 ~~~
 
-If you really want to run then than add tag `rspec --tag really_slow`.
+Note that if you run specific line `bin/rspec spec/features/my_spec.rb:10` than
+it will not be excluded. Only if you run all or speficic file `bin/rspec
+spec/features/my_spec.rb`
+
+If you want to run specific task then than add tag `rspec --tag really_slow`. If you
+want to run all and specific tasks than use env variable:
+
+~~~
+# spec/spec_helper.rb
+RSpec.configure do |config|
+  # If you really want to run then than add tag `bin/rspec --tag really_slow` to run
+  # only that tag, or to run all and some tags use
+  # INCLUDING_TAGS=chrome_remote_selenium bin/rspec
+  %i(
+    really_slow chrome_remote_selenium
+    headless_chrome_remote_selenium edit_hosts
+  ).each do |tag|
+    config.filter_run_excluding(tag) unless ENV['INCLUDING_TAGS'].to_s.include? tag.to_s
+  end
+end
+~~~
 
 You can exclude specific folder
 <https://relishapp.com/rspec/rspec-core/v/3-3/docs/configuration/exclude-pattern>
@@ -881,8 +924,84 @@ Test default values from database and in after hooks.
 
 ~~~
 
-Usually we do not test migration since we use them later and write test
-for that usage.
+## Test migration
+
+You can test data migration. Do not perfom migration, come just before it
+
+~~~
+rake db:drop db:create db:migrate VERSION=20180503095528
+rake db:migrate:status
+You have 1 pending migration:
+  20180508073700 RemoveLocationVoucherType
+# Run `rake db:migrate` to update your database then try again.
+# I tried to ignore with `config.active_record.migration_error = false` but it
+# gives me error message. You should move or rename migration file while you run
+rake db:drop db:create db:migrate && bin/rspec spec/migrations/my_migration_specc.rb
+~~~~
+
+You should also rename test file so it is not run with all other, or ignore
+specific tag metadata.
+
+~~~
+class MyMigration < ActiveRecord::Migration
+  # this is local Location class used only inside this migration
+  class Location < ActiveRecord::Base
+  end
+  def up
+    rename_column :locations, :name, :name2
+    # this is needed since renamed columns will be ignored on "save"
+    Location.reset_column_information
+    Location.find_each do |location|
+      location.name2 = 'updated in migration'
+      location.save!
+    end
+  end
+end
+~~~
+
+I tried with
+[Migrator.migrate](https://github.com/xevix/activerecord_migration_testing_example/blob/53ee8c52f5c4d21a616f4a2f40cdc2481ccbd73c/spec/migrations/move_sales_price_to_user_item_spex.rb)
+but nothing happens (no sql migration commands), so I simply run
+`MyMigration.new.up`
+
+~~~
+# spec/migrations/my_migration_spec.rb
+load 'spec/spec_helper.rb'
+load 'tmp/20180508073700_remove_location_voucher_type.rb'
+# run test with this command
+# rake db:drop db:create db:migrate STEP=20180503095528 && bin/rspec spec/migrations/remove_location_voucher_type_spec.rb --tag migration_specs
+RSpec.describe RemoveLocationVoucherType, migration_specs: true do
+
+  it 'up' do
+    # ActiveRecord::Migrator.migrate(migrations_paths, previous_version)
+    my_user = create :user
+    MyMigration.new.up
+    my_user.reload
+    expect(my_user.name2).to be 'updated in migration'
+  end
+end
+~~~
+
+If there is an error than skip DatabaseCleaner
+
+~~~
+# error
+
+# spec/support/database_cleaner.rb
+RSpec.configure do |config|
+  config.around(:each) do |example|
+    if example.metadata[:migration_specs]
+      example.run
+    else
+      # Start transaction
+      DatabaseCleaner.cleaning do
+        example.run
+      end
+    end
+  end
+end
+~~~
+
 
 ## RSpec background jobs spec
 
@@ -986,7 +1105,16 @@ RSpec.describe "Post #create" do
 end
 ~~~
 
-# Acceptance tests with Capybara
+# Selenium
+
+<https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings>
+Selenium for ruby use gem `selenium-webdriver`.
+You also need executables for firefox `geckodriver` (just download from
+<https://github.com/mozilla/geckodriver/releases> to `/usr/local/bin`)
+and for chrome `chromedriver` (download from
+<https://sites.google.com/a/chromium.org/chromedriver/downloads> to
+`/usr/local/bin`) and also `gem 'chromedriver-helper'` is needed for client.
+Make sure you have version of firefox and chrome that matches drivers.
 
 Instead of using `get` and `response.body` we can use only what end user see
 `visit`, `fill_in` and `page.should`. Also it can use the
@@ -1014,17 +1142,30 @@ rm -rf ~/.chromedriver-helper/
 chromedriver-update
 ~~~
 
+If you see error `SocketError: getaddrinfo: Name or service not known` than make
+sure you have defined localhost `127.0.0.1 localhost` in `/etc/hosts`
+
+If you see error `Selenium::WebDriver::Error::StaleElementReferenceError: stale
+element reference: element is not attached to the page document` it could be
+that element was removed. This could happend also when you use `within #id` and
+than make expectation inside `within` block. Try to move expectation outsite of
+`within` block or to reload
+
+~~~
+page.driver.browser.navigate.refresh
+page.evaluate_script 'window.location.reload()'
+~~~
+
 Chrome driver usually starts with `data:,` url and than redirects to for example
 <http://127.0.0.1:34623/posts>
 
-In console you should see starting browser with
+In rails console you should see starting browser with
 
 ~~~
 options = Selenium::WebDriver::Chrome::Options.new
 options.add_argument('--headless')
 driver = Selenium::WebDriver.for :chrome #, options: options
 ~~~
-
 
 To run in browser javascript use `js: true`. Note that in this mode, drop down
 links are not visible, you need to click on dropdown. Also `data-confirm` will
@@ -1077,12 +1218,13 @@ Capybara.enable_aria_label = true
 
 
 # if you need to use custom domain , you can set host, but also set server port
-Capybara.app_host = "http://my-domain.local:3333"
+Capybara.app_host = "http://my-domain.loc:3333"
 Capybara.server_port = 3333
 # you can read host and port
 Capybara.current_session.server.host
 Capybara.current_session.server.port
 # normally chrome starts with url: data; and than redirects to app_host
+# app_host should ends with .loc or .lvh.me so it point to localhost
 ~~~
 
 For newer Firefox I needed to download
@@ -1091,6 +1233,57 @@ somewhere like `/user/local/bin/geckodriver`. Also [Firefox
 47.0.1](https://ftp.mozilla.org/pub/firefox/releases/47.0.1/) is suggested, but
 my ver 50 also works.
 
+# Remote Selenium
+
+You can control remote selenium server. Download
+[selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run
+selenium server.  For error `Unsupported major.minor
+version 52.0` you need to update java: 51 -> java7, 52 -> java8, 53 -> java9.
+
+~~~
+java -jar selenium-server-standalone.jar
+~~~
+
+To test in `rails c` try
+
+~~~
+# chrome
+driver = Selenium::WebDriver.for :remote, desired_capabilities: :chrome, url: "http://192.168.5.56:4444/wd/hub"
+# same as
+# driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub"
+driver.navigate.to 'http://google.com' #=> nil
+
+# firefox
+# driver = Selenium::WebDriver.for :firefox, url: "http://192.168.5.56:4444/wd/hub"
+
+# headless chrome
+options = Selenium::WebDriver::Chrome::Options.new(
+  args: %w[headless disable-gpu window-size=1024,768],
+)
+driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub", options: options
+~~~
+
+If there is a screen you can run both headless and not. If you run server from
+ssh (there is no screen) than you can run headless or you can run server using X
+virtual frame buffer
+
+~~~
+xvfb-run java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver -jar /usr/local/bin/selenium-server-standalone.jar
+~~~
+
+Open new tab
+
+~~~
+# http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Window
+    old_window = page.driver.browser.window_handles.last
+    new_window = page.open_new_window
+    page.switch_to_window new_window
+    # page.current_window.close
+    page.driver.browser.close # this will close tab, not whole window
+    page.switch_to_window old_window
+~~~
+
+# Capybara
 
 Capybara is used only with
 [feature
@@ -1174,9 +1367,30 @@ Some of the most used capybara methods
 sheet](https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf)
 
 **Session methods** you can set expectation for `current_path` or `current_url`
-* `visit "/"`, `visit new_project_path`
+`page` is actually `Capybara::Session` class so better is to use `sessions`
+name. When you find some element you get `Capybara::Node::Element`, but you can
+create new node without going to selenium, using html text
+
+~~~
+node = Capybara.string <<-HTML
+  <ul>
+    <li id="home">Home</li>
+    <li id="projects">Projects</li>
+  </ul>
+HTML
+node.class # => Capybara::Node::Simple
+node.find('#projects').text # => 'Projects'
+~~~
+
+* `visit "/"`, `visit new_project_path`. Remember that if you want to go to
+  different domain than `Capybara.app_host` than you need to use full url (with
+  protocol) so no `visit 'www.google.com` but rather `visit
+  'http://google.con'`. Any relative url will use `Capybara.app_host` just note
+  that it also needs protocol `Capybara.app_host = 'http://...'` otherwise error
+  `undefined method  +  for nil:NilClass`
 * `within "#login-form" do`
-* generate capybara post request using submit (this does not work for `js: true`)
+* generate capybara post request using submit (this does not work for `js:
+  true`)
 
   ~~~
     session = Capybara.current_session.driver
@@ -1223,12 +1437,17 @@ only for finders). You can use substring or you can define `exact: true`
 **Node matchers** and rspec matchers [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers) [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
 
 * `expect(page.has_css?('.asd')).to be true`
-* `expect(page).to have_css(".title", text: "my title")`, `have_text`,
-`have_content`, `have_link`, `have_selector("#project_#{project.id} .name",
-text: 'duke')` . `have_no_selector` for opposite. It is not same
-`expect(page).not_to have_text` and `expect(page).to have_no_text` since in
-later case it will wait until it tries to fulfill expectation.
+* `expect(page).to have_css(".title", text: "my title")`, `have_text /hi|bye/`,
+`have_content`, `have_link`, `have_button`, `have_selector("#project_#{project.id} .name",
+text: 'duke')` .
+`have_no_selector` for opposite. It is not same `expect(page).not_to have_text`
+and `expect(page).to have_no_text` since in later case it will wait until it
+tries to fulfill expectation.
 With all you can use `text: '...'` and `count: 2` which is number of occurences.
+Instead of `page.body.include? text` (this will compare html tags) use
+`page.has_text? text` (this will compare only text).
+For testing if something is on the page, for example 3 rows, you can use
+`page.has_selector? '[name="customer_ids[]"]', count: 3`
 * If element is not visible, you can provide `visible: false` (does not work
 with `have_content "d", visible: false` but works with `have_css 'div', text:
 'd', visible: false`. Note that this is triggered only if `js: true` (and pass
@@ -1483,7 +1702,7 @@ module PauseHelpers
   # you can use byebug, but it will stop rails so you can not navigate to other
   # pages or make another requests in chrome while testing
   def pause
-    $stderr.write 'Press ENTER to continue'
+    $stderr.write 'Press CTRL+J or ENTER to continue'
     $stdin.gets
   end
 end
@@ -1666,13 +1885,23 @@ Wait for ajax to finish is not needed in latest capybara, but here is reference:
 ~~~
 # spec/support/features/wait_for_ajax.rb
 # https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
+
+# You can use this flash and force driver to wait more time, expecially on
+# destroy action when there is slow deleting data
+# app/views/users/destroy.js.erb
+# window.location.assign('<%= customer_path @customer %>');
+# jQuery.active = 1;
+#
 module WaitForAjax
   def wait_for_ajax
     printf "jQuery.active"
+    start_time = Time.current
     Timeout.timeout(Capybara.default_max_wait_time) do
       loop until finished_all_ajax_requests?
     end
-    sleep 1
+    printf '%.2f', Time.current - start_time
+  rescue Timeout::Error
+    printf "timeout#{Capybara.default_max_wait_time}"
   end
 
   def finished_all_ajax_requests?
@@ -1681,10 +1910,6 @@ module WaitForAjax
     output.zero?
   end
 end
-
-# you can use this flash and force driver to wait more time
-# window.location.assign('<%= customer_path @customer %>');
-# jQuery.active = 1;
 RSpec.configure do |config|
   config.include WaitForAjax, type: :feature
 end
@@ -1974,8 +2199,6 @@ associations and *create_list* method
   end
   ~~~
 
-* inheritance: nest multiple `factory :user_with_posts` or use `parent: :user`
-attribute
 * if you need to use existing record and not create new, you can like this
 ~~~
 factory :company do
@@ -2002,7 +2225,10 @@ factory :sms_alert do
 end
 ~~~
 
-* nested factory is usefull if you need different kind of objects
+* nested factory is usefull if you need different kind of objects. It is
+  similar to inheritance. Note that if you have model `UserWithPosts` nested
+  factory will use parent factory class `User`, not the `UserWithPosts`.
+  You can also define as `parent: :user` attribute
 
 ~~~
 factory :user_without_profile do

@@ -209,3 +209,9 @@ On ubuntu, you can rename `ssl.crt` to `ssl.crt.p12` (or ssl.crt.key) and double
 details of certificate.
 
 For heroku you can follow <https://gist.github.com/meskyanichi/3354578>
+
+If in windows 7 can not open www.xda-developers.com because
+of invalid certificate, The certificate cannot be verified up to a trused
+certification authority... This server could not prove that it is
+www.xda-developers.com its secity certificate is not trusted by your computer's
+operating system...

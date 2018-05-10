@@ -668,7 +668,7 @@ General variables:
 * `host-ip` client ip address from `/ip hotspot host`
 
 Inside templates `$(if varName) ... $(elif varName) ... $(else) ... $(endif)`
-can be used for conditionals.
+or `$(if logged-in = 'yes')` can be used for conditionals.
 
 You can POST to `/login.html` with username and password, and user will be
 authenticated and redirected. You can also GET and user will be authenticated
@@ -688,6 +688,11 @@ or you can disable cookie login for hotspot profile `/ip hotspot profile set
 default login-by=http-chap`
 
 External login <https://wiki.mikrotik.com/wiki/HotSpot_external_login_page>
+
+Note that form url should point to `/login` path
+~~~
+no
+~~~
 
 ## Firewall
 

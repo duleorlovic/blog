@@ -285,8 +285,6 @@ for his audience.
 You can use some of the services: Google Analytics, Firebase anal, Amazon anal,
 Fabric Answers, Mixpanel, Keen, Segment, Amplitude, Localytics, Ionic Analytics
 
-To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
-
 # SEO search enginge optimization
 
 hangouts tutorials <https://plus.google.com/collection/oSHR9>

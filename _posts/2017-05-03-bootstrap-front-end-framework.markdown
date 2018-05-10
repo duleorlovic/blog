@@ -20,7 +20,7 @@ Bootstrap Media queries:
 
 So when you specify for sm, you do not need to specify for md or lg.
 
-With bootstra4 you can use mixins for media queries:
+With bootstrap 4 you can use mixins for media queries:
 ~~~
 @include media-breakpoint-up(sm) {
   .some-class {
@@ -178,9 +178,10 @@ of input with select and button.
 
 # Color helpers
 
-Primary colors are [link](http://getbootstrap.com/css/#helper-classes-colors):
-`default` (or `muted`), `primary`, `success`, `info`, `warning` and `danger`.
-So you can use for:
+Primary colors are [link](https://getbootstrap.com/docs/4.0/utilities/colors/)
+`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `dark`, `light`,
+`white`.  For text there is `muted` and also need background `text-light
+bg-dark` and `text-white bg-dark`.
 
 * text `.text-success`
 * background `.bg-warning`
@@ -206,15 +207,21 @@ well with `display: flex` elements, better is to use
     }
   }
   ~~~
-* margin and padding helpers `1..5` like `p-0`, `p-0-25` ... `p-3`, margin top
-  `mt-5`.
+* margin and padding helpers in format `<property><sides>-<breakpoint>-<size>`
+  <https://getbootstrap.com/docs/4.0/utilities/spacing/#notation> 
+  property is `m` margin or `p` padding
+  sides `t` top, `b` bottom, `l` left, `r` right, `x` both l and r, `y` t and b
+  size `0`, `1` (`$spacer * 0.25`), `2` (`$spacer * .5`), `3` (`$spacer`), `4`
+  (`$spacer * 1.5`), `5` (`$spacer * 3`), `auto` for margin auto. Spacer is 1rem
 
-# Flex
+  sides or breakpoint not required: `p-0` padding none, `mt-5` margin top,
+  `ml-auto` to align to the right, `mx-auto` for horizontal centering of fixed
+  width block elements.  If you put inside `d-flex` than it will be scretched so
+  use `d-flex align-items-center` to center verticaly.
 
-You can use `d-flex` class to convert to flexbox container.
-Other position and alignment helpers https://getbootstrap.com/docs/4.0/utilities/flex/
+* `d-flex` class to convert to flexbox container.  Other flex helpers
+  https://getbootstrap.com/docs/4.0/utilities/flex/
 
-* to align to the right use `ml-auto`
 
 # Rails
 
@@ -305,6 +312,10 @@ sed -i app/views/layouts/application.html.erb -e '/<.ul>/ {
 }'
 ~~~
 
+## Nabar
+
+https://getbootstrap.com/docs/4.0/examples/navbars/ shows different styles
+
 Here is an example adding style for specific media for alert
 
 ~~~
@@ -362,6 +373,13 @@ with `layout: :horizontal` (note that it won't work for string `layout:
 'horizontal'`). You can add options `label_col: 'col-sm-4', control_col:
 'col-sm-8'`. Also you can override `control_class`, `wrapper_class` (if it is a
 hash you can override any option).
+
+you can make checkbox inline with button
+
+~~~
+  <%= f.check_box :remember_me, inline: true %>
+  <%= f.submit t "sign_in" %>
+~~~
 
 You can use form to have horizontal layout, and some input group can be inline,
 so you can group input and select (note that is you have horizontal layout you
@@ -538,3 +556,9 @@ class MyFormBuilder < BootstrapForm::FormBuilder
 end
 end
 ~~~
+
+## Data confirm modal
+
+When rails use `data-confirm='Are you sure?'` it opens default browser's builtin
+`confirm()`. Instead of that, you can open bootstrap 3 or 4 modal with
+<https://github.com/ifad/data-confirm-modal>

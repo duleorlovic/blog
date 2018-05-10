@@ -310,6 +310,12 @@ sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
   protect_from_forgery with: :null_session'
 ~~~
 
+You can disable CSRF Token authenticity for specific actions
+
+~~~
+skip_before_action :verify_authenticity_token, only: [:my_insecure_post_action]
+~~~
+
 # Authentication
 
 You can use `WWW-Authenticate` header or setting sessiong key using Http cookie.

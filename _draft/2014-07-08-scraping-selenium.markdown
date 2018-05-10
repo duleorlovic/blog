@@ -77,6 +77,8 @@ page.link_with text: 'Next' # exact match
 page.search('#updates div a:first-child') # css match
 ~~~
 
+Nokogiri cheat sheet https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
+
 For using plain selenium (not capybara) you need to implement waiting for ajax
 results. I used three steps
 

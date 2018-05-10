@@ -344,6 +344,12 @@ will show `\n` and will insert spaces because text is indented. There is
   HERE_DOC
 
   INDENT #=> "1\n  2\n3\n"
+
+  # also without assignment
+  def html_boilerplate
+    <<~HTML
+    HTML
+  end
   ~~~
 
   Same HERE_DOC functionality can be achieved with `%()` or `%Q()` with
@@ -384,7 +390,7 @@ will show `\n` and will insert spaces because text is indented. There is
   require 'open3'
   stdout, stderr, status = Open3.capture3("ls")
   ~~~
-* `%i(sym1 sym2)` is used to return array of symbols
+* `%i[sym1 sym2]` is used to return array of symbols `[;sym1 :sum2]`
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
@@ -725,6 +731,14 @@ my_default_value_computation is only evaluated when `hash[:foo]` is nil
 * `string.gsub("asd", "qwe")` should be replaced with `string.sub("asd", "qwe")`
 if we need to replace only first occurence, so no need to scan string to the
 end. Also you can use `string.tr(" ", "_")`
+* replace all double new lines `"\n\n"` with single `"\n"` with
+  `s.squeeze("\n")` so you can string with
+
+  ~~~
+  def strip(text)
+    text.tr("\n", " ").squeeze(" ")
+  end
+  ~~~
 * do not use exception for controll flow, so better is to check before
 
 ~~~
@@ -775,6 +789,7 @@ key.to_s.titleize }`
 * `map` and `collect` are the same methods
 * to check if string starts with or ends with some substring prefix sufix you
 can use `s.start_with? prefix` or `s.end_with? suffix`
+* get substring based on position `s[3..-4]` or `s[3, s.length - 3]`
 
 # Rubocop
 
@@ -1071,6 +1086,10 @@ class Test < Minitest::Test
   end
 end
 ~~~
+
+* tripple equal `===` is operator that for ranges calls `.includes?`, for regexp
+  calls `.match?`, for proc calls `.call`
+
 
 todo
 

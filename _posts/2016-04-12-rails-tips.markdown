@@ -5,6 +5,7 @@ title: Rails tips
 
 # Nested forms
 
+<http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html>
 If you want to use nested forms like question and answers, good approach is to
 `create!` on new action and redirect to edit. That way you have `question_id`.
 For new questions or delete questions, you can simply use ajax. So start with
@@ -47,6 +48,7 @@ end
     <%= ff.text_field :content, placeholder: "Answer" %>
     <%= ff.number_field :score, placeholder: 'Score' %>
     <%= ff.number_field :position, placeholder: 'Position' %>
+    <%= link_to "Destroy", destroy_answer_question_path(answer.question, answer_id: answer.id), remote: true, method: :delete %>
   </div>
 <% end %>
 
@@ -75,6 +77,10 @@ $('#answers').append('<%= output %>');
     @answer = @question.answers.find(params[:answer_id])
     @answer.destroy!
   end
+
+    def question_params
+      params.require(:question).permit(:title, :time_limit, answers_attributes: [:id, :score, :content, :_destroy] )
+    end
 ~~~
 
 You can try
@@ -156,7 +162,8 @@ You should avoid saving without validation `save(validate: false)` or
 `update_attribute :name, 'my name'`. It is risky to save without callbacks and
 validations.
 
-Conditional validations can be used with proc new like if: -> { }
+Conditional validations can be used with proc new like `if: -> { }` but with
+parameters. Also `if: lambda {|a| }` (difference in required params to block)
 
 ~~~
 validates :password, confirmation: true, if: Proc.new { |a|
@@ -686,7 +693,7 @@ heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
 * `rails g model user email_address` will generate migration and model. It is
 good to edit `last_migration` and add `null: false` to not null fields
 (particularly for foreign keys) and
-`add_index :users, :email_address, unique: true`... 
+`add_index :users, :email_address, unique: true`...
 if you want to add index in different step (not in `t.references :c, index:
 false` because name is too long (error like `Index name 'index_table_column' on
 table 'table' is too long; the limit is 64 characters`) than you can use
@@ -710,6 +717,7 @@ records.
     def change
       add_column :products, :fuzz, :string
       # Product.reset_column_information # not sure if we need this
+      # chech with Product.columns or Product.column_names
       Product.update_all fuzz: 'fuzzy'
       Product.find_each { |product| product.save! }
       change_column :products, :fuzz, :string, null: false
@@ -735,10 +743,22 @@ records.
   (select box, customer plans)
 * when you restore database you can see that list of performed migrations `rake
 db:migrate:status` does not show that any migration was perfomed. You can
-manually perform run specific single migration `rake db:migrate:up
-VERSION=20161114162031`. if you want to redo migration you should use `redo`
-instead of `up`. To drop database in console you can
-`ActiveRecord::Migration.drop_table(:users)`
+manually perform run specific single or all migrations
+~~~
+# status
+rake db:migrate:status
+# all including until this version
+rake db:migrate VERSION=20161114162031`
+# only this migration file
+rake db:migrate:up VERSION=20161114162031`
+# reverse if it is reversible
+rake db:migrate:down VERSION=20161114162031`
+# to remove migration so you can redo
+mysql> DELETE FROM schema_migrations WHERE version = 20161114162031
+~~~
+
+if you want to redo migration you should use `redo` instead of `up`. To drop
+database in console you can `ActiveRecord::Migration.drop_table(:users)`
 * you can use `rake db:migrate:redo STEP=2` to redo last two migrations, or you
 can run all migrations to certain point with `rake db:migrate
 VERSION=20161114162031` (note that `:up` `:down` only run one migration)
@@ -771,6 +791,8 @@ class CreateCampaignsTemplates < ActiveRecord::Migration
     create_table :campaigns_templates, id: false do |t|
       t.references :campaign, foreign_key: true, null: false
       t.references :template, foreign_key: true, null: false
+
+      t.timestamps
     end
   end
 end
@@ -901,6 +923,16 @@ end
 
 Do not add index for tables that has a lot or removing, since perfomance will be
 bad. Also huge tables need huge indexes, so pay attention on size.
+
+Remove index and foreign key if you want to remove column
+
+~~~
+  remove_foreign_key :online_payment_responses, :location_packages
+  remove_column :online_payment_responses, :location_package_id
+  if index_exists?(:online_payment_responses, name: 'fk_rails_b36eeaa704')
+    remove_index :online_payment_responses, name: 'fk_rails_b36eeaa704'
+  end
+~~~
 
 In mysql sometimes `LIMIT 10` is slower than `LIMIT 100` since it won't use
 index for small stuff, but if table is huge than it's much slower without index.
@@ -1182,7 +1214,9 @@ Devise user should use `first_or_initialize` since we can't create without
 password, but we don't have password field. `do ... end` block is used only if
 that object is not found.
 `slice` is used for uniq fields (not generated by faker), but all other fields
-should be populated in block.
+should be populated in block. Slice is nice method to get params hash from
+current active record object `user.slice :email, :name # { email: '', name: ''
+}`
 
 Use `faker` gem to generate example strings:
 
@@ -1443,6 +1477,9 @@ Rails domain is always last two strings.
 request.host = 'dule.asd.zxc.com'
 request.domain = 'zxc.com'
 request.subdomain = 'dule.asd'
+
+# you can specify different tld length
+request.domain(2) = 'asd.zxc.com'
 ~~~
 
 When you use url for, you can pass `host` parameter.
@@ -1576,6 +1613,7 @@ Service object is similar to Command pattern which is implemented in gem
 form objects (query objects) for multiple in multiple out data
 
 ~~~
+# app/form_objects/landing_signup.rb
 class LandingSignup
   include ActiveModel::Model
   FIELDS = %i[ current_city current_location current_group prefered_group email].freeze
@@ -1593,6 +1631,25 @@ end
 Usage
 
 ~~~
+# app/controllers/pages_controller.rb
+class PagesController < ApplicationController
+  def home
+    @landing_signup = LandingSignup.new
+    @landing_signup.current_city = City.first
+  end
+
+  def landing_signup
+    @landing_signup = LandingSignup.new landing_signup_params
+    @landing_signup.current_city = City.first
+    if @landing_signup.perform
+      sign_in @landing_signup.user
+      redirect_to dashboard_path, notice: @landing_signup.notice
+    else
+      flash.now[:alert] = @landing_signup.errors.full_messages.join(', ')
+      render :home
+    end
+  end
+end
 ~~~
 
 
@@ -2261,6 +2318,11 @@ Note that following next `cannot` rule will override a previous `can` rule, so
 it is enough to set `can :manage, :all` and than write what `cannot :destroy,
 Project`
 
+Other autorization policy
+
+* https://github.com/varvet/pundit
+* https://github.com/palkan/action_policy
+
 # Autoloading
 
 <https://www.bigbinary.com/videos/learn-ruby-on-rails/how-autoloading-works-in-rails>
@@ -2277,7 +2339,17 @@ required.
 
 # Tips
 
-* parse url to get where user come from `URI.parse(request.referrer).host`
+* parse url to get where user come from `URI.parse(request.referrer).host` or
+  just `URI(request.referrer).host`. You can parse uri query with CGI (values
+  are arrays) and Rack utils parse query (values are strings)
+
+  ~~~
+  (byebug) CGI::parse uri.query
+  {"dst"=>["http://www.trk.in.rs/?a=1"]}
+  (byebug) Rack::Utils.parse_query uri.query
+  {"dst"=>"http://www.trk.in.rs/?a=1"}
+  ~~~
+
 * `spring stop` in many cases:
   * when you export some ENV and use them in `config/secrets.yml` but can't see
     in `rails c`
@@ -2287,6 +2359,27 @@ required.
 * run at port 80 `sudo service apache2 stop` and `rvmsudo rails s -p 80`. Note
   that db user will to *root* instead of *orlovic* so you need to hardcode it in
   *config/database.yml*. Rember to `-b 0.0.0.0` if you access from outside.
+  You can make default option to bind on localhost 0.0.0.0
+  ~~~
+  # config/boot.rb
+  # Set up gems listed in the Gemfile.
+  ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+
+  require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
+
+  # https://fullstacknotes.com/make-rails-4-2-listen-to-all-interface/
+  require 'rubygems'
+  require 'rails/commands/server'
+
+  module Rails
+    class Server
+      alias :default_options_bk :default_options
+      def default_options
+        default_options_bk.merge!(Host: '0.0.0.0')
+      end
+    end
+  end
+  ~~~
   When you are using `local.trk.in.rs` you can set local ip *192.168.0.4* as
   Redirection (301 or 302) (but not as Forwarding since that does not work for
   some api requests from android).
@@ -2374,15 +2467,63 @@ locales [look for adminlte example]( {{ site.baseurl }}
 
 * title and meta tags for the template can be added using helper functions
 
-  ~~~
-  # app/views/pages/index.html
-  <% page_title 'My Page' %>
+~~~
+# app/helpers/page_helper.rb
+module PageHelper
+  def page_title(title)
+    # this will add both page title and header below topnav
+    content_for(:page_title) { title }
+    content_for(:page_header) { title }
+  end
 
-  # app/helpers/application_helper.rb
-    def page_title(title)
-      content_for(:page_title) { title }
-    end
-  ~~~
+  def page_description(description)
+    content_for(:page_description) { description.html_safe }
+  end
+
+  def breadcrumb(list)
+    @breadcrumb = list
+  end
+
+  def get_breadcrumb_list
+    @breadcrumb || []
+  end
+end
+
+# app/views/layouts/application.html.erb
+  <ol class="breadcrumb">
+    <% get_breadcrumb_list.each_with_index do |(text, link), i| %>
+      <li class="<%= 'active' if i == get_breadcrumb_list.length - 1 %>">
+        <% if link.present? %>
+          <%= link_to link do %>
+            <% if i == 0 %>
+              <i class="fa fa-dashboard"></i>
+            <% end %>
+            <%= text %>
+          <% end %>
+        <% else %>
+          <% if i == 0 %>
+            <i class="fa fa-dashboard"></i>
+          <% end %>
+          <%= text %>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+
+# app/views/customers/index.html
+<%
+  page_title "Customers List"
+  case params[:non_table_filter]
+  when "registered_today"
+    page_description "Registered Today"
+  when "registered_this_month"
+    page_description "Registered This Month"
+  when "renewed_in_advance"
+    page_description "Renewed In Advance"
+  end
+  breadcrumb "Dashboard": dashboard_path, "Customers": nil
+%>
+~~~
 
 * `inverse_of` is needed when you have validation errors for
   `accepts_nested_attributes_for`
@@ -2748,6 +2889,8 @@ to iterate...
 
 * you can iterate in groups batches `<% company.jobs.group_by(&:user).each do
   |user, jobs| %>`
+* `Person.find_in_batches do |person|` will iterate but load only 1000 per run.
+  Or shorter is `Person.find_each do |person|`
 * to count by grouping you can group_by specific column
 `User.group(:company_id).count.values.max`
 if you want to order in sql, than you need to name the count and order by that
@@ -2812,10 +2955,22 @@ And if you use jQuery data method than you do not need to use JSON.parse.
 but if you want that recursively for nested hashes as well you can use
 `params[:some_pararam].deep_symbolize_keys`
 
-* memoization is nice if you have network calls or sql calls. If the value is
-falsy `nil` or `false` than you should not use `||=` since it will have affect
-as `=`. You should check if instance variable is defined. You can also use
-`begin` `end` for multiline definition
+* memoization is nice if you have network calls or sql calls or db query
+
+~~~
+def MyClass
+  def self.issues
+    @issues ||= Brand.find(1).issues.inject({}) do |hash, issue|
+      hash[issue.title] = issue
+      hash
+    end
+  end
+end
+~~~
+
+If the value is falsy `nil` or `false` than you should not use `||=` since it
+will have affect as `=`. You should check if instance variable is defined. You
+can also use `begin` `end` for multiline definition
 
 ~~~
 class User < ActiveRecord::Base
@@ -2898,3 +3053,34 @@ unless item.save` you can move important things in front `item.save ||
   ~~~
 * single line one liner rails app for active record can be found in
 [contributibuting](https://github.com/rails/rails/blob/master/CONTRIBUTING.md)
+* autocomplete fields can be disabled
+[mdn](https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion)
+on form or input (better since browser can ask to remember) `autocomplete;
+'off'`
+* if you want to access hash keys by symbol or string you can instantiate with
+`params = HashWithIndifferentAccess.new name: 'Duke'` so you can use
+`params[:name]` or `params["name"]`.
+
+* http client https://docs.ruby-lang.org/en/2.0.0/Net/HTTP.html
+
+~~~
+require 'net/http'
+require 'uri'
+
+def fetch(uri_str, limit = 10)
+  # You should choose better exception.
+  raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+
+  url = URI.parse(uri_str)
+  req = Net::HTTP::Get.new(url.path, { 'User-Agent' => 'Mozilla/5.0 (etc...)' })
+  response = Net::HTTP.start(url.host, url.port) { |http| http.request(req) }
+  case response
+  when Net::HTTPSuccess     then response
+  when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+  else
+    response.error!
+  end
+end
+
+print fetch('http://www.ruby-lang.org/')
+~~~

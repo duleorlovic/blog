@@ -459,4 +459,5 @@ wants to cover all skill levels.
 <https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two>
 
 https://medium.com/@stevenpetryk/providing-useful-error-responses-in-a-rails-api-24c004b31a2e#.lp6e0sjpf
-<https://medium.com/statuscode/introducing-webpacker-7136d66cddfb#.edrnqbrj6>
+
+https://github.com/tuwukee/jwt_sessions

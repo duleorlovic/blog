@@ -20,6 +20,9 @@ keynames:
   `CTRL-j`)
 * `<tab>` tab
 
+If you press `c-s` ctrl+s than terminal will freeze all output and looks like
+vim hangs and stop working, but you need to run `c-q` ctrl+q to exit from that.
+
 special variables
 
 * `<leader>` by default is `\ ` but I use `<space>`. To check current value use:
@@ -306,10 +309,16 @@ you need to exit current visual area and than jump to first or last line/char
   * jump to closing (Oposite) html tag with `o`. more on `:help
   visual-operators` `:help v_it`
   * `vap` select paragraph (until next empty line, including that empty line)
-  * `dst` delete surround tag with vim surround plugin
+  * `dst` delete surround tag with vim surround plugin.
 * `va'` visually select all inside ' including '
 * `cgn` change visually selected text using previous search
 * `gv` to select previous selected visual area
+
+ragtag plugin in insert mode:
+* `<c-x>/` close last html tag
+* `<c-x>=` append `<%= %>`, use `<c-x>+` to wrap around last line
+* `<c-x>-` append `<% %>`, use `<c-x>_` to wrap around last line
+* `<c-x>@` insert stylesheet or `<c-x>$` javascript tags
 
 # Copy paste
 
@@ -575,25 +584,21 @@ You need to install this tools:
 ~~~
 AllCops:
   TargetRubyVersion: 2.3
-  Exclude:
-    - '**/*'
 
+# it is OK that code explains instead class documentation
 Style/Documentation:
   Enabled: false
 
-# it is ok to write 'string' and "string"
-Style/StringLiterals:
-  Enabled: false
-
-# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-# tasks for setup data could be very long
+# tasks and test for setup data could be very long
 Metrics/BlockLength:
   Exclude:
-    - "lib/tasks/*"
-    - "**/*_spec.rb"
+    - "lib/**/*"
+    - 'test/**/*'
+
+# line length is not important everywhere
+Metrics/LineLength:
+  Exclude:
+    - "db/**/*"
 
 # I like to put comma after each line
 Style/TrailingCommaInLiteral:
@@ -606,6 +611,13 @@ Style/TrailingCommaInArguments:
 Metrics/MethodLength:
   Max: 15
 
+# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# do not need to write # frozen_string_literal: true
+Style/FrozenStringLiteralComment:
+  Enabled: false
 ~~~
 
   * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
@@ -865,3 +877,8 @@ Use https://github.com/tpope/vim-db and access with
 ~~~
 :DB mysql://username:password@localhost/my_db_test
 ~~~
+
+# Tmux
+
+https://handbook.infinum.co/books/rails/Editors/Vim
+
