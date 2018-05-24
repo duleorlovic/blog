@@ -11,6 +11,23 @@ Shift key is ⇧
 Return key is ↵ 
 Control (CTRL) key is ^
 
+Since on mac keyboard `fn` key is at left edge, I use it as `ctrl` . Remap with
+System preferences -> Keyboard -> Modifier Keys -> Function key as Ctrl
+Also tilda and backtick are not on top left corner, so I used different Keyboar
+
+-> Input sources -> English British so at least `backtick` is on top left key.
+Install Key codes app
+https://itunes.apple.com/us/app/key-codes/id414568915?mt=12 and switch keys
+`0xa` (§) and `0x32` (backtick)
+https://developer.apple.com/library/content/technotes/tn2450/_index.html
+
+~~~
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x7
+000000a,"HIDKeyboardModifierMappingDst":0x700000032},{"HIDKeyboardModifierMappi
+gSrc":0x700000032,"HIDKeyboardModifierMappingDst":0x70000000a}]}'
+)
+~~~
+
 From terminal toolbar:
 * `⌘ N` new window
 * `⌘ T` new tab
@@ -106,12 +123,38 @@ brew install bash-completion
 
 Install [meld for mac](https://yousseb.github.io/meld/)
 
+On high sierra you need to run <https://github.com/yousseb/meld/issues/50>
+
+~~~
+unlink /Applications/Meld.app/Contents/Frameworks/libz.1.dylib
+~~~
+
+Install java JRE from jre-9.0.4_osx-x64_bin.dmg (not tar.gz)
+http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Double click will install.
+You can check if installed using https://java.com/en/download/installed.jsp on
+safari.
+
+Install vim
+
+~~~
+brew install vim
+# if you receive error
+# xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
+xcode-select --install
+~~~
+
 # iTerm2
 
 You can maps pageup in iterm.  Do `⌘ ,` to open Preferences -> Keys -> Key
 mappings and add `⌘ [` and `⌘ ]` to map scroll page down and up. But that does
 not work well for vim since it show previous page in terminal buffer (not in
 vim) so for vim use `^b` and `^f` (`^d` and `^u` for half down up)
+
+# Tips
+
+* new disks like sd card will be mounted under `/Volumes` instead of `/media` or
+  `/mnt`
 
 # Work spaces
 
@@ -122,6 +165,10 @@ three fingers (you can see more animations on System Preferences -> Trackpad.
 Full screen apps open their own space.
 
 # AppleScript
+
+You can run and edit scripts in `Script Editor`. Open `Dictionary` in File->Open
+Dictionary or drag application icon to Script Editor application icon.
+
 
 ~~~
 # comments
@@ -152,12 +199,85 @@ Statements can include all above. Simple statement is single line, multiline is
 compound statements
 ~~~
 tell application "Finder"
-    set savedName to name of front window
+  -- by position index, first/last or front/back, name
+  get the name of window 2
+  -- same as get the name of second window
+  -- same as get the name of 2nd window
+  -- same as get the name of the window after the front window
+  -- same as get the name of window "Trash"
+
+  -- name can not be updated, but other (like index) can be updated
+  set the index of the last window to 1
+  set toolbar visible of the front Finder window to true
+  set the sidebar width of  the second Finder window to 240
+  set the position of the front Finder window to {94, 134}
+  set the bounds of the front Finder window to {24, 96, 524, 396}
+  set the target of the front Finder window to home
+
+  open window "Trash"
+  -- same as select window "Trash"
+  tell the front window
+    set the current view to flow view
+    set the bounds to {528, 116, 1016, 674}
+  end tell
+
+  close window "Trash"
+  set savedName to name of front window
+  set windowRef to a reference to window 1
+  set windowId to theWindow's id
+  -- same as set windowId to id of the first window
+
 end tell
+~~~
+
+Exceptions handling
+
+~~~
+try
+  set windowId to do shell script "defaults read com.duleorlovic.windowShortCuts " & key
+on error
+  display dialog "Please create window shortcut for key "
+end try
+~~~
+If conditional with type casting
+
+~~~
+if (myVar as string) is equal to "asd" then
+end if
 ~~~
 
 Command is series of words that request an action. Command is directed to a
 target.
+Choose file
+
+~~~
+    set xfile to choose file
+    set xpath to POSIX path of xfile
+~~~
+
+Debugging with `display dialog "message"`. Use double quotes, not single quote.
+
+Array list iterate loop
+
+~~~
+set theList {1, 2, 3}
+set first as item 1 of theList
+set first to item 1 of theList
+~~~
+
+~~~
+on getPositionOfItemInList(theItem, theList)
+    repeat with a from 1 to count of theList
+        if item a of theList is theItem then return a
+    end repeat
+    return 0
+end getPositionOfItemInList
+
+set theList to {"Sal", "Ben", "David", "Chris", "Jen", "Lizzie", "Maddie", "Lillie"}
+getPositionOfItemInList("Maddie", theList)
+~~~
+
+String manipulation https://developer.apple.com/library/content/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/ManipulateText.html
 
 You can run scripts inside bash with `osascript -e 'display dialog "Hi"'` or for
 shell scripts (you need to `chmod +x filename.txt`
@@ -167,13 +287,81 @@ shell scripts (you need to `chmod +x filename.txt`
 display dialog "Hi"
 ~~~
 
-You can run and edit scripts in `Script Editor`. Open `Dictionary` in File->Open
-Dictionary or drag application icon to Script Editor application icon.
+You can also call another scpt file
 
-Object has
-* property 
+~~~
+osascript ~/myscript.scpt
+~~~
 
 TODO: https://developer.apple.com/library/content/documentation/AppleScript/Conceptual/AppleScriptLangGuide/conceptual/ASLR_fundamentals.html#//apple_ref/doc/uid/TP40000983-CH218-SW1
+
+# Activate window
+
+iTerm supports hotkeys https://www.iterm2.com/documentation-hotkey.html
+but it is not generic. I rather write window id and hotkey combination in user
+
+~~~
+do shell script "defaults write com.myname.myapp foo bar"
+set myValue to do shell script "defaults read com.myname.myapp foo"
+~~~
+
+To assign keyboard shortcuts you need to create a service in Automator and
+create shortcut in System Preferences -> Keyboard -> Shortcuts -> Services
+
+Create service for each key, for example activateWindowL
+(`/home/orlovic/Library/Services/activateWindowL.workflow`).
+
+~~~
+on run {input, parameters}
+    -- note that mac path is using colons instead of slash
+    run script file "Macintosh HD:Users:dule:config:bashrc:mac_scripts:mac_activate_window.scpt" with parameters {"l"}
+    return input
+end run
+~~~
+
+To overwrite existing shortcuts in specific application you need to remap that
+same menu item to something else, for example in chrome cmd + j is jump to
+selection so in  System Preferences -> Keyboard -> Shortcuts -> App Shortcuts
+
+~~~
+all Jump to Selection cmd+ald+j
+
+iTerm Clear Buffer cmd+alt+k
+iTem Use Transparency cmd+alt+u
+
+scriptEditr Underline cmd+alt+u
+~~~
+
+To get foremost window
+
+https://apple.stackexchange.com/questions/117421/how-do-i-focus-a-specific-window-with-applescript-without-doing-an-activate-and
+https://stackoverflow.com/questions/10366003/applescript-google-chrome-activate-a-certain-window/34375804#34375804
+http://tom.scogland.com/blog/2013/06/08/mac-raise-window-by-title/
+https://macosxautomation.com/applescript/firsttutorial/index.html chap 3 name
+oroperty
+~~~
+# open last window
+do shell script "open -a Google\\ Chrome"
+~~~
+
+~~~
+tell application "iTerm"
+       activate
+       set theWindow to the first item of ¬
+               (get the windows whose name is "2. bash")
+       if index of theWindow is not 1 then
+               set index to 1
+               set visible to false
+               set visible to true
+       end if
+end tell
+~~~
+
+~~~
+tell application "System Events" to tell process "iTerm"
+       perform action "AXRaise" of (first window whose name contains "2.")
+end tell
+~~~
 
 # Rails
 
@@ -205,7 +393,7 @@ batery). I needed to restart mac to find my phone in network preferences.
 
 # Defaults
 
-Mac user defaults system
+Mac user defaults are preferences for user system configurations
 
 ~~~
 defaults read com.mydomain.myapp
@@ -213,3 +401,9 @@ defaults read com.mydomain.myapp "MyKey"
 defaults write com.mydomain.myapp "MyKey" myvalue
 defaults delete com.mydomain.myapp
 ~~~
+
+
+# Logs
+
+You can see logs using `console` application. You can attach iPhone and see logs
+for it. Filter in `Search`, follow last logs with `Now` button.
