@@ -253,8 +253,8 @@ https://gist.github.com/bcremer/9caa54d0432531f80c1e
 I use mapping for all keys that I need right shift like underscore, brackets,
 html >.
 
-
 ~~~
+! ~/.Xmodmap
 ! remove caps lock modifier
 clear Lock
 ! assign dummy modifier to capslock

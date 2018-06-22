@@ -194,3 +194,6 @@ Variable types can be:
   Special characters: `\\`, `\"`, `\n`
 
   26
+
+TODO 
+https://github.com/mhinz/vim-galore

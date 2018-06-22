@@ -1679,11 +1679,26 @@ which is not happen if you are using database_cleaner. Solution is to jump to
 module MailerHelpers
   # you should call this manually for specific test
   # not for all tests like: config.before(:each) { reset_email }
-  def reset_email
+  def clear_emails
     ActionMailer::Base.deliveries = []
   end
+
   def last_email
     ActionMailer::Base.deliveries.last
+  end
+
+  # some usage is like:
+  # mail = give_me_last_mail_and_clear_mails
+  # assert_equal [email], mail.to
+  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.html_part.decoded
+  # confirmation_link = mail.html_part.decoded.match(
+  #   /(http:.*)">#{t("confirm_email")}/
+  # )[1]
+  # visit confirmation_link
+  def give_me_last_email_and_clear_emails
+    email = last_email
+    clear_emails
+    email
   end
 end
 RSpec.configure do |config|
@@ -2821,6 +2836,10 @@ application](https://www.youtube.com/playlist?list=PL93_jRSrU7hzEUNmevlnMeUx6F35
 Rspec book <http://www.betterspecs.org/>
 
 * [sandy metz](https://www.youtube.com/watch?v=URSWYvyc42M)
+
+Improve speed of the tests
+
+https://github.com/palkan/test-prof
 
 TODO
 

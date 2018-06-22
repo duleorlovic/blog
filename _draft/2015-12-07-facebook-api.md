@@ -1,10 +1,37 @@
 ---
+layout: post
 ---
 
 # Share buttons
 
-* feed share on [facebook feed](https://developers.facebook.com/docs/sharing/reference/feed-dialog) requires ap_id
-* [share](https://developers.facebook.com/docs/sharing/reference/share-dialog) reads metatags and is cached
+* feed share on [facebook feed](https://developers.facebook.com/docs/sharing/reference/feed-dialog) requires FACEBOOK_APP_ID. It allows share only on timeline (not for other pages you are admin). I allows custom images.
+* [share dialog](https://developers.facebook.com/docs/sharing/reference/share-dialog) reads metatags and is cached (it uses `/dialog/share`). Also needs fb sdk and FACEBOOK_APP_ID
+* [share button](https://developers.facebook.com/docs/plugins/share-button)
+ you can put a link (it uses `/sharer/sharer.php`) without sdk and
+ FACEBOOK_APP_ID. Custom images are not supported so you should use meta tags.
+ I do not override properties on url (I just provide a link) and let facebook
+ get the page and cache it.
+ https://developers.facebook.com/docs/sharing/webmasters
+
+ ~~~
+ <meta property="og:url"           content="https://www.your-domain.com/your-page.html" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="Your Website Title" />
+  <meta property="og:description"   content="Your description" />
+  <meta property="og:image"         content="https://www.your-domain.com/path/image.jpg" />
+
+  <meta property="fb:app_id" content="123">
+ ~~~
+
+* image should be 600x315 (minimum is 200x200). First user wont see image since
+  crawler not yet cached the page. you should add so it is rendered first time
+  ~~~
+  <meta property="og:image:width"      content="200">
+  <meta property="og:image:height"     content="500">
+  ~~~
+  https://developers.facebook.com/docs/sharing/best-practices/
+* image wont be changed until image url is changed https://developers.facebook.com/docs/sharing/opengraph/object-properties#image
+
 * new window in popup will be blocked if it is cause by script from ajax. It should be called `on-click`
 
 ~~~

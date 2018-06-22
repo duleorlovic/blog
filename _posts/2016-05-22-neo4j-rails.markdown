@@ -52,11 +52,21 @@ use on production.
 # install neo4j to db/neo4j/development`
 rake neo4j:install[community-latest,development]
 rake neo4j:install[community-latest,test]
+
 # To change the server port (default is 7474) type:
 rails neo4j:config[development,$(expr $NEO4J_BOLT_PORT + 2)]
 rails neo4j:config[test,$(expr $NEO4J_TEST_BOLT_PORT + 2)]
 
 # vi db/neo4j/development/conf/neo4j.conf
+# this will add something like this
+# Bolt connector
+dbms.connector.bolt.enabled=true
+#dbms.connector.bolt.tls_level=OPTIONAL
+dbms.connector.bolt.listen_address=localhost:7040
+
+# HTTP Connector. There must be exactly one HTTP connector.
+dbms.connector.http.enabled=true
+dbms.connector.http.listen_address=localhost:7042
 ~~~
 
 ~~~
@@ -470,6 +480,14 @@ Query on property `User.where(name: ?)` parametar `?` can be: string, nil,
 array, regular expression `User.where(name: /.*dule.*/i)`, range
 `User.where(age: 1..2)`.
 
+If you use params inside where string you should use params to excape and
+prevent injection attack https://github.com/neo4j/neo4j/issues/1983
+https://neo4jrb.readthedocs.io/en/5.2.x/Querying.html#parameters
+
+~~~
+Location.query_as(:location).where("location.name_en =~ {name_en}").params(name_en: "(?iu).*#{@term}.*").pluck(:location)
+~~~
+
 There is `neo_id` on each node and relationships but are somewhat volatile so do
 not use it. Instead, each new node requires primary key `uuid` property which is
 also accessed using `.id` method. Rels do not have ids since they are traversed
@@ -575,6 +593,9 @@ Common Graph stuctures:
   * structure: we have idendtity nodes as placeholders and timestamped
   relationships.
   * state: every note is snapshot, 
+
+* ignore case is with `(?i)` but for cyrilic we need `(?iu)`, for example `MATCH
+  (d:Covek) WHERE d.nameL =~ '(?iu).*DUŠAN.*' RETURN d` https://github.com/neo4j/neo4j/issues/1983
 
 # Errors
 

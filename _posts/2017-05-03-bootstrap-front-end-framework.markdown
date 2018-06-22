@@ -222,6 +222,8 @@ well with `display: flex` elements, better is to use
 * `d-flex` class to convert to flexbox container.  Other flex helpers
   https://getbootstrap.com/docs/4.0/utilities/flex/
 
+  for example to enable wrap use `d-flex flex-wrap`
+
 
 # Rails
 

@@ -2305,6 +2305,33 @@ When you use `.capitalize` than you need first to call `.mb_chars.capitalize`
 Some common words translations can be found
 <https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml>
 
+To translate with accusative you need to joins strings or use param in
+translation
+
+~~~
+module TranslateHelper
+  # there are two ways of calling this helper:
+  # t_crud 'are_you_sure_to_remove_item', item: @move
+  # t_crud 'edit', User
+  def t_crud(action, model_class)
+    if model_class.class == Hash
+      t(action, item: t("neo4j.models.#{model_class[:item].name.downcase}.accusative"))
+    else
+      "#{t(action)} #{t("neo4j.models.#{model_class.name.downcase}.accusative")}"
+    end
+  end
+end
+~~~
+For model translation you can use human method
+~~~
+  <%= link_to User.size.to_s + ' ' + User.model_name.human(count: 2), admin_users_path %>
+~~~
+For non model you can use simple translation
+~~~
+  <%= link_to t('report', count: Message.), admin_reported_messages_path %>
+~~~
+
+
 # Devise
 
 use cancancan and define all your actions in app/models/ability. If you want to
@@ -2405,6 +2432,12 @@ required.
   `Post.includes(:comments).all` or for instance
   `@post.comments.includes(:author)`. You need to eager load before calling
   `.all` or `.each`
+You can use procs to further filter relations. Note that in case of
+`Customer.joins(:radaccts)` customer argument is not a Customer but a relationg
+so this filter only works for `customer.radaccts`
+~~~
+has_many   :radaccts, -> (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
+~~~
 * If you want to filter with raw SQL like: `.where('jobs.title ILIKE "%duke%"')`
 you need to `reference` them (see below) or use join (filtering using hash works
 without referencing since rails knows which table to look `.where(jobs: { title:
@@ -3083,4 +3116,36 @@ def fetch(uri_str, limit = 10)
 end
 
 print fetch('http://www.ruby-lang.org/')
+~~~
+
+* do not name local variables the same as methods
+~~~
+class SameVariableNameAsMethod
+  attr_accessor :current_user
+  def initialize(h = {})
+    @current_user = h[:current_user]
+  end
+
+  def find_current_user
+    # SameVariableNameAsMethod.new(current_user: 1).find_current_user
+    # => raise ActiveRecord::RecordNotFound: Couldn't find User with 'id'=
+    current_user = User.find current_user
+  end
+
+  def find_user_object
+    # SameVariableNameAsMethod.new(current_user: 1).find_user_object
+    # this works since we do not use same name
+    user_object = User.find current_user
+  end
+
+  def find_any_number
+    # SameVariableNameAsMethod.new.find_any_number
+    # this will return nil, even any_number is 42, problem is same name
+    any_number = any_number
+  end
+
+  def any_number
+    42
+  end
+end
 ~~~

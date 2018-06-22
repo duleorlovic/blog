@@ -133,6 +133,7 @@ sudo /etc/init.d/dnsmasq restart
 Also follow [instructions](https://gist.github.com/marek-saji/6808114)
 
 DNS server dnsmasq for .dev domains for osx <https://passingcuriosity.com/2013/dnsmasq-dev-osx/>
+https://gist.github.com/ogrrd/5831371
 
 ~~~
 brew install dnsmasq
@@ -146,7 +147,7 @@ address=/loc/127.0.0.1
 sudo brew services restart dnsmasq
 
 sudo mkdir -p /etc/resolver
-sudo tee /etc/resolver/dev >/dev/null <<EOF
+sudo tee /etc/resolver/loc >/dev/null <<EOF
 nameserver 127.0.0.1
 EOF
 ~~~

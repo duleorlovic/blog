@@ -1,6 +1,5 @@
 ---
 layout: post
-title: CSS and HTML tips
 ---
 
 * when you want to have smaller input field type number (smaller in terms of

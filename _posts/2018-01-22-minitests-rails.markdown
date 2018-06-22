@@ -113,7 +113,8 @@ title: "Ahoy!" }, response.parsed_body)`.
 * `follow_redirect!`
 * `assert_redirected_to post_url(Post.last)`
 * `assert_response :success` (for http codes 200-299), `:redirect` (300-399), `:missing` (404), `:error` (500-599).
-* `assert_select 'h1', user.email`
+* `assert_select 'h1', user.email` . Note that white spaces andnew lines are
+  ignored
 * `assert_difference "User.count", 1 do`
 * You have access to `@request`, `@controller` and `@response` object, but only
 after you call `get`, `post`. You can see page body with `response.body`

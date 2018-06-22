@@ -438,7 +438,7 @@ dates
 * `gq` in visual mode will format text to 80 char lines (good for markdown)
 * `gg=G` indent whole file
 
-# Usefull commands
+# Tips
 
 * Repeat last colon command `@:`, repeat last command `@@`
 * `:args app/*/*`  to add all files to arg list
@@ -457,6 +457,8 @@ snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
 * `K` in normal mode opens documentation for that keyword, for example
 `image_tag` or `select` will open documentation for all gems which defines that
 keyword
+* black screen is caused to silent command
+  https://github.com/vim/vim/issues/1253 use `:redraw!`
 
 # Books, videos tutorials
 

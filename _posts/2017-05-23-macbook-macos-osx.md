@@ -138,7 +138,7 @@ safari.
 Install vim
 
 ~~~
-brew install vim
+brew install vim --override-system-vi
 # if you receive error
 # xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
 xcode-select --install
@@ -230,20 +230,46 @@ tell application "Finder"
 end tell
 ~~~
 
-Exceptions handling
+If conditional with type casting
 
 ~~~
+if (myVar as string) is equal to "asd" then
+end if
+~~~
+
+If you want to check the type of variable
+
+~~~
+if class of myVar is string then
+end if
+~~~
+
+If you got exception than wrap with try to do exceptions handling
+
+~~~
+try
+    set a to a as number
+    display dialog "Yes! It's a number!"
+end try
+
+-- or
+
 try
   set windowId to do shell script "defaults read com.duleorlovic.windowShortCuts " & key
 on error
   display dialog "Please create window shortcut for key "
 end try
 ~~~
-If conditional with type casting
+
+Get user input
 
 ~~~
-if (myVar as string) is equal to "asd" then
+set theResponse to display dialog "Key (h, j, k, l, semicolon, m, comma, dot, slash, u, i) ?" default answer "" with icon note buttons {"Cancel", "Continue"} default button "Continue"
+if button returned of theResponse is equal to "Cancel" then
+ error number -128
 end if
+set key to text returned of theResponse
+
 ~~~
 
 Command is series of words that request an action. Command is directed to a
@@ -384,6 +410,13 @@ sudo mkdir -p /var/run/mysqld
 sudo ln -s /tmp/mysql.sock /var/run/mysqld/mysqld.sock
 ~~~
 
+To permanently change socket file location you can update
+
+~~~
+sudo vi /usr/local/etc/my.cnf
+[client]
+socket=/var/run/mysqld/mysqld.sock
+~~~
 
 # Android USB Thethering
 
