@@ -13,19 +13,35 @@ Control (CTRL) key is ^
 
 Since on mac keyboard `fn` key is at left edge, I use it as `ctrl` . Remap with
 System preferences -> Keyboard -> Modifier Keys -> Function key as Ctrl
-Also tilda and backtick are not on top left corner, so I used different Keyboar
-
+Also tilda and backtick are not on top left corner, so I used different Keyboard
 -> Input sources -> English British so at least `backtick` is on top left key.
-Install Key codes app
-https://itunes.apple.com/us/app/key-codes/id414568915?mt=12 and switch keys
-`0xa` (§) and `0x32` (backtick)
+
+Another solution to remap keys is to use `hidutil`
 https://developer.apple.com/library/content/technotes/tn2450/_index.html
+You can find key codes in a table.
+Install **Key Codes** app
+https://itunes.apple.com/us/app/key-codes/id414568915?mt=12 to find key codes.
+
+To switch switch keys
+`0xa` (§) and `0x32` (backtick tilde)
 
 ~~~
-hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x7
-000000a,"HIDKeyboardModifierMappingDst":0x700000032},{"HIDKeyboardModifierMappi
-gSrc":0x700000032,"HIDKeyboardModifierMappingDst":0x70000000a}]}'
-)
+hidutil property --set '{"UserKeyMapping":
+  [
+    {"HIDKeyboardModifierMappingSrc":0x7000000a,
+    "HIDKeyboardModifierMappingDst":0x700000032},
+    {"HIDKeyboardModifierMappingSrc":0x700000032,
+    "HIDKeyboardModifierMappingDst":0x70000000a}
+  ]
+}'
+~~~
+
+
+~~~
+# to see what is already mapped
+hidutil property --get 'UserKeyMapping'
+# clear mappings
+hidutil property --set '{"UserKeyMapping":[]}'
 ~~~
 
 From terminal toolbar:
@@ -142,6 +158,13 @@ brew install vim --override-system-vi
 # if you receive error
 # xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
 xcode-select --install
+~~~
+
+Instal pip
+
+~~~
+sudo easy_install-3.6 pip
+pip3 install awscli  --user --upgrade
 ~~~
 
 # iTerm2

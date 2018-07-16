@@ -22,3 +22,7 @@ Value description for customer:
 * revolutional innovation:
 
 
+Online course
+
+https://www.udacity.com/course/how-to-build-a-startup--ep245
+https://strategyzer.com/training/courses/mastering-business-models

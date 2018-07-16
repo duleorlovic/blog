@@ -223,6 +223,13 @@ bucket = s3.bucket credentials[:aws_bucket_name]
 bucket.objects(prefix: 'assets').map {|o| o.public_url}
 ~~~
 
+# AWS CLI
+
+https://aws.amazon.com/cli/
+
+If you export keys, cli will use that
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+
 # Elastic Beanstalk
 
 https://aws.amazon.com/cli/

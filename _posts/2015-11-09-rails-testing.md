@@ -1105,6 +1105,13 @@ RSpec.describe "Post #create" do
 end
 ~~~
 
+You can stub request.remote_ip
+
+~~~
+allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('192.168.0.1')
+
+~~~
+
 # Selenium
 
 <https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings>
@@ -2648,7 +2655,7 @@ Use cassete inside `it` example block
 ~~~
 RSpec.describe "Location direct sms", js: true do
   it 'sends successfully' do
-    VCR.use_cassette "sms_success_1111111111" do
+    VCR.use_cassette "sms_success_1111111111_cassette" do
       visit customer_path customer, open_chat: true
       click_button 'Send', visible: true
     end

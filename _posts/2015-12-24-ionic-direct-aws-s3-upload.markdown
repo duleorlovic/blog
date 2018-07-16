@@ -239,7 +239,7 @@ In form you can add new
         Add more files
       </a>
     </div>
-    <%= file_field_tag "files[]", id: 'fileupload', multiple: true, data: { 'form-data': @s3_direct_post.fields, 'url': @s3_direct_post.url, 'host': URI.parse(@s3_direct_post.url).host }, style: 'position: absolute;left: -500px' %>
+    <%= file_field_tag "files[]", id: 'fileupload', multiple: true, data: { 'form-data': @s3_direct_post.fields, 'url': @s3_direct_post.url, 'host': URI.parse(@s3_direct_post.url).host }, style: 'position: absolute;left: -1500px' %>
     <script>
       setupFileUpload($('#fileupload'))
     </script>
