@@ -187,6 +187,9 @@ ruby example) `"123\ntest".match /^[a-z]/` will return `t`... (you can use
 alternative `string.start_with? /^[a-z]/`
 * repetative match is with `{number}` like for example 000...999 `^[0-9]{3}$`
 * whitespace `\s`, word `\w` character
+* `\A` start and `\z` end of string. That is better than `^` (start of line) and
+  `$` (end of line) since that will match until a new line
+  `asd@asd.asd\n<script>alert('danger')</script>`
 
 When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
 That is needed for negative lookahead.

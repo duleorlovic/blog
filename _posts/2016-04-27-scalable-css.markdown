@@ -15,11 +15,11 @@ tags: css
   (so it wont affect first p, only ones that are immediately after p)
   * `p ~ p` is [general
     sibling](https://www.w3.org/TR/selectors/#general-sibling-combinators) so
-    all p elements who has sibling p which if before (not neccessary
+    all p elements who has sibling p which is before (not neccessary
     immediatelly before).
 * layout: divide page into sections. prefix with `l-` like `l-inline`
-* module: reusable parts: `callouts`, `products`... When used in different part
-  of page you should use subclassing class_name-module, for example: `<div
+* module: reusable parts: `callouts`, `products` When used in different part
+  of page you should use subclassing classname-module, for example: `<div
   class="pod pod-callout">` instead of specificity war `.callout .pod`
 * state: how module or layout looks in particular state (active/inactive, home
   page/sidebar, small/big screens), prefixed with `is-`, like `is-hidden`. For
@@ -36,21 +36,25 @@ tags: css
 a way to write classes with `--` and `__` so instead of `menu-item-visible`
 write *block-name__elem-name--mod-name* `menu__item--visible`
 
-* *blocks* are independent page component that contains other blocks or
-  *elements*
-* elements can't be used outside of a block and they start with
-  `__`
-* *modifiers* defines appearance and behavior on block or elements and
-  start with `--` (or `_`). They always prefixed with parent block/element
-  name, so instead of `button active` we write `button button-active` 3 reasons
-  for that: single level specificity, `item button active` don't know if
-  `item--active` or `button--active` and we clearly see that it is modifier and
-  not some other block/element
-* do not use semantic tags, its better to write `<button class="button
-  button--mod">` beause you can change tag to `<a>` and you can mix `button`
-  class on other places
+**blocks** are independent page component that contains other blocks or
+**elements**. elements can't be used outside of a block and they start with
+`__`. **modifiers** defines appearance and behavior on block or elements and
+start with `--` (or `_`). They always prefixed with parent block/element name,
+so instead of `button active` we write `button button--active` 3 reasons for
+that: single level specificity, `item button active` don't know if
+`item--active` or `button--active` and we clearly see that it is modifier and
+not some other block/element.
+* instead of nested elements `.o-grid .o-grid__item {}` since BEM suggest to use
+  unique class name, you need to define only single level `.o-grid__item {}`. If
+  you have long class name `.o-grid__item-search-button-text-svg-icon` than it
+  should be replaced with single element `.o-grid__svg_icon` since icon do not
+  relate to item, search or button, it current position is inside, but not have
+  to be.
+* do not use semantic tags (`a.button {}`), its better to write `<button
+  class="button button--mod">` beause you can change tag to `<a>` and you can
+  mix `button` class on other places
 * do not write nested rules, except when you write for block modifier element
-  `.block--modifier .block__element`
+  `.block--modifier .block__element { background: blue }`
 * do not use global modifier that you want to apply to any class like `block
   hidden`. Better is to use `block--hidden`
 * when you have nested blocks than instead
@@ -64,7 +68,7 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 * <http://work.stevegrossi.com/2014/09/06/how-to-write-css-that-scales/>
 * <https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Writing_efficient_CSS#Avoid_the_descendant_selector.21>
 
-* *key selector* is the right most part of selector (could be `#id`, `.class`,
+* **key selector** is the right most part of selector (could be `#id`, `.class`,
   tag `h1` or universal `[hidden="true"]` category). Avoid plain universal and
   avoid mixing other three categories.
 * avoid descendant selector `table[hidden="true"] td tr`, betters is to use
@@ -77,6 +81,58 @@ write *block-name__elem-name--mod-name* `menu__item--visible`
 # ABEM
 
 <https://css-tricks.com/abem-useful-adaptation-bem/>
+
+# BIO
+
+https://css-tricks.com/combining-the-powers-of-sem-and-bio-for-improving-css/
+SEM Scalable Extensible Maintainable, BIO Bem Inverted triangle css, Object
+Oriented css
+
+Scalable means reusable ie you can use `c-btn` on link or button and it will
+look the same, and wont impace sibling or parent elements. Extensible means you
+can add new features without breaking current usage. `c-btn--3d` use `c-btn` and
+add 3d effect to it.
+
+~~~
+/* =Mixins
+--------------------------------*/
+@mixin button-3d($color) {
+  box-shadow: 0px 4px darken($color, 20%);
+}
+/* =Objects style
+--------------------------------*/
+.c-btn {
+  background-color: transparent;
+  border: 0;
+  border-radius: rem(3);
+  color: $black;
+  padding: rem(5) rem(10);
+  text-decoration: none;
+}
+
+.c-btn--large {
+  font-size: rem(25);
+}
+
+.c-btn--3d {
+  &.c-btn--yellow {
+    @include button-3d($yellow);
+  }
+
+  &.c-btn--blue {
+    @include button-3d($blue);
+  }
+}
+
+.c-btn--yellow {
+  background-color: $yellow;
+}
+
+.c-btn--blue {
+  background-color: $blue;
+  color: $white;
+}
+~~~
 
 # CSS variables
 

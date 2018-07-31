@@ -294,6 +294,8 @@ And you can preview in bootstrap modal
 ~~~
 
 
+To limit max width in javascript you can use https://github.com/blueimp/jQuery-File-Upload/wiki/Client-side-Image-Resizing
+
 
 # AWS Bucket
 

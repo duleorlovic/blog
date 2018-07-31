@@ -681,6 +681,20 @@ Delayed::Worker.destroy_failed_jobs = false
 Delayed::Worker.max_attempts = 3
 Delayed::Worker.delay_jobs = !Rails.env.test?
 
+### RAILS 5
+module CustomFailedJob
+  def handle_failed_job(job, error)
+    super
+    ExceptionNotifier.notify_exception(error, data: {job: job})
+  end
+end
+
+class Delayed::Worker
+  prepend CustomFailedJob
+end
+
+### Rails 4
+
 Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
 
 # when you change this file, make sure that you restart delayed_job process

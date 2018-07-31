@@ -106,7 +106,7 @@ cat /etc/resolv.conf
 # /etc/resolv.conf is overwritten by resolvconf, network-manager and other dhcp
 # clients.
 
-# list interfaces event they are not connected
+# list interfaces even they are not connected
 ls /sys/class/net/
 
 # to set static ip address you can edit either /etc/dhcpcd.conf
@@ -130,11 +130,19 @@ Check internet connection with
 
 ~~~
 host google.com
+ping http://www.google.com
 ~~~
 
 # Ruby
 
-Check if ruby is already installed in latest Raspian. 
+Check if ruby is already installed in latest Raspian.
+
+~~~
+sudo apt-get install ruby
+ruby -v
+~~~
+
+Use ligth [sinatra framework]({{ site.baseurl }} {% post_url 2018-05-31-sinatra %})
 
 ~~~
 sudo gem install bundler
@@ -176,6 +184,32 @@ sudo apt-get install ruby ruby1.9.1-dev libssl-dev
 sudo gem install pi_piper
 ~~~
 
+# PiPiper
+
+In irb
+
+~~~
+rvmsudo irb
+require 'pi_piper'
+pin = PiPiper::Pin.new(pin: 17, direction: :in)
+pin.read
+~~~
+
+Errors
+
+~~~
+/var/lib/gems/2.3.0/gems/pi_piper-1.3.2/lib/pi_piper/pin.rb:24:in `initialize': Permission denied @ rb_sysopen - /sys/class/gpio/gpio11/direction (Errno::EACCES)
+# you need to run as root
+~~~
+
+~~~
+/var/lib/gems/2.3.0/gems/pi_piper-1.3.2/lib/pi_piper/pin.rb:23:in `close': Device or resource busy @ fptr_finalize - /sys/class/gpio/export (Errno::EBUSY)
+
+# you need to open pin port again, but before that you need to release
+# https://github.com/jwhitehorn/pi_piper/issues/30
+File.open("/sys/class/gpio/unexport", "w") { |f| f.write("#{pin.pin}") }
+~~~
+
 # Bash
 
 <https://raspberrypi-aa.github.io/session2/bash.html>
@@ -206,7 +240,10 @@ sudo apt-get install wiringpi
 
 ~~~
 gpio readall
-# use wPi numbers so instead PIN 26 use 11
+# for pin number with gpio we use wPi numbers so instead PIN 26 use 11
+# for pi_piper we use BCM (GPIO NUMBERS like GPIO07 for pin 26)
+# http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto
+
 gpio mode 11 out
 # same as -g 7
 # gpio -g mode 7 out
@@ -216,7 +253,8 @@ gpio write 11 1
 gpio mode 12 up
 ~~~
 
-Dallas DS18B20 sensor
+Dallas DS18B20 temperature sensor. Connect to pin BCM 4, wPi 7, Phusical 7 and
+use one pull up resistor. Reading is from file.
 
 ~~~
 sudo vi /boot/config.txt
@@ -230,26 +268,20 @@ cd 28-xxxx (change this to match what serial number pops up)
 cat w1_slave
 ~~~
 
-# PiPiper
-
-In irb
-
-~~~
-rvmsudo irb
-require 'pi_piper'
-pin = PiPiper::Pin.new(pin: 17, direction: :in)
-pin.read
-# if you want to open pin port again, you need to release
-# https://github.com/jwhitehorn/pi_piper/issues/30
-File.open("/sys/class/gpio/unexport", "w") { |f| f.write("#{pin.pin}") }
-~~~
-
 # Startup run
 
-Add to your `.bash_profile` this line:
+This somehow does not work
+~~~
+# /etc/rc.local
+sudo ruby /home/pi/home_automation/app.rb -e production
+~~~
+
+so I use  `~/.bash_profile` and with `sudo raspi-config` enable option Boot to
+CLIE Autologin, Create `~/.bash_profile` with this line:
 
 ~~~
-source $HOME/securiPi/start.sh
+sudo ruby /home/pi/home_automation/app.rb -e production
+# source $HOME/securiPi/start.sh
 ~~~
 
 We use prefix `rvm` so `rvmsudo` pass that env variable to
@@ -266,89 +298,6 @@ ip address and go <http://192.168.2.111/wifi-setup>
 
 https://hacks.mozilla.org/2018/02/making-a-clap-sensing-web-thing/
 
-# Sinatra
-
-Default folder for partials is `views/` and name is with `.erb` extension.
-Default layout file is `views/layout.erb`. Always use symbols when referencing
-templates, event with subfolder `erb :'subdir/home'`. Instance variables are
-accessible in templates.
-Static files are server from `public/` folder.
-For stylesheet use `scss :stylesheet, style: :expanded`
-For coffescript `coffee :index`
-
-~~~
-# to change default views folder
-set :views, settings.root + '/templates'
-~~~
-
-Filter can be used to modify request and response, set instance variable.
-
-~~~
-before '/protected/*' do
-  authenticate!
-end
-~~~
-
-Session and other configuration options
-
-~~~
-require 'securerandom'
-
-enable :sessions
-set :session_secret, ENV.fetch('SESSION_SECRET') { SecureRandom.hex(64) }
-
-# to be able to access from other computers
-set :bind, '0.0.0.0'
-
-get '/:value' do
-  session['val'] = params['value']
-end
-~~~
-
-Log is with `logger.info 'some data'`.
-Redirect with `redirect to('/foo?bar=42')`.
-Cache-control header is set with `cache_control :public`. Rack cache can be used
-for caching.
-
-Top level application assumes a micro app style configuration (a single app
-file, public and views folders). This is classic style.
-If you want modular style (run is disabled by default) you can inherit from
-`Sinatra::Base` (logging and inline templates disabled by default) or
-`Sinatra::Application`.
-
-Run with
-~~~
-bundle exec rackup
-~~~
-
-## Sinatra Sass
-
-To add support to scss you can add `gem 'sass'` and if using modular style
-
-~~~
-# config.ru
-require 'sass/plugin/rack'
-
-Sass::Plugin.options[:style] = :compressed
-use Sass::Plugin::Rack
-~~~
-
-or is using classis style, run
-
-~~~
-sass --watch public/assets/stylesheets/sass:public/assets/stylesheets
-~~~
-
-and include in layout
-
-~~~
-<link rel="stylesheet" href="/assets/stylesheets/switch.css">
-~~~
-
-# Sinatra tests
-
-https://www.sitepoint.com/build-sinatra-api-using-tdd-heroku-continuous-integration-travis/
-
 # Webpack
 
 Follow [Webpack]({{ site.baseurl }} {% post_url 2016-04-20-bundler-bower-gulp-npm-yarn-webpack-tips %})
@@ -357,7 +306,8 @@ Follow [Webpack]({{ site.baseurl }} {% post_url 2016-04-20-bundler-bower-gulp-np
 
 # Home automation
 
-Example https://github.com/yovasx2/sinatra-raspberry-pi
+automation
+https://github.com/sjmog/ralyxa
 
 # Disk errors
 
@@ -380,7 +330,10 @@ manager
 # POE power over ethernet
 
 From left to right, when you hold lan cable and look at pins (T568A color)
-pinouts
+pinouts. B variant is when orange and green are swapped.
+**Crossover cable** is when on one side is A and on other is B variant and it is
+used to connect two computers directly. When you connect computer to switch than
+use straight through cable (on both side is same variant).
 
 * 1 White green
 * 2 Green
@@ -419,6 +372,8 @@ systemctl start zoneminder
 
 sed -i /etc/php/7.0/apache2/php.ini -e '/\[Date\]/a \
 date.timezone = Europe/Belgrade'
+
+systemctl reload apache2
 ~~~
 
 <http://localhost/zm/api/host/getVersion.json> should return version.
@@ -427,17 +382,21 @@ date.timezone = Europe/Belgrade'
 {"version":"1.30.2","apiversion":"1.0"}
 ~~~
 
-Motion recording works but can not see stream. One fix for
-[ubuntu](https://forums.zoneminder.com/viewtopic.php?t=24265)
-
+Motion recording works but can not see stream. Error in log
 ~~~
-1) (Web interface) Options, paths, and update PATH_ZMS from "/cgi-bin/nph-zms" to "/zoneminder/cgi-bin/nph-zms"
-2) edit /etc/apache2/conf-available/zoneminder.conf
-#ScriptAlias /zm/cgi-bin "/usr/lib/zoneminder/cgi-bin"
-ScriptAlias /zoneminder/cgi-bin "/usr/lib/zoneminder/cgi-bin"
+Socket /var/run/zm/zms-153908s.sock does not exist. This file is created by zms, and since it does not exist, either zms did not run, or zms exited early. Please check your zms logs and ensure that CGI is enabled in apache and check that the PATH_ZMS is set correctly. Make sure that ZM is actually recording. If you are trying to view a live stream and the capture process (zmc) is not running then zms will exit. Please go to http://zoneminder.readthedocs.io/en/latest/faq.html#why-can-t-i-see-streamed-images-when-i-can-see-stills-in-the-zone-window-etc for more information.
+~~~
 
-service apache2 restart
-service zoneminder restart
+One fix for
+[ubuntu](https://forums.zoneminder.com/viewtopic.php?t=24265)
+~~~
+(Web interface) Options, paths, and update PATH_ZMS from "/cgi-bin/nph-zms" to "/zm/cgi-bin/nph-zms"
+
+That should match in /etc/apache2/conf-available/zoneminder.conf
+#ScriptAlias /zm/cgi-bin "/usr/lib/zoneminder/cgi-bin"
+
+sudo service apache2 restart
+sudo service zoneminder restart
 ~~~
 
 To change apache port to 81 you can change:
@@ -448,6 +407,18 @@ To change apache port to 81 you can change:
 
 # /etc/apache2/ports.conf
 Listen 81
+~~~
+
+Error 'Failed to open video device /dev/video0: Permission denied'
+
+~~~
+adduser www-data video
+usermod -a -G video www-data
+
+# chmod is not needed
+# sudo chmod 777 /dev/video*
+
+sudo reboot
 ~~~
 
 To trigger some functions you can run script with
@@ -464,6 +435,16 @@ If you want to prevent automatical start on boot, you can disable using:
 
 ~~~
 sudo update-rc.d zoneminder remove
+~~~
+
+## Logs
+
+Watch logs
+
+~~~
+tail -f /var/log/syslog
+tail -f /var/log/apache2/*
+tail -f /var/log/mysql/*
 ~~~
 
 ## Zones
@@ -514,6 +495,34 @@ To change password use:
 mysql -u root -p
 use zm
 update Users set Password=PASSWORD("admin") where Username="admin";
+~~~
+
+# PCI Cards
+
+PICO200 https://wiki.zoneminder.com/Pico2000
+PICO2000 is a quad camera input PCI card. The card uses a single Conexant 878A
+chip. In addition, some models have 1 audio input jack; it has not been tested
+with ZoneMinder.  30 FPS (degrades as the channels are utilized; expect ~2 FPS
+with all four channels capturing)
+
+~~~
+# /etc/modprobe.conf
+options bttv card=77 tuner=4 radio=0 triton1=0 vsfx=0 autoload=0
+~~~
+
+Bt878 4chip https://wiki.zoneminder.com/Bt878_4chip_8inputs
+
+~~~
+dmesg | grep video
+dmesg | grep bttv
+
+[   21.257789] bttv: Bt8xx card found (0)
+[   21.258002] bttv: 0: Bt878 (rev 17) at 0000:01:01.0, irq: 17, latency: 32, mmio: 0xf8601000
+[   21.258045] bttv: 0: using:  *** UNKNOWN/GENERIC ***  [card=0,autodetected]
+[   27.728037] bttv: 0: tuner type unset
+[   27.735284] bttv: 0: registered device video0
+[   27.737522] bttv: 0: registered device vbi0
+
 ~~~
 
 # China IP cam

@@ -40,16 +40,15 @@ With ActiveJob you can pass entire ActiveRecord objects because GlobalID will
 deserialize for us. But if you are using directly some jobs (not inherited from
 ActiveJob::Base) than you should pass object_id.
 
+Error `Unsupported argument type: Move` when using
+`UserMailer.signup(move).deliver_later`. You need to pass id instead of object
+when delivering later.
+
 Rails provides in-process queuing (it keeps in memory and is running with rails)
 so if you put byebug it will stop rails process.
 By default `config.active_job.queue_adapter = :inline` better is to use
 `:async`.  Both inline and async Active Job do not support priority, timeout and
 retry. You can find all adapter http://api.rubyonrails.org/v5.1/classes/ActiveJob/QueueAdapters.html
-For testing there are `:test` queue adapter which is used "only" for testing
-[more]( {{ site.baseurl }} {% post_url 2015-11-09-rails-testing %}#rspec-background-jobs-spec)
-
-For production you need some backend queuing library to store that to db and
-later execute. That process should be started separately from rails.
 
 # Sidekiq
 
@@ -58,6 +57,7 @@ Add `gem 'sidekiq'` to Gemfile.
 ~~~
 # config/application.rb
     config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_name_prefix = 'mysite'
 ~~~
 
 Sidekiq is faster but requires thread safe code.
@@ -73,9 +73,16 @@ web: bundle exec puma -C config/puma.rb
 worker: bundle exec sidekiq -C config/sidekiq.yml
 ~~~
 
+You can run `bundle exec sidekiq -q default -q mailers` but better is in config:
 ~~~
 # config/sidekiq.yml
 :concurrency:  3
+:queues:
+  - default
+  - mailers
+
+  - my_site_default
+  - my_site_mailers
 ~~~
 
 Concurrency is a number which are used by sidekiq server to create redis
@@ -107,7 +114,9 @@ another sidekig queue, that is 5 * (concurrency + 5) connections.
 To see how many jobs is in default queue:
 
 ~~~
-Sidekiq::Queue.new.size
+Sidekiq::Queue.new.size # default name is 'default'
+Sidekiq::Queue.new('mailers').size
+Sidekiq::Queue.new('my_app_mailers').size
 ~~~
 
 To see dashboard add two lines to routes
@@ -117,6 +126,21 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 ~~~
+
+Testing sidekiq https://github.com/mperham/sidekiq/wiki/Testing
+
+You can use block
+
+~~~
+require 'sidekiq/testing'
+
+Sidekiq::Testing.inline! do
+  HardWorker.perform_async
+  assert_worked_hard
+end
+~~~
+
+For emails https://github.com/mperham/sidekiq/issues/724
 
 # Resque
 
@@ -171,11 +195,18 @@ Resque.redis = config[Rails.env]
 HERE_DOC
 ~~~
 
+For web use
+
+~~~
+# Gemfile
+gem 'resque-web', require: 'resque_web'
+~~~
+
 # Define jobs
 
 You can use Rails `ActiveJob` (so you can use `perform_later`) or any class
 module that responds to `perform` (but than you need to use
-`Resque.enqueue(SimpleJob,i)`, or `Delayed::Job.enqueue SimpleJob` or
+`Resque.enqueue(SimpleJob,i)`, or `Delayed::Job.enqueue SimpleJob.new` or
 `SimpleJob.delay.perform` to enqueue)
 
 ~~~
@@ -304,6 +335,53 @@ worker_2: QUEUE=* bundle exec rake resque:scheduler
 
 ## Delayed Job
 
+Define jobs using Struct (or ApplicationJob or ActiveJob::Base, but that
+is not needed). Put params in initialization.
+
+~~~
+FetchFeedJob = Struct.new(:feed_id) do
+  def perform
+    puts "called with #{feed_id}"
+  end
+end
+# invoke with
+Delayed::Job.enqueue FetchFeedJob.new(feed.id)
+# you can still use rails version
+rake jobs:work
+# no need to restart for code changes and byebug
+~~~
+
+or you can pass params to `perform` and use rails `perform_later` to invoke
+
+~~~
+# app/jobs/send_sms_job.rb
+class SendSmsJob < ActiveJob::Base
+  queue_as :webapp
+
+  rescue_from Net::ReadTimeout, SocketError do |e|
+    e.ignore_please = true
+    sleep 1
+    # re-raise so job is retried
+    raise e
+  end
+  def perform(location_sms_alert)
+  end
+end
+
+# somewhere in the code
+SendSmsJob.perform_later location_sms_alert
+~~~
+
+Install
+
+~~~
+# Gemfile
+gem 'delayed_job_active_record'
+rails generate delayed_job:active_record
+rake db:migrate
+# this will create bin/delayed_job
+~~~
+
 Configuration is in `config/application.rb` to set
 `config.active_job.queue_adapter = :delayed_job`. Note that it is not fully
 compatible with activejob (does not use default mailer queue name, starts
@@ -360,24 +438,27 @@ job.handler # to see how job will be called
 job.last_error # to see backtrace of error
 job.failed_at # time when last failed
 
-# rerun, re run, invoke job you can
+# to rerun, re run, invoke, retry job you can
 job.invoke_job # this does not remove job if successfully, so you need to do
 job.destroy # that manually
 # or
 Delayed::Worker.new.run job # this runs in current process (not in
 # bin/delayed_job run) and will remove if successfully
 # or
-job.update_attributes(:attempts=>0, :run_at=>Time.now, :failed_at => nil, :locked_by=>nil, :locked_at=>nil)
+job.update_attributes attempts: 0, run_at: Time.now, failed_at: nil
+# locked_by: nil, locked_at: nil
 # job.failed_at = nil; job.save!
-
 ~~~
 
 To invoke jobs you can do that in three ways (all three ways support queue name)
 
 ~~~
-object.delay(queue: 'tracking').method
-Delayed::Job.enqueue job, queue: 'tracking'
-handle_asynchronously :tweet_later, queue: 'tweets'
+# call for object method like user.activate
+user.delay(queue: 'tracking').activate
+# call in rake tasks
+Delayed::Job.enqueue MyJob.new(user_id), queue: 'tracking'
+# define it on User class
+handle_asynchronously :activate, queue: 'tracking'
 ~~~
 
 Usage is simply with inserting `delay` method and it will run in background. So
@@ -416,6 +497,78 @@ Sample worker
 
 `User.find(1).with_lock do sleep(10); puts "worker 1 done" end`
 `User.find(1).with_lock do sleep(1); puts "worker 2 done" end`
+
+You can add web based monitoring https://github.com/ejschmitt/delayed_job_web
+
+~~~
+# Gemfile
+gem 'delayed_job_web'
+
+# config/routes.rb
+  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+
+# config/initializers/delayed_job_web.rb
+if Rails.env.production?
+  DelayedJobWeb.use Rack::Auth::Basic do |username, password|
+    ActiveSupport::SecurityUtils.variable_size_secure_compare(Rails.application.secrets.delayed_job_username, username) &&
+      ActiveSupport::SecurityUtils.variable_size_secure_compare(Rails.application.secrets.delayed_job_password, password)
+  end
+end
+
+# config/secrets.yml
+  delayed_job_username: delayed_job
+  delayed_job_password: delayed_job
+~~~
+
+When you want to cancel a delayed job you can find and destroy it... but better
+is to create a job that is immune ie check at the begginning...
+
+# Test background jobs spec
+
+`ActiveJob::Base.queue_adapter = :test` will change queue adapter for all
+following test.
+You can see differences between queue adapters
+<http://api.rubyonrails.org/v5.1.4/classes/ActiveJob/QueueAdapters.html>
+There is test helpers like `assert_performed_with` http://api.rubyonrails.org/classes/ActiveJob/TestHelper.html#method-i-assert_performed_with
+example of use is
+<https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb>
+For mailers Rails uses
+[ActionMailer::DeliveryJob](https://blog.bigbinary.com/2018/01/15/rails-5-2-allows-mailers-to-use-custom-active-job-class.html)
+so to test in minitest
+
+~~~
+require 'test_helper'
+
+class ProductTest < ActiveJob::TestCase
+  test 'billing job scheduling' do
+    # if you want to test outcome ie how job is performed
+    # perform_enqueued_jobs only: ActionMailer::DeliveryJob do
+    # or you can assert how it is called `_with`
+    # assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
+    # or assert and perform
+    assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
+      product.charge(account)
+    end
+  end
+end
+~~~
+
+IF you use Delayed::Job you can test in three ways:
+First is `Delayed::Worker.delay_jobs = true`
+
+~~~
+expect do
+  post url, params
+end.to change { Delayed::Job.count }.by(1)
+
+expect do
+  Delayed::Worker.new.work_off
+end.to change(Delayed::Job, :count).by(-1)
+~~~
+
+Second is `Delayed::Worker.delay_jobs = false` so job is performed inline ie
+invoked immediatelly.
+
 
 # TIPS
 

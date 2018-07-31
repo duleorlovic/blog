@@ -80,6 +80,10 @@ selected text).
 `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected area.
 Press space after that to select window. Screen shots will be on desktop.
 
+To use apple keyboard on ubuntu I tried to remap Fn key, but that is not
+possible https://askubuntu.com/questions/370944/remap-fn-key-to-insert-key-on-apple-aluminium-keyboard
+
+
 To show home folder in Finder, go to Finder Preferences -> Sidebar and enable
 home folder in sidebar.
 Inside Finder Go menu you can hold ⌥  key to show `Library` folder. Some app

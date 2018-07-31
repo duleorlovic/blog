@@ -1,4 +1,4 @@
----
+- open uri--
 layout: post
 title: Rails tips
 ---
@@ -121,9 +121,11 @@ can accept as 2th param (choices) two variant:
 as 3th param (options):
 
 * `selected: value` if you need selected value be different than
-`job.job_type_id`. Sometimes when options do not include value that you want to
-set and you use prompt to be shown, please preform check `{ prompt: 'Select
-package' }.merge( options.present? ? { selected: @customer.some_other_package.id
+`job.job_type_id`. If second param is `options_from_collection_for_select(User,
+:id, :email, selected: current_user.id)` than use `selected` as 4th param there.
+Sometimes when options do not include value that you want to set and you
+use prompt to be shown, please preform check `{ prompt: 'Select package'
+}.merge( options.present? ? { selected: @customer.some_other_package.id
 } : {} )`. If target selected value is not in options, that first option will be
 used, or prompt is shown when options is empty.
 * `disabled: [values]` to disable some options
@@ -160,7 +162,9 @@ controller you need to allow arrays
 
 You should avoid saving without validation `save(validate: false)` or
 `update_attribute :name, 'my name'`. It is risky to save without callbacks and
-validations.
+validations. Other methods also do not check validation
+http://www.davidverhasselt.com/set-attributes-in-activerecord/
+`update_column`, `@users.update_all`.
 
 Conditional validations can be used with proc new like `if: -> { }` but with
 parameters. Also `if: lambda {|a| }` (difference in required params to block)
@@ -170,8 +174,17 @@ validates :password, confirmation: true, if: Proc.new { |a|
 a.password.present?}
 ~~~
 
+Validate occurs `:on` `:save` by default (but you can not use `validate :d, on:
+:save`).  http://guides.rubyonrails.org/active_record_validations.html#on you
+can split and specify to run on `on: :create` or `on: :update`. To run
+validation on destroy you need hook `before_destroy` where you can `errors.add`
+
 # Hooks
 
+**NOTE THAT YOU SHOULD NOT USE HOOKS... Better is to just call a method where
+needed, because you will not needed it always (for example in tests you want
+different value) If you really need (default value that you really want) than
+please use ||= conditional assignment**
 Default value for column could be in migration but than you need another
 migration if you want to change value. If we put on `after_initialize
 :default_values_on_initialize` than it is called also when you read object (that
@@ -757,8 +770,8 @@ rake db:migrate:down VERSION=20161114162031`
 mysql> DELETE FROM schema_migrations WHERE version = 20161114162031
 ~~~
 
-if you want to redo migration you should use `redo` instead of `up`. To drop
-database in console you can `ActiveRecord::Migration.drop_table(:users)`
+if you want to redo migration (revert and migrate again) you can use `redo` 
+To drop database in console you can `ActiveRecord::Migration.drop_table(:users)`
 * you can use `rake db:migrate:redo STEP=2` to redo last two migrations, or you
 can run all migrations to certain point with `rake db:migrate
 VERSION=20161114162031` (note that `:up` `:down` only run one migration)
@@ -844,6 +857,9 @@ using `add_foregn_key`.
 
 For MySql I have to use `unsigned: true` in `t.belongs_to :user, null: false,
 unsigned: true` or for `t.references :user, unsigned: true`
+You can add column at specific location `add_column :feeds, :last_modified,
+:datetime, after: :url` (after column does not work in psql since you need to
+change table) https://stackoverflow.com/questions/27214251/postgresql-add-column-after-option-usage-in-rails-migration
 
 If you need to update specific fields of association, add validation or cdd
 ustom order then you should create the model and use `has_many :templates,
@@ -951,55 +967,13 @@ If you receive error `undefined method map for "'users' FORCE INDEX
 
 <https://vimeo.com/12941188>
 
-Siimulate `Mysql2::Error: Lock wait timeout exceeded; try restarting transaction
-` with this examples. You can use rails `destroy` or sql execute
-
+For errors
 ~~~
-namespace :demo do
-  task first: :environment do
-    Farmer.transaction do
-      retries ||= 0
-      begin
-        puts "start"
-        bob = Farmer.find_by! name: 'Bob'
-        conn = ActiveRecord::Base.connection
-        # conn.execute "SELECT * FROM farmers WHERE id = #{bob.id}"
-        puts "bob coin #{bob.coin}. start another transaction that will lock this"
-        sleep 10
-        puts "destroy"
-        # conn.execute "DELETE FROM farmers WHERE id = #{bob.id}"
-        bob.destroy
-        puts "finish"
-      rescue ActiveRecord::StatementInvalid => e
-        puts e.message
-        retry if (retries += 1) < 3
-      end
-    end
-  end
-  task del: :environment do
-    Farmer.transaction do
-      puts "start del"
-      bob = Farmer.find_by! name: 'Bob'
-      conn = ActiveRecord::Base.connection
-      puts "execute"
-      # conn.execute "DELETE FROM farmers WHERE id = #{bob.id}"
-      bob.destroy
-      puts "sleep"
-      sleep 100
-    end
-  end
-end
+Mysql2::Error: Lock wait timeout exceeded; try restarting transaction
+Mysql2::Error: Deadlock found when trying to get lock; try restarting transaction: UPDATE
 ~~~
-
-~~~
-rails new deadlock_mysql --database mysql
-cd deadlock_mysql
-rails g model farmer name coin:integer
-rails g model tractor farmer:references model
-rake db:create db:migrate
-~~~
-
-`SHOW ENGINE INNODB STATUS`
+you can see examples on https://github.com/duleorlovic/deadlock_mysql
+To get latest deadlock in mysql run `msql> SHOW ENGINE INNODB STATUS`
 
 `Farmer.lock.find` will wait untill it is free to lock this farmer.
 
@@ -1013,7 +987,6 @@ ActiveRecord::Base.transaction do
 end
 if alert
 ~~~
-
 
 # MySql
 
@@ -1210,7 +1183,7 @@ $(document).one('page:before-change',function() {
 
 If you want indempotent seeds data you should have some identifier (for example
 `id`) for wich you can run `where(id: id).first_or_create! do...end`.
-Devise user should use `first_or_initialize` since we can't create without
+User should use `first_or_initialize` since we can't create without
 password, but we don't have password field. `do ... end` block is used only if
 that object is not found.
 `slice` is used for uniq fields (not generated by faker), but all other fields
@@ -1364,7 +1337,18 @@ end
 
 You can write tasks with arguments [rails
 rake](http://guides.rubyonrails.org/command_line.html#custom-rake-tasks)
+~~~
+namespace :db do
+  desc "This task does nothing"
+  task :nothing do
+    # you can not access rails models here, you need dependency env  like
+    # task nothing: :environment do
+  end
+end
+~~~
+
 Instead of `:env` or `:environment` you can use other tasks on which it depends.
+Also you can receive parameters into `args`
 
 ~~~
 # lib/tasks/update_subdomain.rake
@@ -1374,7 +1358,7 @@ namespace :update_subdomain do
     args.with_defaults subdomain: 'my_subdomain'
     user = User.find_by name: 'my-user'
     fail "Can't find user 'my-user'" unless user
-    user.subdomain = args
+    user.subdomain = args.subdomain
     user.save!
     puts "Updated #{user.subdomain}"
   end
@@ -1400,6 +1384,9 @@ end
 
 # db/seed.rb
 Rake::Task["seed:bid_types"].invoke
+
+# call task from another task
+Rake::Task['translate:copy'].invoke Rails.env
 ~~~
 
 so you can create with `rake db:seed` or `rake seed:bid_types`
@@ -1541,6 +1528,7 @@ class MyService
     def initialize(message)
       @message = message
     end
+
     def success?
       true
     end
@@ -2198,6 +2186,14 @@ helper classes to show hide content:
   end
   ~~~
 
+* when you need a image logo in pdf than you can use `fit` option https://www.rubydoc.info/gems/prawn/0.12.0/Prawn/Images
+
+  ~~~
+    require 'open-uri'
+    uri_escaped = URI.escape "http:#{tax_holder.logo_url}"
+    image open(uri_escaped), fit: [column_2_width, 89], position: :right
+  ~~~
+
 # Style guide
 
 [toughtbot style
@@ -2261,8 +2257,104 @@ en:
   activerecord:
     models:
       user:
+        zero: No dudes
         one: Dude
         other: Dudes
+~~~
+
+For form objects `include ActiveModel::Model` you should translate
+`activemodel`. For `ApplicationRecord` translate `activerecord`.
+~~~
+# config/locales/activemodel.sr.yml
+sr:
+  activemodel:
+    attributes:
+      landing_signup:
+        current_city: Који је твој град ?
+    errors:
+      messages:
+        group_not_exists_for_age: Не постоји група (%{age}год) на овој локацији
+      models:
+        landing_signup:
+          attributes:
+            current_city:
+              blank: Не може бити празно ?
+    models:
+      user:
+        one: корисник
+        other: корисници
+        accusative: корисника
+        some_customer_message: Моја порука
+~~~
+
+For custom errors can be different for each attribute or same. Can also accept
+param, for example
+
+~~~
+    errors.add :from_group_age, :group_not_exists_for_age, age: age
+~~~
+
+https://stackoverflow.com/questions/6166064/i18n-pluralization
+For serbian you can provide pluralization
+
+~~~
+# config/locales/plurals.rb
+# https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
+serbian = {
+  i18n: {
+    plural: {
+      keys: %i[one few many other],
+      rule: lambda { |n|
+        if n % 10 == 1 && n % 100 != 11
+          :one
+        elsif [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100)
+          :few
+        # elsif (n % 10).zero? || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100)
+        #   :many
+        # there are no other integers, use :many if you need to differentiate
+        # with floats
+        else
+          :other
+        end
+      }
+    }
+  }
+}
+{
+  sr: serbian,
+  'sr-latin': serbian,
+}
+~~~
+
+~~~
+# config/initializers/pluralization.rb
+require "i18n/backend/pluralization"
+I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
+~~~
+
+~~~
+# config/locales/sr.yml
+sr:
+  sent_messages:
+    # 1, 21, 31 ...
+    one: %{count} порука је послата
+    # 2, 3, 4, 22, 23, 24, 32, 33, 34 ...
+    few: %{count} поруке су послате
+    # all other integers: 5, 6, ... 9, 10, 11, 12, 13, 14 ... 20, 25, ...
+    many: %{count} порука је послато
+~~~
+
+Note that you have to provide `few` translation for all words, since it could
+happend that count is 2 and translation is missing.
+
+~~~
+I18n.t 'sent_messages', count: 15
+~~~
+
+You can translate to any language with
+
+~~~
+I18n.t 'sent_messages', locale: :sr
 ~~~
 
 Separate translations for models `config/locales/sr.yml` and views
@@ -2488,10 +2580,6 @@ Post.includes(:comments).find params[:id]`
   [decomposition
   array](http://docs.ruby-lang.org/en/2.1.0/syntax/assignment_rdoc.html#label-Array+Decomposition)
   to some variables, you can use parenthesis.
-* fake objects could be generated with `OpenStruct.new name: 'Dule'`. If you
-need recursively generated OpenStruct than you can convert to json and parse
-with Open struct class: `h = { a: 1, b: { c: 1 }}; o=JSON.parse(h.to_json,
-object_class: OpenStruct); o.b.c # => '1'`
 * long output of a command (for example segmentation fault) can be catched with
   `rails s 2>&1 | less -R`
 * use different layout and template based on different params is easy using
@@ -2643,6 +2731,22 @@ end
 
   ~~~
   ApplicationController.helpers.my_custom_helper
+  ~~~
+
+  If you want to use it inside controller or any other class you can include
+
+  ~~~
+  include MyHelper
+  ~~~
+
+  But best options in controllers in Rails 5 is to use `helpers`
+
+  ~~~
+  class MyController < ApplicationController
+    def index
+      alert helpers.titleize_message
+    end
+  end
   ~~~
 
   * you can include all
@@ -2856,6 +2960,35 @@ triggered even in you test when you prepare some data
 
   When you are not using `f.submit` but plain `<button>Some label</button>` than
   you need to add `hidden_field_tag :commit, "Some label"`
+
+  Sometimes there is a problem when automatic translator on the page change
+  button labels and inputs so commit param is different...
+  Instead of `commit` you can use
+  [formaction](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#attr-formaction)
+  So you do not need to parse commits.
+
+  ~~~
+  <% form_for(something) do |f| %>
+      <%= f.submit "Create" %>
+      <%= f.submit "Special Action", formaction: special_action_path %>
+  <% end %>
+  ~~~
+
+  If you want to disable utf-8 and authenticity hidden fields, remove hidden
+  input `name='commit'` for submit buttons `button_tag 'OK', name: nil` and use
+  plain param name instead of in brackets `f.hidden_field :name` generate
+  `name='[name]'` (but `f.text_field :name` generate `name='name'`), than use
+  `hidden_field_tag :name`
+
+  ~~~
+    <%= bootstrap_form_tag url: @atom_payment.atom_server_link, layout: :horizontal, enforce_utf8: false, authenticity_token: false do |f| %>
+      <% @atom_payment.atom_params.each do |atom_param| %>
+        <%= hidden_field_tag atom_param[:name], atom_param[:value] %>
+      <% end %>
+      <%= button_tag "Pay Now", name: nil, class: 'btn btn-primary btn-block', 'data-disable-with': 'Processing...' %>
+    <% end %>
+  ~~~
+
 * `"data-disable-with": "<i class='fa fa-spinner fa-spin'></i> #{name}"` works
 on any element except `f.submit` since it is `input` element and you will see
 `<i>` tags... better is to use `f.button` but than you lose `params[:commit]`
@@ -3116,36 +3249,4 @@ def fetch(uri_str, limit = 10)
 end
 
 print fetch('http://www.ruby-lang.org/')
-~~~
-
-* do not name local variables the same as methods
-~~~
-class SameVariableNameAsMethod
-  attr_accessor :current_user
-  def initialize(h = {})
-    @current_user = h[:current_user]
-  end
-
-  def find_current_user
-    # SameVariableNameAsMethod.new(current_user: 1).find_current_user
-    # => raise ActiveRecord::RecordNotFound: Couldn't find User with 'id'=
-    current_user = User.find current_user
-  end
-
-  def find_user_object
-    # SameVariableNameAsMethod.new(current_user: 1).find_user_object
-    # this works since we do not use same name
-    user_object = User.find current_user
-  end
-
-  def find_any_number
-    # SameVariableNameAsMethod.new.find_any_number
-    # this will return nil, even any_number is 42, problem is same name
-    any_number = any_number
-  end
-
-  def any_number
-    42
-  end
-end
 ~~~

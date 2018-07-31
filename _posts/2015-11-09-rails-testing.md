@@ -1003,33 +1003,6 @@ end
 ~~~
 
 
-## RSpec background jobs spec
-
-`ActiveJob::Base.queue_adapter = :test` will change queue adapter for all
-following test.
-You can see differences between queue adapters
-<http://api.rubyonrails.org/v5.1.4/classes/ActiveJob/QueueAdapters.html>
-There is test helper
-[assert_performed_with](http://api.rubyonrails.org/classes/ActiveJob/TestHelper.html#method-i-assert_performed_with)
-example of use is
-<https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb>
-
-IF you use Delayed::Job you can test in three ways:
-First is `Delayed::Worker.delay_jobs = true`
-
-~~~
-expect do
-  post url, params
-end.to change { Delayed::Job.count }.by(1)
-
-expect do
-  Delayed::Worker.new.work_off
-end.to change(Delayed::Job, :count).by(-1)
-~~~
-
-Second is `Delayed::Worker.delay_jobs = false` so job is performed inline ie
-invoked immediatelly.
-
 # Refactoring
 
 Refactoring in 3 types:
@@ -1127,7 +1100,7 @@ Instead of using `get` and `response.body` we can use only what end user see
 `visit`, `fill_in` and `page.should`. Also it can use the
 same DSL to drive browser (selenium-webdriver, chrome-driver or capybara-webkit)
 or headless drivers (`:rack_test` or phantomjs). `Capybara.current_driver` could
-be `:rack_test` or `:headless_chrome` or `':chrome`.
+be `:rack_test` (when no `js: true`) or `:headless_chrome` or `':chrome`.
 
 ## Errors
 
@@ -1148,6 +1121,10 @@ chromedriver bin` or if you are using `chromedriver-helper` run
 rm -rf ~/.chromedriver-helper/
 chromedriver-update
 ~~~
+
+For `Selenium::WebDriver::Error::UnknownError: unknown error: call function
+result missing 'value' (Session info: headless chrome=67.0.3396.48)` you need to
+update chromedriver to 2.38
 
 If you see error `SocketError: getaddrinfo: Name or service not known` than make
 sure you have defined localhost `127.0.0.1 localhost` in `/etc/hosts`
@@ -1397,7 +1374,7 @@ node.find('#projects').text # => 'Projects'
   `undefined method  +  for nil:NilClass`
 * `within "#login-form" do`
 * generate capybara post request using submit (this does not work for `js:
-  true`)
+  true`, so please use `js: false`)
 
   ~~~
     session = Capybara.current_session.driver
@@ -1408,6 +1385,7 @@ node.find('#projects').text # => 'Projects'
 `js: true` you can use `page.execute_script "window.scrollBy(0,10000)"` or make
 anchor and use hash url `url/#my-form` since execute script is not available
 when not `js: true`
+* back button `page.driver.go_back`
 * [more](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)
 
 **Node actions** target elements by their: id (without `#`), name, label text,
@@ -1420,7 +1398,7 @@ only for finders). You can use substring or you can define `exact: true`
 `click_link "Menu"`. Find can be used for click, for example
 `find('.class').click` but I prefer to enable aria labels and use that
 `Capybara.enable_aria_label = true` and `click 'my-aria-label'`
-* `fill_in "email", with: 'asd@asd.asd'` (alternative is
+* `fill_in "email", with: 'asd@asd.asd'` (alternative is find set
 `find("input[name='cc']").set 'asd@asd.asd'`, or using `page.execute_script
 "$('#my-id').val('asd@asd.asd')"`
 * to click on select2 I use `find('#original-select-id+span').click` so we find
@@ -1440,6 +1418,8 @@ only for finders). You can use substring or you can define `exact: true`
   `find('input', match: :first)` since it do not need to find all
 * `find('#selector').find(:xpath, '..')` find parent node of selector
   `.find(:xpath, '../..')` is parent of parent (grandparent).
+* next adjacent to `<h3>Name2</h3><table>` is `find(:xpath,
+  "//h3[contains(text(),'Name2')]/following-sibling::table")`
 
 **Node matchers** and rspec matchers [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers) [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
 
@@ -1465,7 +1445,9 @@ in popups.
 * test if input has value:
   * `expect(page).to have_xpath("//input[@value='John']")`
   * `expect(page).to have_selector("input[value='John']")`
-  * `expect(page).to have_field('Your name', with: 'John')`
+  * `expect(page).to have_field('Your name', with: 'John')` this does not match
+  disabled input field. of you want to match disabled use `have_field('Your
+  name', disabled: true, with: 'John')`
 
 Node element [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Element)
 * `find('input').trigger('focus')` (does not work in selenium)
@@ -1537,6 +1519,20 @@ end
 
 let(:all_projects) { [project_1, project_2] }
 expect(user).to be_able_to_see(project_1, project_2)
+~~~
+
+~~~
+# spec/a/equal_when_sorted_by_id.rb
+require 'rspec/expectations'
+
+# When using `Timecop.freeze Date.parse('2018-06-06 10:00:00') do` than ordering
+# from database could be random (since created_at are all the same) so you might
+# get failed tests when comparing some scopes.
+RSpec::Matchers.define :equal_when_sorted_by_id do |expected|
+  match do |actual|
+    actual.sort_by(&:id) == expected.sort_by(&:id)
+  end
+end
 ~~~
 
 ## Login helper
@@ -2122,6 +2118,15 @@ FactoryBot.define do
     full_name { "exiting #{name}" }
     name "My Project"
     due_date Date.parse("2017-01-10")
+    # note that Time.zone.now is evaluated at begining of test suite so that
+    # expired_at = Time.zone now - 20.mins if you test suite lasts 20.mins
+    expired_at Time.zone.now
+    # here is evaluated when we create :project
+    expired_at { Time.zone.now }
+    # also
+    before :create do |project|
+      project.expired_at = Time.zone.now
+    end
   end
 end
 ~~~
@@ -2344,7 +2349,6 @@ do should not define all attributes.
 Use fixtures for integration or complex controller tests. Use factories for unit
 tests.
 
-
 # Testing uploading files
 
 ~~~
@@ -2360,6 +2364,8 @@ For files you can use
 
 # Testing time and date
 
+Using rails native helpers
+http://edgeapi.rubyonrails.org/classes/ActiveSupport/Testing/TimeHelpers.html
 Use `ActiveSupport::Testing::TimeHelpers#travel` (usefull when you want time to
 pass) and `travel_to` `travel_back` (time does not move for the duration of the
 test).
@@ -2374,6 +2380,37 @@ attribute, in fixture or update method. Sometimes for `updated_at` you need to
 prevent rails callbacks with `Project.record_timestamps = false;
 @project.updated_at = 5.days.ago; @project.save; Project.record_timestamps =
 true`
+
+Use gem Timecop https://github.com/travisjeffery/timecop timecoop
+Similar to mock which will return same value for all subsequent calls...
+
+~~~
+assert now
+Timecop.freeze(Date.today + 30) do
+  assert in one month
+end
+
+# Recomended is to use block syntax since
+Timecop.freeze(Date.today + 30)
+Time.now # will always return same value
+Time.now # will always return same value event in different test
+Timecop.return
+
+# or travel with block syntax
+Timecop.travel(Date.today + 30) do
+  Time.now # will show Date.today + 30 + 1s...
+end
+
+# Note that factory bot definitions are used before timecop, so if you have
+factory :user do
+  renewed_at: Time.zone.today
+end
+
+Timecop.freeze Date.parse('2018-01-15') do
+  user = create :user
+  user.renewed_at # => 2018-05-05
+end
+~~~
 
 # Using test doubles as mocks and stubs
 
@@ -2762,6 +2799,13 @@ better that test is fragile than writting/updating test double setup
 * repeat Red-Green-Refactor cycle in small increments, because a lot of changes
 will have a lot of places where code could broke. Refactoring step should not
 need to change any tests, just code.
+* simulate network timeouts with
+
+  ~~~
+  # if you perform request with `res = Net::HTTP.get_response(uri)`
+  expect(Net::HTTP).to receive(:get_response).and_raise(Net::OpenTimeout)
+  click_button 'Make Request'
+  ~~~
 
 # TODO:
 

@@ -503,8 +503,8 @@ and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
   ~~~
 
 * `for(i=0;i<cars.length;i++) {}` is not concise `cars.forEach(myFunction)` is
-  concise but can not break out of the loop. `for(let ... of ...)` is concise
-  and can break `for(let car of cars) { }` (coffee script has `.each`)
+  concise but can not break out of the loop. `for(let ... in ...)` is concise
+  and can break `for(let key of cars) { cars[key] }` (coffee script has `.each`)
 * `array.reduce(function, init_value)` can be used as filtering if `init_value`
   is array, than function takes two arguments (init_value, array_item)
   ~~~
@@ -715,6 +715,76 @@ variable with same same as key, you can use
 * https://performancejs.com/post/hde6d32/The-Best-Frontend-JavaScript-Interview-Questions-%28written-by-a-Frontend-Engineer%29
 * https://github.com/getify/You-Dont-Know-JS
 * best practices https://github.com/wearehive/project-guidelines
+
+# Colors
+
+You can generate random colors in javascript
+
+~~~
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  var color = getRandomColor()
+  // add transparency for background colors
+  var backgroundColor = color + 'A0'
+~~~
+
+If you need same colors based on integer numbers you can create a deterministic
+function. I use ruby since it is easier than javascript
+
+~~~
+  def add_colors(data)
+    # http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+    h = 0.5
+    golden_ratio_conjugate = 0.618033988749895
+    colors = (1..datasets.length).to_a.map do
+      h += golden_ratio_conjugate
+      h %= 1
+      hsv_to_rgb(h, 0.5, 0.95)
+    end.map do |r,g,b|
+      { 
+        full: "rgba(#{r},#{g},#{b},1)",
+        transparent: "rgba(#{r},#{g},#{b},0.2)"
+      }
+    end.map { |c| OpenStruct.new c }
+
+    result = datasets.each_with_index.map do |dataset,i|
+      {
+        fillColor: colors[i].transparent,
+        strokeColor: colors[i].full,
+        pointColor: colors[i].full,
+        pointStrokeColor: "#fff",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: colors[i].full,
+      }.merge dataset
+    end
+    result
+  end
+
+  # HSV values in [0..1[
+  # returns [r, g, b] values from 0 to 255
+  def hsv_to_rgb(h, s, v)
+    h_i = (h*6).to_i
+    f = h*6 - h_i
+    p = v * (1 - s)
+    q = v * (1 - f*s)
+    t = v * (1 - (1 - f) * s)
+    r, g, b = v, t, p if h_i==0
+    r, g, b = q, v, p if h_i==1
+    r, g, b = p, v, t if h_i==2
+    r, g, b = p, q, v if h_i==3
+    r, g, b = t, p, v if h_i==4
+    r, g, b = v, p, q if h_i==5
+    [(r*256).to_i, (g*256).to_i, (b*256).to_i]
+  end  
+~~~
+
 # Javascript tips
 
 * [modern js cheatsheet](https://github.com/mbeaudru/modern-js-cheatsheet)
@@ -875,3 +945,4 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
     credentials: 'same-origin'
   })
   ~~~
+

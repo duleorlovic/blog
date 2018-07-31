@@ -366,13 +366,16 @@ Set default url option, that is domain for `root_url`:
 # for rails 5 you can use Rack::Server.new.options[:Port] and no need to
 # require anything, but it works only if you provide -p param to rails s
 
-sed -i config/application.rb -e '/^  end$/i \
-    # for link urls in emails\
-    config.action_mailer.default_url_options = Rails.application.secrets.default_url.symbolize_keys\
-    # for link urls in rails console\
-    config.after_initialize do\
-      Rails.application.routes.default_url_options = Rails.application.config.action_mailer.default_url_options\
-    end'
+# config/application.rb
+    link = Rails.application.secrets.default_url.symbolize_keys
+    # for link urls in emails
+    config.action_mailer.default_url_options = link
+    # for link urls in rails console
+    config.after_initialize do
+      Rails.application.routes.default_url_options = link
+    end
+    # for asset-url or img_tag in emails
+    config.action_mailer.asset_host = "http://#{link[:host]}:#{link[:port]}"
 ~~~
 
 For [devise]({{ site.baseurl }}{% post_url 2015-12-20-devise-oauth-angular %})

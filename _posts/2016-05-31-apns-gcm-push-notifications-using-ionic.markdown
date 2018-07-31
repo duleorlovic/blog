@@ -92,7 +92,7 @@ to certificate to be able to export it as a .p12 file)
 * sometimes you need to restart Settings app (geard icon) to be able to set up
 variables for specific app
 
-# Firebase cloud messaging
+# FCM Firebase cloud messaging
 
 Note that GCM (developers.google.com/cloud-messaging) is deprecated so use FCM
 instead.
@@ -103,6 +103,14 @@ Create API key and save as GOOGLE_API_KEY.
 
 More info for server https://firebase.google.com/docs/cloud-messaging/server and
 error codes https://firebase.google.com/docs/reference/fcm/rest/v1/FcmError
+
+To send test messages to the mobile apps  https://console.firebase.google.com/u/0/project/test-gcm/notification/compose
+
+FCM gem
+
+Send message to maximum 1000 tokens (source
+https://github.com/spacialdb/fcm#usage)
+
 
 # Firebase web
 
@@ -120,8 +128,6 @@ firebase login
 firebase use --add
 firebase serve -p 8001
 ~~~
-
-
 
 
 You will also need project number, top righ "Project Settings" and go to the

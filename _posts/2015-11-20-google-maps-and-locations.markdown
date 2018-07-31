@@ -530,6 +530,73 @@ When creating a map, you need to provide zoom option.
 </script>
 ~~~
 
+# Geocoder gem
+
+You can geocode ActiveRecord object by latitude longitude or by ip address.
+Results (reverse_geocode) can be written in addres, city, country. You can use
+in console
+
+~~~
+Geocoder.coordinates("25 Main St, Cooperstown, NY")
+# Google Geocoding API error: over query limit.
+Geocoder.coordinates("178.222.169.10") #=> ["46.1", "19.6"]
+
+Geocoder.search("Paris", :bounds => [[32.1,-95.9], [33.9,-94.3]])
+~~~
+
+You can download MaxMind local database (only for ip geocode) and import to psql
+
+~~~
+# generate migration to create tables
+rails generate geocoder:maxmind:geolite_city
+
+# download, unpack, and import data
+rake geocoder:maxmind:geolite:load PACKAGE=city
+
+# configure
+Geocoder.configure(ip_lookup: :maxmind_local, maxmind_local: {package: :city})
+
+# now you can use offline
+Geocoder.coordinates("178.222.169.10") #=> ["46.1", "19.6"]
+~~~
+
+Since for GOOGLE API there is a limit of free 2_500 request per day you can
+geocode if change in latitude and longitude is big
+> Each degree of latitude is approximately 69 miles (111 kilometers) apart. The range varies (due to the earth's slightly ellipsoid shape) from 68.703 miles (110.567 km) at the equator to 69.407 (111.699 km) at the poles. This is convenient because each minute (1/60th of a degree) is approximately one [nautical] mile.
+> A degree of longitude is widest at the equator at 69.172 miles (111.321) and gradually shrinks to zero at the poles. At 40° north or south the distance between a degree of longitude is 53 miles (85 km)
+
+~~~
+# app/models/user.rb
+class User < ActiveRecord::Base
+  MIN_LATITUDE_CHANGE_FOR_GEOCODE = 0.2 # 1 degree is 69 miles (111 km)
+  MIN_LONGITUDE_CHANGE_FOR_GEOCODE = 0.3 # 1 degree on equator 69 miles (111km), on 40deg 53 miles (85km)
+  reverse_geocoded_by :latitude, :longitude, address: :reverse_geocoded_address do |obj, results|
+    # next unless (obj.latitude_changed? && obj.longitude_changed?) || !obj.current_city_by_latitude_longitude.present?
+    if geo = results.first
+      obj.current_city_by_latitude_longitude    = geo.city
+      obj.current_address_by_latitude_longitude = geo.address
+      obj.save!
+    end
+  end
+  # do not run on each validation since api limit is 2_500
+  # after_validation :reverse_geocode
+
+  def submit_reverse_geocode
+    return false if latitude.nil? || longitude.nil?
+    if current_city_by_latitude_longitude.nil? || last_geocoded_latitude.nil? || last_geocoded_longitude.nil?  ||
+        (last_geocoded_latitude - latitude).abs > MIN_LATITUDE_CHANGE_FOR_GEOCODE ||
+        (last_geocoded_longitude - longitude).abs > MIN_LONGITUDE_CHANGE_FOR_GEOCODE
+      reverse_geocode
+      self.last_geocoded_latitude = latitude
+      self.last_geocoded_longitude = longitude
+      save!
+    else
+      false
+    end
+  end
+end
+~~~
+
 # Geolocating
 
 Here are the steps that I usually do for geolocating users:
@@ -567,3 +634,8 @@ You can buy cheap [ssl](http://www.geoplugin.com/webservices/ssl) packet and use
 [Google Maps Geolocation
 API](https://developers.google.com/maps/documentation/geolocation/intro#wifi_access_point_object)
 can use wifi or tower ids to give you latLng.
+
+# Apple MapKit
+
+https://developer.apple.com/videos/play/wwdc2018/212/
+

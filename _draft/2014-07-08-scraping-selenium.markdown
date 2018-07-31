@@ -242,7 +242,7 @@ In ruby you can parse some text with nokogiri `data = Nokogiri::HTML(html_page)`
 * find by id  `//*[@id='my_id']` (note that it needs quotes inside
   squarebrackets)
 * by class `//*a[contains(@class,'my_class')]`
-* text `//*[contains(text(),'ABC')]`
+* text `//*[contains(text(),'ABC')]` or `//*[text()='exact_match']`
 * parrent `../`
 * some child of this `.//`
 * to get text without child nodes, call `text()` in xpath 

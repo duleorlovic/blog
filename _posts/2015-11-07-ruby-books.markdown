@@ -388,9 +388,71 @@ will show `\n` and will insert spaces because text is indented. There is
   commands
   ~~~
   require 'open3'
-  stdout, stderr, status = Open3.capture3("ls")
+  stdout, stderr, status = Open3.capture3("sleep 10")
   ~~~
-* `%i[sym1 sym2]` is used to return array of symbols `[;sym1 :sum2]`
+
+  capture3 will wait for all output, even you use ampersand `sleep 10 &` at the
+  end of command. You can use `system 'sleep 10 &'` to get immediatelly back to
+  ruby. Also spawn
+
+  ~~~
+  pid = spawn('sleep 3') #=> 45376
+  # do something while process is running
+  Process.wait pid # wait for process to finishs
+  ~~~
+
+  Also Open3.capture3 can return back from background process if you
+  dont use `stdout.read` and use ampersand (sometimes do not block event without
+  ampersand).
+  https://www.rubydoc.info/stdlib/open3/Open3.popen3
+
+  ~~~
+  # tmp/r.rb
+  # run with: ruby tmp/r.rb
+  require 'open3'
+  puts 'start'
+  # system 'sleep 10 &'
+  stdin, stdout, stderr, wait_thr = Open3.popen3('sleep 10 && ls &')
+  pid = wait_thr[:pid]  # pid of the started process
+  stdin.close # stdin, stdout and stderr should be closed explicitly in this form.
+  # if you uncommend this line, than it will wait for output
+  # puts stdout.read
+  stdout.close
+  stderr.close
+  exit_status = wait_thr.value  # Process::Status object returned.
+  puts 'end'
+  ~~~
+
+  Another solution to run in background is using `IO`
+
+  ~~~
+  require 'open3'
+  require 'byebug'
+
+  puts "start in #{Process.pid}"
+  cmd = 'touch tmp/txt && sleep 10 && ls'
+  io = IO.popen cmd
+  puts "cmd started in #{io.pid}"
+  # does not exist the loop
+  # begin
+  #   while true do
+  #     Process.getpgid io.pid
+  #     printf '.'
+  #     sleep 1
+  #   end
+  # rescue Errno::ESRCH
+  #   puts 'cmd exits'
+  # end
+  Process.wait io.pid
+  puts 'end'
+  ~~~
+
+  Also `Process.fork { sleep 1 }`
+  https://ruby-doc.org/core-2.1.3/Process.html#method-c-exit
+
+  ~~~
+  Process.kill("HUP", pid)
+  ~~~
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
@@ -769,7 +831,8 @@ end
   user.assign_attributes other_user.slice :email, :phone
   ~~~
 
-  On hash there is `values_at` but that is only values.
+  On hash there is `values_at` but that is only values. To fetch all attributes
+  use `other_user.attributes` or `other_user.attributes.extract! 'id', 'email'`
 
 * safe navigation operator `&.` can be used instead of `.try` for example: `user
 && user.name` can be written as `user&.name`. It is usefull with find_by for
@@ -806,8 +869,8 @@ HERE_DOC
 
 # Url encode
 
-URI.escape has been deprecated in Ruby 1.9.2... so use CGI::escape or
-ERB::Util.url_encode.
+`URI.escape` has been deprecated in Ruby 1.9.2... so use `CGI::escape` or
+`ERB::Util.url_encode`.
 
 # Retry from rescue
 
@@ -877,6 +940,23 @@ call `captures` to get matched groups. You can use block instead of `if`
     detail += " for the field #{match_data.captures.first}"
   end
   ~~~
+
+  for error `Lint/AmbiguousRegexpLiteral: Ambiguous regexp literal. Parenthesize
+  the method arguments if it's surely a regexp literal, or add a whitespace to
+  the right of the / if it should be a division` you can use alternative forms
+  for regular expressions
+
+  ~~~
+  a = '[\w\s]+'
+  /#{a}/
+  %r[#{a}]
+  Regexp.new a
+
+
+  Regexp.new(t('user_mailer.welcome'))
+  ~~~
+
+
 
 * decorators poro presenters
 [thoughtbot](https://robots.thoughtbot.com/evaluating-alternative-decorator-implementations-in)
@@ -974,7 +1054,7 @@ assignment for function parameters)
   param.
 
 * sort hash by keys with `h.sort` and by values with `h.sort {|a,b|
-a[1]<=>b[1]}`
+a[1]<=>b[1]}` or using `sort_by` with method `o.sort_by &:published_at`
 
 ~~~
 h = { "a" => 20, "b" => 30, "c" => 10  }
@@ -1008,6 +1088,16 @@ else
 end
 ~~~
 
+When you need to match object class to not use `object.class` in case statement
+http://batsov.com/articles/2012/10/14/ruby-tip-number-3-matching-on-an-objects-class-in-a-case-expression/
+
+~~~
+# not case receiver.class
+case receiver
+when Customer
+end
+~~~
+
 New in  Ruby 2.5
 * `Module#attr, attr_accessor, attr_reader, attr_writer, define_method,
 alias_method, undef_method` and `remove_method` are now all public.
@@ -1037,6 +1127,7 @@ to_upper = -> (str) { str.upcase }
 
 * colorize matching string in console
 ~~~
+# config/initializers/colorize.rb
 class String
   COLOR = 31 # red
 
@@ -1089,7 +1180,64 @@ end
 
 * tripple equal `===` is operator that for ranges calls `.includes?`, for regexp
   calls `.match?`, for proc calls `.call`
+* fake objects could be generated from hash with `OpenStruct.new name: 'Dule'`.
+  If you need recursively generated OpenStruct than you can convert to json and
+  parse with Open struct class: `h = { a: 1, b: { c: 1 }};
+  o=JSON.parse(h.to_json, object_class: OpenStruct); o.b.c # => '1'`. You can
+  use rails `h = ActionController::Parameters.new` so you can `h.merge! b:1`
+* raise error when hash key does not exists (instead of returning `nil`).
+  `default_proc` will be executed if key does not exists
 
+~~~
+# config/initializers/constants.rb
+class Constant
+  def self.hash_or_error_if_key_does_not_exists(h)
+    # https://stackoverflow.com/questions/30528699/why-isnt-an-exception-thrown-when-the-hash-value-doesnt-exist
+    # raise if key does not exists h[:non_exists] or h.values_at[:non_exists]
+    h.default_proc = -> (_h, k) { raise KeyError, "#{k} not found!" }
+    # raise when value not exists h.key 'non_exists'
+    def h.key(value)
+      k = super
+      raise KeyError, "#{value} not found!" unless k
+      k
+    end
+    h
+  end
+
+  def self.CUSTOMER_EVENTS
+    hash_or_error_if_key_does_not_exists(
+      EDIT: 'edit',
+    )
+  end
+end
+~~~
+
+~~~
+# spec/models/constant_spec.rb
+RSpec.describe Constant do
+  it 'store string values' do
+    expect(Constant.CUSTOMER_EVENTS[:EDIT]).to eq 'edit'
+    expect(Constant.CUSTOMER_EVENTS.key 'edit').to eq :EDIT
+  end
+
+  it 'raise error if key does not exists' do
+    expect do
+      Constant.CUSTOMER_EVENTS[:not_exists]
+    end.to raise_error KeyError
+
+    expect do
+      Constant.CUSTOMER_EVENTS.values_at 'not_exists'
+    end.to raise_error KeyError
+
+    expect do
+      Constant.CUSTOMER_EVENTS.key 'not_exists'
+    end.to raise_error KeyError
+  end
+end
+~~~
+
+* use `enumerator.map do ... end` block when there is a side effects and curly
+  braces than you need return value `enumerator.map { ... }`
 
 todo
 
@@ -1099,4 +1247,3 @@ http://www.confidentruby.com/
 http://www.poodr.com/
 http://poignant.guide/book/chapter-5.html
 https://prograils.com/posts/ruby-on-rails-books-experienced-level
-

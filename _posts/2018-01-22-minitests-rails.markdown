@@ -13,8 +13,8 @@ have same test descriptions since it will be converted to same
 `test_my_password`.
 
 You can run specific test use `:line` or `-n test_name`.
-This also works for system test (you do not need `system` in `rails
-test:system`)
+This also works for system test (so you do not need `system` in `rails
+test:system somefile`)
 
 ~~~
 # invoke test by line
@@ -29,6 +29,42 @@ TESTOPTS="--name=test_should_run_validations_for_specific_state -v"`
 
 Each test run will load all fixture data, run setup blocks, run test method, run
 teardown block, rollback fixtures.
+
+# Fixtures
+
+http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
+
+* loading fixtures includes: removing old fixture data, load fixture data.
+* use labels for associated belongs_to and has_many items (separated by comma)
+* if you have polymorphic than put class name in brackets
+  ~~~
+  apple:
+    eater: george (Monkey)
+  ~~~
+
+* `created_at`, `updated_at`, `created_on` and `updated_on` is automatically
+  Time.now
+* fixture label interpolation
+
+  ~~~
+  me:
+    name: 'duke'
+    subdomain: $LABEL
+    email: $LABEL@email.com
+  ~~~
+
+* `pre_loaded_fixtures`
+* `use_transactional_tests`. In Rails 4 it was
+  `use_transactional_fixtures` but since it could be factories not fixtures,
+  that is renamed to `use_transactional_tests`. So to disable it you can use
+
+  ~~~
+  class FooTest < ActiveSupport::TestCase
+    self.use_transactional_tests = false
+  end
+  ~~~
+
+# Minitest classes
 
 To see all 6 base test clases go
 <http://guides.rubyonrails.org/testing.html#a-brief-note-about-test-cases>
@@ -45,7 +81,7 @@ ActionDispatch::SystemTestCase
 require 'test_helper'
 
 class MyClassTest < ActiveSupport::TestCase
-  test "a completed" do
+  test 'a completed' do
     task = Task.new
     refute(task.complete?)
     task.mark_completed
@@ -229,12 +265,64 @@ module PauseHelper
   # you can use byebug, but it will stop rails so you can not navigate to other
   # pages or make another requests in chrome while testing
   def pause
-    $stderr.write('Press ENTER to continue') && $stdin.gets
+    $stderr.write('Press CTRL+j or ENTER to continue') && $stdin.gets
   end
 end
 
 class ActionDispatch::SystemTestCase
   include PauseHelper
+end
+~~~
+
+## Minitest Mock
+
+You need to require autorun
+
+~~~
+# test/test_helper.rb
+require 'minitest/autorun'
+~~~
+
+http://ruby-doc.org/stdlib-2.0.0/libdoc/minitest/rdoc/MiniTest/Mock.html
+
+You can mock return values:
+~~~
+@mock = Minitest::Mock.new
+@mock.expect(:meaning_of_life, 42)
+@mock.meaning_of_life # => 42
+~~~
+
+and also for arguments and verify their type or value
+
+~~~
+@mock.expect(:do_something_with, true, [some_obj, true])
+@mock.do_something_with(some_obj, true) # => true
+
+@mock.expect(:uses_any_string, true, [String])
+@mock.uses_any_string("foo") # => true
+@mock.verify  # => true
+
+@mock.expect(:uses_one_string, true, ["foo"]
+@mock.uses_one_string("bar") # => true
+@mock.verify  # => raises MockExpectationError
+~~~
+
+You can use `Object.stub` https://github.com/seattlerb/minitest#stubs and with
+some custom doubles mock
+
+~~~
+# test/models/user_test.rb
+require 'test_helper'
+class UserTest < ActiveSupport::TestCase
+  test '#apply_subscription' do
+    mock = Minitest::Mock.new
+    def mock.apply; true; end
+
+    SubscriptionService.stub :new, mock do
+      user = users(:one)
+      assert user.apply_subscription
+    end
+  end
 end
 ~~~
 
@@ -329,6 +417,8 @@ vi Guardfile
 # change some lines in Guardfile
 guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
 ~~~
+
+* to show full backtrace use `BACKTRACE=blegga rails test`
 
 # Capybara
 

@@ -40,16 +40,21 @@ allowed inside ()
 
 # Yaml
 
-key value pairs are delimited with colon space.
-Value could be intented to mark the bounds of it.
-String does not need `" "` only if you use some special symbol `|` `:`
-Multiline strings starts with pipe `|` on the line with attribute name, and
-indented.
-Write dates in format `yyyy-mm-dd` so rails `Date.parse()` recognize it.
 
-YML file can use anchor (`&`) and reference (`*`) so you do not repeat the code.
-When you use reference `*` (as for testing) you can not add or update keys, but
-with `<<` you can (as for [production secrets]( {{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}))
+* comments are single line and starts with `#` number sign
+* list (arrays) are denoted by a leading hyphen `-` for each member per line, or
+  in single line with `[a, b]` square brackets separated with comma space
+* associative arrays (hash) are written with colon space `key: value` or in
+  single line with `{a: 1, b: 2}`. Value could be intented to mark the bounds of
+  it.
+* String does not need `" "` only if you use some special symbol `|` `:`
+* Multiline strings starts with pipe `|` on the line with attribute name, and
+indented.
+* Write dates in format `yyyy-mm-dd` so rails `Date.parse()` recognize it.
+* YML file can use anchor (`&`) and reference (`*`) so you do not repeat the
+  code.  When you use reference `*` (as for testing) you can not add or update
+  keys, but with `<<` you can (as for [production secrets]( {{ site.baseurl }}
+  {% post_url 2015-04-05-common-rails-bootstrap-snippets %}))
 
 ~~~
 name: Dusan Orlovic

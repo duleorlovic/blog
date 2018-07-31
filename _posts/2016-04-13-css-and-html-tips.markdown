@@ -35,8 +35,6 @@ layout: post
   absolute;bottom: 10px;`. This
   [question](http://stackoverflow.com/questions/17656623/position-absolute-scrolling)
   explains why outer need to be relative.
-* use `vertical-align: baseline` for image to be on same bootom as other
-  elements
 * use `mouseenter` instead `mouseover` (which will retrigger on inner elements).
 * use relative units instead of absolute
   <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 {
@@ -53,14 +51,6 @@ layout: post
   element
   [link](http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements).
   You need to make the label a block level element for it to work.
-* to make vertical align you need parent to be `position: relative`, and target
-  to be `position:absolute; top: 50%; margin-top: -1rem;` (if you show text
-  1rem).
-* for block elemenent with `margin: auto` (bootstrap
-  [center-block](http://getbootstrap.com/css/#helper-classes-center) helper)
-  does not have effect unless the element has the width (because it can not
-  calculate margins). For text you can use `text-center` `text-right` helper
-  classes for to align text right.
 * space inside a element is important. for example `<label>1</label><label> 2
   </label><label> 3 </label>` with `label { background: blue;}` this background
   will occupy only character and it will be disconnected from 1-2, but connected
@@ -180,7 +170,6 @@ Instead of scss
 * here is a list of used tags [HEAD](https://github.com/joshbuchea/HEAD)
 * chrome 39 for android use different color for toolbar, just add `<meta
   name="theme-color" content="#db5945">`
-
 
 # Css helper classes
 
@@ -337,7 +326,7 @@ To show active on click in pure css use `li:hover { color: blue }`
 
 Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/
 
-# Layout
+# Flex
 
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background
 
@@ -354,7 +343,7 @@ on container we can have:
   line, wrap means that it is allowed to go onto multiple lines. This two
   properites can be shorhanded in one `flex-flow: row nowrap`
 * `justify-content: flex-start | flex-end | center | space-between |
-  space-around | space-evenly` aligment when items are inflexible. space around
+  space-around | space-evenly` alignment when items are inflexible. space around
   means that all items have same space around (before first there is no items so
   that's why it is single space) if you need exactly same space from start to
   first and first to second, use space-evenly.
@@ -420,6 +409,38 @@ Used in layout in one dimension at a time (either row or column).
 
 CSS Grid https://mozilladevelopers.github.io/playground/css-grid
 
+# CSS box alignment
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Alignment
+older alignment methoods were:
+* align text using `text-align` In bootstra for text you can use `text-center`
+  `text-right` helper classes for to align text right.
+* center blocks using auto `margin` for block elemenent with `margin: auto`
+  (bootstrap [center-block](http://getbootstrap.com/css/#helper-classes-center)
+  helper) does not have effect unless the element has the width (because it
+  can not calculate margins)
+* in inline-block elements use `vertical-align: baseline` for image to be on
+  same bootom as other elements
+* to make vertical align you need parent to be `position: relative`, and target
+  to be `position:absolute; top: 50%; margin-top: -1rem;` (if you show text
+  1rem).
+
+
+There are two axis: inline (main) and block (cros) axis.
+When aligning items on inline axis we use properties that starts with `justify-`
+and when aligning items on block axis we use `align-` (items, self, content).
+With `flex-direction: row` than main axis is block, and cross is inline.
+Three types of alignment:
+* **positional alignment** for `-self` and `-content` specify position of
+  subject with relation to container: `center`, `start`, `end`, `self-start`,
+  `self-end`, `flex-start`, `flex-end`, `left`, `right`.
+* **baseline alignment** for `-self` and `-content` specify relationship amount
+  baselines of multiple subjects: `baseline`, `first baseline`, `last baseline`
+* **distributed alignment** for `-content` specify what happens to space after
+  subject have been displayed: `strech`, `space-between`, `space-around`,
+  `space-evenly`
+
+
 # Table
 
 Table has [two layouts](http://www.w3schools.com/cssref/pr_tab_table-layout.asp)
@@ -475,7 +496,6 @@ You can join elements with: append, prepend, after and before. Here you can use
 jquery objects or plain html: `$('#box').append($div).append('<div
 id="foo"></div>')`.
 
-
 # Tips
 
 * submit button outside of a form is
@@ -501,6 +521,20 @@ it's value). you can disable submit on enter with
       return false;
     }
   });
+  ~~~
+
+  I made helper data function which will also click. put on document ready or
+  turbolinks load.
+
+  ~~~
+  # app/assets/javascripts/turbolinks_loads.coffee
+  # f.text_field :email, 'data-prevent-submit-on-enter': '#email-continue'
+  $(document).on 'turbolinks:load', ->
+    $('[data-prevent-submit-on-enter]').on 'keyup keypress', (e) ->
+      keyCode = e.keyCode || e.which
+      if keyCode == 13
+        e.preventDefault()
+        $($(this).data().preventSubmit).click() if $(this).data().preventSubmitOnEnter != true
   ~~~
 
 * `<input readonly="readonly">` is better to use than `<input
@@ -635,3 +669,9 @@ link_to "+123-123", "tel:123123" %>`)
     font-weight: bold;
   }
   ~~~
+
+  You can style different states of defails (`details[open]` and
+  `details:not[open]`) https://codepen.io/jh3y/pen/mLaXRe
+* text input can have focus on page load with  `<input autofocus>`
+
+

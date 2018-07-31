@@ -281,6 +281,7 @@ list:
 * <http://wagn.org> wiki with cards with editor
 * <https://beefree.io/>
 * [fireEdit](https://github.com/coltaemanuela/FireEdit)
+* counter how many characters left https://github.com/rikschennink/short-and-sweet
 * quill
 
 ## Quil
@@ -470,7 +471,25 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 [parallel](http://exposedata.com/parallel/) and the best is
 [grafana](http://play.grafana.org/)
 * [d3 for charts](http://plottablejs.org/examples/)
-* [chartjs](http://www.chartjs.org/)
+* [chartjs](http://www.chartjs.org/). Labels and datasets should be inside
+  `data` attribute. Labels are for all charts.
+
+  ~~~
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['2018-1-1', '2018-1-2'],
+      datasets: [
+      {
+        data: [1, 2],
+        label: 'Tavan',
+      },
+      ]
+    }
+  })
+  ~~~
+  To add new data you can push to datasets and labels
+  https://www.chartjs.org/docs/latest/developers/updates.html
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
 
@@ -660,6 +679,7 @@ Email templates
 * <https://tympanus.net/Development/PerspectivePageViewNavigation/index6.html#>
 * <https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#>
 * <https://tympanus.net/Tutorials/3DShadingWithBoxShadows/>
+* shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&theme-id=1&slug-hash=RNjRZz&default-tab=result&user=iamryanyu&embed-version=2&pen-title=Modern%20Button%20Collection#js-box
 
 # Scroll
 
@@ -679,6 +699,8 @@ the content
 * animations <https://www.kronologic.ai/>
 * red bull <https://www.bullandbeard.com/>
 * project portfolio animated <http://celialopez.fr/>
+* menu rotate on round image <https://codepen.io/JoseRosario/pen/PeERry>
+* menu isometric https://codepen.io/ClementRoche/pen/yEPogx
 
 
 # Fonts and icons
@@ -709,6 +731,7 @@ shell scripts
 * https://wireframe.cc/ free for public one page
 
 To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
+
 # Continuous integration
 
 * <https://flynn.io/>
@@ -716,6 +739,17 @@ To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
 powered by fastlane
 * others <https://news.ycombinator.com/item?id=12703121>
 
+
+#  DDNS
+
+* [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
+* https://www.nsupdate.info to run on ubuntu just `sudo apt-get install
+ddclient` and provide config params (or update `/etc/ddclient.conf`) and it
+will run every hour
+
+# Find alternatives
+
+https://alternativeto.net
 
 # Dokku
 

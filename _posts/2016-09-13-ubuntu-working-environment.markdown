@@ -20,7 +20,9 @@ forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
 tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
 <about:preferences#advanced> Networktab -> Settings choose "Manual proxy
 configuration" and type SOCKS Host: localhost, and port 1080. Do not write
-anyting in HTTP proxy... 
+anyting in HTTP proxy... For Chrome or another connections you can use system
+wide Ubuntu Settings -> Network -> Network Proxy -> Method: Manual -> Socks Host
+localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
 guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
@@ -454,3 +456,10 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
   sudo -i
   echo "options ath9k btcoex_enable=1"  >  /etc/modprobe.d/ath9k.conf
   ~~~
+
+* trim or mute vocals in mp3 files with audacity
+* boot old computers
+  * unetbootin http://unetbootin.github.io/
+  * burn cd with mini.iso
+    https://help.ubuntu.com/community/Installation/MinimalCD (since full iso is
+    850MB > 700 MB CD capacity)

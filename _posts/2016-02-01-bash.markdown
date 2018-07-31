@@ -1,9 +1,7 @@
 ---
 layout: post
-title: Bash
 tags: bash
 ---
-
 
 # Run command as another user
 
@@ -26,7 +24,7 @@ Very usefull shortcuts to activate certain windows.
 * `gnome-terminal` if negative is used, than it is bottom alligned
 * [wmctrl](http://helpdeskgeek.com/linux-tips/resize-a-window-to-a-specific-size-in-ubuntu/)
 * `xwininfo` to click on window to find it's `0x440003d` which we can use to
-  create shortcut `xdotool windowactivate 0x440003d`. 
+  create shortcut `xdotool windowactivate 0x440003d`
 * another robust solution is to set predefined classname for windows with
   `xprop -f WM_CLASS 8s -set WM_CLASS main_editor` (click on window) and 
   `xdotool search --classname main_editor windowactivate` in *Alt+M* shortcut.
@@ -192,12 +190,35 @@ xdotool key $1
 # xdotool keydown Alt_L
 ~~~
 
+You can send commands to specific window
+https://unix.stackexchange.com/questions/87831/how-to-send-keystrokes-f5-from-terminal-to-a-gui-program
+
+~~~
+# this does not send key
+xdotool search --classname vp_$(get_current_viewport)_class_slash  windowactivate --sync %1 key  a
+
+# also can not send key without activate that window
+xdotool key --window 67199662 a Return
+
+# with windowactivate you need to wait with sync and than send key
+xdotool windowactivate --sync 67199662 key a
+
+# to write command use `type`, to include spaces wrap with quotes
+xdotool windowactivate --sync 67199662 type "pwd"
+
+# to send Enter <CR> you need delay and also some key before that
+# <CR> is 'Return', space is 'space'
+# remember not to run command with <C-j> since ctrl modifier is still active
+xdotool windowactivate --sync 67199662 type "pwd"; xdotool key --delay 50 space Return
+
+# you can come back to previous terminal with
+xdotool windowactivate --sync 67199662 type "pwd"; xdotool key --delay 50 space Return windowactivate 67199574
+
+# complete command for janko-m/vim-test strategy is in vim tips
+~~~
+
 Remapping keyboard keys is with
 [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap).
-[list of
-keysym](http://wiki.linuxquestions.org/wiki/List_of_Keysyms_Recognised_by_Xmodmap)
-[list of keysym](http://wiki.linuxquestions.org/wiki/List_of_KeySyms) AltGr,
-Alt_R, AltGr_R are synonyms.
 
 ~~~
 # show all keys, columns are
@@ -210,25 +231,55 @@ xmodmap -pke > ~/.Xmodmap
 xmodmap ~/.Xmodmap
 ~~~
 
-To find keycodes use `xev` program (exit with mouse or alt+f4). `showkeys` is
-using for linux system. You can use also `xkeycaps` but I do not know which
-keyboard to choose.
-Keycode for `a` is 64, and keysym is value assigned to that keycode `0x61` (ie
-`a`). Keysym for `shift+a` is `0x41` ie `A`.
+To find keycodes use `xev` program (exit with mouse or alt+f4).
+`showkeys` is using for linux system.
+You can use also `xkeycaps` but I do not know which keyboard to choose.
+`sudo showkey -a` can show keycode.
+
+~~~
+xev | sed -n 's/^.*keycode *\([0-9]\+\).*$/keycode \1 = /p'
+~~~
+
+Keycode for `a` is 38. It can be used alone or with modifier keys. Alone `a`
+gives keysym `0x61` (ie 141 in ascii), for `shift+a` keysym is `0x41` ie `A`.
 Descriptive keysyms for multimedia keys are in `/usr/include/X11/XF86keysym.h`.
 Keycode for left ctrl is 37 (keysym `Control_L`), left alt 64 (keysym `Alt_L`),
-windows 133 (keysym `Super_L`), caps lock 66.
+windows 133 (keysym `Super_L`), caps lock 66 (Caps_Lock), right alt is 108
+(`Alt_R`).
 
-To see all modifier and keysym binded to them:
+http://wiki.linuxquestions.org/wiki/List_of_Keysyms_Recognised_by_Xmodmap
+http://wiki.linuxquestions.org/wiki/List_of_KeySyms AltGr, Alt_R, AltGr_R are
+synonyms.
+
+From `man xmodmap` you can see that you can write 4 keysyms
+
+> Up to eight keysyms may be attached to a key, however the last four are not
+> used in any major X server implementation.  The first keysym is used when no
+> modifier key is pressed in conjunction with this key, the  second with Shift,
+> the third when the Mode_switch key is used with this key and the fourth when
+> both the Mode_switch and Shift keys are used
+
+keycode 57 = key Shift+Key Mode_switch+Key Mode_switch+Shift+Key ISO_Level3_Shift+Key ISO_Level3_Shift+Shift+Key
+
+Do not know where is ISO_Level3_Shift. Mode switch is on Caps_Lock. When I bind
+to for example number 1 and 2, than `13` gives `4` (so Mode_switch works) but
+`23` gives `3` (ISO_Level3_Shift does not work)
+
 ~~~
-xmodmap -pm
+keycode  10 = Mode_switch exclam 1 exclam
+keycode  11 = ISO_Level3_Shift at 2 at
+keycode  12 = 3 numbersign 4 numbersign 5 6
+~~~
 
+Default output of `xmodmap -pm` is
+
+~~~
 xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
 
 shift       Shift_L (0x32),  Shift_R (0x3e)
 lock        Caps_Lock (0x42)
-control     Control_L (0x25),  Control_R (0x69)
-mod1        Alt_L (0x40),  Alt_R (0x6c),  Meta_L (0xcd)
+control     Control_L (0x25=37), Control_R (0x69)
+mod1        Alt_L (0x40=64),  Alt_R (0x6c=108),  Meta_L (0xcd)
 mod2        Num_Lock (0x4d)
 mod3
 mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
@@ -243,12 +294,26 @@ Modifier `Mod4` is usually `Super_L`.
 ! This modifies CapsLock to Control, and keep CapsLock on Shift+CapsLock
 clear lock
 clear control
-add control = Caps_Lock Control_L Control_R
 keycode 66 = Control_L Caps_Lock NoSymbol NoSymbol
+add control = Caps_Lock Control_L Control_R
 ~~~
 
 You can use dummy modifier on capslock and assign various key on that modifier.
 https://gist.github.com/bcremer/9caa54d0432531f80c1e
+
+For Apple keyboard you can use https://help.ubuntu.com/community/AppleKeyboard
+and this answer
+https://askubuntu.com/questions/131900/how-do-i-switch-the-command-key-and-control-key-on-a-macbook-pro
+for swapping controll and command (I use swapping option and command).
+For swapping fn and control use https://help.ubuntu.com/community/TroubleWithAppleKbdOnUbuntu
+https://wiki.archlinux.org/index.php/Apple_Keyboard#Treating_Apple_keyboards_like_regular_keyboards
+https://github.com/free5lot/hid-apple-patched#installation-via-dkms-recommended
+
+~~~
+sudo vi /etc/modprobe.d/hid_apple.conf
+cat /sys/module/hid_apple/parameters/swap_fn_leftctrl
+~~~
+
 
 I use mapping for all keys that I need right shift like underscore, brackets,
 html >.
@@ -273,6 +338,28 @@ keycode 108 = underscore underscore underscore underscore
 ! Colon and semicolon are just reversed.
 keycode 47 = colon semicolon colon semicolon
 ~~~
+
+Also I like command+c / alt+c for copy/paste so I use this answer to copy
+selected text to clipboard https://askubuntu.com/questions/573663/command-to-copy-currently-selected-text
+and in terminal remap copy paste Terminal->Preferences->Shortcuts->Edit->Copy
+(Alt+C) Paste (Alt+V) so I can create keyboard shortcut for Alt+C and Alt+V
+which I can use both on terminal and non terminal
+
+~~~
+# /home/orlovic/config/bashrc/copy_from_x_selection.sh
+#!/bin/bash
+xclip -out -selection primary | xclip -in -selection clipboard
+~~~
+
+create two shortcuts, one for Alt+C
+`/home/orlovic/config/bashrc/copy_from_x_selection.sh` and another for Alt+V
+`/home/orlovic/config/bashrc/ctrl_browser.sh Control+v`.
+Do not forget to use old method of selecting text and middle mouse button or
+Shift+Insert (Insert does not exists on Apple Keyboard so that is the reason why
+I add this shortcuts, but also another helpers is ctrl+i which is remaped to
+shift+insert in .xbindkeysrc). This xclip is also used when you want to copy
+from vim to clipboard, you need just to yank and alt+c and alt+v (alt+c do not
+need to be inside vim).
 
 Run `/home/orlovic/config/bashrc/startup_xmodmap.sh 2>&1 | /usr/bin/logger` in
 both startup scripts and /lib/systemd/system-sleep/startup_after_sleep.sh
@@ -411,14 +498,20 @@ it will be in `tmp/db.dump`
 [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
 "@reboot /home/orlovic/my.sh") | crontab -`
+* output goes to the mail but I prefer to redirect to some file. Also define
+  shell since it will use sh (on which sleep does not work).
+  ~~~
+  SHELL=/bin/bash
+  * * * * * /path/to/my/script.sh >> /home/orlovic/Downloads/cron.log 2>&1
+  ~~~
+
   cron format `Minute Hour Day_of_the_Month Month_of_the_Year Day_of_the_Week`
-  and also `Year` as 6th field.
+  and also `Year` as 6th field. For more information see the manual pages of
+  crontab(5) and cron(8) `m h  dom mon dow   command`.
   For multiple values you can separate with comma, use dash or use slash, for
   example `0,15,30,45 0,6,12,18 1,15,31 * 1-5 *` is the same as `*/15 */6
   1,15,31 * 1-5 *`.
 * repeat last command with sudo `sudo !!`
-* DDNS
-  * read [duckdns install](https://www.duckdns.org/vascript:; install.jsp)
 * copy all files from folder (including hidden) `cp folder/. /some-other/ -r`
 Note `.` after folder name.
 * preserve env variables with sudo `sudo -E ruby some_script.rb`, but `rvmsudo
@@ -428,6 +521,17 @@ Note `.` after folder name.
   [p]rocess_name`. to show full command for process id you can use `ps -fp
   <pid>`. You can kill one by one using `top` and `k`. To find proccess by port
   it is using you can `lsof -wni tcp:3000`.
+  You can see top 5 proccesses and commands
+  ~~~
+  ps aux | sort -nrk 3,3 | head -n 5
+  watch "ps aux | sort -nrk 3,3 | head -n 5"
+
+  # or with top
+  top -b -n 1 | head -n 12  | tail -n 5
+
+  # or better
+  htop
+  ~~~
 * edit long commands in bash `set -o vi` and than press Esc, and v (visual).
   Don't recomment to put in bashrc since it will disable bash shortcuts like:
   ctrp+p, bind, ....
@@ -750,3 +854,14 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
 
 * add tab suggestions for your script using `complete` command
   https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial
+* strip new line from command output `xdotool search --classname
+  vp_3_class_slash | tr -d '\n'`
+* fan working when high temperature
+  ~~~
+  sudo apt install lm-sensors
+  sudo sensors-detect
+  sensors
+
+  sudo apt install hardinfo
+  hardinfo
+  ~~~

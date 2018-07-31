@@ -876,6 +876,9 @@ not confuse crawlers. You can add redirection in html
 </html>
 ~~~
 
+* google io slides can be found https://github.com/willnorris/io-slides
+*
+
 <https://jekyllrb.com/docs/plugins/>
 <https://github.com/planetjekyll/awesome-jekyll>
 <https://github.com/planetjekyll/awesome-jekyll-plugins>

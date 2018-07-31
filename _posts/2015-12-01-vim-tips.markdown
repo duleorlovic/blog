@@ -332,7 +332,9 @@ yank link to register `a` and paste: `"add` `"ap"`
 * to paste with proper indend use [vim-unimpaired](https://github.com/tpope/vim-unimpaired) `]p` , also from plugin `:help unimpaired`
 * `[l` `]l` ale errors
 * `]b` buffers
-* `]q` go next `[q` prev Quick fix, more are in `:help unimpaired-next`
+* `]q` go next `[q` prev Quick fix, Alss next error or warning with `:lnext` or
+  `:lpr` or using `[l` `]l`. More are in `:help unimpaired-next`
+
 To close error window you need to `:lcl`. I use map for quickfix to `:.cc`
 
 * insert text from external command is with `:read !date`
@@ -340,6 +342,10 @@ To close error window you need to `:lcl`. I use map for quickfix to `:.cc`
 # Exploring
 
 * `:edit .` (short `:e.`) opens (`:vsp`) splits netrw of folder,
+
+# Tips
+
+* open file on specific line `vi +10 README`
 
 ## Netrw
 
@@ -570,8 +576,6 @@ let g:syntastic_<filetype>_checkers = ['<checker-name>']
 let g:syntastic_<filetype>_<checker>_args = "--my --args --here"
 ~~~
 
-You can jump to next error or warning with `:lnext` or `:lpr` or using `[l` `]l`
-
 Here is my configuration for syntastic and vim
 <https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim>
 You need to install this tools:
@@ -587,6 +591,10 @@ You need to install this tools:
 AllCops:
   TargetRubyVersion: 2.3
 
+# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 # it is OK that code explains instead class documentation
 Style/Documentation:
   Enabled: false
@@ -594,7 +602,13 @@ Style/Documentation:
 # tasks and test for setup data could be very long
 Metrics/BlockLength:
   Exclude:
-    - "lib/**/*"
+    - 'lib/**/*'
+    - 'test/**/*'
+
+# big test big ABC size
+Metrics/AbcSize:
+  Max: 25
+  Exclude:
     - 'test/**/*'
 
 # line length is not important everywhere
@@ -612,10 +626,9 @@ Style/TrailingCommaInArguments:
 # I like methods in 10 lines but some are bigger
 Metrics/MethodLength:
   Max: 15
-
-# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
-Style/ClassAndModuleChildren:
-  Enabled: false
+  Exclude:
+    - 'lib/**/*'
+    - 'test/**/*'
 
 # do not need to write # frozen_string_literal: true
 Style/FrozenStringLiteralComment:
@@ -753,6 +766,10 @@ Also in view, I want to be able where current element belongs, so list all
 wrapped elements. And when I'm in scss I want to see all parent selector,
 classes and media queries.
 
+# RubocopFix vim plugin rubocop
+
+Fix current rubocop error, by adding `rubocop:disable`
+
 # Graph visualization in markdown
 
 <https://markvis-editor.js.org/>
@@ -781,7 +798,8 @@ nnoremap <leader>rs :execute "!rspec %:" . line(".")<cr>
 :make %
 ~~~
 
-Place language specific (file type) plugins inside `~/.vim/ftplugin/ruby.vim`
+Place language specific (file type) plugins inside `~/.vim/ftplugin/ruby.vim` so
+they are automatically loaded when you open ruby file.
 
 Use https://github.com/janko-m/vim-test
 * `<leader>t` test nearest spec to the line (if not inside example, whole file
@@ -801,6 +819,20 @@ parse errors:
 
 expected `#<User id: 1061, email: "my-user@asd.asd", created_at: "2017-09-23 09|19| 48", updated_at: "2017-09-23 09:19:48">.confirmed?` to return true, got false
 spec/features/user_confirmation_spec.rb|25| in `block (2 levels) in <top (required)>'
+~~~
+
+I prefer to use xdotool and send command to actual window
+
+~~~
+" config/vim/ftplugin/ruby.vim
+function! EchoStrategy(cmd)
+  let current_window = system('xdotool getactivewindow | tr -d "\n"')
+  let target_window = system('xdotool search --classname vp_3_class_slash | tr -d "\n"')
+  execute 'Dispatch!  xdotool windowactivate --sync '.target_window.' type "'.a:cmd.'"; xdotool key --delay 50 space Return windowactivate '.current_window
+endfunction
+
+let g:test#custom_strategies = {'echo': function('EchoStrategy')}
+let g:test#strategy = 'echo'
 ~~~
 
 # Vim plugin

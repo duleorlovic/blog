@@ -429,6 +429,15 @@ Checkboxes should be inside a `form-group`
   <% end %>
 ~~~
 
+Static test can be displayed with
+
+~~~
+<%= f.static_control :email %>
+<%= f.static_control labe: 'Custom Static Control' do %>
+  Content here
+<% end %>
+~~~
+
 You can use original rails form builder appending `_without_bootstrap`
 
 ~~~

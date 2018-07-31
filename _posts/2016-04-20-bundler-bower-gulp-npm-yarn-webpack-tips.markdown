@@ -80,6 +80,20 @@ bower uninstall packageName
 bower install ng-token-auth --save
 ~~~
 
+You can install npm packages with
+https://www.npmjs.com/package/bower-npm-resolver for example:
+
+~~~
+npm add bower-npm-resolver
+# update your .bowerrc
+{
+  "resolvers": [
+    "bower-npm-resolver"
+  ]
+}
+bower install npm:alert-text-show-hide --save
+~~~
+
 You can update to the latest version by changing bower.json
 
 ~~~
@@ -173,6 +187,10 @@ npm install @myorg/mypackage
 Scope can be associated with a registry at login `npm login
 --registry=http://reg.example.com --scope=@myco` or at config `npm config set
 @myco:registry http://reg.example.com`.
+
+Package lock <https://docs.npmjs.com/files/package-locks> is used to prevend
+using latest dependencies if they are not desirable `package-lock.json` or
+`npm-shrinkwrap.json`
 
 # Npmjs publish package
 

@@ -62,10 +62,20 @@ Gmail smtp is the most easiest way to start
 ~~~
 
 If you receive error `SocketError: getaddrinfo: Name or service not known` than
-you probably miss the `address` field. If there is error `with EOFError: end of
-file reached` than you need to change `domain` field (should not be
-`localhost`, but the domain part of the sender email, for example `gmail.com`).
+you probably miss the `address` field.
+If there is error `with EOFError: end of file reached` than you need to change
+`domain` field (should not be `localhost`, but the domain part of the sender
+email, for example `gmail.com`).
 
+If you see error in logs:
+
+~~~
+2018-06-18T09:13:29.371621+00:00 app[web.1]: An error occurred when sending a notification using 'email' notifier. Net::SMTPAuthenticationError: 534-5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbu5
+~~~
+
+You need to Allow less secure apps https://support.google.com/accounts/answer/6010255
+
+Sometimes you can send from your IP but not from Heroku IP address.
 
 ## Sendgrid
 
@@ -213,9 +223,9 @@ gem 'roadie'
 gem 'roadie-rails'
 ~~~
 
-Another gem is <https://github.com/fphilipe/premailer-rails> which can also
-generate text part so you do not need to maintain it. Just add the gem and you
-are good to go.
+Another solution is `gem 'premailer-rails'`
+<https://github.com/fphilipe/premailer-rails> which can also generate text part
+so you do not need to maintain it. Just add the gem and you are good to go.
 
 [Official gmail styles](https://developers.google.com/gmail/design/css) supports
 `<style>` in head and media queries, but this gem will support more clients
@@ -401,8 +411,29 @@ is what we can do with ActionMailer:
 * attachments
 * mail
 
-# Dynamic smtp settings at runtime
+You can use `before_action` and `after_action` and access to `params`
+http://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-callbacks
 
+For example `prevent_delivery_to_guests`
+
+~~~
+class UserMailer < ApplicationMailer
+  before_action { @business, @user = params[:business], params[:user] }
+
+  after_action :prevent_delivery_to_guests
+
+  def feedback_message
+  end
+
+    def prevent_delivery_to_guests
+      if @user && @user.guest?
+        mail.perform_deliveries = false
+      end
+    end
+  end
+~~~
+
+# Dynamic smtp settings at runtime
 
 ~~~
 class DeviseMailer < Devise::Mailer
@@ -431,6 +462,21 @@ You can include small giff that looks like screencast. Image should be less than
 Email gems <http://awesome-ruby.com/#-email> and
 [gmail](https://github.com/gmailgem/gmail)
 
+You can use img tags and css background image, but if it is run in background
+(it does not know on which request.host) than you need to set asset host (look
+in [common rails bootstrap snippets]( {{ site.baseurl }} 
+{% post_url 2015-04-05-common-rails-bootstrap-snippets %})
+
+
+~~~
+# app/views/layouts/mailer.html.erb
+background-image: url('<%= asset_url 'cute-small.jpg' %>');
+<%= image_tag 'premesti_se.gif' %>
+
+# config/application.rb
+config.action_mailer.asset_host = "http://my_host"
+~~~
+
 # Gmail Go To Action
 
 Using some header json you can set button in gmail subject line "Quick Actions".
@@ -444,3 +490,52 @@ https://github.com/FGRibreau/mailchecker
 # Testing emails
 
 https://www.engineyard.com/blog/testing-async-emails-rails-42
+
+~~~
+# test/support/mailer_helpers.rb
+module MailerHelpers
+  def clear_mails
+    ActionMailer::Base.deliveries = []
+  end
+
+  # if you deliver_now you can
+  # assert_difference 'all_mails.count', 1 do
+  # and for background deliver_later you need to assert perform or enqueue
+  # inherit from ActiveJob::TestCase
+  # or include ActiveJob::TestHelper
+  # assert_performed_jobs 1, only: ActionMailer::DeliveryJob do
+  def all_mails
+    ActionMailer::Base.deliveries
+  end
+
+  # last_email is renamed to last_mail
+  def last_mail
+    raise 'you_should_use_give_me_last_mail_and_clear_mails'
+    # ActionMailer::Base.deliveries.last
+  end
+
+  # some usage is like
+  # mail = give_me_last_mail_and_clear_mails
+  # assert_equal [email], mail.to
+  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.html_part.decoded
+  # confirmation_link = mail.html_part.decoded.match(
+  #   /(http:.*)">#{t("confirm_email")}/
+  # )[1]
+  # visit confirmation_link
+  def give_me_last_mail_and_clear_mails
+    mail = ActionMailer::Base.deliveries.last
+    clear_mails
+    mail
+  end
+end
+class ActiveSupport::TestCase
+  include MailerHelpers
+  # for assert_performed_jobs
+  include ActiveJob::TestHelper
+end
+class ActionDispatch::IntegrationTest
+  include MailerHelpers
+  # for assert_performed_jobs
+  include ActiveJob::TestHelper
+end
+~~~

@@ -69,6 +69,12 @@ end
 Errors like `NoMethodError (undefined method 'users_url' for
 #<DeviseRegistrationsController:0x007ff6068d92b8>):`
 
+IF you need to check user.authenticate_with password you can use valid password
+
+~~~
+user.valid_password? 'new_password'
+~~~
+
 # Devise and Omniauth
 
 Read [wiki](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview) to
@@ -1773,6 +1779,104 @@ and gem <https://github.com/ambethia/recaptcha>
 It is not possible to edit configuration using api
 https://stackoverflow.com/questions/38197959/how-to-add-redirect-uris-programmatically
 so use selenium script to update redirect URIs or captcha domains
+
+# Devise send email in background
+
+Read this gem
+https://github.com/plataformatec/devise/wiki/How-To:-Send-devise-emails-in-background-(Resque,-Sidekiq-and-Delayed::Job)
+and you can add manually, or put lines in User model (so it overrides devise's)
+
+~~~
+# app/models/user.rb
+  devise :database_authenticatable, :device_async
+
+# config/initializers/devise.rb
+# Register devise-async model in Devise
+Devise.add_module(:devise_async, model: 'devise_async')
+
+# app/models/concerns/devise_async.rb
+module DeviseAsync
+  extend ActiveSupport::Concern
+
+  included do
+    protected
+
+    # This method overwrites devise's own `send_devise_notification`
+    # message = devise_mailer.send(notification, self, *args)
+    # message.deliver_now
+    def send_devise_notification(notification, *args)
+      message = devise_mailer.send(notification, self, *args)
+      message.deliver_later
+    end
+  end
+end
+~~~
+
+Look below if you have problem with serilization
+
+# Custom devise mailer
+
+https://github.com/plataformatec/devise/wiki/How-To:-Use-custom-mailer
+I override becaus I wante dto use delive_later but have a problem with
+serilization (Neo4j objects)
+
+~~~
+ActiveJob::SerializationError: Unsupported argument type: User
+~~~
+
+so I send `id` instead of `self`
+
+~~~
+# app/models/user.rb
+  # This method overwrites devise's own `send_devise_notification`
+  # message = devise_mailer.send(notification, self, *args)
+  # message.deliver_now
+  # also need to fetch user in MyDeviseMailer
+  # protected is required, or ActionView::Template::Error: undefined method `main_app'
+
+  protected
+
+  def send_devise_notification(notification, *args)
+    message = devise_mailer.send(notification, id, *args)
+    message.deliver_later
+  end
+~~~
+
+So My devise mailer just call super with same arguments
+
+~~~
+# app/mailers/my_devise_mailer.rb
+class MyDeviseMailer < Devise::Mailer
+  helper :application # gives access to all helpers defined within `application_helper`.
+  include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
+  default template_path: 'devise/mailer' # to make sure that your mailer uses the devise views
+
+  def confirmation_instructions(record_id, token, opts = {})
+    record = User.find record_id
+    super record, token, opts
+  end
+
+  def reset_password_instructions(record_id, token, opts = {})
+    record = User.find record_id
+    super record, token, opts
+  end
+
+  def unlock_instructions(record_id, token, opts = {})
+    record = User.find record_id
+    super record, token, opts
+  end
+
+  def email_changed(record_id, opts = {})
+    record = User.find record_id
+    super record, opts
+  end
+
+  def password_change(record_id, opts = {})
+    record = User.find record_id
+    super record, opts
+  end
+end
+~~~
 
 # Session expired
 

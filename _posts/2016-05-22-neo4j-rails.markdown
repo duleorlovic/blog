@@ -122,7 +122,7 @@ eventual: LIMIT 10.
 
   * WHERE can be moved inside node or edge declaration `MATCH (n:Covek { name:
   'Dusan' }) RETURN n;` so WHERE is usualy used with `WHERE NOT`. For example
-  cocoautors which are not coauthors
+  cocoautors which are not coauthors (not equal is `<>`)
 
   ~~~
   MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]->(m)<-[:ACTED_IN]-(coActors),
@@ -255,6 +255,7 @@ end
 
   # custom query_as match pluck
   post.query_as(:p).match('(p)-[rel1:CONTAINS]->(n2)').pluck(:rel1)
+  post.query_as(:p).match('(p)-[rel1:CONTAINS]->(n2)').where('rel1.on = true').pluck(:rel1)
   ~~~
 
 * when comment is destroyed than you can not get it's post, it is better to get
@@ -472,9 +473,25 @@ class ActiveSupport::TestCase
 end
 ~~~
 
+In tests you can not use fixtures. Maybe raw cypher can help
+https://github.com/neo4jrb/neo4j/issues/611
+
+~~~
+    query = %(
+      CREATE (c:City),
+      (l_a:Location),
+      (l_b:Location),
+      (l_a)-[:IN_CITY]->(c),
+      (l_b)-[:IN_CITY]->(c),
+    )
+    Neo4j::ActiveBase.current_session.query query
+~~~
+
+but best advice to use factory girl.
+
 # Query
 
-Debug with `user.assets.categories.assets.print_cypher`.
+Debug with `user.assets.categories.assets.print_cypher` or some query `move.query_as(:m1).match('(m1)-[]-(g:Group)').to_cypher`
 
 Query on property `User.where(name: ?)` parametar `?` can be: string, nil,
 array, regular expression `User.where(name: /.*dule.*/i)`, range
@@ -522,6 +539,12 @@ Also `.order`, `.limit` and `.skip`.
 You can pass single attribute to assign variable in cypher, so we can pluck on
 it `user.created_assets.categories(:category).pluck('category.name',
 'count(*)')`
+
+Using `where` can be with string or with hash. If you want to target specific
+node you can use string like `where("node.uuid = #{n.id}")` or hash `where(node:
+{ neo_id: n.id })` or `match_nodes(node: n)`
+https://github.com/neo4jrb/neo4j-core/blob/8.0.x/spec/neo4j-core/unit/query_spec.rb#L373
+https://github.com/neo4jrb/neo4j-core/blob/8.0.x/spec/neo4j-core/unit/query_spec.rb#L474
 
 # Regular expression
 
@@ -668,6 +691,15 @@ class CreateChat < Neo4j::Migrations::Base
 end
 ~~~
 
+Error
+
+~~~
+Neo4j::Core::CypherSession::CypherError:   Cypher error:
+  Neo.DatabaseError.Transaction.TransactionStartFailed: The database has encountered a critical error, and needs to be restarted. Please see database logs for more details.
+~~~
+
+
+
 # Todo
 
 `rails g model` will generate model files with rubocop offencies
@@ -687,8 +719,21 @@ Errors format should be used:
 
 # Dump
 
+On Heroku GrapheneDB in tab Admin -> Export database, you can download
+`graphdb.zip` and export to your graph.db folder
+
 ~~~
-cd neo4j/data/graph.db
+rm -rf db/neo4j/development/data/databases/graph.db
+mkdir db/neo4j/development/data/databases/graph.db
+unzip tmp/graphdb.zip db/neo4j/development/data/databases/graph.db
+rails neo4j:restart[development]
+~~~
+
+
+To make a backup you can
+
+~~~
+cd db/neo4j/development/data/databases/graph.db/
 zip -r ../backup.zip .
 ~~~
 
