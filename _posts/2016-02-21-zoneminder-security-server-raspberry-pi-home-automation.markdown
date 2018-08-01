@@ -34,14 +34,18 @@ Than just extract zip to the card.
 On MAC download "SD Memory Card formatter" and do formating. Than extract and
 copy all content from NOOBS_v2_7_0 folder to the root of the card.
 
-When installing Raspian it took around 20mins to extract 4.138MB (speed
-1.5-2MB/s).
-
 NOOBS will ask which OS you want to install. If you preferr to have ready to go
 sd card, than download [RASPBIAN STRETCH
 LITE](https://www.raspberrypi.org/downloads/raspbian/).
-Create empty file `ssh` in the root of sd card so than ssh will be enabled
-and you do not need mouse and monitor, just find ip address and ssh to it.
+
+On Mac use Etcher https://etcher.io/ and select zip and sd card and click Flash.
+When installing Raspian it took around 20mins to extract 4.138MB (speed 2MB/s).
+On another card (Kingston 16GB MicroSD HC C10 SDC10/16GB) speed is 9.9MB/s and 2018-06-27-raspbian-stretch-lite.zip
+(367MB, uncompressed in Etcher says it is 1.86GB) took only few mins.
+
+Create empty file `ssh` in the root of sd card (now sd card has name `boot`) so
+than ssh will be enabled and you do not need mouse and monitor, just find ip
+address and ssh to it.
 
 Run `sudo raspi-config` in console or find in Top Left Icon -> Preferences ->
 Raspberry Pi Coonfiguration -> Tab System.
