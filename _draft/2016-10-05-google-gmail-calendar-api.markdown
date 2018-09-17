@@ -1,7 +1,8 @@
+---
+layout: post
+---
 
-# Youtube
-
-## Youtube video in popup modal
+# Youtube video in popup modal
 
 It is simple iframe similar to [this
 solution](http://jsfiddle.net/jeremykenedy/h8daS/1/) just with stop video after
@@ -40,6 +41,14 @@ $('#videoModal').on('hidden.bs.modal', function() {
 </script>
 ~~~
 
+[yt](https://github.com/Fullscreen/yt) gem access [youtube
+api](https://developers.google.com/youtube/). Creators
+<http://fullscreen.github.io/yt/>. Private or non existing video url raise
+exceptions so you need to `rescue Yt::Errors::NoItems,
+Yt::Errors::RequestError`. Video could be public but not accessible (because of
+deactived account).
+
+
 # Google pdf preview
 
 If you want to preview pdf or image file, you can use Google 
@@ -48,15 +57,7 @@ If you want to preview pdf or image file, you can use Google
 $('#viewerBox').attr('src','https://docs.google.com/viewer?embedded=true&url=<%= application.resume.media.url %>' );
 ~~~
 
-
 or you can use directly [pdf.js](http://mozilla.github.io/pdf.js/getting_started/)
-
-[yt](https://github.com/Fullscreen/yt) gem access [youtube
-api](https://developers.google.com/youtube/). Creators
-<http://fullscreen.github.io/yt/>. Private or non existing video url raise
-exceptions so you need to `rescue Yt::Errors::NoItems,
-Yt::Errors::RequestError`. Video could be public but not accessible (because of
-deactived account).
 
 # Gmail API
 
@@ -67,3 +68,13 @@ https://developers.google.com/api-client-library/ruby/apis/gmail/v1
 
 Someone can break to your account simple by adding his email as recovery email.
 Than he can easily change password.
+
+# Gmail shortcuts
+
+* ? to open keyboard shortcut help
+* Ctrl+Enter to send email
+* j and k to older and newer conversation
+* o to open conversation, u to back to threadlist
+* g+a go to all mail, g+t to sent emails, g+i to inbox
+* c to compose
+* / to search

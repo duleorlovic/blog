@@ -44,13 +44,27 @@ http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
 
 * `created_at`, `updated_at`, `created_on` and `updated_on` is automatically
   Time.now
-* fixture label interpolation
+* fixture label interpolation (`$LABEL` is `me`)
 
   ~~~
   me:
     name: 'duke'
     subdomain: $LABEL
     email: $LABEL@email.com
+  ~~~
+
+* defaults
+  ~~~
+  DEFAULTS: &DEFAULTS
+    created_on: <%= 3.weeks.ago.to_s(:db) %>
+
+  first:
+    name: Smurf
+    <<: *DEFAULTS
+
+  second:
+    name: Fraggle
+    <<: *DEFAULTS
   ~~~
 
 * `pre_loaded_fixtures`
@@ -117,6 +131,53 @@ Rails also defines `assert_difference`, `assert_blank`, `assert_presence`,
     end
 ~~~
 
+You can create your own assertiongs like
+https://github.com/duleorlovic/premesti.se/blob/master/test/support/assert_equal_when_sorted_by_id.rb
+Reopen `module MiniTest::Assertions` when helper is used in all tests. If you
+need only for system tests (assert_selector) or integration test (assert select)
+than you need to reopen that class
+
+~~~
+# test/application_system_test_case.rb
+require 'test_helper'
+
+class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  def assert_alert_message(text)
+    assert_selector 'div#alert-debug', text, visible: false
+  end
+
+  def assert_notice_message(text)
+    assert_selector 'div#notice-debug', text, visible: false
+  end
+end
+~~~
+
+for integration tests
+
+~~~
+# test/support/assert_flash_message.rb
+class ActionDispatch::IntegrationTest
+  # assert_flash_message
+  def assert_alert_message(text)
+    assert_select 'div#alert-debug', text
+  end
+
+  def assert_notice_message(text)
+    assert_select 'div#notice-debug', text
+  end
+
+  def assert_select_field_error(text)
+    assert_select 'div.invalid-feedback', text
+  end
+end
+~~~
+
+For any method? you can assert for example
+
+~~~
+assert_kind_of Array, exp
+~~~
+
 # Minitest services
 
 Similar to model test you can create tests for services since there are PORO
@@ -149,11 +210,13 @@ title: "Ahoy!" }, response.parsed_body)`.
 * `follow_redirect!`
 * `assert_redirected_to post_url(Post.last)`
 * `assert_response :success` (for http codes 200-299), `:redirect` (300-399), `:missing` (404), `:error` (500-599).
-* `assert_select 'h1', user.email` . Note that white spaces andnew lines are
+* `assert_select 'h1', user.email` . Note that white spaces and new lines are
   ignored
 * `assert_difference "User.count", 1 do`
 * You have access to `@request`, `@controller` and `@response` object, but only
-after you call `get`, `post`. You can see page body with `response.body`
+  after you call `get`, `post`. You can set `request.remote_ip` by passing
+  headers `get '/', headers: { 'REMOTE_ADDR': '123.123.123.123' }`
+* You can see page body with `response.body`
 [available instance
 variables](http://guides.rubyonrails.org/testing.html#instance-variables-available):
 
@@ -253,6 +316,7 @@ Capybara assertions
 * `assert_text /dule/`
 * `assert_selector 'a', text: 'duke'`
 * `assert_equal admin_path, page.current_url`
+* `page.accept_confirm` to confirm alert dialog box
 
 ## Minitest helpers
 
@@ -307,8 +371,28 @@ and also for arguments and verify their type or value
 @mock.verify  # => raises MockExpectationError
 ~~~
 
-You can use `Object.stub` https://github.com/seattlerb/minitest#stubs and with
-some custom doubles mock
+You can use `Object.stub` https://github.com/seattlerb/minitest#stubs 
+https://stackoverflow.com/questions/10990622/how-do-i-stub-a-method-to-raise-an-error-using-ruby-minitest
+~~~
+require "minitest/autorun"
+
+class MyModel
+  def my_method; end
+end
+
+class TestRaiseException < MiniTest::Unit::TestCase
+  def test_raise_exception
+    model = MyModel.new
+    raises_exception = Proc.new { raise ArgumentError.new }
+    model.stub :my_method, raises_exception do
+      assert_raises(ArgumentError) { model.my_method }
+    end
+  end
+end
+~~~
+
+
+Stub works also with some custom doubles mock
 
 ~~~
 # test/models/user_test.rb
@@ -419,7 +503,3 @@ guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
 ~~~
 
 * to show full backtrace use `BACKTRACE=blegga rails test`
-
-# Capybara
-
-* `assert_selector`

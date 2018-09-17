@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Capistrano
 ---
 
 # Install
@@ -8,7 +7,8 @@ title: Capistrano
 Capistrano is not server provisioning tool. You need to manually boot up server
 and install ssh, apache, git... usually all tasks that requires sudo should be
 done manually. Capistrano use single non priviliged user in non interactive ssh
-session.
+session. Rubber has script for provisioning a server `cap rubber:create` and
+installing packages `cap rubber:bootstrap`
 
 Capistrano version 3 is used here. Below is section for capistrano version 2.
 
@@ -119,7 +119,7 @@ server "127.0.0.1", user: "vagrant", roles: %w{app db web}, port: 2222
 ~~~
 
 If you are using private github repo, than permission problems for git will
-occurs, so you can use your local keys on server with thise option:
+occurs, so you can use your local keys on server with those option:
 `set :ssh_options, forward_agent: true`
 
 You can check before deploying with `cap staging git:check` or `cap staging
@@ -445,6 +445,8 @@ This gem is used just as wrapper for common stack, like passenger_postgresql,
 targeting EC2 instances and do all provision stepts.
 It depends on capistrano 2.
 [railscast](http://railscasts.com/episodes/347-rubber-and-amazon-ec2)
+[google group](https://groups.google.com/forum/?fromgroups#!forum/rubber-ec2)
+[wiki](https://github.com/rubber/rubber/wiki/Quick-Start)
 
 ~~~
 cat >> Gemfile << HERE_DOC
@@ -457,37 +459,134 @@ bundle exec rubber vulcanize complete_passenger_postgresql
 
 Vulcanize will copy
 [templates](https://github.com/rubber/rubber/blob/master/templates/complete_passenger/templates.yml)
-to `config/rubber` which you can customize, usually only `yml` files. Capistrano
-`.rb` files usually do not need to change, and also configuration files
-`role/*.conf` are uptodate and configurable.
-You can start configuring `config/deploy.rb` and `config/rubber/rubber.yml` to
-add AWS root security credentials and EC2 keypairs (which you download to home
-`~/.ec2` folder, rename without `pem` and create public version `ssh-keygen -y
--f ~/.ec2/aws_test > ~/.ec2/aws_test.pub`).
+to `config/rubber` which you can customize, usually only `yml` files.
+Capistrano recepies files `.rb`  usually do not need to change, and also
+configuration files `role/*.conf` are up-to-date.
+You can start configuring `config/rubber/rubber.yml` and `config/deploy.rb`.
 
-Than you can provision instance with
+In `rubber.yml` add AWS root security credentials (or another IAM user) to
+access API and EC2 keypairs to access machine.
+User security credentials you can export in env.
+Keypair you can download to home `~/.ec2` folder, rename without `pem` and
+change permissions `chmod 600 ~/.ec2/gsg-keypair`.
+No need to create public version `ssh-keygen -y -f ~/.ec2/aws_test >
+~/.ec2/aws_test.pub`). In case of `The key pair  does not exist
+(Fog::Compute::AWS::NotFound)` you should check if keypair is for same region.
+Also `image_id` should be some of the
+http://cloud-images.ubuntu.com/locator/ec2/ You can choose t2.micro since it
+Free tier applicable:
+
+~~~
+# config/rubber/rubber.yml
+
+# this should be one word and app will be in /mnt/myapp-production/releases/...
+app_name: myapp
+
+app_user: ubuntu
+
+cloud_providers:
+  aws:
+    access_key: "#{ ENV['AWS_ACCESS_KEY_ID'] }"
+    secret_access_key: "#{ ENV['AWS_SECRET_ACCESS_KEY'] }"
+    account: "#{ ENV['AWS_ACCOUNT_ID'] }"
+
+    key_name: us-east-1-gsg-keypair
+
+    image_type: t2.micro
+    # Ubuntu 16
+    image_id: ami-04169656fea786776
+
+prompt_for_security_group_sync: false
+
+# this is just default prompt
+staging_roles: "app,db:primary=true"
+~~~
+
+We use just web app and db role, not all roles:
+apache,app,collectd,common,db:primary=true,elasticsearch,examples,graphite_server,graphite_web,graylog_elasticsearch,graylog_mongodb,graylog_server,graylog_web,haproxy,mongodb,monit,passenger,postgresql,postgresql_master,web,web_tools
+Role `app` depends on `passenger` which depends on `apache`.
+Role `"db:primary=true"` depends on `postgresql` and `postgresql_master`
+I had a problem with `web` role since it depends on `haproxy`
+(`config/rubber/rubber-complete.yml`) which has some errors, so I remove that
+dependency:
+~~~
+# config/rubber/rubber-complete.yml
+  web: []
+  app: [passenger]
+~~~
+We could remove that role, but we need to assign security groups.
+
+That imlies to change passenger port to 80
+
+~~~
+# config/rubber/rubber-passenger.yml
+passenger_listen_port: 80
+passenger_listen_ssl_port: 443
+~~~
+
+For Ubuntu 16 (which is ) we need to remove package libapache2-mod-proxy-html
+for apache
+https://groups.google.com/forum/#!topic/rubber-ec2/fut5WZ6TicE
+
+~~~
+# config/rubber/rubber-apache.yml
+roles:
+  apache:
+    packages: [apache2, apache2-utils, libcurl4-openssl-dev, libapache2-mod-xsendfile]
+  web_tools:
+    packages: [apache2, apache2-utils, libcurl4-openssl-dev, libapache2-mod-xsendfile]
+~~~
+
+and remove apache2-mpm-prefork, apache2-prefork-dev for passenger and remove
+passenger version
+
+~~~
+# config/rubber/rubber-passenger.yml
+    packages: [libcurl4-openssl-dev, libapache2-mod-xsendfile, libapache2-mod-passenger]
+~~~
+
+and make sure it has the same ruby version which if going to be build in
+`config/rubber/deploy-setup.rb` You can use later ruby-build https://github.com/rbenv/ruby-build/releases and some of ruby versions `ruby-build --definitions`
+
+~~~
+# config/rubber/rubber-ruby.yml
+ruby_build_version: 20180822
+ruby_version: 2.3.3
+~~~
+
+For rails you need to uncommend `gem 'mini_racer', platforms: :ruby` in Gemfile.
+
+To provision you can run
 
 ~~~
 cap rubber:create_staging
-# this is the same as manually
-# cap rubber:create rubber:bootstrap deploy
 # Hit enter at prompts to accept the default value for params
+# this is the same as manually
+cap rubber:create
+cap rubber:bootstrap
+cap deploy
 # or you can set params in env var like
-# ALIAS=web001 ROLE=app cap rubber:create
+# ALIAS=web01 ROLES=app cap rubber:create
 ~~~
 
+This will create `config/rubber/instance-production.yml`. It will also reboot
+after creating.  `ALIAS` is name ie subdomain and can not contain underscore. If
+you run script again and change name it will add another InstanceItem `web02`
+(new EC2 machine). It will also update your `/etc/hosts` so you can access in
+browser with production.foo.com instead of ip address of newly created instance.
 You can remove (terminate) all EC2 instances with
 
 ~~~
 cap rubber:destroy
-# type production.foo.com
+# type 'web01' or your alias
 ~~~
 
 You can create additional instances:
 
 ~~~
 ALIAS=web01 ROLES=app cap rubber:create
-ALIAS=web01 ROLES=app cap rubber:bootstrap # this is idempotent
+ALIAS=web01 ROLES=app cap rubber:bootstrap # this is idempotent and it is
+# reading config/rubber/instance-production.yml for web01 InstanceItem
 cap deploy:cold
 ~~~
 
@@ -500,6 +599,48 @@ Note that if [current instance- file
 does not exists](https://github.com/rubber/rubber/blob/master/lib/rubber/recipes/rubber/utils.rb#L20)
 `rubber:create_staging` will create new instance using `staging_roles`. If that
 instance file exists, than roles from it will be used.
+
+Rails is running on port 7000 inside virtualbox. haproxy routes standard http
+80 port to rails 7000, so you can access site on <http://default.foo.com/>
+
+# ERRORS
+
+To see logs you can
+
+~~~
+ssh -i $PEM_FILE ubuntu@web01.foo.com
+tail -f /var/log/apache2/* /mnt/myapp-production/current/log/*
+# in another terminal
+curl localhost:7000
+~~~
+
+logs for other services you can find
+https://github.com/rubber/rubber/wiki/Troubleshooting
+or you can use existing task:
+
+~~~
+RAILS_ENV=vagrant cap rubber:tail_logs
+~~~
+
+If you see only dots, it is probably stuck on passenger
+
+~~~
+ * executing `rubber:passenger:serial_add_to_pool_reload_default'
+ ** Waiting for passenger to startup
+  * executing "sudo -p 'sudo password: '  bash -l -c 'while ! curl -s -f http://localhost:$CAPISTRANO:VAR$/ &> /dev/null; do echo .; done'"
+    servers: ["default.foo.com"]
+    [default.foo.com] executing command
+ ** [out :: default.foo.com] .
+ ** [out :: default.foo.com] .
+~~~
+
+Please check rails logs (passenger logs is in apache log) to see if there is any
+error on index page. Probably for first time you need to create database
+
+~~~
+cd /mnt/myapp-production/current
+bundle exec rake db:setup
+~~~
 
 ## Rubber Vagrant rubber provision
 
@@ -649,6 +790,17 @@ Host key verification failed.
 
 Than just remove the key from known_hosts and it will resume without errors.
 
+If you get errors like
+
+~~~
+Received disconnect from 54.210.7.47 port 22:2: Too many authentication failures
+Connection to production.redirection.xceednet.com closed by remote host.
+Connection to production.redirection.xceednet.com closed.
+~~~
+
+it might help to add username `ubuntu@`, like `ssh -i $PEM_FILE
+ubuntu@54.254.110.113`
+
 To add env secrets you can write them in a `keys.sh` file and source from
 `~/.bashrc` before return if not interactivelly. If you are using rubber than
 use system wide bash for example `/etc/profile` and put keys for example
@@ -657,37 +809,6 @@ use system wide bash for example `/etc/profile` and put keys for example
 ~~~
 # keys.sh
 export SECRET_KEY_BASE=52b57...
-~~~
-
-Rails is running on port 7000 inside virtualbox. hadproxy routes standard http
-80 port to rails 7000, so you can access site on <http://default.foo.com/>
-
-If you see only dots, it is probably stuck on passenger
-
-~~~
- * executing `rubber:passenger:serial_add_to_pool_reload_default'
- ** Waiting for passenger to startup
-  * executing "sudo -p 'sudo password: '  bash -l -c 'while ! curl -s -f http://localhost:$CAPISTRANO:VAR$/ &> /dev/null; do echo .; done'"
-    servers: ["default.foo.com"]
-    [default.foo.com] executing command
- ** [out :: default.foo.com] .
- ** [out :: default.foo.com] .
-~~~
-
-Please check rails logs (passenger logs is in apache log) to see if there is any
-error on index page.
-
-To see rubber setup logs, you can ssh and run
-
-~~~
-ssh root@192.168.70.10
-tail -f /var/log/apache2/* /mnt/your_app_name-vagrant/current/log/*
-~~~
-
-or you can use existing task:
-
-~~~
-RAILS_ENV=vagrant cap rubber:tail_logs
 ~~~
 
 To use different domain you need to update `domain: my-domain.vagrant` inside

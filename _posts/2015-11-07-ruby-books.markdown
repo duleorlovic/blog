@@ -692,13 +692,14 @@ upcase_words = words.map(&:upcase)
 
 * in rails there is
 [args.extract_options!](https://simonecarletti.com/blog/2009/09/inside-ruby-on-rails-extract_options-from-arrays/)
-modify args and return last hash (or empty hash if there is no hash).
+modify args and return last hash (or empty hash if there is no hash). Userfull
+if you need to pass attrs by position and as keyword arguments
 
   ~~~
   def my_method(*args)
     options = args.extract_options!
-    puts "Arguments:  #{args.inspect}"
-    puts "Options:    #{options.inspect}"
+    puts "Arguments (array):  #{args.inspect}"
+    puts "Options (hash):    #{options.inspect}"
   end
 
   my_method(1, 2, :a => :b)
@@ -838,7 +839,8 @@ end
 && user.name` can be written as `user&.name`. It is usefull with find_by for
 example `User.find_by(email: 'a@b.c')&.tap { |u| }`
 * In ruby 2.3 there is also `Array#dig` and `Hash#dig` so instead of
-`params[:a].try(:[], :b)` you can `params.dig(:a, :b)`
+  `params[:a].try(:[], :b)` you can `params.dig(:a, :b)`. when you need to take
+  value and not sure if provided (usually in some json response)
 * rails has hash except `my_hash.except :my_key` to ignore only my_key value and
 returns also the hash. Also oposite select is slice `my_hash.slice :my_key` to
 pick `{my_key: 1}` (also returns hash)
@@ -848,6 +850,8 @@ pick `{my_key: 1}` (also returns hash)
 [deep_transform_keys](https://apidock.com/rails/v4.0.2/Hash/deep_transform_keys)
 that can transform keys for your select `hash.deep_transform_keys{ |key|
 key.to_s.titleize }`
+* find in array by object property and return array of selected items
+  `array.select {|i| i.user == current_user }`. 
 * ruby has `Hash#invert` which will replace keys and values.
 * `map` and `collect` are the same methods
 * to check if string starts with or ends with some substring prefix sufix you
@@ -1137,8 +1141,8 @@ class String
 
   def colorize(string, return_result = false)
     last_index = 0
-    res = ""
-    while new_index = self[last_index..-1].index(string) do
+    res = ''
+    while (new_index = self[last_index..-1].index(string))
       res += self[last_index..last_index + new_index - 1] if last_index + new_index - 1 > -1
       res += string.red
       last_index = last_index + new_index + string.length
@@ -1149,38 +1153,40 @@ class String
   end
 end
 
-require 'minitest/autorun'
-class Test < Minitest::Test
-  def test_one_substring
-    s = 'My name is Duke.'
-    assert_equal "My name is \e[31mDuke\e[0m.", s.colorize("Duke", true)
-  end
-
-  def test_two_substrings
-    s = 'Duke is my name, Duke.'
-    assert_equal "\e[31mDuke\e[0m is my name, \e[31mDuke\e[0m.", s.colorize("Duke", true)
-  end
-
-  def test_no_found
-    s = 'My name is Duke.'
-    assert_equal "My name is Duke.", s.colorize("Mike", true)
-  end
-
-  def test_whole
-    s = 'My name is Duke.'
-    assert_equal "\e[31mMy name is Duke.\e[0m", s.colorize(s, true)
-  end
-
-  def test_return
-    s = 'My name is Duke.'
-    assert_equal nil, s.colorize('Duke')
-  end
-end
+# require 'minitest/autorun'
+# class Test < Minitest::Test
+#   def test_one_substring
+#     s = 'My name is Duke.'
+#     assert_equal "My name is \e[31mDuke\e[0m.", s.colorize("Duke", true)
+#   end
+#
+#   def test_two_substrings
+#     s = 'Duke is my name, Duke.'
+#     assert_equal "\e[31mDuke\e[0m is my name, \e[31mDuke\e[0m.", s.colorize("Duke", true)
+#   end
+#
+#   def test_no_found
+#     s = 'My name is Duke.'
+#     assert_equal "My name is Duke.", s.colorize("Mike", true)
+#   end
+#
+#   def test_whole
+#     s = 'My name is Duke.'
+#     assert_equal "\e[31mMy name is Duke.\e[0m", s.colorize(s, true)
+#   end
+#
+#   def test_return
+#     s = 'My name is Duke.'
+#     assert_equal nil, s.colorize('Duke')
+#   end
+# end
 ~~~
 
 * tripple equal `===` is operator that for ranges calls `.includes?`, for regexp
   calls `.match?`, for proc calls `.call`
-* fake objects could be generated from hash with `OpenStruct.new name: 'Dule'`.
+* fake objects could be generated from hash with:
+    `Struct.new(:name).new 'Dule'`
+    `OpenStruct.new name: 'Dule'`
   If you need recursively generated OpenStruct than you can convert to json and
   parse with Open struct class: `h = { a: 1, b: { c: 1 }};
   o=JSON.parse(h.to_json, object_class: OpenStruct); o.b.c # => '1'`. You can

@@ -191,7 +191,8 @@ Success:
 * *204 No Content* `:no_content` success delete, log out, sign out
 
 For errors we could respond with `head :not_found` (and hide sensitive
-information) but its better to send the reason and some info:
+information) but its better to send the reason and some info (`render json:
+{ message: 'Some problem', error: 401 }, status: 401`)
 
 * *303 See Other* when session create (login) email does not exists
 * *400 Bad Request*  `:bad_request` when we have `ParameterMissing`

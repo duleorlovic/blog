@@ -345,6 +345,7 @@ https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
 # Example of nice landing page with animation
 
 * https://scrumpy.io cat is working on laptop
+* http://taotajima.jp/works/ images and video on hover
 
 # Tips
 

@@ -229,7 +229,7 @@ function flash_appear(element, message, i) {
   if (i == undefined)
     i = 0;
   element.innerText = message.substring(0,i);
-  setTimeout(function(){ 
+   setTimeout(function(){ 
     if (i<message.length)
       flash_appear(element, message, i+1);
   }, FLASH_LETTER_STEP);

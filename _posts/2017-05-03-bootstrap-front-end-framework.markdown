@@ -221,9 +221,19 @@ well with `display: flex` elements, better is to use
 
 * `d-flex` class to convert to flexbox container.  Other flex helpers
   https://getbootstrap.com/docs/4.0/utilities/flex/
-
   for example to enable wrap use `d-flex flex-wrap`
 
+* `dl-horizontal` can be replaces with
+  ~~~
+  <dl class='row justify-content-start'>
+    <dt class='col-sm-2'>Sign In Count</dt>
+    <dd class='col'><%= @user.sign_in_count %></dd>
+    <dt class='w-100'></dt>
+    <dt class='col-sm-2'>Last Sign In at</dt>
+    <dd class='col'><%= @user.last_sign_in_at.to_s :short %></dd>
+    <dt class='w-100'></dt>
+  </dl>
+  ~~~
 
 # Rails
 

@@ -12,11 +12,39 @@ need to `touch tmp/caching-dev.txt` AND to comment out `config.cache_store =
 `ActiveSupport::Cache::FileStore`. Instead of file you should use
 `dalli+memcached` or `redis`  (you already have redis you use background jobs
 like Sidekiq).
+Another way to start caching is
+
+~~~
+rails dev:cache
+~~~
+
 Filestore will create files on `tmp/cache/:rand/:rand/cache_key` so you can find
 them `ls -R tmp/cache/`. If cache_key is array, it is joined with `/`.
 On heroku `heroku run bash` I do not see cache files `ls tmp/cache` probably
 because heroku is read only system (only buildpack can add stuff) so it is
 better to use memcached.
+
+# Redis cache store
+
+In Rails 5.2 you can use
+
+~~~
+# Gemfile
+gem 'hiredis'
+gem 'redis', require: ['redis', 'redis/connection/hiredis']
+~~~
+
+~~~
+# config/application/environments/production.rb
+# config/application/environments/development.rb
+config.cache_store = :redis_cache_store
+~~~
+
+In coonsole you can check keys and values
+
+~~~
+pp Rails.cache.redis.keys
+~~~
 
 # Install memcached
 
@@ -75,7 +103,7 @@ end
 HERE_DOC
 ~~~
 
-# Install using rubber
+## Install memcached using rubber
 
 Read about [capistrano and rubber]({{ site.baseurl }}
 {% post_url 2016-09-07-cap3-capistrano-deployment-rubber-provision %}) how to
@@ -126,7 +154,7 @@ CACHE.set("key", "value", 180) # last option is expiry time in seconds
 CACHE.get("key") 2
 ~~~
 
-# Test if it is working
+# Manual check if it is working
 
 You can check from bash if memcached service is running
 
@@ -161,7 +189,7 @@ connect using that domain name. So you need to change
 -l 0.0.0.0
 ~~~
 
-You can test in console if properly enabled
+You can check in console if properly enabled
 
 ~~~
 Rails.cache.class
@@ -198,6 +226,8 @@ stats](http://www.pal-blog.de/entwicklung/perl/memcached-statistics-stats-comman
 
 # Fragment caching
 
+Main usage is like this
+
 ~~~
 <% cache item do %>
   bla
@@ -215,6 +245,9 @@ template digest will invalidate cache)
   My todos list
 <% end %>
 ~~~
+
+Note that you should not use same array of keys since it will use multiple
+times. So if you have to use on same page, use different first string.
 
 You can use conditional caching you can use `cache_if`
 

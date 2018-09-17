@@ -185,7 +185,9 @@ end
   * `type: Integer` define property type in ruby: integer, float, string, time,
   date, datetime, boolean, BigDecimal. Istead of DateTime, if you need some
   expensive query, better is to use `type: Integer` and store as unix timestamp
-  * `serialize: :name` so we can put any hash or array
+  * I have some problems with `serialize: :name` so I used plain old `user.name
+  = { a: 3}.to_json` so I save hash or array to database. When I load, I need
+  to deserialize to that object `JSON.parse user.name`
 
 * `enum status: [:draft, :published]` maps integer in db to strings in rails
   * you can use `user.draft!`, `user.draft?` or `User.draft`
@@ -228,12 +230,18 @@ end
   matched. `unique: { on: [keys] }` is looking only on keys to determine if
   already exists.
   * eager loading is implicit, but if you need explicit you can use
-  `.with_associations(:tags, :comments)` to generate `COLLECT()`
+  `.with_associations(:tags, :comments)` to generate `COLLECT()`. For nested you
+  can use hash and array notation: https://github.com/duleorlovic/premesti.se/blob/master/app/controllers/admin/users_controller.rb#L7
+  ~~~
+    @users = User.all.with_associations moves: { from_group: [:location], to_groups: [:location] }
+  ~~~
+
+  CRUD associations
 
   ~~~
+  Comment.create post: post1, text: 'text'   # create comment and relationship
   post.comments << comment3             # Creates new relationship
   post.comments.create comment3, posted_by: 'me' # text property on relationship
-  Comment.create text: '', post: post1  # create comment and relationship
   # can not create like post1.comments.new text: '' since comment.post will not
   # be defined
 
@@ -253,9 +261,26 @@ end
   post.comments.each_rel.map &:neo_id
   post.comments.each_with_rel { |node, rel| }
 
+  # you can combine several associations
+  post.comments.user.company # will return all companies for comments
+
+  # find does not work if argument is AssociationProxy so you should use map
+  # &:uuid
+  # find_by or where has some problem if argument is array, so I use another
+  # association and find [ids]
+  to_location = move.to_groups.where(location: some_locations)
+  to_location = move.to_groups.location.find(some_location.map(&:uuid)).first
+
   # custom query_as match pluck
-  post.query_as(:p).match('(p)-[rel1:CONTAINS]->(n2)').pluck(:rel1)
   post.query_as(:p).match('(p)-[rel1:CONTAINS]->(n2)').where('rel1.on = true').pluck(:rel1)
+
+  # with_associations and order
+  @users = User.as(:u)
+           .with_associations(moves: { from_group: [:location], to_groups: [:location] })
+           .order('u.last_sign_in_at DESC')
+
+  # to find nodes that does not have relationship
+  Move.query_as(:m).match('(m)').where('NOT (m)-[:WANTS]-()').pluck :m
   ~~~
 
 * when comment is destroyed than you can not get it's post, it is better to get
@@ -271,6 +296,7 @@ end
 * callbacks like `before_save`
 
 Relationships is defined <http://neo4jrb.readthedocs.io/en/9.0.x/ActiveRel.html>
+Type name will be the same as class name uppercased (`:KNOWS`)
 
 ~~~
 class Knows
@@ -279,7 +305,15 @@ class Knows
   to_class :any
   property :created_at, type: DateTime
   property :updated_at, type: DateTime
+  creates_unique
 end
+
+# create
+Knows.create from_node: u, to_node: u
+# fetch retreive
+u.users.each_rel.to_a
+u.users.each_with_rel.to_a
+
 ~~~
 
 * it is not able to access relationships directly, always using a node
@@ -512,17 +546,21 @@ by nodes. SecureRandom uuid is generated in migration `rake
 neo4j:generate_schema_migration[constraint,Model,uuid]` and `rake neo4j:migrate`
 
 Raw query can be done using `Neo4j::ActiveBase.current_session.query('MATCH (n)
-RETURN n LIMIT {limit}', limit: 10)`.
+RETURN n LIMIT {limit}', limit: 10)` or when searching for maximum
+
+
 But it is better to use `ActiveNode` finders:
 ~~~
-# find by id_property 
+# find by id_property
 User.find my_uuid
 # find by any property property
 User.find_by name: 'Dule'
 # find by associations
 User.find_by from_group: Group.last
-# find_by supports only single value event it is has_many
+# find_by supports only single value even it is has_many
 User.find_by to_groups: Group.last
+# you can use where with associations
+User.all.where to_groups: Group.last
 ~~~
 
 Queries can be chained in 3 ways: `Model.all`, `Model.association`,
@@ -542,7 +580,11 @@ it `user.created_assets.categories(:category).pluck('category.name',
 
 Using `where` can be with string or with hash. If you want to target specific
 node you can use string like `where("node.uuid = #{n.id}")` or hash `where(node:
-{ neo_id: n.id })` or `match_nodes(node: n)`
+{ neo_id: n.id })`, or using parms `where('node.uuid =
+{node_id}').params(node_id: n.id)` or `match_nodes(node: n)`.
+Note that you have to use `uuid` since `id` in cypher does not exists. For a
+list you do not need to wrap in square brackets `where('node.uuid IN
+{node_ids}').params(node_ids: @nodes.map(&:uuid))`.
 https://github.com/neo4jrb/neo4j-core/blob/8.0.x/spec/neo4j-core/unit/query_spec.rb#L373
 https://github.com/neo4jrb/neo4j-core/blob/8.0.x/spec/neo4j-core/unit/query_spec.rb#L474
 
@@ -697,6 +739,9 @@ Error
 Neo4j::Core::CypherSession::CypherError:   Cypher error:
   Neo.DatabaseError.Transaction.TransactionStartFailed: The database has encountered a critical error, and needs to be restarted. Please see database logs for more details.
 ~~~
+
+There is a problem when there exists a node when searching by relation but does
+not exists when searching by `n.uuid`
 
 
 

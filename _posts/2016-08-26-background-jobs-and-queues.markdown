@@ -12,7 +12,7 @@ just log 'Hi'.
 
 ~~~
 # app/jobs/my_todo_job.rb
-class MyTodoJob < ActiveJob::Base
+class MyTodoJob < ApplicationJob
   queue_as :critical
 
   def perform(*args)
@@ -22,6 +22,43 @@ class MyTodoJob < ActiveJob::Base
     sleep 5
     Rails.logger.info "MyTodoJob end"
   end
+end
+~~~
+
+or if you can to put logic inside job you can use attr_reader
+(https://youtu.be/wXaC0YvDgIo?list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx&t=289)
+
+~~~
+# app/jobs/person/remove_inaccessible_records_job.rb
+class Person::RemoveInaccessibleRecordsJob < ApplicationJob
+  queue_as :background
+
+  attr_reader :person, :bucket
+
+  def perform(person, bucket)
+    @person, @bucket = person, bucket
+
+    unless presons.buckets.include? bucket
+      remove_inaccessible_records
+    end
+  end
+
+  private
+
+    def remove_inaccessible_records
+      Person::UnsubscribeFromBucketJob.perform_now(person, bucket)
+
+      if person.user
+        remove_inaccessible_readings
+        remove_inaccessible_bookmarkings
+      end
+
+      remove_inaccessible_email_dropboxes
+    end
+
+    def remove_inaccessible_readings
+      person.user.readings.for_bucket(bucket).find_each(batch_size: 100, &:destroy)
+    end
 end
 ~~~
 
@@ -63,6 +100,7 @@ Add `gem 'sidekiq'` to Gemfile.
 Sidekiq is faster but requires thread safe code.
 
 You need to install redis server, which is simply adding Heroku redis addon.
+https://elements.heroku.com/addons/heroku-redis
 Since it allows only 20 connections you need to limit connections for sidekiq.
 It requires usually concurrency + 5 connections to Redis.
 https://github.com/mperham/sidekiq/issues/117
@@ -119,12 +157,15 @@ Sidekiq::Queue.new('mailers').size
 Sidekiq::Queue.new('my_app_mailers').size
 ~~~
 
-To see dashboard add two lines to routes
+To see dashboard add those lines to routes (note that we require current_user to
+be admin
 
 ~~~
 require 'sidekiq/web'
 Rails.application.routes.draw do
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 ~~~
 
 Testing sidekiq https://github.com/mperham/sidekiq/wiki/Testing
@@ -532,9 +573,9 @@ You can see differences between queue adapters
 There is test helpers like `assert_performed_with` http://api.rubyonrails.org/classes/ActiveJob/TestHelper.html#method-i-assert_performed_with
 example of use is
 <https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb>
-For mailers Rails uses
+To send email in background Rails use mailers
 [ActionMailer::DeliveryJob](https://blog.bigbinary.com/2018/01/15/rails-5-2-allows-mailers-to-use-custom-active-job-class.html)
-so to test in minitest
+so to test sending in minitest
 
 ~~~
 require 'test_helper'
@@ -542,9 +583,9 @@ require 'test_helper'
 class ProductTest < ActiveJob::TestCase
   test 'billing job scheduling' do
     # if you want to test outcome ie how job is performed
-    # perform_enqueued_jobs only: ActionMailer::DeliveryJob do
+    perform_enqueued_jobs only: ActionMailer::DeliveryJob do
     # or you can assert how it is called `_with`
-    # assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
+    assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
     # or assert and perform
     assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
       product.charge(account)
@@ -553,7 +594,11 @@ class ProductTest < ActiveJob::TestCase
 end
 ~~~
 
-IF you use Delayed::Job you can test in three ways:
+To rescue from exception in background sending emails you can reopen DeliveryJob
+anywhere, for example in ApplicationMailer. If you want to `rescue_from` in some
+other non-rails class you can `include ActiveSupport::Rescuable`
+
+If you use Delayed::Job you can test in three ways:
 First is `Delayed::Worker.delay_jobs = true`
 
 ~~~
@@ -564,6 +609,13 @@ end.to change { Delayed::Job.count }.by(1)
 expect do
   Delayed::Worker.new.work_off
 end.to change(Delayed::Job, :count).by(-1)
+~~~
+
+Or you can expect specific job
+
+~~~
+expect do
+end.to have_enqueued_job SendSmsJob
 ~~~
 
 Second is `Delayed::Worker.delay_jobs = false` so job is performed inline ie

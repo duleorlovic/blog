@@ -70,3 +70,17 @@ https://developers.google.com/api-client-library/ruby/apis/gmail/v1
 
 Someone can break to your account simple by adding his email as recovery email.
 Than he can easily change password.
+
+# ReCaptcha
+
+Register on <https://www.google.com/recaptcha> and you can use in in javascript
+`<div class="g-recaptcha" data-sitekey="6LdrgFQUAAAAALvyQvT3fpoagmnb-ik9f73Y0Zaz"></div>`
+but on rails and devise just follow
+<https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise>
+and gem <https://github.com/ambethia/recaptcha>
+
+It is not possible to edit configuration using api
+https://stackoverflow.com/questions/38197959/how-to-add-redirect-uris-programmatically
+so use selenium script to update redirect URIs. You can use 50 domain with one
+key.
+

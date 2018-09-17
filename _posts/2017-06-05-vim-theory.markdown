@@ -15,8 +15,8 @@ maping keys `:noremap <newkeys> <keynames>`
 variant `noremap`, `nnoremap` ... so it use default meanings of keynames
 * you can map control CTRL key, for example `:map <c-d> dd`
 * do not use comments `"` in mapping
-* `nmap` normal, `vmap` visual, `imap` insert, `omap` operator, `cmap` command
-mode.
+* `nmap` normal, `vmap` visual, `imap` insert, `omap` operator, `cmap` command,
+  `xmap` (do not know) mode.
 Dor example in insert mode `:imap <esc>ddi`
 * remove mappings `:unmap <key>` or `nunmap`
 * you can map two keys, for example `:map -d dd`

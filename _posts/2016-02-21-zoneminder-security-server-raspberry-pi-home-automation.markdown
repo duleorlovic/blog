@@ -9,7 +9,6 @@ On my board PCB says: `Raspberry Pi (c)2011.12` so [it
 is](http://www.raspberry-projects.com/pi/pi-hardware/raspberry-pi-pcb-versions)
 Pi 1 Model B Revision 2.0 (512MB).
 `cat /proc/cpuinfo` says it is Hardware revision 000e.
-[Pinouts](http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto)
 
 Start with [NOOBS](https://www.raspberrypi.org/downloads/noobs/) (which is based
 on Raspbian) to create SD card.
@@ -143,6 +142,8 @@ Check if ruby is already installed in latest Raspian.
 
 ~~~
 sudo apt-get install ruby
+# this is needed for eventmachine gem
+sudo apt-get install ruby-dev
 ruby -v
 ~~~
 
@@ -156,7 +157,7 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'sinatra-param'
 gem 'pi_piper'
-HER_DOC
+HERE_DOC
 
 bundle
 # I got error installing gems
@@ -212,6 +213,10 @@ Errors
 # you need to open pin port again, but before that you need to release
 # https://github.com/jwhitehorn/pi_piper/issues/30
 File.open("/sys/class/gpio/unexport", "w") { |f| f.write("#{pin.pin}") }
+# or
+gpio unexportall
+# to see all used pins
+gpio exports
 ~~~
 
 # Bash
@@ -241,6 +246,8 @@ sudo apt-get install wiringpi
 ~~~
 
 <https://projects.drogon.net/raspberry-pi/wiringpi/the-gpio-utility/>
+
+[Pinouts](http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto)
 
 ~~~
 gpio readall
@@ -587,7 +594,7 @@ Zoneminder ONVIF rtsp://admin:admin@192.168.3.5:554/cam/realmonitor?channel=1&su
 
 # IP Dom
 
-KIP-200SHT30H
+KIP-200SHT30H (on web page it shows Herospeed)
 <http://www.elementa.rs/proizvod/57087/ip-dom-kamera>
 Objektiv: varifokalni, 2.8-12mm
 Horizontalni ugao vidljivosti: 21° do 81°
@@ -618,3 +625,7 @@ Battery needs charge when it is below 12.5V in open circuit. Battery is fully
 discarged when is it below 9.5V (do not go this far). Battery is around 2.1V per
 cell when is fully charged (12.7V for 12V battery). Wait for 12hours after
 charging to measure open circuit.
+
+# Solar food dehydrator
+
+https://www.youtube.com/results?search_query=solar+food+dehydrator

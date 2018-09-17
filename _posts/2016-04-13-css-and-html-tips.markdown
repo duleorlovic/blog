@@ -258,6 +258,11 @@ Instead of scss
     visibility: visible;
   }
 }
+
+// add class show to stay visible when not hovering, bootstrap dropdown does dat
+.show-on-hover-target.show {
+  visibility: visible;
+}
 ~~~
 
 ~~~
@@ -329,6 +334,7 @@ Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/
 # Flex
 
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background
+https://medium.com/@js_tut/flexbox-the-animated-tutorial-8075cbe4c1b2
 
 Parent element if flex container, and children as flex items. `flex-direction`
 determines main axis on which items will be laid out from `main-start`
@@ -360,7 +366,8 @@ on items https://www.w3.org/TR/css-flexbox-1/#flexibility
 * `flex-grow: 0` ability to grow as proportion. If one has 2 and all others have
   1, first will be twice bigger
 * `flex-shrink: 1`
-* `flex-basis: 20% | auto` default size before remaining space is distributed.
+* `flex-basis: 20% | auto` default size before remaining space is distributed
+  (you this if you want max-size: 20%)
   This three items have shorthand `flex: 0 1 auto`. So use this if you want
   items to use space between (on container clear `justify-content`)
   `flex: auto` is eq to `flex: 1 1 auto` bigger item will take bigger space,
@@ -673,5 +680,8 @@ link_to "+123-123", "tel:123123" %>`)
   You can style different states of defails (`details[open]` and
   `details:not[open]`) https://codepen.io/jh3y/pen/mLaXRe
 * text input can have focus on page load with  `<input autofocus>`
+  (`f.text_field :name, autofocus: true` in rails)
 
-
+* prevent auto completing text inputs can be prevented with `<%= text_field_tag
+* :other_reason, nil, autocomplete: 'off' %>` (note is should be 'off' not
+'false'

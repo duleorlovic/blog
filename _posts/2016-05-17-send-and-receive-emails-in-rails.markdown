@@ -214,6 +214,11 @@ Just put in your Gemfile under development `gem "letter_opener"` and in
 
 # Style
 
+[Official gmail styles](https://developers.google.com/gmail/design/css) supports
+`<style>` in head and media queries but when you forward email than css styles
+will be gone. Better is to use gem which will copy and duplicate all styles from
+head to inline styles and that will support more clients (not just gmail).
+
 For easier styling, you should use *roadie* gem that will generate all inline
 style from your head styles.
 
@@ -223,13 +228,32 @@ gem 'roadie'
 gem 'roadie-rails'
 ~~~
 
+You need to include mixing to each mailer (including in ApplicationMailer does
+not help)
+
+~~~
+# app/mailers/my_mailer.rb
+class MyMailer < ActionMailer::Base
+  include Roadie::Rails::Automatic
+end
+
+# or include in ApplicaitionMailer and use roadie_mail
+
+class ApplicationMailer < ActionMailer::Base
+  include Roadie::Rails::Mailer
+end
+
+class MyMailer < ActionMailer::Base
+  def welcome(user)
+    roadie_mail to: user.email
+  end
+end
+~~~
+
 Another solution is `gem 'premailer-rails'`
 <https://github.com/fphilipe/premailer-rails> which can also generate text part
 so you do not need to maintain it. Just add the gem and you are good to go.
 
-[Official gmail styles](https://developers.google.com/gmail/design/css) supports
-`<style>` in head and media queries, but this gem will support more clients
-since it will copy and duplicate all styles from head to inline styles.
 
 To preview emails use generated preview files in
 `test/mailers/previews/my_mailer_preview.rb` or create new file:
@@ -539,3 +563,7 @@ class ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 end
 ~~~
+
+# Click link tracking in emails
+
+https://github.com/ankane/ahoy_email

@@ -2,9 +2,45 @@
 layout: post
 ---
 
-# Continuous Delivery
+# Other examples
+
+* <https://jenkins.io/> https://github.com/jenkinsci/jenkins ci in java
+* others <https://news.ycombinator.com/item?id=12703121>
+
+# Flynn
+
+<https://flynn.io/>
+
+Install
+
+~~~
+L=/usr/local/bin/flynn && curl -sSL -A "`uname -sp`" https://dl.flynn.io/cli | zcat >$L && chmod +x $L
+~~~
+
+# Fastline Ci
+
+<https://github.com/fastlane/ci> Open source, self hosted, mobile optimized CI
+powered by fastlane (opensource tools for building mobile apps). I like it
+because it is ruby.
+It requires Fastfile
+
+
+# Gocd
 
 https://www.gocd.org/
+
+After downloading client and server dev file, double click and install, you can
+start with https://docs.gocd.org/current/installation/install/server/linux.html#debian-based-distributions-ie-ubuntu
+
+~~~
+sudo /etc/init.d/go-server start
+# Started Go Server on http://main:8153/go
+
+sudo /etc/init.d/go-agent start
+# http://localhost:8153/go
+~~~
+
+Quite complicated...
 
 # Pronto
 
@@ -41,5 +77,5 @@ You need to set up target commit (default is master) to which it needs to
 compare current HEAD. It compare only changes that occurs between those two
 (changes on master are ignored).
 
-<https://christoph.luppri.ch/articles/2017/03/05/how-to-automatically-review-your-prs-for-style-violations-with-pronto-and-rubocop/?utm_source=rubyweekly&utm_medium=email>
+<https://christoph.luppri.ch/articles/2017/03/05/how-to-automatically-review-your-prs-for-style-violations-with-pronto-and-rubocop>
 to find last pull request id

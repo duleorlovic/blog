@@ -2,6 +2,8 @@
 layout: post
 ---
 
+# Creating new app
+
 <https://help.shopify.com/api/getting-started> On <https://partners.shopify.com>
 create account and development store, for example
 <https://duleorlovic-test.myshopify.com/>.
@@ -22,7 +24,8 @@ because if we use `http://159abd37.ngrok.io` there will be a warning:
 https://159abd37.ngrok.io ; expecting http://159abd37.ngrok.io or subdomain
 thereof`
 
-Install <https://developer-tools.shopifyapps.com/install> to load sample data.
+Install <https://developer-tools.shopifyapps.com/install> to load sample
+generated data.
 
 
 Create new rails and add gem <https://github.com/Shopify/shopify_app>
@@ -239,7 +242,7 @@ should skip
   skip_before_action :login_again_if_different_shop, only: [:index]
 ~~~
 
-Anyway for liuid you should set header and render without layout
+Anyway for liquid you should set header and render without layout
 ~~~
     render layout: false, content_type: 'application/liquid'
 ~~~
@@ -320,12 +323,11 @@ https://help.shopify.com/api/tutorials/application-proxies#proxy-response
 
 # Apps
 
+MULTI VENDOR LOKAL SELLER
 * multistore forum discussion: https://ecommerce.shopify.com/c/shopify-discussion/t/multiple-domain-under-one-account-140477
 * one store multi users/vendors discussion https://ecommerce.shopify.com/c/shopify-discussion/t/user-level-accounts-366021
 * supplier offering storefronts to distributors/end_stores. not possible with
 one store since price should be different to each distributor.
-
-MULTI VENDOR LOKAL SELLER
 
 
 # Theme customizations with ThemeKit
@@ -419,6 +421,14 @@ to generate something like
   <input required class="required" type="radio" name="properties[Layout]" value="right"> <span>right</span><br>
 </p>
 ~~~
+
+# Publishing your app
+
+You should attract your merchants to make a review and put stars on you app.
+For example: We see you're seeing success with our app we'd love it if you left
+us a review [link].
+When someone is talking to customer support and have good experience, customer
+support says: Hey we'd love itif you leave a review.
 
 # Opensource examples
 

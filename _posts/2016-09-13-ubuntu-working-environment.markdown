@@ -163,7 +163,8 @@ ping -c 1 www.google.com
 ping -c 1 this.is.a.test.loc
 ~~~
 
-You can check your domain name resolutions with `nslookup`
+You can check your domain name resolutions with mxtoolbox.com or domain settings
+with command `nslookup`
 
 ~~~
 nslookup asd.loc
@@ -305,6 +306,8 @@ To enable ftp write you need to uncomment `sudo vi /etc/vsftpd.conf`
 folder (owner should be trkftp user).
 
 # Ngrok
+
+Also https://localtunnel.github.io/www/
 
 You can create local tunnel with ngrok.
 

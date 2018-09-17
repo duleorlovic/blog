@@ -90,6 +90,13 @@ rspec spec/simple_test_spec.rb
 rspec -b # to show full backtrace in case of exceptions
 ~~~
 
+When you want to stop on first failed test (and not to wait whole test suite to
+finish) you can use
+
+~~~
+rspec spec --fail-fast
+~~~
+
 Rspec examples are written using `describe` (ExampleGroup, you can nest multuple
 describe blocks), `let` statements and `it` blocks (Example). If you need to
 assert count you can use `before {}` (it is `before(:example)` and is run after
@@ -593,6 +600,12 @@ RSpec.describe "OAUTH" do
     expect(response.status).to eq 401
     expect(JSON.parse(response.body)["access_token"]).to be_nil
   end
+
+  it 'redirect' do
+    post '/'
+    expect(response).to redirect_to error_path
+    follow_redirect!
+  end
 end
 
 expect(response.body).to include 'Logout'
@@ -785,7 +798,8 @@ wrapper for `ActiveSupport::TestCase`. Every example is in separate
 You can use
 [instance_double](https://www.relishapp.com/rspec/rspec-rails/v/3-5/docs/model-specs/verified-doubles)
 If not defined, `subject` is an instance of the model.
-Usually have following parts: attributes, relationships, validations.
+Usually have following parts: attributes, relationships, validations,
+hooks(callbacks), scopes and other methods.
 
 [model cheatsheet](https://gist.github.com/kyletcarlson/6234923)
 
@@ -1531,6 +1545,25 @@ require 'rspec/expectations'
 RSpec::Matchers.define :equal_when_sorted_by_id do |expected|
   match do |actual|
     actual.sort_by(&:id) == expected.sort_by(&:id)
+  end
+end
+~~~
+
+For flash messages in feature tests
+
+~~~
+# spec/a/flash_message_feature_helpers.rb
+# instead of expect(page).to have_selector 'div', text: 'Flash message', visible: false
+# you should use: expect(page).to have_flash_message 'Flash message'
+
+require 'rspec/expectations'
+
+RSpec::Matchers.define :have_flash_message do |expected|
+  match do |page|
+    expect(page).to have_selector 'div', text: expected, visible: false
+  end
+  failure_message do |page|
+    "expected find text '#{expected}' in #{page.body}"
   end
 end
 ~~~
@@ -2393,7 +2426,7 @@ end
 # Recomended is to use block syntax since
 Timecop.freeze(Date.today + 30)
 Time.now # will always return same value
-Time.now # will always return same value event in different test
+Time.now # will always return same value even in different test
 Timecop.return
 
 # or travel with block syntax
@@ -2582,6 +2615,7 @@ client and server, **fake server** returns a fake response
 
 ## Webmock VCR
 
+VCR records **outgoing** HTTP requests.
 After installing and requiring [webmock](https://github.com/bblimke/webmock)
 
 ~~~
@@ -2641,12 +2675,8 @@ end
 ~~~
 
 Last reponse is repeated infinitely (times) and you can specify number of times
-given response should be returned. If you need to set expecation on how many
-times request has been made:
-
-~~~
-
-~~~
+given response should be returned. You can set expecation on how many
+times request has been made.
 
 VCR is using cassetes so you do not need to manualy stub requests using curl.
 

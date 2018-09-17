@@ -735,11 +735,11 @@ You can generate random colors in javascript
   var backgroundColor = color + 'A0'
 ~~~
 
-If you need same colors based on integer numbers you can create a deterministic
-function. I use ruby since it is easier than javascript
+If you need same distinct colors based on integer numbers you can create a
+deterministic function. I use ruby since it is easier than javascript
 
 ~~~
-  def add_colors(data)
+  def add_colors(datasets)
     # http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
     h = 0.5
     golden_ratio_conjugate = 0.618033988749895

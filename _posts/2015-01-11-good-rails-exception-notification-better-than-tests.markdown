@@ -52,9 +52,19 @@ cat > config/initializers/exception_notification.rb << HERE_DOC
 require 'exception_notification/rails'
 
 class Notify
-  def self.exception(message, data = nil)
+  # Send notification using string as subject and pass additional argumets (it
+  # will be shown as array) or options (shown as hash) for example:
+  # Notify.message 'some_problem', customers_url, email: customer.email
+  def self.message(message, *args)
+    data = {}
+    # put first args so it is shown at beginning
+    data[:args] = args if args.present?
+    data.merge! args.extract_options!
     ExceptionNotifier.notify_exception(Exception.new(message), data: data)
+    # return true so we could use: Notify.message 'hi' and return unless continue?
+    true
   end
+
 
   def self.exception_with_env(message, args)
     # set env to nil if you do not want sections: Request, Environment, Session
@@ -144,7 +154,7 @@ if (receivers = Rails.application.secrets.exception_recipients).present?
     #   e.ignore_please = true
     #   raise e
     # end
-    config.ignore_if(&:ignore_please)
+    config.ignore_if { |e| e.respond_to?(:ignore_please) && e.ignore_please }
 
     # Notifiers ================================================================
 
@@ -195,10 +205,10 @@ to have some pages for test if this notification works. First create routes
 # config/routes.rb
 get 'sample-error', to: 'pages#sample_error'
 get 'sample-error-in-javascript', to: 'pages#sample_error_in_javascript'
-get 'sample-error-in-javascript-ajax', to:
-'pages#sample_error_in_javascript_ajax'
+get 'sample-error-in-javascript-ajax', to: 'pages#sample_error_in_javascript_ajax'
 post 'notify-javascript-error', to: 'pages#notify_javascript_error'
 get 'sample-error-in-resque', to: 'pages#sample_error_in_resque'
+get 'sample-error-in-sidekiq', to: 'pages#sample_error_in_sidekiq'
 get 'sample-error-in-delayed-job', to: 'pages#sample_error_in_delayed_job'
 {% endhighlight %}
 
@@ -234,7 +244,7 @@ env: request.env, email_prefix: 'just to notify that', data: { current_user:
 current_user });`.
 Here is what I use:
 
-{% highlight ruby %}
+~~~
 # app/controllers/pages_controller.rb
 class PagesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i[
@@ -303,7 +313,89 @@ class TaskWithError
     raise 'This is sample_error_in_resque'
   end
 end
-{% endhighlight %}
+~~~
+
+# Delayed job
+
+~~~
+# config/initializers/delayed_job.rb
+Delayed::Worker.destroy_failed_jobs = false
+Delayed::Worker.max_attempts = 3
+Delayed::Worker.delay_jobs = !Rails.env.test?
+
+### RAILS 5
+module CustomFailedJob
+  def handle_failed_job(job, error)
+    super
+    ExceptionNotifier.notify_exception(error, data: {job: job})
+  end
+end
+
+class Delayed::Worker
+  prepend CustomFailedJob
+end
+
+### Rails 4
+
+Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
+
+# when you change this file, make sure that you restart delayed_job process
+# bin/delayed_job stop && bin/delayed_job start
+# probably DelayedJob is configured to retry 3 times, so you will receive
+# notification emails
+# do not rescue in worker because no notification email will be send
+# http://andyatkinson.com/blog/2014/05/03/delayed-job-exception-notification-integration
+
+class Exception
+  attr_accessor :ignore_please
+end
+
+# Chain delayed job's handle_failed_job method to do exception notification
+Delayed::Worker.class_eval do
+  def handle_failed_job_with_notification(job, error)
+    handle_failed_job_without_notification(job, error)
+
+    begin
+      # ExceptionNotifier.notify_exception(error) do not use standard notification, use delayed_job partial
+      return if error.ignore_please && job.attempts < Delayed::Worker.max_attempts
+      env = {}
+      env['exception_notifier.options'] = {
+        sections: %w(backtrace delayed_job),
+        email_prefix: "[Xceednet Delayed Job Exception] ",
+      }
+      env['exception_notifier.exception_data'] = {job: job}
+      ExceptionNotifier::Notifier.exception_notification(env, error).deliver
+
+    # rescue if ExceptionNotifier fails for some reason
+    rescue Exception => e
+      Rails.logger.error "ExceptionNotifier failed: #{e.class.name}: #{e.message}"
+      e.backtrace.each do |f|
+        Rails.logger.error "  #{f}"
+      end
+      Rails.logger.flush
+    end
+  end
+
+  alias_method_chain :handle_failed_job, :notification
+end
+~~~
+
+If you want to ignore specific timeout exception than use something like
+
+~~~
+# app/jobs/send_sms_job.rb
+class SendSmsJob < ActiveJob::Base
+  queue_as :webapp
+
+  rescue_from Net::ReadTimeout, SocketError do |e|
+    e.ignore_please = true
+    # re-raise so job is retried
+    raise e
+  end
+  def perform()
+  end
+end
+~~~
 
 ~~~
 # app/jobs/sample_error_job.rb
@@ -312,6 +404,27 @@ class SampleErrorJob < ActiveJob::Base
 
   def perform
     raise 'This is sample_error_in_delayed_job'
+  end
+end
+~~~
+
+# Sidekiq
+
+~~~
+# app/jobs/task_with_error_job.rb
+class TaskWithErrorJob < ApplicationJob
+  queue_as :default
+  def perform
+    raise 'This is sample_error_in_sidekiq'
+  end
+end
+
+# config/initializers/exception_notification.rb
+module ExceptionNotification
+  ::Sidekiq.configure_server do |config|
+    config.error_handlers << proc { |ex, context|
+      ExceptionNotifier.notify_exception(ex, data: { sidekiq: context })
+    }
   end
 end
 ~~~
@@ -525,7 +638,7 @@ code. In this case you need to stub it so it is not included twice
   //= stub exception_notification
 
   # config/initializers/assets.rb
-  config.assets.precompile += %w[exception_notification.js]
+  Rails.application.config.assets.precompile += %w[exception_notification.js]
   ~~~
 
 Do not forget to define javascript receivers
@@ -551,7 +664,28 @@ Content-Security-Policy: default-src
 
 # Custom Templates
 
-You can also set some nice looking text with [custom
+You can change existing sections like https://github.com/smartinez87/exception_notification/blob/master/lib/exception_notifier/views/exception_notifier/_session.text.erb
+by creating same file like
+
+~~~
+# app/views/exception_notifier/_session.text.erb
+* session id: <%= @request.ssl? ? "[FILTERED]" : (raw (@request.session['session_id'] || (@request.env["rack.session.options"] and @request.env["rack.session.options"][:id])).inspect.html_safe) %>
+* data: <%= raw PP.pp(@request.session.to_hash, "") %>
+
+<% if @request.session['warden.user.user.key'].present? %>
+<%
+  id = @request.session['warden.user.user.key']&.first&.first
+  user = User.find_by id: id
+%>
+  <% if user %>
+  * user <%= user.email %>
+  <% else %>
+  * user can not be found
+  <% end %>
+<% end %>
+~~~
+
+You can also set some new sections with [custom
 sections](https://github.com/smartinez87/exception_notification#sections). You
 can set sections in manual notification or inside settings->email.  You need to
 write text partial (html is not supported) in which you can access to
@@ -672,88 +806,6 @@ EXCEPTION_RECIPIENTS=asd@asd.asd QUEUE=* rake resque:work
 
 Note that this notifications will be triggered for jobs that are inserted using
 [resque-scheduler-for-reurring-tasks]( {{ site.baseurl }} {% post_url 2016-08-26-background-jobs-and-queues %}#resque-scheduler-for-recurring-tasks)
-
-# Delayed job
-
-{% highlight ruby %}
-# config/initializers/delayed_job.rb
-Delayed::Worker.destroy_failed_jobs = false
-Delayed::Worker.max_attempts = 3
-Delayed::Worker.delay_jobs = !Rails.env.test?
-
-### RAILS 5
-module CustomFailedJob
-  def handle_failed_job(job, error)
-    super
-    ExceptionNotifier.notify_exception(error, data: {job: job})
-  end
-end
-
-class Delayed::Worker
-  prepend CustomFailedJob
-end
-
-### Rails 4
-
-Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
-
-# when you change this file, make sure that you restart delayed_job process
-# bin/delayed_job stop && bin/delayed_job start
-# probably DelayedJob is configured to retry 3 times, so you will receive
-# notification emails
-# do not rescue in worker because no notification email will be send
-# http://andyatkinson.com/blog/2014/05/03/delayed-job-exception-notification-integration
-
-class Exception
-  attr_accessor :ignore_please
-end
-
-# Chain delayed job's handle_failed_job method to do exception notification
-Delayed::Worker.class_eval do
-  def handle_failed_job_with_notification(job, error)
-    handle_failed_job_without_notification(job, error)
-
-    begin
-      # ExceptionNotifier.notify_exception(error) do not use standard notification, use delayed_job partial
-      return if error.ignore_please && job.attempts < Delayed::Worker.max_attempts
-      env = {}
-      env['exception_notifier.options'] = {
-        sections: %w(backtrace delayed_job),
-        email_prefix: "[Xceednet Delayed Job Exception] ",
-      }
-      env['exception_notifier.exception_data'] = {job: job}
-      ExceptionNotifier::Notifier.exception_notification(env, error).deliver
-
-    # rescue if ExceptionNotifier fails for some reason
-    rescue Exception => e
-      Rails.logger.error "ExceptionNotifier failed: #{e.class.name}: #{e.message}"
-      e.backtrace.each do |f|
-        Rails.logger.error "  #{f}"
-      end
-      Rails.logger.flush
-    end
-  end
-
-  alias_method_chain :handle_failed_job, :notification
-end
-{% endhighlight %}
-
-If you want to ignore specific timeout exception than use something like
-
-~~~
-# app/jobs/send_sms_job.rb
-class SendSmsJob < ActiveJob::Base
-  queue_as :webapp
-
-  rescue_from Net::ReadTimeout, SocketError do |e|
-    e.ignore_please = true
-    # re-raise so job is retried
-    raise e
-  end
-  def perform()
-  end
-end
-~~~
 
 # Rake
 

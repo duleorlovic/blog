@@ -734,11 +734,7 @@ To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
 
 # Continuous integration
 
-* <https://flynn.io/>
-* <https://github.com/fastlane/ci> Open source, self hosted, mobile optimized CI
-powered by fastlane
-* others <https://news.ycombinator.com/item?id=12703121>
-
+see [ci cd post]{{ site.baseurl }} {% post_url 2018-04-10-continuous-delivery-integration-ci-cd-pronto.md %})
 
 #  DDNS
 
@@ -757,3 +753,4 @@ Heroku-like self hosted platform as a service
 
 https://pawelurbanek.com/rails-heroku-dokku-migration
 <https://github.com/dokku/dokku>
+https://github.com/githubsaturn/captainduckduck

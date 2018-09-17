@@ -161,8 +161,8 @@ controller you need to allow arrays
   ~~~
 
 You should avoid saving without validation `save(validate: false)` or
-`update_attribute :name, 'my name'`. It is risky to save without callbacks and
-validations. Other methods also do not check validation
+`update_attribute :name, 'my name'`. It is risky to save without validations.
+Other methods also do not check validation
 http://www.davidverhasselt.com/set-attributes-in-activerecord/
 `update_column`, `@users.update_all`.
 
@@ -361,9 +361,35 @@ application/new with {:locale=>[:in, :en], :formats=>["Application/*"],
 Searched in:` on some landing or login pages than simply add:
 
 ~~~
-respond_to do |format|
-  format.any { redirect_to root_path }
+# app/controllers/home_controller.rb
+class HomeController < ApplicationController
+  respond_to :html
+
+  def index
+    respond_with do |format|
+      format.html { render :index }
+      format.any { render :index }
+    end
+  end
 end
+~~~
+
+Another solution to respond to all formats is to add `formats` argument
+
+~~~
+# app/controllers/home_controller.rb
+class HomeController < ApplicationController
+  def index
+    render :index, formats: [:html]
+  end
+end
+~~~
+
+So this will render index for any type of requests
+
+~~~
+curl http://loc:3001
+curl http://loc:3001 -H "Accept: application/json"
 ~~~
 
 # Autosize
@@ -441,6 +467,25 @@ CREATE USER orlovic WITH CREATEDB PASSWORD '<password>';
 ## Active record
 
 * union is not supported [issue 929](https://github.com/rails/rails/issues/939)
+  but you can try with raw sql and `from` statement. Union should have same
+  number and type of columns. Also use `.from([Arel.sql('...')])`
+
+  ~~~
+    sql = <<~SQL
+    ( ( SELECT id, location_id, package_saleid, customer_id, customer_name, location_package_id, sale_date, -total_amount_cents as total_amount_cents, total_amount_currency, customer_invoice_id, (bytes_uploaded_total + bytes_downloaded_total) as total_data_used
+        FROM location_package_sales
+      ) UNION (
+        SELECT id, location_id, balance_refillid as package_saleid, NULL as customer_id, 'refill' as customer_name, NULL as location_package_id, created_at as sale_date, refill_amount_cents as total_amount_cents, refill_amount_currency as total_amount_currency, NULL as customer_invoice_id, NULL as total_data_used
+        FROM location_balance_refills
+      )
+    ) AS location_package_sales_or_location_balance_refills
+    SQL
+    @all_location_package_sales_or_location_balance_refills = LocationPackageSaleOrLocationBalanceRefill
+      .includes(:location, :customer, :customer_invoice, :location_package)
+      .from([Arel.sql(sql)])
+      .where(location_id: current_location)
+  ~~~
+
 * execute sql with `ActiveRecord::Base.connection.execute("SELECT * FROM
 users")`. Result is iteratable (array of arrays of selected fields).
 
@@ -717,6 +762,8 @@ will be validated for something that we did not know on that time.
 We can call `Product.update_all fuzz: 'fuzzy'` or `Product.update_all 'new_col =
 old_col'` to update all records in single sql query, without triggering
 callbacks or validations.
+You can also replace substring for example: `User.update_all('email =
+REPLACE(email, "a", "x")')`
 Better is to create local class and call reset column information. Also if we
 are adding not null column we need to do it in two steps to populate existing
 records.
@@ -894,6 +941,11 @@ class AddUserToLeads < ActiveRecord::Migration
   def change
     # reference will automatically include index on that column
     add_reference :leads, :contact, foreign_key: true
+    assert_difference 'Fetch.count', 1 do
+      assert_difference 'TestItem.count', 1 do
+        FetchFeed.new(feed, parser).perform
+      end
+    end
   end
 end
 ~~~
@@ -1339,10 +1391,9 @@ You can write tasks with arguments [rails
 rake](http://guides.rubyonrails.org/command_line.html#custom-rake-tasks)
 ~~~
 namespace :db do
-  desc "This task does nothing"
-  task :nothing do
-    # you can not access rails models here, you need dependency env  like
-    # task nothing: :environment do
+  desc 'This task does nothing'
+  task nothing: :environment do
+    # environment is needed to load rails
   end
 end
 ~~~
@@ -1360,7 +1411,8 @@ namespace :update_subdomain do
     fail "Can't find user 'my-user'" unless user
     user.subdomain = args.subdomain
     user.save!
-    puts "Updated #{user.subdomain}"
+    puts "Updated #{user.subdomain}" || next if return_from_rake_task_now?
+    puts 'Finished'
   end
 end
 
@@ -1640,6 +1692,52 @@ class PagesController < ApplicationController
 end
 ~~~
 
+## Decorators
+
+Decorators can be used instead of callbacks. Differs from service object because
+it just decorate existing model (it can be used instead of that model, usefull
+for forms). Form object is like a decorator, but for multiple models.
+So instead using `method_missing` you can use standard ruby `SimpleDelegator`
+which delegates any method to object that was passed in initialization
+
+~~~
+# app/decorators/message_decorator.rb
+class MessageDecorator < SimpleDelegator
+  def message
+    __getobj__
+  end
+
+  def save_and_send_notifications
+    message.save && _send_notifications
+  end
+
+  def _send_notifications
+    message.chat.moves.each do |move|
+      next if move.user == message.user
+      UserMailer.new_message(move.id, message.id).deliver_later
+    end
+    true
+  end
+end
+~~~
+
+Use in controller
+
+~~~
+  def show
+    @message_decorator = MessageDecorator.new Message.new
+  end
+
+  def create_message
+    @message_decorator = MessageDecorator.new Message.new _message_params
+    if @message_decorator.save_and_send_notifications
+      redirect_to chat_path(@chat), notice: t_crud('success_create', Message)
+    else
+      render :show
+    end
+  end
+
+~~~
 
 ## Concerns
 
@@ -1647,22 +1745,21 @@ end
 [trashable](https://github.com/discourse/discourse/blob/master/app/models/concerns/trashable.rb)
 [video](https://youtu.be/bHpVdOzrvkE?t=1640)
 [blog](http://www.monkeyandcrow.com/blog/reading_rails_concern/)
+example usage https://github.com/rails/rails/blob/87b0de450761d4404deb615c9b83307316ddb050/activesupport/lib/active_support/rescuable.rb#L11
 
 ~~~
 module Someable
   extend ActiveSupport::Concern
 
-  # access module variables @@my_module_variable or class variable
-  # self.class.class_variable_get :@@someable_value
-  # you can define validations, callbacks and assocications here (before_ has_
-  * macros)
   included do
+    # define validations, callbacks and associations here (before_ has_  macros)
+    # access module variables @@my_module_variable or class variable
+    # self.class.class_variable_get :@@someable_value
     has_many :something_else, as: :someable
     class_attribute :tag_limit
   end
 
   # instance methods are defined here
-
 
   # methods defined here are going to extend the class, not the instance of it
   # do not use "self." in method definition
@@ -2235,7 +2332,7 @@ views.
   where(sport: sport) # conditional on view
 ~~~
 
-# Localisation i18n
+# Localisation i18n translations
 
 Tips <https://devhints.io/rails-i18n>
 To translate active record messages for specific attributes, you can overwrite
@@ -2423,6 +2520,17 @@ For non model you can use simple translation
   <%= link_to t('report', count: Message.), admin_reported_messages_path %>
 ~~~
 
+To cyrilic you can use gem `cyrillizer`
+
+~~~
+'my string'.to_cyr
+ => "мy стринг"
+
+# note that some chars looks the same but are not when rendered on html page
+# for example first line is not correct link a href
+ <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</а>"
+ <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</a>"
+~~~
 
 # Devise
 
@@ -2456,8 +2564,52 @@ There is ruby `autoload :Jeep, 'Jeep'` which is usefull since it will not
 `require 'jeep'` if `Jeep` is not used. If we use `Jeep` in a file, than it will
 required.
 
+# Action Cable
+
+https://www.sitepoint.com/create-a-chat-app-with-rails-5-actioncable-and-devise/
+example
+https://github.com/duleorlovic/premesti.se/commit/ad7cefe192cbbb6b97c13860eb6410d1b02cb5fc
+
+Consumer is a client of a web socket connection that can subscribe to one or
+multiple channels. Each ActionCable server may handle multuple connections (it
+is created per browser tab).
+
+~~~
+rails g channel chat
+# app/assets/javascripts/channels/chat.coffee
+# app/channels/chat_channel.rb
+~~~
+
+You can broadcast with
+
+~~~
+ActionCable.server.broadcast("chat:#{chat.id}", data: data)
+ChatChannel.broadcast_to chat, data: data
+~~~
+
+or in javascript
+
+~~~
+App.chat = App.cable.subscriptions.create 'ChatChannel'
+App.chat.send({data: data})
+~~~
+
+You can call server method with `@perform 'away', my_id:
+$('main').data('my-id')`
+
+You can not use devise `current_user` when rendering for actioncable, there will
+be an error
+
+~~~
+ActionView::Template::Error (Devise could not find the `Warden::Proxy` instance on your request environment.
+Make sure that your application is loading Devise and Warden as expected and that the `Warden::Manager` middleware is present in your middleware stack.
+If you are seeing this on one of your tests, ensure that your tests are either executing the Rails middleware stack or that your tests are using the `Devise::Test::ControllerHelpers` module to inject the `request.env['warden']` object for you.):
+~~~
+
 # Tips
 
+* There is a new line in `Base64.encode64 string` so use `Base64.strict_encode64
+  string` https://stackoverflow.com/questions/2620975/strange-n-in-base64-encoded-string-in-ruby
 * parse url to get where user come from `URI.parse(request.referrer).host` or
   just `URI(request.referrer).host`. You can parse uri query with CGI (values
   are arrays) and Rack utils parse query (values are strings)
@@ -2722,9 +2874,11 @@ end
   ~~~
   ActionController::Base.helpers.pluralize(count, 'mystring')
   ActionController::Base.helpers.strip_tags request.body # html to text
-  ActionView::Base.new.number_to_human 123123
-  Rails.application.routes.url_helpers.jobs_path
   ActionController::Base.helpers.link_to 'name', link
+
+  ActionView::Base.new.number_to_human 123123
+
+  Rails.application.routes.url_helpers.jobs_path
   ~~~
 
   * if it your custom helper you can call from *ApplicationController*
@@ -2773,6 +2927,22 @@ but IE10 wont.
   * `request.ip` `request.referrer` `request.remote_ip`
   * `request.env["HTTP_USER_AGENT"]`
 
+* if you want to add flash_alert for all `flash.now[:alert]='message'` you can
+  use
+
+  ~~~
+  # app/controllers/application_controller.rb
+  after_action :check_flash_message
+
+  # rubocop:disable Metrics/AbcSize
+  def check_flash_message
+    return unless request.xhr? && request.format.js?
+    response.body += "flash_alert('#{view_context.j flash.now[:alert]}');" if flash.now[:alert].present?
+    response.body += "flash_notice('#{view_context.j flash.now[:notice]}');" if flash.now[:notice].present?
+  end
+  # rubocop:enable Metrics/AbcSize
+  ~~~
+
 * Heroku problems:
 * `undefined method url_options' for #<Module:` maybe problem with
   [puma](https://gist.github.com/IAMRYO/e8bee5a8e6710ad4b970)
@@ -2788,6 +2958,50 @@ but IE10 wont.
 
   * you can get dynamic path resoulution with `link_to "Dynamic #{e}",
   controller: :pages, action: e, id: @user.id`
+
+  * you can catch all error using routes https://coderwall.com/p/w3ghqq/rails-3-2-error-handling-with-exceptions_app We can rescue in application controller
+  but not for `ActionController::RoutingError` since that is done before rails
+  so you need to use `config.exceptions_app`, for example:
+
+  ~~~
+  # app/controllers/application_controller.rb
+    rescue_from ActiveRecord::RecordNotFound, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActionController::RoutingError do |exception|
+      redirect_to error_path title: 'Record Not Found', description: 'Could not find resource: ' + request.url
+    end
+
+  # config/application.rb
+  class Application < Rails::Application
+    config.exceptions_app = self.routes
+  end
+
+  # config/routes.rb
+  MyApp::Application.routes.draw do
+    get 'error', controller: 'home'
+    get '/404', controller: 'home', action: 'routing_error'
+    get '/500', controller: 'home', action: 'internal_server_error'
+  end
+
+  # app/controllers/home_controller.rb
+  class HomeController < ApplicationController
+    def error
+      @title = params[:title]
+      @description = params[:description]
+      render :error, formats: [:html]
+    end
+
+    def routing_error
+      @title = 'Page Not Found'
+      @description = 'Cound not find this page'
+      render :error, formats: [:html]
+    end
+
+    def internal_server_error
+      @title = 'Internal Server Error'
+      @description = 'There was an error and administrators were notified'
+      render :error, formats: [:html]
+    end
+  end
+  ~~~
 
 * export csv
 
@@ -2820,7 +3034,7 @@ but IE10 wont.
   }, dependent: :destroy`
 * `enum status: [:paused]` should be type integer, or it will return nil. Use
 synonim for new, like unproccessed, draft. You can access values with symbols
-`:drat` and outside of class with `Class.statuses`.
+`:draft` and outside of class with `Class.statuses`.
 
 * params usually need to be striped, so you can use this code to get rid of all
   unnecessary spaces (not that we create new object that is returned, params
@@ -2894,8 +3108,9 @@ synonim for new, like unproccessed, draft. You can access values with symbols
 * callbacks are defined executed in the order they are defined, or you can use
   `:prepend` option
 * in callbacks should only be some value format correction or other simple task.
-Do not put Mailer to send email or other external task since it will be
-triggered even in you test when you prepare some data
+In callback should not be Mailer to send email or other external task since it
+will be triggered even in you test when you prepare some data, or when creating
+seed data
 * in action pack (action controller) if you `render` something in before_filter
   than execution will be halted (return value is not important for
   ActionController callbacks)
@@ -2965,7 +3180,8 @@ triggered even in you test when you prepare some data
   button labels and inputs so commit param is different...
   Instead of `commit` you can use
   [formaction](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#attr-formaction)
-  So you do not need to parse commits.
+  So you do not need to parse commits but you need different action methods to
+  handle.
 
   ~~~
   <% form_for(something) do |f| %>
@@ -3168,6 +3384,8 @@ on submit button). I do not know how to send value...
 `described_class.name.underscore`
 * `printf '.'` if you need to print single dot
 * turn of sql debug log messages in console `ActiveRecord::Base.logger = nil`
+* to show full backtrace and lines from gems you can call
+  `Rails.backtrace_cleaner.remove_silencers!`
 * put `gem 'irbtools', require: 'irbtools/binding'` in Gemfile so you can load
 scripts in rails console: `vi 'tmp/my_script.rb'` and later you can use just
 `vi`. Do not exit with `<leader>q`. but use `:wq`.
@@ -3197,7 +3415,6 @@ called.
 * instead of guard clauses `errors.add :name, 'is invalid' and return false
 unless item.save` you can move important things in front `item.save ||
 (errors.add :name, 'is invalid' and return false)`
-* [dhh tips for rails](https://www.youtube.com/watch?v=D7zUOtlpUPw)
 * translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> just
   set language in your `config/initializers/cyrillizer.rb` `Cyrillizer.language
   = :serbian`
@@ -3250,3 +3467,49 @@ end
 
 print fetch('http://www.ruby-lang.org/')
 ~~~
+
+* use bang methods to raise exception `User.create! email: 'invalid'`. If you
+  use it inside callbacks than no exception will be raise, but rollback will be
+  performed...
+* sometime tests uses precompiled assets from `/public/assets/` so make sure to
+  clean clear them
+
+[dhh tips for rails](https://www.youtube.com/watch?v=D7zUOtlpUPw)
+* epipsode 1: do not use comments but method names or constants... follow
+  table of content: method definition should be in same order as they are used
+  in the class (in before callbacks)
+  administered concern define methods on associations. Also use `or` `|` to join
+  two arrays
+
+~~~
+module Account::Administered
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :administratorships, dependent: :delete_all do
+      def grant(person)
+        create_or_find person: person
+      end
+
+      def revoke(person)
+        where(person_id: person.id).destroy_all
+      end
+    end
+
+    has_many :administrators, through: :administratorships, source: :person
+  end
+
+  def all_administrators
+    administrators | all_owners
+  end
+
+  def administrator_candidates
+    people.users.
+      where.not(id: administratorships.pluck(:person_id)).
+      where.now(id: ownerships.pluck(:person_id)).
+      where.not(id: owner_person.id)
+  end
+end
+~~~
+* episode 2:
+

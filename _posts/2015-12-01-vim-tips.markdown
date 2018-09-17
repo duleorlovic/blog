@@ -582,58 +582,16 @@ You need to install this tools:
 
 * Markdown `gem install mdl`
 * Ruby, Rails `gem install rubocop`. You can automatically fix some errors with
-`rubocop --auto-correct Gemfile`
-[.rubocop.yml](https://github.com/duleorlovic/config/blob/master/.rubocop.yml)
-  in $HOME or project root. You can disable `AllCops` or specific file paths,
-  for example BlockLength for rspec files
+  `rubocop --auto-correct Gemfile`.
+  Configuration is in .rubocop.yml in $HOME or project root. You can disable all
+  ~~~
+  # .rubocop.yml
+  AllCops:
+    DisabledByDefault: true
+  ~~~
 
-~~~
-AllCops:
-  TargetRubyVersion: 2.3
-
-# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-# it is OK that code explains instead class documentation
-Style/Documentation:
-  Enabled: false
-
-# tasks and test for setup data could be very long
-Metrics/BlockLength:
-  Exclude:
-    - 'lib/**/*'
-    - 'test/**/*'
-
-# big test big ABC size
-Metrics/AbcSize:
-  Max: 25
-  Exclude:
-    - 'test/**/*'
-
-# line length is not important everywhere
-Metrics/LineLength:
-  Exclude:
-    - "db/**/*"
-
-# I like to put comma after each line
-Style/TrailingCommaInLiteral:
-  Enabled: false
-# also in arguments
-Style/TrailingCommaInArguments:
-  Enabled: false
-
-# I like methods in 10 lines but some are bigger
-Metrics/MethodLength:
-  Max: 15
-  Exclude:
-    - 'lib/**/*'
-    - 'test/**/*'
-
-# do not need to write # frozen_string_literal: true
-Style/FrozenStringLiteralComment:
-  Enabled: false
-~~~
+  My preferred configuration is 
+https://github.com/duleorlovic/config/blob/master/.rubocop.yml
 
   * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
   * gem 'rubocop-rspec' is nice linter for rspec.
