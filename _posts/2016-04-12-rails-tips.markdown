@@ -178,6 +178,7 @@ Validate occurs `:on` `:save` by default (but you can not use `validate :d, on:
 :save`).  http://guides.rubyonrails.org/active_record_validations.html#on you
 can split and specify to run on `on: :create` or `on: :update`. To run
 validation on destroy you need hook `before_destroy` where you can `errors.add`
+and `return false` so hook reverts.
 
 # Hooks
 
@@ -966,9 +967,18 @@ class Project < ActiveRecord::Base
 end
 ~~~
 
-You need to add double index:
+When you create you can use `references` and `polymorphic: true`
 
 ~~~
+  t.references :featureable, polymorphic: true, null: false
+~~~
+
+If you add one by one column than you need to add double index:
+
+~~~
+t.string :owner_type
+t.integer :owner_id
+
 # Bad: This will not improve the lookup speed
 add_index :projects, :owner_id
 add_index :projects, :owner_type
@@ -1039,6 +1049,25 @@ ActiveRecord::Base.transaction do
 end
 if alert
 ~~~
+
+Race conditions
+
+When you have a lot of users and long db update commands than you probably have
+exceptions for deadlocks and duplicate entries. You can retry
+https://speakerdeck.com/rstankov/zero-exceptions-in-production?slide=71
+
+~~~
+# app/controllers/users_controller.rb
+  def update
+    retries ||= 2
+    # perform some long task and in another browser and thread try to lock it
+  rescue ActiveRecord::RecordNotUnique
+    retries -= 1
+    raise unless retries.nonzero?
+    retry
+  end
+~~~
+
 
 # MySql
 
@@ -1256,6 +1285,7 @@ Use `faker` gem to generate example strings:
 # we keep all variables (defined as property var: :name) in global b hash
 # so you an access them later as `b[:name]`
 b = {}
+
 # rubocop:disable Rails/Output
 # JobType
 [
@@ -1272,7 +1302,7 @@ end
 
 # deterministic and random data
 1.upto(10).map do |i|
-{ email: "user#{i}@asd.asd", password: Faker::Internet.password }
+  { email: "user#{i}@asd.asd", password: Faker::Internet.password }
 end.each do |doc|
   User.where(doc.except(:password, :remote_avatar_url)).first_or_create! do |user|
     user.password = doc[:password]
@@ -1346,7 +1376,6 @@ app as the exception_notification does).  I will try to create new logger, it
 is used for whole Rails application.
 <http://stackoverflow.com/questions/6407141/how-can-i-have-ruby-logger-log-output-to-stdout-as-well-as-file>
 
-http://stackoverflow.com/questions/6407141/how-can-i-have-ruby-logger-log-output-to-stdout-as-well-as-file
 
 # Mustache
 
@@ -1390,6 +1419,7 @@ end
 You can write tasks with arguments [rails
 rake](http://guides.rubyonrails.org/command_line.html#custom-rake-tasks)
 ~~~
+# lib/tasks/db.rake
 namespace :db do
   desc 'This task does nothing'
   task nothing: :environment do
@@ -2291,6 +2321,11 @@ helper classes to show hide content:
     image open(uri_escaped), fit: [column_2_width, 89], position: :right
   ~~~
 
+## PDF reader
+
+https://github.com/yob/pdf-reader
+
+
 # Style guide
 
 [toughtbot style
@@ -2490,7 +2525,15 @@ sr:
         remember_me: Запамти ме
 ~~~
 
-When you use `.capitalize` than you need first to call `.mb_chars.capitalize`
+When you use `.capitalize` or `.upcase` than you need first to call
+`.mb_chars`. For example 
+~~~
+'ž'.upcase
+=> "ž"
+
+'ž'.mb_chars.upcase.to_s
+ => "Ž"
+~~~
 Some common words translations can be found
 <https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml>
 
@@ -2520,14 +2563,30 @@ For non model you can use simple translation
   <%= link_to t('report', count: Message.), admin_reported_messages_path %>
 ~~~
 
-To cyrilic you can use gem `cyrillizer`
+Translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> You need
+to set language in config
+
+~~~
+# Gemfile
+# translate cyrillic
+gem 'cyrillizer'
+~~~
+
+~~~
+# config/initializers/cyrillizer.rb
+Cyrillizer.language = :serbian
+~~~
+
+In console
 
 ~~~
 'my string'.to_cyr
  => "мy стринг"
+~~~
 
-# note that some chars looks the same but are not when rendered on html page
-# for example first line is not correct link a href
+Note that some chars looks the same but are not when rendered on html page
+~~~
+ # for example first line is not correct link a href
  <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</а>"
  <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</a>"
 ~~~
@@ -2608,6 +2667,11 @@ If you are seeing this on one of your tests, ensure that your tests are either e
 
 # Tips
 
+* I got an error `ActionDispatch::Cookies::CookieOverflow
+  (ActionDispatch::Cookies::CookieOverflow):` when there is `flash[:notice]`
+  that is greater than certain value for example: `flash.now[:notice] =
+  '1'*1972`, `flash.now[:alert] = '1'*1_974` and `flash[:notice] = '1'*1980`,
+  `flash[:alert] = '1'*1981`
 * There is a new line in `Base64.encode64 string` so use `Base64.strict_encode64
   string` https://stackoverflow.com/questions/2620975/strange-n-in-base64-encoded-string-in-ruby
 * parse url to get where user come from `URI.parse(request.referrer).host` or
@@ -3029,9 +3093,27 @@ but IE10 wont.
 
 * [acts_as_lists](https://github.com/swanandp/acts_as_list) is nice gem, you
   just need to `rails g migration add_priority_to_comment priority:integer`,
-  add a line in model `acts_as_list scope: :post, column: :priority` and to use
-  that priority in associations `has_many :comments, -> { order priority: :asc
-  }, dependent: :destroy`
+  add a line in model
+  ~~~
+  acts_as_list scope: :post, column: :priority
+  default_scope { order('position ASC') }
+  ~~~
+  use that priority in associations `has_many :comments, -> { order priority:
+  :asc }, dependent: :destroy`
+  To perform bulk update, use form to pass ids
+
+  ~~~
+  def sort
+    @job.questions.each do |question|
+      # check if this question is in params, since there could be several request of sorting when we save them all
+      if params['question'].include? question.id.to_s
+        question.position = params['question'].index(question.id.to_s) + 1
+        question.save!
+      end
+    end
+  end
+  ~~~
+
 * `enum status: [:paused]` should be type integer, or it will return nil. Use
 synonim for new, like unproccessed, draft. You can access values with symbols
 `:draft` and outside of class with `Class.statuses`.
@@ -3415,9 +3497,6 @@ called.
 * instead of guard clauses `errors.add :name, 'is invalid' and return false
 unless item.save` you can move important things in front `item.save ||
 (errors.add :name, 'is invalid' and return false)`
-* translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> just
-  set language in your `config/initializers/cyrillizer.rb` `Cyrillizer.language
-  = :serbian`
 * gem [countries](https://github.com/hexorx/countries) uses
   [money](https://github.com/RubyMoney/money) gem.
 
@@ -3472,7 +3551,14 @@ print fetch('http://www.ruby-lang.org/')
   use it inside callbacks than no exception will be raise, but rollback will be
   performed...
 * sometime tests uses precompiled assets from `/public/assets/` so make sure to
-  clean clear them
+  clean clear them. Also `/log/test.log` became huge if you do not limit it. You
+  can limit test log with
+
+  ~~~
+  # config/environments/test.rb
+  # limit log file to 50MB, when it reaches that it will start from empty file
+  config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 1, 50.megabytes)
+  ~~~
 
 [dhh tips for rails](https://www.youtube.com/watch?v=D7zUOtlpUPw)
 * epipsode 1: do not use comments but method names or constants... follow
@@ -3511,5 +3597,66 @@ module Account::Administered
   end
 end
 ~~~
-* episode 2:
+* episode 2: use callbacks to initiate background jobs
+* episode 3: use globals in request/response cycle. For background jobs you need
+  to pass them as params.
+* episode 4
+
+* colorize matching string in console
+~~~
+# config/initializers/colorize.rb
+class String
+  COLOR = 31 # red
+
+  def red
+    "\e[#{COLOR}m#{self}\e[0m"
+  end
+
+  def colorize(string, return_result = false)
+    last_index = 0
+    res = ''
+    while (new_index = self[last_index..-1].index(string))
+      if last_index + new_index - 1 > -1
+        res += self[last_index..last_index + new_index - 1]
+      end
+      res += string.red
+      last_index = last_index + new_index + string.length
+    end
+    res += self[last_index..-1]
+    # rubocop:disable Rails/Output
+    puts res
+    # rubocop:enable Rails/Output
+    res if return_result
+  end
+end
+
+# require 'minitest/autorun'
+# class Test < Minitest::Test
+#   def test_one_substring
+#     s = 'My name is John.'
+#     assert_equal "My name is \e[John\e[0m.", s.colorize("John", true)
+#   end
+#
+#   def test_two_substrings
+#     s = 'John is my name, John.'
+#     r = "\e[John\e[0m is my name, \e[John\e[0m."
+#     assert_equal r, s.colorize("John", true)
+#   end
+#
+#   def test_no_found
+#     s = 'My name is John.'
+#     assert_equal "My name is John.", s.colorize("Mike", true)
+#   end
+#
+#   def test_whole
+#     s = 'My name is John.'
+#     assert_equal "\e[31mMy name is John.\e[0m", s.colorize(s, true)
+#   end
+#
+#   def test_return
+#     s = 'My name is John.'
+#     assert_equal nil, s.colorize('John')
+#   end
+# end
+~~~
 

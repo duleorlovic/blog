@@ -10,7 +10,11 @@ Basic example application with [Devise](https://github.com/plataformatec/devise)
 default signup/login views.
 
 ~~~
-echo "gem 'devise'" >> Gemfile
+cat >> Gemfile <<HERE_DOC
+
+# user authentication
+gem 'devise', '~> 4.5.0'
+HERE_DOC
 bundle
 rails generate devise:install
 git add . && git commit -m "rails g devise:install"
@@ -18,18 +22,28 @@ rails g devise User
 rake db:migrate
 git add . && git commit -m "rails g devise user"
 
-# optional
-# rails g devise:views && git add . && git commit -m "rails g devise:views"
-sed -i app/views/layouts/application.html.erb -e '/<body>/a \
-    <% if current_user %>\
-      <strong><%= current_user.email %></strong>\
-      <a href="<%= destroy_user_session_path %>" data-method="delete">Sign out</a>\
-    <% else %>\
-      <a href="<%= new_user_registration_path %>">Sign up</a>\
-      <a href="<%= new_user_session_path %>">Log in</a>\
-    <% end %>'
+# optional generate views
+rails g devise:views && git add . && git commit -m "rails g devise:views"
+# optional create home page and navbar links
+rails g controller pages home
+sed -i config/routes.rb -e "/^end$/i \\
+  # root page\n\
+  root 'pages#home'\
+"
+sed -i app/views/layouts/application.html.erb -e "/<body>/a \\
+    <%= link_to 'Home', root_path %>\n\
+    <% if current_user %>\n\
+      <strong><%= current_user.email %></strong>\n\
+      <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>\n\
+    <% else %>\n\
+      <%= link_to 'Sign up', new_user_registration_path %>\n\
+      <%= link_to 'Log in', new_user_session_path %>\n\
+    <% end %>\
+"
 git add . && git commit -m "Adding login/logout header in layout"
 ~~~
+
+You can add facebook auth below.
 
 Read *config/initializers/devise.rb* about default configuration.
 
@@ -525,7 +539,7 @@ MY_TEXT
 sed -i src/app/components/navbar/navbar.html \
 -e '/Contact/a \
     <md-button href="#" ng-show="!$root.user.id" ng-click="vm.showLoginDialog()">Try For Free</md-button>\
-    <div ng-show="!!$root.user.id">Hello {{ $root.user.email }}</div>\
+    <div ng-show="!!$root.user.id">Hello { { $root.user.email }}</div>\
     <md-button href="#" ng-show="!!$root.user.id" ng-click="vm.signOut()">Sign Out</md-button>'
 
 # config routes since default /api/auth/facebook does not match rails /auth/:provider
@@ -567,7 +581,7 @@ cat > src/app/login/login.html <<\HERE_DOC
               <div ng-messages="loginForm.email.$error">
                 <div ng-message="required">Email is required.</div>
                 <div ng-message="server">
-                  {{ vm.serverErrors.login.email }}.
+                  { { vm.serverErrors.login.email }}.
                 </div>
               </div>
             </md-input-container>
@@ -578,7 +592,7 @@ cat > src/app/login/login.html <<\HERE_DOC
               <div ng-messages="loginForm.password.$error">
                 <div ng-message="required">Password is required.</div>
                 <div ng-message="server">
-                  {{ vm.serverErrors.login.join(', ') }}.
+                  { { vm.serverErrors.login.join(', ') }}.
                 </div>
               </div>
             </md-input-container>
@@ -602,9 +616,9 @@ cat > src/app/login/login.html <<\HERE_DOC
               ng-email="true">
               <div ng-messages="registrationForm.email.$error">
                 <div ng-message="required">Email is required.</div>
-                <div ng-message="email">Must look like email.</div>
+                <div  ng-message="email">Must look like email.</div>
                 <div ng-message="server">
-                  {{ vm.serverErrors.registration.email.join(', ') }}.
+                  { { vm.serverErrors.registration.email.join(', ') }}.
                 </div>
               </div>
             </md-input-container>
@@ -617,7 +631,7 @@ cat > src/app/login/login.html <<\HERE_DOC
                 <div ng-message="minlength,maxlength">Password should be between 6 and 20
                   chars.</div>
                 <div ng-message="server">
-                  {{ vm.serverErrors.registration.password.join(', ') }}.
+                  { { vm.serverErrors.registration.password.join(', ') }}.
                 </div>
               </div>
             </md-input-container>
@@ -631,7 +645,7 @@ cat > src/app/login/login.html <<\HERE_DOC
               </div>
               <div
             ng-messages="vm.serverErrors.registration.password_confirmation">
-                <div>{{ vm.serverErrors.registration.password_confirmation.join(', ') }}</div>
+                <div>{ { vm.serverErrors.registration.password_confirmation.join(', ') }}</div>
               </div>
             </md-input-container>
 

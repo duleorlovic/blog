@@ -298,7 +298,7 @@ shorter `:set rnu`
 * `dE` removes to the End of the string
 * recording macro to q with `qq`, exit with `q`, run with `@q`
 * paste commands in insert mode with `^Rq`
-* `^T` indent in insert mode
+* `^T` indent in insert mode. In normal mode you can select and indent with `=`
 
 # Motion in visual mode
 
@@ -406,6 +406,10 @@ possible (instead of `*` which will stop at last occurrence).
   * `/asd\_.\{-}qwe` find asd followed with any character (including new line)
   and stop at qwe. You can use [S and S!
   snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
+
+`:Ack` can be used to find in files.
+For two line search you can use: `:Ack 'destroy\n.*authorize'  app/controllers/`
+For multiline (dot not matter how many lines are in between) `:Ack 'destroy(\n.*)*flash.now..notice'  app/controllers/`
 
 # Windows buffers and tabs
 
@@ -860,7 +864,7 @@ autocmd BufNewFile,BufRead *.rb call FoldCopyright()
 ~~~
 
 If you use `autocmd FileType vim setlocal foldmethod=marker` marker method than
-any lines that starts and ends with `{{{ .... }}}` can be toggled with `za`
+any lines that starts and ends with *{ { { .... }}}* can be toggled with `za`
 
 # Database
 

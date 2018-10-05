@@ -49,7 +49,7 @@ adminlte is using less we will use two wrappers.
 ~~~
 
 ~~~
-# Gemfile, belowe sass-rails
+# Gemfile, below sass-rails
 # Also need less for adminlte
 gem 'less-rails', '~> 3.0.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

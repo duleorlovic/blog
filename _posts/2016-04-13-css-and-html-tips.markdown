@@ -46,7 +46,18 @@ layout: post
   usually 16px, bootstrap was 14px now is also 16px.
 
 * you can not set the width of inline elements, so to set width of `span` you
-  need to make it `display:inline-block; width: 100px`
+  need to make it `display:inline-block; width: 100px`. Also if you have text
+  than `inline` or `inline-block` element with `block` inside, it will behave
+  differently
+  ~~~
+            inline-block
+  some_text nested_block
+  ~~~
+
+  ~~~
+  some_text inline
+  nested_block
+  ~~~
 * also top and bottom padding has no efect for label since it is an inline
   element
   [link](http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements).

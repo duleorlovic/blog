@@ -25,6 +25,9 @@ text on click
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
 * drag and drop elements <https://shopify.github.io/draggable/>
 
+# Gems
+
+* https://awesome-ruby.com/
 
 # Alerts and notifications
 
@@ -149,6 +152,19 @@ call with
     $('#customer-name-select').select2({ placeholder: 'Search by Customer Name or Username', width: '100%'});
   ~~~
 
+* to make it `inline` you can wraps inside `inline-block` element and set some
+  size with `style='width:100px'` on select element (select2 will use that to
+  calculate size).
+
+  ~~~
+  # app/assets/select2.sass
+  .select2-inline
+    display: inline-block
+    // by default .select2-container is block, which move it slightly to the top
+    // and then it is not inline with other inline text or buttons
+    .select2-container
+      display: inline-block
+  ~~~
 * options like
 [dropdownParent](https://select2.github.io/options.html#dropdownParent) could
 help
@@ -169,6 +185,7 @@ $(document).on 'turbolinks:load', ->
   $('[data-select2-initialize]').each ->
     options = {}
     if $(this).attr 'placeholder'
+      # select_tag :id, options, include_blank: true, placeholder: 'Choose one'
       options['placeholder'] = $(this).attr 'placeholder'
     else
       options['placeholder'] = '<%= I18n.translate 'please_select' %>'
@@ -734,7 +751,7 @@ To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
 
 # Continuous integration
 
-see [ci cd post]{{ site.baseurl }} {% post_url 2018-04-10-continuous-delivery-integration-ci-cd-pronto.md %})
+see [ci cd post]{{ site.baseurl }} {% post_url 2018-04-10-continuous-delivery-integration-ci-cd-pronto %})
 
 #  DDNS
 

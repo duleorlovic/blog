@@ -598,8 +598,8 @@ To rescue from exception in background sending emails you can reopen DeliveryJob
 anywhere, for example in ApplicationMailer. If you want to `rescue_from` in some
 other non-rails class you can `include ActiveSupport::Rescuable`
 
-If you use Delayed::Job you can test in three ways:
-First is `Delayed::Worker.delay_jobs = true`
+If you use Delayed::Job you can write testing in three ways:
+First is when `Delayed::Worker.delay_jobs = true`
 
 ~~~
 expect do
@@ -612,14 +612,15 @@ end.to change(Delayed::Job, :count).by(-1)
 ~~~
 
 Or you can expect specific job
+[have_enqueued_job](https://www.rubydoc.info/gems/rspec-rails/RSpec%2FRails%2FMatchers:have_enqueued_job)
 
 ~~~
 expect do
 end.to have_enqueued_job SendSmsJob
 ~~~
 
-Second is `Delayed::Worker.delay_jobs = false` so job is performed inline ie
-invoked immediatelly.
+Second is when `Delayed::Worker.delay_jobs = false` so job is performed inline
+ie invoked immediatelly.
 
 
 # TIPS

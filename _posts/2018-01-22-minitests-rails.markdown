@@ -17,6 +17,8 @@ This also works for system test (so you do not need `system` in `rails
 test:system somefile`)
 
 ~~~
+rails test
+rails test:system
 # invoke test by line
 rails test test/models/article_test.rb:6
 # or name
@@ -34,8 +36,20 @@ teardown block, rollback fixtures.
 
 http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
 
-* loading fixtures includes: removing old fixture data, load fixture data.
+Rails performs loading fixtures in tree steps: removing old fixture data, load fixture data and dump data into a method inside test case `users(:david)`
+
+Defining fixtures:
 * use labels for associated belongs_to and has_many items (separated by comma)
+  ~~~
+  # test/fixtures/users.yml
+  my_user:
+    name: My User
+    company: my_company
+
+  # test/fixtures/companies.yml
+  my_company:
+    name: My Company
+  ~~~
 * if you have polymorphic than put class name in brackets
   ~~~
   apple:
@@ -44,11 +58,22 @@ http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
 
 * `created_at`, `updated_at`, `created_on` and `updated_on` is automatically
   Time.now
+* use ERB for dynamic creation. Note that you should use fixed dates instead of
+  `published_at: <%= Date.today.strftime('%Y-%m-%d')` so they are stable.
+  ~~~
+  <% 15.times do |i| %>
+  medium_<%= i %>:
+    media_name: My <%= i %> Medium
+    published_at: 2018-10-11
+  <% end %>
+  ~~~
 * fixture label interpolation (`$LABEL` is `me`)
 
   ~~~
   me:
     name: 'duke'
+    subdomain: me
+    # or use label
     subdomain: $LABEL
     email: $LABEL@email.com
   ~~~
@@ -78,6 +103,13 @@ http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
   end
   ~~~
 
+Usage of fixtures
+
+~~~
+# note that we are calling method users
+users(:my_user)
+~~~
+
 # Minitest classes
 
 To see all 6 base test clases go
@@ -94,7 +126,7 @@ ActionDispatch::SystemTestCase
 ~~~
 require 'test_helper'
 
-class MyClassTest < ActiveSupport::TestCase
+class TaskTest < ActiveSupport::TestCase
   test 'a completed' do
     task = Task.new
     refute(task.complete?)
@@ -104,6 +136,12 @@ class MyClassTest < ActiveSupport::TestCase
 
   def test_that_is_skipped
     skip "later"
+  end
+
+  test 'valid fixture' do
+    # database constrains do not need to be tested because fixture will fail if
+    # can not be inserted in db. We need to test only rails validations
+    assert tasks(:my_task).valid?
   end
 end
 ~~~

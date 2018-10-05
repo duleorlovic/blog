@@ -2,6 +2,9 @@
 layout: post
 ---
 
+I got Router Board [rb 750 gr3](https://mikrotik.com/product/RB750Gr3) with 16MB
+RAM in flash.
+
 # Winbox on Wine
 
 <https://wiki.winehq.org/Ubuntu>
@@ -24,19 +27,10 @@ https://mikrotik.com/download for your specific archicteture and drag and drop
 (works in wine) to "Files" (it will appear on root) and simply reboot.
 I'm using RouterOS v6.41.2
 
-# Terminal and Scripts
+You can connect to terminal using Winbox or using ssh (look below for how to
+connect to mikrotik)
 
-~~~
-# comment should start on beggining of the line
-# move top level
-/
-# move up
-..
-# show available commands
-?
-# run other commands within current level
-/ping 10.0.0.1
-~~~
+# Terminal and Scripts
 
 Item names can be used instead of item number and are more stable since some
 other user can configure router in the same time or change scripts.
@@ -44,12 +38,16 @@ other user can configure router in the same time or change scripts.
 General menu commands:
 https://wiki.mikrotik.com/wiki/Manual:Console#General_Commands
 
-* `add` to create new record. You can use `copy-from`
-
-  ~~~
-  add address = 192.168.0.1 / 24 network = 192.168.0.0 broadcast = 192.168.0.255 interface = Local
-  ~~~
-
+* `print` is to list all items, `print file=my_file` print to file, `print
+  detail` print in format `prop=value` (oposite to `print brief`), `print
+  follow` like tail -f, `print from=my_property_name` print single item find by
+  name (similar to `print where name=my_property_name`), `/ip route print where
+  interface="ether1"` filtering used for print, `print dynamic` print dynamic
+  items. `print static interval=1` print static items and refresh every 2
+  seconds
+* `add` to create new record. You can use `copy-from`. example is `add address =
+  192.168.0.1 / 24 network = 192.168.0.0 broadcast = 192.168.0.255 interface =
+  Local`
 * `remove <id>` remove record
 * `disable <id>` and `enable <id>`
 * `move`
@@ -62,12 +60,6 @@ https://wiki.mikrotik.com/wiki/Manual:Console#General_Commands
   to remove all globals you can `/system script environment remove [find]`,
   update specific item: `/system logging set [find topics="warning"]
   action=disk`
-* `print file=my_file` print to file, `print detail` print in format
-  `prop=value` (oposite to `print brief`), `print follow` like tail -f, `print
-  from=my_property_name` print single item find by name (similar to `print where
-  name=my_property_name`), `/ip route print where interface="ether1"` filtering
-  used for print, `print dynamic` print dynamic items. `print static interval=1`
-  print static items and refresh every 2 seconds
 * `/export file=myfilename` will export all configurations. You can export only
   not default with `/export compact`, or `/export compact file=my_export` to
   save to a file `/dule.rsc` which you can download using ftp. If you are not in
@@ -92,12 +84,15 @@ can go to Safe mode so autocompletion is triggered only on tab.
 <https://wiki.mikrotik.com/wiki/Manual:Scripting#Global_commands>
 Note that all commands that work with data, starts with `:`
 
+* `# comment should start on beggining of the line`
+* `/` move top level, `..` move up
+* `?` show available commands
 * `:delay 3` do nothing for 3 seconds. Could be miliseconds `:delay 10ms`
 
 In terminal you can set variables. Local variables only works inside `{ }`, They
 are ignored if used at root of console. Always use snakeCase, so you do not
 overlap with keywords. If you need to use underscore than wrap variable with
-quotes.
+quotes. You can pring value with `:put`
 
 ~~~
 :global globalVar;
@@ -108,6 +103,18 @@ quotes.
 }
 :global "var_with_underscore";
 :global "var-with-dash";
+~~~
+
+In scripts when hotspot user logs in you can access `$user` variable (it is
+username)
+
+~~~
+:global username [/ip hotspot active find user=$user];
+:global userip [/ip hotspot active get $username address];
+:log info $userip
+
+# or in one line
+/ip hotspot user profile set [ find default=yes ] on-login="if ([/ip hotspot active get [find user=\$user] address] in 10.255.0.0/16) do={:log warning \"THIS SUBSCRIBER HAS EXPIRED! ASSIGNED IP IN 10.255.0.0/16\"}"
 ~~~
 
 Conditionals
@@ -163,7 +170,7 @@ You can convert data
 
 Operators
 
-* `in` does belongs `:put (1.1.1.1/32 in 1.0.0.0/8);`
+* `in` logical *belongs* `:put (1.1.1.1/32 in 1.0.0.0/8);`
 * `[]` square brackets is command substitution `:put [ :len "my string" ];`.
   Only one line is allowed (commands can be separated with `;`). To use in menu
   commands wrap with a string `add address="$[ $ip . "1" ]"`. It is not allowed
@@ -222,6 +229,8 @@ Parse can be used to define functions: `:global myFunc [:parse ":put hello!"];`
 
 Logs and debug
 
+You can print to terminal with `:put message=hi` or to log `:log info hi` (log
+can be used both as /menu and :command).
 <https://wiki.mikrotik.com/wiki/Manual:System/Log>
 `:log warning "My message"` write to topic: `error`, `info` and `warning`. You
 can define topis on `/system logging` and which action to perform. Actions could
@@ -381,7 +390,7 @@ Also you can SSH
 https://wiki.mikrotik.com/wiki/Use_SSH_to_execute_commands_(DSA_key_login)
 
 ~~~
-# using winbox create new user: admin-ssh (password can be blank)
+# using winbox create new user under System -> Users: admin-ssh (password can be blank)
 # https://askubuntu.com/a/885396/40031
 /ip ssh set always-allow-password-login=yes
 ~~~
@@ -865,5 +874,3 @@ https://www.youtube.com/user/rodrick4u/playlists
   ~~~
 
 * user scripts https://wiki.mikrotik.com/wiki/Scripts
-* I got [rb 750 gr3](https://mikrotik.com/product/RB750Gr3) with 16MB RAM in
-  flash.

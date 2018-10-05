@@ -489,7 +489,7 @@ it will be in `tmp/db.dump`
   ~~~
 
 * find
-  * find and remove files `find . -type f -name "FILE-TO-FIND" -exec rm -f {} \;`
+  * find and remove files `find . -type f -name "test.log" -exec rm -f {} \;`
   * find all html files `find . -name '*.html'`. Note that `find . -name *.html`
     will not work since wildcard will be changed to html file in current folder.
   * filter files based on their size: `find . -size -212c` show only small than
@@ -681,6 +681,9 @@ localy and change method to `GET` so when you submit you can see data separated
 with `?` and `&`
 * patch request on rails is done with `--request PATCH` option
 * verifyhost 
+
+  some sites prevents curl and ruby scripts, if gives forbidden or empty
+  response: https://www.theguardian.com
 
 # SSH
 

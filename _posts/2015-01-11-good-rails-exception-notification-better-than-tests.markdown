@@ -65,7 +65,6 @@ class Notify
     true
   end
 
-
   def self.exception_with_env(message, args)
     # set env to nil if you do not want sections: Request, Environment, Session
     # backtrace is not shown for manual notification (only if data section
@@ -248,14 +247,13 @@ Here is what I use:
 # app/controllers/pages_controller.rb
 class PagesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i[
-    sample_error_in_javascript notify_javascript_error
+    notify_javascript_error
   ]
 
   def sample_error
     raise 'This is sample_error on server'
   end
 
-  # rubocop:disable Metrics/LineLength
   def sample_error_in_javascript
     render layout: true, html: %(
       Calling manual_js_error_now
@@ -847,10 +845,22 @@ namespace :my_task do
     raise "this is my exception"
   end
 end
+HERE_DOC
 ~~~
 
 and run with `EXCEPTION_RECIPIENTS=asd@asd.asd rake my_task:run` and you should
 see the email.
+
+To test in minitest or rspec you can use
+https://stackoverflow.com/questions/34862667/test-exceptionnotification-middleware-in-rails-unit-test
+https://agileleague.com/blog/rails-3-2-custom-error-pages-the-exceptions_app-and-testing-with-capybara/
+I prefer to test only routing to /404 /422 /500
+Note that you should `js: true`.
+
+~~~
+config.consider_all_requests_local = false
+config.action_dispatch.show_exceptions = true
+~~~
 
 Usually you need to export `export EXCEPTION_RECIPIENTS=asd@asd.asd` in the same
 process where it is run (`rails s` for immediate exceptions, `rake resque:work`

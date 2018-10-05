@@ -1107,7 +1107,9 @@ You also need executables for firefox `geckodriver` (just download from
 <https://github.com/mozilla/geckodriver/releases> to `/usr/local/bin`)
 and for chrome `chromedriver` (download from
 <https://sites.google.com/a/chromium.org/chromedriver/downloads> to
-`/usr/local/bin`) and also `gem 'chromedriver-helper'` is needed for client.
+`/usr/local/bin`) or you can use `gem 'chromedriver-helper'` that will install
+chromedriver to `.rvm/gems/ruby-2.3.3/bin/chromedriver`.
+
 Make sure you have version of firefox and chrome that matches drivers.
 
 Instead of using `get` and `response.body` we can use only what end user see
@@ -1720,6 +1722,7 @@ module MailerHelpers
   end
 
   def last_email
+    fail 'please use give_me_last_mail_and_clear_mails'
     ActionMailer::Base.deliveries.last
   end
 
@@ -1731,9 +1734,9 @@ module MailerHelpers
   #   /(http:.*)">#{t("confirm_email")}/
   # )[1]
   # visit confirmation_link
-  def give_me_last_email_and_clear_emails
-    email = last_email
-    clear_emails
+  def give_me_last_mail_and_clear_mails
+    email = ActionMailer::Base.deliveries.last
+    ActionMailer::Base.deliveries = []
     email
   end
 end
@@ -2677,6 +2680,17 @@ end
 Last reponse is repeated infinitely (times) and you can specify number of times
 given response should be returned. You can set expecation on how many
 times request has been made.
+
+Error like `stub_request(:get, "http://127.0.0.1:9516/shutdown").` is issue with
+[spring](https://github.com/bblimke/webmock/issues/163#issuecomment-37257333)
+so add 
+~~~
+# config/initializers/webmock.rb
+if Rails.env.test?
+  require 'webmock'
+  WebMock.disable_net_connect!(allow_localhost: true)
+end
+~~~
 
 VCR is using cassetes so you do not need to manualy stub requests using curl.
 

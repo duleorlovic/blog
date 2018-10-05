@@ -235,31 +235,22 @@ to another since they are not compatible.
  */
 ~~~
 
-# Bower
+# NPM
 
-I would not add node_modules to git as it was suggested
-<https://coderwall.com/p/6bmygq/heroku-rails-bower>. Instead fetch is with
-bower.
+Add npm to rails app that will install dependecies in `/node_modules`
 
 ~~~
-# do not name your package as `bower` or other existing package
 npm init -y # to create package.json, -y to accept defaults
-npm install bower --save
-sed -i package.json -e '/scripts/a \
-    "postinstall": "./node_modules/bower/bin/bower install",'
-yes '' | bower init # to create bower.json, 'yes' is to choose default options
-echo '{
-  "directory": "vendor/assets/bower_components"
-}' > .bowerrc
-echo '
-# npm and bower packages
-node_modules
-vendor/assets/bower_components' >> .gitignore
+npm install jquery-ui-sortable-npm
+
+cat >> .gitignore << HERE_DOC
+/node_modules
+HERE_DOC
 cat >> config/initializers/assets.rb << HERE_DOC
-Rails.application.config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/
 HERE_DOC
-git add . && git commit -m "Adding npm and bower"
+git add . && git commit -m "Adding npm"
 ~~~
 
 For Heroku you need to use two build packs. Follow this

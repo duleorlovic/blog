@@ -19,3 +19,13 @@
   ~~~
 
 * import dump with `mysql -u newuser -p dbname < web001db.sql`
+* to remove column you need first to remove foreign keys and index. If you have
+  two or more foreign keys than remove all them by name... find name in mysql if
+  not defined in db/schema.rb, sometimes name is different for index and key.
+
+  ~~~
+  SHOW CREATE TABLE operators;
+  alter table operators drop foreign key fk_rails_7bd209f074;
+  alter table operators drop index fk_rails_7bd209f074;
+  alter table operators drop column user_id;
+  ~~~

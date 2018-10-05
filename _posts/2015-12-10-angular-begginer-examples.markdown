@@ -315,7 +315,7 @@ that somehow does not work well.  There are also errors from server
     <div ng-message="email">This field must be an email</div>
     <div ng-message="minlength">Your field is too short</div>
     <div ng-message="pattern">Must look like an email</div>
-    <div ng-message="server">{{ vm.serverErrors.editMenuItemForm.email.toString() }}</div>
+    <div ng-message="server">{ { vm.serverErrors.editMenuItemForm.email.toString() }}</div>
   </div>
 
   <md-button type="submit" class="md-raised md-primary"

@@ -59,7 +59,10 @@ widget</a>`
   `applications.scss` with `@import 'popins';`
 
 * add favicon. It is fine just to add to the root of web site
-  (for rails just copy your png to `public/favicon.ico`)
+  (for rails just copy your png to `public/favicon.ico`) Size should be 32x32.
+  Some of the best favicons is
+  https://cdn.shopify.com/shopify-marketing_assets/static/shopify-favicon.png
+  More info on
   https://en.wikipedia.org/wiki/Favicon#How_to_use
 * custom 404 error page
 * add language `<html lang="en">`

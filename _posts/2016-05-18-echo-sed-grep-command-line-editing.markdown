@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Echo Sed Grep command line editing
-tags: echo sed grep edit command-line
 ---
 
 # Echo
@@ -24,11 +23,31 @@ HERE_DOR
 
 `sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and
 append *home* after that line (beside insert before `i`, this could be `a`
-append, `c` change matched line, `d` delete matched line). Multiple lines need
-to have "\" at the end of line (multiline *echo ' ...'* does not need that
-trailing backslash). You can use `sed -i "// a" file.txt` but then you need
-`\n\` at the end of each line.  Remember that no char (even space) could be
-after last `\`.
+append, `c` change matched line, `d` delete matched line).
+Multiple lines need to have "\" at the end of line because only first line will
+be used otherwise.
+When using double quotes you also need `\n` (last line should not put `\n\ `
+because you probably do not want to insert blank new line).
+With single quotes multiline `echo ' ...'` does not need that new line character
+(last line should ends with `'` because if you put on next line you will insert
+blank line).
+Double backslash at beggining is needed so first line is properly indented.
+Remember that no char (even space) could be after last `\ `.
+
+~~~
+# double quotes need \n, can close quote in new line, need double \\ at begging
+sed -i config/routes.rb -e "/^end$/i \\
+  # root page\n\
+  root 'pages#home'\
+"
+
+# single quotes, no need for \n
+# I do not like this because I need to use double quotes in ruby or ugly escape
+sed -i config/routes.rb -e '/^end$/i \
+  # root page\
+  root '"'"'pages#home'"'"'\
+  root "pages#home"'
+~~~
 
 Most common usage is to add before some line, for example line begins with
 `test`. If you need single quote `'` for example `'a'` than you need to use
@@ -183,15 +202,24 @@ use modifier `m`, like match all dl `s.match /dl.*dl/m`
   or `+`, like
   `registration_email.html_part.decoded.match(/(http:.*?confirmation.*?)"/)[1]`
   to grab inside first next `"`.
+* to include matching delimiter when spliting in ruby, instead of
+  `content.split(/[?.!]/)` we can use a positive lookbehind regular expression
+  (i.e. `?<=`) inside a parenthesis capture group to keep the delimiter at the
+  end of each string `content.split(/(?<=[?.!])/)` https://stackoverflow.com/questions/18089562/how-do-i-keep-the-delimiters-when-splitting-a-ruby-string
 * match start of line with lowercase `^[a-z]` (but one string could have
 multiple lines). Better is to check start of string with lowercase `\A[a-z]` (in
 ruby example) `"123\ntest".match /^[a-z]/` will return `t`... (you can use
 alternative `string.start_with? /^[a-z]/`
-* repetative match is with `{number}` like for example 000...999 `^[0-9]{3}$`
+* repetative match is with `{number}` like for example for numbers 000...999 use
+  `^[0-9]{3}$`. To find two or more spaces you can use `\s{2,}` so 2 is minimum
+  count of matching chars.
 * whitespace `\s`, word `\w` character
 * `\A` start and `\z` end of string. That is better than `^` (start of line) and
   `$` (end of line) since that will match until a new line
   `asd@asd.asd\n<script>alert('danger')</script>`
+* replace groups of text with another text that use matching text, for example
+  add space if there is no space before MAC, `'aMAC'.gsub /([^\s])(MAC)/, '\1
+  \2'`
 
 When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
 That is needed for negative lookahead.

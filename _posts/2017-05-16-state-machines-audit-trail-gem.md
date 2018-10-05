@@ -286,3 +286,11 @@ errors.add(:advance_renewal_package, "Please select Advance Renewal
 Package.")unless advance_renewal_package.present?; end`.
 
 `before_transition`  and `after_transition` callbacks
+
+# Other audit gems
+
+* paper_trail
+  ~~~
+  bundle exec rails g paper_trail:install --with-changes
+  bundle exec rake db:migrate
+  ~~~

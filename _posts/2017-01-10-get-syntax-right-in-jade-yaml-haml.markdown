@@ -64,6 +64,14 @@ sport:
     to play around
 ~~~
 
+~~~
+shared:
+  key: 123
+
+development:
+  << *shared
+~~~
+
 # Haml
 
 

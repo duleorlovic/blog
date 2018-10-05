@@ -212,7 +212,8 @@ well with `display: flex` elements, better is to use
   property is `m` margin or `p` padding
   sides `t` top, `b` bottom, `l` left, `r` right, `x` both l and r, `y` t and b
   size `0`, `1` (`$spacer * 0.25`), `2` (`$spacer * .5`), `3` (`$spacer`), `4`
-  (`$spacer * 1.5`), `5` (`$spacer * 3`), `auto` for margin auto. Spacer is 1rem
+  (`$spacer * 1.5`), `5` (`$spacer * 3`), `auto` for margin auto. By default
+  `$spacer: 1rem` 1rem is 16px
 
   sides or breakpoint not required: `p-0` padding none, `mt-5` margin top,
   `ml-auto` to align to the right, `mx-auto` for horizontal centering of fixed

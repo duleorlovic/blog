@@ -35,7 +35,7 @@ tags: css angular
   ~~~
   <md-chips ng-model="ctrl.items" readonly="true">
     <md-chip-template>
-        {{$chip.name}}
+        { {$chip.name}}
     </md-chip-template>
   </md-chips>
   ~~~

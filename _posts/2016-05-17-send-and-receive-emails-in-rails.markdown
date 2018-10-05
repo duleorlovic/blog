@@ -250,6 +250,9 @@ class MyMailer < ActionMailer::Base
 end
 ~~~
 
+You can change template with `mail to: 'my@email.com', template_name:
+'contact_form'`
+
 Another solution is `gem 'premailer-rails'`
 <https://github.com/fphilipe/premailer-rails> which can also generate text part
 so you do not need to maintain it. Just add the gem and you are good to go.

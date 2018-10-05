@@ -33,7 +33,6 @@ but it is better to create `.railsrc` so it is used for all rails
 
 ~~~
 cat >> ~/.railsrc << HERE_DOC
--T # skip minitests
 -d postgresql # use postgresql
 HERE_DOC
 
@@ -101,30 +100,73 @@ git commit -am "Update .gitignore"
 
 Some of the gems could be found on [thoughtbot
 suspenders](https://github.com/thoughtbot/suspenders)
+Paid 3th party service alternative for `bullet` is scoutapp, for
+`exception_notification` is sentry, informantapp.
 
 ~~~
-rubocop --auto-correct # to autocorrent correct some files (except lineLength)
-rubocop --auto-gen-config # generate .rubocop_todo.yml
-echo 'inherit_from: .rubocop_todo.yml' > .rubocop.yml # create .rubocop.yml
-sed -i Gemfile -e '/group :development do/a  \
-  # to detect N+1 sql queries\
-  gem "bullet"\
+cat >> Gemfile << HERE_DOC
+group :development do
+  # pretty print Ruby objects in full color
+  gem 'awesome_print', require: 'ap'
+  # static analysis security vulnerability scanner, run: `brakeman`
+  gem 'brakeman', '~> 3.5.0', require: false
+  # detect N+1 sql queries
+  gem 'bullet'
+  # detect out-of-date or vulnerable gems, run: `gemsurance`
+  gem 'gemsurance'
+  # automatic reload
+  gem 'guard-livereload', require: false
+  # open emails in browser
+  gem 'letter_opener'
+  # detect file changes
+  gem 'listen', '~> 3.0.5'
+  # support for Rails Panel - chrome extension
+  gem 'meta_request'
+  # debugger
+  gem 'pry'
+  gem 'pry-rails'
+  # ruby static code analyzer
+  gem 'rubocop', require: false
+  # spring speeds up development by keeping your application running in the
+  # background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+HERE_DOC
+~~~
+
+Some not used gems
+~~~
   # do not show assets in log\
   # gem "quiet_assets # can not find rails 5 version"\
+
   # irbtools includes interactive_editor gem (vim inside irb)\
   # just create ~/.irbrc with\
   # require "rubygems"\
   # require "irbtools"\
   gem "irbtools", require: "irbtools/binding"\
-\
-  # automatic reload\
-  gem "guard-livereload", require: false\
-  gem "rack-livereload"\
-\
-  # detects sql and gems vulnerability\
-  gem "brakeman", require: false\
-'
 
+  # is not needed since rails will show line on which there is
+  # exception (no need to insert console and use on web page).
+  gem better_errors
+
+  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
+  gem 'web-console', '>= 3.3.0'
+
+  # config/application.rb
+  # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
+  config.web_console.whiny_requests = false'
+~~~
+
+Rubocop cli
+~~~
+rubocop --auto-correct # to autocorrent correct some files (except lineLength)
+rubocop --auto-gen-config # generate .rubocop_todo.yml
+echo 'inherit_from: .rubocop_todo.yml' > .rubocop.yml # create .rubocop.yml
+~~~
+
+Production gems and configurations
+
+~~~
 cat >> Gemfile << HERE_DOC
 # adding vendor prefixes to css rules
 gem "autoprefixer-rails"
@@ -142,15 +184,16 @@ HERE_DOC
 
 bundle
 guard init livereload
-sed -i config/environments/development.rb -e '/^end/i \
-  # livereload\
-  # use rack-livereload or browser extension\
-  # if guard is not running, there is an error in js console:\
-  # Cross-origin plugin content from  must have a visible size larger than 400 x\
-  # 300 pixels, or it will be blocked. Invisible content is always blocked.\
-  config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
-  # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
-  config.web_console.whiny_requests = false'
+# I receive error No such middleware to insert before: ActionDispatch::Static
+# so better is to use browser plugin instead of gem 'rack-livereload'
+# sed -i config/environments/development.rb -e '/^end/i \
+#   # livereload\
+#   # use rack-livereload or browser extension\
+#   # if guard is not running, there is an error in js console:\
+#   # Cross-origin plugin content from  must have a visible size larger than 400 x\
+#   # 300 pixels, or it will be blocked. Invisible content is always blocked.\
+#   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
+# '
 
 cat > config/initializers/bullet.rb << HERE_DOC
 if defined? Bullet
@@ -336,6 +379,13 @@ shared:
     host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "localhost") %>
     port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : nil) %>
 HERE_DOC
+
+# `shared` is automatically included, no need to write
+# shared: &default
+# development: *default
+# or
+# development:
+#   <<: *default
 
 git add . && git commit -m "Simplify secrets"
 ~~~
@@ -544,15 +594,12 @@ heroku apps:create $MYAPP_NAME
 heroku addons:create heroku-postgresql:hobby-dev # this will set DATABASE_URL
 git push heroku master --set-upstream
 
-# if you receive an error An error occurred while installing Ruby ruby-2.2.4
-# just try again
-
 heroku run rake db:migrate db:seed
 # heroku run rake db:setup will raise error:
 # PG::ConnectionBad: FATAL:  permission denied for database "postgres"
 # DETAIL:  User does not have CONNECT privilege
 # https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps try
-# heroku pg:reset DATABASE_URL --confirm $MYAPP_NAME
+# heroku pg:reset --confirm $MYAPP_NAME
 # heroku restart
 #
 # I do not know how to drop db since db:migrate:reset does not work either
@@ -564,6 +611,24 @@ heroku run rake db:migrate db:seed
 # heroku repo:purge_cache
 
 heroku open
+~~~
+
+Heroku use ubuntu 16 or Ubuntu 18, you can change
+
+~~~
+heroku apps:info
+heroku stack
+heroku stack:set heroku-16
+~~~
+
+You can pull from heroku databse https://devcenter.heroku.com/articles/heroku-postgresql#pg-push-and-pg-pull
+You need to find the name of heroku database by clicking on Postgresl plugin
+
+~~~
+heroku pg:pull postesql-name-on-heroku my_rails_app_development
+
+# also pushing
+heroku pg:push buyers_development postgresql-animate-86842
 ~~~
 
 If you need to compile node packages than you need need custom
@@ -593,7 +658,9 @@ heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
 # echo 'https://github.com/heroku/heroku-buildpack-ruby
 # https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
 # heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+~~~
 
+~~~
 git rm -rf public
 echo '/public
 /node_modules' >> .gitignore
