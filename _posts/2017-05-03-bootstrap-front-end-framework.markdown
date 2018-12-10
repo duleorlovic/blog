@@ -7,26 +7,27 @@ title: Bootstrap front-end framerwork
 
 # Bootstrap
 
-Bootstrap grid is mobile first, so three `.col-md-4` will be stacked until
-desktop and large desktop, where it will be three equal width columns.
-You do not need to define all, `.col` will occupy rest of place.
+`div` is block element and by default it will be stacked. Bootstrap grid is
+mobile first, so three `.col-md-4` will be stacked until desktop, so on desktop,
+large and extra large desktop it will be like three equal width columns.  You do
+not need to define all 12, `.col` will occupy rest of place.
+When you specify for sm, you do not need to specify for md or lg. `col-xs-12` is
+`width: 100%` which is default so no need to write that. Write only when you
+need columns.
+
 Bootstrap Media queries:
 
 * xs - phones (no need for media queary since this is default)
-* sm - tablets `@media (min-width: @screen-sm-min) { // 576px (Bv3 768px) and up`
+* sm - tablets `@media (min-width: map-get($grid-breakpoints, 'sm') { // 576px (Bv3 768px) and up`
 * md - desktops `@media (min-width: @screen-md-min) { // 768px (Bv3 992px)`
 * lg - larger desktops `@media (min-width: @screen-lg-min) { // 992px (Bv3 1200px)`
 * xl - extra lage `@media (min-width: @screen-xl-min) { // 1200pxa`
-
-So when you specify for sm, you do not need to specify for md or lg.
 
 With bootstrap 4 you can use mixins for media queries:
 ~~~
 @include media-breakpoint-up(sm) {
   .some-class {
     display: block;
-  }
-}
 
 // or other direction (given and smaller)
 @include media-breakpoint-down(sm) {}
@@ -59,15 +60,18 @@ With Bootstrap3 you can use their predefined media queries with `min-width`
 
 Bootstrap `container` has fixed width for big devices.
 
+Difference with bootstrap 3 is that there is new grid tier `xl` that was `lg` in
+B3 (`sm` is 576px instead of 768px in B3) and all are bumped up one level (so
+`.col-md-6` in v3 is now `.col-lg-6` in v4)
 Boostrap 3 you can use [responsive available
 classes](http://getbootstrap.com/css/#responsive-utilities-classes) to toggle
 between `display: block, inline, inline-block` or to hide, for specific viewport
 size `.visibe-sm-block .hidden-md .hidden-sm-up`
 
 In Bootstrap 4 you can use `d-*-none` class
-<https://getbootstrap.com/docs/4.0/utilities/display/#hiding-elements>
-For example to hide on smaller than md use `d-none d-md-block`
-
+https://getbootstrap.com/docs/4.1/utilities/display/
+To hide on smaller than md (ie show on md and larger) use `d-none d-md-block`
+To show only on md use `.d-none .d-md-block .d-lg-none`
 
 You can write your own to match all greater (or smaller) sizes:
 
@@ -169,19 +173,24 @@ $.fn.tooltip.Constructor.DEFAULTS.container = 'body'
 $.fn.tooltip.Constructor.DEFAULTS.placement = 'right'
 ~~~
 
-## Bootstrap input group and  button group
+## Bootstrap input group and button group
 
 Buttons and inputs can be grouped, but [input
 group](http://getbootstrap.com/components/#btn-groups) is not advised to group
 with select. [Here](http://jsfiddle.net/MansukhKhandhar/4309n31p/1/) is example
 of input with select and button.
 
-# Color helpers
+# Helpers
 
+Color helpers
 Primary colors are [link](https://getbootstrap.com/docs/4.0/utilities/colors/)
 `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `dark`, `light`,
 `white`.  For text there is `muted` and also need background `text-light
-bg-dark` and `text-white bg-dark`.
+bg-dark` and `text-white bg-dark`. You can set default body background by
+defining variable `$body-bg: #bcdee3` before importing boostrap.
+You can use css `darken` for example for variable
+`$link-hover-color: darken($link-color, 15%) !default;`
+https://github.com/twbs/bootstrap/blob/e7e43edf65306efaf46a16ffc9fe35ef623bffef/scss/_variables.scss#L171
 
 * text `.text-success`
 * background `.bg-warning`
@@ -189,18 +198,21 @@ bg-dark` and `text-white bg-dark`.
 
 Other helpers are:
 
+* position helpers https://github.com/twbs/bootstrap/blob/e57a2f244ba8446fffe71847e6a58b18f7b2d541/scss/utilities/_position.scss
+  `position-relative`, `position-absolute`
 * `.clearfix`
 * `.text-center`, `.text-left`, `.text-nowrap`
 * `.show` and `.hidden`
-* I usually create my own `.hide-not-important` since bootstrap's `hide` and
-`hidden` are with `important`. Do not use jQuery `$el.show()` (hide) or
-`$el.slideDown()` (slideUp) since they use `display: block` which does not work
+* `.d-none` to hide something. But when I want to show/hide in js I usually
+  create my own `.d-none-not-important` since bootstrap's is with `important`.
+  I used `hide-not-important` with jQuery `$el.show()` (hide) or
+`$el.slideDown()` (slideUp) but they use `display: block` which does not work
 well with `display: flex` elements, better is to use
-`$(el).addClass('hide-not-important')`. There is also
+`$(el).addClass('d-none-not-important')`. There is also
 [hidden](https://getbootstrap.com/docs/4.0/content/reboot/#html5-hidden-attribute)
 
   ~~~
-  .hide-not-important {
+  .d-none-not-important,.hide-not-important {
     display: none;
     &.active {
       display: initial;
@@ -212,13 +224,16 @@ well with `display: flex` elements, better is to use
   property is `m` margin or `p` padding
   sides `t` top, `b` bottom, `l` left, `r` right, `x` both l and r, `y` t and b
   size `0`, `1` (`$spacer * 0.25`), `2` (`$spacer * .5`), `3` (`$spacer`), `4`
-  (`$spacer * 1.5`), `5` (`$spacer * 3`), `auto` for margin auto. By default
-  `$spacer: 1rem` 1rem is 16px
+  (`$spacer * 1.5`), `5` (`$spacer * 3`), By default `$spacer: 1rem` 1rem is
+  16px.
+  `mx-auto` for `margin: 0px auto`.
 
   sides or breakpoint not required: `p-0` padding none, `mt-5` margin top,
-  `ml-auto` to align to the right, `mx-auto` for horizontal centering of fixed
-  width block elements.  If you put inside `d-flex` than it will be scretched so
-  use `d-flex align-items-center` to center verticaly.
+  For fixed width block elements `ml-auto` to align to the right (same as
+  pull-right in B3), `mx-auto` for horizontal centering.
+  For inline elements you can use `float-left` (instead of `pull-left`).
+  If you put inside `d-flex` than it will be scretched so use `d-flex
+  align-items-center` to center verticaly.
 
 * `d-flex` class to convert to flexbox container.  Other flex helpers
   https://getbootstrap.com/docs/4.0/utilities/flex/
@@ -372,10 +387,15 @@ cat >> Gemfile << HERE_DOC
 gem 'bootstrap_form'
 HERE_DOC
 
-sed -i app/assets/stylesheets/application.scss -e '1i\
+sed -i app/assets/stylesheets/application.css -e '1i\
 /*\
  *= require rails_bootstrap_forms\
  */'
+# or sass
+cat >> app/assets/stylesheets/application.sass << HERE_DOC
+// gems
+@import 'rails_bootstrap_forms'
+HERE_DOC
 ~~~
 
 and use your `bootstrap_form_for`
@@ -444,7 +464,7 @@ Static test can be displayed with
 
 ~~~
 <%= f.static_control :email %>
-<%= f.static_control labe: 'Custom Static Control' do %>
+<%= f.static_control label: 'Custom Static Control' do %>
   Content here
 <% end %>
 ~~~
@@ -584,3 +604,33 @@ end
 When rails use `data-confirm='Are you sure?'` it opens default browser's builtin
 `confirm()`. Instead of that, you can open bootstrap 3 or 4 modal with
 <https://github.com/ifad/data-confirm-modal>
+
+## Navbar
+
+* `navbar` is starting class which `display: flex; flex-wrap: wrap; align-items:
+  center; justify-content: space-between` (so if you have two childs like
+  `navbar-brand` and `navbar-toggler` they will be on left and right side, but
+  `navbar-collapse` has `flex-grow: 1; flex-basis: 100%` so that's why it looks
+  like it's on left, also `navbar-expand-lg` has `justify-content: flex-start`).
+* `navbar-light bg-light` to add colors (it will change color of nav-links)
+* `navbar-collapse` contains all navbar. add `navbar-expand-lg` on navbar so on
+  lg `navbar-toggler` dissapears, `navbar-collapse` expands and `navbar-nav`
+  change from `column` to `flex-direction: row`. Inside `navbar-collapse` beside
+  `navbar-nav` you can also nest one more `navbar-nav ml-auto` if you want to
+  pull some links to right.
+
+## Cards
+
+```
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src=".../100px180/" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+```
+
+Cards occupy full width, so you need to set width manually.
+`card-body` is used for padding.

@@ -284,7 +284,8 @@ is private but we can
 * `ruby -e 'p Kernel.private_instance_methods.sort'` prints all usefull script
   commands (require, load, raise)
 * `puts caller` to print callstack
-* `p method(:my_method).source_location` to find method implementation
+* `p method(:my_method).source_location` to find method implementation. To print
+  method source you can use `user.method(:name).source.display`
 * if `method` is overwritten in some class, we can unbind from kernel and
   rebind to request object
   [link](https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html)
@@ -328,6 +329,7 @@ is private but we can
 * big multiline strings can be concatenated from lines similar to HERE_DOC. It
 will show `\n` and will insert spaces because text is indented. There is
 `~HERE_DOC` version to strip spaces for all lines based on first line indent.
+Minus in `<<-HERE_DOC` has special meaning.
 
   ~~~
   MY_TEMPLATE = <<HTML
@@ -358,6 +360,13 @@ will show `\n` and will insert spaces because text is indented. There is
     WHERE
       u.created_at <= #{Time.now} AND u.created_at >= #{Time.now - 7.days}
   SQL
+
+  # you can pass as parameter to method
+    Person.joins(<<-SQL).
+      LEFT JOIN people managers
+        ON managers.id = people.manager_id
+    SQL
+    where(managers: { id: Person.find_by!(name: 'Eve') })
   ~~~
 
   Same HERE_DOC functionality can be achieved with `%()` or `%Q()` with
@@ -759,9 +768,13 @@ merge](https://apidock.com/rails/Hash/reverse_merge)
   ruby -rbyebug my_script_with_byebug.rb
   ~~~
 
-  if you want to debug some ruby cli (file that begins with `#!/usr/bin/env
-  ruby...`), you can call it (if you use Gemfil, add byebug to it and wrap with
-  bundle exec)
+  if you want to debug some ruby cli you can write scripts that check for rvm
+  ruby version
+  ```
+  #!/usr/bin/env ruby
+  ```
+  If you use some gems like byebug, add `gem 'byebug'` to Gemfile and from that
+  folder run
 
   ~~~
   ruby -rbyebug $(which vagrant) up
@@ -841,7 +854,8 @@ end
   ~~~
 
   On hash there is `values_at` but that is only values. To fetch all attributes
-  use `other_user.attributes` or `other_user.attributes.extract! 'id', 'email'`
+  use `other_user.attributes` or specific ones `other_user.attributes.values_at
+  'id', 'email'`
 
 * safe navigation operator `&.` can be used instead of `.try` for example: `user
 && user.name` can be written as `user&.name`. It is usefull with find_by for
@@ -861,6 +875,12 @@ key.to_s.titleize }`
 * find in array by object property and return array of selected items
   `array.select {|i| i.user == current_user }`. 
 * ruby has `Hash#invert` which will replace keys and values.
+  Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`
+* you can create hash with `Hash[]`.
+  ```
+  >> [['a','b'], [1, 2]].transpose #=> [["a", 1], ["b", 2]]
+  >> Hash[[['a','b'], [1, 2]].transpose] #=> {"a"=>1, "b"=>2}
+  ```
 * `map` and `collect` are the same methods
 * to check if string starts with or ends with some substring prefix sufix you
 can use `s.start_with? prefix` or `s.end_with? suffix`
@@ -931,18 +951,9 @@ todo https://www.youtube.com/watch?v=4hfMUP5iTq8
 
 # Tips
 
-* Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`
 * insert in strings with percentage `"Nums are %f %f" % [1, 2]`
 * [101 ruby code factoids](http://6ftdan.com/allyourdev/2016/01/13/101-ruby-code-factoids/)
 * you can return only from methods, but not from `do end` blocks
-* method default parameters can be set using ruby 2.0 keyword arguments `def
-my_method(name:, position: 1);end` They looks better than position arguments. It
-will be an error if we call without required arguments, for example `my_method
-position: 2`. It will be an error if we call with non existing arg `my_method
-name: 'me', date: 3`. You can mix with position arguments. It does not work if
-you instead of hash use object `ActionController::Parameters.new name: 'me'` so
-you need to call with `my_method name: ActionController::Parameters.new(name:
-'me').name`
 * ruby regex match will return
 [matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) for which you can
 call `captures` to get matched groups. You can use block instead of `if`
@@ -1029,6 +1040,14 @@ assignment for function parameters)
   f(a: 1, b: 2) # { a: 1, b: 2 }
   ~~~
 
+  method default parameters can be set using ruby 2.0 keyword arguments `def
+  my_method(name:, position: 1);end` They looks better than position arguments.
+  It will be an error if we call without required arguments, for example
+  `my_method position: 2`. It will be an error if we call with non existing arg
+  `my_method name: 'me', date: 3`. You can mix with position arguments. It does
+  not work if you instead of hash use object `ActionController::Parameters.new
+  name: 'me'` so you need to call with `my_method name:
+  ActionController::Parameters.new(name: 'me').name`
   In ruby > 2.0 you can use keyword arguments (params are exploded decomposed),
   for which you can define default values or they need to be required (hash key
   is required)
@@ -1121,6 +1140,11 @@ http://batsov.com/articles/2012/10/14/ruby-tip-number-3-matching-on-an-objects-c
 
 ~~~
 # not case receiver.class
+# better not to use receiver.class == Customer, but receiver.is_a? Customer
+# triple equal is used for that (for a.is_a? b, I can put label b on a)
+# for module it tests for `.is_a?`
+# for range it test for `.includes?`
+# for regexp it test for `.match`
 case receiver
 when Customer
 end

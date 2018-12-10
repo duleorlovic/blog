@@ -10,10 +10,13 @@ Thanks to the workshop I started using Neo4j
 update-java-alternatives --list
 sudo apt install default-jre default-jre-headless
 sudo apt-get install openjdk-8-jdk
+
 wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
 echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
-sudo apt-get update
-sudo apt-get install neo4j=3.3.0
+sudo apt update
+sudo apt install neo4j
+lynx localhost:7474/browser
+
 sudo neo4j start
 # sudo mkdir /var/run/neo4j # this is needed if permission denied
 # cat /etc/neo4j/neo4j.conf
@@ -25,6 +28,20 @@ sudo neo4j start
 sudo service neo4j status
 sudo service neo4j start
 ~~~
+
+To enable remote access just uncomment the line
+
+```
+# /etc/neo4j/neo4j.conf
+dbms.connectors.default_listen_address=0.0.0.0
+```
+
+For debugging you can also uncomment http logs so you can see if firewall is
+blocking
+```
+# /etc/neo4j/neo4j.conf
+ dbms.logs.http.enabled=true
+```
 
 Open browser on <http://localhost:7474/>
 Since communications is over http/bold, you need to create new neo4j instance
@@ -767,11 +784,24 @@ Errors format should be used:
 On Heroku GrapheneDB in tab Admin -> Export database, you can download
 `graphdb.zip` and export to your graph.db folder
 
-~~~
-rm -rf db/neo4j/development/data/databases/graph.db
-mkdir db/neo4j/development/data/databases/graph.db
-unzip tmp/graphdb.zip db/neo4j/development/data/databases/graph.db
+```
+export GRAPH_DB_PATH=db/neo4j/development/data/databases/graph.db
+rm -rf $GRAPH_DB_PATH
+mkdir $GRAPH_DB_PATH
+unzip tmp/graphdb.zip -d $GRAPH_DB_PATH
 rails neo4j:restart[development]
+```
+
+To dump to production you need also to restart heroku
+~~~
+export GRAPH_DB_PATH=/var/lib/neo4j/data/databases/graph.db
+wget graphdb_url
+sudo rm -rf $GRAPH_DB_PATH
+sudo -u neo4j mkdir $GRAPH_DB_PATH
+sudo -u neo4j unzip graphdb.zip -d $GRAPH_DB_PATH
+sudo service neo4j restart
+heroku restart
+tail -f /var/log/neo4j/debug.log 
 ~~~
 
 

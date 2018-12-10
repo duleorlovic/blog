@@ -72,6 +72,13 @@ request = Net::HTTP::Post.new(uri, header)
 request['Content-Type'] = 'text/json'
 ~~~
 
+On response you can read headers
+
+~~~
+response.each_key {|k| res[k]}
+{"server"=>["nginx/1.6.2"], "date"=>["Wed, 17 Oct 2018 22:22:51 GMT"], "content-type"=>["text/html"], "content-length"=>["184"], "connection"=>["close"], "location"=>["https://paytm.com/business/payments"]}
+~~~
+
 Set Form data
 
 ~~~

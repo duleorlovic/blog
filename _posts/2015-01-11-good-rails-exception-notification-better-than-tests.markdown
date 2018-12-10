@@ -672,6 +672,7 @@ by creating same file like
 
 <% if @request.session['warden.user.user.key'].present? %>
 <%
+  # try to find current_user
   id = @request.session['warden.user.user.key']&.first&.first
   user = User.find_by id: id
 %>

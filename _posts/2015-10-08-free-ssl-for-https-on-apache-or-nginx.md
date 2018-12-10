@@ -7,7 +7,54 @@ tags: https ssl apache nginx
 # Lets encrypt for heroku
 
 https://letsencrypt.org/
-https://github.com/pixielabs/letsencrypt-rails-heroku
+Is free and Heroku supports it using
+[ACM](https://devcenter.heroku.com/articles/automated-certificate-management)
+but only for paid dynos.
+Use cloudflare.com for free ssl, and we point directly to https herokuapp (no
+need to setup dns on heroku).
+On Crypto tab on Cloud Flare select FULL (not Flexible) SSL.
+You can check the Always use HTTPS (`Redirect all requests with scheme “http” to
+“https”. This applies to all http requests to the zone`) or create Page rules
+that redirects from http to https.
+There could be a problem when we using http on Rails and submitting the form on
+https, heroku logs will give
+
+```
+HTTP Origin header (https://www.premesti.se) didn't match request.base_url (http://www.premesti.se)
+Completed 422 Unprocessable Entity in 6ms
+ActionController::InvalidAuthenticityToken (ActionController::InvalidAuthenticityToken):
+```
+
+On Page rules add redirect non www to www.
+
+~~~
+https://premesti.se/* -> https://www.premesti.se/$1
+
+# Also we you did not use  `Always use HTTPS` you can add rules that redirects
+http://premesti.se/* -> https://www.premesti.se/$1
+http://www.premesti.se/* -> https://www.premesti.se/$1
+~~~
+
+~~~
+dig premesti.se
+# should have
+;; ANSWER SECTION:
+premesti.se.		78	IN	A	104.28.14.137
+premesti.se.		78	IN	A	104.28.15.137
+
+curl premesti.se -I
+# should have
+HTTP/1.1 301 Moved Permanently
+Location: https://www.premesti.se/
+
+curl https://premesti.se -I
+# should have
+HTTP/1.1 301 Moved Permanently
+Location: https://www.premesti.se/
+~~~
+
+
+# Old way
 
 Following [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-with-a-free-signed-ssl-certificate-on-a-vps) here are some screenshots from Startssl how I registered [www.kontakt.in.rs](http://www.kontakt.in.rs).
 

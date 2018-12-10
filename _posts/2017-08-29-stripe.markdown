@@ -2,7 +2,85 @@
 layout: post
 ---
 
-Test numbers `4242424242424242` or some of declined cards:
-  * incorrect_number `424242424242424241`
+# Installation
 
-<https://github.com/andrewculver/koudoku>
+~~~
+gem 'stripe'
+
+rails credentials:edit
+# add two keys
+stripe_publishable_key: pk_test_I...
+stripe_secret_key: sk_test_g...
+
+# config/initializers/stripe.rb
+Stripe.api_key = Rails.application.credentials.stripe_secret_key
+~~~
+
+You can use checkout.js https://stripe.com/docs/checkout#integration that will
+generate token which you can use to make a customer
+
+~~~
+<%= form_tag charge_path do %>
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="<%= Rails.application.credentials.stripe_publishable_key %>"
+          data-description="A month's subscription"
+          data-amount="500"
+          data-locale="auto"></script>
+<% end %>
+~~~
+
+Or you can use more flexibile `stripe.js` but note that if you use elements
+create than they will be inside iframe
+https://stripe.com/docs/stripe-js/elements/quickstart
+https://github.com/stripe/react-stripe-elements/issues/167
+https://stripe.com/docs/stripe-js/elements/migrating#elements-demo
+
+~~~
+var stripe = Stripe('pk_test_Ib1l2OSfSQv8DieeTjCHsNoU');
+stripe.createToken(card).then(function(result) {
+  result.token
+  result.error
+});
+~~~
+
+# Stripe ruby mock
+
+https://github.com/rebelidealist/stripe-ruby-mock is a nice way to mock all API
+calls. To mock js calls you need to override js or mock params
+https://github.com/rebelidealist/stripe-ruby-mock/issues/360
+
+You can find on github https://github.com/duleorlovic/stripe_demo
+
+~~~
+  def stub_stripe(status, plan_id: nil)
+    StripeMock.start
+    stripe_helper = StripeMock.create_test_helper
+    token = stripe_helper.generate_card_token(last4: '1234')
+    script = "document.token_id = '#{token}'"
+    page.evaluate_script(script)
+    stripe_helper.create_plan(id: plan_id) if plan_id.present?
+    yield if block_given?
+    # note that you should make assertion before the block finish
+    StripeMock.stop
+  end
+~~~
+
+# Testing Stripe
+
+Test numbers `4242424242424242` or some of declined cards:
+https://stripe.com/docs/testing#cards
+  * incorrect_number `424242424242424241`
+  * incorrect cvc is just use two digits or `4000000000000127` or
+  `4000000000000101`
+  * can attach card but attempts to charge fails `4000000000000341`
+
+Demo app but Rails 4 can be found <https://github.com/andrewculver/koudoku>
+http://koudoku.org/
+
+
+You can test using server https://github.com/stripe/stripe-mock or using mocking
+library https://github.com/rebelidealist/stripe-ruby-mock
+
+~~~
+
+~~~

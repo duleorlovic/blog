@@ -5,7 +5,15 @@ title: Administrate gem
 
 # Install
 
-# Generate
+```
+gem 'administrate'
+
+bundle
+rails generate administrate:install
+# this will generate for each existing ApplicationRecord
+```
+
+Generate new dashboard pages
 
 ~~~
 rails g administrate:dashboard Candidate

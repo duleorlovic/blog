@@ -1,3 +1,7 @@
+---
+layout: post
+---
+
 * change root password:
 
   ~~~
@@ -8,11 +12,10 @@
   ~~~
 
 * login `mysql -u root -p`
-* select database `USE mysql`
+* select database `USE mysql`, create database `CREATE DATABASE mydb`
 * create user in mysql database
 
   ~~~
-  mysql -u root mysql -p
   CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
   GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
   FLUSH PRIVILEGES;
@@ -29,3 +32,43 @@
   alter table operators drop index fk_rails_7bd209f074;
   alter table operators drop column user_id;
   ~~~
+* to connect to remote datatabase url using command line cli, for example heroku
+  ```
+  mysql -u hj9gpgm687w1qwx -pvuxns3sidwrjjf8 -h tviw6wn5xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com -P 3306 u6rhqznmtth3j4g
+
+  ```
+* to enable access to mysql on local ubuntu mysql user
+  ```
+  # create user and grant access in one command
+  GRANT ALL ON wordpressdb.* TO 'wpadmin'@'192.168.1.100' IDENTIFIED BY '%u#098Tl3' WITH GRANT OPTION;
+  FLUSH PRIVILEGES;
+  ```
+
+  change port first see on which interface it is using
+  ```
+  sudo netstat -plutn | grep 3306
+  # or see if there is a difference
+  nmap 127.0.0.1
+  nmap 192.168.3.2
+  ```
+  if it is `127.0.0.1` than change binding in `/etc/mysql/my.cnf` (not in
+  `/etc/mysql/mysql.conf.d/mysqld.cnf`)
+
+  ```
+  # bind-address = 127.0.0.1
+  bind-address = 0.0.0.0
+  ```
+
+  make sure that you do not have firewals (on ubuntu `sudo ufw status`) and
+  enable port forwarding on routers for TCP 3306
+
+* restart
+
+  ```
+  # restart mysql with
+  sudo systemctl restart mysql.service
+  # or
+  sudo /etc/init.d/mysql restart
+  # check if port is enabled
+  nmap 192.168.1.100
+  ```

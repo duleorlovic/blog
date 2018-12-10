@@ -50,7 +50,7 @@ files can set variables `set :my_var_name, "value"` and fetch values `fetch
 :my_var_name`. There are some variables that are used by default:
 
 * `:application` name of application
-* `:deploy_to` path on the remove server where the app should be deployed,
+* `:deploy_to` path on the remote server where the app should be deployed,
 initially is `-> { "/var/www/#{fetch(:application)}" }` but I like home folder.
 Inside that folder there are:
   * `current` symlink to some release `/var/www/my_app/releases/20170101010101`

@@ -166,6 +166,16 @@ Interactivelly rebase pull request
      # reword : change commit message
      # edit : use commit but stop for amending
 
+Mark commit with a tag
+
+    git tag -l
+    git tag v1.5
+
+    # push tag is not automatically, you should do it manually
+    git push origin v1.5
+    # or push all tags
+    git push origin --tags
+
 To find if given commit hash is incuded on some release (release is a tag)
 
     git tag --contains <commit>

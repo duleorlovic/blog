@@ -10,6 +10,58 @@ title: Usefull plugins, services and opensource stuff
 text on click
 * [jsPDF](https://github.com/MrRio/jsPDF) pdf generator
   [examples](http://mrrio.github.io/jsPDF/#)
+  preview pdf in browser http://mozilla.github.io/pdf.js/
+  https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website
+  in rails there is `gem 'pdfjs_viewer-rails'` but check for domain is enabled
+  so there is an error https://github.com/mozilla/pdf.js/issues/7153 Related
+  rails issues https://github.com/senny/pdfjs_viewer-rails/issues/12
+  https://github.com/senny/pdfjs_viewer-rails/issues/42 (gem also uses old pdfjs
+  version).
+  Better approach is to copy from
+  [examples](https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website#from-examples)
+
+  ```
+  # app/views/pages/pdf_viewer.html.erb
+  <%# https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website#from-examples %>
+  <head>
+    <%= stylesheet_link_tag 'plugins/pdf_viewer', media: nil %>
+    <!-- This snippet is used in production (included from viewer.html) -->
+    <link rel="resource" type="application/l10n" href="plugins/pdf_viewer.properties">
+    <%= javascript_include_tag 'plugins/pdf_viewer_build' %>
+    <%= javascript_include_tag 'plugins/pdf_viewer' %>
+  </head>
+
+
+  # cp web/viewer.css to app/assets/stylesheets/pdf_viewer.scss and replace all
+  # url with asset-url('pdf_viewer/image.svg') # note that for
+  # pdf_viewers/grab.cur there is double quote
+  # copy all web/images to app/assets/images/pdf_viewer/
+  # cp web/viewer.js and build/* to app/assets/javascripts/pdf_viewer/
+  # add your domain to HOSTED_VIEWER_ORIGINS viewer.js.erb:1547
+  # update to point to worker script
+   workerSrc: {
+-    value: '../build/pdf.worker.js',
++    value: '<%= asset_path 'pdf_viewer/pdf.worker.js' %>',
+  ```
+
+  For error `Message: Failed to fetch` (console error `Access to fetch at
+  'http://s3.amazonaws.com/...' from origin 'http://localhost:3004' has been
+  blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on
+  the requested resource. If an opaque response serves your needs, set the
+  request's mode to 'no-cors' to fetch the resource with CORS disabled.`) you
+  need to add cors to a bucket https://stackoverflow.com/questions/25104448/pdf-js-cors-issue-for-s3-file
+  ```
+<CORSConfiguration>
+    <CORSRule>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>HEAD</AllowedMethod>
+        <MaxAgeSeconds>3000</MaxAgeSeconds>
+        <AllowedHeader>Authorization</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+  ```
+
 * number input field [spinner](https://github.com/vsn4ik/jquery.spinner)
 * toggle checkbox: [bootstrap
   switch](http://bootstrapswitch.com/examples.html)
@@ -97,6 +149,9 @@ window.flash_notice = (message) ->
 # Input mask
 
 * <https://unmanner.github.io/imaskjs/>
+* jquery form validation https://github.com/jquery-validation/jquery-validation
+  to validate only part of a form, you can use element http://jqueryvalidation.org/Validator.element/ but the problem is that you do not know if it is changed
+  https://forum.jquery.com/topic/using-jquery-validation-on-textboxes-in-a-specific-div
 
 # Select something
 
@@ -286,10 +341,43 @@ used for singleDatePicker, dateTime picker
 
 # Image file upload drag and drop crop
 
+* http://plugins.krajee.com/file-input/demo
+
 * [jquery.fileapi](http://rubaxa.github.io/jquery.fileapi/) supports
   webcam, crop, dragndrop
 * [jQuery-File-Upload](https://blueimp.github.io/jQuery-File-Upload/)
 * [browser-camera](https://davidwalsh.name/browser-camera) html5 getUserMedia
+
+For file input you can show preview file using
+[FileReader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader)
+
+```
+# app/assets/javascripts/ready_page_load.coffee
+$(document).on 'ready page:load', ->
+  # file image preview
+  $("[data-image-preview]").each ->
+    return unless typeof FileReader != "undefined"
+    $preview_target = $($(this).data('imagePreview'))
+    $(this).change ->
+      regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.png)$/
+      if regex.test $(this).val().toLowerCase()
+        reader = new FileReader()
+        reader.onload = (e) ->
+          $preview_target.html $('<img />', src: e.target.result)
+        reader.readAsDataURL this.files[0]
+
+# app/views/users/_form.html.erb
+      <div class="admin-image-preview">
+        <div class="admin-image-preview__thumbnail" id='preview-book-cover-picture'>
+          <% if f.object.book_cover_picture.present? %>
+            <%= image_tag f.object.book_cover_picture.url(:medium) %>
+          <% end %>
+        </div>
+        <div>
+            <%= f.file_field :book_cover_picture, 'data-image-preview': '#preview-book-cover-picture' %>
+        </div>
+      </div>
+```
 
 # Rich text editors wyswyg
 
@@ -527,6 +615,8 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   logs in, or use the app
   * you can also send push notifications from mixpanel
 
+https://www.fullstory.com/
+
 # User support services
 
 * intercom <https://demos.intercom.com/>
@@ -688,7 +778,8 @@ Email templates
 # Animations
 
 * <http://animejs.com/>
-* <http://daneden.me/animate>
+* <http://daneden.me/animate> animate.css you need to add `class='animated
+  fadeIn`. Check how it looks in Mac Safari.
 
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>
@@ -697,6 +788,7 @@ Email templates
 * <https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#>
 * <https://tympanus.net/Tutorials/3DShadingWithBoxShadows/>
 * shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&theme-id=1&slug-hash=RNjRZz&default-tab=result&user=iamryanyu&embed-version=2&pen-title=Modern%20Button%20Collection#js-box
+* checkbox in css https://codepen.io/himalayasingh/pen/EdVzNL
 
 # Scroll
 
@@ -718,6 +810,7 @@ the content
 * project portfolio animated <http://celialopez.fr/>
 * menu rotate on round image <https://codepen.io/JoseRosario/pen/PeERry>
 * menu isometric https://codepen.io/ClementRoche/pen/yEPogx
+* menu in css, select sibling and opacity on all but the one being hovered https://medium.freecodecamp.org/how-to-make-the-impossible-possible-in-css-with-a-little-creativity-bd96bb42b29d
 
 
 # Fonts and icons
@@ -747,7 +840,12 @@ shell scripts
 * https://moqups.com/ free up to 300 objects
 * https://wireframe.cc/ free for public one page
 
-To create mockups you can use: Invision, Marvel, Baslamiq, Sketch
+To create mockups you can use: Invision, Marvel, Baslamiq, Sketch. There is one
+opensource free mokup tool: Pencil Project https://pencil.evolus.vn/
+
+To draw diagrams and graphs
+
+* http://js.cytoscape.org/demos/compound-nodes/
 
 # Continuous integration
 
@@ -763,6 +861,10 @@ will run every hour
 # Find alternatives
 
 https://alternativeto.net
+
+# SMS
+
+* twilio gem
 
 # Dokku
 

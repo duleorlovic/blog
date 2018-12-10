@@ -274,6 +274,15 @@ end
 add a line `config.action_mailer.preview_path =
 "#{Rails.root}/app/mailer_previews"` to *config/environments/development.rb* and
 go to [rails/mailers](http://localhost:3000/rails/mailers).
+If you are using catch all route than add those lines
+```
+# config/routes.rb
+  # https://stackoverflow.com/questions/26130130/what-are-the-routes-i-need-to-set-up-to-preview-emails-using-rails-4-1-actionmai
+  get '/rails/mailers' => "rails/mailers#index"
+  get '/rails/mailers/*path' => "rails/mailers#preview"
+  # https://stackoverflow.com/a/6047561/287166
+  match '*a', to: 'home#routing_error', via: [:get, :post]
+```
 
 Another gem to preview emails <https://github.com/markets/maily>
 

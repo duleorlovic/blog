@@ -39,7 +39,7 @@ layout: post
 * use relative units instead of absolute
   <http://www.w3schools.com/cssref/css_units.asp>, for example header `h1 {
   font-size: 20vh;}`. vh is 1% of vertical heigh of view port (window size, not
-  page size). For width you can use horizontal width for example `width: 80vw;`.
+  page size). For width you can use horizontal width for example `width: 8vw;`.
   You should use relative size `rem` (to the html el) or `em` (to the current
   font) since you might want to change font size on whole page, and you do not
   need to go to all nested components to update that. 1rem is default font size
@@ -149,6 +149,25 @@ layout: post
     // code here
   }
   ~~~
+
+  When defining mixin you can use `@content` for example
+
+  ```
+  @mixin hover-focus {
+    &:hovoer,
+    &:focus {
+      @content;
+    }
+  }
+  # usage:
+  # .class {
+  #   @include hover-focus {
+  #     text-decoration: none;
+  #   }
+  # }
+  ```
+
+## SASS
 
 Sass is shorter since it uses indent, and do not require semicolon.
 Atomatic convert scss to sass
@@ -347,52 +366,76 @@ Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background
 https://medium.com/@js_tut/flexbox-the-animated-tutorial-8075cbe4c1b2
 
-Parent element if flex container, and children as flex items. `flex-direction`
+Parent element is flex container and children are flex items. `flex-direction`
 determines main axis on which items will be laid out from `main-start`
 (`flex-start`) to `main-end` (`flex-end`), that is total `main-size`.
 Perpendicular to the main axis is `cross` axis with its `cross-start`
 `cross-end` and `cross-size`.
 
-on container we can have:
-* `display: flex` (synonim is `inline-flex`)
-* `flex-direction: row | row-reverse | column | column-reverse`
+On container `display: flex` (synonim is `inline-flex`) we can have:
+* `flex-direction: row | row-reverse | column | column-reverse` row means that
+flexible items are aligned horizontally as row
 * `flex-wrap: nowrap | wrap | wrap-reverse` default is no wrap so in single
   line, wrap means that it is allowed to go onto multiple lines. This two
-  properites can be shorhanded in one `flex-flow: row nowrap`
+  properites can be shorhanded in one `flex-flow: row nowrap` which is default
+  (child with `width: 100px` will be `width: 12px` if there is no space, unless
+  `flex-shrink` is used).
+
 * `justify-content: flex-start | flex-end | center | space-between |
   space-around | space-evenly` alignment when items are inflexible. space around
   means that all items have same space around (before first there is no items so
   that's why it is single space) if you need exactly same space from start to
   first and first to second, use space-evenly.
 * `align-items: flex-start | flex-end | center | stretch | baseline` behavior
-  along CROSS AXIS on current line. `stretch` is from `cross-start` to
-  `cross-end` still respect min-width/max-width. similar to `justify-content`
-  but for cross axis
+  along CROSS AXIS on current line similar to `justify-content` but for cross
+  axis. `stretch` is from `cross-start` to `cross-end` still respect
+  min-width/max-width. `baseline` when text are on the same line.
 * `align-content: flex-start | flex-end | center | stretch | space-between |
-  space-around` behavior of LINES when there is extra space in cross-axis (no
-  effect is single line) similar to `justify-content` for main axis, but for
-  lines.
+  space-around` behavior of LINES (wrap is enabled) when there is extra space in
+  cross-axis (no effect is single line) similar to `justify-content` for main
+  axis, but for lines.
 
 on items https://www.w3.org/TR/css-flexbox-1/#flexibility
-* `flex-grow: 0` ability to grow as proportion. If one has 2 and all others have
-  1, first will be twice bigger
-* `flex-shrink: 1`
+* `flex-grow: 0` ability to grow as proportion to other items (all items need to
+  defined `flex-grow`). If one has 2 and all others have 1, first will be twice
+  bigger (`width` is changed, but do not use it since it will have some impact).
+* `flex-shrink: 1` ability to shrik (compress), if `flex-shrink: 0` than it will
+  keep it's `width: 500px` property
 * `flex-basis: 20% | auto` default size before remaining space is distributed
-  (you this if you want max-size: 20%)
-  This three items have shorthand `flex: 0 1 auto`. So use this if you want
-  items to use space between (on container clear `justify-content`)
-  `flex: auto` is eq to `flex: 1 1 auto` bigger item will take bigger space,
-  auto means that if item can use space it will use space.
-  `flex: 1` is eq to `flex: 1 1 0` all items same width (flex-basis 0 so their
+  (use this if you want max-size: 20%)
+  This three items have shorthand `flex: flex-grow flex-shrink flex-basis
+  (default 0 1 auto)` which you can attach to flex item. For example:
+  * `flex: auto` auto means that if item can use space it will use space. it is
+  synonim to `flex: 1 1 auto` bigger item will take bigger space (on container
+  remove `justify-content`)
+  * `flex: 1` is eq to `flex: 1 1 0` all items same width (flex-basis 0 so their
   content is not taken into consideration)
+  * `flex: 1 100%` (eq to `flex: 1 1 100%`) inside `wrap` all items takes row
+  * `flex: 3 0px` this item is 3 times bigger than others which are `1` (`wrap>*
+   { flex: 1 auto}`) and do not take it's initial size into account
+
 * `align-self: flex-start | flex-end | center | stretch | baseline` override
   `align-items` for specific item, on cross axis
-* `order: 0`
+* `order: 0` when you want to show in different order `order: 1` `order: 2`
 
 * [justify-items](https://developer.mozilla.org/en-US/docs/Web/CSS/justify-items)
  property defines the default justify-self for all items for a `display: grid`.
 
+Examples:
 https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox
+* perfect centering horizontaly and vertically of one width/height card
+  ```
+  .card-container
+    display: flex
+    height: 20px
+    justify-content: center
+    align-items: center
+  .card
+    width: 10px
+    height: 10px
+  ```
+
+* bootstrap layout for example `.col-md-6 { flex: 0 0 50%; max-witdh; 50% }`
 You can use `margin-left: auto` to separate group of items since auto margin
 will took as much space as it can. So you can align first three on left and last
 two on right by adding `.push` on firt right item.
@@ -561,7 +604,7 @@ and values are successfully posted (disabled input is not send to server).
 * if you need two css files, than write two `<link rel="stylesheet"
   type="text/css" href="1.css" />` . Do not use `@import url("2.css")` in
   `1.css` since it will prevent downloading files in parallel (2.css is
-  downloaded only after 1.css). Only [user of
+  downloaded only after 1.css). Only [use of
   @import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) is when you
   provide media queries as parameter and load only for specific screen. Note
   that sass preprocessor scss `@import` will include inline the code.
@@ -612,44 +655,108 @@ like
 sourceMappingURL=bootstrap-datepicker3.css.map */`
 * plain `<input>` has default with (probably 157px), but if you want to set
 size, use `style="width: 100%"`
-* if you want background image to be blured, you can use overlay with opacity
-position absolute that cover whole area. Your element should be position
-relative and defined after cover to stand out of that cover.
+* for modals you need overlay that cover content beside modal, also if you want
+to have background image that is blured, you can use overlay with opacity
+position absolute that cover whole area.
 https://css-tricks.com/snippets/css/transparent-background-images/
+This use case is when you have my-stuff with forms or something else so you need
+to interact with it. Another use case when you want to add overlay like for
+subscribed users only, so my-stuff can be opacited and with wrapping my-stuff.
+First is solved with sibling div `position: fixed` and `z-index: -1` and adding
+background image to the body (not to fixed element, which is only for overlay
+and opacity) so it scrolls down with content.
+
+Second is solved with position absolute relative pair.
+Note that you should NOT use `height: 100%` on cover because it will not cover
+the area which is not currently in view port (for example you have div height >
+view port size). On `html, body { height: 100% }` is OK (and it will show window
+width and height) but when cover has greater height than body on smaller screen
+than it should have `min-height: 100%` (not `height: 100%`).
+Note that `my-stuff` should be inside `gradient` so gradient wraps it
+completelly (otherwise when they are sibling than gradient can not calculate
+if there is margin on my-stuff).
 
 ~~~
-<body>
-  <div class="gradient"></div>
-  <div class="my-stuff"></div>
-</div>
+<html>
+  <head>
+    <style>
+      html, body {
+        min-height: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+
+      .position-relative {
+        position: relative;
+      }
+      .position-absolute {
+        position: absolute;
+        width: 100%;
+        /* we need this when my-stuff is less than view port */
+        min-height: 100%;
+        /* do not use top bottom, or height: 100% since that is relative to view port */
+        /*
+        top: 0px;
+        bottom: 0px;
+        */
+        /* height: 100%; */
+      }
+      .my-stuff {
+        width: 200px;
+        height: 200px;
+        margin: 10px auto;
+        background: blue;
+        height: 600px;
+      }
+      .my-stuff:hover {
+        height: 600px;
+      }
+      .blue-gradient {
+        opacity: .5;
+        -webkit-backface-visibility: hidden;
+        background-color: #52d3aa;
+        background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0, #3f95ea), color-stop(1, #52d3aa));
+        /* Android 2.3 */
+        background-image: -webkit-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);
+        /* IE10+ */
+        background-image: repeating-linear-gradient(to bottom right, #3f95ea 0%, #52d3aa 100%);
+        background-image: -ms-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);
+      }
+
+      .position-fixed-cover {
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        width: 100%;
+        z-index: -1;
+      }
+      .background-image {
+        background-image: url('cat.jpg');
+      }
+    </style>
+  </head>
+  <body class='position-relative background-image'>
+    <div class='blue-gradient position-absolute'>
+      blue-gradient position-absolute
+      <div class='my-stuff'>
+        my-stuff
+        <button>OK</button>
+      </div>
+    </div>
+    <div class='blue-gradient position-fixed-cover'>blue-gradient position-fixed-cover</div>
+  </body>
+</html>
 ~~~
 
-~~~
-.my-stuff {
-  position: relative;
-}
-.gradient {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  opacity: .7;
-  background-color: #52d3aa;
-  // use image
-  background-image: asset-url("cityscape.png")
-
-  // or gradient
-  -webkit-backface-visibility: hidden;
-  background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0, #3f95ea), color-stop(1, #52d3aa));
-  /* Android 2.3 */
-  background-image: -webkit-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);
-  /* IE10+ */
-  background-image: repeating-linear-gradient(to bottom right, #3f95ea 0%, #52d3aa 100%);
-  background-image: -ms-repeating-linear-gradient(top left, #3f95ea 0%, #52d3aa 100%);
-}
-~~~
-
+* another problem is when you add `margin: 10px` to some innver div, than
+  scrollbar shows up (we use `box-sizing: border-box;` so that is not the case).
+  https://stackoverflow.com/questions/22539053/nested-div-with-margin-top-set-causes-scrollbar-to-appear
+  The problem is in collapsing margins and workaround is: use padding instead of
+  margin, add `overflow: auto` to the element with margin, or introduce new
+  [block formating
+  context](https://www.w3.org/TR/CSS2/visuren.html#block-formatting) by changing
+  to `display: inline-block`
 * for phone you need to use `<a href="tel:123123">+123-123</a>` (rails `<%=
 link_to "+123-123", "tel:123123" %>`)
 * for mail `<a href="mailto:asd@asdasd">asd@asd.asd</a>` (rails `<%= mail_to
@@ -696,3 +803,75 @@ link_to "+123-123", "tel:123123" %>`)
 * prevent auto completing text inputs can be prevented with `<%= text_field_tag
 * :other_reason, nil, autocomplete: 'off' %>` (note is should be 'off' not
 'false'
+
+* arrows (triangles) can be done with border and before pseudo element
+  http://krasimirtsonev.com/blog/article/CSS-before-and-after-pseudo-elements-in-practice just paste this snippet
+
+```
+<style>
+h2 {
+    float: left;
+    width: 170px;
+}
+.popup {
+    float: left;
+    width: 340px;
+    background: #727272;
+    padding: 10px;
+    border-radius: 6px;
+    color: #FFF;
+    position: relative;
+    font-size: 12px;
+    line-height: 20px;
+}
+.popup:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 12px solid #727272;
+    position: absolute;
+    top: 16px;
+    left: -12px;
+}
+</style>
+
+<h2>What is CSS?</h2>
+<div class="popup">
+    Cascading Style Sheets is a style sheet language used for describing
+    the presentation semantics of a document written in a markup language.
+</div>
+```
+
+* usually space is not important in html but if you have some `float` and
+  `width: 40%` than number of spaces is important
+* you can not have `<a>` tag inside other `<a>` tag, use this validator
+  https://validator.w3.org/nu/#textarea
+
+* components and terminology (terms names) on a web page:
+  * accordion is list of blocks that can collapse
+  https://getbootstrap.com/docs/3.3/javascript/#collapse-example-accordion
+  * carousel is big image slider
+  https://getbootstrap.com/docs/3.3/javascript/#carousel
+  * navbar is top header with menu links, in bootstrap_4 it is fluid (spans all
+    width)
+  * B4 cards replace our old panels, wells, and thumbnails
+  * masonry type columns is when element are places optimally basedon vertical
+    space (width is fixed, and height is variable)
+
+* if you have two data attributes on click, to disable one from another, you can
+  disable button, for example
+  ```
+  $('[data-enable-if-valid]').on 'click', (e) ->
+    if need_to_disable_both_clicks
+      $button.prop('disabled', 'disabled')
+      setTimeout(
+        ->
+          $button.prop('disabled', false)
+        100
+      )
+
+    # no need to add e.preventDefault() since button is disabled
+  ```

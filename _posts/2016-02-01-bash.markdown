@@ -100,6 +100,12 @@ bind '"\C-l": "\C-e\C-u xsel --clipboard <<"EOF"\n\C-y\nEOF\n\C-y"'
 In vim you can paste primary selection (just select, middle mouse, shift insert)
 with `"*p`. Clipboard selection (copy, paste) with  and `"+p`
 
+To copy some text from `less` you can click `v` inside less to invoke the
+editor (`vim`) and than you can copy from that. There is an error `Cannot edit
+standard input (press RETURN)` when editing (`v`) for example `ls | less`.
+Workaround is to `ls | vim -`, or for example `git log | vim -`, Note that yank
+while vim is open works fine, but once you close the vim, clipboard is empty.
+
 Maximize terminal window to full screen is with `F11` (yes it is the same
 shortcut for bash as for chrome).
 Inside terminal there are Terminal->Preferences->Shortcuts
@@ -607,9 +613,18 @@ is saved in pid file than you can kill with `pkill -F tmp/pids/server.pid -9`
 
 You can find substring
 
-* call function with `$(function_name)` and print variable with `$variable_name`
-  (without brackets). If you need to concatenate with other string you can use
-  curly braces `${variable_name}other_string`
+* call function with `$(function_name)`. Return value from function can be done
+  with `$()` expansion:
+  ```
+  monitor_size() {
+  result=`ls | cw`
+    echo $result
+  }
+  win_width=`expr $(monitor_size) / 36` # 7200 / 36 = 200
+  ```
+* print variable with `$variable_name` (without brackets). If you need to
+  concatenate with other string you can use curly braces
+  `${variable_name}other_string`
 * [substring removal](http://wiki.bash-hackers.org/syntax/pe#common_use)
 
 # Arrays
@@ -868,3 +883,10 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   sudo apt install hardinfo
   hardinfo
   ~~~
+* first line in scripts shebang for ruby using rvm instead of
+  `/usr/local/bin/ruby` can be
+  https://stackoverflow.com/questions/17447532/what-is-the-use-of-usr-local-bin-ruby-w-at-the-start-of-a-ruby-program
+
+  ```
+  #!/usr/bin/env ruby
+  ```

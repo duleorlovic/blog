@@ -238,7 +238,7 @@ Key will contain template path, item id, item updated_at and template digest so
 if you change anything, cache will be expired.
 
 For index pages I use key to be string, that is maximum updated at (also
-template digest will invalidate cache)
+template digest will invalidate cache).
 
 ~~~
 <% cache ['todos', @tasks.maximum(:updated_at)] do %>
@@ -246,8 +246,17 @@ template digest will invalidate cache)
 <% end %>
 ~~~
 
-Note that you should not use same array of keys since it will use multiple
-times. So if you have to use on same page, use different first string.
+Note that if you use translations on different subdomain than put default locale
+in the key also.
+
+```
+<% cache ['moves-markers', I18n.locale, latest_move_timestamp] do %>
+```
+
+Note that you should not use same keys on multiple places on the page.
+So if you have to use on same page, use different first string.
+
+You can clear cache in rails console : `Rails.cache.clear`
 
 You can use conditional caching you can use `cache_if`
 

@@ -9,25 +9,31 @@ tags: layout render ruby-on-rails
 [Guide](http://guides.rubyonrails.org/layouts_and_rendering.html) says that response from the server can be: render, redirect, or just head. `ActionController::Base#render` designedly use convention over configuration, that means if we request *products#show as HTML* it will render *app/view/products/show.html.erb* template (if there has not been a call to render something else). `ActionController::Base#render` method can set up **template** and **partial** to be rendered as **text, json, xml, js** (that is content-type) and set the **response code** (:status => :ok). 
 
 For example `render "edit" #or :edit`  will change default rendering from *show.html.erb* to *edit.html.erb* (in the same controller). We we can render template from another controller, for example *carts* controller with command `render "carts/edit"`. It should be explicited with parameter `render template: "edit"`so we know what is going on (it will render edit template not partial). Another examples of *ActionController::Base#render*:
+`render text: 'OK'` is replaced with `render plain: 'OK'`
 
-{% highlight ruby %}
-render plain: "OK"
+```
+render plain: 'OK'
 render html: "<strong>OK</strong>".html_safe 
 render xml: @product # automatically calls .to_xml
 render json: @product # no need for .to_json
 render js: "alert();" # will set content-type MIME text/javascript
-{% endhighlight %}
+
+# you can use `head status`
+head :created, location: photo_path(@photo)
+# this is better than
+format.js { render nothing: true }
+```
 
 Four options for *render* are:
 
 1. `:content_type => "text/html"` (or "application/json" or "application/xml" or "application/rss") this sets MIME content-type
 1. `:layout => 'special_layout'` (or false) can be set to whole controller. Convention is to look first for the same name as controller
 1. `:location => photo_url(@photo)` sets HTTP location header
-1. `:status => :ok` is 200, [:unprocessable_entity](http://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option) is 422 
+1. `:status => :ok` is 200,
+   [:unprocessable_entity](http://guides.rubyonrails.org/layouts_and_rendering.html#the-status-option)
+   is 422
 
 Redirect example is `redirect_to :back`.
-
-Head example is `head :created, location: photo_path(@photo)` and is much clearer then `format.js { render nothing: true }`.
 
 
 In Ruby on Rails there are 6 asset tag helpers:
@@ -163,10 +169,11 @@ better since any css code is also scss code.
 
 You can use asset path helpers in scss, instead of erb style `background-image:
 url(<%= asset_url 'logo.png' %>)` you can use `asset-url` (which replace `<%=%>`
-and `url()` and file name should be inside quotes). Remember that it was
-underscored in erb, use hyphenated in sass `background-image:
-asset-url("logo.png")`. You can not use normal `url("logo.png")`. Note that
-asset path `asset-path` does not work, you need to use assets url.
+and `url()` and file name should be inside quotes like `asset-url('logo.png')`.
+Remember that it was underscored in erb, use hyphenated in sass
+`background-image: asset-url("logo.png")`. You can not use normal
+`url("logo.png")`. Note that asset path `asset-path` does not work, you need to
+use assets url.
 
 Note that for coffeescript you need to add extension `customers.coffee.erb` and
 use this initialization file
@@ -197,31 +204,20 @@ You can set dependency between assets using
 [link](https://github.com/sstephenson/sprockets#the-link-directive) `link_tree`
 and `link_directory` directive.
 
-# Fonts
-
-If you need to include for example
-[simple-line-icons](https://github.com/thesabbir/simple-line-icons) than you
-can place it inslide `app/assets/simple_line_icons` and you need to overwrite
-font path, ie instead of `url('../fonts/Simple-Line-Icons.eot?v=2.4.0')` use
-`asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0');`
-
-~~~
-// app/assets/stylesheets/pages.scss
+If you use `require_tree` than you can set dependencies between files with
+`require` so they are included before this file, for example
+```
+# app/assets/javascripts/plugins/jquery-validation/localication.init.js
 /*
- *= require css/simple-line-icons
- */
-@font-face {
-  font-family: 'simple-line-icons';
-  src: asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0');
-  src: asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0#iefix')
-  format('embedded-opentype'),
-  asset-url('fonts/Simple-Line-Icons.woff2?v=2.4.0') format('woff2'),
-  asset-url('fonts/Simple-Line-Icons.ttf?v=2.4.0') format('truetype'),
-  asset-url('fonts/Simple-Line-Icons.woff?v=2.4.0') format('woff'), asset-url('fonts/Simple-Line-Icons.svg?v=2.4.0#simple-line-icons') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-~~~
+*= require plugins/jquery-validation/localization.messages_sr.js
+*= require plugins/jquery-validation/localization.messages_ar.js
+*/
+var lang = $('html').attr('lang');
+if (lang == 'sr')
+  setSerbian();
+else if (lang == 'ar')
+  setArabic();
+```
 
 # Less
 
@@ -280,27 +276,41 @@ More info on [heroku deploy]({{ site.baseurl }} {% post_url 2015-04-05-common-ra
 
 ## Boostrap
 
-You can include bootstrap (which is written in less) or bootstrap-sass (if you
-want modifications in scss).
+You can include bootstrap (which is now written in scss instead of less)
 
 ~~~
-bower install bootstrap --save
-sed -i app/assets/stylesheets/application.css -e '/require_tree/i \
- *= require bootstrap/dist/css/bootstrap'
+npm install bootstrap jquery popper.js
+# configure npm from previous step
+
+## I suggest to use scss instead of dist
+# sed -i app/assets/stylesheets/application.css -e '/require_tree/i \
+#  *= require bootstrap/dist/css/bootstrap'
+cat >> app/assets/stylesheets/application.scss << \HERE_DOC
+/*
+ *= require_tree .
+ *= require_self
+ */
+@import 'bootstrap/scss/bootstrap'
+HERE_DOC
+
 sed -i app/assets/javascripts/application.js -e '/require_tree/i\
+//  from node_modules\
+//= require jquery/dist/jquery.js\
+//= require popper.js/dist/umd/popper.js\
 //= require bootstrap/dist/js/bootstrap'
 
 git commit -am "Adding bootstrap"
 ~~~
 
-Adding css and js files is working fine. There is a problem when some image/font
-files are hardcoded in css files. When filename is fixed and you can
-not include digest sha than you need to deploy files without fingerprint.
+## Adding icons
 
-So first solution is with help of
+There is a problem when some image/font files are hardcoded in css files. When
+that is hardcoded and you can not include digest sha than you need to deploy
+files without fingerprint. So one solution is with help of
 [non-stupid-digest-assets](https://github.com/alexspeller/non-stupid-digest-assets)
 gem you can add non digest version. First your assets should be seen
 (precompiled) with sprockets than they will be again copied without digest.
+Another solution is to override `@font-face` which includes proper `asset-url`
 
 Sprockets `require` concatenates after sass compilation. So it's advices to use
 `@import` sass command instead of `require`. `@import` will work also in
@@ -312,13 +322,12 @@ to move `css -> scss`.
 Here is example adding [fontawesome](http://fontawesome.io/examples/)
 
 ~~~
-bower install fontawesome --save
+npm install fontawesome --save
 mv app/assets/stylesheets/application.css app/assets/stylesheets/application.scss
 cat >> app/assets/stylesheets/application.scss << \HERE_DOC
 $fa-font-path: 'font-awesome/fonts';
 @import 'font-awesome/scss/font-awesome';
 HERE_DOC
-# don't know if this is needed for some assets
 # cat >> Gemfile << HERE_DOC
 # gem "non-stupid-digest-assets"
 # HERE_DOC
@@ -336,21 +345,72 @@ Another solution is to overwrite `@font-face` css definition after you include
 all those icons css files
 
 ~~~
-@import "simple-line-icons";
+// from node_modules
+$fa-font-path: 'font-awesome/fonts'
+@import 'font-awesome/scss/font-awesome'
+@import 'plugins/font-awesome-font-face'
 
+cp node_modules/font-awesome/scss/_path.scss app/assets/stylesheets/plugins/font-awesome-font-face.scss
+# replace url with asset-url in font-awesome-font-face.scss
+~~~
+
+## Simple line icons
+
+If you need to include for example
+[simple-line-icons](https://github.com/thesabbir/simple-line-icons) than you
+can place it inside `app/assets/simple_line_icons` and you need to overwrite
+font path, ie instead of `url('../fonts/Simple-Line-Icons.eot?v=2.4.0')` use
+`asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0');`
+
+~~~
+// app/assets/stylesheets/pages.scss
+/*
+ *= require css/simple-line-icons
+ */
 @font-face {
   font-family: 'simple-line-icons';
-  src:  asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.eot?v=2.2.2');
-  src:  asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.eot?#iefix&v=2.2.2') format('embedded-opentype'),
-        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.ttf?v=2.2.2') format('truetype'),
-        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.woff2?v=2.2.2') format('woff2'),
-        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.woff?v=2.2.2') format('woff'),
-        asset-url('landing/fonts/simple-line-icons/Simple-Line-Icons.svg?v=2.2.2#simple-line-icons') format('svg');
+  src: asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0');
+  src: asset-url('fonts/Simple-Line-Icons.eot?v=2.4.0#iefix')
+  format('embedded-opentype'),
+  asset-url('fonts/Simple-Line-Icons.woff2?v=2.4.0') format('woff2'),
+  asset-url('fonts/Simple-Line-Icons.ttf?v=2.4.0') format('truetype'),
+  asset-url('fonts/Simple-Line-Icons.woff?v=2.4.0') format('woff'), asset-url('fonts/Simple-Line-Icons.svg?v=2.4.0#simple-line-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 ~~~
 
+If you are installing from node module, you can not just update the path since
+all font files will be fingerprinted, so the best is to copy to and edit scss
+file
+
+~~~
+npm install simple-line-icons
+
+// we use asset-url to find a fingerprinted path of font files in
+// node_modules/simple-line-icons/fonts
+$simple-line-font-path: "simple-line-icons/fonts/"
+@import 'plugins/simple-line-icons'
+
+cp node_modules/simple-line-icons/scss/simple-line-icons.scss app/assets/stylesheets/plugins
+
+# app/assets/stylesheets/plugins/simple-line-icons.scss
+# replace url with asset-url, like
+// Fonts
+@if $simple-line-font-family == "simple-line-icons" {
+  @font-face {
+    font-family: '#{$simple-line-font-family}';
+    src:    asset-url('#{$simple-line-font-path}Simple-Line-Icons.eot?v=2.4.0');
+    src:    asset-url('#{$simple-line-font-path}Simple-Line-Icons.eot?v=2.4.0#iefix') format('embedded-opentype'),
+            asset-url('#{$simple-line-font-path}Simple-Line-Icons.woff2?v=2.4.0') format('woff2'),
+            asset-url('#{$simple-line-font-path}Simple-Line-Icons.ttf?v=2.4.0') format('truetype'),
+            asset-url('#{$simple-line-font-path}Simple-Line-Icons.woff?v=2.4.0') format('woff'),
+            asset-url('#{$simple-line-font-path}Simple-Line-Icons.svg?v=2.4.0#simple-line-icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+}
+~~~
 You can test with:
 
 ~~~

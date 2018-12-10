@@ -53,68 +53,6 @@ rvm gemset empty
 
 Bower is deprecated https://github.com/bower/bower/issues/2298
 
-[bower](http://bower.io)  Adding new package will be saved in `bower.json` if
-you add option `--save` or `--save-dev`. To generate bower.json run
-
-~~~
-bower init
-~~~
-
-
-With [install](https://bower.io/docs/api/#install) you can use package name, git
-url, local folder, with a version like `#v3.0.x`
-
-~~~
-{
-  "_filename": "bower.json",
-  "dependencies": {
-    "angular-autodisable": "https://github.com/duleorlovic/angular-autodisable"
-  }
-}
-~~~
-
-~~~
-bower list
-bower install packageName
-bower uninstall packageName
-bower install ng-token-auth --save
-~~~
-
-You can install npm packages with
-https://www.npmjs.com/package/bower-npm-resolver for example:
-
-~~~
-npm add bower-npm-resolver
-# update your .bowerrc
-{
-  "resolvers": [
-    "bower-npm-resolver"
-  ]
-}
-bower install npm:alert-text-show-hide --save
-~~~
-
-You can update to the latest version by changing bower.json
-
-~~~
-# use latest angular material
-sed -i bower.json -e '/angular-material/c\
-    "angular-material": "*",'
-bower update angular-material --save
-~~~
-
-Check installed version of some package, for example `angular-material`
-
-~~~
-cat  bower_components/angular-material/.bower.json | node_modules/json/lib/json.js version
-# install json with: npm install json
-~~~
-
-Note that if you remove some files from package folder (for example
-`vendor/assets/bower_components/iCheck/skins` than `bower install` will not see
-that is was removed. You need to `rm -rf folder` so than `bower install` will
-get fresh copy of the package.
-
 # Gulp
 
 * if you have error `'watch' errored after Error: watch
@@ -122,40 +60,6 @@ get fresh copy of the package.
   ` solution is to run `echo fs.inotify.max_user_watches=524288 | sudo tee -a
   /etc/sysctl.conf && sudo sysctl -p`
   [link](http://stackoverflow.com/questions/16748737/grunt-watch-error-waiting-fatal-error-watch-enospc)
-
-# Yarn
-
-Yarn will install packages to `node_modules` folder.
-
-~~~
-yarn init # to generate package.json
-yarn remove [package]
-yarn # to install dependencies
-yarn run build # to run "scripts" -> "build"
-~~~
-
-You can add `package@version` vesion could be `"^1.0.0"`
-<https://yarnpkg.com/en/docs/dependency-versions> When you `yarn
-upgrade` it will upgrade version to next, for example `"^2.0.0"`.
-
-Example adding jquery 3, bootstrap 4, fontawesome 4
-
-~~~
-yarn add jquery bootstrap font-awesome popper.js
-~~~
-
-If you want to install to specific folder instead of `node_modules` than use
-`yarn install --modules-folder ./public/assets` or add to
-[.yarnrc](https://yarnpkg.com/lang/en/docs/yarnrc/#toc-cli-arguments)
-
-~~~
-# .yarnrc
---install.modules-folder "./public/assets"
---add.modules-folder "./public/assets"
-~~~
-
-Note that there are problems with missing `.bin` folder
-https://github.com/yarnpkg/yarn/issues/3724
 
 # NPM
 
@@ -192,6 +96,14 @@ Package lock <https://docs.npmjs.com/files/package-locks> is used to prevend
 using latest dependencies if they are not desirable `package-lock.json` or
 `npm-shrinkwrap.json`
 
+Note that if you remove some files from package folder (for example
+`node_modules/iCheck/skins` than `npm install` will not see
+that is was removed. You need to `rm -rf folder` so than `npm install` will
+get fresh copy of the package.
+
+Example adding jquery 3, bootstrap 4, fontawesome 4 on rails you can find on {{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %})
+
+
 # Npmjs publish package
 
 https://docs.npmjs.com/getting-started/publishing-npm-packages
@@ -201,6 +113,36 @@ npm whoami
 npm adduser
 npm publish
 ~~~
+
+# Yarn
+
+Yarn will install packages to `node_modules` folder.
+
+~~~
+yarn init # to generate package.json
+yarn remove [package]
+yarn # to install dependencies
+yarn run build # to run "scripts" -> "build"
+
+yarn add [package]
+~~~
+
+You can add `package@version` vesion could be `"^1.0.0"`
+<https://yarnpkg.com/en/docs/dependency-versions> When you `yarn
+upgrade` it will upgrade version to next, for example `"^2.0.0"`.
+
+If you want to install to specific folder instead of `node_modules` than use
+`yarn install --modules-folder ./public/assets` or add to
+[.yarnrc](https://yarnpkg.com/lang/en/docs/yarnrc/#toc-cli-arguments)
+
+~~~
+# .yarnrc
+--install.modules-folder "./public/assets"
+--add.modules-folder "./public/assets"
+~~~
+
+Note that there are problems with missing `.bin` folder
+https://github.com/yarnpkg/yarn/issues/3724
 
 # Commonjs
 

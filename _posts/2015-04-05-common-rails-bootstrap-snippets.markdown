@@ -31,16 +31,22 @@ sudo apt install git postgresql libpq-dev nodejs
 You can choose database with rails param `rails new myapp --database=postgresql`
 but it is better to create `.railsrc` so it is used for all rails
 
-~~~
+```
 cat >> ~/.railsrc << HERE_DOC
 -d postgresql # use postgresql
 HERE_DOC
+```
 
+Create new app
+
+```
 rails new myapp
+# to specify version you can use
+rails _5.2.1_ new myapp
 cd myapp
 rails db:create
 git init . && git add . && git commit -m "rails new myapp"
-~~~
+```
 
 # UUID
 
@@ -72,7 +78,6 @@ DETAIL:  Key columns "post_id" and "id" are of incompatible types: bigint and uu
 
 Note that ordering by id, uuid is not possible. It is hard to implement on
 existing projects and on MySQL db.
-
 
 
 # Gitignore
@@ -184,6 +189,10 @@ HERE_DOC
 
 bundle
 guard init livereload
+# gem https://github.com/guard/guard-livereload suggest some old extension
+# https://addons.mozilla.org/en-US/firefox/addon/livereload/ but there is new
+# https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension
+# or you can use rack-livereload
 # I receive error No such middleware to insert before: ActionDispatch::Static
 # so better is to use browser plugin instead of gem 'rack-livereload'
 # sed -i config/environments/development.rb -e '/^end/i \
@@ -194,6 +203,12 @@ guard init livereload
 #   # 300 pixels, or it will be blocked. Invisible content is always blocked.\
 #   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
 # '
+
+When I get error with command RAILS_ENV=production rails assets:precompile
+ No such middleware to insert before: ActionDispatch::Static
+Than solution is to add `gem 'rails_12factor`, group: :production`
+https://github.com/AssetSync/asset_sync/issues/221#issuecomment-75492905
+
 
 cat > config/initializers/bullet.rb << HERE_DOC
 if defined? Bullet
@@ -238,10 +253,51 @@ git add . && git commit -m "Adding sample index page"
 ~~~
 # initial scale on mobile devices
 sed -i app/views/layouts/application.html.erb -e '/title/a \
-  <meta name="viewport" content="width=device-width, initial-scale=1">'
+    <meta name="viewport" content="width=device-width, initial-scale=1">'
 ~~~
 
-# Front-end
+## Fonts
+
+```
+npm install typeface-roboto
+mkdir app/assets/stylesheets/plugins
+cat >> app/assets/stylesheets/plugins << HERE_DOC
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Regular'), local('Roboto-Regular'), asset-url('typeface-roboto/files/roboto-latin-400.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium'), asset-url('typeface-roboto/files/roboto-latin-500.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Roboto SemiBold'), local('Roboto-SemiBold'), asset-url('typeface-roboto/files/roboto-latin-500.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), asset-url('typeface-roboto/files/roboto-latin-700.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-700.woff2') format('woff2');
+}
+HERE_DOC
+
+cat >> app/assets/stylesheets/application.sass << HERE_DOC
+// plugins
+@import 'plugins/roboto_font_face'
+HERE_DOC
+
+cat >> app/assets/stylesheets/common/body.sass << HERE_DOC
+body
+  font-family: 'Roboto', sans-serif
+HERE_DOC
+```
 
 ## Twitter bootstrap Gem
 
@@ -537,9 +593,14 @@ HERE_DOC
 bundle
 
 # Rails 5 puma is default, and config/puma.rb is used, so do not need Procfile
-# cat >> Procfile <<HERE_DOC
-# web: bundle exec puma -C config/puma.rb
-# HERE_DOC
+# but is it advisable to write it and put rakek db:migrate so you do not need to
+# run migration after you deploy. Restart is not needed as it was needed after
+# heroku run rake db:migrate (there are no exception, but update was not
+# actually saved in new columns, so restart was needed)
+cat >> Procfile <<HERE_DOC
+web: bundle exec puma -C config/puma.rb
+release: rake db:migrate
+HERE_DOC
 
 cat >> config/puma.rb <<HERE_DOC
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
@@ -625,10 +686,22 @@ You can pull from heroku databse https://devcenter.heroku.com/articles/heroku-po
 You need to find the name of heroku database by clicking on Postgresl plugin
 
 ~~~
+rails db:drop
 heroku pg:pull postesql-name-on-heroku my_rails_app_development
 
 # also pushing
+heroku pg:reset
 heroku pg:push buyers_development postgresql-animate-86842
+~~~
+
+If you need to provision new database (upgrade from free to hobby) than you can
+use pg copy
+https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases#upgrading-with-pg-copy
+~~~
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_TEAL_URL
+heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
+heroku config # find color of old database
+heroku addons:destroy HEROKU_POSTGRESQL_NAVY_URL
 ~~~
 
 If you need to compile node packages than you need need custom

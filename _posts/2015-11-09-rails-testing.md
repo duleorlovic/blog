@@ -613,7 +613,7 @@ expect(response.body).to include 'Logout'
 expect(response.body).to include ERB::Util.html_escape "Some text with ' quote"
 expect(response.body.scan(/<tr>/).size).to be 3
 expect(response.body).to match /button.*Publish Package.*\/button/
-# for multiline math you can use modifier m
+# for multiline math response.body text you can use modifier m
 expect(response.body).to match /dl.*dl/m
 ~~~
 
@@ -1066,8 +1066,6 @@ end
   end
   ~~~
 
-  * when testing sort method, create three objects with first in the middle
-
 * class methods could be stubbed
 
 ~~~
@@ -1096,7 +1094,12 @@ You can stub request.remote_ip
 
 ~~~
 allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('192.168.0.1')
+~~~
 
+Also you can stub helper methods
+
+~~~
+allow_any_instance_of(ApplicationHelper).to receive(:generate_password).and_return '111000'
 ~~~
 
 # Selenium
@@ -1147,9 +1150,9 @@ sure you have defined localhost `127.0.0.1 localhost` in `/etc/hosts`
 
 If you see error `Selenium::WebDriver::Error::StaleElementReferenceError: stale
 element reference: element is not attached to the page document` it could be
-that element was removed. This could happend also when you use `within #id` and
-than make expectation inside `within` block. Try to move expectation outsite of
-`within` block or to reload
+that element was removed, page reloaded in javascript, or when you use `within
+#id` and than make expectation inside `within` block. Try to move expectation
+outsite of `within` block or to reload
 
 ~~~
 page.driver.browser.navigate.refresh
@@ -1400,7 +1403,25 @@ node.find('#projects').text # => 'Projects'
 * scroll to the bottom of the page since since elements needs to be visible when
 `js: true` you can use `page.execute_script "window.scrollBy(0,10000)"` or make
 anchor and use hash url `url/#my-form` since execute script is not available
-when not `js: true`
+when not `js: true`. For pagination I prefer to use helper
+```
+  def scroll_down
+    page.execute_script(<<-SCRIPT)
+    var next = $('a.next_page[rel="next"]');
+    var maxScrolls = 15;
+    var myInterval = setInterval(function(){
+      window.scrollBy(0,10000)
+      next = $('a.next_page[rel="next"]');
+      maxScrolls -= 1;
+      if (next.length && maxScrolls > 0) {
+        console.log(maxScrolls);
+      } else {
+        clearInterval(myInterval);
+      }
+    }, 200);
+    SCRIPT
+  end
+```
 * back button `page.driver.go_back`
 * [more](http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method)
 
@@ -1415,8 +1436,8 @@ only for finders). You can use substring or you can define `exact: true`
 `find('.class').click` but I prefer to enable aria labels and use that
 `Capybara.enable_aria_label = true` and `click 'my-aria-label'`
 * `fill_in "email", with: 'asd@asd.asd'` (alternative is find set
-`find("input[name='cc']").set 'asd@asd.asd'`, or using `page.execute_script
-"$('#my-id').val('asd@asd.asd')"`
+  `find("input[name='cc']").set 'asd@asd.asd'`, or using javascript
+  `page.execute_script "$('#my-id').val('asd@asd.asd')"`
 * to click on select2 I use `find('#original-select-id+span').click` so we find
   first next sibling of original select which was disabled and replaced by
   select2 spans. Also works `find('li', text: select.label).click` but I can not
@@ -1436,6 +1457,24 @@ only for finders). You can use substring or you can define `exact: true`
   `.find(:xpath, '../..')` is parent of parent (grandparent).
 * next adjacent to `<h3>Name2</h3><table>` is `find(:xpath,
   "//h3[contains(text(),'Name2')]/following-sibling::table")`
+
+If you need to fill_in iframe than you can access it by id or number
+
+~~~
+  within_frame 0 do
+  end
+~~~
+
+If you need to jump into new window opened by target `_blank` than you can
+~~~
+new_window = window_opened_by { click_link 'Something' }
+# or
+new_window = page.driver.browser.window_handles.last
+
+page.within_window new_window do
+  # code
+end
+~~~
 
 **Node matchers** and rspec matchers [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers) [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
 
@@ -1457,7 +1496,10 @@ with `have_content "d", visible: false` but works with `have_css 'div', text:
 if `js: false`) so it is better to allways use visible: false for some elements
 in popups.
 * test sort order is with regex `expect(page).to have_text
-/first.*second.*third/`
+/first.*second.*third/`  create three objects with first in the middle. If you
+have new lines, than you can match multiline `/first.*second.*third/m` or
+replace `page.body.gsub "\n", ''`
+
 * test if input has value:
   * `expect(page).to have_xpath("//input[@value='John']")`
   * `expect(page).to have_selector("input[value='John']")`
@@ -1596,6 +1638,7 @@ and use `sign_in user`
 
 ~~~
 class ActiveSupport::TestCase
+  # provide `sign_in user`
   include Devise::Test::IntegrationHelpers
 end
 ~~~
@@ -1937,35 +1980,47 @@ is removed. So use expectations which are goint to be met untill after ajax.
 Wait for ajax to finish is not needed in latest capybara, but here is reference:
 
 ~~~
-# spec/support/features/wait_for_ajax.rb
+# spec/support/features/wait_helper.rb
 # https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara
 
-# You can use this flash and force driver to wait more time, expecially on
-# destroy action when there is slow deleting data
-# app/views/users/destroy.js.erb
-# window.location.assign('<%= customer_path @customer %>');
-# jQuery.active = 1;
-#
-module WaitForAjax
+module WaitHelper
+  # You can use this flash and force driver to wait more time, expecially on
+  # destroy action when there is slow deleting data
+  # app/views/users/destroy.js.erb
+  # window.location.assign('<%= customer_path @customer %>');
+  # jQuery.active = 1;
+  #
   def wait_for_ajax
     printf "jQuery.active"
     start_time = Time.current
     Timeout.timeout(Capybara.default_max_wait_time) do
-      loop until finished_all_ajax_requests?
+      loop until _finished_all_ajax_requests?
     end
     printf '%.2f', Time.current - start_time
   rescue Timeout::Error
     printf "timeout#{Capybara.default_max_wait_time}"
   end
 
-  def finished_all_ajax_requests?
+  def _finished_all_ajax_requests?
     output = page.evaluate_script('jQuery.active')
     printf "." unless output.zero?
     output.zero?
   end
+
+  def wait_for_visible(target)
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until page.find(target).visible?
+    end
+  rescue Timeout::Error
+    flunk "Expected #{target} to be visible."
+  end
 end
 RSpec.configure do |config|
-  config.include WaitForAjax, type: :feature
+  config.include WaitHelper, type: :feature
+end
+# for minitest use
+class ActionDispatch::SystemTestCase
+  include WaitHelper
 end
 ~~~
 
@@ -2151,8 +2206,8 @@ use `class: Project`), dynamic attributes are defined with a block
 # spec/factories.rb
 FactoryBot.define do
   factory :project do
-    full_name { "exiting #{name}" }
     name "My Project"
+    full_name { "exiting #{name}" }
     due_date Date.parse("2017-01-10")
     # note that Time.zone.now is evaluated at begining of test suite so that
     # expired_at = Time.zone now - 20.mins if you test suite lasts 20.mins
@@ -2616,9 +2671,7 @@ client and server, **fake server** returns a fake response
 * *integration test* is using fake server
 * *client unit test* ends at adapter
 
-## Webmock VCR
-
-VCR records **outgoing** HTTP requests.
+## Webmock
 After installing and requiring [webmock](https://github.com/bblimke/webmock)
 
 ~~~
@@ -2683,7 +2736,11 @@ times request has been made.
 
 Error like `stub_request(:get, "http://127.0.0.1:9516/shutdown").` is issue with
 [spring](https://github.com/bblimke/webmock/issues/163#issuecomment-37257333)
-so add 
+Also the error
+~~~
+WebMock::NetConnectNotAllowedError: Real HTTP connections are disabled. Unregistered request: POST http://127.0.0.1:9515/session with body '{"desiredCapabilities":{"browserName":"chrome","version":"","platform":"ANY","javascriptEnabled":true,"cssSelectorsEnabled":true,"takesScreenshot":false,"nativeEvents":false,"rotatable":false},"capabilities":{"firstMatch":[{"browserName":"chrome"}]}}' with headers {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Length'=>'250', 'Content-Type'=>'application/json; charset=UTF-8', 'User-Agent'=>'selenium/3.14.1 (ruby linux)'}
+~~~
+To fix you need to write initializer that call `disable_net_connect!`
 ~~~
 # config/initializers/webmock.rb
 if Rails.env.test?
@@ -2692,6 +2749,11 @@ if Rails.env.test?
 end
 ~~~
 
+You can not use webmock for requests in javascript (capybara tests).
+
+## VCR
+
+VCR records **outgoing** HTTP requests.
 VCR is using cassetes so you do not need to manualy stub requests using curl.
 
 ~~~
@@ -2894,6 +2956,9 @@ guidlines [betterspecs](http://betterspecs.org/)
 * use [stubs and spies](https://robots.thoughtbot.com/spy-vs-spy) instead of
 mocks since it clearly separate SETUP, EXERSIZE and VERIFICATION phase.
 
+# Parallel tests
+
+https://github.com/grosser/parallel_tests
 
 # Opensource examples with tests
 

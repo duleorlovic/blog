@@ -39,8 +39,11 @@ LITE](https://www.raspberrypi.org/downloads/raspbian/).
 
 On Mac use Etcher https://etcher.io/ and select zip and sd card and click Flash.
 When installing Raspian it took around 20mins to extract 4.138MB (speed 2MB/s).
-On another card (Kingston 16GB MicroSD HC C10 SDC10/16GB) speed is 9.9MB/s and 2018-06-27-raspbian-stretch-lite.zip
-(367MB, uncompressed in Etcher says it is 1.86GB) took only few mins.
+On another C10 cards:
+Kingston 16GB MicroSD HC C10 SDC10/16GB speed is 9.9MB/s and
+ScanDisk Ultra 32GB 10 UHS I speed is 15MB/s
+so 2018-06-27-raspbian-stretch-lite.zip (367MB, uncompressed in Etcher says it
+is 1.86GB) took only few mins.
 
 Create empty file `ssh` in the root of sd card (now sd card has name `boot`) so
 than ssh will be enabled and you do not need mouse and monitor, just find ip

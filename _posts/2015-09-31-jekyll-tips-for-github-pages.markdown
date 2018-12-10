@@ -606,13 +606,14 @@ highlight ruby %}`, `{{ '{%' }} highlight bash %}`
 
 # Liquid in markdown
 
+* to show jekyll mustache inline you can add space, like `{ % bla_tag %}`. Note
+  that in blocks of code you can use mustache, so this is only for inside tick.
 * to show `{{ '{{ ' }} }}` using *markdown* you need to escape them like
 `{{ "{{ '{{ " }} ' }} }}` first closing brackets will close everything that
 comes after first opening brackets. All other closing brackets are simply
 rendered. This does not work if that line breaks in mutliple lines (probably
 string need + or something). To simplify I just put space between first
 `{{ '{ {' }} }}`
-* similar to show `{ % bla_tag %}`
 * if you need to show **\`** than use backslash or put a space ` so it
 wont be applied`
 
@@ -858,6 +859,10 @@ $ ->
 
 and they will be compiled, so you can include them `<script
 src="assets/js/cart.js"></script>`
+
+# Rails
+
+https://www.sitepoint.com/jekyll-rails/
 
 # Tips
 

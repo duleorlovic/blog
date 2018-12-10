@@ -335,3 +335,4 @@ videos
 
 * <https://www.youtube.com/watch?v=yxhrYiqatdA>
 
+https://medium.com/rubyinside/how-we-halved-our-memory-consumption-in-rails-with-jemalloc-86afa4e54aa3

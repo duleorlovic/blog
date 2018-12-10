@@ -31,6 +31,8 @@ layout: post
   ~~~
   https://developers.facebook.com/docs/sharing/best-practices/
 * image wont be changed until image url is changed https://developers.facebook.com/docs/sharing/opengraph/object-properties#image
+* debug how facebook crawler see the page with
+  https://developers.facebook.com/tools/debug/
 
 * new window in popup will be blocked if it is cause by script from ajax. It should be called `on-click`
 
@@ -139,3 +141,91 @@ Style
   }
 }
 ~~~
+
+## Koala gem
+
+[koala](https://github.com/arsduo/koala).
+
+~~~
+cat >> Gemfile <<HERE_DOC
+# facebook graph api
+gem 'koala'
+HERE_DOC
+
+cat >> config/initializers/koala.rb <<HERE_DOC
+Koala.configure do |config|
+  config.app_id = Rails.application.secrets.facebook_app_id
+  config.app_secret = Rails.application.secrets.facebook_app_secret
+  # you can also configure application access token on new
+  # https://developers.facebook.com/tools/access_token/
+  # @fb Koala::Facebook::API.new(oauth_token, app_token)
+end
+HERE_DOC
+~~~
+
+~~~
+# app/models/user.rb
+  def fb
+    @fb ||= Koala::Facebook::API.new(oauth_token)
+    block_given? ? yield(@fb) : @fb
+  rescue Koala::Facebook::APIError => e
+    logger.info e.to_s
+    nil # or consider a custom null object
+  end
+~~~
+
+You can `get_object id, fields`
+* first param is `id`
+* second param is `fields: ['message', 'link']`. You can also put inside first
+param `get_object "me?fields=link"` (copy from graph api explorer). `id` field
+is always returned. You can use edges here also.
+If some field is object than `"data"` object is returned. You can access those
+nested fields with curly braces `me?fields=picture{url},birthday`
+
+There exists also: `get_connections` or `put_connections`.
+
+Order can be `chronological` or `reverse_chronological` for example
+`some-picture-id?fields=comments.order(reverse_chronological)`
+
+Limit for each field `me?fields=albums.limit(5)`
+
+There are user access token, page access token. To get page access token you can
+navigate to `me/accounts` (with `manage_page` permission).
+You can extend short lived access token to long lived on
+<https://developers.facebook.com/tools/debug/accesstoken>
+<https://developers.facebook.com/docs/facebook-login/access-tokens>
+
+`me?metadata=1` will return all fields and connections
+
+`me?debug=all` will add `__debu__` field
+
+`user.fb.get_connection("me", "permissions")` to get a list of all
+permissions that are granted to this token
+  * `user_posts` to see all posts.
+  [post](https://developers.facebook.com/docs/graph-api/reference/v2.10/post) is
+  entry in profile's feed. Feed can be user, page, app or group.
+  Post has fields: story, message, created_time, id (id has format
+  `userid_postid`) and edges: likes, comments, insights, attachments
+  * `publish_actions` to be able to create or update or delete a post
+  * `publish_pages` when deleting page's post with page access token
+
+Interesting nodes:
+
+* `/me/accounts` to get page access tokens
+* `/page-id?fields=insights.metric(page_impressions)` and
+`/page-id/posts?fields=insights.metric(post_impressions,post_consumptions_unique)`
+get page and page posts insights [available
+metrics](https://developers.facebook.com/docs/graph-api/reference/v2.10/insights#availmetrics)
+
+
+I received error notification
+
+~~~
+A Koala::Facebook::ClientError occurred in #:
+
+  type: OAuthException, code: 5, message: (#5) Unauthorized source IP address, x-fb-trace-id: DRbq0PcDTWj [HTTP 400]
+  app/models/user.rb:75:in `get_user_by_token'
+~~~
+
+This means that server is on facebook banned list. `heroku restart` can help.
+

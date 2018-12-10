@@ -54,10 +54,13 @@ that is:
   Functions](http://www.postgresql.org/docs/9.4/static/functions-aggregate.html)
   since those columns can be merged.
   * you can group by hour with `SELECT date_trunc('hour', created_at),  (which
-      can becount(*)
+      can be count(*)
   FROM users GROUP BY date_trunc('hour', created_at) ORDER BY date_trunc('hour',
   created_at);`. You can reference columns by select position `SELECT
   date_trunc('hour', created_at), count(*) FROM users GROUP BY 1 ORDER BY 1;`
+  Although you can order by expression of columns `ORDER BY col1 + col2`, you
+  can not use order by with calculated col and expression `ORDER BY sum + 1`
+  https://www.postgresql.org/docs/8.3/queries-order.html
 * you can group by several columns and select count > 2 and get only first
 item.id `a=Item.reorder("").select('max("id") as max_id').group([:url, :title,
 :feed_id]).having('count("id") > 1')`
@@ -89,8 +92,12 @@ Some tips:
 
 * if you want to avoid *Division by zero* you can use `CASE count(column_name) =
   0 WHEN 0 THEN 1 ELSE count(column_name) END`.  Another way is to use
-  `COALESCE(NULLIF(column_name,0), 1)` . `NULLIF` is used to show nil, as
-  division by nil is nil.
+  `COALESCE(NULLIF(column_name,0), 1)` .
+  `NULLIF` is used to show nil, as division by nil is nil.
+  `something/NULLIF(column_name,0)` If the value of column_name is 0 - result of
+  entire expression will be NULL.
+  Defaults for `ORDER BY ASC` is `NULLS LAST` and for desc `NULL FIRST` so you
+  maybe want to reverse that.
 * `FROM WHERE field IN ('a','b')` is the same as `field = 'a' OR field =
   'b'`
 * you can use IN, ANY, ALL
@@ -375,6 +382,13 @@ render 'stats_line_graph'
 </script>
 ~~~
 
+* to find which table has the most rows you can use this
+  ```
+  SELECT schemaname,relname,n_live_tup
+  FROM pg_stat_user_tables
+  ORDER BY n_live_tup DESC;
+  ```
+
 # Other gems
 
 I found interesting gems:
@@ -386,3 +400,5 @@ version](https://github.com/ankane/chartkick.js)
 
 * interesting [no sql not required data analytics tool
 INSIGHTS](https://github.com/mariusandra/insights)
+* automatic find indexes that are needed for a database
+  https://github.com/ankane/dexterhttps://github.com/ankane/dexter

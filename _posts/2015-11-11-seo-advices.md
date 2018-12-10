@@ -1,12 +1,17 @@
 ---
 layout: post
-title: SEO advices
 ---
 
 Test your site on
 <https://developers.google.com/speed/pagespeed/insights/>
 Free trial seo report rank <https://www.woorank.com/>
 Also on <https://www.webpagetest.org/>
+
+# WEBPAGETEST
+
+Videos https://www.youtube.com/watch?v=6UeRMMI_IzI&index=7&list=PLWa0Ky8nXQTaFXpT_YNvLElTEpHUyaZi4
+Github https://github.com/WPO-Foundation/webpagetest
+Docs https://sites.google.com/a/webpagetest.org/docs/advanced-features/webpagetest-restful-apis
 
 
 # General Tips
@@ -69,6 +74,7 @@ widget</a>`
 * SSL secure (http should redirect to https), add STS in header,
   xml sitemap, link to css files to use https
 * social media
+* optimize css https://csswizardry.com/2018/11/css-and-network-performance/
 
 # Rails gzip
 
@@ -301,3 +307,6 @@ your app. Do not use secret stuff in url like `/session=1234/...?user=john`
 rel canonical, redirects, sitemaps
 * imporant content that needs to be indexed should be on visible part of the
 page, not on ajax call since crawl will be able to index that
+
+TODO
+https://www.youtube.com/watch?v=Afy7H04X9Us

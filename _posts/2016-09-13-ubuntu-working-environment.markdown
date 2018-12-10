@@ -14,7 +14,8 @@ title: Ubuntu working environment
   ~~~
 
 * taks screenshot: fullsize `Print`, currently active window `Alt+Print`, area
-  `Shift+Print`. Use `ctrl` instead of alt if you want to copy to clipboard
+  `Shift+Print` (select window or drag area).
+  Use `ctrl` instead of alt if you want to copy to clipboard
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
 tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
@@ -114,6 +115,8 @@ development I use `.loc` with dnsmasq. I did not choose to use `localhost`
 because I can not remap subdomain of localhost in /etc/hosts and use in google
 chrome (firefox works fine) for some pathetic reason
 <https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost>
+Now localhost works in Chrome but not in Firefox (about:config
+network.dns.disableIPv6 set to false did not work for me)
 You can also use `lvh.me` since it always resolves to 127.0.0.1.
 
 For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
@@ -466,3 +469,35 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
   * burn cd with mini.iso
     https://help.ubuntu.com/community/Installation/MinimalCD (since full iso is
     850MB > 700 MB CD capacity)
+
+* find motherboard proccessor model with `sudo dmidecode | less`
+
+# Remote access to services
+
+To enable mysql service from remote you need to bind it to 0.0.0.0 in
+configuration. To test on which interface is some port listening you can use
+
+```
+sudo netstat -plutn | grep 3306
+```
+
+You can try with nmap but it does not show for example neo4j 7474 port
+```
+nmap 127.0.0.1
+nmap 192.168.3.2
+```
+
+To start service on boot use
+
+```
+service --status-all
+
+# to automatically boot
+sudo update-rc.d neo4j defaults
+# to remove from auto start
+update-rc.d -f neo4j remove
+
+# another way to set up to run at boot [+]
+
+sudo systemctl enable neo4j
+```

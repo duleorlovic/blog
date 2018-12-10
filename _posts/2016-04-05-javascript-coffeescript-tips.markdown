@@ -11,6 +11,25 @@ the following script `<script>` tag will not work.
 You can add script dynamically in javascript using `appendChild` and it will be
 executed after all inline scripts are done (after all defered so setting `defer`
 option in javascript has no efects).
+You can run your script as callback when script is loaded
+~~~
+# if you are using script tags
+<script onload="loadedContent();" src ="/myapp/myCode.js"  ></script>
+
+# or if loaded using appendChild
+
+var razorpay_script = document.createElement('script');
+razorpay_script.setAttribute('src','https://checkout.razorpay.com/v1/checkout.js');
+razorpay_script.onload=function(){
+  #{razorpay_options_js}
+  var rzp1 = new Razorpay(options);
+  rzp1.open();
+};
+document.head.appendChild(razorpay_script);
+
+# third solution could be to use setTimeout(callback(){}, 200)
+~~~
+
 Threre are two phases: downloading and executing. All modern browsers download
 in parallel so we do not need to consider downloading. Execution could be
 immediatelly or after parsing.
@@ -946,3 +965,10 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
   })
   ~~~
 
+* jquery.each should not return `false` since it will break the loop, for in
+  coffeescript you should add `true`
+  ```
+    $('[data-enable-buttons]:checked').each ->
+      this.checked = false
+      true
+  ```

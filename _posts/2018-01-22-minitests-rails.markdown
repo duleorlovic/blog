@@ -7,10 +7,10 @@ layout: post
 Minitest real test examples: openstreetmap, redmine
 
 Mini test for rails `TestCase`s (like `ActiveSupport::TestCase`) inherits from
-`Minitest::Test` so you can use it `def test_password`, but Rails adds `test`
-method so it can be used like `test "my password" do`.  In minitests you can not
+`Minitest::Test` so you can use it `def test_method`, but Rails adds `test`
+method so it can be used like `test "my method" do`.  In minitests you can not
 have same test descriptions since it will be converted to same
-`test_my_password`.
+`test_my_method`.
 
 You can run specific test use `:line` or `-n test_name`.
 This also works for system test (so you do not need `system` in `rails
@@ -36,7 +36,8 @@ teardown block, rollback fixtures.
 
 http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
 
-Rails performs loading fixtures in tree steps: removing old fixture data, load fixture data and dump data into a method inside test case `users(:david)`
+Rails performs loading fixtures in tree steps: removing old fixture data, load
+fixture data and dump data into a method inside test case `users(:david)`
 
 Defining fixtures:
 * use labels for associated belongs_to and has_many items (separated by comma)
@@ -92,6 +93,19 @@ Defining fixtures:
     <<: *DEFAULTS
   ~~~
 
+* if you really want hardcoded ids you can use
+  ```
+  my_language:
+    id: 5
+    name: English
+
+  course:
+    language_id: 5
+    # note that this is just yml so you can not use
+    language_id: my_language.id
+    # but you can use erb
+    language_id: <%= ActiveRecord::FixtureSet.identify :my_language %>
+  ```
 * `pre_loaded_fixtures`
 * `use_transactional_tests`. In Rails 4 it was
   `use_transactional_fixtures` but since it could be factories not fixtures,
@@ -102,13 +116,26 @@ Defining fixtures:
     self.use_transactional_tests = false
   end
   ~~~
+* when defining new fixtures, add them to the end, so you do not break current
+  test for first page (when you use pagination)
+* load fixtures in development `rake db:fixtures:load` (put in your seed
+  ```
+  # db/seed.rb
+  Rake::Task['db:fixtures:load'].invoke
+  ```
+* to set devise password, you can add exncypted password on specific items
+  ```
+  admin_user:
+    encrypted_password: <%= User.new.send(:password_digest, 'password') %>
+  ```
+* Usage of fixtures
 
-Usage of fixtures
-
-~~~
-# note that we are calling method users
-users(:my_user)
-~~~
+  ~~~
+  # note that we are calling method users()
+  users(:my_user)
+  # we can get two
+  users(:duke, mike)
+  ~~~
 
 # Minitest classes
 
@@ -141,7 +168,10 @@ class TaskTest < ActiveSupport::TestCase
   test 'valid fixture' do
     # database constrains do not need to be tested because fixture will fail if
     # can not be inserted in db. We need to test only rails validations
-    assert tasks(:my_task).valid?
+    assert tasks.map(&:valid?).all?
+
+    # you can add specific error message
+    assert tasks.map(&:valid?).all?, tasks.select {|c| !c.valid?}.map {|c| c.errors.full_messages.join}
   end
 end
 ~~~
@@ -169,11 +199,11 @@ Rails also defines `assert_difference`, `assert_blank`, `assert_presence`,
     end
 ~~~
 
-You can create your own assertiongs like
-https://github.com/duleorlovic/premesti.se/blob/master/test/support/assert_equal_when_sorted_by_id.rb
+You can create your own assertiongs (assert sorted)
 Reopen `module MiniTest::Assertions` when helper is used in all tests. If you
 need only for system tests (assert_selector) or integration test (assert select)
-than you need to reopen that class
+than you need to reopen that particular class
+https://github.com/duleorlovic/premesti.se/blob/master/test/support/assert_equal_when_sorted_by_id.rb
 
 ~~~
 # test/application_system_test_case.rb
@@ -181,11 +211,11 @@ require 'test_helper'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   def assert_alert_message(text)
-    assert_selector 'div#alert-debug', text, visible: false
+    assert_selector 'div#alert-debug', text: text, visible: false
   end
 
   def assert_notice_message(text)
-    assert_selector 'div#notice-debug', text, visible: false
+    assert_selector 'div#notice-debug', text: text, visible: false
   end
 end
 ~~~
@@ -254,13 +284,56 @@ title: "Ahoy!" }, response.parsed_body)`.
 * You have access to `@request`, `@controller` and `@response` object, but only
   after you call `get`, `post`. You can set `request.remote_ip` by passing
   headers `get '/', headers: { 'REMOTE_ADDR': '123.123.123.123' }`
-* You can see page body with `response.body`
-[available instance
-variables](http://guides.rubyonrails.org/testing.html#instance-variables-available):
+* `assert_select 'h1', 'Welcome'` is used to test view. View can be tested with
+  `assert_match /Welcome/', response.body`.
+  There are two forms of *assert_select selector, [equality], [message]* or
+  using Nokogiri::XML::Node as element *assert_select element, selector,
+  [equality]*.
+  selector can be CSS selector as one string, or array with substitutions
+  ~~~
+  assert_select 'div#123' # exists <div id='123'>
+  assert_select "a[href='http://www.example.com/diary/new']"`
+  assert_select 'input[value=?]', username   # substitute username
+  assert_select 'input[value*=?]', username   # match when containing username
 
-`assigns` and `assert_template` are moved to separated template.
-Those are similar to Rspec request spec, and works full stack with no use of
-capybara.
+  # use custom pseudo class `:match(attribute_name, attribute_value)`
+  assert_select "ol>li:match('id', ?)", /item-\d+/       # exists li id='item-1'
+  assert_select "div:match('id',?)", /\d+/        # exists div with non empty id
+
+  assert_select 'div', 'Hello' # exists <div>Hello</div>
+  assert_select 'div', /hello/ # if div text matches
+  assert_select 'div', false # no divs exists
+  assert_select 'div', 4 # exactly 4 divs
+  assert_select 'div', 4..5 # number of dives is in range
+  ~~~
+
+  To perform more than one quality tests in one assert you can use hash
+  (assert_selector also use this hash param)
+
+  ~~~
+  # instead of refute_select, for no div with my_name you can use
+  assert_select 'a[href=?]', link, text: /my_name/, count: 0
+  assert_select 'div', html: 'p', minimum: 2
+  ~~~
+
+  To check html in emails use assert_select_email
+
+  ~~~
+  assert_select_email do
+    items = assert_select "ol>li"
+    items.each do
+      Work with items here...
+    end
+  end
+  ~~~
+
+Those integration tests are similar to Rspec request spec, and works full stack
+with no use of capybara. More info
+  https://github.com/rails/rails-dom-testing/blob/master/lib/rails/dom/testing/assertions/selector_assertions.rb
+similar to capybara `have_selector` but separate implementation `html selector`.
+<http://www.rubydoc.info/github/rails/rails-dom-testing/Rails%2FDom%2FTesting%2FAssertions%2FSelectorAssertions%3Aassert_select>
+  After request is made you can also access `@controller`, `@request` and
+  `@response` (same as `response`).
 
 ~~~
 # test/controllers/projects_controller_test.rb
@@ -271,8 +344,25 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     @project = create :project
   end
 
+  # called after every single test
+  teardown do
+    # when controller is using cache it may be a good idea to reset it afterwards
+    Rails.cache.clear
+  end
+
   test 'show' do
     get project_path(@project)
+    assert_select "#tutorial-#{tutorials(:priced_course_first_free_tutorial).id}", /Watch this lesson now/
+    assert_select "#tutorial-#{tutorials(:priced_course_third_tutorial).id}", text: /Watch this lesson now/, count: 0
+
+    # or you can parse `response.body` do it manually
+
+    doc = Nokogiri::HTML response.body
+    # you can get all text with doc.text.split.join(' ')
+    el = doc.search "#tutorial-#{tutorials(:priced_course_first_free_tutorial).id}"
+    assert_match 'Watch this lesson now', el.text
+    el = doc.search "#tutorial-#{tutorials(:priced_course_third_tutorial).id}"
+    assert_no_match 'Watch this lesson now', el.text
   end
 
   test "the create method creates project" do
@@ -284,28 +374,6 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
   end
 end
 ~~~
-
-# Assert select
-
-View can be tested with `assert_select` similar to capybara `have_selector` but
-separate implementation `html selector`.
-<http://www.rubydoc.info/github/rails/rails-dom-testing/Rails%2FDom%2FTesting%2FAssertions%2FSelectorAssertions%3Aassert_select>
-assert_select can be used in functional or integration tests
-
-* `assert select 'input', 2` second param is integer so assertion is true if
-exactly that number of elements, if `false` than no element exists
-* `assert_select 'input', /my_name/` second param string/regexp so it is true
-if text value of at least one element matches
-* `assert_select  'input', text: /my_name/, count: 0` is also possible and used
-when you do not want to see some text
-* you can nest and use 
-* target with `element[attribute_name=attribute_value]` like
-`assert_select "a[href='http://www.example.com/diary/new']"`
-* substitute with `assert_select input[value=?], username`
-* use custom pseudo class `:match(attribute_name, attribute_value)`
-like: `assert_select "ol>li:match('id', ?)", /item-\d+/`
-
-
 
 ## Minitest routing
 
@@ -356,13 +424,57 @@ Capybara assertions
 * `assert_equal admin_path, page.current_url`
 * `page.accept_confirm` to confirm alert dialog box
 
+## Webmock
+
+```
+# Gemfile
+gem 'webmock'
+
+# config/initializers/webmock.rb
+if Rails.env.test?
+  require 'webmock'
+  WebMock.disable_net_connect!(allow_localhost: true)
+end
+
+# test/test_helper.rb
+require 'webmock/minitest'
+```
+
 ## Minitest helpers
 
-Add a line in `test/test_helper.rb` to include support
-`Dir[Rails.root.join('test/support/**/*.rb')].each { |f| require f }` files.
+Add a line in `test/test_helper.rb` to include files from `test/a`
+```
+# test/test_helper.rb
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../../config/environment', __FILE__)
+Dir[Rails.root.join('test/a/**/*.rb')].each { |f| require f }
+require 'rails/test_help'
+require 'minitest/autorun'
+require 'webmock/minitest'
+
+class ActiveSupport::TestCase
+  # create(:user) instead FactoryBot.create :user
+  include FactoryBot::Syntax::Methods
+  # stub_something
+  include WebmockHelper
+  # devise method: sign_in user
+  include Devise::Test::IntegrationHelpers
+  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
+  fixtures :all
+end
+```
+
+I prefer to use factories on specific integration test so when I need to remove
+specific fixtures I use rails `Courses.delete_all`. I do not use database
+cleaner because it complicates thinks because I need to load some specific
+fixtures (like users) and remove other. Not sure if that will remove fixtures
+for other tests
+https://stackoverflow.com/a/28539464/287166
+
+For pause
 
 ~~~
-# test/support/pause_helper.rb
+# test/a/pause_helper.rb
 module PauseHelper
   # you can use byebug, but it will stop rails so you can not navigate to other
   # pages or make another requests in chrome while testing
@@ -541,3 +653,28 @@ guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
 ~~~
 
 * to show full backtrace use `BACKTRACE=blegga rails test`
+* to take screenshot you can call `take_screenshot` in tests.
+  Automatically taking screenshot when tast fails is included in teardown by
+  default, and you can override it
+  https://api.rubyonrails.org/v5.2/classes/ActionDispatch/SystemTesting/TestHelpers/ScreenshotHelper.html#method-i-take_screenshot
+  By default `image_name` is
+  [method_name](https://github.com/rails/rails/blob/fc5dd0b85189811062c85520fd70de8389b55aeb/actionpack/lib/action_dispatch/system_testing/test_helpers/screenshot_helper.rb#L42)
+  By default `display_image` will print `puts image_path` but we can open image
+
+
+  ~~~
+  # test/application_system_test_case.rb
+  require 'test_helper'
+
+  class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+    driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+
+    def display_image
+      system "gnome-open #{image_path} &"
+      "Opening screenshot: gnome-open #{image_path}"
+    end
+  end
+  ~~~
+
+* test og meta tags for jekyll
+* https://gist.github.com/thbar/10be2ea924b81f78d24ab800461bfee3

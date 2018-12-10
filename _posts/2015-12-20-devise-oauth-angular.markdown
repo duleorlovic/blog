@@ -231,6 +231,16 @@ Note this situations:
   email to our database as well.
 
 
+* user click forgot password, it change password, than it is asked to login,
+  than he should not see again forgot password page
+* when user change the password it should stay logged in
+  ```
+    current_user.password='asdfasdf'
+    current_user.password_confirmation='asdfasdf'
+    current_user.save!
+    bypass_sign_in current_user
+  ```
+
 # Facebook app
 
 Is you use `omniauth-facebook` alone than there are problems with devise (it
@@ -267,93 +277,6 @@ Notes:
 
 * no need to check if email is verified, since facebook will not allow
 unverified accounts to use oauth
-
-## Koala gem
-
-[koala](https://github.com/arsduo/koala).
-
-~~~
-cat >> Gemfile <<HERE_DOC
-# facebook graph api
-gem 'koala'
-HERE_DOC
-
-cat >> config/initializers/koala.rb <<HERE_DOC
-Koala.configure do |config|
-  config.app_id = Rails.application.secrets.facebook_app_id
-  config.app_secret = Rails.application.secrets.facebook_app_secret
-  # you can also configure application access token on new
-  # https://developers.facebook.com/tools/access_token/
-  # @fb Koala::Facebook::API.new(oauth_token, app_token)
-end
-HERE_DOC
-~~~
-
-~~~
-# app/models/user.rb
-  def fb
-    @fb ||= Koala::Facebook::API.new(oauth_token)
-    block_given? ? yield(@fb) : @fb
-  rescue Koala::Facebook::APIError => e
-    logger.info e.to_s
-    nil # or consider a custom null object
-  end
-~~~
-
-You can `get_object id, fields`
-* first param is `id`
-* second param is `fields: ['message', 'link']`. You can also put inside first
-param `get_object "me?fields=link"` (copy from graph api explorer). `id` field
-is always returned. You can use edges here also.
-If some field is object than `"data"` object is returned. You can access those
-nested fields with curly braces `me?fields=picture{url},birthday`
-
-There exists also: `get_connections` or `put_connections`.
-
-Order can be `chronological` or `reverse_chronological` for example
-`some-picture-id?fields=comments.order(reverse_chronological)`
-
-Limit for each field `me?fields=albums.limit(5)`
-
-There are user access token, page access token. To get page access token you can
-navigate to `me/accounts` (with `manage_page` permission).
-You can extend short lived access token to long lived on
-<https://developers.facebook.com/tools/debug/accesstoken>
-<https://developers.facebook.com/docs/facebook-login/access-tokens>
-
-`me?metadata=1` will return all fields and connections
-
-`me?debug=all` will add `__debu__` field
-
-`user.fb.get_connection("me", "permissions")` to get a list of all
-permissions that are granted to this token
-  * `user_posts` to see all posts.
-  [post](https://developers.facebook.com/docs/graph-api/reference/v2.10/post) is
-  entry in profile's feed. Feed can be user, page, app or group.
-  Post has fields: story, message, created_time, id (id has format
-  `userid_postid`) and edges: likes, comments, insights, attachments
-  * `publish_actions` to be able to create or update or delete a post
-  * `publish_pages` when deleting page's post with page access token
-
-Interesting nodes:
-
-* `/me/accounts` to get page access tokens
-* `/page-id?fields=insights.metric(page_impressions)` and
-`/page-id/posts?fields=insights.metric(post_impressions,post_consumptions_unique)`
-get page and page posts insights [available
-metrics](https://developers.facebook.com/docs/graph-api/reference/v2.10/insights#availmetrics)
-
-
-I received error notification
-
-~~~
-A Koala::Facebook::ClientError occurred in #:
-
-  type: OAuthException, code: 5, message: (#5) Unauthorized source IP address, x-fb-trace-id: DRbq0PcDTWj [HTTP 400]
-  app/models/user.rb:75:in `get_user_by_token'
-~~~
-
-This means that server is on facebook banned list. `heroku restart` can help.
 
 # Google console
 
@@ -1090,7 +1013,7 @@ If admin wants to become some other user `login_as` he can use `sign_in(:user,
 # app/views/layouts/application.html.erb
 <% if Rails.env.development? %>
   <small>
-    Only on development
+    only_on_development
     <% User.first(10).each do |user| %>
       <%= link_to user.email, sign_in_as_path(user_id: user.id) %>
     <% end %>
@@ -1151,15 +1074,51 @@ override user as_json
 
 # Redirection after sign in
 
-You can use devise method for redirections
-
+Stored location for resource is usually kept in `session[:user_return_to]`. Yo
+enable it you have to add before action
+https://github.com/plataformatec/devise/wiki/How-To:-Redirect-back-to-current-page-after-sign-in,-sign-out,-sign-up,-update
 ~~~
 # app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  before_action :_store_user_location!, if: :_storable_location?
+  # The callback which stores the current location must be added before you authenticate the user
+  # as `authenticate_user!` (or whatever your resource is) will halt the filter chain and redirect
+  # before the location can be stored.
+
+  # Its important that the location is NOT stored if:
+  # - The request method is not GET (non idempotent)
+  # - The request is handled by a Devise controller such as Devise::SessionsController as that could cause an 
+  #    infinite redirect loop.
+  # - The request is an Ajax request as this can lead to very unexpected behaviour.
+  def _storable_location?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+  end
+
+  def _store_user_location!
+    # :user is the scope we are authenticating
+    # this path can be fetched with path = stored_location_for(resource)
+    store_location_for(:user, request.path)
+  end
+
+  # https://www.rubydoc.info/github/plataformatec/devise/Devise/Controllers/Helpers:after_sign_in_path_for
+  # override in ApplicationController since if you override in
+  # SessionsController and it wont be used in RegistrationController (for example
+  # user already signed in and needs to be redirected)
   def after_sign_in_path_for(resource)
+    # we need save stored location in variable since it is not indenpotent
+    # if we call twice stored_location_for(:user) than second will be nil
+    # so do not use stored_location_for in views or anywhere else... you can use
+    # session[:user_return_to] if you really need
     redirect_url = stored_location_for(resource)
     return redirect_url if redirect_url.present?
     # calculate default paths for user
   end
+
+
+# app/controllers/users/registrations_controller.rb
+note that inside Devise controllers and also in application controller you can
+use `stored_location_for :user`
+
 ~~~
 
 If you need to store landing page for future analitics or you need to redirect

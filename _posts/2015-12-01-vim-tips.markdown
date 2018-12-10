@@ -298,7 +298,53 @@ shorter `:set rnu`
 * `dE` removes to the End of the string
 * recording macro to q with `qq`, exit with `q`, run with `@q`
 * paste commands in insert mode with `^Rq`
-* `^T` indent in insert mode. In normal mode you can select and indent with `=`
+* `^T` indent `^D` dedent in insert mode.
+In normal mode you can select and indent with `=`
+To indent whole file you can jump to begging and indent to last line `gg=G`.
+In visual mode `gq` will format text to 80 char lines (good for markdown)
+
+HTML indent works fine but note when to avoid erb tags. It detects `%>` as
+closed tag except when line starts with `<%`. Do not use comment in the middle
+of erb since that line somehow is not indented. Better is to add another comment
+tag inline `<%# if condition? %>`
+
+```
+Instead
+<div>
+  text node <%= name %>
+</div>
+
+Use
+<div>
+  text node
+  <%= name %>
+</div>
+
+For if else anotation use separated tag
+<% if b %>
+<% else %><%# if b %>
+<% end %><%# if b %>
+
+For multiline ruby there is a problems so use single line erb
+<% one %>
+<% two %>
+
+For case switch there is a problem since it is not recognized as valid ruby
+    <fieldset>
+      <% case searchable %>
+      <% when Book %>
+        <legend>Book</legend>
+        <%= searchable.title %>
+      <% when User %>
+      <% end %>
+only solution is to merge two line into one
+    <fieldset>
+      <% case searchable when Book %>
+        <legend>Book</legend>
+        <%= searchable.title %>
+      <% when User %>
+      <% end %>
+```
 
 # Motion in visual mode
 
@@ -334,6 +380,7 @@ yank link to register `a` and paste: `"add` `"ap"`
 * `]b` buffers
 * `]q` go next `[q` prev Quick fix, Alss next error or warning with `:lnext` or
   `:lpr` or using `[l` `]l`. More are in `:help unimpaired-next`
+* `]ow` to enable wrap, toggle with `yow`, more `:help unimpaired-toggling`
 
 To close error window you need to `:lcl`. I use map for quickfix to `:.cc`
 
@@ -407,9 +454,12 @@ possible (instead of `*` which will stop at last occurrence).
   and stop at qwe. You can use [S and S!
   snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
 
-`:Ack` can be used to find in files.
+`:Ack` can be used to find in files. In vim it uses `ag` instead of `grep` or
+`Ack`. To search specific types use option `-G` and regexp like: `:Ack
+montserrat -G 'css$'`
 For two line search you can use: `:Ack 'destroy\n.*authorize'  app/controllers/`
-For multiline (dot not matter how many lines are in between) `:Ack 'destroy(\n.*)*flash.now..notice'  app/controllers/`
+For multiline (dot not matter how many lines are in between) `:Ack
+'destroy(\n.*)*flash.now..notice'  app/controllers/`
 
 # Windows buffers and tabs
 
@@ -434,6 +484,8 @@ Quickfix window can be opened with `:copen`
 # Completion
 
 * `^n` or `^p` in insert mode to autocomplete strings and get next/previous item
+* `^x^o` to autocomplete using omni completion `:set
+  omnifunc=csscomplete#CompleteCSS`
 * `^x^n` only strings from current file
 * `^x^l` complete whole lines
 * `^x^f` to complete filename (keep `^x^f` when you navigate subfolders)
@@ -442,11 +494,6 @@ Quickfix window can be opened with `:copen`
 [speeddating](https://github.com/tpope/vim-speeddating) if you want to increment
 dates
 * for commands you can use `^d` to show all completion and `<tab>` to use it
-
-# Indent
-
-* `gq` in visual mode will format text to 80 char lines (good for markdown)
-* `gg=G` indent whole file
 
 # Tips
 
@@ -472,7 +519,7 @@ keyword
 
 # Books, videos tutorials
 
-* vim begginer tutorial `:help vimtutor` or run in shel `vimtutor`
+* vim begginer tutorial `:help vimtutor` or run in shell `vimtutor`
 * [vim theory]({{ site.baseurl }} {% post_url 2017-06-05-vim-theory %})
 * <https://www.youtube.com/watch?v=5r6yzFEXajQ>
 * start vim without plugin , no plugins
@@ -558,7 +605,7 @@ see all configuration options `ALEInfo`.
 There was issue with erb <https://github.com/w0rp/ale/issues/580> but this
 erubylint was recently removed from ale linters.
 
-## Syntastic (deprecated)
+## Syntastic (deprecated, use ALE instead)
 
 [syntastic](https://github.com/scrooloose/syntastic) vim plugin is great to
 write your code. Just need to install external syntac checkers and they will be
@@ -691,9 +738,13 @@ endif
 ## Vim scripts in ruby:
 
 https://subvisual.co/blog/posts/139-how-to-program-vim-using-ruby/
+
+## Vim ruby support
+
+`:help ruby`
 Some integrated stuff in vim
 https://github.com/vim-ruby/vim-ruby/blob/master/doc/vim-ruby.txt
-`:help ruby`
+https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport
 
 # WHEREAMI my plugin to show dedented lines
 
@@ -876,5 +927,48 @@ Use https://github.com/tpope/vim-db and access with
 
 # Tmux
 
-https://handbook.infinum.co/books/rails/Editors/Vim
+Not using for now
 
+# Shell script
+
+Calling external shell script is with bang `:!pwd`. When you visually select it
+operates on lines and use it as argument, for example select multuple lines and
+run `:'<,'>!sort` so sort them.
+If nothing is selected, last selected visual line (whole line) is used.
+You can use `cat` to pass argument. For example run `:'<,'>!echo 1`cat`2`, and
+it will replace whole line by inserting 1...line...2.
+Another way to pass is using `system("echo ", @")` unnamed register.
+
+To work on part of a line, you can use visual match replacement
+`:'<,'>s/\%V.*\%V/\=system('echo -n "the result"')`.
+To use visual selected text as inputs, you can do it manually by pasting with
+`<C-R>` + `"` (" is a standard register for yanking).
+Or you can use helper function that will yank to register and get register
+https://stackoverflow.com/questions/12805922/vim-vmap-send-selected-text-as-parameter-to-function
+```
+func! GetSelectedText()
+  normal gv"xy
+  let result = getreg("x")
+  normal gv
+  return result
+endfunc
+
+vnoremap <F6> :call MyFunc(GetSelectedText())<cr>
+```
+
+https://stackoverflow.com/questions/9637921/vim-filter-only-visual-selection-not-the-entire-line
+
+
+# Translate
+
+Run scripts on visual selection and change with output. I use `translate.rb` and
+`sudo ln -s /home/orlovic/config/ruby/translate.rb /usr/local/bin/` and
+`chmod +x ~/config/ruby/translate.rb` https://github.com/duleorlovic/config/blob/master/ruby/translate.rb
+
+
+* strange characters instead of single quote I see `<91>` and `<92>` in vim.
+  https://superuser.com/questions/199799/vim-shows-strange-characters-91-92 run
+  `:%s/[\x91\x92]/'/g` to replace them
+
+https://handbook.infinum.co/books/rails/Editors/Vim
+https://emily.st/2018/11/13/vim-in-the-future/

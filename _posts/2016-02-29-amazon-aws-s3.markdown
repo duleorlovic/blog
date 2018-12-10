@@ -290,6 +290,17 @@ password so they can login in on app url like: `https://123123.signin.aws.amazon
 * `NoSuchKey` 404 Not Found error is when you remove `index.html` and enable
   static website hosting with index document `index.html`
 
+# Paperclip
+
+You can use presigned url if you want S3 links to expire, in paperclip it was
+using `attachment.expiring_url`
+https://www.rubydoc.info/github/thoughtbot/paperclip/Paperclip%2FStorage%2FS3:expiring_url
+When uploading PDF in paperclip there is rails validation error because of
+imagemagic `Paperclip::Errors::NotIdentifiedByImageMagickError` fix is to update
+local `sudo vi /etc/ImageMagick-6/policy.xml` and add `read|write`
+https://github.com/thoughtbot/paperclip/issues/2223#issuecomment-428862815
+
 # Tips
 
 * blog https://alestic.com/
+

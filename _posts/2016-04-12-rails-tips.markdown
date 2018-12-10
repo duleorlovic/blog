@@ -1,92 +1,6 @@
-- open uri--
-layout: post
-title: Rails tips
 ---
-
-# Nested forms
-
-<http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html>
-If you want to use nested forms like question and answers, good approach is to
-`create!` on new action and redirect to edit. That way you have `question_id`.
-For new questions or delete questions, you can simply use ajax. So start with
-`rails g scaffold questions title;rails g model answers question:references`.
-
-~~~
-# models/question.rb
-class Question < ActiveRecord::Base
-  has_many :answers, dependent: :destroy
-  accepts_nested_attributes_for :answers, allow_destroy: true
-end
-
-# questions/_form.html.erb
-  <div id="answers">
-    <h2>Answers</h2>
-    <% @question.answers.each do |answer| %>
-      <%= render partial: 'answer', locals: { question_form: f, answer: answer } %>
-    <% end %>
-  </div>
-  <%= link_to "Create new answers", create_answer_question_path, remote: true,
-  method: :post %>
-
-# questions/_answer.html.erb
-<%#
-  question_form - we need this because we don't want to generate <form> tags
-                - we need just fields
-  answer - target answer
-
-  we hard code "answers_attributes[]" because
-  when we use fields_for :answer, than when we use ajax `new` twice we got two
-  question[answers_attributes][0][]
-  question[answers_attributes][0][]
-  and only latest will be considered
-  probably because uniq number is reset for each fields_for
-  (here id is passed with hidden field)
-%>
-<%= question_form.fields_for "answers_attributes[]", answer do |ff| %>
-  <div class="field">
-    <%= ff.hidden_field :id %>
-    <%= ff.text_field :content, placeholder: "Answer" %>
-    <%= ff.number_field :score, placeholder: 'Score' %>
-    <%= ff.number_field :position, placeholder: 'Position' %>
-    <%= link_to "Destroy", destroy_answer_question_path(answer.question, answer_id: answer.id), remote: true, method: :delete %>
-  </div>
-<% end %>
-
-# questions/create_answer.js.erb
-<% output = nil %>
-<% form_for(@question) do |f| %>
-  <% output = j render partial: 'answer', locals: { question_form: f, answer:
-  @answer } %>
-  <% end %>
-$('#answers').append('<%= output %>');
-
-# config/routes.rb
-  resources :questions do
-    member do
-      post :create_answer
-      delete :destroy_answer
-    end
-  end
-
-# controllers/questions_controller.js
-  def create_answer
-    @answer = @question.answers.create!
-  end
-
-  def destroy_answer
-    @answer = @question.answers.find(params[:answer_id])
-    @answer.destroy!
-  end
-
-    def question_params
-      params.require(:question).permit(:title, :time_limit, answers_attributes: [:id, :score, :content, :_destroy] )
-    end
-~~~
-
-You can try
-[cocoon](https://github.com/nathanvda/cocoon) gem and use
-`link_to_add_association` [tutorial
-post](https://www.sitepoint.com/better-nested-attributes-in-rails-with-the-cocoon-gem)
+layout: post
+---
 
 # Validations
 
@@ -109,6 +23,9 @@ validates :job_type_id, presence: true
 prompt: true }, class: 'my-class' %>
 ~~~
 
+NOTE that in Rails 5.2 we do not need to add presence validations but if you
+want to disable you can do with `belongs_to :job_type, optional: true`
+
 [form
 select](https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select)
 can accept as 2th param (choices) two variant:
@@ -121,8 +38,9 @@ can accept as 2th param (choices) two variant:
 as 3th param (options):
 
 * `selected: value` if you need selected value be different than
-`job.job_type_id`. If second param is `options_from_collection_for_select(User,
-:id, :email, selected: current_user.id)` than use `selected` as 4th param there.
+`job.job_type_id`. If second param is `options_for_select` than use 2th params
+there, or for  `options_from_collection_for_select(User, :id, :email, selected:
+f.object.user_id)` than use `selected_value` as 4th param there.
 Sometimes when options do not include value that you want to set and you
 use prompt to be shown, please preform check `{ prompt: 'Select package'
 }.merge( options.present? ? { selected: @customer.some_other_package.id
@@ -140,8 +58,8 @@ options_from_collection_for_select(current_location.customers, 'id',
 
 as 4th params (html options)
 * `multiple: true` so it is multi_select (instead of dropdown). Multi select
-will be shown with its own scrollbar (use `size: 5` to limit the size). In
-controller you need to allow arrays
+  will be shown with its own scrollbar (use `size: 5` to limit the size).
+  In controller you need to allow arrays
 
   ~~~
   def event_params
@@ -151,8 +69,39 @@ controller you need to allow arrays
   end
   ~~~
 
-  And in model you need to clean empty strings `[""]` when nothing is selected
+*  Form array can be set on any input, use square brackets `name='user_ids[]'`.
+  In view you can set array of hidden fields
+  ```
+    <% @isp_push_packages.isp_package_ids.each do |isp_package_id| %>
+      <%= f.hidden_field 'isp_package_ids[]', value: isp_package_id %>
+    <% end %>
+  ```
+  or using select `multiple: true` (it will automatically add `[]` to the name)
+  ```
+  <%= f.select isp_package_ids, options, {}, multiple: true %>
+  ```
+  You can also nest in two dimensions ie it will be a hash with array values
+  `name='user_ids[#{company.id}][]`. In this case you need to permit hash
+  (Rails 5.2) or whitelist in before Rails 5.2
 
+  ```
+  params.require(:post).permit(reseller_location_ids: {}) # Rails 5.2
+  permit(files: params[:post][:files].key # before Rails 5.2
+
+  <%= select_tag 'reseller_location_ids[#{operator.id}]', options, multiple: true %>
+  # do not know how to use f.select since can not have method with a name
+  `name[name]`
+  ```
+  Note that if it is not required and nothing is selected than nothing will be
+  sent, you should use hidden field or default value `{}`
+
+  ```
+  <%= hidden_field_tag 'reseller_location_ids[0][]' %>
+  # or
+  location_ids = (params[:reseller_location_ids] || {})[params[:reseller_operator_id]] || []
+  ```
+
+*  And in model you need to clean empty strings `[""]` when nothing is selected
   ~~~
   before_validation :clean_empty_skills
   def clean_empty_skills
@@ -260,6 +209,7 @@ rails g migration add_trashed_to_comments trashed:boolean
 # user.rb & comment.rb
   default_scope { where(trashed: nil) }
   scope :trashed, -> { unscoped.where(trashed: true) }
+  scope :by_status_param, -> (status_argument) { where status: status_argument }
 ~~~
 
 than query `User.first.comments.trashed` will return all trashed comments from
@@ -295,13 +245,30 @@ end
 Write datetime in specific my_time format
 https://apidock.com/ruby/DateTime/strftime
 
+You can see default date formats but they are used only when locales are used
+(for example byebug in a view)
+```
+(byebug) I18n.translate('date.formats.default')
+"%m/%d/%Y"
+(byebug) Date.today.to_s :default
+"2018-11-05"
+(byebug) l Date.today, format: :default
+"11/05/2018"
+```
+
+So I override default to_s (output). For parsing (input) best way is to use
+month name in select date `2/Nov/2001` is it can parse collectly. For inputs
+with two numbers it can not guess the month or date `2/3/2000` so you need to
+use `Date.strptime '2/3/2000' , '%m/%d/%y'` to return 3 Februar.
+
 ~~~
-# config/initializers/mytime_formats.rb
+# config/initializers/date_time_formats.rb
 # all 3 classes
 # puts user.updated_at.to_s :myapp_time
 # puts Time.now.to_s :myapp_time
 # puts Date.today.to_time :myapp_time # Date need to be type casted to Time
 # puts Time.now.to_date :myapp_date # Time object to Date if we want myapp_date
+
 Time::DATE_FORMATS[:default] = "%d-%b-%Y %I:%M %p" # this is same as for
 # datepicker format = 'DD-MMM-YYYY h:mm A'
 Time::DATE_FORMATS[:at_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
@@ -353,6 +320,8 @@ format.js do
     jQuery(".best_in_place").best_in_place();
     )
 end
+
+format.js { render js: "windnw.location.assign('#{user_path}');" }
 ~~~
 
 If you receive a lot of errors `An ActionView::MissingTemplate occurred in` and
@@ -465,8 +434,17 @@ sudo -u postgres psql
 CREATE USER orlovic WITH CREATEDB PASSWORD '<password>';
 ~~~
 
+In rails you can access database using 'rails db' and see table definition
+
+```
+rails db
+\d users
+```
+
 ## Active record
 
+* one issue is when you use different table name `self.table_name =
+  'something_other'` than relations could not be picked correctly
 * union is not supported [issue 929](https://github.com/rails/rails/issues/939)
   but you can try with raw sql and `from` statement. Union should have same
   number and type of columns. Also use `.from([Arel.sql('...')])`
@@ -487,8 +465,14 @@ CREATE USER orlovic WITH CREATEDB PASSWORD '<password>';
       .where(location_id: current_location)
   ~~~
 
-* execute sql with `ActiveRecord::Base.connection.execute("SELECT * FROM
-users")`. Result is iteratable (array of arrays of selected fields).
+* execute sql from rails console. When you run sql result is iteratable (array
+ of arrays of selected fields).
+
+```
+s = 'SELECT * FROM users'
+r = ActiveRecord::Base.connection.execute s
+r.each { |l| puts l }
+```
 
 * for single item, always use `@post.destroy` instead of `@post.delete` because
 it propagates to all `has_many :comments, dependent: :destroy` (also need to
@@ -751,13 +735,18 @@ heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
 
 * `rails g model user email_address` will generate migration and model. It is
 good to edit `last_migration` and add `null: false` to not null fields
-(particularly for foreign keys) and
-`add_index :users, :email_address, unique: true`...
+(particularly for foreign keys) also usefull since in sql `where col != NULL`
+will not return any value (also `where NULL = NULL`), you need to use `where col
+IS NOT NULL` (which is default for active record `.where.not(col: nil)`). So
+better is to use `false` since `where col != false` will return some results.
+Add index `add_index :users, :email_address, unique: true`...
 if you want to add index in different step (not in `t.references :c, index:
 false` because name is too long (error like `Index name 'index_table_column' on
 table 'table' is too long; the limit is 64 characters`) than you can use
 different name NOTE that you need to use exact column name (with `_id`)
 `add_index :users, :company_id, name: 'index company on users'`
+https://github.com/gregnavis/active_record_doctor to help you find columns
+without index
 * In migration Product.save will probably break in the future, because *Product*
 will be validated for something that we did not know on that time.
 We can call `Product.update_all fuzz: 'fuzzy'` or `Product.update_all 'new_col =
@@ -769,22 +758,23 @@ Better is to create local class and call reset column information. Also if we
 are adding not null column we need to do it in two steps to populate existing
 records.
 
-  ~~~
-  # db/migrate/20161010121212_update_fuzz.rb
-  class UpdateFuzz < ActiveRecord::Migration
-    # this is local Product class used only inside this migration
-    class Product < ActiveRecord::Base
-    end
-    def change
-      add_column :products, :fuzz, :string
-      # Product.reset_column_information # not sure if we need this
-      # chech with Product.columns or Product.column_names
-      Product.update_all fuzz: 'fuzzy'
-      Product.find_each { |product| product.save! }
-      change_column :products, :fuzz, :string, null: false
-    end
+~~~
+# db/migrate/20161010121212_update_fuzz.rb
+class UpdateFuzz < ActiveRecord::Migration
+  # this is local Product class used only inside this migration
+  class Product < ActiveRecord::Base
   end
-  ~~~
+  def change
+    add_column :products, :fuzz, :string
+    # this is needed since renamed columns will be ignored on "save"
+    # Product.reset_column_information
+    # check with Product.columns or Product.column_names
+    Product.update_all fuzz: 'fuzzy'
+    Product.find_each { |product| product.save! }
+    change_column :products, :fuzz, :string, null: false
+  end
+end
+~~~
 
 * to change type from string to integer (using cast)
 
@@ -825,7 +815,14 @@ can run all migrations to certain point with `rake db:migrate
 VERSION=20161114162031` (note that `:up` `:down` only run one migration)
 * `rake db:migrate` will also invoke `db:schema:dump` task
   [link](http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations)
+* to check current metaga data, for example schema enviroment you can run
+  ```
+  rails runner "ActiveRecord::Base.connection.execute('select * from ar_internal_metadata').each {|r|puts r}"
 
+  # or for test database
+  rails runner "ActiveRecord::Base.connection.execute('select * from ar_internal_metadata').each {|r|puts r}" -e test
+
+  ```
 
 ## Has_many through
 
@@ -865,8 +862,11 @@ You can force uniq with `add_index :campaign_templates, [:campaign_id,
 :template_id], unique: true` and check in rails with
 
 ~~~
+# add if not exists
 campaign.templates << template unless campaign.templates.include? template
+
 # remove
+campaign.templates.delete template
 ~~~
 
 If you have different name of the table: `t.references :donor, foreign_key:
@@ -928,30 +928,29 @@ If you accidentaly use `belongs_to :templates` (pluralized) than error is
 
 Indexes should be on all columns that are references in `WHERE, HAVING, ORDER
 BY` parts of sql.
-For example if you find using specific column `User.find_by column: 'val'`.
+For example if you find using specific column `User.find_by! column: 'val'`. Use
+bang version instead of `@user = User.find_by name: 'Duke'` since that will
+return `nil` instead of `raise ActiveRecord::RecordNotFound unless @user`
 Also we can add index to `:updated_at` column since we sometimes order by
 that column.
 
 All foreign keys need to have index.
-You can use `add_reference` (adding column and index). if you want to add or
-remove reference in migration `rails g migration add_user_to_leads
-user:references` which will generate
+You can use `add_reference` (adding column and index) note that second param is
+in singular.
+If you want to add or remove reference in migration `rails g migration
+add_user_to_leads user:references` which will generate
 
 ~~~
 class AddUserToLeads < ActiveRecord::Migration
   def change
     # reference will automatically include index on that column
     add_reference :leads, :contact, foreign_key: true
-    assert_difference 'Fetch.count', 1 do
-      assert_difference 'TestItem.count', 1 do
-        FetchFeed.new(feed, parser).perform
-      end
-    end
   end
 end
 ~~~
 
-For polymorphic associations `owner_id` and `owner_type`
+For polymorphic associations `owner_id` and `owner_type` you can create in
+migration `rails g model project owner:references{polymorphic}`
 
 ~~~
 class Organization < ActiveRecord::Base
@@ -1166,12 +1165,15 @@ Since `window` and `document` remains, all objects remain in memory.
 
 So if you want to do something on every page and on first load than you need to
 bind on `turbolinks:load`
+Without turbolinks it would be on ready_page_load.coffee `$(document).on 'ready
+page:load', ->`
 
 ~~~
 // app/assets/javascripts/turbolinks_load.coffee
 $(document).on('turbolinks:load', ->
   # in previous rails we used to catch up on 'ready page:load'
   console.log "document on turbolinks:load"
+
   # Activating Best In Place
   jQuery(".best_in_place").best_in_place()
   autosize $('textarea')
@@ -1185,6 +1187,33 @@ $(document).on('turbolinks:load', ->
   $.each $('[data-disable-button-if-empty]'), (index, el) ->
     $(el).trigger('change')
 
+  # for infinite pagination use two divs, second need to have pagination links
+  # <div data-scroll='true'>
+  #   <div data-scroll-content='true'>
+  #     <% @items.each do |item| %>
+  #     <% end %>
+  #     <%= will_paginate, class: 'hide-not-important' %>
+  #
+  # when you do not want auto trigger you can use
+  # <div data-scroll='true' data-scroll-auto-trigger='false'>
+  #   <div data-scroll-content='true'>
+  #     ...
+  #     <%= will_paginate @items, next_label: 'Show more...', class: 'show-more-pagination', page_links: false %>
+  $('[data-scroll]').each ->
+    if $(this).data('scrollAutoTrigger') == undefined
+      autoTrigger = true
+    else
+      autoTrigger = $(this).data('scrollAutoTrigger')
+    $(this).jscroll(
+      nextSelector: 'a.next_page'
+      autoTrigger: autoTrigger
+      contentSelector: '[data-scroll-content]'
+      loadingHtml: "<div class='col-xs-12 text-center mtb20 widget-loader'><img src='https://d1bnwaoqvo9ynq.cloudfront.net/assets/images/loader_widget_sb.gif' alt='loading'><p>Loading more...</p></div>"
+      callback: ->
+        console.log 'jscroll callback'
+    )
+
+  # <
   $('[data-on-change-submit]').on 'change', ->
     $(this).parents('form').first().submit()
 ~~~
@@ -1497,6 +1526,11 @@ Rails.application.config.session_store :cookie_store, key: '_myapp_session',
 domain: :all, expire_after: 60.minutes
 ~~~
 
+If you do not use `expired_after` than it will be `-1` ie in Dev Tools ->
+Application -> Cookies it will be `1969-12-31T23:59:59.000Z` 1970 - 1 second, ie
+cookie will be discarded when browser is closed (on mobile when phone restarts,
+since closing browser keeps current session).
+
 This works fine for top level domains and subdomains for them.
 
 For example if you have `domain: :all` and you sign in at `asd.local`, than you
@@ -1583,6 +1617,10 @@ suggestions for code organization I use mostly:
 You can check also <http://trailblazer.to/>
 You can organize domain (controller, model and view) into separate folders
 [drawers](https://github.com/NullVoxPopuli/drawers)
+
+If there is a lot of business logic in view, I prefer to put that in controller
+so it is more visible.
+
 
 ## Service objects
 
@@ -1715,7 +1753,7 @@ class PagesController < ApplicationController
       sign_in @landing_signup.user
       redirect_to dashboard_path, notice: @landing_signup.notice
     else
-      flash.now[:alert] = @landing_signup.errors.full_messages.join(', ')
+      flash.now[:alert] = @landing_signup.errors.full_messages.to_sentence
       render :home
     end
   end
@@ -2370,6 +2408,17 @@ views.
 # Localisation i18n translations
 
 Tips <https://devhints.io/rails-i18n>
+Translate models using `activerecord`
+https://guides.rubyonrails.org/i18n.html#translations-for-active-record-models
+so you can use
+```
+User.model_name.human
+# pluralize
+User.model_name.human(count: 2)
+# attribute
+User.human_attribute_name(:email)
+```
+
 To translate active record messages for specific attributes, you can overwrite
 messages for specific model and attributes (default ActiveRecord messages taken)
 <https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23>
@@ -2377,7 +2426,14 @@ messages for specific model and attributes (default ActiveRecord messages taken)
 
 Also you can change format `errors.format: Polje "%{attribute}" %{message}`
 https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
-You can also see some default en translations.
+You can also see some default en translations for errors.
+To see Rails default datetime formats go to
+https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
+to see current translation you can use
+```
+I18n.translate 'date.formats.default`
+=> "%Y-%m-%d"
+```
 
 And you can change attribute name `activerecord.attributes.user.email: имејл`
 To translate also plurals you can use `User.model_name.human(count: 2)`. For
@@ -2393,6 +2449,23 @@ en:
         one: Dude
         other: Dudes
 ~~~
+
+Separate translations into different files (for example
+`activerecord_models.sr.yml`) and folders for `/completed/activerecord.sr.yml`
+include them with:
+
+~~~
+# config/application.rb
+config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+~~~
+
+To raise error when translation is missing `.translation_missing` class
+```
+# config/application.rb
+config.action_view.raise_on_missing_translations = true
+```
+No need to write quotes unless you have colon `:` so you need to escape it's
+meaning and use quotes.
 
 For form objects `include ActiveModel::Model` you should translate
 `activemodel`. For `ApplicationRecord` translate `activerecord`.
@@ -2481,6 +2554,8 @@ happend that count is 2 and translation is missing.
 
 ~~~
 I18n.t 'sent_messages', count: 15
+# or if you want to translate model
+"#{chat.moves.size} #{Move.model_name.human count: chat.moves.size}"
 ~~~
 
 You can translate to any language with
@@ -2489,13 +2564,6 @@ You can translate to any language with
 I18n.t 'sent_messages', locale: :sr
 ~~~
 
-Separate translations for models `config/locales/sr.yml` and views
-`config/locales/views/sr.yml` and include them with:
-
-~~~
-# config/application.rb
-config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-~~~
 Example for Serbian localizations translations:
 
 ~~~
@@ -2553,14 +2621,6 @@ module TranslateHelper
     end
   end
 end
-~~~
-For model translation you can use human method
-~~~
-  <%= link_to User.size.to_s + ' ' + User.model_name.human(count: 2), admin_users_path %>
-~~~
-For non model you can use simple translation
-~~~
-  <%= link_to t('report', count: Message.), admin_reported_messages_path %>
 ~~~
 
 Translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> You need
@@ -2729,19 +2789,37 @@ If you are seeing this on one of your tests, ensure that your tests are either e
 * [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
   problem is solved with `includes(:associated_table)` wich is actually LEFT
   OUTER JOINS, but `joins(:associated_table)` is INNER JOIN. Works also for
-  nested joins `includes(jobs: [:user])`.
-  * If model has_many :associated_table then `joins` will return multiple values
+  nested joins `includes(jobs: :user)` or for multuple you can use array
+  `includes(jobs: [:user, :company])`.
+  * Inner `joins` differs if you have has_many or belongs_to association. For
+  `has_many :associated_table` `joins` will return multiple values
   because of multi values of :associated_table per item, or none is
-  :associated_table does not exists for current item.
+  :associated_table does not exists for current item. For `belongs_to :a` it
+  will return single if data exists, or none, if belongs_to is empty, so better
+  is to use left join. (expecially when you search by description OR teacher
+  name, you should not exclude books without teacher)
+  * custom joins if you want to use left inner join
+    https://thoughtbot.com/upcase/videos/advanced-querying-custom-joins
+    ```
+    Person.joins(<<-SQL).
+      LEFT JOIN people managers
+        ON managers.id = people.manager_id
+    SQL
+    where(managers: { id: Person.find_by!(name: 'Eve') })
+    ```
+    custom left joins are better than includes because you are explicit about
+    joining and you do not eager load (do not create AR objects) if not need.
+    In Rails 5 there is a method `left_outer_joins`
+    https://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins
   * `includes` will return the same number of items, with association object
-  loaded in memory.  eager load `includes` can be defined in association
+  loaded in memory. eager load `includes` can be defined in association
   definition `has_many :comments, -> { includes :author }` but this is bad since
   it will **always** load two tables.  Better is to make a query
   `Post.includes(:comments).all` or for instance
   `@post.comments.includes(:author)`. You need to eager load before calling
-  `.all` or `.each`
+  `.all` or `.each`. Do not need eager load belongs_to association.
 You can use procs to further filter relations. Note that in case of
-`Customer.joins(:radaccts)` customer argument is not a Customer but a relationg
+`Customer.joins(:radaccts)` customer argument is not a Customer but a relation
 so this filter only works for `customer.radaccts`
 ~~~
 has_many   :radaccts, -> (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
@@ -2760,8 +2838,10 @@ same columns (you can use it for different columns). Joins
 could be replaced with `references`. But I have some problems with `references`
 since it remove my custom selected data, so instead `references` I use
 `joins('LEFT OUTER JOIN sports ON sports.id = users.sport_id')` and `distinct`.
+Distinct is needed to remove duplicated since inner join with has_many relation
+(also habtm) returns multiple results (single is only for belongs_to relation).
 Here is example of how includes/references do not let me use counts as
-calculated columns, but joins let works fine (event .to_sql is similar)
+calculated columns, but joins let works fine (even .to_sql is similar)
 ~~~
 all = Model
   .select(%(
@@ -2862,8 +2942,6 @@ end
 %>
 ~~~
 
-* `inverse_of` is needed when you have validation errors for
-  `accepts_nested_attributes_for`
 * to change class **fields_with_error** you can override
   ActionView::Base.field_error_proc in any controller
 
@@ -3235,58 +3313,6 @@ seed data
 
 * to start new project from specific rails, run `rails _4.2.7.1_ new myapp` .
   `gem list | grep rails` can show you installed versions
-* for multiple form submit buttons you can use rails builder
-
-  ~~~
-  <%= f.submit "Some label" %>
-  <%= f.submit "Some other label" %>
-  ~~~
-
-  will generate
-
-  ~~~
-  <input type="submit" name="commit" value="Some label">
-  <input type="submit" name="commit" value="Some other label">
-  ~~~
-
-  so you can check on server
-
-  ~~~
-  if params[:commit] == "Some label"
-  ~~~
-
-  When you are not using `f.submit` but plain `<button>Some label</button>` than
-  you need to add `hidden_field_tag :commit, "Some label"`
-
-  Sometimes there is a problem when automatic translator on the page change
-  button labels and inputs so commit param is different...
-  Instead of `commit` you can use
-  [formaction](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#attr-formaction)
-  So you do not need to parse commits but you need different action methods to
-  handle.
-
-  ~~~
-  <% form_for(something) do |f| %>
-      <%= f.submit "Create" %>
-      <%= f.submit "Special Action", formaction: special_action_path %>
-  <% end %>
-  ~~~
-
-  If you want to disable utf-8 and authenticity hidden fields, remove hidden
-  input `name='commit'` for submit buttons `button_tag 'OK', name: nil` and use
-  plain param name instead of in brackets `f.hidden_field :name` generate
-  `name='[name]'` (but `f.text_field :name` generate `name='name'`), than use
-  `hidden_field_tag :name`
-
-  ~~~
-    <%= bootstrap_form_tag url: @atom_payment.atom_server_link, layout: :horizontal, enforce_utf8: false, authenticity_token: false do |f| %>
-      <% @atom_payment.atom_params.each do |atom_param| %>
-        <%= hidden_field_tag atom_param[:name], atom_param[:value] %>
-      <% end %>
-      <%= button_tag "Pay Now", name: nil, class: 'btn btn-primary btn-block', 'data-disable-with': 'Processing...' %>
-    <% end %>
-  ~~~
-
 * `"data-disable-with": "<i class='fa fa-spinner fa-spin'></i> #{name}"` works
 on any element except `f.submit` since it is `input` element and you will see
 `<i>` tags... better is to use `f.button` but than you lose `params[:commit]`
@@ -3360,6 +3386,10 @@ to iterate...
 if you want to order in sql, than you need to name the count and order by that
 name (note that we need to use string not symbol for `'count_id'`:
 `User.group(:company_id).order('count_id desc').count(:id)`.
+you can group by joined table, for example  https://thoughtbot.com/upcase/videos/advanced-querying-aggregations
+```
+Person.joins(:employees).group('people.name').count('employees_people.id')
+```
 * `User.all(joins: :comments, select: "users.*, count(comments.id) as
 comments_count", group: "users.id")` you can provide string to select and output
 just specific value like comments_count.
@@ -3515,14 +3545,6 @@ unless item.save` you can move important things in front `item.save ||
   ~~~
 * single line one liner rails app for active record can be found in
 [contributibuting](https://github.com/rails/rails/blob/master/CONTRIBUTING.md)
-* autocomplete fields can be disabled
-[mdn](https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion)
-on form or input (better since browser can ask to remember) `autocomplete;
-'off'`
-* if you want to access hash keys by symbol or string you can instantiate with
-`params = HashWithIndifferentAccess.new name: 'Duke'` so you can use
-`params[:name]` or `params["name"]`.
-
 * http client https://docs.ruby-lang.org/en/2.0.0/Net/HTTP.html
 
 ~~~
@@ -3547,6 +3569,42 @@ end
 print fetch('http://www.ruby-lang.org/')
 ~~~
 
+* you can use `URI::regexp` to get elements from urls, for example
+  ~~~
+  'https://www.premesti.se/my-profile?open-moda=true'.match URI.regexp
+=> #<MatchData
+ "https://www.premesti.se/my-profile?open-moda=true"
+ 1:"https"
+ 2:nil
+ 3:nil
+ 4:"www.premesti.se"
+ 5:nil
+ 6:nil
+ 7:"/my-profile"
+ 8:"open-moda=true"
+ 9:nil>
+ # to see positions of specific parts just look at
+ URI.regexp
+  ~~~
+
+* validate url with custom validation
+  ```
+  # https://coderwall.com/p/ztig5g/validate-urls-in-rails
+  # use in your models like:
+  # validates :video_url, url: true, allow_blank: true
+  class UrlValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      record.errors[attribute] << (options[:message] || "must be a valid URL") unless url_valid?(value)
+    end
+
+    # a URL may be technically well-formed but may
+    # not actually be valid, so this checks for both.
+    def url_valid?(url)
+      url = URI.parse(url) rescue false
+      url.kind_of?(URI::HTTP) || url.kind_of?(URI::HTTPS)
+    end
+  end
+  ```
 * use bang methods to raise exception `User.create! email: 'invalid'`. If you
   use it inside callbacks than no exception will be raise, but rollback will be
   performed...
@@ -3560,48 +3618,6 @@ print fetch('http://www.ruby-lang.org/')
   config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 1, 50.megabytes)
   ~~~
 
-[dhh tips for rails](https://www.youtube.com/watch?v=D7zUOtlpUPw)
-* epipsode 1: do not use comments but method names or constants... follow
-  table of content: method definition should be in same order as they are used
-  in the class (in before callbacks)
-  administered concern define methods on associations. Also use `or` `|` to join
-  two arrays
-
-~~~
-module Account::Administered
-  extend ActiveSupport::Concern
-
-  included do
-    has_many :administratorships, dependent: :delete_all do
-      def grant(person)
-        create_or_find person: person
-      end
-
-      def revoke(person)
-        where(person_id: person.id).destroy_all
-      end
-    end
-
-    has_many :administrators, through: :administratorships, source: :person
-  end
-
-  def all_administrators
-    administrators | all_owners
-  end
-
-  def administrator_candidates
-    people.users.
-      where.not(id: administratorships.pluck(:person_id)).
-      where.now(id: ownerships.pluck(:person_id)).
-      where.not(id: owner_person.id)
-  end
-end
-~~~
-* episode 2: use callbacks to initiate background jobs
-* episode 3: use globals in request/response cycle. For background jobs you need
-  to pass them as params.
-* episode 4
-
 * colorize matching string in console
 ~~~
 # config/initializers/colorize.rb
@@ -3612,7 +3628,7 @@ class String
     "\e[#{COLOR}m#{self}\e[0m"
   end
 
-  def colorize(string, return_result = false)
+  def colorize(string, return_nil: true, only_matched_lines: false)
     last_index = 0
     res = ''
     while (new_index = self[last_index..-1].index(string))
@@ -3623,40 +3639,65 @@ class String
       last_index = last_index + new_index + string.length
     end
     res += self[last_index..-1]
+    if only_matched_lines
+      res = res.split("\n").select { |l| l.index string }.join("\n")
+    end
     # rubocop:disable Rails/Output
     puts res
     # rubocop:enable Rails/Output
-    res if return_result
+    return_nil ? nil : res
   end
 end
 
+## run tests with a command
+## rails test config/initializers/colorize.rb
 # require 'minitest/autorun'
 # class Test < Minitest::Test
 #   def test_one_substring
 #     s = 'My name is John.'
-#     assert_equal "My name is \e[John\e[0m.", s.colorize("John", true)
+#     assert_equal "My name is \e[31mJohn\e[0m.", s.colorize('John', return_nil: false)
 #   end
 #
 #   def test_two_substrings
 #     s = 'John is my name, John.'
-#     r = "\e[John\e[0m is my name, \e[John\e[0m."
-#     assert_equal r, s.colorize("John", true)
+#     r = "\e[31mJohn\e[0m is my name, \e[31mJohn\e[0m."
+#     assert_equal r, s.colorize('John', return_nil: false)
 #   end
 #
 #   def test_no_found
 #     s = 'My name is John.'
-#     assert_equal "My name is John.", s.colorize("Mike", true)
+#     assert_equal "My name is John.", s.colorize('Mike', return_nil: false)
 #   end
 #
 #   def test_whole
 #     s = 'My name is John.'
-#     assert_equal "\e[31mMy name is John.\e[0m", s.colorize(s, true)
+#     assert_equal "\e[31mMy name is John.\e[0m", s.colorize(s, return_nil: false)
 #   end
 #
 #   def test_return
 #     s = 'My name is John.'
-#     assert_equal nil, s.colorize('John')
+#     assert_nil s.colorize('John')
+#   end
+#
+#   def test_only_matched_lines
+#     s = "first_line\nsecond_line John\nthird_line\nJohn fourth_line"
+#     assert_equal "second_line #{'John'.red}\n#{'John'.red} fourth_line", s.colorize('John', only_matched_lines: true, return_nil: false)
 #   end
 # end
 ~~~
 
+* if you ever need to write form tag in pure html for rails than you need to add
+  authenticity token
+  ~~~
+  <form action='<%= my_url %>' method='post'>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input type='text' name='name'>
+  </form>
+  ~~~
+
+* gem `will_paginate` can use raw sql for selecting and for counting
+ https://www.rubydoc.info/github/mislav/will_paginate/WillPaginate%2FActiveRecord%2FBaseMethods:paginate_by_sql
+
+  if you need rails model without table https://gist.github.com/dalibor/228654
+  it's different for Rails 4 and Rails 5
+  https://stackoverflow.com/questions/41494951/how-to-create-activerecord-tableless-model-in-rails-5

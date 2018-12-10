@@ -148,7 +148,9 @@ add 3d effect to it.
 # SCSS Sass
 
 * you can set default value of variable `$my-var: 123 !default;`. This has no
-  effect if variable is already defined.
+  effect if variable is already defined. Note that you can not override
+  variable, so in order to change value, you need to have `$my-var: 111` before
+  this `!default` line.
 * you can select `this` using `&`
 
   ~~~
@@ -163,9 +165,12 @@ add 3d effect to it.
   }
   ~~~
 
+
 <https://responsivedesign.is/develop/getting-started-with-sass>
 
 * `@extend .email-container` will copy definitions from email container
+* use [functions](http://sass-lang.com/documentation/Sass/Script/Functions.html)
+like `map-keys`
 
 style guides
 
