@@ -122,7 +122,8 @@ For example change current title header in markdown text with `cih`:
   register run `:echo @a` (`:echo @"` is unnamed yank register, `:echo @\ ` is
   search register ... `:help registers`).
 * to get current value you can use `=` and `<TAB>` for example `:set xxx=` and
-press tab so vim autocomplete the value so you can edit it
+press tab so vim autocomplete the value so you can edit it. Or you can press
+enter after the name (skip equal sign), for example `:se ft<cr>`
 
 Local scope variables are with prefix like `:let b:a=2` (`b:` buffer, `w:`
 window, `t:` tab, `g:` global, `l:` local to function, `a:` argument)
@@ -197,3 +198,45 @@ Variable types can be:
 
 TODO 
 https://github.com/mhinz/vim-galore
+
+
+# Shell script
+
+Calling external shell script is with bang `:!pwd`. When you visually select it
+operates on lines and use it as argument, for example select multuple lines and
+run `:'<,'>!sort` to sort them.
+If nothing is selected, last selected visual line (whole line) is used.
+You can use `cat` to pass argument. For example run `:'<,'>!echo 1`cat`2`, and
+it will replace whole line by inserting 1...line...2.
+Another way to pass is using `system("echo ", @")` unnamed register.
+
+To work on part of a line, you can use visual match replacement
+`:'<,'>s/\%V.*\%V/\=system('echo -n "the result"')`.
+To use visual selected text as inputs, you can do it manually by pasting with
+`<C-R>` + `"` (" is a standard register for yanking).
+Or you can use helper function that will yank to register and get register
+https://stackoverflow.com/questions/12805922/vim-vmap-send-selected-text-as-parameter-to-function
+```
+func! GetSelectedText()
+  normal gv"xy
+  let result = getreg("x")
+  normal gv
+  return result
+endfunc
+
+vnoremap <F6> :call MyFunc(GetSelectedText())<cr>
+```
+
+https://stackoverflow.com/questions/9637921/vim-filter-only-visual-selection-not-the-entire-line
+
+
+# Translate
+
+Run scripts on visual selection and change with output. I use `translate.rb` and
+`sudo ln -s /home/orlovic/config/ruby/translate.rb /usr/local/bin/` and
+`chmod +x ~/config/ruby/translate.rb` https://github.com/duleorlovic/config/blob/master/ruby/translate.rb
+In vim there is a [ProgramFilter function](https://github.com/duleorlovic/config/blob/master/.vimrc#L482)
+
+There is an issue with ending space (at the end of a line) when pasting. Same
+problem is when selecting word and super + p
+

@@ -4,24 +4,34 @@ layout: published_post
 
 # HTML Form Input
 
-Start from [basic docs for html
-input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input)
+Start from basic docs for html
+[input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input)
+and [forms](https://www.w3.org/TR/html401/interact/forms.html)
+https://html.spec.whatwg.org/multipage/forms.html
 The most important attribute is
 * `name` identify the input in data submitted with the form. If not provided,
   this input will not we included.
 * `type` to identify a input type that input element represents
 * `value` when specified, it is initial value. For unselected `checkbox` or
-  `radio` it is not submitted (they have default value `on`)
+  `radio` it is not submitted. They have default value `on`
 
-There are aa lot of input types (like `color` which will popup
+There is a lot of input types (like `color` which will popup
 color picker) but here we will focus on:
 * `text` single line text field (line breaks are automatically removed)
 * `checkbox` allowing single value to be selected/deselected
-* `hidden` is is not displayed, but value is submitted
+* `hidden` it is not displayed, but value is submitted
 * `radio` allowing a single value to be selected out of multiple choices
-* `submit` a button thatsubmits the form
+* `submit` ie `<input type='submit'` acts like a button that submits the form.
+  You can use `<button>OK</button>` (default is `type='submit'`) instead (button
+  that does not submit the form is `<button type='button'>`.
+
 
 Now start with what Rails provides https://api.rubyonrails.org/v5.2.1/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for
+
+
+
+
+
 
 Similar to nested forms, you can have select tag with multiple options (habtm
 relation) so we can update without ajax (it is created in one request).
@@ -254,8 +264,16 @@ https://alligator.io/html/dialog-element/
 
 ## Fieldset & Legend
 
-Use `<fieldset>` to group several input fields and mark with `<legend>`. When it
-is disabled, all input fields wont be submitted.
+Use `<fieldset>` to group several input fields and set caption on it with
+`<legend>`.
+When it is disabled, all input fields won't be submitted.
+You can set caption also on firgure
+```
+<figure>
+<img src="/wp-content/uploads/flamingo.jpg" alt="flamingo">
+<figcaption><i>fig. 1</i> A pink flamingo.</figcaption>
+</figure>
+```
 
 # Input Attributes
 

@@ -523,3 +523,9 @@ client = OAuth2::Client.new(client_id, client_secret, site: 'https://localhost:3
 
 client.auth_code.authorize_url redirect_uri: redirect_url
 ~~~
+
+# TIPS
+
+In email search for Chris Kottom Lesson 9: Token-Based Authentication with JWTs
+Accessing Google oauth to list my videos https://martinfowler.com/articles/command-line-google.html
+

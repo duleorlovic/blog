@@ -19,6 +19,7 @@ bundle
 rails generate devise:install
 git add . && git commit -m "rails g devise:install"
 rails g devise User
+last_migration # uncomment Trackable and other parts
 rake db:migrate
 git add . && git commit -m "rails g devise user"
 
@@ -46,6 +47,13 @@ git add . && git commit -m "Adding login/logout header in layout"
 You can add facebook auth below.
 
 Read *config/initializers/devise.rb* about default configuration.
+You need to set default sender:
+
+~~~
+# devise
+sed -i config/initializers/devise.rb -e '/mailer_sender/c \
+  config.mailer_sender = Rails.application.secrets.mailer_sender'
+~~~
 
 You can use `before_action :authenticate_user!` in controllers that will
 redirect to `/users/sign_in`. You need to [set up
@@ -157,27 +165,6 @@ sed -i app/views/layouts/application.html.erb -e '/<body>/a \
 <%= link_to "Sign in with Facebook",
 user_facebook_omniauth_authorize_path(my_param: 1) %>'
 
-sed -i app/models/user.rb -e '/end/i \
-\
-  def self.from_omniauth(auth)\
-    user = find_by(email: auth.info.email)\
-    return user if user\
-    # user changed his email on facebook\
-    user = find_by(provider: auth.provider, uid: auth.uid)\
-    return user if user\
-    # create new user with some password
-    user = User.create!(\
-      email: auth.info.email,\
-      password: Devise.friendly_token[0, 20],\
-      provider: auth.provider,\
-      uid: auth.uid,\
-    )\
-    user.skip_confirmation! # this will just add confirmed_at = Time.now\
-    # user.name = auth.info.name # assuming the user model has a name\
-    # user.image = auth.info.image # assuming the user model has an image\
-    user\
-  end'
-
 vi app/models/user.rb # add :omniauthable
 # no need for , :omniauth_providers => [:facebook], but :omniauthable is needed
 
@@ -215,6 +202,26 @@ module Devise
     end
   end
 end
+
+# app/models/user.rb
+  def self.from_omniauth(auth)
+    user = find_by(email: auth.info.email)
+    return user if user
+    # user changed his email on facebook
+    user = find_by(provider: auth.provider, uid: auth.uid)
+    return user if user
+    # create new user with some passwor
+    user = User.create!(
+      email: auth.info.email,
+      password: Devise.friendly_token[0, 20],
+      provider: auth.provider,
+      uid: auth.uid,
+    )
+    user.skip_confirmation! # this will just add confirmed_at = Time.now
+    # user.name = auth.info.name # assuming the user model has a name
+    # user.image = auth.info.image # assuming the user model has an image
+    user
+  end
 ~~~
 
 If you need multiple identities per account than create separate table for
@@ -284,7 +291,7 @@ Create a project in <https://console.developers.google.com/apis/> and enable
 *Google+ API*.
 Create *OAuth 2.0 client ID* (or edit exists one clicking on its
 name) and set *Authorized redirect URIs* to all urls that will be used (not just
-domain like for facebook, we need whole url path), like
+domain like for facebook, we need whole url path), like redirect_uri
 
 * `http://localhost:3000/users/auth/google_oauth2/callback` this is default
   `devise_for :users`
@@ -1029,7 +1036,7 @@ If admin wants to become some other user `login_as` he can use `sign_in(:user,
     return unless Rails.env.development?
     user = User.find params[:user_id]
     request.env['devise.skip_trackable'] = true
-    sign_in :user, user, byepass: true
+    sign_in :user, user, bypass: true
     redirect_to root_path
   end
 ~~~

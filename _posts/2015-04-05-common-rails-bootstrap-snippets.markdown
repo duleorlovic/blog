@@ -240,13 +240,13 @@ Button should we blue and Fa camera icon should be shown after installing
 #fontawesome)
 
 ~~~
-rails g controller pages index --skip-helper --skip-assets --skip-controller-specs --skip-view-specs
+rails g controller pages home --skip-helper --skip-assets
 echo '<button class="btn btn-primary">
   <i class="fa fa-camera-retro" aria-hidden="true"></i> fa-camera-retro</i>
 </button>
 ' >> app/views/pages/index.html.erb
 sed -i config/routes.rb -e '/draw/a \
-  root "pages#index"'
+  root "pages#home"'
 git add . && git commit -m "Adding sample index page"
 ~~~
 
@@ -257,6 +257,9 @@ sed -i app/views/layouts/application.html.erb -e '/title/a \
 ~~~
 
 ## Fonts
+
+Copy definition from node_modules css files where font-face is defined, and
+change from `url` to `asset-url`
 
 ```
 npm install typeface-roboto
@@ -485,13 +488,6 @@ Set default url option, that is domain for `root_url`:
 ~~~
 
 For [devise]({{ site.baseurl }}{% post_url 2015-12-20-devise-oauth-angular %})
-you need to set default sender:
-
-~~~
-# devise
-sed -i config/initializers/devise.rb -e '/mailer_sender/c \
-  config.mailer_sender = Rails.application.secrets.mailer_sender'
-~~~
 
 For local development use Letter opener:
 
@@ -602,6 +598,7 @@ web: bundle exec puma -C config/puma.rb
 release: rake db:migrate
 HERE_DOC
 
+# default puma config is fine, but on production should include those lines
 cat >> config/puma.rb <<HERE_DOC
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
 threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)

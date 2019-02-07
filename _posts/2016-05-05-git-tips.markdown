@@ -160,11 +160,16 @@ Rebase branches
 
 Interactivelly rebase pull request
 
-     git rebase -i HEAD~2 # rebase last two commits, or use origin/master
-     # pick : use same commit
-     # squash : meld with previous commit (on this list is previous)
-     # reword : change commit message
-     # edit : use commit but stop for amending
+    git rebase -i HEAD~2 # rebase last two commits, or use origin/master
+    # pick : use same commit
+    # squash : meld with previous commit (on this list is previous)
+    # reword : change commit message
+    # edit : use commit but stop for amending
+
+    git fetch rails
+    git checkout guides_i18n
+    git rebase -i rails/master
+    git push origin guides_i18n --force-with-lease
 
 Mark commit with a tag
 

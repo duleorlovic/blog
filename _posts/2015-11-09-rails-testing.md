@@ -1453,10 +1453,14 @@ only for finders). You can use substring or you can define `exact: true`
 * `find('ng-model="newExpense.amount"').set('123')`
 * `find_all('input').first.set(123)` but I think it is better to use
   `find('input', match: :first)` since it do not need to find all
+* `find('[data-test="id"]', visible: false)` to find invisible element
 * `find('#selector').find(:xpath, '..')` find parent node of selector
   `.find(:xpath, '../..')` is parent of parent (grandparent).
-* next adjacent to `<h3>Name2</h3><table>` is `find(:xpath,
-  "//h3[contains(text(),'Name2')]/following-sibling::table")`
+* label as child of next adjacent
+  `<h3>Name2</h3><div><label>enabled</label><label>disabled></div>` is
+  ```
+  find(:xpath, "//h3[contains(text(),'Name2')]/following-sibling::div/label[contains(text(),'enabled')]")
+  ```
 
 If you need to fill_in iframe than you can access it by id or number
 

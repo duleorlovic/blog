@@ -35,12 +35,13 @@ can accept as 2th param (choices) two variant:
 `<%= select tag "statuses[]", options_for_select([[]], selected: 1) %>`
 * nested collection `grouped_options_for_select()`
 
+  Preselected value can be defined as second param in `options_for_select([],
+  selected: f.object.user_id`, or as 4th param in
+  `options_from_collection_for_select(User, :id, :email, selected:
+  f.object.user_id)`. Note that it can be `value` or hash `selected: value`.
+
 as 3th param (options):
 
-* `selected: value` if you need selected value be different than
-`job.job_type_id`. If second param is `options_for_select` than use 2th params
-there, or for  `options_from_collection_for_select(User, :id, :email, selected:
-f.object.user_id)` than use `selected_value` as 4th param there.
 Sometimes when options do not include value that you want to set and you
 use prompt to be shown, please preform check `{ prompt: 'Select package'
 }.merge( options.present? ? { selected: @customer.some_other_package.id
@@ -149,28 +150,20 @@ So you need to separate `default_values_on_create` and
 `default_values_on_update` (which could get `nil` on update some fields)
 
 ~~~
-after_initialize :default_values_on_initialize
+# do not use after initialize since it will be run on every load
+> after_initialize :default_values_on_initialize
 before_validation :default_values_on_create, on: :create
 before_validation :default_values_on_update, on: :update
 
 private
 
-def default_values_on_initialize
-  self.some_no_nil_number ||= 1
-  self.some_positive_number = 1 unless some_positive_number.to_i > 0
-  self.some_false_value ||= false
+def default_values_on_create
+  self.logo ||= Rails.application.secrets.default_restaurant_logo
   # do not use self.some_true_value ||= true since that will override if
   # some_true_value = false
   self.some_true_value = true if some_true_value.nil?
   # http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution
   # return value should be true or nil
-  true
-end
-
-def default_values_on_create
-  self.logo ||= Rails.application.secrets.default_restaurant_logo
-  # return value should be true or nil
-  # http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution
   true
 end
 ~~~
@@ -195,6 +188,9 @@ end
 
 # Default Order
 
+Do not use `default_scope`, since you need to use `.reoder` instead of `.order`.
+If you really want to use, here is example:
+
 ~~~
 default_scope { order('created_at DESC') }
 ~~~
@@ -210,6 +206,9 @@ rails g migration add_trashed_to_comments trashed:boolean
   default_scope { where(trashed: nil) }
   scope :trashed, -> { unscoped.where(trashed: true) }
   scope :by_status_param, -> (status_argument) { where status: status_argument }
+  scope :for_user, (lambda do |user|
+    where user: user
+  end)
 ~~~
 
 than query `User.first.comments.trashed` will return all trashed comments from
@@ -898,7 +897,9 @@ Note that `t.references` should be used with `foreign_key: true, null: false`
 since foreign_key is not automatically used (`t.references` automatically add
 `index`).
 Note that `t.belongs_to` by default use `index: false`, so you need to use
-`index: true` (or `add_index` later). But usually you use `add_foreign_key` that
+`index: true` (or `add_index` later) (`add_column :users, :token, :string,
+index: true` will not create index, you need to use `add_index` separatelly).
+But usually you use `add_foreign_key` that
 will also add index (name will be like: `fk_rails_123123`) if it is not added by
 belongs_to, so you can safelly use `t.belongs_to ... index: false` if you are
 using `add_foregn_key`.
@@ -965,6 +966,19 @@ class Project < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
 end
 ~~~
+
+You can eager load polymorphic association https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#module-ActiveRecord::Associations::ClassMethods-label-Eager+loading+of+associations
+but can not use it in where https://stackoverflow.com/questions/16123492/eager-load-polymorphic
+For using in where you need to define specific associations (note: you need to
+add `optional: true`)
+```
+  belongs_to :notifiable, polymorphic: true
+  belongs_to :comment, -> { where notifications: { notifiable_type: 'Comment' } }, foreign_key: :notifiable_id, optional: true
+  scope :for_comments_on_tasks, (lambda do
+    joins(:comment)
+      .where(comments: { commentable_type: 'Task' })
+  end)
+```
 
 When you create you can use `references` and `polymorphic: true`
 
@@ -1167,6 +1181,9 @@ So if you want to do something on every page and on first load than you need to
 bind on `turbolinks:load`
 Without turbolinks it would be on ready_page_load.coffee `$(document).on 'ready
 page:load', ->`
+This file is used when you need to iterate some elements `.each`, to activate
+some plugins or when you need to bind click event listener and prevent it in
+another data event click
 
 ~~~
 // app/assets/javascripts/turbolinks_load.coffee
@@ -1213,9 +1230,28 @@ $(document).on('turbolinks:load', ->
         console.log 'jscroll callback'
     )
 
-  # <
-  $('[data-on-change-submit]').on 'change', ->
-    $(this).parents('form').first().submit()
+  # we can not use $(document).on 'click', '[data-enable-if-valid]', (e) ->
+  # since we can not prevent already bubbled click event in case of invalid input
+  $('[data-enable-if-valid]').on 'click', (e) ->
+    $button = $(this)
+    # http://jqueryvalidation.org/Validator.element/
+    validator = $button.parents('form').validate()
+    $inputs = $($button.data().enableIfValid).find('input')
+    all_valid = true
+    $inputs.each ->
+      unless validator.element $(this)
+        all_valid = false
+    if all_valid
+      console.log $button.data().enableIfValid + " is valid"
+    else
+      # this hack will prevent other data- events, like data-active-next
+      $button.prop('disabled', 'disabled')
+      setTimeout(
+        ->
+          $button.prop('disabled', false)
+        200
+      )
+      console.log $button.data().enableIfValid + " is not valid"
 ~~~
 
 When you are using `data-remote-true` for show edit form than request is JS and
@@ -1237,6 +1273,20 @@ $(document).on 'click', '[data-js-modal]', (e) ->
   ).done (responseText) ->
     $(target + " .modal-content").replaceWith responseText
   e.preventDefault()
+
+$(document).on 'click change', '[data-toggle-active]', (e) ->
+  target = $(this).data().toggleActive
+  if $(this).is(':checkbox')
+    # if we click directly on checkbox, it will receive also the click event,
+    # but usually that is fine (also when you are using bootstrap toggle)
+    to_show = e.currentTarget.checked
+  else
+    to_show = !$(target).hasClass('active')
+  if to_show
+    $(target).addClass 'active'
+  else
+    $(target).removeClass 'active'
+  console.log "data-toggle-active #{target}"
 ~~~
 
 
@@ -1409,7 +1459,7 @@ is used for whole Rails application.
 # Mustache
 
 [mustache](https://github.com/mustache/mustache) is nice to render user
-templates
+templates `Hi {{name}}`, where `name` is placeholder which is inside handlebars
 
 Usage is simple as
 
@@ -1638,28 +1688,40 @@ def MatchPosts
 end
 ~~~
 
-or more complex with exception rescue.
+You should return object that can be success and hold some data
+
+```
+# app/models/result.rb
+class Result
+  attr_accessor :message, :data
+
+  # you can return in service like:
+  #   return Result.new 'Next task created', next_task: next_task
+  # and use in controller:
+  #   if result.success? && result.data[:next_task] == task
+  def initialize(message, data = {})
+    @message = message
+    @data = data
+  end
+
+  def success?
+    true
+  end
+end
+
+# app/models/error.rb
+class Error < Result
+  def success?
+    false
+  end
+end
+```
+
+and you can rescue from exceptions:
 
 ~~~
 # app/services/my_service.rb
 class MyService
-  class Result
-    attr_reader :message
-    def initialize(message)
-      @message = message
-    end
-
-    def success?
-      true
-    end
-  end
-
-  class Error < Result
-    def success?
-      false
-    end
-  end
-
   # Some custom exception if needed
   class ProcessException < Exception
   end
@@ -1695,24 +1757,6 @@ puts my_service.process(false).success? # false
 puts my_service.process(false).message # empty posts
 ~~~
 
-Even simpler Result class (not using Error class) but not recomended.
-
-~~~
-  class Result
-    attr_reader :error, :message
-    def initialize(error:, message:)
-      @error = error
-      @message = message
-    end
-    def success?
-      error.blank?
-    end
-  end
-
-  Result.new message: success_message
-  Result.new error: e.mesage
-~~~
-
 Service object is similar to Command pattern which is implemented in gem
 <https://github.com/collectiveidea/interactor>
 
@@ -1730,9 +1774,20 @@ class LandingSignup
   validates :email, presence: true
 
   def save
+    _create_users
+    _create_roles
   end
 
   # no need for initialize since AR will pick from params
+  # but if you need to set default values, you can
+  def initialize(attributes)
+    super(attributes)
+    _after_initialize
+  end
+
+  def _after_initialize
+    self.send_email_invitation = true if send_email_invitation.nil?
+  end
 end
 ~~~
 
@@ -1749,7 +1804,7 @@ class PagesController < ApplicationController
   def landing_signup
     @landing_signup = LandingSignup.new landing_signup_params
     @landing_signup.current_city = City.first
-    if @landing_signup.perform
+    if @landing_signup.save
       sign_in @landing_signup.user
       redirect_to dashboard_path, notice: @landing_signup.notice
     else
@@ -2378,9 +2433,20 @@ does not exists
 
 My style
 
-* in rails models use following order: associations-relations, enums,
-validations, callbacks declarations, scopes, method for scopes,
-class methods, instance methods, callbacks definitions
+* in rails models use following order:
+  1. constants `FIELDS = %i[name]`
+  2. `belongs_to :workflow` associations with plugins `acts_as_list scope:
+     [:workflow_id]`
+  3.  `has_many :users` associations
+  4. enums `enum status: %i[draft accepted]`
+  5. validations `validates :name, presence: true`
+  6. validate declarations `validate :_check_nested_resource`
+  7. callbacks declarations `before_validation :_default_values_on_create, on: :create`
+  8. scopes `scope :by_status_param, ->(status_argument) { where status: status_argument }`
+  9. class methods `def self.find_first_unpublished`
+  10. instance methods `def full_name`
+  11. validate definitions `def _check_nested_resource`
+  12. callbacks definitions `def _default_values_on_create`
 
 # Geocoder
 
@@ -2405,253 +2471,9 @@ views.
   where(sport: sport) # conditional on view
 ~~~
 
-# Localisation i18n translations
+# Authorization policy
 
-Tips <https://devhints.io/rails-i18n>
-Translate models using `activerecord`
-https://guides.rubyonrails.org/i18n.html#translations-for-active-record-models
-so you can use
-```
-User.model_name.human
-# pluralize
-User.model_name.human(count: 2)
-# attribute
-User.human_attribute_name(:email)
-```
-
-To translate active record messages for specific attributes, you can overwrite
-messages for specific model and attributes (default ActiveRecord messages taken)
-<https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23>
-<https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message>
-
-Also you can change format `errors.format: Polje "%{attribute}" %{message}`
-https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
-You can also see some default en translations for errors.
-To see Rails default datetime formats go to
-https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
-to see current translation you can use
-```
-I18n.translate 'date.formats.default`
-=> "%Y-%m-%d"
-```
-
-And you can change attribute name `activerecord.attributes.user.email: имејл`
-To translate also plurals you can use `User.model_name.human(count: 2)`. For
-attributes you can use `User.human_attribute_name("email")`
-[link](http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models)
-
-~~~
-en:
-  activerecord:
-    models:
-      user:
-        zero: No dudes
-        one: Dude
-        other: Dudes
-~~~
-
-Separate translations into different files (for example
-`activerecord_models.sr.yml`) and folders for `/completed/activerecord.sr.yml`
-include them with:
-
-~~~
-# config/application.rb
-config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-~~~
-
-To raise error when translation is missing `.translation_missing` class
-```
-# config/application.rb
-config.action_view.raise_on_missing_translations = true
-```
-No need to write quotes unless you have colon `:` so you need to escape it's
-meaning and use quotes.
-
-For form objects `include ActiveModel::Model` you should translate
-`activemodel`. For `ApplicationRecord` translate `activerecord`.
-~~~
-# config/locales/activemodel.sr.yml
-sr:
-  activemodel:
-    attributes:
-      landing_signup:
-        current_city: Који је твој град ?
-    errors:
-      messages:
-        group_not_exists_for_age: Не постоји група (%{age}год) на овој локацији
-      models:
-        landing_signup:
-          attributes:
-            current_city:
-              blank: Не може бити празно ?
-    models:
-      user:
-        one: корисник
-        other: корисници
-        accusative: корисника
-        some_customer_message: Моја порука
-~~~
-
-For custom errors can be different for each attribute or same. Can also accept
-param, for example
-
-~~~
-    errors.add :from_group_age, :group_not_exists_for_age, age: age
-~~~
-
-https://stackoverflow.com/questions/6166064/i18n-pluralization
-For serbian you can provide pluralization
-
-~~~
-# config/locales/plurals.rb
-# https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
-serbian = {
-  i18n: {
-    plural: {
-      keys: %i[one few many other],
-      rule: lambda { |n|
-        if n % 10 == 1 && n % 100 != 11
-          :one
-        elsif [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100)
-          :few
-        # elsif (n % 10).zero? || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100)
-        #   :many
-        # there are no other integers, use :many if you need to differentiate
-        # with floats
-        else
-          :other
-        end
-      }
-    }
-  }
-}
-{
-  sr: serbian,
-  'sr-latin': serbian,
-}
-~~~
-
-~~~
-# config/initializers/pluralization.rb
-require "i18n/backend/pluralization"
-I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
-~~~
-
-~~~
-# config/locales/sr.yml
-sr:
-  sent_messages:
-    # 1, 21, 31 ...
-    one: %{count} порука је послата
-    # 2, 3, 4, 22, 23, 24, 32, 33, 34 ...
-    few: %{count} поруке су послате
-    # all other integers: 5, 6, ... 9, 10, 11, 12, 13, 14 ... 20, 25, ...
-    many: %{count} порука је послато
-~~~
-
-Note that you have to provide `few` translation for all words, since it could
-happend that count is 2 and translation is missing.
-
-~~~
-I18n.t 'sent_messages', count: 15
-# or if you want to translate model
-"#{chat.moves.size} #{Move.model_name.human count: chat.moves.size}"
-~~~
-
-You can translate to any language with
-
-~~~
-I18n.t 'sent_messages', locale: :sr
-~~~
-
-Example for Serbian localizations translations:
-
-~~~
-# config/locales/sr.yml
-sr:
-  # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L8
-  errors:
-    format: Поље "%{attribute}" %{message}
-    messages:
-      blank: не сме бити празно
-      invalid: није исправно
-  neo4j:
-    errors:
-      messages:
-        required: мора постојати
-        taken: је већ заузет
-    models:
-      user: корисник
-      location:
-        one: локација
-        other: локације
-    attributes:
-      user:
-        email: Имејл
-        password: Лозинка
-        password_confirmation: Потврда лозинке
-        remember_me: Запамти ме
-~~~
-
-When you use `.capitalize` or `.upcase` than you need first to call
-`.mb_chars`. For example 
-~~~
-'ž'.upcase
-=> "ž"
-
-'ž'.mb_chars.upcase.to_s
- => "Ž"
-~~~
-Some common words translations can be found
-<https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml>
-
-To translate with accusative you need to joins strings or use param in
-translation
-
-~~~
-module TranslateHelper
-  # there are two ways of calling this helper:
-  # t_crud 'are_you_sure_to_remove_item', item: @move
-  # t_crud 'edit', User
-  def t_crud(action, model_class)
-    if model_class.class == Hash
-      t(action, item: t("neo4j.models.#{model_class[:item].name.downcase}.accusative"))
-    else
-      "#{t(action)} #{t("neo4j.models.#{model_class.name.downcase}.accusative")}"
-    end
-  end
-end
-~~~
-
-Translate latin to cyrilic with <https://github.com/dalibor/cyrillizer> You need
-to set language in config
-
-~~~
-# Gemfile
-# translate cyrillic
-gem 'cyrillizer'
-~~~
-
-~~~
-# config/initializers/cyrillizer.rb
-Cyrillizer.language = :serbian
-~~~
-
-In console
-
-~~~
-'my string'.to_cyr
- => "мy стринг"
-~~~
-
-Note that some chars looks the same but are not when rendered on html page
-~~~
- # for example first line is not correct link a href
- <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</а>"
- <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</a>"
-~~~
-
-# Devise
+## Devise
 
 use cancancan and define all your actions in app/models/ability. If you want to
 use
@@ -2664,9 +2486,12 @@ Note that following next `cannot` rule will override a previous `can` rule, so
 it is enough to set `can :manage, :all` and than write what `cannot :destroy,
 Project`
 
-Other autorization policy
+## Pundig
 
-* https://github.com/varvet/pundit
+https://github.com/varvet/pundit
+
+## Other authorization
+
 * https://github.com/palkan/action_policy
 
 # Autoloading
@@ -2811,6 +2636,27 @@ If you are seeing this on one of your tests, ensure that your tests are either e
     joining and you do not eager load (do not create AR objects) if not need.
     In Rails 5 there is a method `left_outer_joins`
     https://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins
+    when you want to perform custom sql you can use
+    ```
+    task.projects
+         .select(<<-SQL)
+           projects.*,
+           activities.name AS last_task_activity_name,
+           tasks.updated_at AS last_task_updated_at
+         SQL
+         .joins(<<-SQL)
+           INNER JOIN tasks ON tasks.project_id = projects.id
+           INNER JOIN activities
+           INNER JOIN (
+             SELECT project_id, MAX(id) as max_id
+             FROM tasks
+             GROUP BY project_id
+           ) last_task
+           ON last_task.project_id = projects.id AND
+             last_task.max_id = tasks.id AND
+             tasks.activity_id = activities.id
+         SQL
+    ```
   * `includes` will return the same number of items, with association object
   loaded in memory. eager load `includes` can be defined in association
   definition `has_many :comments, -> { includes :author }` but this is bad since
@@ -2886,11 +2732,26 @@ locales [look for adminlte example]( {{ site.baseurl }}
 
 ~~~
 # app/helpers/page_helper.rb
-module PageHelper
-  def page_title(title)
-    # this will add both page title and header below topnav
-    content_for(:page_title) { title }
-    content_for(:page_header) { title }
+module PagesHelper
+  def login_layout(login_title = nil)
+    @login_title = login_title
+    @login_layout = true
+  end
+
+  def login_layout?
+    @login_layout
+  end
+
+  def login_title
+    @login_title
+  end
+
+  def title(name)
+    @title = name
+  end
+
+  def fetch_title
+    @title || fetch_breadcrumb_list.keys.last
   end
 
   def page_description(description)
@@ -2901,31 +2762,41 @@ module PageHelper
     @breadcrumb = list
   end
 
-  def get_breadcrumb_list
-    @breadcrumb || []
+  def fetch_breadcrumb_list
+    @breadcrumb || {}
   end
 end
 
-# app/views/layouts/application.html.erb
+# app/views/layouts/_breadcrumb.html.erb
+<nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <% get_breadcrumb_list.each_with_index do |(text, link), i| %>
-      <li class="<%= 'active' if i == get_breadcrumb_list.length - 1 %>">
+    <% if fetch_breadcrumb_list.blank? %>
+      <li class='breadcrumb-item active' aria-current='page'>
+        <i class="fa fa-dashboard"></i>
+        <%= t('dashboard') %>
+      </li>
+    <% else %>
+      <li class='breadcrumb-item'>
+        <%= link_to dashboard_path do %>
+          <i class="fa fa-dashboard"></i>
+          <%= t('dashboard') %>
+        <% end %>
+      </li>
+    <% end %>
+    <% fetch_breadcrumb_list.each_with_index do |(text, link), i| %>
+      <% last_item = i == fetch_breadcrumb_list.length - 1 %>
+      <li class="breadcrumb-item <%= 'active' if last_item %>" <%= 'aria-current="page"' if last_item %>>
         <% if link.present? %>
           <%= link_to link do %>
-            <% if i == 0 %>
-              <i class="fa fa-dashboard"></i>
-            <% end %>
             <%= text %>
           <% end %>
         <% else %>
-          <% if i == 0 %>
-            <i class="fa fa-dashboard"></i>
-          <% end %>
           <%= text %>
         <% end %>
       </li>
     <% end %>
   </ol>
+</nav>
 
 # app/views/customers/index.html
 <%
@@ -2938,7 +2809,7 @@ end
   when "renewed_in_advance"
     page_description "Renewed In Advance"
   end
-  breadcrumb "Dashboard": dashboard_path, "Customers": nil
+  breadcrumb "Customers": nil
 %>
 ~~~
 
@@ -3017,10 +2888,13 @@ end
   ActionController::Base.helpers.pluralize(count, 'mystring')
   ActionController::Base.helpers.strip_tags request.body # html to text
   ActionController::Base.helpers.link_to 'name', link
+  ActionController::Base.helpers.j "can't be blank" # can\'t be blank
 
   ActionView::Base.new.number_to_human 123123
 
   Rails.application.routes.url_helpers.jobs_path
+
+  ERB::Util.html_escape t('errors.messages.blank') # can&#39;t be blank
   ~~~
 
   * if it your custom helper you can call from *ApplicationController*
@@ -3178,6 +3052,7 @@ but IE10 wont.
   ~~~
   use that priority in associations `has_many :comments, -> { order priority:
   :asc }, dependent: :destroy`
+  Position is starting from 1, 2...
   To perform bulk update, use form to pass ids
 
   ~~~
@@ -3379,7 +3254,7 @@ to iterate...
 
 * you can iterate in groups batches `<% company.jobs.group_by(&:user).each do
   |user, jobs| %>`
-* `Person.find_in_batches do |person|` will iterate but load only 1000 per run.
+* `Person.find_in_batches do |people|` will iterate but load only 1000 per run.
   Or shorter is `Person.find_each do |person|`
 * to count by grouping you can group_by specific column
 `User.group(:company_id).count.values.max`
@@ -3529,6 +3404,12 @@ unless item.save` you can move important things in front `item.save ||
 (errors.add :name, 'is invalid' and return false)`
 * gem [countries](https://github.com/hexorx/countries) uses
   [money](https://github.com/RubyMoney/money) gem.
+  Also
+  ```
+  # Gemfile
+  # country select box and store value as ISO code
+  gem 'country_select'
+  ```
 
   ~~~
   <%= f.form_group :country, label: { text: 'Country' } do %>
@@ -3701,3 +3582,50 @@ end
   if you need rails model without table https://gist.github.com/dalibor/228654
   it's different for Rails 4 and Rails 5
   https://stackoverflow.com/questions/41494951/how-to-create-activerecord-tableless-model-in-rails-5
+
+* constants
+```
+# config/initializers/const.rb
+# rubocop:disable Naming/MethodName
+class Const
+  def self.COMMON
+    hash_or_error_if_key_does_not_exists(
+      site_name: 'My CRM',
+      domain: 'www.trk.in.rs',
+    )
+  end
+
+  def self.COLLAPSE_KEYS
+    hash_or_error_if_key_does_not_exists(
+      new_message: 'new_message',
+    )
+  end
+
+  def self.hash_or_error_if_key_does_not_exists(hash)
+    # https://stackoverflow.com/questions/30528699/why-isnt-an-exception-thrown-when-the-hash-value-doesnt-exist
+    # raise if key does not exists hash[:non_exists] or hash.values_at[:non_exists]
+    hash.default_proc = ->(_h, k) { raise KeyError, "#{k} not found!" }
+    # raise when value not exists hash.key 'non_exists'
+    def hash.key(value)
+      k = super
+      raise KeyError, "#{value} not found!" unless k
+
+      k
+    end
+    hash
+  end
+end
+# rubocop:enable Naming/MethodName
+```
+* rails routes instead of grep you can search by `rails routes -g user` but only
+  for rails > 5.2.1
+* contribute to rails guide https://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html#contributing-to-the-rails-documentation
+  Clone the form of the https://github.com/rails/rails and update
+  `guides/source/*.md` files.
+
+  ```
+  cd guides
+  bundle install
+  bundle exec rake guides:generate
+
+  ```

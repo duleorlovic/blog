@@ -668,4 +668,11 @@ todo
 
 # Parcel
 
-Install with `yarn global add parcel-bundler'
+Install with `yarn global add parcel-bundler`
+
+# Makefile
+
+
+```
+make help
+```

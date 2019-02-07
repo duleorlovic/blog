@@ -61,6 +61,7 @@ Defining fixtures:
   Time.now
 * use ERB for dynamic creation. Note that you should use fixed dates instead of
   `published_at: <%= Date.today.strftime('%Y-%m-%d')` so they are stable.
+  Note that erb is evaluated before yml (for example `$LABEL`)
   ~~~
   <% 15.times do |i| %>
   medium_<%= i %>:
@@ -119,11 +120,32 @@ Defining fixtures:
 * when defining new fixtures, add them to the end, so you do not break current
   test for first page (when you use pagination)
 * load fixtures in development `rake db:fixtures:load` (put in your seed
-  ```
-  # db/seed.rb
-  Rake::Task['db:fixtures:load'].invoke
-  ```
-* to set devise password, you can add exncypted password on specific items
+
+```
+# db/seed.rb
+Rake::Task['db:fixtures:load'].invoke
+# https://github.com/rails/rails/blob/master/activerecord/lib/active_record/fixtures.rb
+already_proccessed = []
+Dir.entries("#{Rails.root}/test/fixtures").each do |file_name|
+  next unless file_name[-4..-1] == '.yml'
+
+  # foreach will read line by line
+  File.foreach("#{Rails.root}/test/fixtures/#{file_name}").grep /LABEL/ do |line|
+    column = line.match(/(\w*):.*\$LABEL/)[1]
+    klass = file_name[0..-5].singularize.camelize
+    next if already_proccessed.include? "#{klass}-#{column}"
+
+    puts "klass=#{klass} column=#{column}"
+    klass.constantize.find_each do |item|
+      item.send "#{column}=", item.send(column).tr('_', ' ')
+      item.save # email can not be saved with spaces
+    end
+    already_proccessed.append "#{klass}-#{column}"
+  end
+end
+puts 'db:seed and db:fixtures:load completed'
+```
+* to set devise password, you can add encrypted password on specific items
   ```
   admin_user:
     encrypted_password: <%= User.new.send(:password_digest, 'password') %>
@@ -171,7 +193,7 @@ class TaskTest < ActiveSupport::TestCase
     assert tasks.map(&:valid?).all?
 
     # you can add specific error message
-    assert tasks.map(&:valid?).all?, tasks.select {|c| !c.valid?}.map {|c| c.errors.full_messages.join}
+    assert tasks.map(&:valid?).all?, tasks.select {|c| !c.valid?}.map {|c| c.name + ' ' + c.errors.full_messages.join}
   end
 end
 ~~~
@@ -283,7 +305,10 @@ title: "Ahoy!" }, response.parsed_body)`.
 * `assert_difference "User.count", 1 do`
 * You have access to `@request`, `@controller` and `@response` object, but only
   after you call `get`, `post`. You can set `request.remote_ip` by passing
-  headers `get '/', headers: { 'REMOTE_ADDR': '123.123.123.123' }`
+  headers (note that http referrer is written as http referer (single r)
+  ```
+  get sign_up_path, params: { user: { email: 'new@email.com' } }, headers: { 'REMOTE_ADDR': '123.123.123.123', HTTP_REFERER: 'http://domain.com' }
+  ```
 * `assert_select 'h1', 'Welcome'` is used to test view. View can be tested with
   `assert_match /Welcome/', response.body`.
   There are two forms of *assert_select selector, [equality], [message]* or
@@ -292,7 +317,8 @@ title: "Ahoy!" }, response.parsed_body)`.
   selector can be CSS selector as one string, or array with substitutions
   ~~~
   assert_select 'div#123' # exists <div id='123'>
-  assert_select "a[href='http://www.example.com/diary/new']"`
+  assert_select "a[href='http://www.example.com/diary/new']"
+  assert_select 'a[href=?]', tasks_path
   assert_select 'input[value=?]', username   # substitute username
   assert_select 'input[value*=?]', username   # match when containing username
 
@@ -464,6 +490,16 @@ class ActiveSupport::TestCase
 end
 ```
 
+```
+# test/a/webmock_helper.rb
+module WebmockHelper
+  def stub_s3
+    stub_request(:get, /s3.amazonaws.com/).to_return(status: 200, body: 'text')
+    yield if block_given?
+  end
+end
+```
+
 I prefer to use factories on specific integration test so when I need to remove
 specific fixtures I use rails `Courses.delete_all`. I do not use database
 cleaner because it complicates thinks because I need to load some specific
@@ -521,7 +557,8 @@ and also for arguments and verify their type or value
 @mock.verify  # => raises MockExpectationError
 ~~~
 
-You can use `Object.stub` https://github.com/seattlerb/minitest#stubs 
+You can use `Object.stub` https://github.com/seattlerb/minitest#stubs
+https://github.com/seattlerb/minitest#mocks
 https://stackoverflow.com/questions/10990622/how-do-i-stub-a-method-to-raise-an-error-using-ruby-minitest
 ~~~
 require "minitest/autorun"
@@ -542,7 +579,9 @@ end
 ~~~
 
 
-Stub works also with some custom doubles mock
+Stub works also with some custom doubles mock. You can define singleton method
+on mock `def mock.apply; end` but can not use other methods or variables... in
+this case use `mock.expect :method, return_value`
 
 ~~~
 # test/models/user_test.rb
@@ -551,6 +590,8 @@ class UserTest < ActiveSupport::TestCase
   test '#apply_subscription' do
     mock = Minitest::Mock.new
     def mock.apply; true; end
+    # or
+    mock.expect :apply, true
 
     SubscriptionService.stub :new, mock do
       user = users(:one)

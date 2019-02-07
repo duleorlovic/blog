@@ -887,3 +887,57 @@ and hosts.
 [Ruby on Rails - Railscasts PRO #337 Capistrano Recipes (pro)](https://www.youtube.com/watch?v=uXla2yyzH_8)
 [How to deploy RubyonRails project to AWS EC2 using capistrano](https://www.youtube.com/watch?v=imdrYD4ooIk)
 
+Tips:
+
+I create shortcuts in home `/home/ubuntu` and `/home/deploy_user` for easier
+access
+```
+ln -s /var/www/myapp/shared/ .
+ln -s /var/www/myapp/current .
+```
+
+Secrets in capistrano is long issue
+https://github.com/capistrano/capistrano/issues/1884
+I put secrets and source in bashrc for both users
+
+```
+# /var/www/myapp/env.sh
+export RAILS_ENV=production
+export SMTP_USERNAME=username
+
+# /home/ubuntu/.bashrc
+...
+# for ubuntu user, it can be at the end of a file
+source /var/www/myapp/env.sh
+
+# /home/deploy_user/.bashrc
+# for deploy_user, it needs to be on first line, since it is used with ssh
+source /var/www/myapp/env.sh
+```
+
+When you update secrets, than you need to restart the server `cap production
+deploy:restart`. For background jobs to pick up new secrets you need to restart
+`cap production sidekiq:restart`.
+
+
+# NGINX
+
+To configure nginx with passenger, and redirect from non www to www, you can use
+
+```
+# /etc/nginx/sites-available/trk.conf
+server {
+    listen 80;
+    server_name www.trkapp.com;
+
+    root /var/www/trkapp/current/public;
+
+    passenger_enabled on;
+    passenger_ruby /usr/local/rvm/gems/ruby-2.5.3/wrappers/ruby;
+}
+server {
+    listen 80;
+    server_name trkapp.com ;
+    return 301 http://www.trkapp.com$request_uri;
+}
+```

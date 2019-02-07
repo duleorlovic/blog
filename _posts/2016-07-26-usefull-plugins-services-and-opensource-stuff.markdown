@@ -74,6 +74,17 @@ text on click
 
   * [abpetkov/switchery](https://github.com/abpetkov/switchery)
   * [animated smile checkbox](https://codepen.io/Rplus/pen/LdjwZz)
+  * [bootstraptoggle](http://www.bootstraptoggle.com/) only for bootstrap 3, for
+    B4 use https://github.com/gitbrent/bootstrap4-toggle
+  ```
+  # http://www.bootstraptoggle.com/
+  # https://github.com/gitbrent/bootstrap4-toggle
+  $('[data-bootstrap-toggle').each ->
+    $(this).bootstrapToggle(
+      # this class will enable vimium
+      style: 'demo-button'
+    )
+  ```
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
 * drag and drop elements <https://shopify.github.io/draggable/>
 
@@ -89,60 +100,127 @@ text on click
 and confirm windows. You need to install plugins that you use
 
 ~~~
-bower install jbox --save
+yarn add jbox
 
-// app/assets/adminlte/application_adminlte.js
-//= require jbox/Source/jBox
-//= require jbox/Source/plugins/Notice/jBox.Notice
+// app/assets/javascripts/application.js
+//= require jbox/src/js/jBox.js
+//= require jbox/src/js/plugins/jBox.Notice.js
 
-// app/assets/adminlte/application_adminlte.scss
-@import "jbox/Source/jBox";
-@import "jbox/Source/plugins/Notice/jBox.Notice";
+// app/assets/javascripts/document_on_turbolinks_load.coffee
+  // add tooltip to all elements with title <a title='Hi'>
+  new jBox('Tooltip', {
+    attach: '[title]'
+  })
+
+// app/assets/javascripts/document_on.coffee
+# <%= button_tag 'Edit', 'data-modal': new_admin_role_path, 'data-modal-title': 'Edit role', class: 'btn' %>
+$(document).on 'click', '[data-modal]', (e) ->
+  openModal(
+    url: e.currentTarget.dataset.modal
+    title: e.currentTarget.dataset.modalTitle
+    width: e.currentTarget.dataset.modalSize
+  )
+  console.log "data-modal #{e.currentTarget.dataset.modal}"
+
+// app/assets/javascripts/plugins/jbox_open_modal.coffee
+# https://stephanwagner.me/jBox/options#ajax
+window.openModal = ({url, title, width = 'auto'}) ->
+  modal = new jBox 'Modal', {
+    title: e.currentTarget.dataset.modalTitle
+    ajax: {
+      url: e.currentTarget.dataset.modal
+      reload: 'strict'
+      setContent: true
+      complete: ->
+        # we need to reposition when ajax returns
+        this.position()
+    }
+    onCloseComplete: ->
+      $("##{this.options.id}").html('')
+  }
+  modal.open()
+  console.log "data-modal #{e.currentTarget.dataset.modal}"
+
+window.initializeJboxTooltip = ->
+  # note that this will remove title attribute
+  new jBox 'Tooltip', {
+    attach: '[title]'
+    theme: 'TooltipDark'
+  }
+
+// app/assets/stylesheets/application.sass
+@import 'jbox/src/scss/jBox.scss'
+@import 'jbox/src/scss/plugins/jBox.Notice.scss'
 
 
 # app/controllers/application_controller.rb
-after_action :check_flash_message
-def check_flash_message
-  return unless request.xhr? && request.format.js? && new_layout?
-  response.body += "flash_alert('#{view_context.j flash.now[:alert]}')" if flash.now[:alert].present?
-  response.body += "flash_notice('#{view_context.j flash.now[:notice]}')" if flash.now[:notice].present?
-end
+  after_action :_add_flash_message, if: -> { request.xhr? }
+  after_action :_add_js_plugins_initialisations, if: -> { request.xhr? }
+
+  # rubocop:disable Metrics/AbcSize
+  def _add_flash_message
+    return unless request.format == 'application/javascript'
+
+    response.body += "flash_alert('#{view_context.j flash.now[:alert]}');" if flash.now[:alert].present?
+    response.body += "flash_notice('#{view_context.j flash.now[:notice]}');" if flash.now[:notice].present?
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def _add_js_plugins_initialisations
+    code = 'initializeJboxTooltip();' if response.body.match? /title=/
+    return unless code.present?
+
+    response.body += if request.format == 'application/javascript'
+                       view_context.j(code)
+                     else
+                       "<script>#{code}</script>"
+                     end
+  end
+
+
+# app/views/layouts/application.html.erb
+      <div class="d-none-not-important" id='notice-holder'><%= notice %></div>
+      <% if notice %>
+        <script>
+          flash_notice('<%= j notice %>');
+        </script>
+      <% end %>
+
+      <div class="d-none-not-important" id='alert-holder'><%= alert %></div>
+      <% if alert %>
+        <script>
+          flash_alert('<%= j alert %>');
+        </script>
+      <% end %>
+    </body>
+  <% end %>
+</html>
 
 # app/assets/javascripts/flash_messages.coffee
 # https://stephanwagner.me/jBox/get_started
 window.flash_alert = (message) ->
+  flash_message message, 'red'
+
+window.flash_notice = (message) ->
+  flash_message message, 'blue'
+
+window.flash_message = (message, color) ->
   # https://stephanwagner.me/jBox/documentation says that we need to wait for
   # ready for page load, so we use setTimeout
-  setTimeout(
-    ->
-      new jBox 'Alert',
-        autoClose: 10000
-        attributes:
-          x: 'right'
-          y:'bottom'
-        stack: false
-        animation:
-          open:'bounce'
-          close:'fadeOut'
-        content: message
-        color: 'red'
-    10 # tried with 0, 1, but it was triggered before page load and not working
-  )
-window.flash_notice = (message) ->
   setTimeout(
     ->
       new jBox 'Notice',
         autoClose: 10000
         attributes:
           x: 'right'
-          y:'bottom'
-        stack: false
+          y: 'bottom'
+        stack: true
         animation:
           open:'bounce'
           close:'fadeOut'
         content: message
-        color: 'blue'
-    10 # tried with 0, 1, but it was triggered before page load and not working
+        color: color
+    50 # tried with 0, 1, but it was triggered before page load and not working
   )
 ~~~
 
@@ -543,11 +621,43 @@ $(document).on 'ready page:load', ->
 
 # Fontawesome
 
-FA icons are very usefull for quick icons. Look for
+Font awesome FA icons are very usefull for quick icons. Look for
 [examples](http://fontawesome.io/examples/)
 
 * color can be set with `bg-red`
 * spinner `<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>`
+* in FA 5, by default should be used `fas` (solid), `far` (regular) and `fal`
+  (light) is only for pro, but some icons like window-close is free for regular
+  https://fontawesome.com/icons/window-close?style=regular
+* size can be with setting `style='font-size: 2rem'` or using class `fas fa-2x`
+  https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons
+* padding between icon and text is with margin, and center with fixed width
+  `<i class='fas fa-tasks fa-fw mx-1' aria-hidden='true'></i><%= t('home') %>`
+
+Other free fonts can be found on http://fontello.com/ where you can select icons
+and download only that batch of fonts. You can include in your project using
+https://github.com/railslove/fontello_rails_converter
+```
+# download zip to `tmp/fontello.zip`
+bundle exec fontello convert --no-download
+gnome-open http://localhost:3001/fontello-demo.html
+
+# when you want to update you can
+fontello open
+# select new icons
+bundle exec fontello convert
+```
+To configure in rails you need to import
+```
+# app/assets/stylesheets/application.sass
+// vendor
+@import 'fontello'
+```
+And use with classes
+```
+# app/layouts/application.html.erb
+<i class="demo-icon icon-mobile">
+```
 
 * page loader progress bar <http://ricostacruz.com/nprogress/>
 * page loader car <https://codepen.io/igor0ser/pen/amJkvp>
@@ -559,6 +669,7 @@ FA icons are very usefull for quick icons. Look for
 * free stock photos <https://burst.shopify.com>
 * sample placeholder https://placeholder.com/
 * free vector images kajak pictogram https://pixabay.com/en/sport-pictogram-olympia-water-swim-1580667/
+* flags http://flagpedia.net/india
 
 # Slides
 
@@ -597,6 +708,35 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   https://www.chartjs.org/docs/latest/developers/updates.html
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
+
+* To draw diagrams and graphs
+  <http://js.cytoscape.org/demos/compound-nodes/>
+  Define elements with array of `{data: { id: 'a' }}`. Edges have
+  `data: { id: 'ab', source: 'a', target: 'b' }`. Alternativelly you can define
+  elements as objects of `nodes: [{data: {id:'a'}}], edges: [{data: {id: 'ab',
+  source: 'a', target' b'}}]`.
+  When you want to group inside squares (compound) than use `data: { parent: 'a'
+  }` (in this case `a` will become square).
+  Layout http://js.cytoscape.org/#layouts
+  ```
+  layout: { name: 'grid' }
+  ```
+  Style is array of selectors style keys:
+  ```
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(id)'
+      }
+    }
+  ]
+  ```
+
+  Events like `dragfree` `tapdrag` http://js.cytoscape.org/#collection/events
+  http://js.cytoscape.org/#core/events
+  You can get position http://js.cytoscape.org/#notation/position
+
 
 # Email services
 
@@ -760,6 +900,8 @@ version](https://github.com/iogbole/gentelella_on_rails)
 [booster](https://freehtml5.co/booster-free-html5-bootstrap-template/) or
 [elate](https://freehtml5.co/demos/elate/)
 * bootstrap 4
+  checkout original bootstrap themes
+  https://coderthemes.com/hyper_2/light/dashboard-crm.html
   <https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio> 
   <https://blackrockdigital.github.io/startbootstrap-freelancer/>
 * [four images](http://barbajs.org/demo/grid/index.html)
@@ -842,10 +984,6 @@ shell scripts
 
 To create mockups you can use: Invision, Marvel, Baslamiq, Sketch. There is one
 opensource free mokup tool: Pencil Project https://pencil.evolus.vn/
-
-To draw diagrams and graphs
-
-* http://js.cytoscape.org/demos/compound-nodes/
 
 # Continuous integration
 

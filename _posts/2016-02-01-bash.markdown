@@ -712,14 +712,31 @@ ssh -A vagrant@127.0.0.1 -p 2222 'env | grep SSH_AUTH_SOCK'
 
 Connect using pem or rsa key is
 ~~
-ssh -i pem_file host
+ssh -i $PEM_FILE host
 ~~~
+
+You can see more logs
+```
+ssh host -vvv
+```
+When there is no connection to the host, you can check with
+```
+# you can see ssh version
+nc -w 10 192.168.1.3 22
+SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.6
+
+# or you can echo true or false in case of timeout
+nc -w 10 192.168.1.3 22 && echo true || echo false
+```
+I had an issue with my old router connecting `SSH-2.0-OpenSSH_7.6p1
+Ubuntu-4ubuntu0.1` so I need to connect directly to my ADSL. This problem was
+related to IPv6 on the server.
 
 `Too many authentication failures for` error is caused by inadvertently offering
 multiple ssh keys to the server. You can limit to only one identity
 
 ~~~
-ssh -i some_id_rsa -o -o IdentitiesOnly=yes host
+ssh -i some_id_rsa -o IdentitiesOnly=yes host
 ~~~
 
 # Rsyslog
@@ -890,3 +907,17 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   ```
   #!/usr/bin/env ruby
   ```
+
+* list files with full path is using `find $PWD` or using `-d`
+  option `ls -d -1 $PWD/*.*`
+
+* `df -h` and `du -sh` can show how much is used or free
+* `df -i` show how much inodes are left. Zoneminder through mysql can use all of
+  them so you need to find and remove those files.
+  ```
+  df -i
+  du -s --inodes /*
+  find . -xdev -printf '%h\n' | sort | uniq -c | sort -k 1 -n
+  ```
+
+  To remove old kernel files you can run `sudo apt-get autoremove`

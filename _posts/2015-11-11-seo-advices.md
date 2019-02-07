@@ -201,6 +201,9 @@ Sitemap: http://s3.amazonaws.com/my-site/my-folder/sitemap_index.xml.gz
 
 Test with `heroku run sitemap:refresh`.
 
+Also interesting tool to check validity of sitemap is
+https://www.websiteplanet.com/webtools/sitemap-validator/
+
 ## Webmaster tools
 
 Check your sitemap on [google

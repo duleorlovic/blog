@@ -341,6 +341,9 @@ sudo fsck.ext4 -fy /dev/sdc7
 manager
 <https://raw.githubusercontent.com/damellis/attiny/ide-1.6.x-boards-manager/package_damellis_attiny_index.json>
 
+Another installation is downloading to hardware folder.
+https://github.com/SpenceKonde/ATTinyCore
+
 # POE power over ethernet
 
 From left to right, when you hold lan cable and look at pins (T568A color)
@@ -357,6 +360,13 @@ use straight through cable (on both side is same variant).
 * 6 Orange
 * 7 White brown (DC+)
 * 8 Brown (DC+)
+
+https://en.m.wikipedia.org/wiki/Ethernet_extender
+Ethernet range is 100m, but you can use some devices to extend that range
+http://www.veracityglobal.com/products/ethernet-and-poe-devices/outreach-lite.aspx
+It is powered with POE and it can deliver POE to the other end.
+
+ixl6009 https://electronics.stackexchange.com/questions/113253/voltage-drop-and-safe-current-load-on-cat5-cable
 
 # Zoneminder
 
@@ -451,7 +461,7 @@ If you want to prevent automatical start on boot, you can disable using:
 sudo update-rc.d zoneminder remove
 ~~~
 
-## Logs
+## Zoneminder Errors and Logs
 
 Watch logs
 
@@ -460,6 +470,39 @@ tail -f /var/log/syslog
 tail -f /var/log/apache2/*
 tail -f /var/log/mysql/*
 ~~~
+
+If you see error:
+
+An error has occurred and this operation cannot continue.
+For full details check your web logs for the code 'F88AB7'
+
+https://forums.zoneminder.com/viewtopic.php?t=12997
+
+It is probably some error in database, like
+
+```
+[Fri Jan 25 12:25:52 2019] [error] [client 192.168.1.8] SQL-ERROR(BDC154): Table './zm/Events' is marked as crashed and last (automatic?) repair failed
+
+[Fri Jan 25 12:25:52 2019] [error] [client 192.168.1.8] PHP Warning:  Unknown: open(/var/lib/php5/sess_31rbb6unk3hhraifv94pfqgci1, O_RDWR) failed: No space left on device (28) in Unknown on line 0
+```
+
+I got this error because no space left on device, specifically inodes.
+So I removed some files and repair mysql.
+
+```
+sudo apt-get autoremove
+rm -rf /var/cache/zoneminder/*
+```
+
+Remove all data from zm with
+
+```
+mysql -u root -p zm
+truncate table Logs;
+truncate table Frames;
+truncate table Events;
+```
+
 
 ## Zones
 
@@ -576,6 +619,9 @@ So to set zoneminder you can use "ONVIF" link at the top or manually select:
 * Remote Method -> TCP
 * Capture Width: 1280, Capture Height: 960
 
+ON/Vif gives some options: Main stream H264 1920x1080 @ 30fps, secondStream
+720x480 @ 30fps, thirdStream 352x288 @ 15fps
+
 IPC-Model vendor is H264DVR, media port 34567, IP address: 192.168.1.11.
 You can search, just type 192.168.1. (blank). Or you do not need to type
 address, it will find cameras on other subnet mask.
@@ -601,9 +647,14 @@ KIP-200SHT30H (on web page it shows Herospeed)
 <http://www.elementa.rs/proizvod/57087/ip-dom-kamera>
 Objektiv: varifokalni, 2.8-12mm
 Horizontalni ugao vidljivosti: 21° do 81°
-You need to 192.168.1.168 and change admin/admin password to admin dule...10.
+You need to 192.168.1.168 (maybe 192.168.1.9) and change admin/admin password to
+admin dule...10.
 Than on configuration there is basic setup, to set up manual IP address.
 Under System there is Time Settings to set TimeZone.
+
+KIP-200SH20H https://www.elementa.rs/proizvod/57086/ip-dom-kamera
+On camera it shows Cantonk. Focus: 3.6mm, 68°
+Default ip is 192.168.1.168 admin/admin.
 
 
 # China IP camera $23
@@ -619,16 +670,98 @@ password: '' empty)
 
 # Lead acid
 
+WP7.2 28W has a 7.2Ah on 12V. ie can provide 0.36A for 20h.
+
 Charging is limited to 2.4V per cell (6x2.4 = 14.4v for 12v battery). Current is
 10% of capacity, 0.1C (0.7A for 7Ah). Stop charging when current is below 3% of
-capacity (0.21A for 7Ah), or after 16hours time (time to charge depends on current, if it is 10% than it need 10 hours).
+capacity (0.21A for 7Ah), or after 16hours time (time to charge depends on
+current, if it is 10% than it need 10 hours).
 Slow charging is 2.25V per cell (6x2.25 = 13.5V for 12v battery).
 Best option is to start with 14.4V and decrease to 13.5V when battery is full.
-Battery needs charge when it is below 12.5V in open circuit. Battery is fully
-discarged when is it below 9.5V (do not go this far). Battery is around 2.1V per
-cell when is fully charged (12.7V for 12V battery). Wait for 12hours after
-charging to measure open circuit.
+Battery needs charge when it is below **12.5V** in open circuit. Battery is
+fully discarged when is it below 9.5V (do not go this far). Battery is around
+2.1V per cell when is fully charged **12.7V** for 12V battery. Wait for 12hours
+after charging to measure open circuit.
 
 # Solar food dehydrator
 
 https://www.youtube.com/results?search_query=solar+food+dehydrator
+
+# Arduino
+
+You can download old Arduino (ver 1.8) to Programs, or you can use from Ubuntu
+(ver 2.1).
+
+## Arduino Makefile
+
+I use Arduino Makefile to compile and flash to arduino https://github.com/sudar/Arduino-Makefile
+
+```
+sudo apt-get install arduino-mk
+```
+
+It gives some files https://packages.ubuntu.com/xenial/all/arduino-mk/filelist
+I could ignore path to arduino dir since I used system arduino
+
+```
+# ~/config/bashrc/arduino.sh
+export ARDUINO_DIR=/usr/share/arduino
+export ARDMK_DIR=/usr/share/arduino/
+```
+
+So for your project you have to define
+```
+# Makefile
+BOARD_TAG    = uno
+ARDUINO_PORT = /dev/ttyACM0
+include $(ARDMK_DIR)/Arduino.mk
+```
+In vim you can run
+
+```
+make
+make upload
+make monitor
+# you can exit with Ctrl+C or Ctrl+A + K (and y)
+make show_boards
+```
+
+To exit from serial monitor (screen or minicom, which I could not setup to work
+from makefile) you can `Ctrl + A and than K and than Y`
+
+## Low cost tx rx
+
+VirtualWire works fine on ATMEGA Follow installation
+http://www.airspayce.com/mikem/arduino/VirtualWire/ and download zip and extract
+to `sketchbook/libraries` in my case is `/home/orlovic/Arduino/libraries`. Than
+you can find examples of it: File -> Examples -> VirtualWire -> transmitter
+Pin 12 is for sending, Pin 11 for receiving.
+
+But since it is not updated I used Manchester http://mchr3k.github.io/arduino-libs-manchester/
+
+
+# Default Passwords
+
+Telekom: admin ztonpk
+
+# POE
+
+# Long cable
+
+Mikrotik RB 750 use 90mA + 10ma for each port, so ~ 150mA when all cables are
+there. There is no difference while there is a traffic or inactive network.
+Cheap china ip camera spends 260mA if all diodes are on and streaming (253mA no
+streaming). During the day, witout IR diodes, it spends 100mA (87mA when there
+is no streaming).
+
+# Stream
+
+You can stream inside html page using https://wiki.videolan.org/Documentation:WebPlugin
+
+but plugin is not supported any more https://forum.videolan.org/viewtopic.php?t=138044
+
+Alternative is https://github.com/Streamedian/html5_rtsp_player
+
+```
+npm install git://github.com/Streamedian/html5_rtsp_player.git
+```

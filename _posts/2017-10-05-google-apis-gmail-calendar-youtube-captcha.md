@@ -75,9 +75,93 @@ Than he can easily change password.
 
 Register on <https://www.google.com/recaptcha> and you can use in in javascript
 `<div class="g-recaptcha" data-sitekey="6LdrgFQUAAAAALvyQvT3fpoagmnb-ik9f73Y0Zaz"></div>`
-but on rails and devise just follow
+but on rails and devise follow
 <https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise>
 and gem <https://github.com/ambethia/recaptcha>
+
+Example is https://github.com/duleorlovic/premesti.se
+
+```
+# Gemfile
+# captcha on contact form
+gem 'recaptcha'
+
+# config/locales/en.yml
+  recaptcha:
+    errors:
+      verification_failed: reCAPTCHA verification failed, please try again.
+
+# app/form_objects/contact_form.rb
+require 'recaptcha/verify'
+
+class ContactForm
+  include ActiveModel::Model
+  include Recaptcha::Verify
+
+  attr_accessor :email, :text, :g_recaptcha_response, :current_user, :remote_ip
+  validates_format_of :email, with: Devise.email_regexp
+  validates :text, :email, presence: true
+
+  def save
+    verify_recaptcha model: self, response: g_recaptcha_response
+    return false if errors.present?
+    return false unless valid?
+
+    _send_notification
+    true
+  end
+
+  def request
+    OpenStruct.new remote_ip: remote_ip
+  end
+
+  def env
+    nil
+  end
+
+  def _send_notification
+    Notify.message("contact_form #{email} @ #{Time.zone.now}", email, text, remote_ip, current_user)
+  end
+end
+
+# app/controllers/pages_controller.rb
+  def contact
+    @contact_form = ContactForm.new(
+      email: current_user&.email
+    )
+  end
+
+  def submit_contact
+    @contact_form = ContactForm.new(
+      email: current_user&.email || params[:contact_form][:email],
+      text: params[:contact_form][:text],
+      g_recaptcha_response: params['g-recaptcha-response'],
+      current_user: current_user,
+      remote_ip: request.remote_ip,
+    )
+    if @contact_form.save
+      flash.now[:notice] = t('contact_thanks')
+      contact
+    else
+      flash.now[:alert] = @contact_form.errors.full_messages.join(', ')
+    end
+    render :contact
+  end
+
+# app/assets/javascripts/window_functions.coffee
+window.enableRecaptchaButtons = (e) ->
+  console.log 'enableRecaptchaButtons'
+  $('[data-recaptcha-button]').prop('disabled', false)
+
+# config/initializers/recaptcha.rb
+Recaptcha.configure do |config|
+  config.site_key = Rails.application.secrets.google_recaptcha_site_key
+  config.secret_key = Rails.application.secrets.google_recaptcha_secret_key
+end
+```
+
+Use `Checkbox` v2 (`Invisible` is similar, just you need to trigger using js and
+use callback to receive results). V3 is for scoring.
 
 It is not possible to edit configuration using api
 https://stackoverflow.com/questions/38197959/how-to-add-redirect-uris-programmatically

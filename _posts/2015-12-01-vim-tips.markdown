@@ -284,7 +284,7 @@ under cursor - hyperlink - ctags
 * `:set scrollbind` in two buffers will make them scroll simultaneously. toggle
 scrolling with `:set scb!`
 * show line numbers `:set number` or relative numbers `:set relativenumber` (or
-shorter `:set rnu`
+shorter `:set rnu`. To disable you can `:set norelativenumber`
 * show approx position in text `^G`
 * `gf` follow that file
 
@@ -296,6 +296,16 @@ shorter `:set rnu`
 * `dt ` delete until the space, `df ` delete until the space including space
 * `dap}p` switch two paragraph
 * `dE` removes to the End of the string
+* `vit` inner or `vat` outer visual select (including html tag) `:h tag-blocks`
+  * repeat `at` to select wraped tag
+  * jump to closing (Oposite) html tag with `o`. more on `:help
+  visual-operators` `:help v_it`
+  * `vap` select paragraph (until next empty line, including that empty line)
+  * `dst` delete surround tag with vim surround plugin.
+  * `cil` change inner line with line text object plugin
+  * `vii` select same indent level with indent text object
+* `va'` visually select all inside ' including '
+* `cgn` change visually selected text using previous search
 * recording macro to q with `qq`, exit with `q`, run with `@q`
 * paste commands in insert mode with `^Rq`
 * `^T` indent `^D` dedent in insert mode.
@@ -350,14 +360,6 @@ only solution is to merge two line into one
 
 * `'<` to the first line (`\`<` char) of last selected visual area. Note that
 you need to exit current visual area and than jump to first or last line/char
-* `vit` inner or `vat` outer visual select (including html tag) `:h tag-blocks`
-  * repeat `at` to select wraped tag
-  * jump to closing (Oposite) html tag with `o`. more on `:help
-  visual-operators` `:help v_it`
-  * `vap` select paragraph (until next empty line, including that empty line)
-  * `dst` delete surround tag with vim surround plugin.
-* `va'` visually select all inside ' including '
-* `cgn` change visually selected text using previous search
 * `gv` to select previous selected visual area
 
 ragtag plugin in insert mode:
@@ -371,7 +373,10 @@ ragtag plugin in insert mode:
 * `"+y` copy visual selection to system clipboard, ubuntu should run `sudo
 apt-get install vim-gtk`.
 * select which register to use with (use character not number) for example:
-yank link to register `a` and paste: `"add` `"ap"`
+yank link to register `a` and paste: `"add` `"ap"`. When deleting or changing it
+will override default register, so you need to select some other register, like
+black hole register `"_` if you want to paste same stuff multiple times, for
+example `"_d` or `"_c` will keep default register untouched.
 * `%y+` copy all lines to clipboard
 * to move a line to buffer on the left you can record macro (something like
 `yy ^wh p ^wl`)
@@ -668,6 +673,8 @@ a + b; total %>`
 
 # Vimium chrome extension
 
+https://github.com/philc/vimium
+
 Normal mode:
 
 * `j` and `k` down and up on a page
@@ -677,6 +684,14 @@ Normal mode:
 * `o` search and open history links
 * `T` search open tabs
 * `r` reload the page
+* `gg` top or `G` bottom of the page
+* `gi` go to first input element
+
+Additional navigation commands:
+
+* `yy` copy current url to clipboard
+* `gu` go up one level in URL path
+* `gU` go to root of domain
 
 Find mode, enter with `/`:
 
@@ -687,6 +702,8 @@ inside input, jump into insert mode first...
 
 Since gmail has own `j` `k` prev and next email, I added rule to ignore all
 (`*`) keys
+
+Do not know https://stackoverflow.com/questions/53918093/why-is-class-demo-button-so-special-in-vimium?noredirect=1#comment94679088_53918093
 
 # Vimum VimFx
 
@@ -928,43 +945,6 @@ Use https://github.com/tpope/vim-db and access with
 # Tmux
 
 Not using for now
-
-# Shell script
-
-Calling external shell script is with bang `:!pwd`. When you visually select it
-operates on lines and use it as argument, for example select multuple lines and
-run `:'<,'>!sort` so sort them.
-If nothing is selected, last selected visual line (whole line) is used.
-You can use `cat` to pass argument. For example run `:'<,'>!echo 1`cat`2`, and
-it will replace whole line by inserting 1...line...2.
-Another way to pass is using `system("echo ", @")` unnamed register.
-
-To work on part of a line, you can use visual match replacement
-`:'<,'>s/\%V.*\%V/\=system('echo -n "the result"')`.
-To use visual selected text as inputs, you can do it manually by pasting with
-`<C-R>` + `"` (" is a standard register for yanking).
-Or you can use helper function that will yank to register and get register
-https://stackoverflow.com/questions/12805922/vim-vmap-send-selected-text-as-parameter-to-function
-```
-func! GetSelectedText()
-  normal gv"xy
-  let result = getreg("x")
-  normal gv
-  return result
-endfunc
-
-vnoremap <F6> :call MyFunc(GetSelectedText())<cr>
-```
-
-https://stackoverflow.com/questions/9637921/vim-filter-only-visual-selection-not-the-entire-line
-
-
-# Translate
-
-Run scripts on visual selection and change with output. I use `translate.rb` and
-`sudo ln -s /home/orlovic/config/ruby/translate.rb /usr/local/bin/` and
-`chmod +x ~/config/ruby/translate.rb` https://github.com/duleorlovic/config/blob/master/ruby/translate.rb
-
 
 * strange characters instead of single quote I see `<91>` and `<92>` in vim.
   https://superuser.com/questions/199799/vim-shows-strange-characters-91-92 run

@@ -10,5 +10,7 @@ permalink: /about/
 
 Here is my old <a href="https://sites.google.com/site/duleorlovic/">personal
 site</a>.
+My First Rails contribution https://github.com/rails/rails/pull/34911 and my
+first conference talk on Balkan Ruby https://youtu.be/lpkePkbYeoI?t=882.
 
 Contact me at: *duleorlovic@* twitter/gmail/facebook/

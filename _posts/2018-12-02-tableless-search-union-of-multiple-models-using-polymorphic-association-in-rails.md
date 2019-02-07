@@ -14,6 +14,10 @@ Solution is to create new model without table (tabless active record). For rails
 4 https://gist.github.com/dalibor/228654 but for Rails 5 we need to override `load_schema!`
 https://stackoverflow.com/questions/41494951/how-to-create-activerecord-tableless-model-in-rails-5
 
+Another solution is to use gem https://github.com/pboling/activerecord-tablefree
+but we will not use it here.
+
+
 ```
 # app/models/abstract_tableless_model.rb
 # https://stackoverflow.com/a/45743718/287166

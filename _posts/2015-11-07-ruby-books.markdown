@@ -329,7 +329,7 @@ is private but we can
 * big multiline strings can be concatenated from lines similar to HERE_DOC. It
 will show `\n` and will insert spaces because text is indented. There is
 `~HERE_DOC` version to strip spaces for all lines based on first line indent.
-Minus in `<<-HERE_DOC` has special meaning.
+Minus in `<<-HERE_DOC` means that it will not strip spaces based on first line.
 
   ~~~
   MY_TEMPLATE = <<HTML
@@ -733,6 +733,29 @@ merge](https://apidock.com/rails/Hash/reverse_merge)
   options = { size: 25, velocity: 10 }.merge(options)
   ~~~
 
+  if you need to deep merge (deep_merge method is deprecated) you can not use
+  `merge` since it will override existing value. In this case it is better to
+  set in initialization
+
+  ```
+  # this will override params[:project][:subscriber_attributes]
+  def _project_params
+    params.require(:project).permit(
+      :name, :description, :priority, subscriber_attributes: Subscriber::PARAMS
+    ).merge(
+      company: current_user.company,
+      subscriber_attributes: {
+        company_id: current_user.company.id
+      }
+    )
+  end
+
+  # so only way to put inside initialization
+    @project = current_user.company.projects.new(
+      subscriber: Subscriber.new(company: current_user.company),
+    )
+  ```
+
 * to merge hash in conditional way you can use:
   ~~~
   hash = {
@@ -855,7 +878,9 @@ end
 
   On hash there is `values_at` but that is only values. To fetch all attributes
   use `other_user.attributes` or specific ones `other_user.attributes.values_at
-  'id', 'email'`
+  'id', 'email'` or `user.attributes.slice('id', 'email')` NOTE that we use
+  string instead of symbols.
+  On Rails 5.2 you can directly use slice on AR model `user.slice :id, :name`
 
 * safe navigation operator `&.` can be used instead of `.try` for example: `user
 && user.name` can be written as `user&.name`. It is usefull with find_by for
@@ -1003,6 +1028,7 @@ assignment for function parameters)
   def f(x, y, *allOtherValues)
   end
   f(1, 2, 3, c: 4) # allOtherValues = [3, { c: 4} ]
+  f(1, 2) # allOtherValues = []
   ~~~
 
   If it is used in method call than it is oposed:
@@ -1012,7 +1038,7 @@ assignment for function parameters)
   f(*a) # is the same as f(1, 2)
   ~~~
 
-  Notee that assigning variables by unpacking the array
+  Note that assigning variables by unpacking the array
 
   ~~~
   a = [1, 2, 3]
@@ -1180,7 +1206,7 @@ to_upper = -> (str) { str.upcase }
 * tripple equal `===` is operator that for ranges calls `.includes?`, for regexp
   calls `.match?`, for proc calls `.call`
 * fake objects could be generated from hash with:
-    `Struct.new(:name).new 'Dule'`
+    `Struct.new(:name, :type, :years).new 'Dule', :kayak, 35`
     `OpenStruct.new name: 'Dule'`
   If you need recursively generated OpenStruct than you can convert to json and
   parse with Open struct class: `h = { a: 1, b: { c: 1 }};
@@ -1239,6 +1265,36 @@ end
 
 * use `enumerator.map do ... end` block when there is a side effects and curly
   braces than you need return value `enumerator.map { ... }`
+
+* documentation using
+ [rdoc](https://en.wikibooks.org/wiki/Ruby_Programming/RubyDoc) SimpleMarkup
+ format which is pretty mature, example is on
+ https://ruby-doc.org/core-2.4.0/String.html but also Rails uses it
+ https://guides.rubyonrails.org/api_documentation_guidelines.html
+  ```
+  # test rdoc in command line
+  echo "+:to_param+" | rdoc --pipe
+  ```
+* yard is newer and it supports links https://www.rubydoc.info/github/rails/rails
+* convert single value and array value to array `Array(1)` and `Array([1])`https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
+* hash with indifferent access (symbol or string) this is Rails ActiveSupport
+  `h = HashWithIndifferentAccess.new a: 2` so you can use `h[:a]` or `h['a']`
+* inserting key value in hash at specific position
+  ```
+  # https://stackoverflow.com/a/17251424/287166
+  class Hash
+  def insert_before(key, kvpair)
+    arr = to_a
+    pos = arr.index(arr.assoc(key))
+    if pos
+      arr.insert(pos, kvpair)
+    else
+      arr << kvpair
+    end
+    replace Hash[arr]
+  end
+end
+  ```
 
 todo
 

@@ -40,7 +40,6 @@ allowed inside ()
 
 # Yaml
 
-
 * comments are single line and starts with `#` number sign
 * list (arrays) are denoted by a leading hyphen `-` for each member per line, or
   in single line with `[a, b]` square brackets separated with comma space
@@ -51,10 +50,10 @@ allowed inside ()
 * Multiline strings starts with pipe `|` on the line with attribute name, and
 indented.
 * Write dates in format `yyyy-mm-dd` so rails `Date.parse()` recognize it.
-* YML file can use anchor (`&`) and reference (`*`) so you do not repeat the
-  code.  When you use reference `*` (as for testing) you can not add or update
-  keys, but with `<<` you can (as for [production secrets]( {{ site.baseurl }}
-  {% post_url 2015-04-05-common-rails-bootstrap-snippets %}))
+* YML file can use anchor ie alias (`&`) and reference (`*`) so you do not
+  repeat the code. When you use reference `*` (as for testing) you can not add
+  or update keys, but with `<<` you can (as for [production secrets]
+  ({{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}))
 
 ~~~
 name: Dusan Orlovic
@@ -65,11 +64,11 @@ sport:
 ~~~
 
 ~~~
-shared:
+shared: &shared
   key: 123
 
 development:
-  << *shared
+  <<: *shared
 ~~~
 
 # Haml

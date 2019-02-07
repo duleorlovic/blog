@@ -10,7 +10,8 @@ title: Bootstrap front-end framerwork
 `div` is block element and by default it will be stacked. Bootstrap grid is
 mobile first, so three `.col-md-4` will be stacked until desktop, so on desktop,
 large and extra large desktop it will be like three equal width columns.  You do
-not need to define all 12, `.col` will occupy rest of place.
+not need to define all 12, `.col` will occupy rest of place. `.col-auto` will
+occupy only that is needed (based on it's contents, it uses `max-width: 100%`).
 When you specify for sm, you do not need to specify for md or lg. `col-xs-12` is
 `width: 100%` which is default so no need to write that. Write only when you
 need columns.
@@ -25,6 +26,7 @@ Bootstrap Media queries:
 
 With bootstrap 4 you can use mixins for media queries:
 ~~~
+// given (sm) and larger
 @include media-breakpoint-up(sm) {
   .some-class {
     display: block;
@@ -111,10 +113,13 @@ You can write your own to match all greater (or smaller) sizes:
 
 ## Bootstrap modal
 
-You can use ajax, but than `render layout: false` and provide only inner html of
+On B3 you can use ajax and `render layout: false` and provide only inner html of
 `<div class="modal"><div class="modal-dialog">...` ie only `.modal-content` will
 be replaced. So you should use same header and footer in initial and ajax
 version.
+
+On B4 we need to replace the modal content with custom js, so I use jBox modal
+in this case.
 
 To close modal with escape key you need to add tabindex on modal elemenent:
 `<div class="modal" tabindex="-1">`. Note that on Firefox ESC closing modal
@@ -192,16 +197,20 @@ You can use css `darken` for example for variable
 `$link-hover-color: darken($link-color, 15%) !default;`
 https://github.com/twbs/bootstrap/blob/e7e43edf65306efaf46a16ffc9fe35ef623bffef/scss/_variables.scss#L171
 
-* text `.text-success`
+* text and links `.text-success`
 * background `.bg-warning`
 * buttons `.btn-primary`
 
 Other helpers are:
 
-* position helpers https://github.com/twbs/bootstrap/blob/e57a2f244ba8446fffe71847e6a58b18f7b2d541/scss/utilities/_position.scss
-  `position-relative`, `position-absolute`
+* position helpers `position-relative`, `position-absolute` https://github.com/twbs/bootstrap/blob/e57a2f244ba8446fffe71847e6a58b18f7b2d541/scss/utilities/_position.scss
 * `.clearfix`
-* `.text-center`, `.text-left`, `.text-nowrap`
+* text size `.h1`(2.5rem), `.h2`(2rem), `.h3`(1.75rem), `.h4`(1.5rem), `.h5`(1.25rem), `.h6`(1rem) so you can use `h2` instead defining `font-size-2`
+* `font-weight-bold` to use bold font
+* text position`.text-center`, `.text-left`, `.text-nowrap`
+ https://www.w3schools.com/bootstrap/bootstrap_ref_css_text.asp
+* `text-truncate` with `max-width: 100px`
+  https://getbootstrap.com/docs/4.1/utilities/text/#text-wrapping-and-overflow
 * `.show` and `.hidden`
 * `.d-none` to hide something. But when I want to show/hide in js I usually
   create my own `.d-none-not-important` since bootstrap's is with `important`.
@@ -211,33 +220,58 @@ well with `display: flex` elements, better is to use
 `$(el).addClass('d-none-not-important')`. There is also
 [hidden](https://getbootstrap.com/docs/4.0/content/reboot/#html5-hidden-attribute)
 
-  ~~~
-  .d-none-not-important,.hide-not-important {
-    display: none;
-    &.active {
-      display: initial;
-    }
-  }
-  ~~~
+~~~
+# app/assets/stylesheets/common/show_hide.sass
+.d-none-not-important,.hide-not-important
+  visibility: hidden
+  opacity: 0
+  transition: visibility 0.5s ease, opacity 0.5s ease
+  // display: none
+  &.active
+    visibility: visible
+    opacity: 1
+    // display: initial
+~~~
 * margin and padding helpers in format `<property><sides>-<breakpoint>-<size>`
   <https://getbootstrap.com/docs/4.0/utilities/spacing/#notation> 
   property is `m` margin or `p` padding
   sides `t` top, `b` bottom, `l` left, `r` right, `x` both l and r, `y` t and b
   size `0`, `1` (`$spacer * 0.25`), `2` (`$spacer * .5`), `3` (`$spacer`), `4`
   (`$spacer * 1.5`), `5` (`$spacer * 3`), By default `$spacer: 1rem` 1rem is
-  16px.
+  default font size ie 16px on B4 (1.5 line height) and 14px in B3 (1.428 line
+  height)
+
   `mx-auto` for `margin: 0px auto`.
-
   sides or breakpoint not required: `p-0` padding none, `mt-5` margin top,
-  For fixed width block elements `ml-auto` to align to the right (same as
-  pull-right in B3), `mx-auto` for horizontal centering.
-  For inline elements you can use `float-left` (instead of `pull-left`).
-  If you put inside `d-flex` than it will be scretched so use `d-flex
-  align-items-center` to center verticaly.
 
-* `d-flex` class to convert to flexbox container.  Other flex helpers
+  For inline elements you can use `float-left` (instead of `pull-left`).
+  For block elements `ml-auto` to align to the right (same as
+  pull-right in B3), `mx-auto` for horizontal centering (need fixed width).
+  For block elements you can wrap inside `d-flex w-100 justify-content-between`
+  width 100% is important because you want right element to go right.
+  https://getbootstrap.com/docs/4.0/components/list-group/#custom-content
+  (also `justify-content-around justify-content-center justify-content-start`).
+  For cross axis it will be scretched so use `d-flex align-items-center` to
+  center verticaly (or horizontaly if it is column based).
+  You can also align for particular item `align-self-center`.
+  Grow item with `flex-grow-1` or `flex-shrink-1`.
+
+* `d-flex` class to convert to flexbox container. You can change display with
+  `d-inline`, `d-inline-block`.  Other flex helpers
   https://getbootstrap.com/docs/4.0/utilities/flex/
-  for example to enable wrap use `d-flex flex-wrap`
+  for example to enable wrap use `d-flex flex-wrap`. You can use those classes
+  instead of row col. For example
+  ```
+  <div class='d-flex flex-column flex-md-row'>
+    <div></div>
+    <div></div>
+  </div>
+  is the same as
+  <div class='row'>
+    <div class='col-md-6'></div>
+    <div class='col-md-6'></div>
+  </div>
+  ```
 
 * `dl-horizontal` can be replaces with
   ~~~
@@ -340,6 +374,32 @@ sed -i app/views/layouts/application.html.erb -e '/<.ul>/ {
 }'
 ~~~
 
+## Overrides
+
+There are two files that configure and override bootstrap
+
+```
+# app/stylesheets/application.sass
+// default
+@import 'common/variable_default_values'
+
+// node_modules
+@import 'bootstrap/scss/bootstrap'
+
+// common
+@import 'common/variables'
+@import 'common/bootstrap_overrides'
+```
+
+```
+# app/assets/stylesheets/common/bootstrap_overrides
+// it is not actually overrides, but additional classes that modify existing
+
+// this is used if you want btn inside h1
+.btn.btn__font-size-inherit
+  font-size: inherit
+```
+
 ## Nabar
 
 https://getbootstrap.com/docs/4.0/examples/navbars/ shows different styles
@@ -407,6 +467,9 @@ with `layout: :horizontal` (note that it won't work for string `layout:
 'col-sm-8'`. Also you can override `control_class`, `wrapper_class` (if it is a
 hash you can override any option).
 
+If you want all controlls and submit button to be in one line, you can use
+`layout: :inline`.
+
 you can make checkbox inline with button
 
 ~~~
@@ -446,19 +509,23 @@ custom form builder).
 }
 ~~~
 
-You can prepend or append strings.
+You can prepend or append strings or buttons
 
 ~~~
   <%= f.text_field :price, append: '$' %>
+  <%= f.text_field :body, append: f.primary(t('send')) %>
 ~~~
 
-Checkboxes should be inside a `form-group`
+Checkboxes or radio buttons should be inside a `form-group` if you want to show
+them indented (inside wrapper class) and to show label (control class).
 
 ~~~
-  <%= f.form_group label: { text: 'Admin' } do %>
+  <%= f.form_group label: { text: 'Admin' }, help: 'This option enables admin' do %>
     <%= f.check_box :admin, label: '' %>
   <% end %>
 ~~~
+
+To hide label instead of `label: false` you need to use `hide_label: true`
 
 Static test can be displayed with
 
@@ -484,6 +551,27 @@ class (`:inline` or `:horizontal`) we need to use same helper
 (`bootstrap_form_for ... builder: MyFormBuilder` instead of `form_for ...
 builder: MyFormBuilder`). I noticed huge chrome memory problems (memory chrome
 is increasing when there is no `form-horizontal` class).
+
+Oneliner form is using button_to with: input label, target url, form class...
+```
+<%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %>
+```
+
+You can change default `col-sm-2` control col class
+
+```
+# config/initializers/bootstrap_form.rb
+module BootstrapForm
+  class FormBuilder
+    def default_label_col
+      'col-sm-3'
+    end
+    def default_control_col
+      'col-sm-9'
+    end
+  end
+end
+```
 
 Here is example of input with select base od
 [example](http://jsfiddle.net/MansukhKhandhar/4309n31p/1/)
@@ -633,4 +721,143 @@ When rails use `data-confirm='Are you sure?'` it opens default browser's builtin
 ```
 
 Cards occupy full width, so you need to set width manually.
+You can use `card-group` or `card-deck` (it has padding), or you can simply add
+`d-flex flex-wrap` to wrapped element.
 `card-body` is used for padding.
+
+```
+# app/assets/stylesheets/components/sizes.sass
+.card--max-width
+  @include media-breakpoint-up(md)
+    // single card on sm and start with two on a md(minus two margins m-2)
+    max-width: map-get($grid-breakpoints, 'md') / 2 - to-px(2 * map-get($spacers, 2))
+
+# app/views/cards/index.html
+<div class='d-flex flex-wrap justify-content-center'>
+  <% @tasks.all.each do |task| %>
+    <div class='card m-2 card--max-width'>
+      <div class='card-body'>
+```
+
+To add buttons to card using list group, use flush to remove some borders and
+render edge to edge, use `btn` to add hover icon
+
+```
+<div class='card'>
+  <div class='list-group list-group-flush text-center'>
+    <%= button_tag class: 'list-group-item list-group-item-action btn' do %>
+      <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+      <%= t('edit') %>
+    <% end %>
+  </div>
+```
+
+
+## Login box
+
+On responsive, instead of margin (margin is used with auto so it is
+centered on bigger screens) you can use `max-width: 90vw` or better is to wrap
+inside container with `padding: 0.5rem`.
+Since I like to put a logo and text which is larger than box, I use two times
+max with and mx-auto, one for wrapper (60rem) and one for white box (sm size).
+
+
+```
+# app/assets/stylesheets/common/sizes.sass
+.login--wrapper-max-width
+  max-width: 60rem
+
+.login--max-width
+  max-width: 30rem
+
+# app/views/layouts/application.html.erb
+  <% if login_layout? %>
+    <body>
+      <div class='text-center'>
+        <%= link_to root_path do %>
+          <%= image_tag 'cable_crm_logo.png', class: 'login-logo' %>
+        <% end %>
+        <h2><%= login_title %></h2>
+      </div>
+      <div class='container'>
+        <div class='login--wrapper-max-width mx-auto'>
+          <div class="<%= 'login--max-width mx-auto bg-white shadow p-4' unless controller_name == 'companies' %>">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </body>
+  <% else %>
+```
+
+## Sidebar
+
+https://bootstrapious.com/p/bootstrap-sidebar#3-fixed-scrollable-sidebar-menu-with-a-content-overlay
+```
+# app/assets/stylesheets/components/sidebar.sass
+$sidebar-width: 20rem
+#sidebar
+  &.active
+    right: 0
+  min-width: $sidebar-width
+  max-width: $sidebar-width
+  height: 100vh
+  position: fixed
+  top: 0
+  right: -$sidebar-width
+  background: #7386D5
+  color: #fff
+  transition: right 0.3s
+  z-index: 9999
+
+.sidebar__overlay
+  display: none
+  position: fixed
+  width: 100vw
+  height: 100vh
+  background: rgba(0, 0, 0, 0.7)
+  z-index: 998
+  opacity: 0
+  transition: all 0.5s ease-in-out
+  &.active
+    display: block
+    opacity: 1
+
+.sidebar__dismiss
+  width: 35px
+  height: 35px
+  position: absolute
+  top: 10px
+  right: 10px
+
+# app/views/layouts/_sidebar.html.erb
+<nav id='sidebar'>
+  <div class='sidebar__dismiss' data-toggle-active='#sidebar,.sidebar__overlay'>
+    <i class="fa fa-times"></i>
+  </div>
+
+  <ul class='list-unstyled'>
+    <p>My App</p>
+    <li class='<%= 'active' if controller_name == 'tasks' %>'>
+      <%= link_to 'Past tasks', '#' %>
+    </li>
+  </ul>
+</nav>
+<div class='sidebar__overlay' data-toggle-active='#sidebar,.sidebar__overlay'></div>
+```
+
+# Improvements
+
+* create classes for text primary for list groups. There is only a color
+  variants `list-group-item-primary` but I do not see variant with white
+  background and blue text
+  https://github.com/twbs/bootstrap/blob/v4-dev/scss/_list-group.scss#L148
+  My fix is:
+  ```
+  // by defauls list-group-item-action.active background is white, but when we add
+  // text-primary if overrides that, so we need to define again
+  .list-group-item-action.active.text-primary
+    color: #ffffff !important
+    &:hover
+      color: #ffffff !important
+  ```

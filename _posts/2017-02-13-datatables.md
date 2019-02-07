@@ -8,11 +8,24 @@ title: Datatables
 
 [datatables.net](https://datatables.net/) install by simply [select packages and
 download](https://datatables.net/download/#bs-3.3.7/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.3/b-html5-1.2.3/b-print-1.2.3)
-but it will be 3M in one file. I think it is better to [set up bower]({{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}#bower)
+but it will be 3M in one file. I think it is better to use yarn
 and install all dependencies that you have selected [bower
 packages](https://datatables.net/download/bower)
 
+```
+yarn add datatables.net-bs4
+```
+include them in application.js
+```
+//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net-bs4/js/dataTables.bootstrap4.js
+```
+and application.sass
+```
+@import 'datatables.net-bs4/css/dataTables.bootstrap4.css'
+```
 
+Here is old bower example
 ~~~
 bower install --save datatables.net datatables.net-bs \
   Stuk/jszip pdfmake \

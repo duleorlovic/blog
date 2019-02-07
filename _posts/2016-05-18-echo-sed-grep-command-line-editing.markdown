@@ -195,13 +195,14 @@ boundaries like `^([0-9]|[1-9][0-9])$` (0..99, but not 0asd, or asd9
 * contains `asd` and `qwe` but not `zxc` in between `asd((?!qwe).)*zxc`
 * include end of line for multiline search, use matcher `\_.` finds any
 character including end-of-line. Use `\n` for new line character for example
-`asd(.|\n)*<div>`. `\{-}` stopping at first occurence (`*` is too greedy and
-would stop at last occurence). If you want ruby regex ignore new line you can
-use modifier `m`, like match all dl `s.match /dl.*dl/m`
+`asd(.|\n)*<div>`. `\{-}` stopping at first occurence early short (`*` is too
+greedy, eager and would stop at last occurence). If you want ruby regex ignore
+new line you can use modifier `m`, like match all dl `s.match /dl.*dl/m`
 * to stop at first match use non greedy match, just add `?` after `?` or `*`
   or `+`, like
   `registration_email.html_part.decoded.match(/(http:.*?confirmation.*?)"/)[1]`
   to grab inside first next `"`.
+* to match all occurences yuo can use `"string",scan /(.*?)/`
 * to include matching delimiter when spliting in ruby, instead of
   `content.split(/[?.!]/)` we can use a positive lookbehind regular expression
   (i.e. `?<=`) inside a parenthesis capture group to keep the delimiter at the

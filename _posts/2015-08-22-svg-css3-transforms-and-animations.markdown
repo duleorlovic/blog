@@ -118,7 +118,10 @@ substracted from bottom image)
 
 # Svg
 
-You can create SVG in Inkscape. When you export you should optimize online
+You can create SVG in Inkscape (Gimp can not export in SVG).
+If you open existing svg or copy paste some paths, in Inkscape you can Edit ->
+"Resize page to selection" to crop to fit size to include only paths.
+When you export you should optimize online
 <https://jakearchibald.github.io/svgomg/> or inline
 
 ~~~

@@ -318,6 +318,7 @@ https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
 Note that input is before label, which is before target
 
 ~~~
+# app/assets/stylesheets/common/show_hide.sass
 // toggle active without javascript
 // <input type="checkbox" id="toggle-active" class="toggle-active" />
 // <label for="toggle-active"><%= t('add') %></label>
@@ -361,6 +362,13 @@ To show active on click in pure css use `li:hover { color: blue }`
 
 Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/
 
+To set image as background and put some text and form on it you need to make the
+image transparent (or white) on that part.
+For navbar, easiest way is to use `fixed-top` and `z-index: 1031` on image so it
+is above navbar.
+Inside page links with anchor does not work with turbolinks, so you need to
+disable it.
+
 # Flex
 
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background
@@ -398,7 +406,10 @@ flexible items are aligned horizontally as row
 on items https://www.w3.org/TR/css-flexbox-1/#flexibility
 * `flex-grow: 0` ability to grow as proportion to other items (all items need to
   defined `flex-grow`). If one has 2 and all others have 1, first will be twice
-  bigger (`width` is changed, but do not use it since it will have some impact).
+  bigger (`width` is changed, but do not use it since it will have some impact,
+  for example if `width: 150px` for sidebar and content `flex-grow: 1` than
+  if content is smaller -> sidebar 150px, but when content has a table than
+  sidebar will be less than 150px, so better is to use `min-width: 150px`).
 * `flex-shrink: 1` ability to shrik (compress), if `flex-shrink: 0` than it will
   keep it's `width: 500px` property
 * `flex-basis: 20% | auto` default size before remaining space is distributed
@@ -475,7 +486,9 @@ CSS Grid https://mozilladevelopers.github.io/playground/css-grid
 https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Alignment
 older alignment methoods were:
 * align text using `text-align` In bootstra for text you can use `text-center`
-  `text-right` helper classes for to align text right.
+  `text-right` helper classes for to align text center and right. Note that if
+  you have some `floating` element before than text will not be centered like in
+  `<div class='float-right'>log out</div><div class='text-center'>Text</div>`
 * center blocks using auto `margin` for block elemenent with `margin: auto`
   (bootstrap [center-block](http://getbootstrap.com/css/#helper-classes-center)
   helper) does not have effect unless the element has the width (because it
@@ -857,6 +870,9 @@ h2 {
   https://getbootstrap.com/docs/3.3/javascript/#carousel
   * navbar is top header with menu links, in bootstrap_4 it is fluid (spans all
     width)
+  * flush on some elements
+    https://getbootstrap.com/docs/4.1/components/list-group/#flush means that
+    rounded corners are removed
   * B4 cards replace our old panels, wells, and thumbnails
   * masonry type columns is when element are places optimally basedon vertical
     space (width is fixed, and height is variable)
@@ -875,3 +891,13 @@ h2 {
 
     # no need to add e.preventDefault() since button is disabled
   ```
+
+* page scroll when image is loaded can be prevented with padding bottom https://www.smashingmagazine.com/2016/08/ways-to-reduce-content-shifting-on-page-load/
+  padding can be defined in % of the page width so for full width page images
+  you can set padding bottom in %.
+  For not full width images you can set the height in css so it will occupy the
+  space before loading (you can set background also if it is not transparent).
+  Do not set only the width since than height is 0 untill the image is loaded.
+* elements with captions are:
+  `<figure><img><figcaption>I'm caption</figcaption></figure>` and 
+  `<fieldset><legend>I'm caption of this set</legent><input></fieldset>`

@@ -110,14 +110,16 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 ## Chrome DNS and HSTS problem for .localhost and .dev
 
 Since google owns `.dev` domain and it exists in hsts list, in chrome (no
-firefox) request to `my-domain.dev` will be always https. So for local
-development I use `.loc` with dnsmasq. I did not choose to use `localhost`
-because I can not remap subdomain of localhost in /etc/hosts and use in google
-chrome (firefox works fine) for some pathetic reason
-<https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost>
-Now localhost works in Chrome but not in Firefox (about:config
-network.dns.disableIPv6 set to false did not work for me)
+firefox) request to `my-domain.dev` will be always https.
 You can also use `lvh.me` since it always resolves to 127.0.0.1.
+But for local development I use `.loc` with dnsmasq or `.localhost` also with
+dnsmasq.
+Old answer: __I did not choose to use `localhost` because I can not remap subdomain of localhost in /etc/hosts and use in google
+chrome (firefox works fine) for some pathetic reason
+<https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost>__
+Now localhost works in Chrome but not in Firefox (about:config
+network.dns.disableIPv6 set to false did not work for me).
+When I change `loc` to `localhost` in `/etc/dnsmasq.d/dev-tld` than it works.
 
 For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
 subdomain:

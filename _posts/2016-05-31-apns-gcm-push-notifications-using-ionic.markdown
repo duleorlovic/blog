@@ -94,23 +94,117 @@ variables for specific app
 
 # FCM Firebase cloud messaging
 
-Note that GCM (developers.google.com/cloud-messaging) is deprecated so use FCM
-instead.
-
+Upgrade <https://developers.google.com/cloud-messaging/faq> Note that GCM
+(developers.google.com/cloud-messaging) is deprecated so use FCM instead.
 For server side in ruby you need to register a project on
 <https://console.developers.google.com> and enable "Firebase Cloud Messaging".
 Create API key and save as GOOGLE_API_KEY.
+Instead of google console you can create a project in firebase console
+https://console.firebase.google.com/
 
+Best way to start is video https://www.youtube.com/watch?v=BsCBCudx58g
 More info for server https://firebase.google.com/docs/cloud-messaging/server and
 error codes https://firebase.google.com/docs/reference/fcm/rest/v1/FcmError
 
-To send test messages to the mobile apps  https://console.firebase.google.com/u/0/project/test-gcm/notification/compose
+There are two formats of payloads: notification (with eventual data) and data
+https://firebase.google.com/docs/cloud-messaging/concept-options#top_of_page
+There are fields that needs to be send
+https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#Notification
+* data message, does not contain notification and can trigger onMessageReceived
+  when app is both in foreground, background, killed
+* notification message, set the `notification` key. It can include optional
+  `data` payload which can be consumed by client app. For general notificaiton
+  you can use title and body, and for android, you can add other fields.
+  https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#androidnotification
+  ```
+  token/topic/condition: "registration_id/weather/foo in topics",
 
-FCM gem
+  notification: {
+    title: 'Message title',
+    body: 'message body',
+    icon: 'myicon', // this can override default lancher icon from manifest
+    color: '#FFFFFF',
+    sound: 'default', // can be my_sound which is located in /res/raw
+    tag: 'post_123', // replace existing notification with same tag in drawer
+    click_action: 'intent'. // If specified, an activity with a matching intent
+                            // filter is launched when a user clicks on the notification. 
+    body_loc_key: 'my_key', // key used to localize message
+    body_loc_args: [],      // agrs used for localization keys
+    title_loc_key: ''.      // same as body
+    title_loc_args: [],     // same as body
+    channel_id: '',  // Android 8 API 26, notifications are separated by
+    channels https://developer.android.com/guide/topics/ui/notifiers/notifications#ManageChannels
+  }
 
-Send message to maximum 1000 tokens (source
-https://github.com/spacialdb/fcm#usage)
+  android: {
+    collapse_key: 'new_post' // max 4 different keys, only last from the same
+                                key will be send on resume
+    priority: 'normal', // normal or high (consumes more battery)
+    restricted_package_name: 'com.trk.web',
+    ttl: '600' //time to live
+    data: {
+    }
+    notification: {
+    }
+  }
+  webpush: {
+  }
+  apns: {
+  }
+  ```
 
+For Rails we use https://github.com/spacialdb/fcm gem which use [Legacy http
+server
+protocol](https://firebase.google.com/docs/cloud-messaging/http-server-ref)
+Send message to maximum 1000 tokens [source](https://github.com/spacialdb/fcm#usage)
+First argument to `fcm.send` is what is actual `registration_ids` (if it is a
+single string than it is converted to array) and it is merged to second options
+param. It can contain
+* `collapse_key` is used to avoid sending too many same messages when the device
+  comes back online, max is 4 different keys
+* `priority` normal or high
+* `content_available` and `mutable_content` iOS specifics
+* `time_to_live` seconds how long it should be on server if device is offline,
+  default is 4 weeks
+
+* `data` custom key value that can be used by the app
+* `notification` object that sets visible parts of the message. not all keys are
+  the same for android and iOS, you can see two tables on
+  https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support
+
+  ```
+  notification: {
+    title: 'hello' // title is not visible on iOS phones and tables
+    body: 'Body text'
+    sound: 'default` // file name from /res/raw (android) or Library/Sounds (ios)
+    click_action: // corresponds to category (ios) or activity intent (android)
+                  // when app is not in foreground, it will open the app
+    body_loc_key: // for localisation purpose
+    body_loc_args:
+    title_loc_key:
+    title_loc_args:
+
+    (ios only)
+    badge: 'new',  // if 0 than badge is removed
+
+    (android only)
+    android_channel_id: 'channel_id' //
+    icon: 'file_name' // file name is from drawable resource
+    tag: 'post_123', // it replaces notification with a same tag in drawer but
+                      // only for when app is not in foreground
+    color: '#ffffff' // icon color
+  }
+  ```
+
+To receive data and notification in android app you can follow https://www.youtube.com/watch?v=we8eGwIED8Y
+
+```
+# config/initializers/fcm.rb
+MY_FCM = FCM.new Rails.application.secrets.firebase_cloud_messaging_server_key
+
+# app/services/firebase_cloud_messaging.rb
+
+```
 
 # Firebase web
 
@@ -155,7 +249,7 @@ If there are failures than iterate one by one and if message is some of the:
 "Unavailable', 'NotRegistered', 'InvalidRegistration' than you can remove it.
 If you notice `registration_id` than you should update it token
 
-## How to make invalid gcm token
+# How to make invalid gcm token
 
 You need to clear all your app data.
 
@@ -417,21 +511,7 @@ angular.module('starter')
   }
 });
 ~~~
-# Android Emulator
-
-I found that genymotion works fine. Just install [google play
-services](https://github.com/codepath/android_guides/wiki/Genymotion-2.0-Emulators-with-Google-Play-support)
-It works for me on Android 5.1. After drag and drop those two files, you need to
-logs in and open Google+ which will trigger update of Google play services.
-You can use same login on all emulators.
-If genymotion emulator dissapears, run `adb kill-server` to clean connections.
-
-For first message you need to wait minute or two. But than it works instantly.
 
 # Service workers
 
 Another cool is service workers <https://developers.google.com/web/fundamentals>
-
-# Firebase Cloud messaging FCM
-
-Upgrade <https://developers.google.com/cloud-messaging/faq>

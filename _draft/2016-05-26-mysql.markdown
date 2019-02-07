@@ -2,13 +2,25 @@
 layout: post
 ---
 
+* change some user password you can do in three ways
+
+  ```
+  SET PASSWORD FOR 'myuser'@'localhost' =newpass;
+
+  ALTER USER myuser@localhost IDENTIFIED BY 'newpass';
+
+  USE mysql;
+  UPDATE user SET authentication_string = PASSWORD('newpass') WHERE user = 'myuser' AND host = 'localhost'
+  FLUSH PRIVILEGES;
+  ```
+
 * change root password:
 
   ~~~
   sudo /etc/init.d/mysql stop
   sudo mysqld --skip-grant-tables &
   mysql -u root mysql
-  UPDATE user SET Password=PASSWORD('asdasd') WHERE User='root'; FLUSH PRIVILEGES; exit;
+  UPDATE user SET authentication_string=PASSWORD('asdasd') WHERE User='root'; FLUSH PRIVILEGES; exit;
   ~~~
 
 * login `mysql -u root -p`
@@ -17,9 +29,29 @@ layout: post
 
   ~~~
   CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
-  GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+  ~~~
+
+* grant access to specific db
+  ~~~
+  GRANT ALL PRIVILEGES ON mydb. * TO 'newuser'@'%' IDENTIFIED BY 'mypass';
   FLUSH PRIVILEGES;
   ~~~
+
+  when I do not use `IDENTIFIED BY` than I receive `Access denied for user` when
+  I connect from remote comp, even I can connect from localhost with same
+  password.
+
+* to see all grants (note that single quote `'` is required)
+
+  ```
+  SHOW GRANTS FOR 'newuser';
+  SHOW GRANTS FOR 'newuser'@'localhost';
+  ```
+
+* to remote a grant
+  ```
+  REVOKE ALL PRIVILEGES, GRANT OPTION FROM newuser
+  ```
 
 * import dump with `mysql -u newuser -p dbname < web001db.sql`
 * to remove column you need first to remove foreign keys and index. If you have
@@ -37,7 +69,7 @@ layout: post
   mysql -u hj9gpgm687w1qwx -pvuxns3sidwrjjf8 -h tviw6wn5xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com -P 3306 u6rhqznmtth3j4g
 
   ```
-* to enable access to mysql on local ubuntu mysql user
+* to enable access to mysql on my own local ubuntu mysql user
   ```
   # create user and grant access in one command
   GRANT ALL ON wordpressdb.* TO 'wpadmin'@'192.168.1.100' IDENTIFIED BY '%u#098Tl3' WITH GRANT OPTION;
@@ -71,4 +103,14 @@ layout: post
   sudo /etc/init.d/mysql restart
   # check if port is enabled
   nmap 192.168.1.100
+  ```
+
+* repair
+  https://stackoverflow.com/questions/8843776/mysql-table-is-marked-as-crashed-and-last-automatic-repair-failed
+  ```
+  sudo service mysql stop
+  cd /var/lib/mysql/$DATABASE_NAME
+  myisamchk -r $TABLE_NAME
+  myisamchk -r -v -f $TABLE_NAME
+  sudo service mysql start
   ```

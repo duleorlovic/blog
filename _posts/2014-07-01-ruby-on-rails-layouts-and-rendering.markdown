@@ -16,7 +16,12 @@ render plain: 'OK'
 render html: "<strong>OK</strong>".html_safe 
 render xml: @product # automatically calls .to_xml
 render json: @product # no need for .to_json
-render js: "alert();" # will set content-type MIME text/javascript
+render js: "alert('OK');" # will set content-type MIME text/javascript
+# multiline respond in javascript with ruby code (espaced with j so we can see '
+render js: %(
+  flash_notice('#{view_context.j I18n.t('successfully_updated')}');
+  window.location.assign('<%= isp_billing_profiles_path %>');
+)
 
 # you can use `head status`
 head :created, location: photo_path(@photo)
@@ -209,6 +214,7 @@ If you use `require_tree` than you can set dependencies between files with
 ```
 # app/assets/javascripts/plugins/jquery-validation/localication.init.js
 /*
+* default is english https://github.com/jquery-validation/jquery-validation/blob/dd187b016a1b4eef22ae93500eb37a44bf2ecd0d/src/core.js#L346
 *= require plugins/jquery-validation/localization.messages_sr.js
 *= require plugins/jquery-validation/localization.messages_ar.js
 */
@@ -304,12 +310,27 @@ git commit -am "Adding bootstrap"
 
 ## Adding icons
 
-There is a problem when some image/font files are hardcoded in css files. When
-that is hardcoded and you can not include digest sha than you need to deploy
-files without fingerprint. So one solution is with help of
+There is a problem when some image/font files are hardcoded in css files, or
+in case of scss, you can define a path, but not a fingerprint digest sha.
+One solution is to deploy files without fingerprint, for example
 [non-stupid-digest-assets](https://github.com/alexspeller/non-stupid-digest-assets)
 gem you can add non digest version. First your assets should be seen
 (precompiled) with sprockets than they will be again copied without digest.
+
+```
+cat >> Gemfile << HERE_DOC
+gem "non-stupid-digest-assets"
+HERE_DOC
+
+cat >> config/initializers/assets.rb << \HERE_DOC
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|woff2|ttf)$/
+
+NonStupidDigestAssets.whitelist += [
+  /\.(?:svg|eot|woff|woff2|ttf)$/
+]
+HERE_DOC
+```
+
 Another solution is to override `@font-face` which includes proper `asset-url`
 
 Sprockets `require` concatenates after sass compilation. So it's advices to use
@@ -319,39 +340,46 @@ to move `css -> scss`.
 
 ## Fontawesome
 
-Here is example adding [fontawesome](http://fontawesome.io/examples/)
+Here is example adding font awesome from npm https://www.npmjs.com/package/@fortawesome/fontawesome-free
+
+https://fontawesome.com/icons?d=gallery&m=free
 
 ~~~
-npm install fontawesome --save
-mv app/assets/stylesheets/application.css app/assets/stylesheets/application.scss
+yarn add @fortawesome/fontawesome-free
+
 cat >> app/assets/stylesheets/application.scss << \HERE_DOC
-$fa-font-path: 'font-awesome/fonts';
-@import 'font-awesome/scss/font-awesome';
-HERE_DOC
-# cat >> Gemfile << HERE_DOC
-# gem "non-stupid-digest-assets"
-# HERE_DOC
-
-cat >> config/initializers/assets.rb << \HERE_DOC
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|woff2|ttf)$/
-
-NonStupidDigestAssets.whitelist += [
-  /\.(?:svg|eot|woff|woff2|ttf)$/
-]
-HERE_DOC
-~~~
-
-Another solution is to overwrite `@font-face` css definition after you include
-all those icons css files
-
-~~~
-// from node_modules
-$fa-font-path: 'font-awesome/fonts'
-@import 'font-awesome/scss/font-awesome'
+// node_modules
+@import '@fortawesome/fontawesome-free/css/all.css'
+// plugins
 @import 'plugins/font-awesome-font-face'
+HERE_DOC
 
-cp node_modules/font-awesome/scss/_path.scss app/assets/stylesheets/plugins/font-awesome-font-face.scss
-# replace url with asset-url in font-awesome-font-face.scss
+# copy @font-face definition from node_modules...all.css and replace url with asset-url
+cat >> app/assets/stylesheets/plugins/font-awersome-font-face.css' << HERE_DOC
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  font-style: normal;
+  font-weight: normal;
+  src: asset-url("@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot");
+  src: asset-url("@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot?#iefix") format("embedded-opentype"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2") format("woff2"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff") format("woff"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf") format("truetype"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg#fontawesome") format("svg");
+}
+
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 400;
+  src: asset-url("@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot");
+  src: asset-url("@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot?#iefix") format("embedded-opentype"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2") format("woff2"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff") format("woff"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf") format("truetype"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg#fontawesome") format("svg");
+}
+
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-style: normal;
+  font-weight: 900;
+  src: asset-url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot");
+  src: asset-url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2") format("woff2"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff") format("woff"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf") format("truetype"), asset-url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+HERE_DOC
 ~~~
 
 ## Simple line icons

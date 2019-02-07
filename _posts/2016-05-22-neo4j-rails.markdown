@@ -542,7 +542,7 @@ but best advice to use factory girl.
 
 # Query
 
-Debug with `user.assets.categories.assets.print_cypher` or some query `move.query_as(:m1).match('(m1)-[]-(g:Group)').to_cypher`
+Debug with `user.assets.categories.assets.print_cypher` or some query `move.query_as(:m1).match('(m1)-[]-(g:Group)').to_cypher` (similar `to_sql`)
 
 Query on property `User.where(name: ?)` parametar `?` can be: string, nil,
 array, regular expression `User.where(name: /.*dule.*/i)`, range
@@ -794,14 +794,15 @@ rails neo4j:restart[development]
 
 To dump to production you need also to restart heroku
 ~~~
+wget 'graphdb_url'
+mv graphdb.zip
 export GRAPH_DB_PATH=/var/lib/neo4j/data/databases/graph.db
-wget graphdb_url
 sudo rm -rf $GRAPH_DB_PATH
 sudo -u neo4j mkdir $GRAPH_DB_PATH
 sudo -u neo4j unzip graphdb.zip -d $GRAPH_DB_PATH
 sudo service neo4j restart
 heroku restart
-tail -f /var/log/neo4j/debug.log 
+tail -f /var/log/neo4j/debug.log
 ~~~
 
 

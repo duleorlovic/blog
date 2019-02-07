@@ -89,18 +89,24 @@ retry. You can find all adapter http://api.rubyonrails.org/v5.1/classes/ActiveJo
 
 # Sidekiq
 
-Add `gem 'sidekiq'` to Gemfile.
+Add those lines
 
-~~~
+```
+# Gemfile
+# background job proccessing
+gem 'sidekiq'
+
 # config/application.rb
+    # background jobs
     config.active_job.queue_adapter = :sidekiq
     config.active_job.queue_name_prefix = 'mysite'
-~~~
+```
 
 Sidekiq is faster but requires thread safe code.
 
 You need to install redis server, which is simply adding Heroku redis addon.
 https://elements.heroku.com/addons/heroku-redis
+Or on AWS you can install https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04
 Since it allows only 20 connections you need to limit connections for sidekiq.
 It requires usually concurrency + 5 connections to Redis.
 https://github.com/mperham/sidekiq/issues/117
@@ -123,6 +129,13 @@ You can run `bundle exec sidekiq -q default -q mailers` but better is in config:
   - my_site_mailers
 ~~~
 
+You can use console to see all queues
+
+```
+require 'sidekiq/api'
+Sidekig::Queue.all
+```
+
 Concurrency is a number which are used by sidekiq server to create redis
 connections (=concurrency + 5 per one process).
 Sidekiq client defaults to 5 connections per process but this can be limited to
@@ -130,14 +143,14 @@ Sidekiq client defaults to 5 connections per process but this can be limited to
 So for max 10 redis connections you can use:
 
 ~~~
-# three unicorns = 3 connections
+# config/initializers/sidekiq.rb
 Sidekiq.configure_client do |config|
-  config.redis = { :size => 1 }
+  config.redis = { size: 1 }
 end
-# so one sidekiq can have 7 connections
+# three processes = 3 connections so one sidekiq can have 7 connections
+# only 2 connections are for workers
 Sidekiq.configure_server do |config|
-  # only 2 connections are for workers
-  config.redis = { :size => 7 }
+  config.redis = { size: 7 }
 end
 ~~~
 
@@ -580,7 +593,9 @@ so to test sending in minitest
 ~~~
 require 'test_helper'
 
-class ProductTest < ActiveJob::TestCase
+class ProductTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper # needed for assert_enqueued_with helper
+
   test 'billing job scheduling' do
     # if you want to test outcome ie how job is performed
     perform_enqueued_jobs only: ActionMailer::DeliveryJob do

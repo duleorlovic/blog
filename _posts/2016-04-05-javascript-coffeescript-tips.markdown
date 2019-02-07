@@ -13,8 +13,17 @@ executed after all inline scripts are done (after all defered so setting `defer`
 option in javascript has no efects).
 You can run your script as callback when script is loaded
 ~~~
-# if you are using script tags
+# if you are using script src tag
 <script onload="loadedContent();" src ="/myapp/myCode.js"  ></script>
+
+# or using script src tag and event listenter
+<script id="myscript" src ="/myapp/myCode.js"></script>
+<script>
+  var script = document.querySelector('#myscript');
+  script.addEventListener('load', function() {
+    myScipt Initialisation code
+  });
+</script>
 
 # or if loaded using appendChild
 
@@ -360,7 +369,23 @@ can use `do`
 * you can use `class`, `constructor`, `@instance_valiable =`, `@class_variable:
 ` for
 [classes](http://coffeescript-cookbook.github.io/chapters/classes_and_objects/)
+for example you can define constants
+https://coderwall.com/p/1dckba/constants-in-coffeescript
+```
+# app/assets/javascripts/const.coffee.erb
+class window.Const
+  @DATATABLE_SR_LANGUAGE_URL: '<%= asset_path 'plugins/datatables/i18n.sr.json.erb' %>'
+  @SOME_OBJECT: {
+    a: 1
+  }
+```
 
+so you can access in other js files
+
+```
+url = Const.DATATABLE_SR_LANGUAGE_URL
+my_obj = Const.SOME_OBJECT
+```
 
 # Difference ES6 (ie ES2015) and ES5
 
@@ -509,6 +534,7 @@ version on "Hello #{name}")
 * default parameter values `function g(a=2){}` (the same for coffeescript). It
 can be combined with default destructing params `function g({a=1, b}={b:2}){}`
 and `g({a: 2})` (ok b=2), `g()` (ok a=1, b=2), but `g({})` error, b is required.
+Also for in coffeescript `my_f = ({a, b, c='auto'}) ->`.
 * if you need some param to be required you can use this trick
 
   ~~~
