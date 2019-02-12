@@ -193,6 +193,12 @@ Clone for local or remote folders
 
     git remote add local orlovic@192.168.2.103:/home/orlovic/ruby/securiPi/.git
 
+Big files
+
+    sudo apt install git-lfs
+    git lfs install
+    git lfs track *.mov
+
 Tutorials
 
     git help tutorial-2

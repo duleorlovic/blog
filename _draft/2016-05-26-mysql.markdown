@@ -48,7 +48,7 @@ layout: post
   SHOW GRANTS FOR 'newuser'@'localhost';
   ```
 
-* to remote a grant
+* to remove a grant
   ```
   REVOKE ALL PRIVILEGES, GRANT OPTION FROM newuser
   ```
