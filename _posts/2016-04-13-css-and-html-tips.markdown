@@ -22,7 +22,8 @@ layout: post
   ~~~
 
   * long text can be in one line `white-space: nowrap;` no wrap means it will no
-  go to the next line even for white space.
+  go to the next line even for white space (this is used in `navbar-brand`). To
+  make it go to next line define something like `.white-space-normal`.
   * long strings can be shown on multiple lines with `word-wrap: break-word`
   this will break long string to multiple lines (for text `white-space: normal`)
 

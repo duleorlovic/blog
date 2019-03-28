@@ -419,6 +419,12 @@ avconv -i input.mp4 -s 640x480 -strict -2 output.mp4
 for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
 ~~~
 
+* convert dvd vob to mp4
+  ```
+  for f in *.VOB ; do ffmpeg -i "$f" -vcodec copy -strict experimental -c:a aac "${f%.*.VOB}.mp4"; done
+  ```
+
+
 * default gnome screenshot folder `dconf-editor` find
   `org->gnome->gnome-screenshot-> auto-save-directory ->
   file:///home/user/Download/`
@@ -502,4 +508,99 @@ update-rc.d -f neo4j remove
 # another way to set up to run at boot [+]
 
 sudo systemctl enable neo4j
+```
+
+# Obs studio
+
+Install https://obsproject.com/
+
+```
+sudo add-apt-repository ppa:obsproject/obs-studio
+sudo apt-get update
+sudo apt-get install obs-studio
+```
+
+## Stream remote screen recordings
+
+You can stream from other computers using VNC (on windows install TinyVNC) and
+on main comp use VNC viewer and stream that Window Capture (Xcomposite).
+
+Stream from web use: https://github.com/bazukas/obs-linuxbrowser
+
+## Auto rotate scenes based on timer
+
+Advances Scene switcher
+https://obsproject.com/forum/resources/advanced-scene-switcher.395/ source
+https://github.com/WarmUpTill/SceneSwitcher
+
+To install download .so and copy
+```
+sudo cp ~/Downloads/SceneSwitcher/SceneSwitcher/Linux/advanced-scene-switcher.so /usr/lib/obs-plugins/
+```
+
+On linux there could be an error (Help -> Log files -> View current log)
+```
+09:13:53.109: os_dlopen(/usr//lib/obs-plugins/advanced-scene-switcher.so->/usr//lib/obs-plugins/advanced-scene-switcher.so): /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5: version `Qt_5' not found (required by /usr//lib/obs-plugins/advanced-scene-switcher.so)
+09:13:53.109:
+09:13:53.109: Module '/usr//lib/obs-plugins/advanced-scene-switcher.so' not loaded
+```
+
+You can check which libraries qt is using `ldd $(which qtcreator)` (it is in
+/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5: but plugin is not using it).
+I tried to compile plugin from source
+```
+cmake -DLIBOBS_INCLUDE_DIR=~/Programs/obs-studio/libobs -DLIBOBS_FRONTEND_INCLUDE_DIR=~/Programs/obs-studio/UI/obs-frontend-api/ -DLIBOBS_FRONTEND_API_LIB=/usr/lib/ -DCMAKE_INSTALL_PREFIX=/usr ..
+make
+```
+but I receive error
+```
+Generating ui_advanced-scene-switcher.h
+File '/home/orlovic/Programs/SceneSwitcher/src/headers/advanced-scene-switcher.ui' is not valid
+AUTOUIC: error: process for ui_advanced-scene-switcher.h needed by
+ "/home/orlovic/Programs/SceneSwitcher/src/headers/advanced-scene-switcher.hpp"
+```
+
+So I build from source using Debian-based Build Directions on
+https://obsproject.com/wiki/install-instructions#linux
+
+```
+sudo apt-get install build-essential pkg-config cmake git-core checkinstall
+sudo apt-get install libx11-dev libgl1-mesa-dev libvlc-dev libpulse-dev libxcomposite-dev libxinerama-dev libv4l-dev libudev-dev libfreetype6-dev libfontconfig1-dev qtbase5-dev libqt5x11extras5-dev libqt5svg5-dev libx264-dev libxcb-xinerama0-dev libxcb-shm0-dev libjack-jackd2-dev libcurl4-openssl-dev libluajit-5.1-dev swig python3-dev
+```
+
+Install ffmpeg from source
+
+```
+sudo apt-get install zlib1g-dev yasm
+git clone --depth 1 git://source.ffmpeg.org/ffmpeg.git
+cd ffmpeg
+./configure --enable-shared --prefix=/usr
+make -j4
+sudo checkinstall --pkgname=FFmpeg --fstrans=no --backup=no \
+        --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
+#      dpkg -r ffmpeg
+
+```
+
+To find package which provide a header file
+```
+apt-file search X11/extensions/scrnsaver.h
+```
+
+So I installed also
+
+```
+sudo apt-get install libxss-dev
+```
+
+Build OBS
+
+```
+git clone --recursive https://github.com/obsproject/obs-studio.git
+cd obs-studio
+mkdir build && cd build
+cmake -DUNIX_STRUCTURE=1 -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j4
+sudo checkinstall --pkgname=obs-studio --fstrans=no --backup=no \
+       --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
 ```

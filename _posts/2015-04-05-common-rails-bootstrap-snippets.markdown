@@ -48,10 +48,23 @@ rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ```
 
+For error
+```
+Webpacker can't find application in /home/orlovic/Downloads/rails_6_beta2_stimulus/public/packs/manifest.json. Possible causes:
+```
+you need to install webpack and run initial compilation
+```
+yarn add @rails/webpacker
+bin/webpack
+```
+
 # UUID
+
+https://github.com/trkin/contact_form/commit/52532f3378604f59fb16c1e6432cc567542c391d
 
 ~~~
 bin/rails g migration enable_extension_for_uuid
+last_migration
 # add following line to migration
   def change
     enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
@@ -62,6 +75,10 @@ Rails.application.config.generators do |g|
   g.orm :active_record, primary_key_type: :uuid
 end
 HERE_DOC
+
+rake db:create db:migrate
+git add .
+git commit -m 'Enable uuid in postgresql'
 ~~~
 
 Later, if you add some references, you need to specify `type: :uuid` like:
@@ -78,6 +95,58 @@ DETAIL:  Key columns "post_id" and "id" are of incompatible types: bigint and uu
 
 Note that ordering by id, uuid is not possible. It is hard to implement on
 existing projects and on MySQL db.
+
+# Sample page
+
+~~~
+rails g controller pages home --skip-helper --skip-assets
+sed -i config/routes.rb -e "/^end$/i \\
+  # root page\n\
+  root 'pages#home'\
+"
+~~~
+Rubocop cli
+~~~
+rubocop --auto-correct # to autocorrent correct some files (except lineLength)
+~~~
+
+~~~
+# initial scale on mobile devices
+sed -i app/views/layouts/application.html.erb -e '/title/a \
+    <meta name="viewport" content="width=device-width, initial-scale=1">'
+~~~
+
+# Font icons
+
+Fontello provides a icons which you can include in your project using
+https://github.com/railslove/fontello_rails_converter
+```
+# Gemfile
+# pick icons
+gem 'fontello_rails_converter'
+
+# select some fonts http://fontello.com/ and download zip to `tmp/fontello.zip`
+bundle exec fontello convert --no-download
+gnome-open http://localhost:3001/fontello-demo.html
+
+# when you want to update you can
+fontello open
+# select new icons
+bundle exec fontello convert
+```
+To configure in rails you need to import
+```
+# app/assets/stylesheets/application.sass
+// vendor
+@import 'fontello'
+```
+And use with classes
+```
+# app/layouts/application.html.erb
+<i class="demo-icon icon-mobile"></i>
+```
+
+Prepare icons https://github.com/fontello/fontello/wiki/How-to-use-custom-images#preparing-images-in-inkscape
 
 
 # Gitignore
@@ -162,13 +231,6 @@ Some not used gems
   config.web_console.whiny_requests = false'
 ~~~
 
-Rubocop cli
-~~~
-rubocop --auto-correct # to autocorrent correct some files (except lineLength)
-rubocop --auto-gen-config # generate .rubocop_todo.yml
-echo 'inherit_from: .rubocop_todo.yml' > .rubocop.yml # create .rubocop.yml
-~~~
-
 Production gems and configurations
 
 ~~~
@@ -231,30 +293,6 @@ guard -d
 
 Customize log output of rails logger in production with
 https://github.com/roidrage/lograge#handle-actioncontrollerroutingerror
-
-# Sample page
-
-Button should we blue and Fa camera icon should be shown after installing
-[bootstrap and fontawesome inside rails](
-{{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %}
-#fontawesome)
-
-~~~
-rails g controller pages home --skip-helper --skip-assets
-echo '<button class="btn btn-primary">
-  <i class="fa fa-camera-retro" aria-hidden="true"></i> fa-camera-retro</i>
-</button>
-' >> app/views/pages/index.html.erb
-sed -i config/routes.rb -e '/draw/a \
-  root "pages#home"'
-git add . && git commit -m "Adding sample index page"
-~~~
-
-~~~
-# initial scale on mobile devices
-sed -i app/views/layouts/application.html.erb -e '/title/a \
-    <meta name="viewport" content="width=device-width, initial-scale=1">'
-~~~
 
 ## Fonts
 
@@ -437,7 +475,6 @@ shared:
   default_url:
     host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "localhost") %>
     port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : nil) %>
-HERE_DOC
 
 # `shared` is automatically included, no need to write
 # shared: &default
@@ -445,6 +482,7 @@ HERE_DOC
 # or
 # development:
 #   <<: *default
+HERE_DOC
 
 git add . && git commit -m "Simplify secrets"
 ~~~

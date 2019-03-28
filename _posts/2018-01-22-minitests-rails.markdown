@@ -53,9 +53,15 @@ Defining fixtures:
   ~~~
 * if you have polymorphic than put class name in brackets
   ~~~
-  apple:
-    eater: george (Monkey)
+  # test/fixtures/notifications.yml
+  notification_for_task:
+    notifiable: my_task (Task)
+  notification_for_comment:
+    notifiable: my_comment (Comment)
   ~~~
+
+  No need to use brackets if you have `belongs_to :associated, class_name:
+  'Activity'`
 
 * `created_at`, `updated_at`, `created_on` and `updated_on` is automatically
   Time.now
@@ -80,9 +86,13 @@ Defining fixtures:
     email: $LABEL@email.com
   ~~~
 
+  $Label is not interpolated within object like `name: { en: $LABEL }` (so I18n
+  mobility does not work)
+
 * defaults
   ~~~
   DEFAULTS: &DEFAULTS
+    name: $LABEL Name
     created_on: <%= 3.weeks.ago.to_s(:db) %>
 
   first:
@@ -150,6 +160,8 @@ puts 'db:seed and db:fixtures:load completed'
   admin_user:
     encrypted_password: <%= User.new.send(:password_digest, 'password') %>
   ```
+
+* if there are no colomns you can use `user: {}` curly brackets
 * Usage of fixtures
 
   ~~~
@@ -188,12 +200,12 @@ class TaskTest < ActiveSupport::TestCase
   end
 
   test 'valid fixture' do
-    # database constrains do not need to be tested because fixture will fail if
-    # can not be inserted in db. We need to test only rails validations
-    assert tasks.map(&:valid?).all?
+    assert_valid_fixture activities
+  end
 
-    # you can add specific error message
-    assert tasks.map(&:valid?).all?, tasks.select {|c| !c.valid?}.map {|c| c.name + ' ' + c.errors.full_messages.join}
+  # test/test_helper.rb
+  def assert_valid_fixture(items)
+    assert items.map(&:valid?).all?, (items.reject(&:valid?).map { |c| (c.respond_to?(:name) ? "#{c.name} " : '') + c.errors.full_messages.to_sentence })
   end
 end
 ~~~
@@ -483,6 +495,8 @@ class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   # stub_something
   include WebmockHelper
+  # t('successfully') instead I18n.t('successfully')
+  include AbstractController::Translation
   # devise method: sign_in user
   include Devise::Test::IntegrationHelpers
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.

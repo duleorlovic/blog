@@ -4,6 +4,11 @@ layout: post
 
 Test your site on
 <https://developers.google.com/speed/pagespeed/insights/>
+<https://search.google.com/test/mobile-friendly>
+<https://search.google.com/search-console/inspect>
+<https://search.google.com/test/rich-results>
+<https://search.google.com/structured-data/testing-tool/u/0/>
+
 Free trial seo report rank <https://www.woorank.com/>
 Also on <https://www.webpagetest.org/>
 
@@ -296,6 +301,11 @@ for his audience.
 
 You can use some of the services: Google Analytics, Firebase anal, Amazon anal,
 Fabric Answers, Mixpanel, Keen, Segment, Amplitude, Localytics, Ionic Analytics
+
+Go to https://analytics.google.com and on left sidebar click Admin to add
+property and get UA code.
+
+
 
 # SEO search enginge optimization
 

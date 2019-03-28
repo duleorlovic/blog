@@ -8,36 +8,23 @@ tags: jekyll github rakefile
 
 Here are the steps you can follow to generate myblog
 
-~~~
+```
 gem install jekyll
 jekyll new myblog
 cd myblog
 git init .
 git add .
 git commit -m "Initial jekyll new myblog"
+```
 
-cat >> Gemfile << HERE_DOC
-gem "guard"
-gem "guard-livereload"
-HERE_DOC
-bundle
-
-cat >> Guardfile << HERE_DOC
-# A samle Guardfile
-guard "livereload" do
-  watch(%r{_site/.+})
-end
-HERE_DOC
-
-git add . && git commit -m "Adding livereload"
-jekyll serve
-guard
-~~~
+Live reload is now built in (no need for `guard-livereload`). You just need to
+run with option `jekyll serve --livereload`
 
 For livereload you need to install [Chrome
 plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related?hl=en)
-enable it and activate by clicking on icon when you open a page. Or you can use
-javascript version.
+enable it and activate by clicking on icon when you open a page.
+There is also plugin for firefox https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension/
+You can use javascript version.
 
 # Custom domain
 
@@ -46,7 +33,7 @@ you just need to rename repository to that name.
 
 Do not need to rename if you want custom domain, you can  enable it from
 settings <https://github.com/duleorlovic/trk.in.rs/settings> or you can just
-create CNAME file manually
+create CNAME file manually since that is the same
 
 ~~~
 git chechout -t origin/gh-pages
@@ -56,13 +43,17 @@ echo "www.trk.in.rs" > CNAME
 You need to configure your domain name provider to point to your github
 respository with [CNAME
 record](https://help.github.com/articles/setting-up-a-www-subdomain/)
+to point to `{username}.github.io`, for example `CNAME duleorlovic.github.io`.
+Check when it is updated, usually in one hour
 
-~~~
-# CNAME duleorlovic.github.io
-# check when it is updated, usually in one hour
-dig www.trk.in.rs +nostats +nocomments +nocmd
+```
 # note that second column is TTL time to live in secods
-~~~
+dig +nostats +nocomments +nocmd www.trk.in.rs
+;www.trk.in.rs.			IN	A
+www.trk.in.rs.		3600	IN	CNAME	kulakajak.github.io.
+kulakajak.github.io.	3600	IN	A	185.199.111.153
+kulakajak.github.io.	3600	IN	A	185.199.110.153
+```
 
 Use this only for subdomains (www.trk.in.rs, blog.trk.in.rs) and not for apex
 domain. Adding CNAME record to the root of your domain will disable MX and TXT
@@ -74,6 +65,13 @@ Default `duleorlovic.github.io` is serverd under HTTPS, but custom domain is
 serverd under HTTP. To enable HTTPS for custom domains you can try
 [cloudflare](https://www.cloudflare.com/) but recently, all github pages are
 enypted with free <https://letsencrypt.org/> certificate.
+
+```
+dig  +nostats +nocomments +nocmd projektor.trk.in.rs
+;projektor.trk.in.rs.		IN	A
+projektor.trk.in.rs.	3405	IN	CNAME	d1ub4fmsp3scvp.cloudfront.net.
+d1ub4fmsp3scvp.cloudfront.net. 47 IN	A	13.32.22.82
+```
 
 # Loopia
 
@@ -460,6 +458,16 @@ discuss, analytics, meta and uses `gems: jekyll-sitemap` which github supports.
 It does not use theme. It is very similar to default jekyll theme
 [minima](https://github.com/jekyll/minima)
 
+
+Jekyll default template minima can be overriden with
+```
+mkdir _includes
+cp ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0/_includes/head* _includes
+cp ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0/_includes/footer.html _includes
+git add .
+git commit -am 'cp ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0/_includes/footer.html _includes'
+```
+
 # Theme
 
 If you want to [create
@@ -811,7 +819,7 @@ can use `@import "file_from_scss";` to load partials from `_sass` folder
 ~~~
 <!-- override default template file _includes/head.html -->
 ...
-<link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
 ~~~
 
 # Coffee script

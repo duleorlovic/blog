@@ -289,7 +289,7 @@ bottom of the element.
   `return` in angular constructor functions
 * conditional ternary (triple) operator in `? : ` can be used with `if then else`
 * [loops](http://coffeescript.org/#loops) are simiral to ruby, and it's
-  better than angular `forEach` since we can `break` from the loop. For example
+  better than ES5 `forEach` since we can `break` from the loop. For example
   find by objectId in array carts:
 
   ~~~
@@ -353,7 +353,8 @@ bottom of the element.
 or you can use `@` syntax `@my_var = 42`
 * [iterate loops](http://coffeescript.org/#loops) over hash object `for k, v of
 my_object`. If you need index of array use also two params `for value, index of
-array`
+array`. In ES6 you can `myArray.forEach(function(val) { console.log(val) }`. To
+convert HtmlCollection to array you can use `Array.from(htmlCollection)`
 * you can call functions without parantesis but if you have params. But if you
 do not have params, that would be just a reference to a function, to call it you
 can use `do`
@@ -420,7 +421,7 @@ notice difference in
 * `const MY_CONST = document.querySelect(".my-class");` have block scope,
 and it should be used for all non volatile variables. If you use object than
 nested values can change `const k = { a: 3 }; k.a = 4`
-* intepolation of template literals with backticks and curly braces (coffe
+* interpolation of template literals with backticks and curly braces (coffe
 version on "Hello #{name}")
 
   ~~~
@@ -617,7 +618,7 @@ Also for in coffeescript `my_f = ({a, b, c='auto'}) ->`.
   js script (no need for special keyword) but everything defined inside module
   is local to the module, except when you use `export`.
   <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import>
-  Note that for Webpack you need to use CommonJS module
+  Note that for Webpack you can use CommonJS module
 
   ~~~
   function myModule() {
@@ -653,42 +654,6 @@ Also for in coffeescript `my_f = ({a, b, c='auto'}) ->`.
   https://medium.com/@kelin2025/so-you-wanna-use-es6-modules-714f48b3a953
   http://krasimirtsonev.com/blog/article/javascript-library-starter-using-webpack-es6
 
-  Note that with import you should use brackets if there is not default export,
-  and check the form of the `export` command.
-  https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
-
-  ~~~
-  // import what is default exported and bind bind to defaultExport
-  import defaultExport from "module-name";
-  // this is shorthand of
-  import { default as defaultExport } from 'module-name';
-
-
-  // namespace import
-  import * as name from "module-name";
-  // named import
-  import { export } from "module-name";
-  import { export as alias } from "module-name";
-  import { export1 , export2 } from "module-name";
-  import { export1 , export2 as alias2 , [...] } from "module-name";
-  // combination of default import and named or namespaces import
-  import defaultExport, { export [ , [...] ] } from "module-name";
-  import defaultExport, * as name from "module-name";
-  // just run the code, not importing anything
-  import "module-name";
-  ~~~
-
-  module-name is relative (`./lib/math` or `lib/math`) or abosulte path name to
-  the `.js` file
-  ~~~
-  import * as math from "lib/math";
-  console.log("2pi = " + math.sum(math.pi, math.pi));
-
-  // or we could
-  import { pi, sum } from "lib/math";
-  console.log("2pi = " + sum(pi, pi));
-  ~~~
-
   You can export any top level function, class, var, let or const.
 
   ~~~
@@ -715,6 +680,48 @@ Also for in coffeescript `my_f = ({a, b, c='auto'}) ->`.
     field1: value1,
     field2: value2
   };
+  ~~~
+
+  Note that with `import` you should use brackets if there is no default export,
+  and check the form of the `export` command.
+  https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
+  Default import
+
+  ```
+  // import what is default exported and bind bind to defaultExport
+  import defaultExport from "module-name";
+  // this is shorthand of
+  import { default as defaultExport } from 'module-name';
+  ```
+
+  Namespace import
+  ```
+  import * as name from "module-name";
+  ```
+  Named import
+  ```
+  import { export } from "module-name";
+  import { export as alias } from "module-name";
+  import { export1 , export2 } from "module-name";
+  import { export1 , export2 as alias2 , [...] } from "module-name";
+  ```
+  combination of default import and named or namespaces import
+  ```
+  import defaultExport, { export [ , [...] ] } from "module-name";
+  import defaultExport, * as name from "module-name";
+  // just run the code, not importing anything
+  import "module-name";
+  ```
+
+  module-name is relative (`./lib/math` or `lib/math`) or absolute path name to
+  the `.js` file
+  ~~~
+  import * as math from "lib/math";
+  console.log("2pi = " + math.sum(math.pi, math.pi));
+
+  // or we could
+  import { pi, sum } from "lib/math";
+  console.log("2pi = " + sum(pi, pi));
   ~~~
 
 * property value shorthands, when you define object and you already have

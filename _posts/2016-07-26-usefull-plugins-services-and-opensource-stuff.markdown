@@ -298,6 +298,9 @@ call with
     .select2-container
       display: inline-block
   ~~~
+
+  one solution to make select wider is to use `select_tag :id, '',
+  include_blank: 'Long sentence that make select width wider'`
 * options like
 [dropdownParent](https://select2.github.io/options.html#dropdownParent) could
 help
@@ -391,6 +394,31 @@ $(document).on 'turbolinks:load', ->
     $(this).focus ->
       $(this).select2('open')
 ~~~
+
+Search not only on text but on custom data attributes https://stackoverflow.com/questions/36021892/search-on-select-attribute-in-select2
+https://select2.org/searching
+I tried to add hidden divs to `<option>` but it seems that there could be only
+the text as inner object. So I add title and copy `matcher` function from
+Select2 and add
+```
+# app/assets/javascripts/data_select2_initialize.coffee
+matcher = (params, data) ->
+  # ... copy from original matcher ...
+  title = stripDiacritics(data.title).toUpperCase()
+  # check if title exists and contains the term
+  if title.indexOf(term) > -1
+    return data
+
+@initializeSelect2 = ->
+  $('[data-select2-initialize]').each ->
+    # we need to remove tabindex attribute from modal if exists
+    # https://github.com/select2/select2/issues/119
+    $(this).parents(".modal").removeAttr('tabindex')
+    $(this).select2(
+      matcher: matcher
+    )
+```
+
 
 # Calendar date and time picker
 
@@ -635,30 +663,7 @@ Font awesome FA icons are very usefull for quick icons. Look for
   `<i class='fas fa-tasks fa-fw mx-1' aria-hidden='true'></i><%= t('home') %>`
 
 Other free fonts can be found on http://fontello.com/ where you can select icons
-and download only that batch of fonts. You can include in your project using
-https://github.com/railslove/fontello_rails_converter
-```
-# download zip to `tmp/fontello.zip`
-bundle exec fontello convert --no-download
-gnome-open http://localhost:3001/fontello-demo.html
-
-# when you want to update you can
-fontello open
-# select new icons
-bundle exec fontello convert
-```
-To configure in rails you need to import
-```
-# app/assets/stylesheets/application.sass
-// vendor
-@import 'fontello'
-```
-And use with classes
-```
-# app/layouts/application.html.erb
-<i class="demo-icon icon-mobile">
-```
-
+and download only that batch of icons.
 * page loader progress bar <http://ricostacruz.com/nprogress/>
 * page loader car <https://codepen.io/igor0ser/pen/amJkvp>
 
@@ -900,7 +905,7 @@ version](https://github.com/iogbole/gentelella_on_rails)
 [booster](https://freehtml5.co/booster-free-html5-bootstrap-template/) or
 [elate](https://freehtml5.co/demos/elate/)
 * bootstrap 4
-  checkout original bootstrap themes
+  checkout original bootstrap themes https://themes.getbootstrap.com/preview/?theme_id=6743&show_new=
   https://coderthemes.com/hyper_2/light/dashboard-crm.html
   <https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio> 
   <https://blackrockdigital.github.io/startbootstrap-freelancer/>
@@ -931,6 +936,7 @@ Email templates
 * <https://tympanus.net/Tutorials/3DShadingWithBoxShadows/>
 * shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&theme-id=1&slug-hash=RNjRZz&default-tab=result&user=iamryanyu&embed-version=2&pen-title=Modern%20Button%20Collection#js-box
 * checkbox in css https://codepen.io/himalayasingh/pen/EdVzNL
+* rotate and shake on hover https://codepen.io/duleorlovic/pen/jdjYNE
 
 # Scroll
 

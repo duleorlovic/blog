@@ -4,6 +4,8 @@ layout: post
 
 # Install
 
+To checkount demo you can
+
 ~~~
 git clone https://github.com/stimulusjs/stimulus-starter.git
 cd stimulus-starter
@@ -11,6 +13,12 @@ yarn install
 yarn start
 gnome-open http://localhost:9000/
 ~~~
+
+To add to existing Rails app
+
+```
+rails webpacker:install:stimulus
+```
 
 # Magic keywords
 

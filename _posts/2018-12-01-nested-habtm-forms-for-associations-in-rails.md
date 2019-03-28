@@ -36,13 +36,32 @@ Now start with what Rails provides https://api.rubyonrails.org/v5.2.1/classes/Ac
 Similar to nested forms, you can have select tag with multiple options (habtm
 relation) so we can update without ajax (it is created in one request).
 Since in html forms we can only send value or array
-* single value (html `name='name'` rails `params[:name] # => 'Duke'`)
-* array (html `name='ids[]'` rails `params[:ids] #=> [1,2]`)
-* hash with array values (html `name='ids[company][]` rails
- `params[:ids][:company] #=> [1,2]`)
-* hash with hash values (rails use this for `fields_for &
-  accepts_nested_attributes_for` (html `name='user[posts_attributes][0][id]`
-  rails `params[:user][:posts_attributes]["0"][:id]`
+* single value (html `name='name'`) In rails `text_field_tag :name` and
+  we got `params[:name] # => 'Duke'`
+* array (html `name='ids[]'`) In rails `text_field_tag 'ids[]'` or
+  `f.text_field :ids, name: 'ids[]'` and we got `params[:ids] #=> [1,2]` Note
+  that you need to permit array `params.permit(ids: [])`. When you remove all
+  elements from DOM than nothing is send to server, so you need to add empty and
+  reject empty values
+  ```
+  before_save :clear_unchecked_values
+  def clear_unchecked_values
+    self.custom_sign_up_labels = custom_sign_up_labels.reject(&:blank?)
+    true
+  end
+  ```
+* hash is when you nest inside brackets and define specific key, for example
+  `name='user[name]`, in rails `f.text_field :name` (when f.object.class ==
+  User).  Note that you need to permit each key.
+
+  Hash values can also be string, array or another hash. For array (html
+  `name='user[ids][]`) in rails you can use `f.text_field :ids, name:
+  'user[ids][]` (or general `"#{f.object.class.name.underscore}[ids][]"` and we
+  got `params[:user][:ids] #=> [1,2]`.  Hash with hash values rails use it for
+  `fields_for & accepts_nested_attributes_for` html
+  `name='user[posts_attributes][0][id]` and we got
+  `params[:user][:posts_attributes]["0"][:id]`. Note that you need to permit
+  each key `params.require(:user).permit(posts_attributes: [:id,:name])`
 
 So for habtm or has_many through, we need to mark for destruction and than add
 params
@@ -215,17 +234,36 @@ you can use rails builder
 
   Sometimes there is a problem when automatic translator on the page change
   button labels and inputs so commit param is different...
+  There are two solutions for that:
   Instead of `commit` you can use
   [formaction](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#attr-formaction)
   So you do not need to parse commits but you need different action methods to
   handle.
 
   ~~~
-  <% form_for(something) do |f| %>
-      <%= f.submit "Create" %>
-      <%= f.submit "Special Action", formaction: special_action_path %>
+  <%= form_for('url') do |f| %>
+      <%= f.submit 'Create' %>
+      <%= f.submit 'Special Action', formaction: special_action_path %>
   <% end %>
   ~~~
+
+  Another solution to translations of input submit is to use buttons with value
+  as the same as the text inside button tag.
+  ```
+  <%= form_for('url') do |f| %>
+    <%# instead of <input> we use <button> with value (which is the same as inner text) so automatic page translators do not change that value %>
+    <%= f.button 'Create', value: 'Create' %>
+    <%= f.button 'Special Action', value: 'Special Action' %>
+  <% end %>
+  ```
+  this will generate
+  ```
+  <form action="url">
+    <button name="button" type="submit" value="Create">Create</button>
+    <button name="button" type="submit" value="Special Action">Special Action</button>
+  </form>
+  ```
+  so you can grab `params[:button] == 'Create'`
 
   If you want to disable utf-8 and authenticity hidden fields, remove hidden
   input `name='commit'` for submit buttons `button_tag 'OK', name: nil` and use

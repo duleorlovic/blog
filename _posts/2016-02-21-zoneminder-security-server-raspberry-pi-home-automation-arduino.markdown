@@ -668,6 +668,10 @@ password: '' empty)
 * set timezone
 * set fix ip address 192.168.3.6
 
+# China Mini IP camera without box
+
+https://www.aliexpress.com/item/1280-720P-1-0-MP-1-3MP-Mini-IP-Camera-ONVIF-indoor-Plug-and-Play-support/32801033646.html?spm=a2g0s.9042311.0.0.27424c4dIrwbGp
+
 # Lead acid
 
 WP7.2 28W has a 7.2Ah on 12V. ie can provide 0.36A for 20h.
@@ -680,8 +684,8 @@ Slow charging is 2.25V per cell (6x2.25 = 13.5V for 12v battery).
 Best option is to start with 14.4V and decrease to 13.5V when battery is full.
 Battery needs charge when it is below **12.5V** in open circuit. Battery is
 fully discarged when is it below 9.5V (do not go this far). Battery is around
-2.1V per cell when is fully charged **12.7V** for 12V battery. Wait for 12hours
-after charging to measure open circuit.
+2.15V per cell when is fully charged **12.91V** for 12V battery. Wait for
+12hours after charging to measure open circuit.
 
 # Solar food dehydrator
 
@@ -746,16 +750,20 @@ Telekom: admin ztonpk
 
 # POE
 
-# Long cable
+# Long cable on battery power
 
 Mikrotik RB 750 use 90mA + 10ma for each port, so ~ 150mA when all cables are
 there. There is no difference while there is a traffic or inactive network.
-Cheap china ip camera spends 260mA if all diodes are on and streaming (253mA no
-streaming). During the day, witout IR diodes, it spends 100mA (87mA when there
-is no streaming).
+
+Cheap china white ip camera spends 260mA if all diodes are on and streaming
+(253mA no streaming). During the day, witout IR diodes, it spends 100mA (87mA
+when there is no streaming).
+Cheap china ip camera without box spends ~140mA.
+
 
 # Stream
 
+You can open rtsp stream in vlc player.
 You can stream inside html page using https://wiki.videolan.org/Documentation:WebPlugin
 
 but plugin is not supported any more https://forum.videolan.org/viewtopic.php?t=138044
@@ -765,3 +773,14 @@ Alternative is https://github.com/Streamedian/html5_rtsp_player
 ```
 npm install git://github.com/Streamedian/html5_rtsp_player.git
 ```
+
+To search for onvif devices in ruby you can use:
+https://github.com/Caldis/Ruby-Onvif/blob/master/examples/test_device_discovery.rb
+based on https://github.com/jimxl/ruby-onvif-client
+
+
+To stream screen recordings you can download
+https://www.tightvnc.com/download.php vnc server (default configuration is
+enough). Run Server in Application Mode.
+On computer that is connected to projector, run OBS project
+https://obsproject.com/ and add source "Window source"

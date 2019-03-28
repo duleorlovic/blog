@@ -11,8 +11,9 @@ Contact me at: *duleorlovic@* twitter/gmail/facebook/
 
 Here is my old <a href="https://sites.google.com/site/duleorlovic/">personal
 site</a>.
-My First Rails contribution <https://github.com/rails/rails/pull/34911> and my
-conference lighting talk on Balkan Ruby <https://youtu.be/lpkePkbYeoI?t=882>.
+My First Rails contribution <https://github.com/rails/rails/pull/34911> (docs)
+<https://github.com/rails/rails/pull/35143> (code) and my conference lighting
+talk on Balkan Ruby <https://youtu.be/lpkePkbYeoI?t=882>.
 
 <video  width="320" height="240" controls>
   <source src='https://github.com/duleorlovic/big_files/blob/master/balkan_ruby_duleorlovic_2018.mp4?raw=true' type="video/mp4">

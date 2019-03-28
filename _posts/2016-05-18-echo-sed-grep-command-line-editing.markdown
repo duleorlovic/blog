@@ -226,7 +226,7 @@ When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
 That is needed for negative lookahead.
 When using `-P` than no need to escape.
 
-In bash you need to escape *()|\* (for both single and double quotes).
+In bash you need to escape `()|\` (for both single and double quotes).
 In vim you also need to escape again (for both single and double quotes):
 `grep '\(asd\\|qwe\)'` is the same as in vim `:grep '\\(asd\\\|qwe\\)'`. Note
 When using `-P` than no need one escape (vim escape is still required).
@@ -234,6 +234,14 @@ When using `-P` than no need one escape (vim escape is still required).
 In vim [vim pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html) search
 inside buffer.
 
+Catastrophic Backtracking
+
+https://www.regular-expressions.info/catastrophic.html
+
+example in ruby is
+```
+"simple_captcha_valid?".match /^([A-Za-z\d*]+)+([\w]*)+([A-Za-z\d*]+)$/
+```
 
 # AWK
 

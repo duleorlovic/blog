@@ -43,9 +43,13 @@ allowed inside ()
 * comments are single line and starts with `#` number sign
 * list (arrays) are denoted by a leading hyphen `-` for each member per line, or
   in single line with `[a, b]` square brackets separated with comma space
-* associative arrays (hash) are written with colon space `key: value` or in
-  single line with `{a: 1, b: 2}`. Value could be intented to mark the bounds of
-  it.
+* associative arrays (hash) are written with colon space `key: value`
+  (multiline) or in single line with `{a: 1, b: 2}`
+  ```
+  data: { a: 1 }
+  data:
+    a: 1
+  ```
 * String does not need `" "` only if you use some special symbol `|` `:`
 * Multiline strings starts with pipe `|` on the line with attribute name, and
 indented.

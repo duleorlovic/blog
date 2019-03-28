@@ -6,7 +6,12 @@ layout: post
 
 When you install another version of existing gem, for example `gem install rails
 -v 4.2.0`, than you can find it with `gem list rails` and use it with `rails
-_4.2.0_ new mystore`
+_4.2.0_ new mystore`.
+To list by exact name (not regexp) use `-e`, to show remote gems `-r` so to find
+all available versions including pre release run `gem list rails -re
+--prerelease`
+
+To find help some `gem` command you can run `gem help list`
 
 To rebuild Gemfile.lock you can run `bundle update`. You can upgrade specific
 gem `bundle update rails` and only patch version of rails and its dependencies
@@ -47,7 +52,9 @@ rvm gemset empty
 
 # RVM
 
-* install specific version and patch level `rvm install 2.3.3-p451`
+Install specific version and patch level `rvm install 2.3.3-p451`
+To see current ruby `rvm list`
+
 
 # Bower
 
@@ -193,7 +200,7 @@ webpack main.js -o main-bundle.js
 # AMD Asynchronous module definition
 
 When you `require('jQuery')` it should be there at that moment, but if we want
-to run the code without jQuery loaded jet use async `define(dependencies, f)`
+to run the code without jQuery loaded yet use async `define(dependencies, f)`
 Build with `webpack` since it will recognize that it is AMD and define `define`
 correctly.
 
@@ -228,7 +235,7 @@ execute it's code.
 [RequireJS Optimizer](http://requirejs.org/docs/optimization.html) or
 `amd-optimize` and almond (minimized AMD for optimized builds which define
 `define`),
-Or you can transform AMD modules to CommonJS cjs modules with `deamdify` (so no
+Or you can transform AMD modules to CommonJS js modules with `deamdify` (so no
 need for almond to define `define`) and than run `browserify`.
 
 # ES6 Import Export
@@ -334,6 +341,10 @@ webpack
 
 # Webpack
 
+<https://webpack.academy>
+<https://www.what-problem-does-it-solve.com/webpack>
+<https://survivejs.com/webpack/>
+
 <https://webpack.js.org/guides/getting-started/>
 /home/orlovic/rails_temp/webpack_guide
 
@@ -357,8 +368,8 @@ npm run build
 webpack # not recomended to use as global
 ~~~
 
-Entry point is module for which webpack start building out dependency graph and
-create bundles.
+Entry point is module for which webpack start building out dependency graph
+(search for imports, requires, defines) and create bundles.
 Output is where to emit the bundles (default `path` is `./dist`).
 Loader is used to process webpack modules (files that use `import`, `require()`,
 `@import`, `url()`) and use coffescript, typescript, sass processors. It has
@@ -450,6 +461,40 @@ generated stuff.
     })
   ],
 ~~~
+
+You can pass env params on command line and extract common config
+```
+// build-utils/webpack.common.js
+const commonPaths = require('./common-paths.js');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: commonPaths.output,
+  },
+};
+```
+
+```
+// build-utils/common-paths.js
+const path = require('path');
+
+module.exports = {
+  outputPath: path.resolve(__dirname, '../', 'dist'),
+};
+```
+
+```
+// webpack.config.js
+const commonConfig = require('./build-utils/webpack.common');
+
+module.exports = (env) => {
+  console.log(env);
+  return commonConfig;
+};
+```
+https://webpack.academy/courses/web-fundamentals/lectures/2987268
 
 https://www.npmjs.com/package/clean-webpack-plugin
 You can clean dist folder before each build
@@ -591,8 +636,9 @@ bundle
 bundle exec rails webpacker:install
 ~~~
 
-Put your module files in `app/javascript/packs` and your pure js files in
-`app/javascript/src` which you can load (just run) `import '../src/my_file'`.
+Put your 'entry' module files in `app/javascript/packs` and your pure js files
+in `app/javascript` or `app/javascript/src` which you can load (just run)
+`import '../my_file'`.
 Global functions will not pollute global scope, you need to attach to window or
 global object.
 Reload js files automatically with webpacker dev server
@@ -664,7 +710,7 @@ For css from gems create package.json
 https://github.com/rails/webpacker/issues/57#issuecomment-327533578
 
 todo
-<https://medium.com/statuscode/introducing-webpacker-7136d66cddfb#.edrnqbrj6>
+https://youtu.be/fKOq5_2qj54?t=602
 
 # Parcel
 

@@ -891,7 +891,8 @@ add_foregn_key :donations, :users, column: :donor_id
 ~~~
 
 Also in model you need to write: `has_many :donations, foreign_key: :donor_id`
-and `belongs_to :donor, class_name: "User"`
+and `belongs_to :donor, class_name: "User"`. If you need to specify class name
+in has_many through association, user option `source: :user`
 
 Note that `t.references` should be used with `foreign_key: true, null: false`
 since foreign_key is not automatically used (`t.references` automatically add
@@ -1235,6 +1236,7 @@ $(document).on('turbolinks:load', ->
   $('[data-enable-if-valid]').on 'click', (e) ->
     $button = $(this)
     # http://jqueryvalidation.org/Validator.element/
+    # https://johnnycode.com/2014/03/27/using-jquery-validate-plugin-html5-data-attribute-rules/
     validator = $button.parents('form').validate()
     $inputs = $($button.data().enableIfValid).find('input')
     all_valid = true
@@ -2431,22 +2433,23 @@ guide](https://github.com/thoughtbot/guides/tree/master/best-practices)
 * use `ENV.fetch` instead of `ENV[]` so it raises exception when env variable
 does not exists
 
-My style
+My style in rails models use following order:
 
-* in rails models use following order:
-  1. constants `FIELDS = %i[name]`
-  2. `belongs_to :workflow` associations with plugins `acts_as_list scope:
-     [:workflow_id]`
-  3.  `has_many :users` associations
-  4. enums `enum status: %i[draft accepted]`
-  5. validations `validates :name, presence: true`
-  6. validate declarations `validate :_check_nested_resource`
-  7. callbacks declarations `before_validation :_default_values_on_create, on: :create`
-  8. scopes `scope :by_status_param, ->(status_argument) { where status: status_argument }`
-  9. class methods `def self.find_first_unpublished`
-  10. instance methods `def full_name`
-  11. validate definitions `def _check_nested_resource`
-  12. callbacks definitions `def _default_values_on_create`
+1. `include` and `extend` other modules, `devise` or, `serialize :col, Hash`
+1. constants `FIELDS = %i[name]`
+1. `attr_accessor`
+1. `belongs_to :workflow` associations with plugins `acts_as_list scope:
+1  [:workflow_id]`
+1.  `has_many :users` associations
+1. enums `enum status: %i[draft accepted]`
+1. validations `validates :name, presence: true`
+1. validate declarations `validate :_check_nested_resource`
+1. callbacks declarations `before_validation :_default_values_on_create, on: :create`
+1. scopes `scope :by_status_param, ->(status_argument) { where status: status_argument }`
+1. class methods `def self.find_first_unpublished`
+1. instance methods `def full_name`
+1. validate definitions `def _check_nested_resource`
+1. callbacks definitions `def _default_values_on_create`
 
 # Geocoder
 
@@ -2473,7 +2476,7 @@ views.
 
 # Authorization policy
 
-## Devise
+## Cancan
 
 use cancancan and define all your actions in app/models/ability. If you want to
 use
@@ -2613,16 +2616,16 @@ If you are seeing this on one of your tests, ensure that your tests are either e
     load also the user model
 * [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
   problem is solved with `includes(:associated_table)` wich is actually LEFT
-  OUTER JOINS, but `joins(:associated_table)` is INNER JOIN. Works also for
-  nested joins `includes(jobs: :user)` or for multuple you can use array
-  `includes(jobs: [:user, :company])`.
+  OUTER JOINS, `joins(:associated_table)` is INNER JOIN and do not load the
+  models. Works also for nested joins `includes(jobs: :user)` or for multuple
+  you can use array `includes(jobs: [:user, :company])`.
   * Inner `joins` differs if you have has_many or belongs_to association. For
   `has_many :associated_table` `joins` will return multiple values
   because of multi values of :associated_table per item, or none is
   :associated_table does not exists for current item. For `belongs_to :a` it
-  will return single if data exists, or none, if belongs_to is empty, so better
-  is to use left join. (expecially when you search by description OR teacher
-  name, you should not exclude books without teacher)
+  will return single if data exists, or nothing will be returned, if belongs_to
+  is empty, so better is to use left join. (expecially when you search by
+  description OR teacher name, you should not exclude books without teacher)
   * custom joins if you want to use left inner join
     https://thoughtbot.com/upcase/videos/advanced-querying-custom-joins
     ```
@@ -2670,6 +2673,16 @@ so this filter only works for `customer.radaccts`
 ~~~
 has_many   :radaccts, -> (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
 ~~~
+
+You can specify conditions in relation
+```
+class Company < ApplicationRecord
+  has_many :company_users, dependent: :destroy
+  # has_many :users, through: :company_users # do not use this since company
+  # users can be disabled, so better is to use active_users
+  has_many :active_users, -> { where(company_users: { status: :active }) },
+           through: :company_users, source: :user
+```
 * If you want to filter with raw SQL like: `.where('jobs.title ILIKE "%duke%"')`
 you need to `reference` them (see below) or use join (filtering using hash works
 without referencing since rails knows which table to look `.where(jobs: { title:
@@ -3367,8 +3380,6 @@ on submit button). I do not know how to send value...
   <%= check_box_tag name, value, checked, data: { url: toggle_todo_path(todo), remote: true } %>
 ~~~
 
-* if you need snake case from class name, you can
-`described_class.name.underscore`
 * `printf '.'` if you need to print single dot
 * turn of sql debug log messages in console `ActiveRecord::Base.logger = nil`
 * to show full backtrace and lines from gems you can call
@@ -3629,3 +3640,5 @@ end
   bundle exec rake guides:generate
 
   ```
+* Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
+  💯% sure.

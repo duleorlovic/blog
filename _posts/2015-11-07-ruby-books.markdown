@@ -878,9 +878,11 @@ end
 
   On hash there is `values_at` but that is only values. To fetch all attributes
   use `other_user.attributes` or specific ones `other_user.attributes.values_at
-  'id', 'email'` or `user.attributes.slice('id', 'email')` NOTE that we use
-  string instead of symbols.
+  'id', 'email'` (if you have array of fields you need to expand
+  `other_user.attributes.values_at *fields`). NOTE that we use string instead of
+  symbols.
   On Rails 5.2 you can directly use slice on AR model `user.slice :id, :name`
+  (before that you can do on `user.attributes.slice :id`)
 
 * safe navigation operator `&.` can be used instead of `.try` for example: `user
 && user.name` can be written as `user&.name`. It is usefull with find_by for
@@ -926,8 +928,9 @@ HERE_DOC
 
 # Url encode
 
-`URI.escape` has been deprecated in Ruby 1.9.2... so use `CGI::escape` or
-`ERB::Util.url_encode`.
+* `URI.escape`
+* `CGI::escape`
+* `ERB::Util.url_encode`
 
 # Retry from rescue
 
@@ -1295,6 +1298,11 @@ end
   end
 end
   ```
+
+* if you need snake case from class name, you can
+`described_class.name.underscore`. Of you need class from controller name
+`users_controller` you can `controller_name.classify.constantize` which returns
+`UsersController`
 
 todo
 

@@ -646,7 +646,7 @@ You need to install this tools:
     DisabledByDefault: true
   ~~~
 
-  My preferred configuration is 
+  My preferred configuration is
 https://github.com/duleorlovic/config/blob/master/.rubocop.yml
 
   * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
@@ -661,6 +661,10 @@ syntastic_quiet_messages`)
 `<%= CONST.to_s %>`, when is problem with + than fix with assign `<%= total =
 a + b; total %>`
 
+* for js I use `jshint` with es6 and disabled semicolons
+* semicolons also disabled in `eslint` (which extends from airbnb-base)
+* for styleles I use `stylelint` and local `.stylelintrc` since version 9.10
+  does not pick my home configuration
 * Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
 * json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)
 
@@ -795,6 +799,9 @@ RSpec.describe Project do
 Also in view, I want to be able where current element belongs, so list all
 wrapped elements. And when I'm in scss I want to see all parent selector,
 classes and media queries.
+
+Solution is to use similar row as in https://github.com/chrisbra/csv.vim
+`:Header`
 
 # RubocopFix vim plugin rubocop
 

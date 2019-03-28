@@ -285,18 +285,10 @@ More info on [heroku deploy]({{ site.baseurl }} {% post_url 2015-04-05-common-ra
 You can include bootstrap (which is now written in scss instead of less)
 
 ~~~
-npm install bootstrap jquery popper.js
-# configure npm from previous step
+yarn add bootstrap jquery popper.js
 
-## I suggest to use scss instead of dist
-# sed -i app/assets/stylesheets/application.css -e '/require_tree/i \
-#  *= require bootstrap/dist/css/bootstrap'
 cat >> app/assets/stylesheets/application.scss << \HERE_DOC
-/*
- *= require_tree .
- *= require_self
- */
-@import 'bootstrap/scss/bootstrap'
+
 HERE_DOC
 
 sed -i app/assets/javascripts/application.js -e '/require_tree/i\

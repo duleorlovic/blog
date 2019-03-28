@@ -23,6 +23,7 @@ messages for specific model and attributes (default ActiveRecord messages taken)
 
 Also you can change format `errors.format: Polje "%{attribute}" %{message}`
 https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
+You can use custom notice:
 You can also see some default en translations for errors.
 To see Rails default datetime formats go to
 https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
@@ -36,8 +37,12 @@ And you can change attribute name `activerecord.attributes.user.email: имеј�
 To translate also plurals you can use `User.model_name.human(count: 2)`. For
 attributes you can use `User.human_attribute_name("email")`
 [link](http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models)
+For `ApplicationRecord` translate `activerecord`.
+For form objects `include ActiveModel::Model` you should translate
+`activemodel`.
 
 ~~~
+# config/locales/activerecord_activemodels.en.yml
 en:
   activerecord:
     models:
@@ -45,11 +50,28 @@ en:
         zero: No dudes
         one: Dude
         other: Dudes
+  activemodel:
+    attributes:
+      landing_signup:
+        current_city: Који је твој град ?
+    errors:
+      messages:
+        group_not_exists_for_age: Не постоји група (%{age}год) на овој локацији
+      models:
+        landing_signup:
+          attributes:
+            current_city:
+              blank: Не може бити празно ?
+    models:
+      user:
+        one: корисник
+        other: корисници
+        accusative: корисника
+        some_customer_message: Моја порука
 ~~~
 
 Separate translations into different files (for example
-`activerecord_models.sr.yml`) and folders for `/completed/activerecord.sr.yml`
-include them with:
+`activerecord_activemodels.sr.yml`) include them with:
 
 ~~~
 # config/application.rb
@@ -82,31 +104,6 @@ No need to write quotes in yml unless you have:
 
 When debugging `SyntaxError: [stdin]:60:33: unexpected identifier` you should
 run `rake tmp:clear` so all yml end .erb files are compiled again.
-
-For form objects `include ActiveModel::Model` you should translate
-`activemodel`. For `ApplicationRecord` translate `activerecord`.
-~~~
-# config/locales/activemodel.sr.yml
-sr:
-  activemodel:
-    attributes:
-      landing_signup:
-        current_city: Који је твој град ?
-    errors:
-      messages:
-        group_not_exists_for_age: Не постоји група (%{age}год) на овој локацији
-      models:
-        landing_signup:
-          attributes:
-            current_city:
-              blank: Не може бити празно ?
-    models:
-      user:
-        one: корисник
-        other: корисници
-        accusative: корисника
-        some_customer_message: Моја порука
-~~~
 
 If you want to reuse same translation you can use alias, but only inside same
 file, so in case of form object, you can add to activerecord_models.yml
@@ -169,7 +166,7 @@ serbian = {
 
 ~~~
 # config/initializers/pluralization.rb
-require "i18n/backend/pluralization"
+require 'i18n/backend/pluralization'
 I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
 ~~~
 
@@ -323,6 +320,28 @@ For controller, you need to use around filters
   end
 ```
 
+# Translating user content
+
+https://github.com/shioyama/mobility#quickstart
+
+```
+# Gemfile
+# translation
+gem 'mobility', '~> 0.8.6'
+
+# this will generate config/initializers/mobility.rb
+rails g mobility:install
+
+# app/models/activity.rb
+class Activity < ApplicationRecord
+  extend Mobility
+  translates :name
+end
+
+# in migration add default value
+  create_table :activities, id: :uuid do |t|
+    t.json :name, default: {}
+```
 
 For google translate look for two scripts, one for vim and one for whole yml.
 https://github.com/duleorlovic/config/tree/master/ruby

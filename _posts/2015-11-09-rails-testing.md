@@ -1469,7 +1469,8 @@ If you need to fill_in iframe than you can access it by id or number
   end
 ~~~
 
-If you need to jump into new window opened by target `_blank` than you can
+If you need to switch jump into new window opened by target `_blank` than you
+can
 ~~~
 new_window = window_opened_by { click_link 'Something' }
 # or
@@ -1915,6 +1916,7 @@ end
 ## Debug
 
 Debug capybara
+* using byebug you can `page.find('[data-id]')`
 * `save_and_open_page` to visually inspect the page. It works when `js: false`
 and uses `lunchy` gem. It does not load images with relative path (images on
 your server).
