@@ -294,9 +294,12 @@ so I use  `~/.bash_profile` and with `sudo raspi-config` enable option Boot to
 CLIE Autologin, Create `~/.bash_profile` with this line:
 
 ~~~
-sudo ruby /home/pi/home_automation/app.rb -e production
+# -E is needed if you want to pass env varables to sudo command
+sudo -E ruby /home/pi/home_automation/app.rb -e production
 # source $HOME/securiPi/start.sh
 ~~~
+Note that this will be executed for each ssh login and it will be exited when
+you disconnect from ssh session.
 
 We use prefix `rvm` so `rvmsudo` pass that env variable to
 [child](https://github.com/rvm/rvm/blob/master/bin/rvmsudo#L84) and unbuffer so
@@ -635,7 +638,7 @@ You can change ip with "EditDevice"
 
 IPC-HDW4300C Dahua IP dome 3MP Camera HDW4300C Built-in MIC Metal body POE CMOS IR 30m IK10 1080p IP66 security cctv Camera IPC-HDW4300C
 Lens (mm):3.6mm
-default IP address 192.168.1.108 media port 3777 MAC
+Default IP address for Dahua cameras is 192.168.1.108 media port 3777 MAC
 3c:ef:8c:a3:c9:6b, vendor Dahua, username: admin, password: admin. Also have
 RTSP port 554.
 
@@ -758,7 +761,8 @@ there. There is no difference while there is a traffic or inactive network.
 Cheap china white ip camera spends 260mA if all diodes are on and streaming
 (253mA no streaming). During the day, witout IR diodes, it spends 100mA (87mA
 when there is no streaming).
-Cheap china ip camera without box spends ~140mA.
+Cheap china ip camera without box and ir diodes spends ~140mA.
+Dahua IPC-HDW4631C-A spens 250mA without IR and 270mA with ID diodes.
 
 
 # Stream
@@ -782,5 +786,16 @@ based on https://github.com/jimxl/ruby-onvif-client
 To stream screen recordings you can download
 https://www.tightvnc.com/download.php vnc server (default configuration is
 enough). Run Server in Application Mode.
+
+# OBS
 On computer that is connected to projector, run OBS project
-https://obsproject.com/ and add source "Window source"
+https://obsproject.com/ and add source "Window source".
+You can stream RTSP cameras by selecting "Media source" and unchecking "Local
+file" and insert something like rtsp://admin:dusan10@192.168.3.6:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream
+Since changing scenes will disconnect and reconnect again, best way to switch
+cameras is to move to top (on mac it is fn + cmd + left).
+To preview cameras you can use right click and "Windowed projector" so you can
+see all three cameras in three windows.
+On each source you should use "Transform" and "Strech to screen". It is good to
+have all cameras with same ratio width and height.
+

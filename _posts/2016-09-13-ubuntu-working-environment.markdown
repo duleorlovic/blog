@@ -478,7 +478,13 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
     https://help.ubuntu.com/community/Installation/MinimalCD (since full iso is
     850MB > 700 MB CD capacity)
 
-* find motherboard proccessor model with `sudo dmidecode | less`
+* find motherboard proccessor model with `sudo dmidecode | less`. To find type
+  of memory run `sudo dmidecode --type 17` and look for `Type Detail` (for
+  my server [Dell power Edge
+  T110](https://www.dell.com/ky/business/p/poweredge-t110-2/pd)  it is `Type
+  Detail: Synchronous Unbuffered (Unregistered)` and `Part Number`
+  (M391B5273DH0-CK0) so it does not support registered/buffered memory
+  [link](https://www.dell.com/community/PowerEdge-Hardware-General/PowerEdge-T110-RAM-compatibility/td-p/5816309)
 
 # Remote access to services
 

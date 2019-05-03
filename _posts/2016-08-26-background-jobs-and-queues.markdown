@@ -536,6 +536,10 @@ than you can assign priority for each queue:
 For mailer instead of `.deliver` method we can also use `.delay` in prefix, like
 `MyMailer.delay(run_at: 5.minutes.from_now).welcome(user)`. Or use rails 5
 `deliver_now` or `deliver_later`.
+Note that if you deliver_later in some validate block which is invalid (model
+has sam validation errors) than whole block is rolledback and even ActiveJob or
+DelayedJobs is rolledback and hence will not be executed in background.
+
 Mailer `queue` is by default `mailers`. For other jobs `queue` is `nil`.
 In Rails 5 you can rename to `config.action_mailer.deliver_later_queue_name =
 'default_mailer_queue'`.

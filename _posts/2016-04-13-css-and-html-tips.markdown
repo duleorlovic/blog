@@ -549,6 +549,27 @@ th.rotate > div > span {
 }
 ~~~
 
+# CSS Selectors
+
+https://www.w3.org/TR/2011/REC-css3-selectors-20110929/
+
+* type selector
+* universal
+* attribute
+* class
+* id
+* pseudo-classes
+* pseudo-elements
+* combinators
+
+To find you can use https://www.w3.org/TR/selectors-api/
+
+* `querySelector('#bar, #foo')` for example return first in document order
+  `#foo`
+* `var lis = querySelectorAll('ul>li')` we can iterate using array notation
+  `for(var i = 0; i < lis.lenght; i++) { lis[i] }`. NodeList are static (not
+  live) so changes in DOM do not affect content of the lis
+
 # jQuery
 
 [some

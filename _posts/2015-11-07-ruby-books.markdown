@@ -130,9 +130,10 @@ copy paste code), but `require` only once and only when needed. `ruby -e 'puts
 $:'` will list all load paths. `load` is usefull to overwrite with new changes
 of a particular file.
 
-`require` is more suitable for features (no need `.rb`).
-It does not know for current folder, so it needs explicit `require "./f.rb"` or
-`$: << "."` or `require_relative "f"`.
+`require` is more suitable for features (no need `.rb`).  It does not know for
+current folder, so you need to use `./` dot that explicitly define path `require
+"./f.rb"` or `$: << "."` or `require_relative "f"`(extension is not needed
+`.rb`)
 
 Variables are not objects. They just hold a reference to objects. You can use
 `var.dup` to create another object or you can `var.freeze` to prevent
@@ -1303,6 +1304,9 @@ end
 `described_class.name.underscore`. Of you need class from controller name
 `users_controller` you can `controller_name.classify.constantize` which returns
 `UsersController`
+* to create array of hashes or array of new objects you can not use `[{}]*2` or
+  `[User.new]*2` since that will be the same object in both places. You have to
+  use `Array.new(2) { User.new }`
 
 todo
 

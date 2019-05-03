@@ -919,6 +919,21 @@ When you update secrets, than you need to restart the server `cap production
 deploy:restart`. For background jobs to pick up new secrets you need to restart
 `cap production sidekiq:restart`.
 
+* if there is an error for
+  ```
+  sidekiq:monit:monitor
+      01 sudo /usr/bin/monit monitor sidekiq_cablecrm_production_0
+      01 sudo
+      01 :
+      01 no tty present and no askpass program specified
+  ```
+  than I tried to enable ssh with no password for monit with `sudo visudo` and
+  add line
+  ```
+  deploy_user ALL= NOPASSWD: /usr/bin/monit
+
+  ```
+  but still same problem.
 
 # NGINX
 

@@ -311,6 +311,9 @@ $('#clicks-table').DataTable({
 
 If you have special simbols, you can try to enable `bom: true` option.
 
+Export server side datatable
+https://diogenesggblog.wordpress.com/2017/02/02/how-to-export-all-rows-from-datatables-using-server-side-ajax/
+
 # DOM
 
 [dom](https://datatables.net/reference/option/dom) control buttons: `l` for
@@ -511,3 +514,19 @@ shift](https://datatables.net/extensions/select/examples/styling/bootstrap.html)
 
 * another nice
 [bootstrap-table](http://issues.wenzhixin.net.cn/bootstrap-table/index.html)
+
+# Ajax datatable rails
+
+For this [gem](https://github.com/jbox-web/ajax-datatables-rails) you need to
+define view_columns, by default `orderable` and `searchable` are true, and
+`cond` is `:like` (`:start_with`, `:end_with`, `:string_in`,... )
+
+```
+  def view_columns
+    @view_columns ||= {
+      name: { source: "User.name", cond: :like }
+    }
+  end
+```
+
+

@@ -56,8 +56,11 @@ Since in html forms we can only send value or array
 
   Hash values can also be string, array or another hash. For array (html
   `name='user[ids][]`) in rails you can use `f.text_field :ids, name:
-  'user[ids][]` (or general `"#{f.object.class.name.underscore}[ids][]"` and we
-  got `params[:user][:ids] #=> [1,2]`.  Hash with hash values rails use it for
+  'user[ids][]` (`f.text_field :ids` does not make sense since there are
+  multiple input fields, so better is to use `text_field_tag :name`, but if you
+  are using strong params, than you need to put inside model name, for example
+  `"#{f.object.class.name.underscore}[ids][]"`) we got
+  `params[:user][:ids] #=> [1,2]`.  Hash with hash values rails use it for
   `fields_for & accepts_nested_attributes_for` html
   `name='user[posts_attributes][0][id]` and we got
   `params[:user][:posts_attributes]["0"][:id]`. Note that you need to permit
@@ -247,11 +250,11 @@ you can use rails builder
   <% end %>
   ~~~
 
-  Another solution to translations of input submit is to use buttons with value
-  as the same as the text inside button tag.
+  Another solution to translations I18 of input submit is to use buttons with
+  value as the same as the text inside button tag.
   ```
   <%= form_for('url') do |f| %>
-    <%# instead of <input> we use <button> with value (which is the same as inner text) so automatic page translators do not change that value %>
+    <%# instead of <input> we use <button> with value (which could be the same as inner text) so automatic page translators do not change that value %>
     <%= f.button 'Create', value: 'Create' %>
     <%= f.button 'Special Action', value: 'Special Action' %>
   <% end %>

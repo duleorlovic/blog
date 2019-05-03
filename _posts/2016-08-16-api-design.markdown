@@ -83,48 +83,6 @@ configured with:
 * `has_many`
 * `filters`, `filter`
 
-# Test and Documentation from rspec
-
-rspec_api_documentations/dsl and generate api docs `rake docs:generate` and
-`gnome-open docs/`:
-* `resource` synonim for describe
-* `get`, `post`, `patch`, `delete`
-  * you can validate `response_status` and `response_body` which is
-  `JSON.parse(response.body)`
-* `parameter` used to define params
-* `example_request` is the same as colling `example` (synonim for `it`) and
-`do_request`
-* `send :name` to get value of `name`
-* `no_doc`
-
-
-If you got [415 error UNSUPPORTED_MEDIA_TYPE
-](http://www.rubydoc.info/gems/jsonapi-resources/JSONAPI) than set header.
-If you got `is not a valid resource` code 101, than you mispelled `type` top
-level attribute (for example `users`) on [resource
-object](http://jsonapi.org/format/#document-resource-objects).
-If you got `"no implicit conversion of nil into Hash"` than problem is that we
-need to declare `attribute` on the resource.
-If you for `does not contain a key` code 109, than you need to add `:id` to both
-"data" and "url" and use different name, for example this is duplication for
-update resources:
-
-~~~
-  patch '/v1/organizations/:organization_id' do
-    let(:organization) { create :organization, name: 'My Organization' }
-    let(:organization_id) { organization.id }
-    parameter :id, 'Id of the organization.', required: true
-    let(:id) { organization.id }
-  end
-~~~
-
-HTTP codes are standard (200 get, 201 created, 204 deleted).
-
-You can debug with:
-
-~~~
-tail -f log/test.log
-~~~
 
 # Postman
 
@@ -192,7 +150,7 @@ Success:
 
 For errors we could respond with `head :not_found` (and hide sensitive
 information) but its better to send the reason and some info (`render json:
-{ message: 'Some problem', error: 401 }, status: 401`)
+{ error: 'Some problem', error_status: 401, error_code: 1234 }, status: 401`)
 
 * *303 See Other* when session create (login) email does not exists
 * *400 Bad Request*  `:bad_request` when we have `ParameterMissing`
@@ -208,7 +166,8 @@ exist
 * *410 Gone* data has been deleted, deactivated ...
 * *422 Unprocessable Entity* `:unprocessable_entity` change password form but
 current password is bad, or form validation errors `if ! @user.update() render
-json: @user.errors.full_messages.join(','), status: :unprocessable_entity`
+json: @user.errors.full_messages.join(','), status: :unprocessable_entity`, or
+when creating new resource but uniqueness validation (already exists) prevents
 
 Server errors
 
@@ -216,19 +175,49 @@ Server errors
 * `503 Service Unavailable` api is overloaded or in maintenance mode
 
 Common responses:
+Rails does not come with `:unauthorized` exception
+https://stackoverflow.com/questions/25892194/does-rails-come-with-a-not-authorized-exception
+so you can create one
+```
+# app/models/authorization_exception.rb
+class AuthorizationException < Exception
+end
+```
+and you can use for example in `login`
+```
+# app/controllers/api/v2/sessions_controller.rb
+  def subscriber_login
+    # this will raise ActiveRecord::RecordNotFound
+    subscriber = Subscriber.find_by! username: params[:username]
+    # instead of bang we could use find_by and manually raise, result is the same
+    raise ActiveRecord::RecordNotFound.new("Couldn't find Subscriber") unless subscriber
+    raise AuthorizationException.new('Password is not correct') unless subscriber.authenticate(params[:password])
+    render json: { auth_token: JwtAuth.encode_subscriber_id(subscriber.id) }
+```
+
+and rescue from those exceptions and show json message
 
 ~~~
 # app/controllers/application_controller.rb
-  rescue_from ActiveRecord::RecordNotFound do
-    render json: { error: "Not found" }, status: :not_found
+  rescue_from JWT::DecodeError do |e|
+    render json: { error: e.message }, status: :bad_request
   end
 
-  rescue_from ActionController::ParameterMissing do
-    render json: { error: "Bad requests" }, status: :bad_request
+  rescue_from ActiveRecord::RecordNotFound do |e|
+    render json: { error: e.message }, status: :not_found
   end
 
-  rescue_from Pundit::NotAuthorizedError do
-    render json: { error: "Unauthorized" }, status: :unauthorized
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  # used with params.permit(:domain).fetch(:domain)
+  rescue_from ActionController::ParameterMissing do |e|
+    render json: { error: e.message }, status: :bad_request
+  end
+
+  rescue_from AuthorizationException do |e|
+    render json: { error: e.message }, status: :unauthorized
   end
 ~~~
 
@@ -236,8 +225,29 @@ Usually in case of validation error, I put only all error messages in one field
 `error` for example :
 
 ~~~
-  alert = "Failed to send new password"
-  format.json { render json: { error: alert }, status: :unprocessable_entity }
+# app/controllers/users_controller.rb
+
+  def send_password
+    alert = "Failed to send new password"
+    format.json { render json: { error: alert }, status: :unprocessable_entity }
+  end
+
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      render json: @user, status: :created
+    else
+      render json: { error: @user.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
+
+  def update
+    unless @user.update(user_params)
+      render json: { error: @user.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
 ~~~
 
 In angular, I use `connectionInterceptor` to set that `data.error` in case of
@@ -321,6 +331,70 @@ views.
 If you use rspec then go with
 [rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation),
 or swagger
+
+## Test and Documentation from rspec
+
+rspec_api_documentations/dsl and generate api docs `rake docs:generate` and
+`gnome-open docs/`:
+You need to put tests in `/spec/acceptance` in order to get [generate docs
+working](https://github.com/zipmark/rspec_api_documentation#rake-task)
+Configuration
+```
+# spec/support/rspec_api_documentation.rb
+RspecApiDocumentation.configure do |config|
+  config.docs_dir = Rails.root.join('public', 'api')
+  config.format = :json
+  config.curl_host = 'admin.xceednet.com'
+  used_headers = ['Content-Type', 'Authentication']
+  ignored_headers = ['Cookie', 'Host']
+  config.curl_headers_to_filter = ignored_headers
+  config.request_headers_to_include = used_headers
+  config.response_headers_to_include = used_headers
+end
+```
+
+Usage:
+
+* `resource` synonim for describe, but you need to use `resource` if you want to
+  generate docs and have
+* `get`, `post`, `patch`, `delete`
+  * you can validate `response_status` and `response_body` which is
+  `JSON.parse(response.body)`
+* `parameter` used to define params
+* `example_request` is the same as calling `example` (synonim for `it`) and
+`do_request`
+* `send :name` to get value of `name`
+* `no_doc`
+* `explanation` can be inside resource or it block
+
+
+If you got [415 error UNSUPPORTED_MEDIA_TYPE
+](http://www.rubydoc.info/gems/jsonapi-resources/JSONAPI) than set header.
+If you got `is not a valid resource` code 101, than you mispelled `type` top
+level attribute (for example `users`) on [resource
+object](http://jsonapi.org/format/#document-resource-objects).
+If you got `"no implicit conversion of nil into Hash"` than problem is that we
+need to declare `attribute` on the resource.
+If you for `does not contain a key` code 109, than you need to add `:id` to both
+"data" and "url" and use different name, for example this is duplication for
+update resources:
+
+~~~
+  patch '/v1/organizations/:organization_id' do
+    let(:organization) { create :organization, name: 'My Organization' }
+    let(:organization_id) { organization.id }
+    parameter :id, 'Id of the organization.', required: true
+    let(:id) { organization.id }
+  end
+~~~
+
+HTTP codes are standard (200 get, 201 created, 204 deleted).
+
+You can debug with:
+
+~~~
+tail -f log/test.log
+~~~
 
 ## Swagger ui grape
 
@@ -456,9 +530,20 @@ wants to cover all skill levels.
 
 # JWT Json web tokens
 
+```
+gem 'jwt'
+
+t = JWT.encode( {a: 1}, 'secret')
+=> "eyJhbGciOiJIUzI1NiJ9.eyJhIjoxfQ.LrlPmSL4FxrzAHJSYbKzsA997COXdYCeFKlt3zt5DIY"
+>> JWT.decode t, 'secret' #=> [{"a"=>1}, {"alg"=>"HS256"}]
+```
 
 <https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two>
 
 https://medium.com/@stevenpetryk/providing-useful-error-responses-in-a-rails-api-24c004b31a2e#.lp6e0sjpf
 
 https://github.com/tuwukee/jwt_sessions
+
+In email search for Chris Kottom Lesson 9: Token-Based Authentication with JWTs
+Accessing Google oauth to list my videos https://martinfowler.com/articles/command-line-google.html
+

@@ -79,6 +79,28 @@ If you want redirection from non www to www, than use Forwatd -> Url redirect
 (301 or 302) but uncheck "Synchronize the domain and subdomain www"
 ![loopia dns]({{ site.base_url }}/assets/posts/loopia_dns.png "Loopia DNS")
 
+# Jekyll on github
+
+Easiest way to start a blog on github it to fork
+<https://github.com/barryclark/jekyll-now> and rename it to
+`duleorlovic.github.io` and start editing using <http://prose.io/>. There is
+nothing special there, just simple jekyll project, with
+[_includes](https://github.com/duleorlovic/jekyll-now/tree/master/_includes) for
+discuss, analytics, meta and uses `gems: jekyll-sitemap` which github supports.
+It does not use theme. It is very similar to default jekyll theme
+[minima](https://github.com/jekyll/minima)
+
+
+Jekyll default template minima can be overriden with
+```
+bundle show minima
+# ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0
+mkdir _includes
+cp `bundle show minima`/_includes/@(footer|header|head).html _includes/
+git add .
+git commit -am 'cp `bundle show minima`/_includes/@(footer|header|head).html _includes/'
+```
+
 
 # Travis
 
@@ -446,27 +468,6 @@ not find the page.
 
 You can serve using different port, just add `port: 4001` to your `_config.yml`
 file.
-
-# Jekyll now on github
-
-Easiest way to start a blog on github it to fork
-<https://github.com/barryclark/jekyll-now> and rename it to
-`duleorlovic.github.io` and start editing using <http://prose.io/>. There is
-nothing special there, just simple jekyll project, with
-[_includes](https://github.com/duleorlovic/jekyll-now/tree/master/_includes) for
-discuss, analytics, meta and uses `gems: jekyll-sitemap` which github supports.
-It does not use theme. It is very similar to default jekyll theme
-[minima](https://github.com/jekyll/minima)
-
-
-Jekyll default template minima can be overriden with
-```
-mkdir _includes
-cp ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0/_includes/head* _includes
-cp ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0/_includes/footer.html _includes
-git add .
-git commit -am 'cp ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0/_includes/footer.html _includes'
-```
 
 # Theme
 
@@ -889,8 +890,11 @@ not confuse crawlers. You can add redirection in html
 </html>
 ~~~
 
-* google io slides can be found https://github.com/willnorris/io-slides
-*
+# Slides
+
+Google io slides can be found https://github.com/willnorris/io-slides
+After you clone the repository
+
 
 <https://jekyllrb.com/docs/plugins/>
 <https://github.com/planetjekyll/awesome-jekyll>

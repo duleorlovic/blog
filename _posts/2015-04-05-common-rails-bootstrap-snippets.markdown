@@ -473,7 +473,7 @@ shared:
   # default_url is required for links in email body or in links in controller
   # when url host is not available (for example rails console)
   default_url:
-    host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "localhost") %>
+    host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "www.myapp.localhost") %>
     port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : nil) %>
 
 # `shared` is automatically included, no need to write
@@ -722,7 +722,7 @@ You need to find the name of heroku database by clicking on Postgresl plugin
 
 ~~~
 rails db:drop
-heroku pg:pull postesql-name-on-heroku my_rails_app_development
+heroku pg:pull postgresql-name-on-heroku my_rails_app_development
 
 # also pushing
 heroku pg:reset

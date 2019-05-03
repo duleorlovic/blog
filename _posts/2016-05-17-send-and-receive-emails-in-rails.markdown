@@ -185,6 +185,9 @@ sed -i '/group :development do/a  \
 sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
 ~~~
 
+Note that email letter opener does not work when you run with `rake jobs:work`,
+but works when `bin/delayed_job run` (Launchy works in both cases, this
+difference is only for mailer).
 
 # Interceptor
 
@@ -438,6 +441,9 @@ ohers are hash.
   end
 ~~~
 
+Note that you should not send email in before blocks since when validation fails
+it will rollback and even background job is rollbacked.
+
 # ActionMailer
 
 [Here](http://guides.rubyonrails.org/action_mailer_basics.html#complete-list-of-action-mailer-methods)
@@ -522,6 +528,8 @@ Using some header json you can set button in gmail subject line "Quick Actions".
 
 You can disable registering specific email domains using this list
 https://github.com/FGRibreau/mailchecker
+Using this gem https://github.com/rubygarage/truemail you can check if actual
+email account exists on smtp server.
 
 # Testing emails
 

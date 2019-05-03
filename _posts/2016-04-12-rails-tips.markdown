@@ -497,6 +497,9 @@ but `delete_all` strategy
 Note that you can use simple text column (without default value) and add
 `serialize :preferences, Hash` in your model, so `user.prefereces # => {}` is
 defined for initial empty value.
+You can not search serialized columns (you are limited to reading and writing
+data) `User.where(params: { a: 1 })` gives error. You can only use raw sql, for
+example `User.where('params = ?', { a: 1}.to_yaml)`.
 
 Adding array of any type and hstore is easy, just add default value `[]` and
 `''` (breaks for `{}`). You can create hstore extension in migration. If you
@@ -892,7 +895,7 @@ add_foregn_key :donations, :users, column: :donor_id
 
 Also in model you need to write: `has_many :donations, foreign_key: :donor_id`
 and `belongs_to :donor, class_name: "User"`. If you need to specify class name
-in has_many through association, user option `source: :user`
+in has_many through association, use option `source: :user`
 
 Note that `t.references` should be used with `foreign_key: true, null: false`
 since foreign_key is not automatically used (`t.references` automatically add
@@ -973,8 +976,14 @@ but can not use it in where https://stackoverflow.com/questions/16123492/eager-l
 For using in where you need to define specific associations (note: you need to
 add `optional: true`)
 ```
+class Notification < ApplicationRecord
   belongs_to :notifiable, polymorphic: true
+  # notifiable: Comment, Task, Project need to implement subscribed_users since
+  # we send body text to them
+
   belongs_to :comment, -> { where notifications: { notifiable_type: 'Comment' } }, foreign_key: :notifiable_id, optional: true
+  belongs_to :task, -> { where notifications: { notifiable_type: 'Task' } }, foreign_key: :notifiable_id, optional: true
+
   scope :for_comments_on_tasks, (lambda do
     joins(:comment)
       .where(comments: { commentable_type: 'Task' })
@@ -1514,6 +1523,8 @@ Also you can receive parameters into `args`
 
 ~~~
 # lib/tasks/update_subdomain.rake
+# instead of puts, we can use Rails.logger.info
+Rails.logger = Logger.new(STDOUT)
 namespace :update_subdomain do
   desc "update subdomains for my-user. default value is 'my_subdomain'"
   task :my_user, [:subdomain] => :environment do |task, args|
@@ -1522,8 +1533,8 @@ namespace :update_subdomain do
     fail "Can't find user 'my-user'" unless user
     user.subdomain = args.subdomain
     user.save!
-    puts "Updated #{user.subdomain}" || next if return_from_rake_task_now?
-    puts 'Finished'
+    Rails.logger.info "Updated #{user.subdomain}" || next if return_from_rake_task_now?
+    Rails.logger.info 'Finished'
   end
 end
 
@@ -1781,7 +1792,7 @@ class LandingSignup
   end
 
   # no need for initialize since AR will pick from params
-  # but if you need to set default values, you can
+  # but if you need to set default values, here is a code
   def initialize(attributes)
     super(attributes)
     _after_initialize
@@ -1816,6 +1827,10 @@ class PagesController < ApplicationController
   end
 end
 ~~~
+
+To define url for ActiveModel you need to overwrite some instance vars
+https://stackoverflow.com/questions/3736759/ruby-on-rails-singular-resource-and-form-for
+so better is to define url param `form_for @form, url: users_path`
 
 ## Decorators
 
@@ -1975,6 +1990,15 @@ task.tick # ...
 
 # Unsubscribe links
 
+You can use
+https://api.rubyonrails.org/v5.2.2.1/classes/ActiveSupport/MessageVerifier.html
+to encode strings or id
+```
+  @unsubscribe = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
+```
+
+Old example
+
 ~~~
 # app/views/layouts/_email_footer.html.erb
 <p>
@@ -2093,6 +2117,13 @@ end
 # Money
 
 Dealing with money with <https://github.com/RubyMoney/money-rails>
+
+Add money column is using `add_money` instead `add_column`. You can define where
+to put cents and currency column
+```
+  add_money :invoices, :round_off, amount: { after: :round_off_applicable }, currency: { after: :round_off_cents }
+
+```
 
 # Carrierwave for uploading
 
@@ -2642,8 +2673,8 @@ If you are seeing this on one of your tests, ensure that your tests are either e
     when you want to perform custom sql you can use
     ```
     task.projects
+        .select('projects.*')
          .select(<<-SQL)
-           projects.*,
            activities.name AS last_task_activity_name,
            tasks.updated_at AS last_task_updated_at
          SQL
@@ -2673,6 +2704,9 @@ so this filter only works for `customer.radaccts`
 ~~~
 has_many   :radaccts, -> (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
 ~~~
+
+In rails belongs_to foreign_key https://guides.rubyonrails.org/v5.2/association_basics.html#options-for-belongs-to-foreign-key
+is used is you have different name of the column than name_of_association_id
 
 You can specify conditions in relation
 ```

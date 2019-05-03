@@ -927,6 +927,7 @@ Email templates
 * <http://animejs.com/>
 * <http://daneden.me/animate> animate.css you need to add `class='animated
   fadeIn`. Check how it looks in Mac Safari.
+* <https://alexcambose.ro/motus/#/demos/svg> animate on scroll
 
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>
@@ -1001,6 +1002,28 @@ see [ci cd post]{{ site.baseurl }} {% post_url 2018-04-10-continuous-delivery-in
 * https://www.nsupdate.info to run on ubuntu just `sudo apt-get install
 ddclient` and provide config params (or update `/etc/ddclient.conf`) and it
 will run every hour
+
+Problem with dynamic dns is that their servers (hosted on AWS) sometime fails.
+Currently it shows correct ip
+
+```
+dig +noall +answer trkcam.duckdns.org
+trkcam.duckdns.org.	60	IN	A	77.46.227.151
+```
+
+but sometimes it resolves to `ec2-54-80-18-240j.compute-1.amazonaws.com` or
+`ec2-52-91-66-51.compute-1.amazonaws.com`, and errors is raised:
+```
+Mysql2::Error::ConnectionError: Access denied for user 'cablecrm_staging_user'@'ec2-52-91-66-51.compute-1.amazonaws.com' (using password: (redacted)))
+```
+or
+```
+A Neo4j::Core::CypherSession::ConnectionFailedError occurred in chats#show:
+
+  Faraday::ConnectionFailed: Couldn't resolve host name
+```
+
+Best way is to use static ip address.
 
 # Find alternatives
 

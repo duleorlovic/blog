@@ -32,25 +32,11 @@ git add . && git commit -m "rails g devise user"
 Copy views
 ```
 rails g devise:views
-&& git add . && git commit -m "rails g devise:views"
-# optional create home page and navbar links
-rails g controller pages home
-sed -i config/routes.rb -e "/^end$/i \\
-  # root page\n\
-  root 'pages#home'\
-"
-sed -i app/views/layouts/application.html.erb -e "/<body>/a \\
-    <%= link_to 'Home', root_path %>\n\
-    <% if current_user %>\n\
-      <strong><%= current_user.email %></strong>\n\
-      <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>\n\
-    <% else %>\n\
-      <%= link_to 'Sign up', new_user_registration_path %>\n\
-      <%= link_to 'Log in', new_user_session_path %>\n\
-    <% end %>\
-"
-git add . && git commit -m "Adding login/logout header in layout"
+git add . && git commit -m "rails g devise:views"
 ```
+
+Override default devise views with my views with locales, follow instructions on
+https://github.com/duleorlovic/devise-views-i18n
 
 You can add facebook auth below.
 

@@ -288,7 +288,6 @@ http://thorstenball.com/blog/2014/03/12/watching-understanding-ruby-2.1-garbage-
 
 # Rack memory profiles
 
-
 Gem rack-mini-profiler <https://github.com/MiniProfiler/rack-mini-profiler>
 I add simple widget on top left corner of the page. Does not work when `render
 json: data` (it has to be html).
@@ -302,7 +301,13 @@ gem 'stackprof' # ruby 2.1+ only
 gem 'memory_profiler'
 ~~~
 
-To enable on production env use
+By default it is enabled, to disable you need to
+```
+# config/initializers/rack_profiler.rb
+Rack::MiniProfiler.config.authorization_mode = :whitelist
+```
+
+To enable for specific users you need to
 
 ~~~
 # app/controllers/application_controller.rb
@@ -313,7 +318,6 @@ To enable on production env use
     end
   end
 ~~~
-
 
 # Links
 

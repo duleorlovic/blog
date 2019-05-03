@@ -14,7 +14,13 @@ not need to define all 12, `.col` will occupy rest of place. `.col-auto` will
 occupy only that is needed (based on it's contents, it uses `max-width: 100%`).
 When you specify for sm, you do not need to specify for md or lg. `col-xs-12` is
 `width: 100%` which is default so no need to write that. Write only when you
-need columns.
+need columns. Gutter between columns (padding) is 30px, ie 15px on each side,
+so when nesting column inside column, first column will get blank space on its
+left (unneeded indent from 15px padding from first column and 15px padding from
+nested column) so that the reason why row has -15px margin (to fix eventual
+parent column padding) and you have to wrap row with `.container` class to
+compensate that (padding 15px) otherwise you will get horizontal scrollbar since
+body will be larger than 100% by 30px.
 
 Bootstrap Media queries:
 
@@ -430,17 +436,18 @@ You can prepend or append strings or buttons
 ~~~
 
 Checkboxes or radio buttons should be inside a `form-group` if you want to show
-them indented (inside wrapper class) and to show label (control class).
+them indented (inside wrapper class) and to show label (control class) and help
+text
 
 ~~~
-  <%= f.form_group label: { text: 'Admin' }, help: 'This option enables admin' do %>
-    <%= f.check_box :admin, label: '' %>
+  <%= f.form_group label: { text: 'Admin', for: 'admin' }, help: 'This option enables admin' do %>
+    <%= f.check_box :admin, hide_label: true, id: 'admin' %>
   <% end %>
 ~~~
 
-To hide label instead of `label: false` you need to use `hide_label: true`
+To hide label instead of `label: ''` you need to use `hide_label: true`
 
-Static test can be displayed with
+Static text can be displayed with
 
 ~~~
 <%= f.static_control :email %>

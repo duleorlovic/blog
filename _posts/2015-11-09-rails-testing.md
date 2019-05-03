@@ -566,6 +566,12 @@ Usually for oauth (doorkeeper gem).
 If request is not performed (`get` `xhr`) than something is different (current
 user is not initialized, or something).
 `post url, name: 'my name'` is used without `params` key
+To set headers you can use third param
+
+```
+  get login_path, nil, { 'Authentication' => 'MyToken' }
+
+```
 
 ~~~
 # spec/requests/oauth_password_flow_spec.rb

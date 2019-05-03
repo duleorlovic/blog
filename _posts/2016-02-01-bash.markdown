@@ -910,6 +910,11 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
 
 * list files with full path is using `find $PWD` or using `-d`
   option `ls -d -1 $PWD/*.*`
+  list files by regexp https://www.linuxjournal.com/content/bash-extended-globbing
+  ```
+  ls @(one|two).html
+  ```
+  ls sort by file size using `ls -S`
 
 * `df -h` and `du -sh` can show how much is used or free
 * `df -i` show how much inodes are left. Zoneminder through mysql can use all of

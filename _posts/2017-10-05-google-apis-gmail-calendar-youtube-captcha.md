@@ -71,6 +71,16 @@ https://developers.google.com/api-client-library/ruby/apis/gmail/v1
 Someone can break to your account simple by adding his email as recovery email.
 Than he can easily change password.
 
+# Gmail shortcuts
+
+* ? to open keyboard shortcut help
+* Ctrl+Enter to send email
+* j and k to older and newer conversation
+* o to open conversation, u to back to threadlist
+* g+a go to all mail, g+t to sent emails, g+i to inbox
+* c to compose
+* / to search
+
 # ReCaptcha
 
 Register on <https://www.google.com/recaptcha> and you can use in in javascript
@@ -158,6 +168,11 @@ Recaptcha.configure do |config|
   config.site_key = Rails.application.secrets.google_recaptcha_site_key
   config.secret_key = Rails.application.secrets.google_recaptcha_secret_key
 end
+
+# config/secrets.yml
+  # Google recaptcha
+  google_recaptcha_site_key: <%= ENV['GOOGLE_RECAPTCHA_SITE_KEY'] %>
+  google_recaptcha_secret_key: <%= ENV['GOOGLE_RECAPTCHA_SECRET_KEY'] %>
 ```
 
 Use `Checkbox` v2 (`Invisible` is similar, just you need to trigger using js and

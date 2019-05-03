@@ -39,7 +39,8 @@ attributes you can use `User.human_attribute_name("email")`
 [link](http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models)
 For `ApplicationRecord` translate `activerecord`.
 For form objects `include ActiveModel::Model` you should translate
-`activemodel`.
+`activemodel`. There you can use `t('successfully')` instead
+`I18n.t('successfully')` if you `include AbstractController::Translation`
 
 ~~~
 # config/locales/activerecord_activemodels.en.yml

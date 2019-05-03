@@ -197,8 +197,8 @@ end
 ~~~
 
 * properties are declared with `property :name`. It can also define
-  * `default: 'default_value'` is set when property is `nil` so for existing and
-  new object it will be `'default_value'`
+  * `default: 'default_value'` is set when property is `nil` so for new object
+  it will be `'default_value'`. For existing object you need to run migration
   * `type: Integer` define property type in ruby: integer, float, string, time,
   date, datetime, boolean, BigDecimal. Istead of DateTime, if you need some
   expensive query, better is to use `type: Integer` and store as unix timestamp
@@ -208,7 +208,11 @@ end
 
 * `enum status: [:draft, :published]` maps integer in db to strings in rails
   * you can use `user.draft!`, `user.draft?` or `User.draft`
-  * `_default: :draft` to define default value
+  * `_default: :draft` to define default value, note that default value is when
+    value is NULL for existing objects, so better is to run migration
+    (`user.draft?` will return true even in neo4j it is NULL!!!) and you need to
+    save two times `next unless user.draft? ; user.status = :published;
+    user.save! user.status = :draft; user.save!`
   * usually you need to add index on enum column but you can disable `_index:
   false`
   * validation like `validates :name, presence: true`, or
@@ -298,6 +302,9 @@ end
 
   # to find nodes that does not have relationship
   Move.query_as(:m).match('(m)').where('NOT (m)-[:WANTS]-()').pluck :m
+  # to find nodes that does not have relation with EmailMessage with specific
+  # property tag=some_tag
+  User.query_as(:user).where("NOT (user)-[:RECEIVED]-(:EmailMessage { tag: '#{tag}'})").pluck(:user)
   ~~~
 
 * when comment is destroyed than you can not get it's post, it is better to get
@@ -596,8 +603,8 @@ it `user.created_assets.categories(:category).pluck('category.name',
 'count(*)')`
 
 Using `where` can be with string or with hash. If you want to target specific
-node you can use string like `where("node.uuid = #{n.id}")` or hash `where(node:
-{ neo_id: n.id })`, or using parms `where('node.uuid =
+node you can use string like `where("node.uuid = '#{n.id}'")` or hash
+`where(node: { neo_id: n.id })`, or using parms `where('node.uuid =
 {node_id}').params(node_id: n.id)` or `match_nodes(node: n)`.
 Note that you have to use `uuid` since `id` in cypher does not exists. For a
 list you do not need to wrap in square brackets `where('node.uuid IN
@@ -809,6 +816,7 @@ tail -f /var/log/neo4j/debug.log
 To make a backup you can
 
 ~~~
+# we have to cd to directory because otherwise zip will store path in output
 cd db/neo4j/development/data/databases/graph.db/
 zip -r ../backup.zip .
 ~~~

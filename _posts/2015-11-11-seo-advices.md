@@ -8,6 +8,7 @@ Test your site on
 <https://search.google.com/search-console/inspect>
 <https://search.google.com/test/rich-results>
 <https://search.google.com/structured-data/testing-tool/u/0/>
+<https://gtmetrix.com/>
 
 Free trial seo report rank <https://www.woorank.com/>
 Also on <https://www.webpagetest.org/>
@@ -54,10 +55,15 @@ widget</a>`
 * add viewport meta tag `<meta name="viewport" content="initial-scale=1.0,
   width=device-width">` and use CSS media queries to apply different style
   depending of screen size
-* enable gzip compresion, optimize image, eliminate render-blocking javascript
-  and css, leverage browser caching, minify css, to have small page size
-  (less than 320Kb) and load under one second
-  * [google web
+* enable gzip compresion, optimize image, use `srcset` for responsive images,
+  specify image dimensions
+  ```
+  <img src="https://example.com/images/image.png" srcset="https://example.com/images/image-1024.png 1024w, https://example.com/images/image-512.png 512w" sizes="100vw">
+  ```
+* eliminate render-blocking javascript
+  and css, leverage browser caching, minify css, to have small page size (less
+  than 320Kb) and load under one second
+  [google web
   fonts](https://fonts.googleapis.com/css?family=Montserrat|Open+Sans) are
   cached only for one day (each day, it is downloaded again). For
   different browsers it uses diffent files: woff2, svg ... Download fonts using

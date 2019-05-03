@@ -1,6 +1,5 @@
 ---
 layout: post
-title:  Postgresql Tricks for Statistics Graphs
 tags: ruby-on-rails postgresql
 ---
 
@@ -102,6 +101,9 @@ Some tips:
   'b'`
 * you can use IN, ANY, ALL
 [functions-comparisons](https://www.postgresql.org/docs/current/static/functions-comparisons.html#AEN18509)
+
+Use gem to extent ActiveRecord functionality
+https://github.com/georgekaraszi/ActiveRecordExtended
 
 # Tutorial links
 
