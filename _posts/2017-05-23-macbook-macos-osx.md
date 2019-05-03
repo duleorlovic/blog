@@ -21,9 +21,10 @@ https://developer.apple.com/library/content/technotes/tn2450/_index.html
 You can find key codes in a table.
 Install **Key Codes** app
 https://itunes.apple.com/us/app/key-codes/id414568915?mt=12 to find key codes.
+Than use OR with 0x700000000.
 
-To switch switch keys
-`0xa` (§) and `0x32` (backtick tilde)
+To switch switch keys `0xa` (§) and `0x32` (backtick tilde) use `0x700000004`
+and `0x700000032`.  For `a` and `b` use `0x700000004` and `0x700000005`
 
 ~~~
 hidutil property --set '{"UserKeyMapping":
@@ -89,6 +90,9 @@ home folder in sidebar.
 Inside Finder Go menu you can hold ⌥  key to show `Library` folder. Some app
 data can be
 `~/Library/Containers/com.mydomain.myaoo/Data/Library/Application%20Support/myapp/`
+When you open the app using ⌘ + space than it is usually from Applications
+folder, but it could be from Downloads. You can check where app is location by
+right clicking on app icon in Dock than Options -> Show in finder
 
 I added to `.bash_profile`:
 
