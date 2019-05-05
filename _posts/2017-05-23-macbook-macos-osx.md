@@ -471,3 +471,12 @@ defaults delete com.mydomain.myapp
 
 You can see logs using `console` application. You can attach iPhone and see logs
 for it. Filter in `Search`, follow last logs with `Now` button.
+
+# Closed lid
+
+To keep working after lid is closed you can use app https://github.com/semaja2/InsomniaX and disable Idle Sleep and Disable Lid Sleep
+
+Open new VLC in separate window using
+~~~
+/Applications/VLC.app/Contents/MacOS/VLC &
+~~~
