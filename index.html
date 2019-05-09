@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>duleorlovic - web developer</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="home">
+
+  <h1>Posts</h1>
+
+  <ul class="posts">
+    
+      <li>
+        <span class="post-date">Apr 23, 2019</span>
+        <a class="post-link" href="/2019/04/23/d3-visualization/">D3 Visualization</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Mar 26, 2019</span>
+        <a class="post-link" href="/2019/03/26/service-workers/">Service Workers</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Mar 25, 2019</span>
+        <a class="post-link" href="/2019/03/25/es6-esnext/">Es6 Esnext</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 4, 2019</span>
+        <a class="post-link" href="/2019/01/04/rails-translations-i18n/">Rails Translations I18n</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 10, 2018</span>
+        <a class="post-link" href="/2018/12/10/java-in-android-studio/">Java In Android Studio</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 10, 2018</span>
+        <a class="post-link" href="/2018/12/10/alexa-aws-lambda/">Alexa Aws Lambda</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 2, 2018</span>
+        <a class="post-link" href="/2018/12/02/tableless-search-union-of-multiple-models-using-polymorphic-association-in-rails/">Tableless Search Union Of Multiple Models Using Polymorphic Association In Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 1, 2018</span>
+        <a class="post-link" href="/2018/12/01/nested-habtm-forms-for-associations-in-rails/">Nested Habtm Forms For Associations In Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 30, 2018</span>
+        <a class="post-link" href="/2018/11/30/object-oriented-design-principles/">Object Oriented Design Principles</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 20, 2018</span>
+        <a class="post-link" href="/2018/11/20/android-turbolinks-native-mobile-app-for-rails/">Android Turbolinks Native Mobile App For Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 7, 2018</span>
+        <a class="post-link" href="/2018/11/07/cordova/">Cordova</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 13, 2018</span>
+        <a class="post-link" href="/2018/08/13/oauth-specification-doorkeeper/">Oauth Specification Doorkeeper</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jun 5, 2018</span>
+        <a class="post-link" href="/2018/06/05/innovations-and-business/">Innovations And Business</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 31, 2018</span>
+        <a class="post-link" href="/2018/05/31/sinatra/">Sinatra</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 30, 2018</span>
+        <a class="post-link" href="/2018/05/30/rss-feed-reader/">Rss Feed Reader</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 24, 2018</span>
+        <a class="post-link" href="/2018/05/24/websockets-actioncable/">Websockets Actioncable</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 18, 2018</span>
+        <a class="post-link" href="/2018/05/18/ruby-http-client/">Ruby Http Client</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 17, 2018</span>
+        <a class="post-link" href="/2018/05/17/gdpr-privacy-policy-and-terms-of-use/">Gdpr Privacy Policy And Terms Of Use</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 16, 2018</span>
+        <a class="post-link" href="/2018/04/16/let-me-see/">Let Me See</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 10, 2018</span>
+        <a class="post-link" href="/2018/04/10/continuous-delivery-integration-ci-cd-pronto/">Continuous Delivery Integration Ci Cd Pronto</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Mar 22, 2018</span>
+        <a class="post-link" href="/2018/03/22/stimulus-js/">Stimulus Js</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 21, 2018</span>
+        <a class="post-link" href="/2018/02/21/blockchain-bitcoin-etherium/">Blockchain Bitcoin Etherium</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 12, 2018</span>
+        <a class="post-link" href="/2018/02/12/mikrotik-routers-winbox/">Mikrotik Routers Winbox</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 26, 2018</span>
+        <a class="post-link" href="/2018/01/26/hanami/">Hanami</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 22, 2018</span>
+        <a class="post-link" href="/2018/01/22/minitests-rails/">Minitests Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 17, 2017</span>
+        <a class="post-link" href="/2017/11/17/sharetribe/">Sharetribe</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 5, 2017</span>
+        <a class="post-link" href="/2017/10/05/google-apis-gmail-calendar-youtube-captcha/">Google Apis Gmail Calendar Youtube Captcha</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 3, 2017</span>
+        <a class="post-link" href="/2017/10/03/design-patterns-and-domain-driven-design/">Design Patterns And Domain Driven Design</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 2, 2017</span>
+        <a class="post-link" href="/2017/10/02/vue-js/">Vue Js</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 29, 2017</span>
+        <a class="post-link" href="/2017/08/29/stripe/">Stripe</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 18, 2017</span>
+        <a class="post-link" href="/2017/08/18/shopify-api/">Shopify Api</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 15, 2017</span>
+        <a class="post-link" href="/2017/08/15/typescript-begginer-examples/">Typescript begginer examples</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 10, 2017</span>
+        <a class="post-link" href="/2017/08/10/angular-4-and-beyond/">Angular 4 And Beyond</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jul 11, 2017</span>
+        <a class="post-link" href="/2017/07/11/graphql/">GraphQL</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jun 16, 2017</span>
+        <a class="post-link" href="/2017/06/16/move-index/">Move Index opensource</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jun 5, 2017</span>
+        <a class="post-link" href="/2017/06/05/vim-theory/">Vim theory</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 23, 2017</span>
+        <a class="post-link" href="/2017/05/23/macbook-macos-osx/">MacBook MacOS OSX</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 16, 2017</span>
+        <a class="post-link" href="/2017/05/16/state-machines-audit-trail-gem/">State machines audit trails gem</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 3, 2017</span>
+        <a class="post-link" href="/2017/05/03/bootstrap-front-end-framework/">Bootstrap front-end framerwork</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 23, 2017</span>
+        <a class="post-link" href="/2017/02/23/http-theory/">HTTP theory</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 13, 2017</span>
+        <a class="post-link" href="/2017/02/13/datatables/">Datatables</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 3, 2017</span>
+        <a class="post-link" href="/2017/02/03/rails-cache/">Rails cache</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 10, 2017</span>
+        <a class="post-link" href="/2017/01/10/get-syntax-right-in-jade-yaml-haml/">Get Syntax Right In Jade Yaml Haml</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 28, 2016</span>
+        <a class="post-link" href="/2016/10/28/adminlte-free-template-on-rails/">AdminLTE Free Template on Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 19, 2016</span>
+        <a class="post-link" href="/2016/10/19/elm-functional-static-typed-language/">Elm functional static typed language</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Sep 14, 2016</span>
+        <a class="post-link" href="/2016/09/14/web-vulnerability-and-dos-attacks/">Web Vulnerability And Dos Attacks</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Sep 13, 2016</span>
+        <a class="post-link" href="/2016/09/13/ubuntu-working-environment/">Ubuntu working environment</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Sep 12, 2016</span>
+        <a class="post-link" href="/2016/09/12/ruby-math-hackerrank/">Ruby Math Hackerrank</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Sep 7, 2016</span>
+        <a class="post-link" href="/2016/09/07/cap3-capistrano-deployment-rubber-provision/">Cap3 Capistrano Deployment Rubber Provision</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 26, 2016</span>
+        <a class="post-link" href="/2016/08/26/background-jobs-and-queues/">Background jobs and queues</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 20, 2016</span>
+        <a class="post-link" href="/2016/08/20/ionic-3/">Ionic 3</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 16, 2016</span>
+        <a class="post-link" href="/2016/08/16/api-design/">Api design</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jul 26, 2016</span>
+        <a class="post-link" href="/2016/07/26/usefull-plugins-services-and-opensource-stuff/">Usefull plugins, services and opensource stuff</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 31, 2016</span>
+        <a class="post-link" href="/2016/05/31/apns-gcm-push-notifications-using-ionic/">Apns Gcm Push Notifications Using Ionic</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 22, 2016</span>
+        <a class="post-link" href="/2016/05/22/neo4j-rails/">Neo4j Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 18, 2016</span>
+        <a class="post-link" href="/2016/05/18/echo-sed-grep-command-line-editing/">Echo Sed Grep command line editing</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 17, 2016</span>
+        <a class="post-link" href="/2016/05/17/send-and-receive-emails-in-rails/">Send and receive emails in rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">May 5, 2016</span>
+        <a class="post-link" href="/2016/05/05/git-tips/">Git tips</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 27, 2016</span>
+        <a class="post-link" href="/2016/04/27/scalable-css/">Scalable css</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 20, 2016</span>
+        <a class="post-link" href="/2016/04/20/bundler-bower-gulp-npm-yarn-webpack-tips/">Bundler Bower Gulp Npm Yarn Webpack Tips</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 13, 2016</span>
+        <a class="post-link" href="/2016/04/13/css-and-html-tips/">Css And Html Tips</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 12, 2016</span>
+        <a class="post-link" href="/2016/04/12/rails-tips/">Rails Tips</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 7, 2016</span>
+        <a class="post-link" href="/2016/04/07/angular-errors/">Angular errors</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 5, 2016</span>
+        <a class="post-link" href="/2016/04/05/javascript-coffeescript-tips/">Javascript & coffeescript tips</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Mar 2, 2016</span>
+        <a class="post-link" href="/2016/03/02/gulp-tasks/">Gulp tasks</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 29, 2016</span>
+        <a class="post-link" href="/2016/02/29/amazon-aws-s3/">Amazon AWS S3</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 21, 2016</span>
+        <a class="post-link" href="/2016/02/21/zoneminder-security-server-raspberry-pi-home-automation-arduino/">Zoneminder security server and Raspberry Pi home automation</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 19, 2016</span>
+        <a class="post-link" href="/2016/02/19/angular-material/">Angular Material</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 10, 2016</span>
+        <a class="post-link" href="/2016/02/10/javascript-theory/">Javascript theory</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 1, 2016</span>
+        <a class="post-link" href="/2016/02/01/bash/">Bash</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 27, 2016</span>
+        <a class="post-link" href="/2016/01/27/ionic-begginer-examples/">Ionic Begginer Examples</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 8, 2016</span>
+        <a class="post-link" href="/2016/01/08/testing-in-javascript/">Testing in javascript</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 24, 2015</span>
+        <a class="post-link" href="/2015/12/24/ionic-direct-aws-s3-upload/">Ionic & Rails Direct S3 image upload</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 20, 2015</span>
+        <a class="post-link" href="/2015/12/20/devise-oauth-angular/">From simple Devise to Oauth on Angular</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 18, 2015</span>
+        <a class="post-link" href="/2015/12/18/angular-testing/">Angular Testing</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 10, 2015</span>
+        <a class="post-link" href="/2015/12/10/angular-begginer-examples/">Angular begginer examples</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Dec 1, 2015</span>
+        <a class="post-link" href="/2015/12/01/vim-tips/">Vim</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 26, 2015</span>
+        <a class="post-link" href="/2015/11/26/angular-and-ruby-on-rails/">Angular 1.x and Ruby on Rails</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 20, 2015</span>
+        <a class="post-link" href="/google/location-suggestion/maps/2015/11/20/google-maps-and-locations/">Google Maps and Locations</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 11, 2015</span>
+        <a class="post-link" href="/2015/11/11/seo-advices/">Seo Advices</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 9, 2015</span>
+        <a class="post-link" href="/2015/11/09/rails-testing/">Rails Testing</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Nov 7, 2015</span>
+        <a class="post-link" href="/2015/11/07/ruby-books/">Ruby Books</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 8, 2015</span>
+        <a class="post-link" href="/2015/10/08/free-ssl-for-https-on-apache-or-nginx/">Free SSL for https on apache or nginx</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Oct 1, 2015</span>
+        <a class="post-link" href="/2015/10/01/jekyll-tips-for-github-pages/">Jekyll tips for github pages</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Sep 10, 2015</span>
+        <a class="post-link" href="/2015/09/10/ruby-memory-leak-track/">Ruby memory leak trackdown</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Aug 22, 2015</span>
+        <a class="post-link" href="/2015/08/22/svg-css3-transforms-and-animations/">Svg Css3 Transforms And Animations</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jul 7, 2015</span>
+        <a class="post-link" href="/2015/07/07/postgresql-tricks/">Postgresql Tricks</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Apr 5, 2015</span>
+        <a class="post-link" href="/2015/04/05/common-rails-bootstrap-snippets/">Common Rails bootstrap snippets</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Mar 4, 2015</span>
+        <a class="post-link" href="/2015/03/04/rails-settings-in-cache-and-beta-features/">Rails settings in cache and beta features</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Feb 16, 2015</span>
+        <a class="post-link" href="/2015/02/16/rails-through-vagrant-to-digitalocean/">Rails through Vagrant to DigitalOcean</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jan 11, 2015</span>
+        <a class="post-link" href="/2015/01/11/good-rails-exception-notification-better-than-tests/">Good rails exception notifier better than tests</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Sep 2, 2014</span>
+        <a class="post-link" href="/2014/09/02/ruby-on-rails-with-ajax-javascript/">Ruby on rails and Ajax javascript</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jul 3, 2014</span>
+        <a class="post-link" href="/2014/07/03/ruby-on-rails-polymorphic-or-sti/">RoR polymorphic or sti</a>
+      </li>
+    
+      <li>
+        <span class="post-date">Jul 1, 2014</span>
+        <a class="post-link" href="/2014/07/01/ruby-on-rails-layouts-and-rendering/">Ruby on Rails Layouts and rendering</a>
+      </li>
+    
+  </ul>
+
+  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

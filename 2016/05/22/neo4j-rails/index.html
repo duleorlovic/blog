@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Neo4j Rails</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Neo4j Rails</h1>
+    <p class="meta">May 22, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installing"><span class="tocnumber">1</span> <span class="toctext">Installing</span></a></li><li class="toc_level-1 toc_section-2"><a href="#cypher-commands"><span class="tocnumber">2</span> <span class="toctext">Cypher commands</span></a></li><li class="toc_level-1 toc_section-3"><a href="#neo4jrb"><span class="tocnumber">3</span> <span class="toctext">Neo4jrb</span></a></li><li class="toc_level-1 toc_section-4"><a href="#schema"><span class="tocnumber">4</span> <span class="toctext">Schema</span></a></li><li class="toc_level-1 toc_section-5"><a href="#query"><span class="tocnumber">5</span> <span class="toctext">Query</span></a></li><li class="toc_level-1 toc_section-6"><a href="#regular-expression"><span class="tocnumber">6</span> <span class="toctext">Regular expression</span></a></li><li class="toc_level-1 toc_section-7"><a href="#devise"><span class="tocnumber">7</span> <span class="toctext">Devise</span></a></li><li class="toc_level-1 toc_section-8"><a href="#heroku"><span class="tocnumber">8</span> <span class="toctext">Heroku</span></a></li><li class="toc_level-1 toc_section-9"><a href="#tips"><span class="tocnumber">9</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-10"><a href="#errors"><span class="tocnumber">10</span> <span class="toctext">Errors</span></a></li><li class="toc_level-1 toc_section-11"><a href="#todo"><span class="tocnumber">11</span> <span class="toctext">Todo</span></a></li><li class="toc_level-1 toc_section-12"><a href="#dump"><span class="tocnumber">12</span> <span class="toctext">Dump</span></a></li><li class="toc_level-1 toc_section-13"><a href="#links"><span class="tocnumber">13</span> <span class="toctext">Links</span></a></li></ul></td></tr></tbody></table></div><p>Thanks to the workshop I started using Neo4j</p>
+
+<h1 id="installing">Installing</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>update-java-alternatives --list
+sudo apt install default-jre default-jre-headless
+sudo apt-get install openjdk-8-jdk
+
+wget -O - https://debian.neo4j.org/neotechnology.gpg.key | sudo apt-key add -
+echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list.d/neo4j.list
+sudo apt update
+sudo apt install neo4j
+lynx localhost:7474/browser
+
+sudo neo4j start
+# sudo mkdir /var/run/neo4j # this is needed if permission denied
+# cat /etc/neo4j/neo4j.conf
+# cat /var/log/neo4j/neo4j.log
+# server will accepts connection on bolt://localhost:7687
+# user:password neo4j:neo4j but it has to be changed
+# reset password with: sudo rm /var/lib/neo4j/data/dbms/auth  or
+# sudo neo4j-admin set-initial-password ...
+sudo service neo4j status
+sudo service neo4j start
+</code></pre></div></div>
+
+<p>To enable remote access just uncomment the line</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/neo4j/neo4j.conf
+dbms.connectors.default_listen_address=0.0.0.0
+</code></pre></div></div>
+
+<p>For debugging you can also uncomment http logs so you can see if firewall is
+blocking</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/neo4j/neo4j.conf
+ dbms.logs.http.enabled=true
+</code></pre></div></div>
+
+<p>Open browser on <a href="http://localhost:7474/">http://localhost:7474/</a>
+Since communications is over http/bold, you need to create new neo4j instance
+for each your project and environment. Use
+<a href="https://github.com/cohesivestack/ineo">https://github.com/cohesivestack/ineo</a> and install with the script</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ineo instances
+ineo status
+ineo create -v 3.1.0 -p 7004 my_app_development
+ineo create -p7006 my_app_test
+ineo set-port my_app_development 7000 # this will change only http port
+ineo destroy my_app_test
+ineo delete-db my_app_test # this will clear only database
+ineo versions
+</code></pre></div></div>
+
+<p>But I think <a href="https://stackoverflow.com/questions/43344087/neo4jmigrationerror-duplicate-constraint-for-person/47485163#47485163">bolt is not supported</a></p>
+
+<p>Alternativelly you can use <a href="https://github.com/neo4jrb/neo4j-rake_tasks">https://github.com/neo4jrb/neo4j-rake_tasks</a>. Add
+<code class="highlighter-rouge">gem 'neo4j-rake_tasks'</code>. Note that there is no authentication enabled so do not
+use on production.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># install neo4j to db/neo4j/development`
+rake neo4j:install[community-latest,development]
+rake neo4j:install[community-latest,test]
+
+# To change the server port (default is 7474) type:
+rails neo4j:config[development,$(expr $NEO4J_BOLT_PORT + 2)]
+rails neo4j:config[test,$(expr $NEO4J_TEST_BOLT_PORT + 2)]
+
+# vi db/neo4j/development/conf/neo4j.conf
+# this will add something like this
+# Bolt connector
+dbms.connector.bolt.enabled=true
+#dbms.connector.bolt.tls_level=OPTIONAL
+dbms.connector.bolt.listen_address=localhost:7040
+
+# HTTP Connector. There must be exactly one HTTP connector.
+dbms.connector.http.enabled=true
+dbms.connector.http.listen_address=localhost:7042
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake neo4j:start[development]
+echo http://localhost:$(expr $NEO4J_BOLT_PORT + 2)
+rake neo4j:start[test]
+echo http://localhost:$(expr $NEO4J_TEST_BOLT_PORT + 2)
+
+rails neo4j:stop[development]
+kill -9 `cat db/neo4j/development/run/neo4j.pid`
+</code></pre></div></div>
+
+<p>Note that when you are changing the ports, then run <code class="highlighter-rouge">spring stop</code> to reload new
+env.</p>
+
+<p>Learn from examples in browser, type <code class="highlighter-rouge">:play movies</code>.</p>
+
+<h1 id="cypher-commands">Cypher commands</h1>
+
+<p><code class="highlighter-rouge">:play_cypher</code></p>
+
+<ul>
+  <li>
+    <p>create node <code class="highlighter-rouge">()</code> and relationship <code class="highlighter-rouge">[]</code>. In CREATE only directed
+relationships. Nodes can have 0 or more labels <code class="highlighter-rouge">:Person</code> and can have different
+properties (strings, numbers or booleans). Relationships always have a direction
+and have a single type (<code class="highlighter-rouge">:KNOWS</code>) and also properties.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE (d:Covek { name: 'Dusan' }), (m:Covek { name: 'Milan' }),
+(s:Covek { name: 'Srdjan' }),
+(d)-[:TWIN_BRO]-&gt;(m),
+(m)-[:TWIN_BRO]-&gt;(s),
+(m)-[:BRO]-&gt;(s),
+(d)-[:BRO]-&gt;(s)
+</code></pre></div>    </div>
+  </li>
+  <li>RETURN matched nodes and relationships, WHERE filter and what to RETURN, with
+eventual: LIMIT 10.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MATCH (n:Covek) WHERE n.name = 'Dusan' RETURN n;
+</code></pre></div>    </div>
+
+    <ul>
+      <li>match relationships by type <code class="highlighter-rouge">[edge:BRO]</code>. You can write long edges
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MATCH (n)-[:BRO]-&gt;()&lt;-[:BRO]-(m) RETURN n, m
+</code></pre></div>        </div>
+      </li>
+      <li>instead writting two edges <code class="highlighter-rouge">MATCH (n)-[]-&gt;(t), (t)-[]-&gt;(m)</code> you can write
+number of edges <code class="highlighter-rouge">[*2]</code> or even interval of number <code class="highlighter-rouge">[*1..4]</code></li>
+      <li>if direction is ommited it will return twice (one in both directions)
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MATCH (n)-[:BRO]-(m) RETURN n, m;
+</code></pre></div>        </div>
+      </li>
+      <li>WHERE can be moved inside node or edge declaration <code class="highlighter-rouge">MATCH (n:Covek { name:
+'Dusan' }) RETURN n;</code> so WHERE is usualy used with <code class="highlighter-rouge">WHERE NOT</code>. For example
+cocoautors which are not coauthors (not equal is <code class="highlighter-rouge">&lt;&gt;</code>)</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MATCH (tom:Person {name:"Tom Hanks"})-[:ACTED_IN]-&gt;(m)&lt;-[:ACTED_IN]-(coActors),
+      (coActors)-[:ACTED_IN]-&gt;(m2)&lt;-[:ACTED_IN]-(cocoActors)
+WHERE NOT (tom)-[:ACTED_IN]-&gt;()&lt;-[:ACTED_IN]-(cocoActors) AND tom &lt;&gt; cocoActors
+RETURN cocoActors.name AS Recommended, count(*) AS Strength ORDER BY Strength DESC
+</code></pre></div>    </div>
+
+    <ul>
+      <li>RETURN can be node or edge, <code class="highlighter-rouge">Type()</code>, <code class="highlighter-rouge">DISTINCT()</code>,</li>
+    </ul>
+  </li>
+  <li>
+    <p>delete all nodes for <code class="highlighter-rouge">&gt;2.3.0</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MATCH (n) DETACH DELETE n
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">EXPLAIN</code> and <code class="highlighter-rouge">PROFILE</code> will give more info about query</li>
+</ul>
+
+<h1 id="neo4jrb">Neo4jrb</h1>
+
+<p>Follow <a href="https://neo4j.com/developer/ruby-course/">https://neo4j.com/developer/ruby-course/</a> to create example app
+<code class="highlighter-rouge">asset_portal</code>, there is <a href="https://www.youtube.com/watch?v=n0P0pOP34Mw&amp;list=PL5klM3mD6alLUhNTPTbj5a3GBjU7oZN0t">screen
+cast</a> episode 6 is advance
+and links
+<a href="https://gist.github.com/cheerfulstoic/3142ed2e15ad08ef6631">https://gist.github.com/cheerfulstoic/3142ed2e15ad08ef6631</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new asset_portal -m http://neo4jrb.io/neo4j/neo4j.rb -O
+# this will add gem neo4j and neo4j-rake_tasks
+# config/neo4j,yml
+# db/neo4j folder
+# config/application.rb uncomment server url with
+config.neo4j.session.type = :bolt
+config.neo4j.session.url = 'bolt://neo4j:dusan10@localhost:7687'
+
+rails generate scaffold User name:string email:string
+rails s
+gnome-open http://localhost:3000/users
+</code></pre></div></div>
+
+<p>Model are defined with <a href="http://neo4jrb.readthedocs.io/en/9.0.x/ActiveNode.html">http://neo4jrb.readthedocs.io/en/9.0.x/ActiveNode.html</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class User
+  include Neo4j::ActiveNode
+  has_many :out, :assets, type: :OWNS
+end
+
+class Asset
+  include Neo4j::ActiveNode
+  property :created_at, type: DateTime
+  property :updated_at, type: DateTime
+  has_one :in, :user, origin: :assets
+end
+</code></pre></div></div>
+
+<ul>
+  <li>properties are declared with <code class="highlighter-rouge">property :name</code>. It can also define
+    <ul>
+      <li><code class="highlighter-rouge">default: 'default_value'</code> is set when property is <code class="highlighter-rouge">nil</code> so for new object
+it will be <code class="highlighter-rouge">'default_value'</code>. For existing object you need to run migration</li>
+      <li><code class="highlighter-rouge">type: Integer</code> define property type in ruby: integer, float, string, time,
+date, datetime, boolean, BigDecimal. Istead of DateTime, if you need some
+expensive query, better is to use <code class="highlighter-rouge">type: Integer</code> and store as unix timestamp</li>
+      <li>I have some problems with <code class="highlighter-rouge">serialize: :name</code> so I used plain old <code class="highlighter-rouge">user.name
+= { a: 3}.to_json</code> so I save hash or array to database. When I load, I need
+to deserialize to that object <code class="highlighter-rouge">JSON.parse user.name</code></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">enum status: [:draft, :published]</code> maps integer in db to strings in rails
+    <ul>
+      <li>you can use <code class="highlighter-rouge">user.draft!</code>, <code class="highlighter-rouge">user.draft?</code> or <code class="highlighter-rouge">User.draft</code></li>
+      <li><code class="highlighter-rouge">_default: :draft</code> to define default value, note that default value is when
+value is NULL for existing objects, so better is to run migration
+(<code class="highlighter-rouge">user.draft?</code> will return true even in neo4j it is NULL!!!) and you need to
+save two times <code class="highlighter-rouge">next unless user.draft? ; user.status = :published;
+user.save! user.status = :draft; user.save!</code></li>
+      <li>usually you need to add index on enum column but you can disable <code class="highlighter-rouge">_index:
+false</code></li>
+      <li>validation like <code class="highlighter-rouge">validates :name, presence: true</code>, or
+<code class="highlighter-rouge">validates_uniqueness_of :name</code></li>
+      <li>you can pass undeclared properties if you insert the line <code class="highlighter-rouge">include
+Neo4j::UndeclaredProperties</code></li>
+    </ul>
+  </li>
+  <li>relationship: <code class="highlighter-rouge">has_many :in, :posts</code>
+    <ul>
+      <li>first parameter can be <code class="highlighter-rouge">:in</code>, <code class="highlighter-rouge">:out</code>, <code class="highlighter-rouge">:both</code>. Once it is created, you
+should not change it (unless you write data migration)</li>
+      <li>second set the association name (can be overriden with <code class="highlighter-rouge">:model_class</code> and
+association name <code class="highlighter-rouge">:type</code>)</li>
+      <li><code class="highlighter-rouge">has_one</code> should be used with singular and <code class="highlighter-rouge">.first</code> is automatically called
+so result is non chainable (unless you call <code class="highlighter-rouge">comment.post(chainable: true)</code></li>
+      <li><code class="highlighter-rouge">:type</code> override association name in Neo4j (Rails uses asociation name).
+<code class="highlighter-rouge">type: false</code> match all relationships</li>
+      <li><code class="highlighter-rouge">:model_class</code> is NODE model on other end of association, usualy resolved
+from second parametar - association name, <code class="highlighter-rouge">model_class: false</code> will match any
+node on other end. Value can be a symbol with class name: <code class="highlighter-rouge">model_class:
+:Asset</code>, or can be array in case of polymorphic association <code class="highlighter-rouge">has_many :in,
+:written_post_or_comments, type: :WROTE, model_class: [:Post, :Comment]</code>.
+When using polymorphic than chains will not work unless <code class="highlighter-rouge">proxy_as</code> and
+<code class="highlighter-rouge">query_as</code> are used</li>
+    </ul>
+    <p><a href="http://neo4jrb.readthedocs.io/en/9.0.x/ActiveNode.html#polymorphic-associations">http://neo4jrb.readthedocs.io/en/9.0.x/ActiveNode.html#polymorphic-associations</a></p>
+    <ul>
+      <li><code class="highlighter-rouge">:rel_class</code> is REL model</li>
+      <li><code class="highlighter-rouge">:origin</code> name of association in oposite model so you don’t need to
+write <code class="highlighter-rouge">:type</code> in both classes, often used in <code class="highlighter-rouge">:in</code> relationships. Value is the
+association name in reciprocal model, <code class="highlighter-rouge">origin: :user</code></li>
+      <li><code class="highlighter-rouge">dependent: delete</code> to delete all associated nodes in cypher
+(<code class="highlighter-rouge">:destroy</code> will call <code class="highlighter-rouge">.each</code> and <code class="highlighter-rouge">.destroy</code> with callbacks).
+<code class="highlighter-rouge">:delete_orphans</code> delete associated records that have no other relationships
+of the same type (<code class="highlighter-rouge">:destroy_orphans</code> do that in Ruby and callbacks will be
+called).</li>
+      <li><code class="highlighter-rouge">unique: true</code> will use <code class="highlighter-rouge">CREATE UNIQUE</code> relationship (only one). <code class="highlighter-rouge">unique:
+:all</code> will create unless all nodes, type, direction and rel properties are
+matched. <code class="highlighter-rouge">unique: { on: [keys] }</code> is looking only on keys to determine if
+already exists.</li>
+      <li>eager loading is implicit, but if you need explicit you can use
+<code class="highlighter-rouge">.with_associations(:tags, :comments)</code> to generate <code class="highlighter-rouge">COLLECT()</code>. For nested you
+can use hash and array notation: https://github.com/duleorlovic/premesti.se/blob/master/app/controllers/admin/users_controller.rb#L7
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@users = User.all.with_associations moves: { from_group: [:location], to_groups: [:location] }
+</code></pre></div>        </div>
+      </li>
+    </ul>
+
+    <p>CRUD associations</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Comment.create post: post1, text: 'text'   # create comment and relationship
+post.comments &lt;&lt; comment3             # Creates new relationship
+post.comments.create comment3, posted_by: 'me' # text property on relationship
+# can not create like post1.comments.new text: '' since comment.post will not
+# be defined
+
+# remove association
+https://github.com/neo4jrb/neo4j/wiki/Neo4j%3A%3ARails-Persistence#destroy-and-delete
+post.comments = [comment1, comment2]  # Removes all existing relationships
+comment.post = post1                  # Removes all existing relationships
+post.comments.delete(comment) # destroys the relationship
+post.comments.find(comment).delete # destroys the relationship and node
+
+# update nodes
+post.comments.update_all flagged: true
+# update relationships
+post.comments.update_all_rels flagged: true
+
+# iterate over relationships
+post.comments.each_rel.map &amp;:neo_id
+post.comments.each_with_rel { |node, rel| }
+
+# you can combine several associations
+post.comments.user.company # will return all companies for comments
+
+# find does not work if argument is AssociationProxy so you should use map
+# &amp;:uuid
+# find_by or where has some problem if argument is array, so I use another
+# association and find [ids]
+to_location = move.to_groups.where(location: some_locations)
+to_location = move.to_groups.location.find(some_location.map(&amp;:uuid)).first
+
+# custom query_as match pluck
+post.query_as(:p).match('(p)-[rel1:CONTAINS]-&gt;(n2)').where('rel1.on = true').pluck(:rel1)
+
+# with_associations and order
+@users = User.as(:u)
+         .with_associations(moves: { from_group: [:location], to_groups: [:location] })
+         .order('u.last_sign_in_at DESC')
+
+# to find nodes that does not have relationship
+Move.query_as(:m).match('(m)').where('NOT (m)-[:WANTS]-()').pluck :m
+# to find nodes that does not have relation with EmailMessage with specific
+# property tag=some_tag
+User.query_as(:user).where("NOT (user)-[:RECEIVED]-(:EmailMessage { tag: '#{tag}'})").pluck(:user)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>when comment is destroyed than you can not get it’s post, it is better to get
+it’s post before</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def destroy
+  post = @comment.post
+  @comment.destroy
+  redirect_to post_path post
+end
+</code></pre></div>    </div>
+  </li>
+  <li>callbacks like <code class="highlighter-rouge">before_save</code></li>
+</ul>
+
+<p>Relationships is defined <a href="http://neo4jrb.readthedocs.io/en/9.0.x/ActiveRel.html">http://neo4jrb.readthedocs.io/en/9.0.x/ActiveRel.html</a>
+Type name will be the same as class name uppercased (<code class="highlighter-rouge">:KNOWS</code>)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Knows
+  include Neo4j::ActiveRel
+  from_class :user
+  to_class :any
+  property :created_at, type: DateTime
+  property :updated_at, type: DateTime
+  creates_unique
+end
+
+# create
+Knows.create from_node: u, to_node: u
+# fetch retreive
+u.users.each_rel.to_a
+u.users.each_with_rel.to_a
+
+</code></pre></div></div>
+
+<ul>
+  <li>it is not able to access relationships directly, always using a node</li>
+  <li>properties are the same as for nodes</li>
+  <li>usefull for polymophic, for example User knowns companies, places, … so it
+contains different logic for each relation.</li>
+</ul>
+
+<h1 id="schema">Schema</h1>
+
+<p><a href="http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/">http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/</a></p>
+
+<p>Index and constraints are defined in migrations. To generate use
+‘rake neo4j:generate_schema_migration[<code class="highlighter-rouge">index|constraint</code>,<code class="highlighter-rouge">Label</code>,<code class="highlighter-rouge">property</code>]’
+for example:
+<code class="highlighter-rouge">rake neo4j:generate_schema_migration[constraint,Person,uuid]</code> will generate
+<a href="http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/">http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/</a>
+<a href="https://github.com/neo4jrb/neo4j/blob/5e0127f4bb3f3b523cf3f5a515f36e0468c287c5/docs/Migrations.rst#add_constraint">https://github.com/neo4jrb/neo4j/blob/5e0127f4bb3f3b523cf3f5a515f36e0468c287c5/docs/Migrations.rst#add_constraint</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ForceCreatePersonUuidConstraint &lt; Neo4j::Migrations::Base
+  def up
+    add_constraint :Person, :uuid, force: true
+  end
+
+  def down
+    drop_constraint :Person, :uuid
+  end
+end
+</code></pre></div></div>
+
+<p><a href="https://github.com/neo4jrb/neo4j/blob/master/lib/neo4j/migrations/helpers/schema.rb#L12">code</a>
+This will add uniqueness constrain <code class="highlighter-rouge">ASSERT person.uuid IS UNIQUE</code>, I think in
+<a href="https://github.com/neo4jrb/neo4j-core/blob/master/lib/neo4j/label.rb#L43">neo4j-core</a>
+implement that. I see in <code class="highlighter-rouge">:schema</code> that we alse got a index.</p>
+
+<p>Not sure how to generate existence <code class="highlighter-rouge">ASSERT exists(person.uuid)</code> constraint.</p>
+
+<p><a href="http://neo4j.com/docs/developer-manual/current/cypher/schema/index/">http://neo4j.com/docs/developer-manual/current/cypher/schema/index/</a>
+Also you can <code class="highlighter-rouge">add_index :Person, :email, force: true</code>.
+Run migrations with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake neo4j:migrate
+</code></pre></div></div>
+
+<p>Or use my shortcut <code class="highlighter-rouge">rake db:migrate</code>, <code class="highlighter-rouge">RAILS_ENV=test rake db:drop</code> and <code class="highlighter-rouge">rake
+db:seed</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/db.rake
+namespace :db do
+  desc 'seed'
+  task seed: :environment do
+    b = {}
+    # User
+    [
+      { var: :user1, email: 'asdf1@asdf.asdf' },
+      { var: :user2, email: 'asdf2@asdf.asdf' },
+      { var: :user3, email: 'asdf3@asdf.asdf' },
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      user = User.find_by params
+      unless user.present?
+        user = User.create! params.merge(password: 'asdfasdf', confirmed_at: Time.zone.now)
+        puts "User #{user.email}"
+      end
+      b[doc[:var]] = user if doc[:var]
+    end
+
+    # Location
+    [
+      { var: :location1 },
+      { var: :location2 },
+      { var: :location3 },
+      { var: :location4 },
+      { var: :location5 },
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      location = Location.find_by params
+      if location.blank?
+        location = Location.create! params
+        puts "Location #{location.name}"
+      end
+      b[doc[:var]] = location if doc[:var]
+    end
+
+    # Group
+    [
+      { var: :g2_l1, location: b[:location1], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l2, location: b[:location2], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l3, location: b[:location3], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l4, location: b[:location4], age_min: 2,
+        age_max: 2 },
+      { var: :g2_l5, location: b[:location5], age_min: 2,
+        age_max: 2 },
+      { var: :g4_l1, location: b[:location1], age_min: 4,
+        age_max: 4 },
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      group = Group.find_by params
+      unless group.present?
+        group = Group.create! params
+        puts "Group #{group.name}"
+      end
+      b[doc[:var]] = group if doc[:var]
+    end
+
+    # Move
+    [
+      { var: :m1_l1_l2, from_group: b[:g2_l1], prefered_groups: b[:g2_l2],
+        user: b[:user1] },
+      { var: :m1_l1_l3, from_group: b[:g2_l1], prefered_groups: b[:g2_l3],
+        user: b[:user1] },
+      { var: :m2_l3_l4, from_group: b[:g2_l3], prefered_groups: b[:g2_l4],
+        user: b[:user2], available_from_date:
+        Date.today.end_of_month },
+      { var: :m3_l4_l1, from_group: b[:g2_l4], prefered_groups: b[:g2_l1],
+        user: b[:user3], }
+    ].each do |doc|
+      params = doc.except(:var).merge(name: doc[:var])
+      move = Move.find_by params
+      unless move.present?
+        move = Move.create! params
+        puts "Move #{move.name}"
+      end
+    end
+  end
+
+  desc 'drop'
+  task drop: :environment do
+    Rake::Task["neo4j:stop"].invoke Rails.env
+    puts sh "rm -rf db/neo4j/#{Rails.env}/data/databases/graph.db"
+    Rake::Task["neo4j:start"].invoke Rails.env
+    puts "Find database on http://" +
+         Rails.application.secrets.neo4j_host.to_s + ":" +
+         (Rails.application.secrets.neo4j_bolt_port.to_i + 2).to_s
+  end
+
+  desc 'migrate'
+  task migrate: :environment do
+    puts "running neo4j:migrate"
+    Rake::Task["neo4j:migrate"].invoke Rails.env
+  end
+
+  desc 'setup = drop, migrate and seed'
+  task setup: :environment do
+    puts 'this is not implemented'
+    puts 'since drop need some time to bootup, and migrate raises exception'
+  end
+end
+</code></pre></div></div>
+
+<p>In migration <code class="highlighter-rouge">def change</code> should be replaced with <code class="highlighter-rouge">def up</code> and <code class="highlighter-rouge">def down</code> since
+there is an error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake aborted!
+NotImplementedError: NotImplementedError
+</code></pre></div></div>
+
+<p>If using the bold, in migrations there are exception
+<a href="https://github.com/neo4jrb/neo4j-core/issues/303">https://github.com/neo4jrb/neo4j-core/issues/303</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake aborted!
+should be implemented!
+</code></pre></div></div>
+
+<p>Test data should be wiped manually
+<a href="http://neo4jrb.readthedocs.io/en/8.0.x/Miscellany.html#cleaning-your-database-for-testing">http://neo4jrb.readthedocs.io/en/8.0.x/Miscellany.html#cleaning-your-database-for-testing</a>
+There are attempts to use database_cleaner gem
+<a href="https://github.com/neo4jrb/neo4j/issues/1368">https://github.com/neo4jrb/neo4j/issues/1368</a>
+<a href="https://github.com/DatabaseCleaner/database_cleaner/issues?utf8=%E2%9C%93&amp;q=Neo4j">https://github.com/DatabaseCleaner/database_cleaner/issues?utf8=%E2%9C%93&amp;q=Neo4j</a>
+<a href="https://github.com/DatabaseCleaner/database_cleaner/pull/481/files">https://github.com/DatabaseCleaner/database_cleaner/pull/481/files</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/test_helper.rb
+class ActiveSupport::TestCase
+  # http://neo4jrb.readthedocs.io/en/8.0.x/Miscellany.html#cleaning-your-database-for-testing
+  teardown do
+    Neo4j::ActiveBase.current_session.query %(
+      MATCH (n)
+      WHERE NOT (n:`Neo4j::Migrations::SchemaMigration`)
+      DETACH
+      DELETE n
+    )
+  end
+end
+</code></pre></div></div>
+
+<p>In tests you can not use fixtures. Maybe raw cypher can help
+https://github.com/neo4jrb/neo4j/issues/611</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    query = %(
+      CREATE (c:City),
+      (l_a:Location),
+      (l_b:Location),
+      (l_a)-[:IN_CITY]-&gt;(c),
+      (l_b)-[:IN_CITY]-&gt;(c),
+    )
+    Neo4j::ActiveBase.current_session.query query
+</code></pre></div></div>
+
+<p>but best advice to use factory girl.</p>
+
+<h1 id="query">Query</h1>
+
+<p>Debug with <code class="highlighter-rouge">user.assets.categories.assets.print_cypher</code> or some query <code class="highlighter-rouge">move.query_as(:m1).match('(m1)-[]-(g:Group)').to_cypher</code> (similar <code class="highlighter-rouge">to_sql</code>)</p>
+
+<p>Query on property <code class="highlighter-rouge">User.where(name: ?)</code> parametar <code class="highlighter-rouge">?</code> can be: string, nil,
+array, regular expression <code class="highlighter-rouge">User.where(name: /.*dule.*/i)</code>, range
+<code class="highlighter-rouge">User.where(age: 1..2)</code>.</p>
+
+<p>If you use params inside where string you should use params to excape and
+prevent injection attack https://github.com/neo4j/neo4j/issues/1983
+https://neo4jrb.readthedocs.io/en/5.2.x/Querying.html#parameters</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Location.query_as(:location).where("location.name_en =~ {name_en}").params(name_en: "(?iu).*#{@term}.*").pluck(:location)
+</code></pre></div></div>
+
+<p>There is <code class="highlighter-rouge">neo_id</code> on each node and relationships but are somewhat volatile so do
+not use it. Instead, each new node requires primary key <code class="highlighter-rouge">uuid</code> property which is
+also accessed using <code class="highlighter-rouge">.id</code> method. Rels do not have ids since they are traversed
+by nodes. SecureRandom uuid is generated in migration <code class="highlighter-rouge">rake
+neo4j:generate_schema_migration[constraint,Model,uuid]</code> and <code class="highlighter-rouge">rake neo4j:migrate</code></p>
+
+<p>Raw query can be done using <code class="highlighter-rouge">Neo4j::ActiveBase.current_session.query('MATCH (n)
+RETURN n LIMIT {limit}', limit: 10)</code> or when searching for maximum</p>
+
+<p>But it is better to use <code class="highlighter-rouge">ActiveNode</code> finders:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># find by id_property
+User.find my_uuid
+# find by any property property
+User.find_by name: 'Dule'
+# find by associations
+User.find_by from_group: Group.last
+# find_by supports only single value even it is has_many
+User.find_by to_groups: Group.last
+# you can use where with associations
+User.all.where to_groups: Group.last
+</code></pre></div></div>
+
+<p>Queries can be chained in 3 ways: <code class="highlighter-rouge">Model.all</code>, <code class="highlighter-rouge">Model.association</code>,
+<code class="highlighter-rouge">model_object.association</code>. It returns <code class="highlighter-rouge">AssociationProxy</code>.</p>
+
+<p>If <code class="highlighter-rouge">where</code> is used, than <code class="highlighter-rouge">QueryProxy</code> is returned.</p>
+
+<p>Query object is used to simplify on which fields is used:
+<code class="highlighter-rouge">User.query_as(:user).where(user: { age: 1..2 }).pluck(:user)</code></p>
+
+<p>You can use <code class="highlighter-rouge">where</code> or <code class="highlighter-rouge">rel_where</code> in the middle of a chain (it is applied to
+last) for example <code class="highlighter-rouge">user.created_assets.where(public: true).categories</code>.
+Also <code class="highlighter-rouge">.order</code>, <code class="highlighter-rouge">.limit</code> and <code class="highlighter-rouge">.skip</code>.
+You can pass single attribute to assign variable in cypher, so we can pluck on
+it <code class="highlighter-rouge">user.created_assets.categories(:category).pluck('category.name',
+'count(*)')</code></p>
+
+<p>Using <code class="highlighter-rouge">where</code> can be with string or with hash. If you want to target specific
+node you can use string like <code class="highlighter-rouge">where("node.uuid = '#{n.id}'")</code> or hash
+<code class="highlighter-rouge">where(node: { neo_id: n.id })</code>, or using parms <code class="highlighter-rouge">where('node.uuid =
+{node_id}').params(node_id: n.id)</code> or <code class="highlighter-rouge">match_nodes(node: n)</code>.
+Note that you have to use <code class="highlighter-rouge">uuid</code> since <code class="highlighter-rouge">id</code> in cypher does not exists. For a
+list you do not need to wrap in square brackets <code class="highlighter-rouge">where('node.uuid IN
+{node_ids}').params(node_ids: @nodes.map(&amp;:uuid))</code>.
+https://github.com/neo4jrb/neo4j-core/blob/8.0.x/spec/neo4j-core/unit/query_spec.rb#L373
+https://github.com/neo4jrb/neo4j-core/blob/8.0.x/spec/neo4j-core/unit/query_spec.rb#L474</p>
+
+<h1 id="regular-expression">Regular expression</h1>
+
+<p>You can search with case insensitive regex
+https://neo4j.com/docs/developer-manual/current/cypher/clauses/where/#case-insensitive-regular-expressions</p>
+
+<h1 id="devise">Devise</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'devise-neo4j'
+bundle
+rails g devise:install --orm=neo4j
+rails g neo4j:devise User
+</code></pre></div></div>
+
+<h1 id="heroku">Heroku</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export MYAPP_NAME=my-app # only dash, not underscore
+heroku apps:create $MYAPP_NAME
+heroku addons:create graphenedb
+
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
+
+heroku config # copy all GRAPHENEDB_BOLT... variables
+# use http, not bolt port
+heroku config:set NEO4J_TYPE=https NEO4J_HOST= NEO4J_PORT= NEO4J_USERNAME= NEO4J_PASSWORD=
+heroku run rake db:migrate
+heroku run rake db:seed
+</code></pre></div></div>
+
+<p>You can export from Graphenedb <code class="highlighter-rouge">graphdb.zip</code>
+<a href="https://docs.graphenedb.com/docs/importing-and-exporting-databases">https://docs.graphenedb.com/docs/importing-and-exporting-databases</a>. To restore
+localy you need to copy files to <code class="highlighter-rouge">neo4j/data/graph.db/</code></p>
+
+<h1 id="tips">Tips</h1>
+
+<p>Model your entity attribute as property on a node if</p>
+<ul>
+  <li>it is simple value and there is no need to qualify relationship.</li>
+</ul>
+
+<p>Otherwise:</p>
+<ul>
+  <li>use relationship to a new node instead of property of a node in cases where
+you need to add another relationships to it. For example instead of property
+<code class="highlighter-rouge">user_id</code> on relationship you should use <code class="highlighter-rouge">User</code> node with <code class="highlighter-rouge">:OWNS</code> relationship
+to it, since you will probably add another relation to that <code class="highlighter-rouge">User</code></li>
+  <li>use relationship if there is a need to specify something relationship
+(for example <em>profiency in a skill</em>)</li>
+  <li>use relationship if its a complex property like multiple fields (address)
+So rule is to use node if you need start a query from this entity like skill
+ruby -&gt; users.</li>
+</ul>
+
+<p>Instead to name relationship with <code class="highlighter-rouge">:BELONGS_TO</code> use something more meaningfull
+to businness so you know what it is about:</p>
+<ul>
+  <li>something belongs to Category use <code class="highlighter-rouge">something-[:IN_CATEGORY]-&gt;category</code></li>
+  <li>for review <code class="highlighter-rouge">[:REVIEW_FOR]</code>.</li>
+  <li>For has_many use verb <code class="highlighter-rouge">()-[:POSTS]-&gt;(:Post)</code>, or <code class="highlighter-rouge">[:CONTAINS]</code>, <code class="highlighter-rouge">[:USING]</code>,
+<code class="highlighter-rouge">[:MENTIONS]</code></li>
+  <li>For has_and_belongs_to_many use whatever <code class="highlighter-rouge">(:User)-[:FRIENDS]-&gt;(:User)</code>, <code class="highlighter-rouge">(Tweet)-[:RETWEETS]-&gt;(:Tweet)</code></li>
+</ul>
+
+<p>Common Graph stuctures:</p>
+<ul>
+  <li>Intermediate Nodes: when when you have three or more entity in single context:
+‘Ian bought a book in Mercator’, ‘Patrick work at Trk in role Designer’ …</li>
+  <li>Linked List: entities are linked as sequence, you need to traverse:
+‘Job history’, ‘Broadcast or Production of Movies’</li>
+  <li>Versioning Graphs: time based
+    <ul>
+      <li>structure: we have idendtity nodes as placeholders and timestamped
+relationships.</li>
+      <li>state: every note is snapshot,</li>
+    </ul>
+  </li>
+  <li>ignore case is with <code class="highlighter-rouge">(?i)</code> but for cyrilic we need <code class="highlighter-rouge">(?iu)</code>, for example <code class="highlighter-rouge">MATCH
+(d:Covek) WHERE d.nameL =~ '(?iu).*DUŠAN.*' RETURN d</code> https://github.com/neo4j/neo4j/issues/1983</li>
+</ul>
+
+<h1 id="errors">Errors</h1>
+
+<p>Error <code class="highlighter-rouge">defined for a second time. Associations can only be defined once</code> is when
+you name the associataion with already used name. Please use different name and
+same model_class.</p>
+
+<p>In migration <code class="highlighter-rouge">rails aborted!  Neo4j::MigrationError: Duplicate constraint for
+Location</code> means that there exists in schema so you need to manually remove.
+You can use <code class="highlighter-rouge">:schema</code> or <code class="highlighter-rouge">CALL db.constraints</code> to see all constrains and you can
+drop with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DROP CONSTRAINT ON (l:Location) ASSERT l.uuid IS UNIQUE
+</code></pre></div></div>
+
+<p>To wipe all data, destroy clear database, remove graph.db and restart.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake neo4j:stop[development]
+rm -rf db/neo4j/development/data/databases/graph.db
+rake neo4j:start[development]
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">ArgumentError: Invalid value for 'city' condition</code> is error in seed task when
+you assign symbol <code class="highlighter-rouge">:city1</code> instead of object <code class="highlighter-rouge">b[:city1]</code></p>
+
+<p>If you open <code class="highlighter-rouge">rails c</code> console1 and than <code class="highlighter-rouge">rails c</code> console2, and <code class="highlighter-rouge">exit</code> in
+console1, it will not exit. You need to <code class="highlighter-rouge">exit</code> console2 to release something and
+both consoles exists… When rails console hangs than <code class="highlighter-rouge">spring stop</code> helps.</p>
+
+<p>I got some error:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Neo4j::Core::CypherSession::CypherError (  Cypher error:
+  Neo.DatabaseError.Transaction.TransactionStartFailed: Database has encountered some problem, please perform necessary action (tx recovery/restart)
+):
+</code></pre></div></div>
+
+<p>For which I restart my machine to recover from this error.</p>
+
+<p>Error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Neo4j::DeprecatedSchemaDefinitionError:           Some schema elements were defined by the model (which is no longer supported), but they do not exist in the database.  Run the following to create them if you haven't already:
+
+rake neo4j:generate_schema_migration[constraint,Chat,uuid]
+
+
+And then run `rake neo4j:migrate`
+
+(zshell users may need to escape the brackets)
+</code></pre></div></div>
+
+<p>can be solved with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAILS_ENV=test rake neo4j:migrate
+heroku run rake neo4j:migrate:status
+# try adding force: true so there is no error when performing migrations
+class CreateChat &lt; Neo4j::Migrations::Base
+  def up
+    add_constraint :Chat, :uuid, force: true
+  end
+
+  def down
+    drop_constraint :Chat, :uuid
+  end
+end
+</code></pre></div></div>
+
+<p>Error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Neo4j::Core::CypherSession::CypherError:   Cypher error:
+  Neo.DatabaseError.Transaction.TransactionStartFailed: The database has encountered a critical error, and needs to be restarted. Please see database logs for more details.
+</code></pre></div></div>
+
+<p>There is a problem when there exists a node when searching by relation but does
+not exists when searching by <code class="highlighter-rouge">n.uuid</code></p>
+
+<h1 id="todo">Todo</h1>
+
+<p><code class="highlighter-rouge">rails g model</code> will generate model files with rubocop offencies</p>
+
+<p><code class="highlighter-rouge">rails neo4j:migrate</code> event it is successfull, generate error message:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>should be implemented!
+</code></pre></div></div>
+<p><a href="https://github.com/neo4jrb/neo4j-core/issues/303">https://github.com/neo4jrb/neo4j-core/issues/303</a></p>
+
+<p>device-neo4j generate two migrations with same id… Best solution is to rename
+migration and clear database.</p>
+
+<p>Errors format should be used:</p>
+
+<h1 id="dump">Dump</h1>
+
+<p>On Heroku GrapheneDB in tab Admin -&gt; Export database, you can download
+<code class="highlighter-rouge">graphdb.zip</code> and export to your graph.db folder</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export GRAPH_DB_PATH=db/neo4j/development/data/databases/graph.db
+rm -rf $GRAPH_DB_PATH
+mkdir $GRAPH_DB_PATH
+unzip tmp/graphdb.zip -d $GRAPH_DB_PATH
+rails neo4j:restart[development]
+</code></pre></div></div>
+
+<p>To dump to production you need also to restart heroku</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget 'graphdb_url'
+mv graphdb.zip
+export GRAPH_DB_PATH=/var/lib/neo4j/data/databases/graph.db
+sudo rm -rf $GRAPH_DB_PATH
+sudo -u neo4j mkdir $GRAPH_DB_PATH
+sudo -u neo4j unzip graphdb.zip -d $GRAPH_DB_PATH
+sudo service neo4j restart
+heroku restart
+tail -f /var/log/neo4j/debug.log
+</code></pre></div></div>
+
+<p>To make a backup you can</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># we have to cd to directory because otherwise zip will store path in output
+cd db/neo4j/development/data/databases/graph.db/
+zip -r ../backup.zip .
+</code></pre></div></div>
+
+<h1 id="links">Links</h1>
+
+<ul>
+  <li>http://neo4jrb.io/ and differences with sql http://neo4j.com/product/</li>
+  <li>http://neo4jrb.readthedocs.io/en/7.0.x/</li>
+  <li>youtube series https://www.youtube.com/watch?v=n0P0pOP34Mw</li>
+  <li>https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood</li>
+</ul>
+
+<p>Todo
+https://youtu.be/78r0MgH0u0w 42min time versioned graphs
+https://youtu.be/AaJS-DGBQX4</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

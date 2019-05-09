@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Background jobs and queues</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Background jobs and queues</h1>
+    <p class="meta">Aug 26, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#activejob---rails-wrapper"><span class="tocnumber">1</span> <span class="toctext">ActiveJob - Rails wrapper</span></a></li><li class="toc_level-1 toc_section-2"><a href="#sidekiq"><span class="tocnumber">2</span> <span class="toctext">Sidekiq</span></a></li><li class="toc_level-1 toc_section-3"><a href="#resque"><span class="tocnumber">3</span> <span class="toctext">Resque</span></a></li><li class="toc_level-1 toc_section-4"><a href="#define-jobs"><span class="tocnumber">4</span> <span class="toctext">Define jobs</span></a></li><li class="toc_level-1 toc_section-5"><a href="#resque-scheduler-for-recurring-tasks"><span class="tocnumber">5</span> <span class="toctext">Resque scheduler for recurring tasks</span></a><ul><li class="toc_level-2 toc_section-6"><a href="#delayed-job"><span class="tocnumber">5.1</span> <span class="toctext">Delayed Job</span></a></li></ul></li><li class="toc_level-1 toc_section-7"><a href="#test-background-jobs-spec"><span class="tocnumber">6</span> <span class="toctext">Test background jobs spec</span></a></li><li class="toc_level-1 toc_section-8"><a href="#tips"><span class="tocnumber">7</span> <span class="toctext">TIPS</span></a></li></ul></td></tr></tbody></table></div><h1 id="activejob---rails-wrapper">ActiveJob - Rails wrapper</h1>
+
+<p><a href="http://guides.rubyonrails.org/active_job_basics.html">Using ActiveJob</a> can
+simplify writing jobs so you can change queuing backend.
+<code class="highlighter-rouge">rails g job my_todo --queue critical</code> it will generate job for which we will
+just log ‘Hi’.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/jobs/my_todo_job.rb
+class MyTodoJob &lt; ApplicationJob
+  queue_as :critical
+
+  def perform(*args)
+    puts "puts will show in QUEUE=* rake resque:work"
+    puts "use VERBOSE=1 to see job name, queue and params"
+    Rails.logger.info "This will show in log/development,log: start #{args}"
+    sleep 5
+    Rails.logger.info "MyTodoJob end"
+  end
+end
+</code></pre></div></div>
+
+<p>or if you can to put logic inside job you can use attr_reader
+(https://youtu.be/wXaC0YvDgIo?list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx&amp;t=289)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/jobs/person/remove_inaccessible_records_job.rb
+class Person::RemoveInaccessibleRecordsJob &lt; ApplicationJob
+  queue_as :background
+
+  attr_reader :person, :bucket
+
+  def perform(person, bucket)
+    @person, @bucket = person, bucket
+
+    unless presons.buckets.include? bucket
+      remove_inaccessible_records
+    end
+  end
+
+  private
+
+    def remove_inaccessible_records
+      Person::UnsubscribeFromBucketJob.perform_now(person, bucket)
+
+      if person.user
+        remove_inaccessible_readings
+        remove_inaccessible_bookmarkings
+      end
+
+      remove_inaccessible_email_dropboxes
+    end
+
+    def remove_inaccessible_readings
+      person.user.readings.for_bucket(bucket).find_each(batch_size: 100, &amp;:destroy)
+    end
+end
+</code></pre></div></div>
+
+<p>Invoke jobs with attributes <code class="highlighter-rouge">wait</code> and <code class="highlighter-rouge">wait_until</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MyTodoJob.perform_later args
+MyTodoJob.set(wait: 1.week).perform_later args
+MyTodoJob.set(wait_until: Date.tomorrow.noon).perform_later args
+
+# or
+MyTodoJob.perform_now args
+</code></pre></div></div>
+
+<p>With ActiveJob you can pass entire ActiveRecord objects because GlobalID will
+deserialize for us. But if you are using directly some jobs (not inherited from
+ActiveJob::Base) than you should pass object_id.</p>
+
+<p>Error <code class="highlighter-rouge">Unsupported argument type: Move</code> when using
+<code class="highlighter-rouge">UserMailer.signup(move).deliver_later</code>. You need to pass id instead of object
+when delivering later.</p>
+
+<p>Rails provides in-process queuing (it keeps in memory and is running with rails)
+so if you put byebug it will stop rails process.
+By default <code class="highlighter-rouge">config.active_job.queue_adapter = :inline</code> better is to use
+<code class="highlighter-rouge">:async</code>.  Both inline and async Active Job do not support priority, timeout and
+retry. You can find all adapter http://api.rubyonrails.org/v5.1/classes/ActiveJob/QueueAdapters.html</p>
+
+<h1 id="sidekiq">Sidekiq</h1>
+
+<p>Add those lines</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# background job proccessing
+gem 'sidekiq'
+
+# config/application.rb
+    # background jobs
+    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_name_prefix = 'mysite'
+</code></pre></div></div>
+
+<p>Sidekiq is faster but requires thread safe code.</p>
+
+<p>You need to install redis server, which is simply adding Heroku redis addon.
+https://elements.heroku.com/addons/heroku-redis
+Or on AWS you can install https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04
+Since it allows only 20 connections you need to limit connections for sidekiq.
+It requires usually concurrency + 5 connections to Redis.
+https://github.com/mperham/sidekiq/issues/117</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Procfile
+web: bundle exec puma -C config/puma.rb
+worker: bundle exec sidekiq -C config/sidekiq.yml
+</code></pre></div></div>
+
+<p>You can run <code class="highlighter-rouge">bundle exec sidekiq -q default -q mailers</code> but better is in config:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/sidekiq.yml
+:concurrency:  3
+:queues:
+  - default
+  - mailers
+
+  - my_site_default
+  - my_site_mailers
+</code></pre></div></div>
+
+<p>You can use console to see all queues</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'sidekiq/api'
+Sidekig::Queue.all
+</code></pre></div></div>
+
+<p>Concurrency is a number which are used by sidekiq server to create redis
+connections (=concurrency + 5 per one process).
+Sidekiq client defaults to 5 connections per process but this can be limited to
+1 per process (it does not use <code class="highlighter-rouge">concurrency</code>)
+So for max 10 redis connections you can use:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/sidekiq.rb
+Sidekiq.configure_client do |config|
+  config.redis = { size: 1 }
+end
+# three processes = 3 connections so one sidekiq can have 7 connections
+# only 2 connections are for workers
+Sidekiq.configure_server do |config|
+  config.redis = { size: 7 }
+end
+</code></pre></div></div>
+
+<p>You can limit connection pool to 3 so all threads will use only those
+connections. Concurrency is less than (server pool size - 5)*2. At least
+<code class="highlighter-rouge">concurrency</code> connections to database is also required.
+Puma threads share client connections per process. so if size is 3, all threads
+will use only those 3 connections.
+Dyno count is important, so if you have 4 dynos of one sidekiq and 1 dyno of
+another sidekig queue, that is 5 * (concurrency + 5) connections.</p>
+
+<p>To see how many jobs is in default queue:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sidekiq::Queue.new.size # default name is 'default'
+Sidekiq::Queue.new('mailers').size
+Sidekiq::Queue.new('my_app_mailers').size
+</code></pre></div></div>
+
+<p>To see dashboard add those lines to routes (note that we require current_user to
+be admin</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'sidekiq/web'
+Rails.application.routes.draw do
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web =&gt; '/sidekiq'
+  end
+</code></pre></div></div>
+
+<p>Testing sidekiq https://github.com/mperham/sidekiq/wiki/Testing</p>
+
+<p>You can use block</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'sidekiq/testing'
+
+Sidekiq::Testing.inline! do
+  HardWorker.perform_async
+  assert_worked_hard
+end
+</code></pre></div></div>
+
+<p>For emails https://github.com/mperham/sidekiq/issues/724</p>
+
+<h1 id="resque">Resque</h1>
+
+<p>Add resque by adding it to Gemfile, and you need to add some config files.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# background job using redis
+gem 'resque'
+HERE_DOC
+bundle
+
+sed -i config/application.rb -e '/^  end$/i \
+    config.active_job.queue_adapter = :resque\
+'
+
+cat &gt;&gt; lib/tasks/resque.rake &lt;&lt; HERE_DOC
+require 'resque/tasks'
+
+# we need to load our rails environment
+# without this, we can call: QUEUE=* rake environemt resque:work
+task 'resque:setup' =&gt; :environment
+HERE_DOC
+</code></pre></div></div>
+
+<p>Two configurations:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ENV["REDISTOGO_URL"].present?
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  REDIS = Redis.new(host: uri.host, port: uri.port, password: uri.password)
+else
+  REDIS = Redis.new(host: "localhost")
+end
+
+Resque.redis = REDIS
+</code></pre></div></div>
+
+<p>or</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; config/redis.yml &lt;&lt; HERE_DOC
+development: &amp;default localhost:6379
+test: *default
+production: &lt;%= REDISTOGO_URL %&gt;
+HERE_DOC
+
+cat &gt;&gt; config/initializers/resque.rb &lt;&lt; HERE_DOC
+config = YAML.load_file(Rails.root.join('config', 'redis.yml'))
+# configure redis connection
+Resque.redis = config[Rails.env]
+HERE_DOC
+</code></pre></div></div>
+
+<p>For web use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'resque-web', require: 'resque_web'
+</code></pre></div></div>
+
+<h1 id="define-jobs">Define jobs</h1>
+
+<p>You can use Rails <code class="highlighter-rouge">ActiveJob</code> (so you can use <code class="highlighter-rouge">perform_later</code>) or any class
+module that responds to <code class="highlighter-rouge">perform</code> (but than you need to use
+<code class="highlighter-rouge">Resque.enqueue(SimpleJob,i)</code>, or <code class="highlighter-rouge">Delayed::Job.enqueue SimpleJob.new</code> or
+<code class="highlighter-rouge">SimpleJob.delay.perform</code> to enqueue)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir app/jobs
+cat &gt;&gt; app/jobs/process.rb &lt;&lt; HERE_DOC
+module SimpleJob
+  @queue = :default
+
+  def self.perform(args)
+    puts "puts will show in QUEUE=* rake resque:work"
+    puts "use VERBOSE=1 to see job name, queue and params"
+    Rails.logger.info "logger will show in log/development,log: start #{args}"
+    sleep 3
+    Rails.logger.info "SimpleJob end"
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>You can enqueue from rails console (watch out that you do not already have some
+background worker running, because it will eat those jobs).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3.times { |i| Resque.enqueue(SimpleJob,i) }
+3.times { |i| MyTodoJob.perform_later i }
+# note that SimpleJob will wait until critical tasks are done
+</code></pre></div></div>
+
+<p>Note that if you use <code class="highlighter-rouge">ActiveJob::Base</code> than you do not need to restart process
+when changing job, but if you use plain class than you need to kill and start
+again. In either case you do not need to reload rails console, since it merely
+sends name of jobs.</p>
+
+<p>You can list all queues with <code class="highlighter-rouge">Resque.queues</code> (<code class="highlighter-rouge">low, critical, default</code>)</p>
+
+<p>To send notification in case of error use <a href="/2015/01/11/good-rails-exception-notification-better-than-tests/#resque">exception notification for resque</a></p>
+
+<p>Since you need to run separate process for background jobs, you need to write
+<code class="highlighter-rouge">Procfile</code>. By default heroku will run with WEBRICK server and it is advisable
+to use puma.</p>
+
+<p>Always use <code class="highlighter-rouge">QUEUE</code> when calling <code class="highlighter-rouge">QUEUE=* rake reque:work</code></p>
+
+<ul>
+  <li><code class="highlighter-rouge">QUEUES=comma,separated,list</code></li>
+  <li><code class="highlighter-rouge">QUEUE=my_queue</code></li>
+  <li><code class="highlighter-rouge">QUEUE=*</code> or <code class="highlighter-rouge">QUEUES=*</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Procfile
+web: bundle exec puma -C config/puma.rb
+worker: env TERM_CHILD=1 QUEUE=* bundle exec rake resque:work
+</code></pre></div></div>
+
+<p>You can start both web and worker with <code class="highlighter-rouge">foreman start</code>
+<code class="highlighter-rouge">heroku addons:create redistogo</code> is needed to enable redis on heroku.
+<code class="highlighter-rouge">heroku addons:docs redistogo</code></p>
+
+<h1 id="resque-scheduler-for-recurring-tasks">Resque scheduler for recurring tasks</h1>
+
+<p>You can create heroku scheduler (cron task) and call (for example every hour)
+your custom rake task in which you can add new jobs.
+Disadvantage of this approach is memory. Every time it starts new Rails
+environment (that could be 450MB) and several could be at the same time.
+Also I do not like to write the code outside of git, so I prefer to use plugins.</p>
+
+<p>All plugins use <a href="https://github.com/jmettraux/rufus-scheduler">rufus-scheduler</a>.</p>
+
+<p>resque-scheduler works in that way to check every 5 seconds if some of the tasks
+should be processes. If it find them, they are pushed to jobs queue.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/resque.rake
+require 'resque/tasks'
+require 'resque/scheduler/tasks'
+
+task "resque:setup" =&gt; :environment
+
+namespace :resque do
+  task :setup_schedule =&gt; :setup do
+    require 'resque-scheduler'
+    Resque.schedule = {
+      UpdateViews: {
+        every: '5s',
+      }
+    }
+    # Resque.schedule = YAML.load_file('config/scheduler.yml')
+  end
+
+  # somehow scheduler task need to be separated from setup_scheduler
+  task :scheduler =&gt; :setup_schedule
+end
+</code></pre></div></div>
+
+<p>Note that scheduler can be defined as hash or yml file. If you are using yml you
+need to put inside strings all values <code class="highlighter-rouge">5s</code>, cron…</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/scheduler.yml
+MyJob:
+  # cron: '* * * * *'
+  every: '5s'
+  queue: 'critical'
+</code></pre></div></div>
+
+<p>You need to start both <code class="highlighter-rouge">rake resque:work</code> and <code class="highlighter-rouge">rake resque:scheduler</code>.
+(usually you need to export exception recipients only in <code class="highlighter-rouge">work</code> proccess if you
+need notification).</p>
+
+<p>If you want to run that on same dyno you can use
+<a href="http://stackoverflow.com/questions/18176043/does-anyone-run-more-than-one-resque-worker-in-a-heroku-dyno">foreman</a>
+but on on heroku free hoby type, you can run both web and worker.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Procfile
+web: bundle exec puma -C config/puma.rb
+resque: bundle exec foreman start -f Procfile.workers
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Procfile.workers
+worker_1: QUEUE=* bundle exec rake resque:work
+worker_2: QUEUE=* bundle exec rake resque:scheduler
+</code></pre></div></div>
+
+<h2 id="delayed-job">Delayed Job</h2>
+
+<p>Define jobs using Struct (or ApplicationJob or ActiveJob::Base, but that
+is not needed). Put params in initialization.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FetchFeedJob = Struct.new(:feed_id) do
+  def perform
+    puts "called with #{feed_id}"
+  end
+end
+# invoke with
+Delayed::Job.enqueue FetchFeedJob.new(feed.id)
+# you can still use rails version
+rake jobs:work
+# no need to restart for code changes and byebug
+</code></pre></div></div>
+
+<p>or you can pass params to <code class="highlighter-rouge">perform</code> and use rails <code class="highlighter-rouge">perform_later</code> to invoke</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/jobs/send_sms_job.rb
+class SendSmsJob &lt; ActiveJob::Base
+  queue_as :webapp
+
+  rescue_from Net::ReadTimeout, SocketError do |e|
+    e.ignore_please = true
+    sleep 1
+    # re-raise so job is retried
+    raise e
+  end
+  def perform(location_sms_alert)
+  end
+end
+
+# somewhere in the code
+SendSmsJob.perform_later location_sms_alert
+</code></pre></div></div>
+
+<p>Install</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'delayed_job_active_record'
+rails generate delayed_job:active_record
+rake db:migrate
+# this will create bin/delayed_job
+</code></pre></div></div>
+
+<p>Configuration is in <code class="highlighter-rouge">config/application.rb</code> to set
+<code class="highlighter-rouge">config.active_job.queue_adapter = :delayed_job</code>. Note that it is not fully
+compatible with activejob (does not use default mailer queue name, starts
+immediatelly and in background with rake jobs:work)</p>
+
+<p>Running is using gem <code class="highlighter-rouge">daemons</code> (so put it in your Gemfile) and then <code class="highlighter-rouge">rails g
+delayed_job</code> will generate script file <code class="highlighter-rouge">bin/delayed_job</code> which you can use</p>
+
+<ul>
+  <li><code class="highlighter-rouge">RAILS_ENV=production bin/delayed_job start</code> to run all queues</li>
+  <li><code class="highlighter-rouge">RAILS_ENV=production bin/delayed_job start --queues=webapp,jobs</code> set specific
+queue (QUEUE=webapp env does not work for delayed job)</li>
+  <li><code class="highlighter-rouge">RAILS_ENV=production bin/delayed_job start --exit-on-complete</code> exit when
+there are not more jobs</li>
+  <li><code class="highlighter-rouge">RAILS_ENV=production bin/delayed_job run</code> is to run in foreground (sometimes
+byebug does not work, so I use <code class="highlighter-rouge">rake jobs:work</code> when debugging)</li>
+  <li><code class="highlighter-rouge">RAILS_ENV=production bin/delayed_job restart</code></li>
+  <li><code class="highlighter-rouge">RAILS_ENV=production bin/delayed_job status</code></li>
+  <li><code class="highlighter-rouge">cat tmp/pids/delayed_job.pid</code> can give you process id</li>
+</ul>
+
+<p>The Rails way is:</p>
+<ul>
+  <li><code class="highlighter-rouge">rake jobs:work</code></li>
+  <li><code class="highlighter-rouge">rake jobs:workoff</code> to exit after is done with all jobs</li>
+  <li><code class="highlighter-rouge">rake jobs:clear</code> to delete all jobs</li>
+  <li><code class="highlighter-rouge">QUEUES=webapp,jobs rake jobs:work</code> to set specific queue (by default it runs
+all)</li>
+</ul>
+
+<p>Note that email letter opener does not work when you run with <code class="highlighter-rouge">rake jobs:work</code>,
+but works when <code class="highlighter-rouge">bin/delayed_job run</code> (Launchy works in both cases, this
+difference is only for mailer).</p>
+
+<p>Workers will check database every 5 seconds.
+Note that you do not need to refresh the runner when you update the code. Kill
+and restart is only required if you update some of the initializers files.</p>
+
+<p>Jobs are objects with a method called <code class="highlighter-rouge">perform</code>. Also you can override
+<code class="highlighter-rouge">Delayed::Worker.max_attempts</code> with your method <code class="highlighter-rouge">max_attempts</code> (you can find
+<a href="https://github.com/collectiveidea/delayed_job#gory-details">defaults</a> for other
+methods like: <code class="highlighter-rouge">max_run_time</code>, <code class="highlighter-rouge">detroy_failed_jobs?</code>)</p>
+
+<p>To see that is it actually working you need to enable log:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/delayed_job_config.rb
+Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
+</code></pre></div></div>
+
+<p>Also you can see all jobs in console:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Delayed::Job.all
+job = Delayed::Job.find 10 # 10 is job.id
+
+job.handler # to see how job will be called
+job.last_error # to see backtrace of error
+job.failed_at # time when last failed
+
+# to rerun, re run, invoke, retry job you can
+job.invoke_job # this does not remove job if successfully, so you need to do
+job.destroy # that manually
+# or
+Delayed::Worker.new.run job # this runs in current process (not in
+# bin/delayed_job run) and will remove if successfully
+# or
+job.update_attributes attempts: 0, run_at: Time.now, failed_at: nil
+# locked_by: nil, locked_at: nil
+# job.failed_at = nil; job.save!
+</code></pre></div></div>
+
+<p>To invoke jobs you can do that in three ways (all three ways support queue name)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># call for object method like user.activate
+user.delay(queue: 'tracking').activate
+# call in rake tasks
+Delayed::Job.enqueue MyJob.new(user_id), queue: 'tracking'
+# define it on User class
+handle_asynchronously :activate, queue: 'tracking'
+</code></pre></div></div>
+
+<p>Usage is simply with inserting <code class="highlighter-rouge">delay</code> method and it will run in background. So
+instead <code class="highlighter-rouge">@user.activate(params)</code> call with <code class="highlighter-rouge">@user.delay.activate(params)</code>.
+Another way is to define <code class="highlighter-rouge">handle_asynchronously :activate</code> on User class. It can
+take these params:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">priority: 10</code> lower numbers run first</li>
+  <li><code class="highlighter-rouge">run_at: 5.minutes.from_now</code> or <code class="highlighter-rouge">handle_asynchronously :activate, run_at:
+Proc.new { 5.minutes.from_now }</code></li>
+  <li>
+    <p><code class="highlighter-rouge">queue: 'important'</code> or <code class="highlighter-rouge">handle_asynchronously :ativate, queue: 'important'</code>
+than you can assign priority for each queue:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Delayed::Worker.queue_attributes = {
+  important: { priority: -10 },
+  low_priority: { priority: 10 }
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>For mailer instead of <code class="highlighter-rouge">.deliver</code> method we can also use <code class="highlighter-rouge">.delay</code> in prefix, like
+<code class="highlighter-rouge">MyMailer.delay(run_at: 5.minutes.from_now).welcome(user)</code>. Or use rails 5
+<code class="highlighter-rouge">deliver_now</code> or <code class="highlighter-rouge">deliver_later</code>.
+Note that if you deliver_later in some validate block which is invalid (model
+has sam validation errors) than whole block is rolledback and even ActiveJob or
+DelayedJobs is rolledback and hence will not be executed in background.</p>
+
+<p>Mailer <code class="highlighter-rouge">queue</code> is by default <code class="highlighter-rouge">mailers</code>. For other jobs <code class="highlighter-rouge">queue</code> is <code class="highlighter-rouge">nil</code>.
+In Rails 5 you can rename to <code class="highlighter-rouge">config.action_mailer.deliver_later_queue_name =
+'default_mailer_queue'</code>.</p>
+
+<p>Another way to run background jobs is with <code class="highlighter-rouge">Delayed::Job.enqueue CleanJob.new,
+queue: 'import'</code>. Note that for ActiveJob instances it runs immediatelly
+and also in background task. So advice is not to mix those two…</p>
+
+<p><a href="https://www.sitepoint.com/delayed-jobs-best-practices/">best practices</a></p>
+
+<p>Sample worker</p>
+
+<p><code class="highlighter-rouge">User.find(1).with_lock do sleep(10); puts "worker 1 done" end</code>
+<code class="highlighter-rouge">User.find(1).with_lock do sleep(1); puts "worker 2 done" end</code></p>
+
+<p>You can add web based monitoring https://github.com/ejschmitt/delayed_job_web</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'delayed_job_web'
+
+# config/routes.rb
+  match "/delayed_job" =&gt; DelayedJobWeb, :anchor =&gt; false, :via =&gt; [:get, :post]
+
+# config/initializers/delayed_job_web.rb
+if Rails.env.production?
+  DelayedJobWeb.use Rack::Auth::Basic do |username, password|
+    ActiveSupport::SecurityUtils.variable_size_secure_compare(Rails.application.secrets.delayed_job_username, username) &amp;&amp;
+      ActiveSupport::SecurityUtils.variable_size_secure_compare(Rails.application.secrets.delayed_job_password, password)
+  end
+end
+
+# config/secrets.yml
+  delayed_job_username: delayed_job
+  delayed_job_password: delayed_job
+</code></pre></div></div>
+
+<p>When you want to cancel a delayed job you can find and destroy it… but better
+is to create a job that is immune ie check at the begginning…</p>
+
+<h1 id="test-background-jobs-spec">Test background jobs spec</h1>
+
+<p><code class="highlighter-rouge">ActiveJob::Base.queue_adapter = :test</code> will change queue adapter for all
+following test.
+You can see differences between queue adapters
+<a href="http://api.rubyonrails.org/v5.1.4/classes/ActiveJob/QueueAdapters.html">http://api.rubyonrails.org/v5.1.4/classes/ActiveJob/QueueAdapters.html</a>
+There is test helpers like <code class="highlighter-rouge">assert_performed_with</code> http://api.rubyonrails.org/classes/ActiveJob/TestHelper.html#method-i-assert_performed_with
+example of use is
+<a href="https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb">https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb</a>
+To send email in background Rails use mailers
+<a href="https://blog.bigbinary.com/2018/01/15/rails-5-2-allows-mailers-to-use-custom-active-job-class.html">ActionMailer::DeliveryJob</a>
+so to test sending in minitest</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'test_helper'
+
+class ProductTest &lt; ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper # needed for assert_enqueued_with helper
+
+  test 'billing job scheduling' do
+    # if you want to test outcome ie how job is performed
+    perform_enqueued_jobs only: ActionMailer::DeliveryJob do
+    # or you can assert how it is called `_with`
+    assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
+    # or assert and perform
+    assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
+      product.charge(account)
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>To rescue from exception in background sending emails you can reopen DeliveryJob
+anywhere, for example in ApplicationMailer. If you want to <code class="highlighter-rouge">rescue_from</code> in some
+other non-rails class you can <code class="highlighter-rouge">include ActiveSupport::Rescuable</code></p>
+
+<p>If you use Delayed::Job you can write testing in three ways:
+First is when <code class="highlighter-rouge">Delayed::Worker.delay_jobs = true</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect do
+  post url, params
+end.to change { Delayed::Job.count }.by(1)
+
+expect do
+  Delayed::Worker.new.work_off
+end.to change(Delayed::Job, :count).by(-1)
+</code></pre></div></div>
+
+<p>Or you can expect specific job
+<a href="https://www.rubydoc.info/gems/rspec-rails/RSpec%2FRails%2FMatchers:have_enqueued_job">have_enqueued_job</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect do
+end.to have_enqueued_job SendSmsJob
+</code></pre></div></div>
+
+<p>Second is when <code class="highlighter-rouge">Delayed::Worker.delay_jobs = false</code> so job is performed inline
+ie invoked immediatelly.</p>
+
+<h1 id="tips">TIPS</h1>
+
+<ul>
+  <li>Always check if job is eligible to run , world changes, it could be already
+run bu some error.</li>
+  <li>Test if job is added and if it added only once.</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

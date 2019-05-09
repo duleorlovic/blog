@@ -1,0 +1,350 @@
+<p>http://graphql.org/learn</p>
+
+<h1 id="queries">Queries</h1>
+
+<p>Fields can be string or array, or object (than you can make subselection).
+You can pass arguments to fields (like <code class="highlighter-rouge">id: 1</code>). Argument can be Enumeration
+type.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  # queries can have comments
+  human(id: 1) {
+    name
+    height(unit: METER)
+  }
+}
+</code></pre></div></div>
+
+<p>response is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "data: {
+    "hero": {
+      "name": "My name",
+      "height": 4
+    }
+  }
+</code></pre></div></div>
+
+<p>If you need several items than you can use aliases</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  importantHuman: human(id:1) {
+    name
+  }
+}
+</code></pre></div></div>
+
+<p>For each alias you can include same set of <code class="highlighter-rouge">credentialsFields</code> with named
+fragments</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  niceHuman: human(id: 2) {
+  ...credentialsFields
+  }
+  importantHuman: human(id:1) {
+    ... on Character {
+      name
+    }
+  }
+  fragment credentialsFields on Character {
+    name
+  }
+</code></pre></div></div>
+
+<p>Named fragment <code class="highlighter-rouge">credentialsFields</code> is included only on type <code class="highlighter-rouge">Character</code> since it
+is defined on it. For importantHuman we used inline fragment.</p>
+
+<h1 id="variables">Variables</h1>
+
+<p>Query can have dynamic params which are interpolated on server. Variables has
+prefix $ and is followed by type.
+Type can be (<code class="highlighter-rouge">Episode</code> is type): scalar, enum or input object type.
+If type ends with <code class="highlighter-rouge">!</code> than variable is required (otherwise optional).
+Variables can have default type.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>query HeroNameAndFriends($episode: Episode = 'Default Value')
+  hero(episode: $episode) {
+    name
+    friends {
+      name
+    }
+  }
+</code></pre></div></div>
+
+<p>Additional JSON</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "episode": "My Episode"
+}
+</code></pre></div></div>
+
+<h1 id="directives">Directives</h1>
+
+<p>Dinamically include fields with <code class="highlighter-rouge">@include(if: $my_var)</code> or <code class="highlighter-rouge">@skip(if: ...)</code>.
+This was we can conditionally add some fields.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>query Hero($episode: Episode, $withFriends: Boolean!) {
+  hero(episode: $episode) {
+    name
+    friends @include(if: $withFriends) {
+      name
+    }
+  }
+}
+</code></pre></div></div>
+
+<h1 id="introspection">Introspection</h1>
+
+<p><a href="http://graphql.org/learn/introspection/">learn</a>
+When searching results could be union of types, so to determine which type you
+can request also <code class="highlighter-rouge">__typename</code> meta field which will show name of object type.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  search(text: 'an') {
+    __typename
+    name
+    ... on Human {
+      name
+    }
+    ... on Droid {
+      name
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>returns</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "data": {
+    "search": [
+      {
+        "__typename": "Human",
+        "name": "My name"
+      },
+      {
+        "__typename": "Droid"
+        "name": "My droid name"
+      }
+    ]
+  }
+}
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">__schema</code> is used to see what types are available:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  __schema {
+    types {
+      name
+    }
+  }
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "data": {
+    "__schema": {
+      "types": [
+        {
+          "name": "Query"
+        },
+        {
+          "name": "Episode"
+        },
+        {
+          "name": "__Schema"
+        }
+      }
+    }
+  }
+}
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">queryType.name</code> will return root, probably <code class="highlighter-rouge">Query</code>.
+For <code class="highlighter-rouge">__type</code> we can ask:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">kind</code> returns <code class="highlighter-rouge">__TypeKind</code> enum: OBJECT, INTERFACE, SCALAR, NOT_NULL, LIST</li>
+  <li><code class="highlighter-rouge">fields</code> returns list or fields, if you have <code class="highlighter-rouge">NOT_NULL</code> and <code class="highlighter-rouge">LIST</code> you can use
+<code class="highlighter-rouge">ofType</code> to get into exact type</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<p><code class="highlighter-rouge">__type, __fields</code></p>
+
+<h1 id="schemas-and-types">Schemas and types</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  hero {
+    name
+    appearsIn
+  }
+}
+</code></pre></div></div>
+
+<p>Select <code class="highlighter-rouge">hero</code> field on <code class="highlighter-rouge">root</code> object and select <code class="highlighter-rouge">name</code> and <code class="highlighter-rouge">appearsIn</code> on
+<code class="highlighter-rouge">hero</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type Character {
+  name: String!
+  appearsIn: [Episode]!
+  length(unit: LengthUnit = METER): Float
+}
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Character</code> is grapqh object type. <code class="highlighter-rouge">name</code> is fiels on <code class="highlighter-rouge">Character</code> type. With <code class="highlighter-rouge">!</code>
+means that it is not nullable, its always string. <code class="highlighter-rouge">appearsIn</code> is always array
+(could be empty). <code class="highlighter-rouge">length</code> field has argument <code class="highlighter-rouge">unit</code> and its optional (<code class="highlighter-rouge">METER</code>
+is default value).</p>
+
+<p>Scalar types are: <code class="highlighter-rouge">Int</code> (signed 32 bit integer), <code class="highlighter-rouge">Float</code>,<code class="highlighter-rouge">String</code>, <code class="highlighter-rouge">Boolean</code> and
+<code class="highlighter-rouge">ID</code>.
+Enumeration types (Enums) are restricted to a set of allowed values. Use string
+name, similar to constants.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
+</code></pre></div></div>
+
+<p>Object type, scalars and enums are only kind of types that you can define. There
+are two type modifiers that affect validation:</p>
+
+<ul>
+  <li>exclamation mark <code class="highlighter-rouge">!</code> (non null value) can be used also in query</li>
+  <li>list <code class="highlighter-rouge">[]</code></li>
+</ul>
+
+<p>When writing query we need to go down to scalar types (can’t ask for field
+<code class="highlighter-rouge">hero</code>).</p>
+
+<p>Interface is abstract type that includes set of fields that a type must include
+to implement interface. Beside fields, also return types must match.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>interface Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+}
+</code></pre></div></div>
+
+<p>Example implementation</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type Droid implements Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+  someOtherDroidField: String
+}
+</code></pre></div></div>
+
+<p>To ask specific object you need to use Inline fragments
+Inline fragments check if returned type of hero (hero is type <code class="highlighter-rouge">Character</code>) is
+Droid or Human. For <code class="highlighter-rouge">hero</code> you can only ask for fields that exists on
+<code class="highlighter-rouge">Character</code> interface. But for specific <code class="highlighter-rouge">Droid</code> fiels you can use inline
+framents</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>query HeroForEpisode($ep: Episode!) {
+  hero(episode: $ep) {
+    name
+    ... on Droid {
+      primaryFunction
+    }
+    ... on Human {
+      height
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>Union type defines possible types. Note that you can’t create union type out of
+other union type or interface.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>union SearchResult = Human | Droid
+</code></pre></div></div>
+
+<h1 id="mutations">Mutations</h1>
+
+<p>Input types looks exactly the same as regular object types with keyword <code class="highlighter-rouge">input</code>.
+They are used as arguments in mutations</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>input ReviewInput {
+  stars: Int!
+  commentary: String
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
+  createReview(episode: $ep, review: $review) {
+    stars
+    commentary
+  }
+}
+</code></pre></div></div>
+
+<p>data</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "ep": "Episode Jedi",
+  "review": {
+    "stars": 5,
+    "commentary": "My comment"
+  }
+}
+</code></pre></div></div>
+
+<p>Mutation run in sequence, one by one (query run in parallel). Data fields are
+without <code class="highlighter-rouge">$</code>.</p>
+
+<h1 id="root-fields-and-resolvers">Root fields and resolvers</h1>
+
+<p>Root type or Query type represents all possible entry points. Resolver receive
+three params:</p>
+
+<ul>
+  <li>obj: previous object (not used on root Query type)</li>
+  <li>args: arguments provided in query</li>
+  <li>context: used for db and authentication</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Query: {
+  human(obj, arg, context) {
+    return context.db.loadHumanById(agrs.id).then(
+      userData =&gt; new Human(userData)
+    }
+  }
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Human: {
+  name(obj, args, context) {
+    return obj.name
+  }
+}
+</code></pre></div></div>
+
+<h1 id="testing">Testing</h1>
+
+<p>https://youtu.be/QHoddukdqf0?t=1918</p>
+
+<p>Permissions:</p>
+
+<p>live queries
+subscriptions</p>
+
+<p>We get data with GET request and send sada with POST request with <code class="highlighter-rouge">query</code> param.
+Only problem could be caching since we need different strategy for caching.</p>
+
+<p>https://github.com/chentsulin/awesome-graphql
+https://www.netguru.co/blog/grapghql-vs-rest
+https://www.howtographql.com/
+https://www.compose.com/articles/use-all-the-databases-part-1/
+https://www.youtube.com/watch?v=UBGzsb2UkeY&amp;feature=youtu.be
+https://blog.codeship.com/how-to-implement-a-graphql-api-in-rails/
+http://graphqlme.com/2017/09/16/upload-images-to-s3-in-graphql-using-rails-and-paperclip/</p>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Get Syntax Right In Jade Yaml Haml</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Get Syntax Right In Jade Yaml Haml</h1>
+    <p class="meta">Jan 10, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#jade"><span class="tocnumber">1</span> <span class="toctext">Jade</span></a></li><li class="toc_level-1 toc_section-2"><a href="#yaml"><span class="tocnumber">2</span> <span class="toctext">Yaml</span></a></li><li class="toc_level-1 toc_section-3"><a href="#haml"><span class="tocnumber">3</span> <span class="toctext">Haml</span></a></li></ul></td></tr></tbody></table></div><h1 id="jade">Jade</h1>
+
+<p>Very nice tool, like coffescript. You can convert all html files with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install -g html2jade
+html2jade *.html --bodyless --donotencode --noattrcomma --noemptypipe
+# --bodyless          do not output enveloping html and body tags
+# --donotencode       do not html encode characters (useful for templates)
+# --noattrcomma       omit attribute separating commas
+# --noemptypipe       omit lines with only pipe ('|') printable character
+rm *.html
+
+# version for all files in subdirectories
+find . -name '*.html' -exec html2jade {} --bodyless --donotencode --noattrcomma --noemptypipe \;
+find . -name '*.html' -exec  rm {} \;
+</code></pre></div></div>
+
+<p>Please check if format is good. At least this command will ignore &lt;body&gt; tag so
+you need to build that (index.html) separately. Usually index.html needs to be
+at specific location so I leave it in html format, and all other move to
+<code class="highlighter-rouge">jade_build</code> folder.</p>
+
+<ul>
+  <li>
+    <p>arguments could be in new line, but strings need <em>**</em>. comments are not
+allowed inside ()</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// comment should be outside of (arguments)
+md-button(ng-really-click='vm.delete()'
+ng-really-message='Are you sure to \
+remove this option?')
+</code></pre></div>    </div>
+
+    <p>I prefer not to indent attributes even they suggest to <a href="http://jade-lang.com/reference/attributes/">indent
+them</a></p>
+  </li>
+</ul>
+
+<h1 id="yaml">Yaml</h1>
+
+<ul>
+  <li>comments are single line and starts with <code class="highlighter-rouge">#</code> number sign</li>
+  <li>list (arrays) are denoted by a leading hyphen <code class="highlighter-rouge">-</code> for each member per line, or
+in single line with <code class="highlighter-rouge">[a, b]</code> square brackets separated with comma space</li>
+  <li>associative arrays (hash) are written with colon space <code class="highlighter-rouge">key: value</code>
+(multiline) or in single line with <code class="highlighter-rouge">{a: 1, b: 2}</code>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data: { a: 1 }
+data:
+  a: 1
+</code></pre></div>    </div>
+  </li>
+  <li>String does not need <code class="highlighter-rouge">" "</code> only if you use some special symbol <code class="highlighter-rouge">|</code> <code class="highlighter-rouge">:</code></li>
+  <li>Multiline strings starts with pipe <code class="highlighter-rouge">|</code> on the line with attribute name, and
+indented.</li>
+  <li>Write dates in format <code class="highlighter-rouge">yyyy-mm-dd</code> so rails <code class="highlighter-rouge">Date.parse()</code> recognize it.</li>
+  <li>YML file can use anchor ie alias (<code class="highlighter-rouge">&amp;</code>) and reference (<code class="highlighter-rouge">*</code>) so you do not
+repeat the code. When you use reference <code class="highlighter-rouge">*</code> (as for testing) you can not add
+or update keys, but with <code class="highlighter-rouge">&lt;&lt;</code> you can (as for [production secrets]
+( /2015/04/05/common-rails-bootstrap-snippets/))</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name: Dusan Orlovic
+sport:
+  kayak: |
+    It is nice sport
+    to play around
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shared: &amp;shared
+  key: 123
+
+development:
+  &lt;&lt;: *shared
+</code></pre></div></div>
+
+<h1 id="haml">Haml</h1>
+
+<ul>
+  <li>html tags are written with <code class="highlighter-rouge">%</code>, and attributes is hash <code class="highlighter-rouge">{src: post.image}</code> but
+for class you can use css notation <code class="highlighter-rouge">.class</code> and <code class="highlighter-rouge">#id</code> (and <code class="highlighter-rouge">%div</code> is not
+needed), and for content from ruby code use <code class="highlighter-rouge">=</code> immediatelly or idented in new
+line, like: <code class="highlighter-rouge">%div.col-md-6= @user.name</code></li>
+  <li>if you need more nested content, use tabs</li>
+  <li>if ruby line spans multiple lines than use</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>= link_to "Add",
+  url: posts_url
+</code></pre></div></div>
+
+<ul>
+  <li>plain text is without <code class="highlighter-rouge">%</code> or <code class="highlighter-rouge">=</code></li>
+  <li>excaping html <code class="highlighter-rouge">&amp;= "Me &amp; you"</code> will sanitize HTML sensitive characters <code class="highlighter-rouge">Me
+&amp;amp; you</code>, unescaping HTML <code class="highlighter-rouge">!= &lt;br&gt;</code> will output <code class="highlighter-rouge">&lt;br&gt;</code> instead of <code class="highlighter-rouge">&amp;lt;br&amp;gt;</code></li>
+  <li>if conditional classes is false, than it is ignored <code class="highlighter-rouge">.item{class: @item.empty?
+&amp;&amp; "empty"}</code> can be <code class="highlighter-rouge">&lt;div class="item"&gt;</code> or <code class="highlighter-rouge">&lt;div class="item empty"&gt;</code></li>
+  <li>
+    <p>whitespace can be removed immediatelly within the tag <code class="highlighter-rouge">&lt;</code> (or surrounding the
+tag <code class="highlighter-rouge">&gt;</code>), for example</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%blockquoute&lt;
+  %div
+    Foo
+</code></pre></div>    </div>
+
+    <p>is</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;blockqoute&gt;&lt;div&gt;
+  Foo
+&lt;/blockquote&gt;&lt;/div&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>HTML comments <code class="highlighter-rouge">&lt;!-- --&gt;</code> is with <code class="highlighter-rouge">/</code></li>
+  <li>
+    <p>ruby code which is not inserted <code class="highlighter-rouge">-</code> like <code class="highlighter-rouge">- title = 'home'</code>. Iteration and
+other blocks use indent</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- case 2
+- when 1
+  = "1"
+- when 2
+  = "2?"
+</code></pre></div>    </div>
+  </li>
+  <li>ruby comments <code class="highlighter-rouge">-# this is a comment</code></li>
+  <li>
+    <p>filters like <code class="highlighter-rouge">:javascript</code>, <code class="highlighter-rouge">:coffeescript</code>, <code class="highlighter-rouge">:scss</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:javascript
+  $(document).ready(function() {
+    alert("hi");
+  });
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

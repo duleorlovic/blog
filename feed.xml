@@ -1,0 +1,1755 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>duleorlovic - web developer</title>
+    <description>I am writing here some toughts during my work in Ruby on Rails, Javascript and other</description>
+    <link>http://duleorlovic.github.io/</link>
+    <atom:link href="http://duleorlovic.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Thu, 09 May 2019 09:24:45 +0200</pubDate>
+    <lastBuildDate>Thu, 09 May 2019 09:24:45 +0200</lastBuildDate>
+    <generator>Jekyll v3.8.5</generator>
+    
+      <item>
+        <title>D3 Visualization</title>
+        <description>&lt;h1 id=&quot;d3&quot;&gt;D3&lt;/h1&gt;
+
+&lt;p&gt;https://d3js.org/&lt;/p&gt;
+
+&lt;p&gt;Use declarative approach like jQuery &lt;code class=&quot;highlighter-rouge&quot;&gt;d3.selectAll('p').style('color', 'blue')&lt;/code&gt;.
+Instead of static values, properties can be specified as functions of data (for
+example path data). You can pass data &lt;code class=&quot;highlighter-rouge&quot;&gt;.data([1,2])&lt;/code&gt; to bound to a selection. If
+there are fewer nodes than data, extra data elements form the &lt;code class=&quot;highlighter-rouge&quot;&gt;enter&lt;/code&gt; selection
+&lt;code class=&quot;highlighter-rouge&quot;&gt;.enter().append('p')&lt;/code&gt;
+You can add &lt;code class=&quot;highlighter-rouge&quot;&gt;.transition().duration(500).delay(function(d,i) { return i*10})&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Nice tutorial for bar chart using svg
+https://alignedleft.com/tutorials/d3/making-a-bar-chart&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var data = [100,400,200, 220, 433, 123, 1, 333]
+var w = 500
+var h = Math.max(...data)
+var barPadding = 1
+var font_size = 16
+
+var svg = d3.select('.chart')
+  .append('svg')
+  .attr('width', w)
+  .attr('height', h)
+
+svg.selectAll('rect')
+  .data(data)
+  .enter()
+  .append('rect')
+  .attr('x', (d, i) =&amp;gt; i * (w/data.length) )
+  .attr('y', (d) =&amp;gt; h - d )
+  .attr('width', w / data.length - barPadding)
+  .attr('height', (d) =&amp;gt; d )
+  .attr('fill', (d) =&amp;gt; 'rgb(0,0,' + (d*255/h) + ')' )
+
+svg.selectAll('text')
+  .data(data)
+  .enter()
+  .append('text')
+  .text((d) =&amp;gt; d)
+  .attr('text-anchor', 'middle')
+  .attr('x', (d, i) =&amp;gt; i * (w/data.length) + (w/data.length - barPadding)/2 )
+  .attr('font-size', font_size)
+  .attr('font-family', 'sans-serif')
+  .attr('y', (d) =&amp;gt; d &amp;gt; font_size ? h + font_size - d : h - 2 )
+  .attr('fill', (d) =&amp;gt; d &amp;gt; font_size ? 'white' : 'black' )
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Tue, 23 Apr 2019 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2019/04/23/d3-visualization/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2019/04/23/d3-visualization/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Service Workers</title>
+        <description>&lt;p&gt;https://davidwalsh.name/write-your-first-service-worker-in-5-minutes&lt;/p&gt;
+</description>
+        <pubDate>Tue, 26 Mar 2019 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2019/03/26/service-workers/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2019/03/26/service-workers/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Es6 Esnext</title>
+        <description>&lt;h1 id=&quot;esnext&quot;&gt;Esnext&lt;/h1&gt;
+
+&lt;p&gt;https://medium.freecodecamp.org/es5-to-esnext-heres-every-feature-added-to-javascript-since-2015-d0c255e13c6e
+https://blog.bitsrc.io/6-tricks-with-resting-and-spreading-javascript-objects-68d585bdc83&lt;/p&gt;
+
+&lt;p&gt;ES6 is ES2015, ES7 is published on 2016 and so on (latest is
+ES#{curent_year%2010+(month &amp;gt; june) ? 1 : 0 }).
+ES6 features:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;defining variable was using &lt;code class=&quot;highlighter-rouge&quot;&gt;var a&lt;/code&gt; (in strict mode, which is default in ES6,
+ error is raised for using undefined variables). If it was defined inside
+ function, it was visible only inside it, otherwise global scope. It should be
+ declarad at the beggining of a function, because it can be still referecenced
+ before declaration and used like a function parameter (hoisting). ES6
+ introduced &lt;code class=&quot;highlighter-rouge&quot;&gt;let&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;const&lt;/code&gt; with &lt;em&gt;block scope&lt;/em&gt;. For example inside &lt;code class=&quot;highlighter-rouge&quot;&gt;if ()
+ { let myVar=1; }&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;myVar&lt;/code&gt; is not accesible outside of &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; block). Also you
+ can NOT use variable before we &lt;code class=&quot;highlighter-rouge&quot;&gt;let variable&lt;/code&gt;. Also you can NOT redeclare same
+ variable name (or if name is same as param declaration &lt;code class=&quot;highlighter-rouge&quot;&gt;function f(myName) {
+ let myName; }&lt;/code&gt;. Notice difference in&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for (var i = 1; i&amp;lt; 5; i++) {
+  console.log(i)
+  setTimeout(function() {
+    console.log(i) # here we have i = 5,5,5,5 since same variable is used
+    # if we used let i=1;i&amp;lt;5;i++ than it will be different variable: 1,2,3,4
+  }, 1000)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;const MY_CONST = document.querySelect(&quot;.my-class&quot;);&lt;/code&gt; have block scope,
+and it should be used for all non volatile variables. If you use object than
+nested values can change &lt;code class=&quot;highlighter-rouge&quot;&gt;const k = { a: 3 }; k.a = 4&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;interpolation of template literals with backticks and curly braces
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var name = &quot;Duke&quot;;
+console.log(`Hello ${name}`);
+
+const multiLine = `this
+is
+multi
+line`
+
+// use trim() so you can go to new line at beggining
+let n = `
+hi
+bye`.trim()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;array functions are abbreviated syntax for anonymouse functions. If there is
+ only one parameter than you can omit parenthesis, if there are no params than
+ you can replace parenthesis with &lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;. One liner syntax (without block) use
+ implicit return, for other you need explicit return if you need. If returning
+ object, remember to wrap inside parethenses&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var sayHello = (name) =&amp;gt; ({name: `Hello ${name}!`})
+var sayCiao = name =&amp;gt; {
+  return `Ciao ${name}!`
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;Note that &lt;code class=&quot;highlighter-rouge&quot;&gt;self&lt;/code&gt; inside arrow functions does not bind to current object for
+object methods. It binds to outer &lt;code class=&quot;highlighter-rouge&quot;&gt;this&lt;/code&gt; (it is inherited from the execution
+context). So &lt;code class=&quot;highlighter-rouge&quot;&gt;this&lt;/code&gt; is usefull only if you have function inside method that is
+defined in clasical way, ie do not use arrow functions for methods, use
+old functions (when dynamic context is not needed)&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let o = {
+  name: 'name',
+  myMethod: function() {
+    setTimeout( () =&amp;gt; {
+      console.log(this.name) // o.name
+    }, 3000)
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;destructuring with default values and renaming
+&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment&quot;&gt;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment&lt;/a&gt;&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# destructuring arrays
+let [, month, date = 1] = '2010-10-11'.split('-')
+# month = '10' and date = '11'
+let [f, s, ...rest] = [1, 2, 3, 4]
+# f=1, s=2, rest = [3,4]
+
+# destructuring objects
+let { name, age, gender:sex = 'male' } = { name: 'Duke', age: '33', gender: 'male' }
+# is the same as
+let name = o.name
+let age = o.age
+let sex = o.gender # here we also renaming and have default value
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;You can also use destructuring when defining methods&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function call({
+  name: 'My Name',
+  phone: '123123',
+} = {}) {
+  console.log(name + ' ' + phone)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;You can also destructure nested objects in function params&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var car = {
+  model: 'bmw 2018',
+  engine: {
+    turbo: true,
+    vin: 12345
+  }
+}
+
+// es6 shorthand instead of
+// { vin: vin }
+// you can use just
+// { vin }
+const modelAndVIN = ({model, engine: {vin}}) =&amp;gt; {
+  console.log(`model: ${model} vin: ${vin}`);
+}
+
+modelAndVIN(car); // =&amp;gt; model: bmw 2018  vin: 12345
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;There exists rest &lt;code class=&quot;highlighter-rouge&quot;&gt;...&lt;/code&gt; parameter which convers to array&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const sum = (...a) =&amp;gt; a.reduce((sum, current) =&amp;gt; sum + current, 0)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;and same operator &lt;code class=&quot;highlighter-rouge&quot;&gt;...&lt;/code&gt; inside method call is called &lt;em&gt;spread&lt;/em&gt; and it expands
+array to params (coffee calls this splats &lt;code class=&quot;highlighter-rouge&quot;&gt;f(items...)&lt;/code&gt;)&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let a = [1, 2, 3]
+f(...a)
+# is the same as
+f(1, 2, 3)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;you can also spread objects &lt;code class=&quot;highlighter-rouge&quot;&gt;let d = { a: 3}; let db = { ...d, b: 3}&lt;/code&gt;. But if
+object has methods, it wont be expanded. If you spread two objects, later will
+override: &lt;code class=&quot;highlighter-rouge&quot;&gt;let object1 = { a:1, b:2 }; let object2 = { b:30, c:40}; let merged
+= {…object1, …object2} // {a:1, b:30, c:40}&lt;/code&gt;. You can de-duplicate array with
+&lt;code class=&quot;highlighter-rouge&quot;&gt;let arr = [1, 1, 2, 2, 3, 3]; let deduped = [...new Set(arr)] // [1, 2, 3]&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;default parameter values &lt;code class=&quot;highlighter-rouge&quot;&gt;function g(a=2){}&lt;/code&gt;. It
+can be combined with default destructing params &lt;code class=&quot;highlighter-rouge&quot;&gt;function g({a=1, b}={b:2}){}&lt;/code&gt;
+and &lt;code class=&quot;highlighter-rouge&quot;&gt;g({a: 2})&lt;/code&gt; (ok b=2), &lt;code class=&quot;highlighter-rouge&quot;&gt;g()&lt;/code&gt; (ok a=1, b=2), but &lt;code class=&quot;highlighter-rouge&quot;&gt;g({})&lt;/code&gt; error, b is required.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;if you need some param to be required you can use this trick&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const required = () =&amp;gt; {throw new Error('Missing parameter')};
+
+//The below function will trow an error if either &quot;a&quot; or &quot;b&quot; is missing.
+const add = (a = required(), b = required()) =&amp;gt; a + b;
+
+add(1, 2) //3
+add(1) // Error: Missing parameter.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;for(i=0;i&amp;lt;cars.length;i++) {}&lt;/code&gt; is not concise &lt;code class=&quot;highlighter-rouge&quot;&gt;cars.forEach(myFunction)&lt;/code&gt; is
+concise but can not break out of the loop. ES6 gives &lt;code class=&quot;highlighter-rouge&quot;&gt;for(let ... of ..) {}&lt;/code&gt;
+(for values in array) and &lt;code class=&quot;highlighter-rouge&quot;&gt;for..in&lt;/code&gt; (for object property names)) is concise
+and can break. Use &lt;code class=&quot;highlighter-rouge&quot;&gt;.entries()&lt;/code&gt; to get index
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for(let [i, car] of cars.entries()) { car }`
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;To convert HtmlCollection to array you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;Array.from(htmlCollection)&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;array.reduce(function, init_value)&lt;/code&gt; can be used as filtering if &lt;code class=&quot;highlighter-rouge&quot;&gt;init_value&lt;/code&gt;
+is array, than function takes two arguments (init_value, array_item)
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const numbers = [10, 20, 30, 40];
+
+const doubledOver50 = numbers.reduce((finalList, num) =&amp;gt; {
+  num = num * 2; //double each number (i.e. map)
+  //filter number &amp;gt; 50
+  if (num &amp;gt; 50) {
+    finalList.push(num);
+  }
+  return finalList;
+}, []);
+doubledOver50; // [60, 80]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;class Person&lt;/code&gt; can be used to instantiate objects &lt;code class=&quot;highlighter-rouge&quot;&gt;new Person()&lt;/code&gt;. For
+initialization you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;constructor(name) { this.name = name }&lt;/code&gt;
+Instead of hash method &lt;code class=&quot;highlighter-rouge&quot;&gt;full_name: function() {}&lt;/code&gt; we can write &lt;code class=&quot;highlighter-rouge&quot;&gt;full_name(){}&lt;/code&gt;
+Extend classes &lt;code class=&quot;highlighter-rouge&quot;&gt;class Employee extends Person {}&lt;/code&gt; so we don’t need to write
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Employee.prototype = new Person&lt;/code&gt; (or &lt;code class=&quot;highlighter-rouge&quot;&gt;var e = { __proto__: person }&lt;/code&gt;.
+Inside &lt;code class=&quot;highlighter-rouge&quot;&gt;class&lt;/code&gt; we can define instance and &lt;code class=&quot;highlighter-rouge&quot;&gt;static&lt;/code&gt; methods. Static methods are
+called without instantiating their class (used for utility functions).
+Multiple inheritance can be achieved with mix-ins https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins
+You can use getter (or setter) which binds an object property to a function
+that will be called when that property is looked up (or attempt to set that
+property &lt;code class=&quot;highlighter-rouge&quot;&gt;e.full_name =&lt;/code&gt;)&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Empoyee extends Person {
+  constructor(name) {
+    super(name);
+
+    this.proffessional_name = name;
+  }
+  get full_name() {
+    return this.name;
+  }
+  set full_name(name) {
+    this.name = name;
+  }
+
+  static myUtilityFunction(uppercase) {
+    return uppercase;
+  }
+
+  hello() {
+    return `Hi, I'm ${name}`
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;new data structure called &lt;code class=&quot;highlighter-rouge&quot;&gt;Map&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;WeakMap&lt;/code&gt; (keys are objects, not plain
+values like number, string or symbol)&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var map = new Map();
+map.set('year', '123');
+map.get('year'); // '123'
+
+# or use initialization
+m = new Map([['color', 'red'],['owner', 'me']])
+m.size
+m.keys()
+m.values()
+m.delete('color')
+m.clear()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;new data structure called &lt;code class=&quot;highlighter-rouge&quot;&gt;Set&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;WeakSet&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;new string functions
+&lt;code class=&quot;highlighter-rouge&quot;&gt;'asd'.startsWith('a');'asd'.endsWith('a');'asd'.includes('as');'a'.repeat(3);&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;new Array functions
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Array.from([1,2,3], x =&amp;gt; x + x)&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Array.find( user =&amp;gt; user.age &amp;gt; 15)&lt;/code&gt; same as &lt;code class=&quot;highlighter-rouge&quot;&gt;Array.findIndex&lt;/code&gt; but returns
+ object instead of index&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[1,2,3].filter( (n) =&amp;gt; n &amp;gt; 2 )&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[1,2].includes(3)&lt;/code&gt; returns false&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;property value shorthands, when you define object and you already have
+variable with same name as key, you can use&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const name = 'dule'
+const anPerson = {
+  name
+}
+// is the same as
+const aPerson = {
+  name: name
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;it also exists for methods&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const aPerson = {
+  speak (word) {},
+  // same as
+  speak: function (word) {},
+  // do not use array because you can not acsess this
+  // speak: () =&amp;gt; {},
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;computed object property names&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const name = 'dule'
+
+const aPerson = {
+  'mile': 'value',
+  [name]: 'dule is key and value',
+  [name+'car']: 'value',
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;generators
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function *calculator(input) {
+  var doubleThat = 2 * (yield (input / 2))
+  var another = yield (doubleThat)
+  return (input * doubleThat * another)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const calc = calculator(10)
+// start
+&amp;gt; c.next()
+{ value: 5, done: false }
+&amp;gt; c.next(7)
+{ value: 14, done: false }
+&amp;gt; c.next(100)
+{ value: 14000, done: true }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ES2017&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;in function declarations and function calls you can use trailing commas
+&lt;code class=&quot;highlighter-rouge&quot;&gt;doSomething(p1, p2,)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ES2019 ESNext&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[1,[2]].flat(Infinity)&lt;/code&gt; and
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;['My dog', 'is awesome'].flatMap(words =&amp;gt; words.split(' '))
+//[ 'My', 'dog', 'is', 'awesome' ]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;create object from entries &lt;code class=&quot;highlighter-rouge&quot;&gt;newPerson =
+Object.fromEntries(Object.entries(person))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;promise&quot;&gt;Promise&lt;/h1&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let done = true
+
+const isItDoneYet = new Promise((resolve, reject) =&amp;gt; {
+  if (done) {
+    const workDone = 'Here is the thing I built'
+    resolve(workDone)
+  } else {
+    const why = 'Still working on something else'
+    reject(why)
+  }
+})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Promise.all([p1, p2]).then&lt;/code&gt; will be executed when all are resolved
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Promise.race([p1, p2]).then&lt;/code&gt; will be executed when first (any) is resolved&lt;/p&gt;
+
+&lt;p&gt;Async/Await&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const doSomethingAsync = () =&amp;gt; {
+  return new Promise(resolve =&amp;gt; {
+    setTimeout( () =&amp;gt; resolve('Here is thing I built after some delay'), 2000);
+  })
+}
+
+const doSomething = async () =&amp;gt; {
+  console.log(await doSomethingAsync())
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Using &lt;code class=&quot;highlighter-rouge&quot;&gt;async&lt;/code&gt; to a function means that it will return promise, so those two
+functions are the same:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const aFunction = async () =&amp;gt; {
+  return 'test'
+}
+
+const aFunction = () =&amp;gt; {
+  return Promise.resolve('test')
+}
+
+aFunction().then(console.log)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ES2018 there is &lt;code class=&quot;highlighter-rouge&quot;&gt;for await (const line of readLines(filePath)) { log(line) }&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.finnaly()&lt;/code&gt; is executed regardless of the successful or not promise.&lt;/p&gt;
+
+&lt;h1 id=&quot;modules&quot;&gt;Modules&lt;/h1&gt;
+
+&lt;p&gt;Import bindings which are exported by another module (js file). Module is just
+js script (no need for special keyword) but everything defined inside module is
+local to the module, except when you use &lt;code class=&quot;highlighter-rouge&quot;&gt;export&lt;/code&gt;.
+&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import&quot;&gt;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function myModule() {
+  this.hello = function() {
+    return 'hello
+  }
+}
+
+module.exports = myModule
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that for Webpack you can use CommonJS module and use with &lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var myModule = require('myModule');
+
+var myModuleInstance = new myModule();
+myModuleInstance.hello(); // 'hello!'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Using Asynchronous Module Definition AMD can load modules async using &lt;code class=&quot;highlighter-rouge&quot;&gt;define&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;define(['myModule', 'myOtherModule'], function(myModule, myOtherModule) {
+  console.log(myModule.hello());
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Universal Module Definition UMD combines AMD and CommonJS. But ECMASCRIPT 6
+introduce &lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;export&lt;/code&gt; methods which replace all those functions…
+So if you write libs for web you should create all variations so it can be
+used in webpack or directly
+https://medium.com/@kelin2025/so-you-wanna-use-es6-modules-714f48b3a953
+http://krasimirtsonev.com/blog/article/javascript-library-starter-using-webpack-es6&lt;/p&gt;
+
+&lt;p&gt;You can export any top level function, class, var, let or const.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// lim/math.js
+export function sum(x, y) {
+  return x + y;
+}
+export let pi = 3.141593;
+
+// or you could use export list
+export { sum, pi };
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can name the export as &lt;code class=&quot;highlighter-rouge&quot;&gt;default&lt;/code&gt; and in this case you can use anonymous
+functions (otherwise you have to name each export so it can be distinquished
+from other exports)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let myObject = {
+  field1: value1,
+  field2: value2
+};
+export {myObject as default};
+// or better use shorthand
+export default {
+  field1: value1,
+  field2: value2
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that with &lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt; you should use brackets if there is no default export,
+and check the form of the &lt;code class=&quot;highlighter-rouge&quot;&gt;export&lt;/code&gt; command.
+https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
+Default import&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// import what is default exported and bind bind to defaultExport
+import defaultExport from &quot;module-name&quot;;
+// this is shorthand of
+import { default as defaultExport } from 'module-name';
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Namespace import&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import * as name from &quot;module-name&quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Named import&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import { export } from &quot;module-name&quot;;
+import { export as alias } from &quot;module-name&quot;;
+import { export1 , export2 } from &quot;module-name&quot;;
+import { export1 , export2 as alias2 , [...] } from &quot;module-name&quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;combination of default import and named or namespaces import&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import defaultExport, { export [ , [...] ] } from &quot;module-name&quot;;
+import defaultExport, * as name from &quot;module-name&quot;;
+// just run the code, not importing anything
+import &quot;module-name&quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;module-name is relative (&lt;code class=&quot;highlighter-rouge&quot;&gt;./lib/math&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/math&lt;/code&gt;) or absolute path name to
+the &lt;code class=&quot;highlighter-rouge&quot;&gt;.js&lt;/code&gt; file&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import * as math from &quot;lib/math&quot;;
+console.log(&quot;2pi = &quot; + math.sum(math.pi, math.pi));
+
+// or we could
+import { pi, sum } from &quot;lib/math&quot;;
+console.log(&quot;2pi = &quot; + sum(pi, pi));
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In html you can include using script tag with &lt;code class=&quot;highlighter-rouge&quot;&gt;type='module'&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;charset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utf-8&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;script &lt;/span&gt;&lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'module'&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;src=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'./app.js'&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    asd up is
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'up'&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+
+# app.js
+import toUp from './t.js'
+document.getElementById('up').innerHTML = toUp('asd')
+
+# t.js
+export default (str) =&amp;gt; str.toUpperCase()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Mon, 25 Mar 2019 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2019/03/25/es6-esnext/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2019/03/25/es6-esnext/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Rails Translations I18n</title>
+        <description>&lt;h1 id=&quot;localisation-i18n-translations&quot;&gt;Localisation i18n translations&lt;/h1&gt;
+
+&lt;p&gt;Tips &lt;a href=&quot;https://devhints.io/rails-i18n&quot;&gt;https://devhints.io/rails-i18n&lt;/a&gt;
+Translate models using &lt;code class=&quot;highlighter-rouge&quot;&gt;activerecord&lt;/code&gt;
+https://guides.rubyonrails.org/i18n.html#translations-for-active-record-models
+so you can use&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;User.model_name.human
+# pluralize
+User.model_name.human(count: 2)
+# attribute
+User.human_attribute_name(:email)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To translate active record messages for specific attributes, you can overwrite
+messages for specific model and attributes (default ActiveRecord messages taken)
+&lt;a href=&quot;https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23&quot;&gt;https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23&lt;/a&gt;
+&lt;a href=&quot;https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message&quot;&gt;https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Also you can change format &lt;code class=&quot;highlighter-rouge&quot;&gt;errors.format: Polje &quot;%{attribute}&quot; %{message}&lt;/code&gt;
+https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
+You can use custom notice:
+You can also see some default en translations for errors.
+To see Rails default datetime formats go to
+https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
+to see current translation you can use&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;I18n.translate 'date.formats.default`
+=&amp;gt; &quot;%Y-%m-%d&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And you can change attribute name &lt;code class=&quot;highlighter-rouge&quot;&gt;activerecord.attributes.user.email: имејл&lt;/code&gt;
+To translate also plurals you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;User.model_name.human(count: 2)&lt;/code&gt;. For
+attributes you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;User.human_attribute_name(&quot;email&quot;)&lt;/code&gt;
+&lt;a href=&quot;http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models&quot;&gt;link&lt;/a&gt;
+For &lt;code class=&quot;highlighter-rouge&quot;&gt;ApplicationRecord&lt;/code&gt; translate &lt;code class=&quot;highlighter-rouge&quot;&gt;activerecord&lt;/code&gt;.
+For form objects &lt;code class=&quot;highlighter-rouge&quot;&gt;include ActiveModel::Model&lt;/code&gt; you should translate
+&lt;code class=&quot;highlighter-rouge&quot;&gt;activemodel&lt;/code&gt;. There you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;t('successfully')&lt;/code&gt; instead
+&lt;code class=&quot;highlighter-rouge&quot;&gt;I18n.t('successfully')&lt;/code&gt; if you &lt;code class=&quot;highlighter-rouge&quot;&gt;include AbstractController::Translation&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/locales/activerecord_activemodels.en.yml
+en:
+  activerecord:
+    models:
+      user:
+        zero: No dudes
+        one: Dude
+        other: Dudes
+  activemodel:
+    attributes:
+      landing_signup:
+        current_city: Који је твој град ?
+    errors:
+      messages:
+        group_not_exists_for_age: Не постоји група (%{age}год) на овој локацији
+      models:
+        landing_signup:
+          attributes:
+            current_city:
+              blank: Не може бити празно ?
+    models:
+      user:
+        one: корисник
+        other: корисници
+        accusative: корисника
+        some_customer_message: Моја порука
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Separate translations into different files (for example
+&lt;code class=&quot;highlighter-rouge&quot;&gt;activerecord_activemodels.sr.yml&lt;/code&gt;) include them with:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/application.rb
+config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+
+# Whitelist locales available for the application
+I18n.available_locales = [:en, :pt]
+
+# Set default locale to something other than :en
+I18n.default_locale = :pt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To raise error when translation is missing &lt;code class=&quot;highlighter-rouge&quot;&gt;.translation_missing&lt;/code&gt; class&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/application.rb
+config.action_view.raise_on_missing_translations = true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This way you can change default_locale and run system tests and you will get
+exception if some locale is missing.&lt;/p&gt;
+
+&lt;p&gt;No need to write quotes in yml unless you have:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;colon &lt;code class=&quot;highlighter-rouge&quot;&gt;:&lt;/code&gt; , than simply escape it’s meaning and use quotes &lt;code class=&quot;highlighter-rouge&quot;&gt;name: &quot;name: Ime&quot;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;start with &lt;code class=&quot;highlighter-rouge&quot;&gt;%{}&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;have &lt;code class=&quot;highlighter-rouge&quot;&gt;answer: Yes&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;answer: No&lt;/code&gt;, is somehow casts to &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;have double quotes inside &lt;code class=&quot;highlighter-rouge&quot;&gt;processing: &amp;lt;i class=&quot;fa fa-spinner fa-spin
+ datatable-spinner&quot;&amp;gt;&amp;lt;/i&amp;gt;Обрада...&lt;/code&gt;. Than you need to switch to single quotes.
+ Note that it does not help to wrap double quotes with single quote, this won’t
+ work: &lt;code class=&quot;highlighter-rouge&quot;&gt;processing: '&amp;lt;i class=&quot;c&quot;&amp;gt;&amp;lt;/i&amp;gt;'&lt;/code&gt; since you have double quote inside.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When debugging &lt;code class=&quot;highlighter-rouge&quot;&gt;SyntaxError: [stdin]:60:33: unexpected identifier&lt;/code&gt; you should
+run &lt;code class=&quot;highlighter-rouge&quot;&gt;rake tmp:clear&lt;/code&gt; so all yml end .erb files are compiled again.&lt;/p&gt;
+
+&lt;p&gt;If you want to reuse same translation you can use alias, but only inside same
+file, so in case of form object, you can add to activerecord_models.yml&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sr:
+  activerecord:
+    attributes:
+      subscriber: &amp;amp;subscriber_attributes
+        name: Назив
+      project: &amp;amp;project_attributes
+        name: Назив
+  activemodel:
+    attributes:
+      project_task_notification:
+        &amp;lt;&amp;lt;: *project_attributes
+        &amp;lt;&amp;lt;: *subscriber_attributes
+        project_name: Назив
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For custom errors can be different for each attribute or same. Can also accept
+param, for example&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    errors.add :from_group_age, :group_not_exists_for_age, age: age
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;https://stackoverflow.com/questions/6166064/i18n-pluralization
+For serbian you can provide pluralization&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/locales/plurals.rb
+# https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
+serbian = {
+  i18n: {
+    plural: {
+      keys: %i[one few many other],
+      rule: lambda { |n|
+        if n % 10 == 1 &amp;amp;&amp;amp; n % 100 != 11
+          :one
+        elsif [2, 3, 4].include?(n % 10) &amp;amp;&amp;amp; ![12, 13, 14].include?(n % 100)
+          :few
+        # elsif (n % 10).zero? || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100)
+        #   :many
+        # there are no other integers, use :many if you need to differentiate
+        # with floats
+        else
+          :other
+        end
+      }
+    }
+  }
+}
+{
+  sr: serbian,
+  'sr-latin': serbian,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/initializers/pluralization.rb
+require 'i18n/backend/pluralization'
+I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/locales/sr.yml
+sr:
+  sent_messages:
+    # 1, 21, 31 ...
+    one: %{count} порука је послата
+    # 2, 3, 4, 22, 23, 24, 32, 33, 34 ...
+    few: %{count} поруке су послате
+    # all other integers: 5, 6, ... 9, 10, 11, 12, 13, 14 ... 20, 25, ...
+    many: %{count} порука је послато
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that you have to provide &lt;code class=&quot;highlighter-rouge&quot;&gt;few&lt;/code&gt; translation for all words, since it could
+happend that count is 2 and translation is missing.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;I18n.t 'sent_messages', count: 15
+# or if you want to translate model
+&quot;#{chat.moves.size} #{Move.model_name.human count: chat.moves.size}&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can translate to any language with&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;I18n.t 'sent_messages', locale: :sr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Example for Serbian localizations translations:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/locales/sr.yml
+sr:
+  # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L8
+  errors:
+    format: Поље &quot;%{attribute}&quot; %{message}
+    messages:
+      blank: не сме бити празно
+      invalid: није исправно
+  neo4j:
+    errors:
+      messages:
+        required: мора постојати
+        taken: је већ заузет
+    models:
+      user: корисник
+      location:
+        one: локација
+        other: локације
+    attributes:
+      user:
+        email: Имејл
+        password: Лозинка
+        password_confirmation: Потврда лозинке
+        remember_me: Запамти ме
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When you use &lt;code class=&quot;highlighter-rouge&quot;&gt;.capitalize&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;.titleize&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;.upcase&lt;/code&gt; than you need first to call
+&lt;code class=&quot;highlighter-rouge&quot;&gt;.mb_chars&lt;/code&gt;. For example&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;'ž'.upcase
+=&amp;gt; &quot;ž&quot;
+
+'ž'.mb_chars.upcase.to_s
+ =&amp;gt; &quot;Ž&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Some common words translations can be found
+&lt;a href=&quot;https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml&quot;&gt;https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To translate with accusative you need to joins strings or use param in
+translation&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module TranslateHelper
+  # there are two ways of calling this helper:
+  # t_crud 'are_you_sure_to_remove_item', item: @move
+  # t_crud 'edit', User
+  def t_crud(action, model_class)
+    if model_class.class == Hash
+      t(action, item: t(&quot;neo4j.models.#{model_class[:item].name.downcase}.accusative&quot;))
+    else
+      &quot;#{t(action)} #{t(&quot;neo4j.models.#{model_class.name.downcase}.accusative&quot;)}&quot;
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Translate latin to cyrilic with &lt;a href=&quot;https://github.com/dalibor/cyrillizer&quot;&gt;https://github.com/dalibor/cyrillizer&lt;/a&gt; You need
+to set language in config&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Gemfile
+# translate cyrillic
+gem 'cyrillizer'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/initializers/cyrillizer.rb
+Cyrillizer.language = :serbian
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In console&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;'my string'.to_cyr
+ =&amp;gt; &quot;мy стринг&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that some chars looks the same but are not when rendered on html page&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; # for example first line is not correct link a href
+ &amp;lt;a href='%{confirmation_url}'&amp;gt;Поново пошаљи упутство за потврду&amp;lt;/а&amp;gt;&quot;
+ &amp;lt;a href='%{confirmation_url}'&amp;gt;Поново пошаљи упутство за потврду&amp;lt;/a&amp;gt;&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;locale&quot;&gt;Locale&lt;/h1&gt;
+
+&lt;p&gt;When changing locale &lt;code class=&quot;highlighter-rouge&quot;&gt;I18n.locale = :sr&lt;/code&gt; in some methods, note that this is
+global variable in thread, so when you have 5 puma threads than on GET requests
+(simply refresh couple of times) you will get different locales.
+Here is my Rails controbution to guide about it https://github.com/rails/rails/pull/34911
+One way is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;I18n.with_locale&lt;/code&gt; for example&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class UserMailer &amp;lt; ActionMailer::Base
+  default from: 'noreply@translation.io'
+
+  def invitation(user)
+    I18n.with_locale(user.locale) do
+      mail subject: t('invitation'), to: user.email
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For controller, you need to use around filters&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  around_action :set_locale_from_session
+
+  def set_locale_from_session
+    if session[:locale].present?
+      I18n.with_locale session[:locale].to_sym do
+        yield
+      end
+    else
+      yield
+    end
+  end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;translating-user-content&quot;&gt;Translating user content&lt;/h1&gt;
+
+&lt;p&gt;https://github.com/shioyama/mobility#quickstart&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Gemfile
+# translation
+gem 'mobility', '~&amp;gt; 0.8.6'
+
+# this will generate config/initializers/mobility.rb
+rails g mobility:install
+
+# app/models/activity.rb
+class Activity &amp;lt; ApplicationRecord
+  extend Mobility
+  translates :name
+end
+
+# in migration add default value
+  create_table :activities, id: :uuid do |t|
+    t.json :name, default: {}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For google translate look for two scripts, one for vim and one for whole yml.
+https://github.com/duleorlovic/config/tree/master/ruby&lt;/p&gt;
+</description>
+        <pubDate>Fri, 04 Jan 2019 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2019/01/04/rails-translations-i18n/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2019/01/04/rails-translations-i18n/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Java In Android Studio</title>
+        <description>&lt;h1 id=&quot;install-firebase&quot;&gt;Install Firebase&lt;/h1&gt;
+
+&lt;p&gt;There is a collection of apps for quick start
+https://github.com/firebase/quickstart-android&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;google-services.json&lt;/code&gt; file should be copied to &lt;code class=&quot;highlighter-rouge&quot;&gt;app/&lt;/code&gt; folder, but you can use
+different google services json for different build type
+https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;app/google-services.json
+app/src/release/google-services.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To connect your app with Firebase you can use Gradle or Assistant.
+For using Gradle, you need to copy SHA and paste to firebase console. To get
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Debug signing certificate SHA-1 (optional)&lt;/code&gt; from the Android Studio, you can go
+to right toolbox &lt;code class=&quot;highlighter-rouge&quot;&gt;Gradle&lt;/code&gt; and double click on &lt;code class=&quot;highlighter-rouge&quot;&gt;root -&amp;gt; Tasks -&amp;gt; android -&amp;gt;
+signinReport&lt;/code&gt;. Another way to get sha is running command&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool --exportcert -list -v -alias androiddebugkey -keystore $ANDROID_SDK_ROOT/.android/debug.keystore
+Enter keystore password:
+# type: android
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Using assistant, you will grand permission to update your firebase settings, so
+you do not need to paste.&lt;/p&gt;
+
+&lt;p&gt;You can register different firebase project with the same package name, but you
+need to use different signing key (it is not possible to have same SHA on two
+different projects for the same package name). So you need to use another key
+(you can keep same package name &lt;code class=&quot;highlighter-rouge&quot;&gt;com.myapp.app&lt;/code&gt;).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keytool --exportcert -list -v -alias key0 -keystore app/myapp_debug.jks
+# type the password: myapp123456
+# in output find SHA1: 87:16:52:08:C7:B1:BE:BC:73:BE:9E:37:64:67:CB:9D:76:0C:2B:01
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Add dependencies&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# build.gradle
+buildscript {
+  dependencies {
+    // Add this line
+    classpath 'com.google.gms:google-services:4.0.1'
+  }
+}
+
+# app/build.gradle
+dependencies {
+  // Add this line
+  implementation 'com.google.firebase:firebase-core:16.0.1'
+}
+
+// Add to the bottom of the file
+apply plugin: 'com.google.gms.google-services'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;signing-config-keys&quot;&gt;Signing config keys&lt;/h1&gt;
+
+&lt;p&gt;https://coderwall.com/p/zrdsmq/signing-configs-with-gradle-android
+Instead of default certificate located at &lt;code class=&quot;highlighter-rouge&quot;&gt;$HOME/.android/debug.keystore&lt;/code&gt; (which
+is different for each user ie sdk installation) you can create your own keys.
+That way new developer do not need to add SHA to firebase project, since he can
+imediatelly build and run the app in emulator or device.&lt;/p&gt;
+
+&lt;p&gt;https://developer.android.com/studio/publish/app-signing
+There are &lt;code class=&quot;highlighter-rouge&quot;&gt;signing&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;upload&lt;/code&gt; key.&lt;/p&gt;
+
+&lt;p&gt;You can sign in manually from command line or using gradle https://developer.android.com/studio/publish/app-signing#gradle-sign
+Generate &lt;code class=&quot;highlighter-rouge&quot;&gt;.jks&lt;/code&gt; file from Android studio&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# app/build.gradle
+android {
++    signingConfigs {
++      debug {
++          // You need to specify either an absolute path or include the
++          // keystore file in the same directory as the build.gradle file.
++          storeFile file(&quot;mykey.jks&quot;)
++          storePassword &quot;asdf&quot;
++          keyAlias &quot;key0&quot;
++          keyPassword &quot;asdf&quot;
++      }
++    }
++
+     buildTypes {
+         release {
+             minifyEnabled false
+             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+         }
++        debug {
++            signingConfig signingConfigs.debug
++
++        }
+     }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Release to App Store https://www.youtube.com/watch?v=AWawL5HFn64&lt;/p&gt;
+
+&lt;h1 id=&quot;keyboard-shortcuts&quot;&gt;Keyboard shortcuts&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Comment with &lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl + /&lt;/code&gt; uncomment with &lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl + shift + /&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Alt + Enter&lt;/code&gt; when you want to import something that can not be resolved (when
+you paste some code snipets))&lt;/li&gt;
+  &lt;li&gt;fix code indent with &lt;code class=&quot;highlighter-rouge&quot;&gt;Ctrl + Alt + Super + L&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;webview&quot;&gt;Webview&lt;/h1&gt;
+
+&lt;p&gt;https://developer.android.com/guide/webapps/webview#java
+Start new app with blank intent.
+In &lt;code class=&quot;highlighter-rouge&quot;&gt;app/serv/main/AndroidManifest.xml&lt;/code&gt; add permission for internet and also for
+http traffic https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted/50834600#50834600&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;manifest...
+    &amp;lt;uses-permission android:name=&quot;android.permission.INTERNET&quot;&amp;gt;&amp;lt;/uses-permission&amp;gt;
+    &amp;lt;application
+        ...
+        android:usesCleartextTraffic=&quot;true&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In java you need to enable javascript in webview, set user agent so you can
+customize the response.&lt;/p&gt;
+
+&lt;p&gt;https://github.com/duleorlovic/android-webview-example/commit/3097878534c019264f58050612a2d5564267b63d&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class MainActivity extends AppCompatActivity {
+
+    private WebView myWebView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        myWebView = (WebView) findViewById(R.id.webview);
+//        setContentView(myWebView);
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setUserAgentString(&quot;myapp&quot;);
+        myWebView.setWebViewClient(new MyWebViewClient());
+        myWebView.addJavascriptInterface(new WebAppInterface(this), &quot;Android&quot;);
+
+        myWebView.loadUrl(&quot;http://192.168.5.4:3001/&quot;);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check if the key event was the Back button and if there's history
+        if ((keyCode == KeyEvent.KEYCODE_BACK) &amp;amp;&amp;amp; myWebView.canGoBack()) {
+            myWebView.goBack();
+            return true;
+        }
+        // If it wasn't the Back key or there's no web page history, bubble up to the default
+        // system behavior (probably exit the activity)
+        return super.onKeyDown(keyCode, event);
+    }
+}
+
+public class WebAppInterface {
+    Context mContext;
+
+    /** Instantiate the interface and set the context */
+    WebAppInterface(Context c) {
+        mContext = c;
+    }
+
+    /** Show a toast from the web page */
+    @JavascriptInterface
+    public void showToast(String toast) {
+        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;to change launcher icon and other icons you can go to File -&amp;gt; New -&amp;gt; Image
+Asset and than select “Lanucher icons” and add svg image file. Repeat proccess
+but select “Notification icons”. You can see &lt;code class=&quot;highlighter-rouge&quot;&gt;git status&lt;/code&gt; that existing files
+will be updated, for example &lt;code class=&quot;highlighter-rouge&quot;&gt;app/src/main/res/mipmap-hdpi/ic_launcher.png&lt;/code&gt;
+insteaad of mipmap-hdpi, there is mipmap-mdpi/xhdmpi/xxhdpi/xxxhdpi density
+and ic_launcher_foreground.png/ic_launcher_round.png
+There is &lt;code class=&quot;highlighter-rouge&quot;&gt;app/src/main/res/values/ic_launcher_background.xml&lt;/code&gt; which is some
+&lt;code class=&quot;highlighter-rouge&quot;&gt;vector&lt;/code&gt; but do not know how to use it.
+For notification icon path is &lt;code class=&quot;highlighter-rouge&quot;&gt;app/src/main/res/drawable/ic_notificaiton.png&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;const-for-server-url&quot;&gt;Const for server Url&lt;/h1&gt;
+
+&lt;p&gt;When you build &lt;code class=&quot;highlighter-rouge&quot;&gt;release&lt;/code&gt; (Build -&amp;gt; Select build variant -&amp;gt; release), by default
+&lt;code class=&quot;highlighter-rouge&quot;&gt;serverUrl&lt;/code&gt; is targeting production server &lt;code class=&quot;highlighter-rouge&quot;&gt;https://myapp.herokuapp.com&lt;/code&gt;.
+When you want to target local Rails server than choose &lt;code class=&quot;highlighter-rouge&quot;&gt;debug&lt;/code&gt; and update
+&lt;code class=&quot;highlighter-rouge&quot;&gt;app/src/main/java/com/myapp/app/Const.java&lt;/code&gt;, by default is
+&lt;code class=&quot;highlighter-rouge&quot;&gt;http://192.168.5.4:3001&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;myapp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;android&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;android&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ApplicationInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Use&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mUrl&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getServerUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getApplicationContext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;//&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getServerUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isDebuggable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;!= (context.getApplicationInfo().flags
+&lt;/span&gt;                &lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ApplicationInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FLAG_DEBUGGABLE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isDebuggable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;mUrl&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://192.168.5.4:3001&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;mUrl&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://myaapp.herokuapp.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;release-new-version-on-play-store&quot;&gt;Release new version on Play store&lt;/h1&gt;
+
+&lt;p&gt;Increment &lt;code class=&quot;highlighter-rouge&quot;&gt;android { defaultConfig { versionCode X }}}&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;app/build.gradle&lt;/code&gt;.
+(Module: app). Than go to Build -&amp;gt; Generate Signed Bundle or APK -&amp;gt; Apk -&amp;gt;
+Choose
+&lt;code class=&quot;highlighter-rouge&quot;&gt;app/myaapp.jks&lt;/code&gt; and add passwords from gradle config. Upload
+&lt;code class=&quot;highlighter-rouge&quot;&gt;app/release/app-release.apk&lt;/code&gt; to Google Play console , Release Management -&amp;gt; App
+preleases -&amp;gt; Production Track -&amp;gt; Manage -&amp;gt; Create Release or Edit Release
+https://play.google.com/apps/publish/&lt;/p&gt;
+
+&lt;p&gt;Note that Playstore is somehow cached on Emulator, so install from real device
+when you want to checound latest release.&lt;/p&gt;
+
+&lt;h1 id=&quot;errors&quot;&gt;Errors&lt;/h1&gt;
+
+&lt;p&gt;When I Import existing project the subfolders, I got error&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Gradle sync failed: Could not find com.google.gms:google-services:4.2.0.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so I need to add this line to gradle https://stackoverflow.com/questions/53706565/error-could-not-find-com-google-gmsgoogle-services4-2-0&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;maven { url 'https://dl.bintray.com/android/android-tools' }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;tips&quot;&gt;Tips&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;add loader before page is shown https://android.jlelse.eu/loading-splash-screen-for-webview-in-android-studio-ef68ec05720a&lt;/li&gt;
+  &lt;li&gt;if you have multiple andoird icons&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 10 Dec 2018 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2018/12/10/java-in-android-studio/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2018/12/10/java-in-android-studio/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Alexa Aws Lambda</title>
+        <description>&lt;p&gt;Aws Lambda supports ruby
+https://aws.amazon.com/blogs/compute/announcing-ruby-support-for-aws-lambda/&lt;/p&gt;
+</description>
+        <pubDate>Mon, 10 Dec 2018 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2018/12/10/alexa-aws-lambda/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2018/12/10/alexa-aws-lambda/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Tableless Search Union Of Multiple Models Using Polymorphic Association In Rails</title>
+        <description>&lt;p&gt;Common problem is to enable search on the site, but with differt kind of results
+(posts, comments, books). So we need to combine different models in one action
+and still enable pagination and sorting (so merge arrays is not considered
+here).&lt;/p&gt;
+
+&lt;p&gt;Also, you might need to show all instances for
+searched used user (&lt;code class=&quot;highlighter-rouge&quot;&gt;belongs_to :created_by&lt;/code&gt;, or habtm &lt;code class=&quot;highlighter-rouge&quot;&gt;book_users&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;Solution is to create new model without table (tabless active record). For rails
+4 https://gist.github.com/dalibor/228654 but for Rails 5 we need to override &lt;code class=&quot;highlighter-rouge&quot;&gt;load_schema!&lt;/code&gt;
+https://stackoverflow.com/questions/41494951/how-to-create-activerecord-tableless-model-in-rails-5&lt;/p&gt;
+
+&lt;p&gt;Another solution is to use gem https://github.com/pboling/activerecord-tablefree
+but we will not use it here.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# app/models/abstract_tableless_model.rb
+# https://stackoverflow.com/a/45743718/287166
+# to define you tableless model you can
+class AbstractTablelessModel &amp;lt; ApplicationRecord
+  self.abstract_class = true
+
+  def self.attribute_names
+    @attribute_names ||= attribute_types.keys
+  end
+
+  def self.load_schema!
+    @columns_hash ||= Hash.new
+
+    # From active_record/attributes.rb
+    attributes_to_define_after_schema_loads.each do |name, (type, options)|
+      if type.is_a?(Symbol)
+        type = ActiveRecord::Type.lookup(type, **options.except(:default))
+      end
+
+      define_attribute(name, type, **options.slice(:default))
+
+      # Improve Model#inspect output
+      @columns_hash[name.to_s] = ActiveRecord::ConnectionAdapters::Column.new(name.to_s, options[:default])
+    end
+
+    # Apply serialize decorators
+    attribute_types.each do |name, type|
+      decorated_type = attribute_type_decorations.apply(name, type)
+      define_attribute(name, decorated_type)
+    end
+  end
+
+  def persisted?
+    false
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We use &lt;code class=&quot;highlighter-rouge&quot;&gt;left_outer_joins&lt;/code&gt; on searchable for which there is only one instance.
+But if you need to search for some nested has_many relation (for example
+&lt;code class=&quot;highlighter-rouge&quot;&gt;book_users&lt;/code&gt;) so there could be multiple instances than we need to use
+&lt;code class=&quot;highlighter-rouge&quot;&gt;distinct&lt;/code&gt;
+If you want to split on table to two models based on one fields&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Book &amp;lt; ApplicationRecord
+end
+
+class ShortBook &amp;lt; Book
+end
+
+class LongBook &amp;lt; Book
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;than you shoud know that &lt;code class=&quot;highlighter-rouge&quot;&gt;where(long_book: { user: 'me' })&lt;/code&gt; produces the same
+result as &lt;code class=&quot;highlighter-rouge&quot;&gt;where(short_book: { user: 'me' })&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;One solution could be to use database views&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;CREATE VIEW search AS
+  SELECT ...
+  UNION ALL
+  SELECT ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;But for updating database view we need migration, so I prefer to have that SQL
+in the code.&lt;/p&gt;
+
+&lt;p&gt;Similar to but without database query
+https://blog.bigbinary.com/2016/05/30/rails-5-adds-or-support-in-active-record.html&lt;/p&gt;
+
+&lt;p&gt;For Postgresql there could be improvements using &lt;code class=&quot;highlighter-rouge&quot;&gt;pg_search&lt;/code&gt;
+https://github.com/Casecommons/pg_search&lt;/p&gt;
+</description>
+        <pubDate>Sun, 02 Dec 2018 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2018/12/02/tableless-search-union-of-multiple-models-using-polymorphic-association-in-rails/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2018/12/02/tableless-search-union-of-multiple-models-using-polymorphic-association-in-rails/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Nested Habtm Forms For Associations In Rails</title>
+        <description>&lt;h1 id=&quot;html-form-input&quot;&gt;HTML Form Input&lt;/h1&gt;
+
+&lt;p&gt;Start from basic docs for html
+&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input&quot;&gt;input&lt;/a&gt;
+and &lt;a href=&quot;https://www.w3.org/TR/html401/interact/forms.html&quot;&gt;forms&lt;/a&gt;
+https://html.spec.whatwg.org/multipage/forms.html
+The most important attribute is&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt; identify the input in data submitted with the form. If not provided,
+this input will not we included.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;type&lt;/code&gt; to identify a input type that input element represents&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;value&lt;/code&gt; when specified, it is initial value. For unselected &lt;code class=&quot;highlighter-rouge&quot;&gt;checkbox&lt;/code&gt; or
+&lt;code class=&quot;highlighter-rouge&quot;&gt;radio&lt;/code&gt; it is not submitted. They have default value &lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There is a lot of input types (like &lt;code class=&quot;highlighter-rouge&quot;&gt;color&lt;/code&gt; which will popup
+color picker) but here we will focus on:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;text&lt;/code&gt; single line text field (line breaks are automatically removed)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;checkbox&lt;/code&gt; allowing single value to be selected/deselected&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;hidden&lt;/code&gt; it is not displayed, but value is submitted&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;radio&lt;/code&gt; allowing a single value to be selected out of multiple choices&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;submit&lt;/code&gt; ie &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;input type='submit'&lt;/code&gt; acts like a button that submits the form.
+You can use &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;button&amp;gt;OK&amp;lt;/button&amp;gt;&lt;/code&gt; (default is &lt;code class=&quot;highlighter-rouge&quot;&gt;type='submit'&lt;/code&gt;) instead (button
+that does not submit the form is &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;button type='button'&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now start with what Rails provides https://api.rubyonrails.org/v5.2.1/classes/ActionView/Helpers/FormHelper.html#method-i-fields_for&lt;/p&gt;
+
+&lt;p&gt;Similar to nested forms, you can have select tag with multiple options (habtm
+relation) so we can update without ajax (it is created in one request).
+Since in html forms we can only send value or array&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;single value (html &lt;code class=&quot;highlighter-rouge&quot;&gt;name='name'&lt;/code&gt;) In rails &lt;code class=&quot;highlighter-rouge&quot;&gt;text_field_tag :name&lt;/code&gt; and
+we got &lt;code class=&quot;highlighter-rouge&quot;&gt;params[:name] # =&amp;gt; 'Duke'&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;array (html &lt;code class=&quot;highlighter-rouge&quot;&gt;name='ids[]'&lt;/code&gt;) In rails &lt;code class=&quot;highlighter-rouge&quot;&gt;text_field_tag 'ids[]'&lt;/code&gt; or
+&lt;code class=&quot;highlighter-rouge&quot;&gt;f.text_field :ids, name: 'ids[]'&lt;/code&gt; and we got &lt;code class=&quot;highlighter-rouge&quot;&gt;params[:ids] #=&amp;gt; [1,2]&lt;/code&gt; Note
+that you need to permit array &lt;code class=&quot;highlighter-rouge&quot;&gt;params.permit(ids: [])&lt;/code&gt;. When you remove all
+elements from DOM than nothing is send to server, so you need to add empty and
+reject empty values
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;before_save :clear_unchecked_values
+def clear_unchecked_values
+  self.custom_sign_up_labels = custom_sign_up_labels.reject(&amp;amp;:blank?)
+  true
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;hash is when you nest inside brackets and define specific key, for example
+&lt;code class=&quot;highlighter-rouge&quot;&gt;name='user[name]&lt;/code&gt;, in rails &lt;code class=&quot;highlighter-rouge&quot;&gt;f.text_field :name&lt;/code&gt; (when f.object.class ==
+User).  Note that you need to permit each key.&lt;/p&gt;
+
+    &lt;p&gt;Hash values can also be string, array or another hash. For array (html
+&lt;code class=&quot;highlighter-rouge&quot;&gt;name='user[ids][]&lt;/code&gt;) in rails you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;f.text_field :ids, name:
+'user[ids][]&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;f.text_field :ids&lt;/code&gt; does not make sense since there are
+multiple input fields, so better is to use &lt;code class=&quot;highlighter-rouge&quot;&gt;text_field_tag :name&lt;/code&gt;, but if you
+are using strong params, than you need to put inside model name, for example
+&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;#{f.object.class.name.underscore}[ids][]&quot;&lt;/code&gt;) we got
+&lt;code class=&quot;highlighter-rouge&quot;&gt;params[:user][:ids] #=&amp;gt; [1,2]&lt;/code&gt;.  Hash with hash values rails use it for
+&lt;code class=&quot;highlighter-rouge&quot;&gt;fields_for &amp;amp; accepts_nested_attributes_for&lt;/code&gt; html
+&lt;code class=&quot;highlighter-rouge&quot;&gt;name='user[posts_attributes][0][id]&lt;/code&gt; and we got
+&lt;code class=&quot;highlighter-rouge&quot;&gt;params[:user][:posts_attributes][&quot;0&quot;][:id]&lt;/code&gt;. Note that you need to permit
+each key &lt;code class=&quot;highlighter-rouge&quot;&gt;params.require(:user).permit(posts_attributes: [:id,:name])&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So for habtm or has_many through, we need to mark for destruction and than add
+params&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# modal
+class Book &amp;lt; ApplicationRecord
+  has_many :book_topics
+  has_many :topics, through: :book_topics
+  accepts_nested_attributes_for :book_topics
+end
+class BookTopic &amp;lt; ApplicationRecord
+  belongs_to :book
+  belongs_to :topic
+end
+
+# html
+      &amp;lt;%= f.select :topic_ids, options_from_collection_for_select(Topic.all, :id, :topic_name, -&amp;gt; (topic) { @book.book_topics.map(&amp;amp;:topic).include? topic }), {}, multiple: true %&amp;gt;
+
+# controller
+    @book.book_topics.each &amp;amp;:mark_for_destruction
+    book_topics_params = {
+      book_topics_attributes: params[:book][:topic_ids].map {|id| { topic_id: id } }
+    }
+    if @book.update _book_params.merge book_topics_params
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;nested-forms&quot;&gt;Nested forms&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html&quot;&gt;http://api.rubyonrails.org/classes/ActiveRecord/NestedAttributes/ClassMethods.html&lt;/a&gt;
+If you want to use nested forms like question and answers, good approach is to
+&lt;code class=&quot;highlighter-rouge&quot;&gt;create!&lt;/code&gt; on new action and redirect to edit. That way you have &lt;code class=&quot;highlighter-rouge&quot;&gt;question_id&lt;/code&gt;.
+For new questions or delete questions, you can simply use ajax. So start with
+&lt;code class=&quot;highlighter-rouge&quot;&gt;rails g scaffold questions title;rails g model answers question:references&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# models/question.rb
+class Question &amp;lt; ActiveRecord::Base
+  has_many :answers, dependent: :destroy
+  accepts_nested_attributes_for :answers, allow_destroy: true
+end
+
+# questions/_form.html.erb
+  &amp;lt;div id=&quot;answers&quot;&amp;gt;
+    &amp;lt;h2&amp;gt;Answers&amp;lt;/h2&amp;gt;
+    &amp;lt;% @question.answers.each do |answer| %&amp;gt;
+      &amp;lt;%= render partial: 'answer', locals: { question_form: f, answer: answer } %&amp;gt;
+    &amp;lt;% end %&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;%= link_to &quot;Create new answers&quot;, create_answer_question_path, remote: true,
+  method: :post %&amp;gt;
+
+# questions/_answer.html.erb
+&amp;lt;%#
+  question_form - we need this because we don't want to generate &amp;lt;form&amp;gt; tags
+                - we need just fields
+  answer - target answer
+
+  we hard code &quot;answers_attributes[]&quot; because
+  when we use fields_for :answer, than when we use ajax `new` twice we got same
+  name for different records
+  question[answers_attributes][0][id] (value 111)
+  question[answers_attributes][0][id] (value 222)
+  and only latest will be considered
+  it is because uniq number is reset for each fields_for
+  this sequential &quot;0&quot;, &quot;1&quot; is used so you can show `fields_for :answers` for
+  existing and new answers (which does not have id) so they are all separated
+  with hard coded `answers_attributes[]` it is
+  question[answers_attributes][111][id] (value 111)
+  question[answers_attributes][222][id] (value 222)
+  but for unsaved objects it will be
+  question[answers_attributes][][id] (value nil)
+  so there are two solutions:
+    * always create objects and than render form
+    * add fake id (used for key), but not provide a hidden input field 'id'
+%&amp;gt;
+&amp;lt;%= question_form.fields_for &quot;answers_attributes[]&quot;, answer do |ff| %&amp;gt;
+  &amp;lt;div class=&quot;field&quot;&amp;gt;
+    &amp;lt;%= ff.hidden_field :id %&amp;gt;
+    &amp;lt;%= ff.text_field :content, placeholder: &quot;Answer&quot; %&amp;gt;
+    &amp;lt;%= ff.number_field :score, placeholder: 'Score' %&amp;gt;
+    &amp;lt;%= ff.number_field :position, placeholder: 'Position' %&amp;gt;
+    &amp;lt;%= link_to &quot;Destroy&quot;, destroy_answer_question_path(answer.question, answer_id: answer.id), remote: true, method: :delete %&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;% end %&amp;gt;
+
+# questions/create_answer.js.erb
+&amp;lt;% output = nil %&amp;gt;
+&amp;lt;% form_for(@question) do |f| %&amp;gt;
+  &amp;lt;% output = j render partial: 'answer', locals: { question_form: f, answer:
+  @answer } %&amp;gt;
+  &amp;lt;% end %&amp;gt;
+$('#answers').append('&amp;lt;%= output %&amp;gt;');
+
+# config/routes.rb
+  resources :questions do
+    member do
+      post :create_answer
+      delete :destroy_answer
+    end
+  end
+
+# controllers/questions_controller.js
+  def create_answer
+    @answer = @question.answers.create!
+  end
+
+  def destroy_answer
+    @answer = @question.answers.find(params[:answer_id])
+    @answer.destroy!
+  end
+
+    def question_params
+      params.require(:question).permit(
+        :title, :time_limit,
+        answers_attributes: [:id, :score, :content, :_destroy]
+      )
+    end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can try
+&lt;a href=&quot;https://github.com/nathanvda/cocoon&quot;&gt;cocoon&lt;/a&gt; gem and use
+&lt;code class=&quot;highlighter-rouge&quot;&gt;link_to_add_association&lt;/code&gt; &lt;a href=&quot;https://www.sitepoint.com/better-nested-attributes-in-rails-with-the-cocoon-gem&quot;&gt;tutorial
+post&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;has_many :ip_addresses, inverse_of: :subscriber&lt;/code&gt; is needed when you have
+validation errors for &lt;code class=&quot;highlighter-rouge&quot;&gt;accepts_nested_attributes_for&lt;/code&gt;
+https://robots.thoughtbot.com/accepts-nested-attributes-for-with-has-many-through
+Validation of uniqueness does not work for bulk update with &lt;code class=&quot;highlighter-rouge&quot;&gt;_attributes&lt;/code&gt; since
+it check only what is in db (not in params), so one solution is to add
+&lt;code class=&quot;highlighter-rouge&quot;&gt;inverse_of&lt;/code&gt; and to add validation&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  # this works when we create one record (not for batch update with
+  # ip_address_attributes)
+  validates :fix_ip_address, presence: true, uniqueness: { scope: :parent_location_id }
+  # so we need to validate that also
+  validate :uniqueness_for_batch_update
+  def uniqueness_for_batch_update
+    ips = subscriber.ip_addresses.map(&amp;amp;:fix_ip_address)
+    errors.add(:fix_ip_address, 'already exists') if ips.size != ips.uniq.size
+  end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;multiple-form-submit-buttons-for-different-actions&quot;&gt;Multiple form submit buttons for different actions&lt;/h1&gt;
+
+&lt;p&gt;you can use rails builder&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;%= f.submit &quot;Some label&quot; %&amp;gt;
+  &amp;lt;%= f.submit &quot;Some other label&quot; %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;will generate&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;input type=&quot;submit&quot; name=&quot;commit&quot; value=&quot;Some label&quot;&amp;gt;
+  &amp;lt;input type=&quot;submit&quot; name=&quot;commit&quot; value=&quot;Some other label&quot;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;so you can check on server&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  if params[:commit] == &quot;Some label&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When you are not using &lt;code class=&quot;highlighter-rouge&quot;&gt;f.submit&lt;/code&gt; but plain &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;button&amp;gt;Some label&amp;lt;/button&amp;gt;&lt;/code&gt; than
+  you need to add &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden_field_tag :commit, &quot;Some label&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Sometimes there is a problem when automatic translator on the page change
+  button labels and inputs so commit param is different…
+  There are two solutions for that:
+  Instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;commit&lt;/code&gt; you can use
+  &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#attr-formaction&quot;&gt;formaction&lt;/a&gt;
+  So you do not need to parse commits but you need different action methods to
+  handle.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;%= form_for('url') do |f| %&amp;gt;
+      &amp;lt;%= f.submit 'Create' %&amp;gt;
+      &amp;lt;%= f.submit 'Special Action', formaction: special_action_path %&amp;gt;
+  &amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Another solution to translations I18 of input submit is to use buttons with
+  value as the same as the text inside button tag.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;%= form_for('url') do |f| %&amp;gt;
+    &amp;lt;%# instead of &amp;lt;input&amp;gt; we use &amp;lt;button&amp;gt; with value (which could be the same as inner text) so automatic page translators do not change that value %&amp;gt;
+    &amp;lt;%= f.button 'Create', value: 'Create' %&amp;gt;
+    &amp;lt;%= f.button 'Special Action', value: 'Special Action' %&amp;gt;
+  &amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;this will generate&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;form action=&quot;url&quot;&amp;gt;
+    &amp;lt;button name=&quot;button&quot; type=&quot;submit&quot; value=&quot;Create&quot;&amp;gt;Create&amp;lt;/button&amp;gt;
+    &amp;lt;button name=&quot;button&quot; type=&quot;submit&quot; value=&quot;Special Action&quot;&amp;gt;Special Action&amp;lt;/button&amp;gt;
+  &amp;lt;/form&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;so you can grab &lt;code class=&quot;highlighter-rouge&quot;&gt;params[:button] == 'Create'&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;If you want to disable utf-8 and authenticity hidden fields, remove hidden
+  input &lt;code class=&quot;highlighter-rouge&quot;&gt;name='commit'&lt;/code&gt; for submit buttons &lt;code class=&quot;highlighter-rouge&quot;&gt;button_tag 'OK', name: nil&lt;/code&gt; and use
+  plain param name instead of in brackets &lt;code class=&quot;highlighter-rouge&quot;&gt;f.hidden_field :name&lt;/code&gt; generate
+  &lt;code class=&quot;highlighter-rouge&quot;&gt;name='[name]'&lt;/code&gt; (but &lt;code class=&quot;highlighter-rouge&quot;&gt;f.text_field :name&lt;/code&gt; generate &lt;code class=&quot;highlighter-rouge&quot;&gt;name='name'&lt;/code&gt;), than use
+  &lt;code class=&quot;highlighter-rouge&quot;&gt;hidden_field_tag :name&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &amp;lt;%= bootstrap_form_tag url: @atom_payment.atom_server_link, layout: :horizontal, enforce_utf8: false, authenticity_token: false do |f| %&amp;gt;
+      &amp;lt;% @atom_payment.atom_params.each do |atom_param| %&amp;gt;
+        &amp;lt;%= hidden_field_tag atom_param[:name], atom_param[:value] %&amp;gt;
+      &amp;lt;% end %&amp;gt;
+      &amp;lt;%= button_tag &quot;Pay Now&quot;, name: nil, class: 'btn btn-primary btn-block', 'data-disable-with': 'Processing...' %&amp;gt;
+    &amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;if you want to access hash keys by symbol or string you can instantiate with
+&lt;code class=&quot;highlighter-rouge&quot;&gt;params = HashWithIndifferentAccess.new name: 'Duke'&lt;/code&gt; so you can use
+&lt;code class=&quot;highlighter-rouge&quot;&gt;params[:name]&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;params[&quot;name&quot;]&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here is a rails app, and here is a gist&lt;/p&gt;
+
+&lt;h1 id=&quot;rails-and-forms&quot;&gt;Rails and Forms&lt;/h1&gt;
+
+&lt;p&gt;https://api.rubyonrails.org/v5.2.1/classes/ActionView/Helpers/FormHelper.html&lt;/p&gt;
+
+&lt;h2 id=&quot;input-outside-of-a-form&quot;&gt;Input outside of a form&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;input&amp;gt;&lt;/code&gt; can be outside of a &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;form&amp;gt;&lt;/code&gt;, all it needs is &lt;code class=&quot;highlighter-rouge&quot;&gt;form='id_of_a_form'&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;dialog-element&quot;&gt;Dialog element&lt;/h2&gt;
+
+&lt;p&gt;There is native html tag for modals &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;dialog&amp;gt;&lt;/code&gt;. When you call
+&lt;code class=&quot;highlighter-rouge&quot;&gt;dialogEl.showModal()&lt;/code&gt; there will be backgrop and autofocus is triggered (if
+there is &lt;code class=&quot;highlighter-rouge&quot;&gt;autofocus&lt;/code&gt; attribute).
+https://alligator.io/html/dialog-element/&lt;/p&gt;
+
+&lt;h2 id=&quot;fieldset--legend&quot;&gt;Fieldset &amp;amp; Legend&lt;/h2&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;fieldset&amp;gt;&lt;/code&gt; to group several input fields and set caption on it with
+&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;legend&amp;gt;&lt;/code&gt;.
+When it is disabled, all input fields won’t be submitted.
+You can set caption also on firgure&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;figure&amp;gt;
+&amp;lt;img src=&quot;/wp-content/uploads/flamingo.jpg&quot; alt=&quot;flamingo&quot;&amp;gt;
+&amp;lt;figcaption&amp;gt;&amp;lt;i&amp;gt;fig. 1&amp;lt;/i&amp;gt; A pink flamingo.&amp;lt;/figcaption&amp;gt;
+&amp;lt;/figure&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;input-attributes&quot;&gt;Input Attributes&lt;/h1&gt;
+
+&lt;h2 id=&quot;autosuggestion&quot;&gt;Autosuggestion&lt;/h2&gt;
+
+&lt;p&gt;Pure html autoselect suggestions (but not required from list) can be done using
+&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist&quot;&gt;datalist&lt;/a&gt;
+and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;input list='id_of_datalist'&amp;gt;&lt;/code&gt; attribute.&lt;/p&gt;
+
+&lt;h2 id=&quot;autocomplete&quot;&gt;Autocomplete&lt;/h2&gt;
+
+&lt;p&gt;Autocomplete can be enabled with specific value https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
+or disabled because off
+&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion&quot;&gt;security&lt;/a&gt;
+(even disabled, browser can ask for auto save password, it will populate them)&lt;/p&gt;
+
+&lt;p&gt;Firefox has soft refresh which persist input values and disabled attribute on
+refresh the page https://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing
+This can be disabled by hard refresh or autocomplete &lt;code class=&quot;highlighter-rouge&quot;&gt;off&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;autofocus&quot;&gt;Autofocus&lt;/h2&gt;
+
+&lt;p&gt;Auto focus input fields on page load (or dialog show). If you need to show focus
+on input with existing value than you can use callback &lt;code class=&quot;highlighter-rouge&quot;&gt;onfocus&lt;/code&gt;
+https://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end-of-text-in-text-input-element/2345915#2345915&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;%= f.search_field :s, autofocus: true, onfocus: 'this.selectionStart = this.selectionEnd = this.value.length;' %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;disabled&quot;&gt;Disabled&lt;/h2&gt;
+
+&lt;p&gt;Disabled inputs do not receive &lt;code class=&quot;highlighter-rouge&quot;&gt;click&lt;/code&gt; event, and they are not submitted with
+the form.
+This can be used to preventDefault on click event for other &lt;code class=&quot;highlighter-rouge&quot;&gt;data-&lt;/code&gt; event
+listeners.&lt;/p&gt;
+
+&lt;h2 id=&quot;required&quot;&gt;Required&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;required&lt;/code&gt; is boolean attribute, when is present, user myst specify a value. On
+all except (color, hidden, range, submit, image, reset, button). When it is on
+&lt;code class=&quot;highlighter-rouge&quot;&gt;checkbox&lt;/code&gt; than user have to select it before procceeding.
+Required inputs has pseudoclass &lt;code class=&quot;highlighter-rouge&quot;&gt;:required&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;tabindex&quot;&gt;Tabindex&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tabindex&lt;/code&gt; should be &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; so it is reachable by sequential keyboard navigation.&lt;/p&gt;
+
+&lt;h2 id=&quot;placeholder&quot;&gt;Placeholder&lt;/h2&gt;
+
+&lt;p&gt;There are three ways of providing more info about form field, but the best way
+is using &lt;code class=&quot;highlighter-rouge&quot;&gt;label&lt;/code&gt; and to avoid placeholders.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;label&lt;/code&gt; element is outside of a input&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;placeholder&lt;/code&gt; text that is shown when field is empty. So when is not empty, no
+show. Also browsers translators does not work on placeholders since it is
+attribute (not a value or a text object).&lt;/li&gt;
+  &lt;li&gt;adjacent elements (google sign in use this)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sat, 01 Dec 2018 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2018/12/01/nested-habtm-forms-for-associations-in-rails/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2018/12/01/nested-habtm-forms-for-associations-in-rails/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Object Oriented Design Principles</title>
+        <description>&lt;p&gt;https://thoughtbot.com/upcase/intermediate-ruby-on-rails&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=D7zUOtlpUPw&quot;&gt;dhh tips for rails&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;epipsode 1: do not use comments but method names or constants… follow
+table of content: method definition should be in same order as they are used
+in the class (in before callbacks)
+administered concern define methods on associations. Also use &lt;code class=&quot;highlighter-rouge&quot;&gt;or&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt; to join
+two arrays&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module Account::Administered
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :administratorships, dependent: :delete_all do
+      def grant(person)
+        create_or_find person: person
+      end
+
+      def revoke(person)
+        where(person_id: person.id).destroy_all
+      end
+    end
+
+    has_many :administrators, through: :administratorships, source: :person
+  end
+
+  def all_administrators
+    administrators | all_owners
+  end
+
+  def administrator_candidates
+    people.users.
+      where.not(id: administratorships.pluck(:person_id)).
+      where.now(id: ownerships.pluck(:person_id)).
+      where.not(id: owner_person.id)
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;episode 2: use callbacks to initiate background jobs&lt;/li&gt;
+  &lt;li&gt;episode 3: use globals in request/response cycle. For background jobs you need
+to pass them as params.&lt;/li&gt;
+  &lt;li&gt;episode 4&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Fri, 30 Nov 2018 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2018/11/30/object-oriented-design-principles/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2018/11/30/object-oriented-design-principles/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Android Turbolinks Native Mobile App For Rails</title>
+        <description>&lt;h1 id=&quot;native-login&quot;&gt;Native login&lt;/h1&gt;
+
+&lt;p&gt;Since mobile can use sdk to login user, it should be done native (android
+activity).
+After Firebase auth you should pass the token to the webview (do not pass
+&lt;code class=&quot;highlighter-rouge&quot;&gt;user.getUid()&lt;/code&gt; since that wont change)
+https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile&lt;/p&gt;
+
+&lt;p&gt;That accessToken can be validated in ruby
+https://medium.com/@igorkhomenko/how-to-validate-firebase-id-token-in-ruby-23f4f54c89ab&lt;/p&gt;
+
+&lt;p&gt;There is a firebase-ruby gem but only wrapper for Real time database REST API
+https://github.com/oscardelben/firebase-ruby
+https://firebase.google.com/docs/database/rest/start&lt;/p&gt;
+
+&lt;h1 id=&quot;turbolinks&quot;&gt;Turbolinks&lt;/h1&gt;
+
+&lt;p&gt;https://github.com/turbolinks/turbolinks-android
+You just need to use &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;com.basecamp.turbolinks.TurbolinksView&lt;/code&gt; and override
+&lt;code class=&quot;highlighter-rouge&quot;&gt;visitProposedToLocationWithAction&lt;/code&gt;. Look at demo app.&lt;/p&gt;
+
+&lt;h1 id=&quot;notifications&quot;&gt;Notifications&lt;/h1&gt;
+
+&lt;p&gt;Option to use email of mobile app notifications.&lt;/p&gt;
+
+&lt;h1 id=&quot;android-emulator&quot;&gt;Android Emulator&lt;/h1&gt;
+
+&lt;p&gt;I found that genymotion works fine. Just install &lt;a href=&quot;https://github.com/codepath/android_guides/wiki/Genymotion-2.0-Emulators-with-Google-Play-support&quot;&gt;google play
+services&lt;/a&gt; after drag and drop those two files, you need to
+logs in and open Google+ which will trigger update of Google play services.
+You can use same login on all emulators.
+If genymotion emulator dissapears, run &lt;code class=&quot;highlighter-rouge&quot;&gt;adb kill-server&lt;/code&gt; to clean connections.&lt;/p&gt;
+
+&lt;p&gt;For first message you need to wait minute or two. But than it works instantly.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 20 Nov 2018 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2018/11/20/android-turbolinks-native-mobile-app-for-rails/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2018/11/20/android-turbolinks-native-mobile-app-for-rails/</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

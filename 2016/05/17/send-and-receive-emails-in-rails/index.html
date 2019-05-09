@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Send and receive emails in rails</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Send and receive emails in rails</h1>
+    <p class="meta">May 17, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#email-providers"><span class="tocnumber">1</span> <span class="toctext">Email providers</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#testing-smtp"><span class="tocnumber">1.1</span> <span class="toctext">Testing SMTP</span></a></li><li class="toc_level-2 toc_section-3"><a href="#gmail"><span class="tocnumber">1.2</span> <span class="toctext">Gmail</span></a></li><li class="toc_level-2 toc_section-4"><a href="#sendgrid"><span class="tocnumber">1.3</span> <span class="toctext">Sendgrid</span></a></li><li class="toc_level-2 toc_section-5"><a href="#mandrill"><span class="tocnumber">1.4</span> <span class="toctext">Mandrill</span></a></li><li class="toc_level-2 toc_section-6"><a href="#sparkpost"><span class="tocnumber">1.5</span> <span class="toctext">Sparkpost</span></a></li></ul></li><li class="toc_level-1 toc_section-7"><a href="#letter-opener-for-local-preview"><span class="tocnumber">2</span> <span class="toctext">Letter opener for local preview</span></a></li><li class="toc_level-1 toc_section-8"><a href="#interceptor"><span class="tocnumber">3</span> <span class="toctext">Interceptor</span></a></li><li class="toc_level-1 toc_section-9"><a href="#style"><span class="tocnumber">4</span> <span class="toctext">Style</span></a></li><li class="toc_level-1 toc_section-10"><a href="#receiving-emails"><span class="tocnumber">5</span> <span class="toctext">Receiving emails</span></a></li><li class="toc_level-1 toc_section-11"><a href="#internal-notification"><span class="tocnumber">6</span> <span class="toctext">Internal Notification</span></a></li><li class="toc_level-1 toc_section-12"><a href="#actionmailer"><span class="tocnumber">7</span> <span class="toctext">ActionMailer</span></a></li><li class="toc_level-1 toc_section-13"><a href="#dynamic-smtp-settings-at-runtime"><span class="tocnumber">8</span> <span class="toctext">Dynamic smtp settings at runtime</span></a></li><li class="toc_level-1 toc_section-14"><a href="#interesting"><span class="tocnumber">9</span> <span class="toctext">Interesting</span></a></li><li class="toc_level-1 toc_section-15"><a href="#gmail-go-to-action"><span class="tocnumber">10</span> <span class="toctext">Gmail Go To Action</span></a></li><li class="toc_level-1 toc_section-16"><a href="#spam-detection"><span class="tocnumber">11</span> <span class="toctext">Spam detection</span></a></li><li class="toc_level-1 toc_section-17"><a href="#testing-emails"><span class="tocnumber">12</span> <span class="toctext">Testing emails</span></a></li><li class="toc_level-1 toc_section-18"><a href="#click-link-tracking-in-emails"><span class="tocnumber">13</span> <span class="toctext">Click link tracking in emails</span></a></li></ul></td></tr></tbody></table></div><h1 id="email-providers">Email providers</h1>
+
+<p>There is nice table of <a href="http://socialcompare.com/en/comparison/transactional-emailing-providers-mailjet-sendgrid-critsend">main
+providers</a></p>
+
+<h2 id="testing-smtp">Testing SMTP</h2>
+
+<p>If you need to test smtp use <a href="https://debugmail.io/">https://debugmail.io/</a> free service, just use port
+9025 instead 25 since ISP is blocking 25.
+For command line you can use <code class="highlighter-rouge">swaks</code> like <code class="highlighter-rouge">swaks --to duleorlovic@gmail.com
+--server $SERVER --port $PORT --auth-user $AUTH_USER --auth-password
+$AUTH_PASSWORD --auth-plaintext --auth-hide-password</code>
+so in autout you can see all telnet communications:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># generate base64 encoding
+# special characters need to have \ in front
+perl -MMIME::Base64 -e 'print encode_base64("duleorlovic\@gmx.com");'
+perl -MMIME::Base64 -e 'print encode_base64("password");'
+
+telnet debugmail.io 9025
+EHLO main
+AUTH LOGIN
+&lt;paste encoded username&gt;
+&lt;paste encoded password&gt;
+
+ctrl + ]
+ctrl + d
+</code></pre></div></div>
+
+<p>If you want to inspect how rails action_mailer sends and receive tcp messages
+than put byebug in net smtp class on line 940 <code class="highlighter-rouge">get_response</code> <code class="highlighter-rouge">recv_response</code>
+<code class="highlighter-rouge">/home/orlovic/.rvm/rubies/ruby-2.3.3/lib/ruby/2.3.0/net/smtp.rb</code></p>
+
+<h2 id="gmail">Gmail</h2>
+
+<p>Gmail smtp is the most easiest way to start</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+    config.action_mailer.smtp_settings = {
+      address: 'smtp.gmail.com',
+      port: 587,
+      domain: 'gmail.com',
+      authentication: 'plain',
+      enable_starttls_auto: true,
+      user_name: Rails.application.secrets.smtp_username,
+      password: Rails.application.secrets.smtp_password
+    }
+    config.action_mailer.delivery_method = :smtp
+
+# config/secrets.yml
+  smtp_username: &lt;%= ENV["SMTP_USERNAME"] %&gt;
+  smtp_password: &lt;%= ENV["SMTP_PASSWORD"] %&gt;
+</code></pre></div></div>
+
+<p>If you receive error <code class="highlighter-rouge">SocketError: getaddrinfo: Name or service not known</code> than
+you probably miss the <code class="highlighter-rouge">address</code> field.
+If there is error <code class="highlighter-rouge">with EOFError: end of file reached</code> than you need to change
+<code class="highlighter-rouge">domain</code> field (should not be <code class="highlighter-rouge">localhost</code>, but the domain part of the sender
+email, for example <code class="highlighter-rouge">gmail.com</code>).</p>
+
+<p>If you see error in logs:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2018-06-18T09:13:29.371621+00:00 app[web.1]: An error occurred when sending a notification using 'email' notifier. Net::SMTPAuthenticationError: 534-5.7.14 &lt;https://accounts.google.com/signin/continue?sarp=1&amp;scc=1&amp;plt=AKgnsbu5
+</code></pre></div></div>
+
+<p>You need to Allow less secure apps https://support.google.com/accounts/answer/6010255</p>
+
+<p>Sometimes you can send from your IP but not from Heroku IP address.</p>
+
+<h2 id="sendgrid">Sendgrid</h2>
+
+<p>Sendgrid is simple to start on heroku. Just add new add-on free plan with
+commands <code class="highlighter-rouge">heroku addons:create sendgrid</code> and that will set up env keys.
+<code class="highlighter-rouge">heroku config</code> you can find the keys and copy them to <code class="highlighter-rouge">heroku config:set
+SMTP_USERNAME=asdasdasd SMTP_PASSWORD=asdasdasd</code>. It allows sending with <code class="highlighter-rouge">from</code>
+field any domain, but in gmail it shows that message is from: <code class="highlighter-rouge">My Company
+support@example.com via sendgrid.me</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt; config/initializers/smtp.rb &lt;&lt; \HERE_DOC
+ActionMailer::Base.smtp_settings = {
+  :user_name =&gt; Rails.application.secrets.smtp_username,
+  :password =&gt; Rails.application.secrets.smtp_password,
+  :domain =&gt; 'yourdomain.com',
+  :address =&gt; 'smtp.sendgrid.net',
+  :port =&gt; 587,
+  :authentication =&gt; :plain,
+  :enable_starttls_auto =&gt; true
+}
+HERE_DOC
+</code></pre></div></div>
+
+<p>Another way is to use API</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h2 id="mandrill">Mandrill</h2>
+
+<p>Mandrill is better than Sendgrid, since Sendgrid can not automatically convert
+html to txt mails. Also mandrill has nice API so you do not need background
+job to send a lot of emails quickly. To setup sending using API just run:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'mandrill_dm'
+
+# config/application.rb
+config.action_mailer.delivery_method = :mandrill
+
+# config/initializers/mandrill.rb
+MandrillDm.configure do |config|
+  config.api_key = Rails.application.secrets.mandrill_api_key
+end
+
+# config/secrets.yml
+development:
+  mandrill_api_key: &lt;%= ENV["MANDRILL_API_KEY"] %&gt;
+</code></pre></div></div>
+
+<p>If you are using <code class="highlighter-rouge">mandril_delivery</code> for ExceptionNotification than emails will
+look scrambled, because generated html version will join all lines. Note that it
+will trigger any webhooks that you have set up.</p>
+
+<h2 id="sparkpost">Sparkpost</h2>
+
+<p>Sparkpost offer a lot of free usage (mandrill requires subscription) so
+currently it is my best option. You need first to validate your domain, so you
+can send with <code class="highlighter-rouge">from</code> field with that domain. You need also to</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'sparkpost_rails'" &gt;&gt; Gemfile
+
+sed -i config/environments/production.rb -e '/^end$/i \
+  config.action_mailer.delivery_method = :sparkpost'
+
+cat &gt; config/initializers/sparkpostrails.rb &lt;&lt; HERE_DOC
+# https://github.com/the-refinery/sparkpost_rails#additional-configuration
+SparkPostRails.configure do |c|
+  c.api_key = Rails.application.secrets.sparkpost_api_key
+end
+HERE_DOC
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # email provider\
+  sparkpost_api_key: &lt;%= ENV["SPARKPOST_API_KEY"] %&gt;'
+
+vi config/secrets.yml # update mailer_sender to match your domain
+</code></pre></div></div>
+
+<p>You can also use smtp with SPARK_POST but it is two times slower</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+    config.action_mailer.smtp_settings = {
+      address: 'smtp.sparkpostmail.com',
+      port: 587,
+      enable_starttls_auto: true,
+      user_name: 'SMTP_Injection',
+      password: Rails.application.secrets.sparkpost_api_key,
+    }
+    config.action_mailer.delivery_method = :smtp # sparkpost
+
+time rails runner 'UserMailer.signup.deliver_now!' # ~5sec with smtp
+time rails runner 'UserMailer.signup.deliver_now!' # ~2.5sec with sparkpost
+</code></pre></div></div>
+
+<h1 id="letter-opener-for-local-preview">Letter opener for local preview</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i '/group :development do/a  \
+  # open emails in browser\
+  gem "letter_opener"' Gemfile
+sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
+</code></pre></div></div>
+
+<p>Note that email letter opener does not work when you run with <code class="highlighter-rouge">rake jobs:work</code>,
+but works when <code class="highlighter-rouge">bin/delayed_job run</code> (Launchy works in both cases, this
+difference is only for mailer).</p>
+
+<h1 id="interceptor">Interceptor</h1>
+
+<p>When you need to test production emails localy, than you can set up interceptor
+so you receive all emails (and not real customer emails).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/interceptor.rb
+class DevelopmentMailInterceptor
+  def self.delivering_email(message)
+    message.subject = "#{message.to} #{message.subject}"
+    message.to = Rails.application.secrets.mail_interceptor_email
+  end
+end
+if Rails.env.development?
+  ActionMailer::Base.register_interceptor(DevelopmentMailInterceptor)
+end
+
+# config/secrets.yml
+  mail_interceptop_email: &lt;%= ENV["MAIL_INTERCEPTOR_EMAIL"] %&gt;
+</code></pre></div></div>
+
+<p>When you need to preview a lot of emails, its faster to use letter_opener gem.
+Just put in your Gemfile under development <code class="highlighter-rouge">gem "letter_opener"</code> and in
+<em>config/environments/development.rb</em> <code class="highlighter-rouge">config.action_mailer.delivery_method =
+:letter_opener</code>. Works when email is sent (even from ajax response or console).</p>
+
+<h1 id="style">Style</h1>
+
+<p><a href="https://developers.google.com/gmail/design/css">Official gmail styles</a> supports
+<code class="highlighter-rouge">&lt;style&gt;</code> in head and media queries but when you forward email than css styles
+will be gone. Better is to use gem which will copy and duplicate all styles from
+head to inline styles and that will support more clients (not just gmail).</p>
+
+<p>For easier styling, you should use <em>roadie</em> gem that will generate all inline
+style from your head styles.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Attach css classes to emails
+gem 'roadie'
+gem 'roadie-rails'
+</code></pre></div></div>
+
+<p>You need to include mixing to each mailer (including in ApplicationMailer does
+not help)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/mailers/my_mailer.rb
+class MyMailer &lt; ActionMailer::Base
+  include Roadie::Rails::Automatic
+end
+
+# or include in ApplicaitionMailer and use roadie_mail
+
+class ApplicationMailer &lt; ActionMailer::Base
+  include Roadie::Rails::Mailer
+end
+
+class MyMailer &lt; ActionMailer::Base
+  def welcome(user)
+    roadie_mail to: user.email
+  end
+end
+</code></pre></div></div>
+
+<p>You can change template with <code class="highlighter-rouge">mail to: 'my@email.com', template_name:
+'contact_form'</code></p>
+
+<p>Another solution is <code class="highlighter-rouge">gem 'premailer-rails'</code>
+<a href="https://github.com/fphilipe/premailer-rails">https://github.com/fphilipe/premailer-rails</a> which can also generate text part
+so you do not need to maintain it. Just add the gem and you are good to go.</p>
+
+<p>To preview emails use generated preview files in
+<code class="highlighter-rouge">test/mailers/previews/my_mailer_preview.rb</code> or create new file:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/mailer_previews/application_mailer_preview.rb
+class ApplicationMailerPreview &lt; ActionMailer::Preview
+  def new_message_from_client
+    message = Message.first || FactoryBot.create :message
+    ApplicationMailer.new_message_from_client message
+  end
+end
+</code></pre></div></div>
+
+<p>add a line <code class="highlighter-rouge">config.action_mailer.preview_path =
+"#{Rails.root}/app/mailer_previews"</code> to <em>config/environments/development.rb</em> and
+go to <a href="http://localhost:3000/rails/mailers">rails/mailers</a>.
+If you are using catch all route than add those lines</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/routes.rb
+  # https://stackoverflow.com/questions/26130130/what-are-the-routes-i-need-to-set-up-to-preview-emails-using-rails-4-1-actionmai
+  get '/rails/mailers' =&gt; "rails/mailers#index"
+  get '/rails/mailers/*path' =&gt; "rails/mailers#preview"
+  # https://stackoverflow.com/a/6047561/287166
+  match '*a', to: 'home#routing_error', via: [:get, :post]
+</code></pre></div></div>
+
+<p>Another gem to preview emails <a href="https://github.com/markets/maily">https://github.com/markets/maily</a></p>
+
+<p>Here is example of style:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/mailers/applicaion_mailer.rb
+class ApplicationMailer &lt; ActionMailer::Base
+  default from: 'from@example.com'
+  layout 'mailer'
+  add_template_helper MailerHelper
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/layouts/mailer.html.erb
+<span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"Content-Type"</span> <span class="na">content=</span><span class="s">"text/html; charset=utf-8"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;style&gt;</span>
+      <span class="nc">.email-container</span> <span class="p">{</span>
+        <span class="nl">max-width</span><span class="p">:</span> <span class="m">500px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.pre-header</span> <span class="p">{</span>
+        <span class="nl">display</span><span class="p">:</span> <span class="nb">none</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.bordered</span> <span class="p">{</span>
+        <span class="nl">border</span><span class="p">:</span> <span class="m">2px</span> <span class="nb">solid</span> <span class="m">#ccc</span><span class="p">;</span>
+        <span class="nl">border-radius</span><span class="p">:</span> <span class="m">5px</span><span class="p">;</span>
+        <span class="nl">padding</span><span class="p">:</span> <span class="m">5px</span><span class="p">;</span>
+        <span class="nl">background</span><span class="p">:</span> <span class="m">#e5f1ff</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"email-container"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"pre-header"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">yield</span> <span class="na">:subject_line</span> <span class="err">%</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">yield</span> <span class="err">%</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/helpers/mailer_helper.rb
+module MailerHelper
+  def subject_line(message)
+    content_for :subject_line, message
+  end
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/mailers/user_mailer/contact.html.erb
+&lt;%
+  subject_line @user.name
+%&gt;
+&lt;h1&gt;&lt;%= t "user_mailer.landing_signup.title", name: @user.email %&gt;&lt;/h1&gt;
+</code></pre></div></div>
+
+<h1 id="receiving-emails">Receiving emails</h1>
+
+<p>When you want to receive, use <a href="https://github.com/evendis/mandrill-rails">mandrill-rails</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo '
+# receiving emails and webhooks
+gem "mandrill-rails" ' &gt;&gt; Gemfile
+
+sed 
+resource :inbox, :controller =&gt; 'inbox', :only =&gt; [:show,:create]
+config/routes.rb
+
+echo 'class InboxController &lt; ApplicationController
+  include Mandrill::Rails::WebHookProcessor
+
+  def handle_inbound(event_payload)
+    # do something with payload
+  end
+end ' &gt; app/controllers/inbox_controller.rb
+</code></pre></div></div>
+
+<p>Mandrill:</p>
+
+<ul>
+  <li>create api key for prod and test</li>
+  <li>validate inbound domains for prod and test</li>
+  <li>create routes for validated domains (this will create one webhook)</li>
+  <li>create webhooks</li>
+  <li>create rules that match api and hooktype and send it to webhook</li>
+</ul>
+
+<p>authentication
+http://www.openspf.org/SPF_Record_Syntax</p>
+
+<p>Feedback Loop is in a header and some clients enable them
+http://www.list-unsubscribe.com/</p>
+
+<h1 id="internal-notification">Internal Notification</h1>
+
+<p>Those are usefull admin or devops notifications</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/secrets.yml
+shared:
+  mailer_sender: &lt;%= ENV["MAILER_SENDER"] || "My Company &lt;support@example.com&gt;" %&gt;
+  internal_notification_email: &lt;%= ENV["INTERNAL_NOTIFICATION_EMAIL"] || "internal@example.com" %&gt;
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># mailers/application_mailer.rb
+class ApplicationMailer &lt; ActionMailer::Base
+  layout 'mailer'
+  default from: Rails.application.secrets.mailer_sender
+
+  INTERNAL_NOTIFICATION_EMAIL = Rails.application.secrets.internal_notification_email
+
+  def internal_notification(subject, item = {})
+    return unless INTERNAL_NOTIFICATION_EMAIL
+    email_subject = "[MyApp#{' staging' if Rails.application.secrets.is_staging}] #{subject}"
+    email_body = "&lt;h1&gt;#{subject}&lt;/h1&gt;&lt;strong&gt;Details:&lt;/strong&gt;" +
+                 item.inspect.
+                   gsub(', ', ",&lt;br&gt;").
+                   gsub('{', '&lt;br&gt;{&lt;br&gt;').
+                   gsub('}', '&lt;br&gt;}&lt;br&gt;')
+    mail to: INTERNAL_NOTIFICATION_EMAIL,
+         subject: email_subject,
+         body: email_body,
+         content_type: "text/html"
+  end
+end
+</code></pre></div></div>
+
+<p>You can send notification in any class. Note that first param is string, and
+ohers are hash.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  after_save :send_notification_geocode_failed
+
+  def send_notification_geocode_failed
+    if address_changed? &amp;&amp; !city.present?
+      ApplicationMailer.internal_notification(
+        "geocode city is not present #{name}",
+        name: name,
+        url: Rails.application.routes.url_helpers.menu_url(link),
+        address: address,
+      ).deliver_now
+    end
+  end
+</code></pre></div></div>
+
+<p>Note that you should not send email in before blocks since when validation fails
+it will rollback and even background job is rollbacked.</p>
+
+<h1 id="actionmailer">ActionMailer</h1>
+
+<p><a href="http://guides.rubyonrails.org/action_mailer_basics.html#complete-list-of-action-mailer-methods">Here</a>
+is what we can do with ActionMailer:</p>
+
+<ul>
+  <li>headers</li>
+  <li>attachments</li>
+  <li>mail</li>
+</ul>
+
+<p>You can use <code class="highlighter-rouge">before_action</code> and <code class="highlighter-rouge">after_action</code> and access to <code class="highlighter-rouge">params</code>
+http://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-callbacks</p>
+
+<p>For example <code class="highlighter-rouge">prevent_delivery_to_guests</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class UserMailer &lt; ApplicationMailer
+  before_action { @business, @user = params[:business], params[:user] }
+
+  after_action :prevent_delivery_to_guests
+
+  def feedback_message
+  end
+
+    def prevent_delivery_to_guests
+      if @user &amp;&amp; @user.guest?
+        mail.perform_deliveries = false
+      end
+    end
+  end
+</code></pre></div></div>
+
+<h1 id="dynamic-smtp-settings-at-runtime">Dynamic smtp settings at runtime</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class DeviseMailer &lt; Devise::Mailer
+  after_action :set_smtp
+
+  def set_smtp
+    # determine smtp settings form @receiver or other
+    if isp.use_my_smtp_server &amp;&amp; @_mail_was_called # spam could ignore mail
+      mail.from = "#{receiver.smtp_from_name} &lt;#{receiver.smtp_from_email}&gt;"
+      mail.reply_to = "#{receiver.smtp_from_name} &lt;#{receiver.smtp_from_email}&gt;"
+      mail.delivery_method.settings.merge!(
+        address: receiver.smtp_host,
+        port: (receiver.smtp_port.present? ? receiver.smtp_port : 587),
+        user_name: receiver.smtp_username,
+        password: receiver.smtp_password,
+      )
+    end
+  end
+</code></pre></div></div>
+
+<h1 id="interesting">Interesting</h1>
+
+<p>You can include small giff that looks like screencast. Image should be less than
+1MB and included inline.</p>
+
+<p>Email gems <a href="http://awesome-ruby.com/#-email">http://awesome-ruby.com/#-email</a> and
+<a href="https://github.com/gmailgem/gmail">gmail</a></p>
+
+<p>You can use img tags and css background image, but if it is run in background
+(it does not know on which request.host) than you need to set asset host (look
+in <a href="/2015/04/05/common-rails-bootstrap-snippets/">common rails bootstrap snippets</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/layouts/mailer.html.erb
+background-image: url('&lt;%= asset_url 'cute-small.jpg' %&gt;');
+&lt;%= image_tag 'premesti_se.gif' %&gt;
+
+# config/application.rb
+config.action_mailer.asset_host = "http://my_host"
+</code></pre></div></div>
+
+<h1 id="gmail-go-to-action">Gmail Go To Action</h1>
+
+<p>Using some header json you can set button in gmail subject line “Quick Actions”.
+<a href="https://stackoverflow.com/questions/22318432/how-do-i-add-go-to-action-in-gmail-subject-line-using-schema-org">https://stackoverflow.com/questions/22318432/how-do-i-add-go-to-action-in-gmail-subject-line-using-schema-org</a></p>
+
+<h1 id="spam-detection">Spam detection</h1>
+
+<p>You can disable registering specific email domains using this list
+https://github.com/FGRibreau/mailchecker
+Using this gem https://github.com/rubygarage/truemail you can check if actual
+email account exists on smtp server.</p>
+
+<h1 id="testing-emails">Testing emails</h1>
+
+<p>https://www.engineyard.com/blog/testing-async-emails-rails-42</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/support/mailer_helpers.rb
+module MailerHelpers
+  def clear_mails
+    ActionMailer::Base.deliveries = []
+  end
+
+  # if you deliver_now you can
+  # assert_difference 'all_mails.count', 1 do
+  # and for background deliver_later you need to assert perform or enqueue
+  # inherit from ActiveJob::TestCase
+  # or include ActiveJob::TestHelper
+  # assert_performed_jobs 1, only: ActionMailer::DeliveryJob do
+  def all_mails
+    ActionMailer::Base.deliveries
+  end
+
+  # last_email is renamed to last_mail
+  def last_mail
+    raise 'you_should_use_give_me_last_mail_and_clear_mails'
+    # ActionMailer::Base.deliveries.last
+  end
+
+  # some usage is like
+  # mail = give_me_last_mail_and_clear_mails
+  # assert_equal [email], mail.to
+  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.html_part.decoded
+  # confirmation_link = mail.html_part.decoded.match(
+  #   /(http:.*)"&gt;#{t("confirm_email")}/
+  # )[1]
+  # visit confirmation_link
+  def give_me_last_mail_and_clear_mails
+    mail = ActionMailer::Base.deliveries.last
+    clear_mails
+    mail
+  end
+end
+class ActiveSupport::TestCase
+  include MailerHelpers
+  # for assert_performed_jobs
+  include ActiveJob::TestHelper
+end
+class ActionDispatch::IntegrationTest
+  include MailerHelpers
+  # for assert_performed_jobs
+  include ActiveJob::TestHelper
+end
+</code></pre></div></div>
+
+<h1 id="click-link-tracking-in-emails">Click link tracking in emails</h1>
+
+<p>https://github.com/ankane/ahoy_email</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

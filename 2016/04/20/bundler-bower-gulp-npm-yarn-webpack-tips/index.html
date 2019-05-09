@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Bundler Bower Gulp Npm Yarn Webpack Tips</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Bundler Bower Gulp Npm Yarn Webpack Tips</h1>
+    <p class="meta">Apr 20, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#bundler-and-gemfile"><span class="tocnumber">1</span> <span class="toctext">Bundler and Gemfile</span></a></li><li class="toc_level-1 toc_section-2"><a href="#rvm"><span class="tocnumber">2</span> <span class="toctext">RVM</span></a></li><li class="toc_level-1 toc_section-3"><a href="#bower"><span class="tocnumber">3</span> <span class="toctext">Bower</span></a></li><li class="toc_level-1 toc_section-4"><a href="#gulp"><span class="tocnumber">4</span> <span class="toctext">Gulp</span></a></li><li class="toc_level-1 toc_section-5"><a href="#npm"><span class="tocnumber">5</span> <span class="toctext">NPM</span></a></li><li class="toc_level-1 toc_section-6"><a href="#npmjs-publish-package"><span class="tocnumber">6</span> <span class="toctext">Npmjs publish package</span></a></li><li class="toc_level-1 toc_section-7"><a href="#yarn"><span class="tocnumber">7</span> <span class="toctext">Yarn</span></a></li><li class="toc_level-1 toc_section-8"><a href="#commonjs"><span class="tocnumber">8</span> <span class="toctext">Commonjs</span></a></li><li class="toc_level-1 toc_section-9"><a href="#amd-asynchronous-module-definition"><span class="tocnumber">9</span> <span class="toctext">AMD Asynchronous module definition</span></a></li><li class="toc_level-1 toc_section-10"><a href="#es6-import-export"><span class="tocnumber">10</span> <span class="toctext">ES6 Import Export</span></a></li><li class="toc_level-1 toc_section-11"><a href="#umd"><span class="tocnumber">11</span> <span class="toctext">UMD</span></a></li><li class="toc_level-1 toc_section-12"><a href="#webpack"><span class="tocnumber">12</span> <span class="toctext">Webpack</span></a></li><li class="toc_level-1 toc_section-13"><a href="#webpack-plugins"><span class="tocnumber">13</span> <span class="toctext">Webpack plugins</span></a></li><li class="toc_level-1 toc_section-14"><a href="#webpacker"><span class="tocnumber">14</span> <span class="toctext">Webpacker</span></a></li><li class="toc_level-1 toc_section-15"><a href="#parcel"><span class="tocnumber">15</span> <span class="toctext">Parcel</span></a></li><li class="toc_level-1 toc_section-16"><a href="#makefile"><span class="tocnumber">16</span> <span class="toctext">Makefile</span></a></li></ul></td></tr></tbody></table></div><h1 id="bundler-and-gemfile">Bundler and Gemfile</h1>
+
+<p>When you install another version of existing gem, for example <code class="highlighter-rouge">gem install rails
+-v 4.2.0</code>, than you can find it with <code class="highlighter-rouge">gem list rails</code> and use it with <code class="highlighter-rouge">rails
+_4.2.0_ new mystore</code>.
+To list by exact name (not regexp) use <code class="highlighter-rouge">-e</code>, to show remote gems <code class="highlighter-rouge">-r</code> so to find
+all available versions including pre release run <code class="highlighter-rouge">gem list rails -re
+--prerelease</code></p>
+
+<p>To find help some <code class="highlighter-rouge">gem</code> command you can run <code class="highlighter-rouge">gem help list</code></p>
+
+<p>To rebuild Gemfile.lock you can run <code class="highlighter-rouge">bundle update</code>. You can upgrade specific
+gem <code class="highlighter-rouge">bundle update rails</code> and only patch version of rails and its dependencies
+will be updated in Gemfile.lock. You should also update gemfile to point to new
+patch version. If you want to update minor version than you
+need to change in Gemfile, like <code class="highlighter-rouge">gem 'rails', '~&gt;5.2.0'</code>
+To install specific groups in Gemfile run <code class="highlighter-rouge">bundle install --with postgresql</code>.
+To specify github source of gem use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'jekyll', github: 'jekyll/jekyll' # branch: 'master'
+</code></pre></div></div>
+
+<p>Issue with rmagic on ubuntu 16</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>checking for Magick-config... no
+Can't install RMagick 2.12.0. Can't find Magick-config in
+...
+An error occurred while installing rmagick (2.12.0), and Bundler cannot continue.
+Make sure that `gem install rmagick -v '2.12.0'` succeeds before bundling.
+</code></pre></div></div>
+
+<p>I upgraded to rmagic 2.13.2 and follow this
+<a href="https://github.com/ttscoff/Slogger/issues/344">issue</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install libmagickwand-dev
+sudo apt-get install graphicsmagick-imagemagick-compat
+PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
+</code></pre></div></div>
+
+<p>To remove all gems from current gemset</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rvm gemset empty
+</code></pre></div></div>
+
+<h1 id="rvm">RVM</h1>
+
+<p>Install specific version and patch level <code class="highlighter-rouge">rvm install 2.3.3-p451</code>
+To see current ruby <code class="highlighter-rouge">rvm list</code></p>
+
+<h1 id="bower">Bower</h1>
+
+<p>Bower is deprecated https://github.com/bower/bower/issues/2298</p>
+
+<h1 id="gulp">Gulp</h1>
+
+<ul>
+  <li>if you have error <code class="highlighter-rouge">'watch' errored after Error: watch
+/home/orlovic/rails/menucards-frontend/src/ ENOSPC
+</code> solution is to run <code class="highlighter-rouge">echo fs.inotify.max_user_watches=524288 | sudo tee -a
+/etc/sysctl.conf &amp;&amp; sudo sysctl -p</code>
+<a href="http://stackoverflow.com/questions/16748737/grunt-watch-error-waiting-fatal-error-watch-enospc">link</a></li>
+</ul>
+
+<h1 id="npm">NPM</h1>
+
+<p>To create package.json in current folder run <code class="highlighter-rouge">npm init -y</code></p>
+
+<p>To show all versions and install specific version you can</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm info ionic
+npm install ionic@1.4.0
+npm uninstall ionic
+</code></pre></div></div>
+
+<p>You can install packages localy (recommended) so you can access them
+<code class="highlighter-rouge">node_modules/.bin/</code> or using <code class="highlighter-rouge">npx webpack</code> or with <code class="highlighter-rouge">npm run build</code> if inside
+package.json <code class="highlighter-rouge">"scripts":{ "build": "webpack"}</code>. If you need to pass additional
+params to build command you can use two dashes <code class="highlighter-rouge">npm run build -- --colors</code>
+If you need to access from command line than install globaly <code class="highlighter-rouge">-g</code>
+Use <code class="highlighter-rouge">--save</code> if package is used on production env, and <code class="highlighter-rouge">--save-dev</code> if it is
+only on development (like linters or testing tools).</p>
+
+<p>You can use scoped packages https://docs.npmjs.com/misc/scope that will be used
+from subfolder, for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install @myorg/mypackage
+</code></pre></div></div>
+
+<p>Scope can be associated with a registry at login <code class="highlighter-rouge">npm login
+--registry=http://reg.example.com --scope=@myco</code> or at config <code class="highlighter-rouge">npm config set
+@myco:registry http://reg.example.com</code>.</p>
+
+<p>Package lock <a href="https://docs.npmjs.com/files/package-locks">https://docs.npmjs.com/files/package-locks</a> is used to prevend
+using latest dependencies if they are not desirable <code class="highlighter-rouge">package-lock.json</code> or
+<code class="highlighter-rouge">npm-shrinkwrap.json</code></p>
+
+<p>Note that if you remove some files from package folder (for example
+<code class="highlighter-rouge">node_modules/iCheck/skins</code> than <code class="highlighter-rouge">npm install</code> will not see
+that is was removed. You need to <code class="highlighter-rouge">rm -rf folder</code> so than <code class="highlighter-rouge">npm install</code> will
+get fresh copy of the package.</p>
+
+<p>Example adding jquery 3, bootstrap 4, fontawesome 4 on rails you can find on  /2014/07/01/ruby-on-rails-layouts-and-rendering/)</p>
+
+<h1 id="npmjs-publish-package">Npmjs publish package</h1>
+
+<p>https://docs.npmjs.com/getting-started/publishing-npm-packages</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm whoami
+npm adduser
+npm publish
+</code></pre></div></div>
+
+<h1 id="yarn">Yarn</h1>
+
+<p>Yarn will install packages to <code class="highlighter-rouge">node_modules</code> folder.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn init # to generate package.json
+yarn remove [package]
+yarn # to install dependencies
+yarn run build # to run "scripts" -&gt; "build"
+
+yarn add [package]
+</code></pre></div></div>
+
+<p>You can add <code class="highlighter-rouge">package@version</code> vesion could be <code class="highlighter-rouge">"^1.0.0"</code>
+<a href="https://yarnpkg.com/en/docs/dependency-versions">https://yarnpkg.com/en/docs/dependency-versions</a> When you <code class="highlighter-rouge">yarn
+upgrade</code> it will upgrade version to next, for example <code class="highlighter-rouge">"^2.0.0"</code>.</p>
+
+<p>If you want to install to specific folder instead of <code class="highlighter-rouge">node_modules</code> than use
+<code class="highlighter-rouge">yarn install --modules-folder ./public/assets</code> or add to
+<a href="https://yarnpkg.com/lang/en/docs/yarnrc/#toc-cli-arguments">.yarnrc</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .yarnrc
+--install.modules-folder "./public/assets"
+--add.modules-folder "./public/assets"
+</code></pre></div></div>
+
+<p>Note that there are problems with missing <code class="highlighter-rouge">.bin</code> folder
+https://github.com/yarnpkg/yarn/issues/3724</p>
+
+<h1 id="commonjs">Commonjs</h1>
+
+<p>All bundle tools explained in video https://www.youtube.com/watch?v=U4ja6HeBm6s
+CommonJS is used by node.js. <code class="highlighter-rouge">module.exports</code> is defined in environment, and
+it’s value is returned when you <code class="highlighter-rouge">require('my_module')</code> (no need to include
+<code class="highlighter-rouge">.js</code>). You can export object with multiple functions. Build with <code class="highlighter-rouge">browserify</code>
+or <code class="highlighter-rouge">webpack</code>.
+Each module is run inside closure so there is no global variables. When you
+include <code class="highlighter-rouge">&lt;script&gt;</code> tag code is run and that is.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># index.html
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"s"</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"./main-bundle.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># add.js
+function add(a, b) {
+  return a + b;
+}
+module.exports = add;
+
+# main.js
+var add = require('./add');
+function sum(list) {
+  var m = 0;
+  list.forEach(function(item) {
+    m = add(m, item);
+  });
+  return m;
+}
+document.getElementById('s').innerHTML = sum([1,2,3])
+
+
+npm install browserify -g
+browserify main.js -o main-bundle.js
+
+npm install -D webpack-cli
+webpack main.js -o main-bundle.js
+</code></pre></div></div>
+
+<h1 id="amd-asynchronous-module-definition">AMD Asynchronous module definition</h1>
+
+<p>When you <code class="highlighter-rouge">require('jQuery')</code> it should be there at that moment, but if we want
+to run the code without jQuery loaded yet use async <code class="highlighter-rouge">define(dependencies, f)</code>
+Build with <code class="highlighter-rouge">webpack</code> since it will recognize that it is AMD and define <code class="highlighter-rouge">define</code>
+correctly.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># add.js
+define([], function() {
+  return function add(a, b) {
+    return a + b;
+  }
+});
+
+# main.js
+define(['./add'], function(add) {
+  function sum(list) {
+    var m = 0;
+    list.forEach(function(item) {
+      m = add(m, item);
+    });
+    return m;
+  }
+  document.getElementById('s').innerHTML = sum([1,2,3])
+});
+
+webpack main.js -o main-bundle.js
+</code></pre></div></div>
+
+<p>For development you can use <a href="http://requirejs.org/docs/whyamd.html">RequireJS</a>
+(works with AMD modules) that can see if <code class="highlighter-rouge">define</code> is called and fetch other
+dependencies (with another <code class="highlighter-rouge">&lt;script&gt;</code> tags) and include them so <code class="highlighter-rouge">main.js</code> can
+execute it’s code.</p>
+
+<p><a href="http://requirejs.org/docs/optimization.html">RequireJS Optimizer</a> or
+<code class="highlighter-rouge">amd-optimize</code> and almond (minimized AMD for optimized builds which define
+<code class="highlighter-rouge">define</code>),
+Or you can transform AMD modules to CommonJS js modules with <code class="highlighter-rouge">deamdify</code> (so no
+need for almond to define <code class="highlighter-rouge">define</code>) and than run <code class="highlighter-rouge">browserify</code>.</p>
+
+<h1 id="es6-import-export">ES6 Import Export</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># add.js
+function add(a, b) {
+  return a + b;
+}
+export { add }
+
+# main.js
+import { add } from './add';
+function sum(list) {
+  var m = 0;
+  list.forEach(function(item) {
+    m = add(m, item);
+  });
+  return m;
+}
+
+# build with webpack
+webpack main.js -o main-bundle.js
+
+# or build with browserify with babelify transform
+npm install -g babelify
+browserify -t babelify main.js -o main-bundle.js
+
+# or older google tool Traceur with es6ify transform
+</code></pre></div></div>
+
+<p>If you want to dynamic load on development and bundle on production, you can use
+systemjs, similar to RequireJS, but loads amd, es6 or commonjs modules and
+compiles es6 in the browser.</p>
+
+<p><a href="https://github.com/rollup/rollup">Rollup</a> bundle only functions that you use,
+not the whole library (deprecate <code class="highlighter-rouge">esperanto</code>).</p>
+
+<p><a href="https://jspm.io/">jspm</a>  can consume all formats in same time.</p>
+
+<h1 id="umd">UMD</h1>
+
+<p>Universal module definition so you can import in commonjs or amd or with script
+tag.
+You can use rollbar or webpack to produce umd that will generate a global
+<code class="highlighter-rouge">myGlobalModule</code> or plain js https://stackoverflow.com/questions/38638210/how-to-use-umd-in-browser-without-any-additional-dependencies</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># main.js
+import { add } from './add';
+function sum(list) {
+  var m = 0;
+  list.forEach(function(item) {
+    m = add(m, item);
+  });
+  return m;
+}
+
+// to use like `myGlobalModule([1,2,3])`.
+export default sum
+export default function sum(list) {
+
+// to use like `myGlobalModule.sum([1,2,3])`.
+export default {
+  sum: sum
+}
+export function sum(list) {
+
+
+// webpack call with myGlobalModule.sum([1,2,3])
+export function sum(list) {
+// with webpack with myGlobalModule.default([1,2,3])
+export default function sum(list) {
+export default sum
+// with webpack with myGlobalModule.default.sum([1,2,3])
+export default {
+  sum: sum
+}
+</code></pre></div></div>
+
+<p>rollup</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rollup main.js --format umd --name 'myGlobalModule' --file main-bundle-rollup-umd.js
+</code></pre></div></div>
+
+<p>webpack</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># webpack.config.js
+module.exports = {
+  entry: './main.js',
+  output: {
+    filename: 'main-bundle-webpack-umd.js',
+    path: __dirname,
+    library: "myGlobalModule",
+    libraryTarget: "umd"
+  }
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>webpack
+</code></pre></div></div>
+
+<h1 id="webpack">Webpack</h1>
+
+<p><a href="https://webpack.academy">https://webpack.academy</a>
+<a href="https://www.what-problem-does-it-solve.com/webpack">https://www.what-problem-does-it-solve.com/webpack</a>
+<a href="https://survivejs.com/webpack/">https://survivejs.com/webpack/</a></p>
+
+<p><a href="https://webpack.js.org/guides/getting-started/">https://webpack.js.org/guides/getting-started/</a>
+/home/orlovic/rails_temp/webpack_guide</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm init -y
+npm install webpack webpack-cli --save-dev
+</code></pre></div></div>
+
+<p>Add to <code class="highlighter-rouge">package.json</code> build command so you can run</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// package.json
+  "scripts": {
+    "build": "webpack"
+  }
+
+// run build with
+npm run build
+
+// if webpack is installed globally than you can use directly
+webpack # not recomended to use as global
+</code></pre></div></div>
+
+<p>Entry point is module for which webpack start building out dependency graph
+(search for imports, requires, defines) and create bundles.
+Output is where to emit the bundles (default <code class="highlighter-rouge">path</code> is <code class="highlighter-rouge">./dist</code>).
+Loader is used to process webpack modules (files that use <code class="highlighter-rouge">import</code>, <code class="highlighter-rouge">require()</code>,
+<code class="highlighter-rouge">@import</code>, <code class="highlighter-rouge">url()</code>) and use coffescript, typescript, sass processors. It has
+<code class="highlighter-rouge">test</code> property (which files should be transformed) and <code class="highlighter-rouge">use</code> which loader.
+Plugins are use to perform wider range of tasks like uglify.
+<code class="highlighter-rouge">./dist/</code> is default output path folder, and you can open <code class="highlighter-rouge">gnome-open
+dist/index.html</code>.</p>
+
+<p>Asset Management with loaders (<code class="highlighter-rouge">npm install --save-dev style-loader</code>)</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">style-loader</code> will in javascript create and attach to head as inline <code class="highlighter-rouge">&lt;style
+  type="text/css"&gt;.my-style-from-file{}&lt;/style&gt;</code>. It needs to be called in js
+  <code class="highlighter-rouge">import './my_style.css'</code> to define which file will be imported.</p>
+  </li>
+  <li><code class="highlighter-rouge">css-loader</code> will interprets <code class="highlighter-rouge">@import</code> and <code class="highlighter-rouge">url()</code> and copy file using random
+file name
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// src/style.css
+.background {
+  background: url('./img.png');
+}
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">file-loader</code> handles files
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import myImage from './img.png'
+myImage // random-name-of-image.png
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">html-loader</code> handles <code class="highlighter-rouge">&lt;img src="./my-image.png"&gt;</code>.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module: {
+  rules: [
+    {
+      test: /\.css$/,
+      use: [
+        'style-loader',
+        'css-loader'
+      ]
+    },
+    {
+      test: /\.(png|svg|jpg|gif)$/,
+      use: [
+        'file-loader'
+      ]
+    },
+    {
+      test: /\.(woff|woff2|eot|ttf|otf)$/,
+      use: [
+        'file-loader'
+      ]
+    }
+  ]
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Input and Output
+For several input files you can generate <code class="highlighter-rouge">[name].bundle.js</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  entry: {
+    app: './src/index.js',
+    print: './src/print.js'
+  },
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+}
+</code></pre></div></div>
+
+<p>We need to manually include those generated files in <code class="highlighter-rouge">index.html</code>,  it is easier
+to automatically include https://github.com/jantimon/html-webpack-plugin
+Output management is needed to automatically include compiled assets (which are
+fingerprinted) using <code class="highlighter-rouge">HtmlWebpackPlugin</code> installed with <code class="highlighter-rouge">npm install --save-dev
+html-webpack-plugin</code> and it will generate <code class="highlighter-rouge">dist/index.html</code> which includes all
+generated stuff.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// webpack.config.js
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Output management'
+    })
+  ],
+</code></pre></div></div>
+
+<p>You can pass env params on command line and extract common config</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// build-utils/webpack.common.js
+const commonPaths = require('./common-paths.js');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: commonPaths.output,
+  },
+};
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// build-utils/common-paths.js
+const path = require('path');
+
+module.exports = {
+  outputPath: path.resolve(__dirname, '../', 'dist'),
+};
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// webpack.config.js
+const commonConfig = require('./build-utils/webpack.common');
+
+module.exports = (env) =&gt; {
+  console.log(env);
+  return commonConfig;
+};
+</code></pre></div></div>
+<p>https://webpack.academy/courses/web-fundamentals/lectures/2987268</p>
+
+<p>https://www.npmjs.com/package/clean-webpack-plugin
+You can clean dist folder before each build</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install clean-webpack-plugin --save-dev
+
+# webpack.config.js
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
+</code></pre></div></div>
+
+<p>Use
+<a href="https://github.com/danethurber/webpack-manifest-plugin">WebpackManifestPlugin</a>
+for manifest about what is included in build.</p>
+
+<p>Add <code class="highlighter-rouge">devtool: 'inline-source-map',</code> to provide source maps.</p>
+
+<p>webpack-dev-server for live reloading when code is changed</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install --save-dev webpack-dev-server
+
+# webpack.config.js
+  devServer: {
+    contentBase: './dist'
+  },
+
+# package.json
+  "scripts": {
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",
+    "start": "webpack-dev-server --open",
+
+npm start
+</code></pre></div></div>
+
+<p>HMR Hot module replacement</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># webpack.config.js
+const webpack = require('webpack');
+module.exports = {
+  devServer: {
+    contentBase: './dist',
+    hot: true
+  },
+  plugins: [
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin()
+
+
+# src/index.js
+if (module.hot) {
+  module.hot.accept('./print.js', function() {
+    console.log('Accepting the updated printMe module!');
+    printMe();
+    document.body.removeChild(element);
+    element = component(); // Re-render the "component" to update the click handler
+    document.body.appendChild(element);
+  })
+}
+</code></pre></div></div>
+
+<p>Babel-loader
+https://github.com/babel/babel-loader</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install "babel-loader@^8.0.0-beta" @babel/core @babel/preset-env webpack
+</code></pre></div></div>
+
+<p><a href="https://medium.com/statuscode/introducing-webpacker-7136d66cddfb">https://medium.com/statuscode/introducing-webpacker-7136d66cddfb</a></p>
+
+<p>Webpack uses <code class="highlighter-rouge">webpack.config.js</code> and compile for your using Loaders and Plugins.
+Install loaders with <code class="highlighter-rouge">yarn add --dev webpack babel-core babel-loader
+babel-preset-react babel-preset-es2015 node-sass css-loader sass-loader
+style-loader</code> and use with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// webpack.config.js
+// This library allows us to combine paths easily
+const path = require('path');
+module.exports = {
+   entry: path.resolve(__dirname, 'src', 'index.jsx'),
+   output: {
+      path: path.resolve(__dirname, 'output'),
+      filename: 'bundle.js'
+   },
+   resolve: {
+      extensions: ['.js', '.jsx']
+   },
+   module: {
+      rules: [
+         {
+             test: /\.jsx/,
+             use: {
+                loader: 'babel-loader',
+                options: { presets: ['react', 'es2015'] }
+             }
+         },
+         {
+            test: /\.scss/,
+            use: ['style-loader', 'css-loader', 'sass-loader']
+         }
+      ]
+   }
+};
+</code></pre></div></div>
+
+<h1 id="webpack-plugins">Webpack plugins</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add webpack-bundle-analyzer --dev
+// config/webpack/development.js
+const BundleAnalyzerPlugin =
+require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+module.exports = environment.toWebpackConfig().merge({
+  plugins: [
+    new BundleAnalyzerPlugin({analyzerMode: 'static'})
+  ]
+});
+
+# bin/webpack-dev-server
+# /home/orlovic/rails/myApp/public/packs/report.html
+</code></pre></div></div>
+
+<h1 id="webpacker">Webpacker</h1>
+
+<p>From sprockets to webpacker
+<a href="https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79">https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# instead of sprockets
+gem 'webpacker', '~&gt; 3.4'
+
+bundle
+bundle exec rails webpacker:install
+</code></pre></div></div>
+
+<p>Put your ‘entry’ module files in <code class="highlighter-rouge">app/javascript/packs</code> and your pure js files
+in <code class="highlighter-rouge">app/javascript</code> or <code class="highlighter-rouge">app/javascript/src</code> which you can load (just run)
+<code class="highlighter-rouge">import '../my_file'</code>.
+Global functions will not pollute global scope, you need to attach to window or
+global object.
+Reload js files automatically with webpacker dev server</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/webpack-dev-server
+</code></pre></div></div>
+
+<p>Refence each file in packs folder with (restart dev seerver)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/layouts/application.html.erb %&gt;
+  &lt;%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %&gt;
+</code></pre></div></div>
+
+<p>Add npm packages: jquery turbolinks bootstrap</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add jquery rails-ujs turbolinks bootstrap popper.js
+</code></pre></div></div>
+
+<p>Configure jquery as plugin</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// config/webpack/environment.js
+const webpack = require('webpack');
+environment.plugins.append('Provide', new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery',
+  Popper: ['popper.js', 'default']
+}));
+
+// or if you load jQuery in script tag
+environment.config.external = {
+  jquery: 'jQuery'
+}
+
+module.exports = environment
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/javascript/packs/application.js
+import Rails from 'rails-ujs';
+import Turbolinks from 'turbolinks';
+
+Rails.start();
+Turbolinks.start();
+
+$(function () {
+  console.log('Hello World from Webpacker');
+});
+
+# if you need jquery globally attach to window or global object
+global.$ = require('jquery')
+window.$ = window.jQuery = require("jquery")
+</code></pre></div></div>
+
+<p>For stylesheets create new module and move files and import in scss. Use tilda
+when referencing node modules.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/javascript/packs/stylesheets.scss
+@import '~bootstrap/scss/bootstrap';
+</code></pre></div></div>
+
+<p>For css from gems create package.json</p>
+
+<p>https://github.com/rails/webpacker/issues/57#issuecomment-327533578</p>
+
+<p>todo
+https://youtu.be/fKOq5_2qj54?t=602</p>
+
+<h1 id="parcel">Parcel</h1>
+
+<p>Install with <code class="highlighter-rouge">yarn global add parcel-bundler</code></p>
+
+<h1 id="makefile">Makefile</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make help
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

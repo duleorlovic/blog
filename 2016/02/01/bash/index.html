@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Bash</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Bash</h1>
+    <p class="meta">Feb 1, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#run-command-as-another-user"><span class="tocnumber">1</span> <span class="toctext">Run command as another user</span></a></li><li class="toc_level-1 toc_section-2"><a href="#shortcuts-for-windows"><span class="tocnumber">2</span> <span class="toctext">Shortcuts for windows</span></a></li><li class="toc_level-1 toc_section-3"><a href="#shortcuts-for-key-mappings"><span class="tocnumber">3</span> <span class="toctext">Shortcuts for key mappings</span></a></li><li class="toc_level-1 toc_section-4"><a href="#tar"><span class="tocnumber">4</span> <span class="toctext">Tar</span></a></li><li class="toc_level-1 toc_section-5"><a href="#scrips-and-commands"><span class="tocnumber">5</span> <span class="toctext">Scrips and commands</span></a></li><li class="toc_level-1 toc_section-6"><a href="#pipe"><span class="tocnumber">6</span> <span class="toctext">Pipe</span></a></li><li class="toc_level-1 toc_section-7"><a href="#parameter-expansion"><span class="tocnumber">7</span> <span class="toctext">Parameter expansion</span></a></li><li class="toc_level-1 toc_section-8"><a href="#arrays"><span class="tocnumber">8</span> <span class="toctext">Arrays</span></a></li><li class="toc_level-1 toc_section-9"><a href="#curl"><span class="tocnumber">9</span> <span class="toctext">Curl</span></a></li><li class="toc_level-1 toc_section-10"><a href="#ssh"><span class="tocnumber">10</span> <span class="toctext">SSH</span></a></li></ul></td></tr></tbody></table></div><h1 id="run-command-as-another-user">Run command as another user</h1>
+
+<p>In two ways</p>
+
+<ul>
+  <li><code class="highlighter-rouge">su deployer -c 'whoami</code> can add login <code class="highlighter-rouge">-l</code> option <code class="highlighter-rouge">su -l deployer -c 'rvm
+list'</code> so PATH is extended with <code class="highlighter-rouge">~/.rvm/bin/</code> and rvm script works</li>
+  <li><code class="highlighter-rouge">sudo -u deployer whoami</code> simpler, no need for quotes
+    <ul>
+      <li>Add option <code class="highlighter-rouge">-i</code> or <code class="highlighter-rouge">--login</code> to run as login shell. In login shell <code class="highlighter-rouge">~</code> is
+pointing to <code class="highlighter-rouge">/home/deployer/</code> not <code class="highlighter-rouge">/root/</code> home.</li>
+      <li>Wrap command inside <code class="highlighter-rouge">bash</code> to properly load XDG_RUNTIME_DIR for rails c or
+other ruby commands: <code class="highlighter-rouge">sudo -i -u deployer /bin/bash -c "cd /vagrant &amp;&amp; rails
+c"</code>. Also when you use pipe <code class="highlighter-rouge">|</code> or <code class="highlighter-rouge">&amp;&amp;</code> or redirection <code class="highlighter-rouge">&gt;&gt;</code>, you should wrap
+inside bash or use <code class="highlighter-rouge">eval</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="shortcuts-for-windows">Shortcuts for windows</h1>
+
+<p>Very usefull shortcuts to activate certain windows.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">gnome-terminal</code> if negative is used, than it is bottom alligned</li>
+  <li><a href="http://helpdeskgeek.com/linux-tips/resize-a-window-to-a-specific-size-in-ubuntu/">wmctrl</a></li>
+  <li><code class="highlighter-rouge">xwininfo</code> to click on window to find it’s <code class="highlighter-rouge">0x440003d</code> which we can use to
+create shortcut <code class="highlighter-rouge">xdotool windowactivate 0x440003d</code></li>
+  <li>another robust solution is to set predefined classname for windows with
+<code class="highlighter-rouge">xprop -f WM_CLASS 8s -set WM_CLASS main_editor</code> (click on window) and 
+<code class="highlighter-rouge">xdotool search --classname main_editor windowactivate</code> in <em>Alt+M</em> shortcut.
+I’m using ALT+HJKL; with <em>class_hjkl;</em></li>
+</ul>
+
+<p><img src="/assets/posts/mapping hjkl keys to activate window.png" alt="mapping hjkl keys to activate window" />
+<img src="/assets/posts/mapping_workspace_keys_to_hjkl.png" alt="mapping workspace keys to hjkl" title="mapping workspace keys to hjkl" />
+Look at my
+<a href="https://github.com/duleorlovic/config/blob/master/bashrc/window_shortcuts.sh">window_shortcuts</a></p>
+
+<p>When I update ubuntu I need to map keys again. Go one by one and press ALT+key
+combination again.</p>
+
+<p>On blank ubuntu I need to go All Settings -&gt; Appearance -&gt; (tab) Behavior and
+<em>Auto-hide the Launcher</em> to ON and <em>Enable workspaces</em>.
+(in virtualBox I can not open launcher, only hud with left alt)</p>
+
+<h1 id="shortcuts-for-key-mappings">Shortcuts for key mappings</h1>
+
+<p>To scroll in terminal window, instead <code class="highlighter-rouge">shift+page_up</code> we can <a href="http://askubuntu.com/questions/250791/how-to-bind-altarrows-to-pageup-pagedown">bind to
+key</a>
+<a href="https://bbs.archlinux.org/viewtopic.php?id=136265">simulate keyup</a>.
+<a href="https://wiki.archlinux.org/index.php/Xbindkeys">xbindkeys</a> I usually map vim
+shortcuts <em>CTRL+</em> , so for terminal windows I use <em>ALT+</em>.  Do not override
+already two ALT <a href="http://www.howtogeek.com/howto/ubuntu/keyboard-shortcuts-for-bash-command-shell-for-ubuntu-debian-suse-redhat-linux-etc/">bash
+shortcut</a>
+<em>Alt+F</em> <em>Alt+B</em> to move cursor one word (use capitalize F to not open File menu
+or disable in <em>Edit</em> -&gt; <em>Keyboard Shortcuts</em>) (CTRL version move by one
+character) . I also map <em>ctrl+k</em> to scroll up since it’s natural (I don’t mind
+that I don’t have cut shortcut, I just use <code class="highlighter-rouge">#</code>). I tried to use <code class="highlighter-rouge">bind</code> command
+but that outputs, so multiple scroll looks like one scroll.</p>
+
+<p>Here are all bash CTRL shortcuts:</p>
+
+<ul>
+  <li>ctrl+a (+e) : move cursor to begging (end) of line</li>
+  <li>ctrl+b (+f) : move cursor by one char to left (right)</li>
+  <li>ctrl+h (+d) : delete char left to the cursor-backspace (under the cursor)</li>
+  <li>ctrl+w : delete word before the cursor</li>
+  <li>ctrl+i : (or tab) completion</li>
+  <li>ctrl+j : enter</li>
+  <li>ctrl+k (+u) [+y]: cut chars until the end of the line (before the cursor
+position) [yank cutted text]</li>
+  <li>ctrl+p (+n) : go to previous (next) command</li>
+  <li>ctrl+r : search</li>
+  <li>ctrl+c (+z) : kill current process (send to background and suspend, use <code class="highlighter-rouge">fg</code>
+to restore).  You can put any shell (vim, rails s) to suspend state with
+<code class="highlighter-rouge">Control + z</code>. Than you can put it in background <code class="highlighter-rouge">bg</code> if needed. You can use
+that shell for inspection other things. When you are finished, you can switch
+back to vim, or rails s, with foreground <code class="highlighter-rouge">fg</code> (from both suspend and background
+state) see all background and suspended processes in current bash session <code class="highlighter-rouge">jobs
+-l</code></li>
+  <li>ctrl+l : clear window, but I remaped to copy current line to clipboard</li>
+</ul>
+
+<p>ALT shortcuts:</p>
+
+<ul>
+  <li>alt+b (+f) : move cursor by one word to left (right). On mac Alt is Meta so
+you need to disable in all your terminals in system preferences and restart.</li>
+</ul>
+
+<p>Here are some <em>Edit</em> -&gt; <em>Keyboard Shortcuts</em>:</p>
+
+<ul>
+  <li>shoft+ctrl+t : open in new tab</li>
+  <li>alt+1 : switch between tabs</li>
+</ul>
+
+<p>To copy line, you need to select with mouse and use <em>ctrl+shift+c</em>
+(<em>ctrl+shift+v</em> to pase). Or with <code class="highlighter-rouge">xsel</code> you can bind to ctrl+l:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .bashrc
+bind '"\C-l": "\C-e\C-u xsel --clipboard &lt;&lt;"EOF"\n\C-y\nEOF\n\C-y"'
+</code></pre></div></div>
+
+<p>In vim you can paste primary selection (just select, middle mouse, shift insert)
+with <code class="highlighter-rouge">"*p</code>. Clipboard selection (copy, paste) with  and <code class="highlighter-rouge">"+p</code></p>
+
+<p>To copy some text from <code class="highlighter-rouge">less</code> you can click <code class="highlighter-rouge">v</code> inside less to invoke the
+editor (<code class="highlighter-rouge">vim</code>) and than you can copy from that. There is an error <code class="highlighter-rouge">Cannot edit
+standard input (press RETURN)</code> when editing (<code class="highlighter-rouge">v</code>) for example <code class="highlighter-rouge">ls | less</code>.
+Workaround is to <code class="highlighter-rouge">ls | vim -</code>, or for example <code class="highlighter-rouge">git log | vim -</code>, Note that yank
+while vim is open works fine, but once you close the vim, clipboard is empty.</p>
+
+<p>Maximize terminal window to full screen is with <code class="highlighter-rouge">F11</code> (yes it is the same
+shortcut for bash as for chrome).
+Inside terminal there are Terminal-&gt;Preferences-&gt;Shortcuts</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Shift+Ctrl+F</code> search (<code class="highlighter-rouge">G</code> and <code class="highlighter-rouge">H</code> next and previous)</li>
+</ul>
+
+<p>Only place where I sometimes need arrow keys is google chrome suggestions in
+address bar, but than I use Tab.</p>
+
+<p>Starting chrome with <a href="http://peter.sh/experiments/chromium-command-line-switches/">command line
+switch</a>
+<code class="highlighter-rouge">chromium-browser --auto-open-devtools-for-tabs</code> does work only on
+google-chrome.</p>
+
+<p>Intresting <a href="http://anti-code.com/devtools-cheatsheet/">devtools-cheatcheet</a>
+(search by filename Ctrl+O, search all sources Ctrl+Shift+F).</p>
+
+<p>Look my
+<a href="https://github.com/duleorlovic/config/blob/master/.xbindkeysrc">xbindkeysrc</a>
+There is very nice tool <a href="http://xmonad.org/">Xmonad</a> which is designed to
+maximize. move windows around, <code class="highlighter-rouge">automatically tile the screen without gaps or
+overlap</code>, but I do not need auto arrangement.</p>
+
+<p>To start command programs on startup you can use <code class="highlighter-rouge">ctrontab -r</code> and <code class="highlighter-rouge">@reboot</code>,
+but for gui programs use ubunt Startup Applications.
+Output (from crontab or gui) should be redirected to system log, for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># script should start with #!/bin/bash
+# and should be executable chmod +x my_script.sh
+# in script use echo "start my script"
+/home/orlovic/config/bashrc/startup_my_script.sh 2&gt;&amp;1 | /usr/bin/logger
+# using tags works only if you call script direclty, but if it is called from
+# startup scripts than tag is gnome-session it overrides my tag
+# --tag my_tag
+# sometimes messages are grouped so wait few seconds
+tail -f /var/log/syslog
+# clear syslog
+&gt; /var/log/syslog
+# if syslog is not readable you can make it readable and writable
+sudo chmod g+rw /var/log/syslog
+</code></pre></div></div>
+
+<p>You can also redirect output to a file withing the script itself (but
+redirecting to syslog does not work)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">exec</span> <span class="o">&gt;&gt;</span> /home/orlovic/Downloads/output.log
+<span class="nb">exec </span>2&gt;&amp;1
+
+<span class="nb">echo </span>this will go to /home/orlovic/Downloads/output.log
+</code></pre></div></div>
+
+<p>For gui debugging you can use this command to log message from scripts:
+<code class="highlighter-rouge">notify-send $USER --urgency critical</code> Create desktop notifications with
+<code class="highlighter-rouge">notify-send</code> but need urgency critical, so I made alias <code class="highlighter-rouge">alert</code>.
+You can debug with <code class="highlighter-rouge">sleep</code> and <code class="highlighter-rouge">echo</code> redirection.</p>
+
+<p>Since <code class="highlighter-rouge">ctrl+w</code> and <code class="highlighter-rouge">ctrl+r</code> in chrome firefox browsers will close and reload the
+page, it is much easier to use alt (like on mac), so I created shortcuts</p>
+
+<p>To run script on keyboad shortcut go to Settings -&gt; Keyboard -&gt; Shortcuts -&gt;
+Custom Schortcuts -&gt; +</p>
+<ul>
+  <li>name: this is description</li>
+  <li>command: should be path to the executable script… Directly writting commands
+here might not work</li>
+</ul>
+
+<p>If you are mapping <code class="highlighter-rouge">Alt+W</code> to send another key <code class="highlighter-rouge">Ctrl+W</code> you need to release
+<code class="highlighter-rouge">Alt</code> first. To release all modifiers
+you can use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c"># config/bashrc/ctrl_browser.sh</span>
+<span class="c"># exec &gt;&gt; /home/orlovic/Downloads/output.log</span>
+<span class="c"># exec 2&gt;&amp;1</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">""</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span>notify-send <span class="s2">"Please provide a key, like Ctrl+r"</span> <span class="nt">-u</span> critical
+<span class="k">fi</span>
+
+<span class="c"># release all modifiers</span>
+<span class="c"># https://unix.stackexchange.com/questions/60007/how-to-force-release-of-a-keyboard-modifiers</span>
+xdotool keyup Shift_L Shift_R Control_L Control_R Meta_L Meta_R Alt_L Alt_R Super_L Super_R Hyper_L Hyper_R ISO_Level2_Latch ISO_Level3_Shift ISO_Level3_Latch ISO_Level3_Lock ISO_Level5_Shift ISO_Level5_Latch ISO_Level5_Lock
+xdotool key <span class="nv">$1</span>
+<span class="c"># keydown again so you can run multiple reloads while keeping alt key down</span>
+<span class="c"># problem is if you release alt to fast, you need to click again to release it</span>
+<span class="c"># xdotool keydown Alt_L</span>
+</code></pre></div></div>
+
+<p>You can send commands to specific window
+https://unix.stackexchange.com/questions/87831/how-to-send-keystrokes-f5-from-terminal-to-a-gui-program</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this does not send key
+xdotool search --classname vp_$(get_current_viewport)_class_slash  windowactivate --sync %1 key  a
+
+# also can not send key without activate that window
+xdotool key --window 67199662 a Return
+
+# with windowactivate you need to wait with sync and than send key
+xdotool windowactivate --sync 67199662 key a
+
+# to write command use `type`, to include spaces wrap with quotes
+xdotool windowactivate --sync 67199662 type "pwd"
+
+# to send Enter &lt;CR&gt; you need delay and also some key before that
+# &lt;CR&gt; is 'Return', space is 'space'
+# remember not to run command with &lt;C-j&gt; since ctrl modifier is still active
+xdotool windowactivate --sync 67199662 type "pwd"; xdotool key --delay 50 space Return
+
+# you can come back to previous terminal with
+xdotool windowactivate --sync 67199662 type "pwd"; xdotool key --delay 50 space Return windowactivate 67199574
+
+# complete command for janko-m/vim-test strategy is in vim tips
+</code></pre></div></div>
+
+<p>Remapping keyboard keys is with
+<a href="https://wiki.archlinux.org/index.php/Xmodmap">xmodmap</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># show all keys, columns are
+# Key, Shift+Key, mode_switch+Key, mode_switch+Shift+Key, alt+Key, alt+shift+key
+xmodmap -pke
+
+# save configuration to a file
+xmodmap -pke &gt; ~/.Xmodmap
+# reload new configuration
+xmodmap ~/.Xmodmap
+</code></pre></div></div>
+
+<p>To find keycodes use <code class="highlighter-rouge">xev</code> program (exit with mouse or alt+f4).
+<code class="highlighter-rouge">showkeys</code> is using for linux system.
+You can use also <code class="highlighter-rouge">xkeycaps</code> but I do not know which keyboard to choose.
+<code class="highlighter-rouge">sudo showkey -a</code> can show keycode.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xev | sed -n 's/^.*keycode *\([0-9]\+\).*$/keycode \1 = /p'
+</code></pre></div></div>
+
+<p>Keycode for <code class="highlighter-rouge">a</code> is 38. It can be used alone or with modifier keys. Alone <code class="highlighter-rouge">a</code>
+gives keysym <code class="highlighter-rouge">0x61</code> (ie 141 in ascii), for <code class="highlighter-rouge">shift+a</code> keysym is <code class="highlighter-rouge">0x41</code> ie <code class="highlighter-rouge">A</code>.
+Descriptive keysyms for multimedia keys are in <code class="highlighter-rouge">/usr/include/X11/XF86keysym.h</code>.
+Keycode for left ctrl is 37 (keysym <code class="highlighter-rouge">Control_L</code>), left alt 64 (keysym <code class="highlighter-rouge">Alt_L</code>),
+windows 133 (keysym <code class="highlighter-rouge">Super_L</code>), caps lock 66 (Caps_Lock), right alt is 108
+(<code class="highlighter-rouge">Alt_R</code>).</p>
+
+<p>http://wiki.linuxquestions.org/wiki/List_of_Keysyms_Recognised_by_Xmodmap
+http://wiki.linuxquestions.org/wiki/List_of_KeySyms AltGr, Alt_R, AltGr_R are
+synonyms.</p>
+
+<p>From <code class="highlighter-rouge">man xmodmap</code> you can see that you can write 4 keysyms</p>
+
+<blockquote>
+  <p>Up to eight keysyms may be attached to a key, however the last four are not
+used in any major X server implementation.  The first keysym is used when no
+modifier key is pressed in conjunction with this key, the  second with Shift,
+the third when the Mode_switch key is used with this key and the fourth when
+both the Mode_switch and Shift keys are used</p>
+</blockquote>
+
+<p>keycode 57 = key Shift+Key Mode_switch+Key Mode_switch+Shift+Key ISO_Level3_Shift+Key ISO_Level3_Shift+Shift+Key</p>
+
+<p>Do not know where is ISO_Level3_Shift. Mode switch is on Caps_Lock. When I bind
+to for example number 1 and 2, than <code class="highlighter-rouge">13</code> gives <code class="highlighter-rouge">4</code> (so Mode_switch works) but
+<code class="highlighter-rouge">23</code> gives <code class="highlighter-rouge">3</code> (ISO_Level3_Shift does not work)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keycode  10 = Mode_switch exclam 1 exclam
+keycode  11 = ISO_Level3_Shift at 2 at
+keycode  12 = 3 numbersign 4 numbersign 5 6
+</code></pre></div></div>
+
+<p>Default output of <code class="highlighter-rouge">xmodmap -pm</code> is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xmodmap:  up to 4 keys per modifier, (keycodes in parentheses):
+
+shift       Shift_L (0x32),  Shift_R (0x3e)
+lock        Caps_Lock (0x42)
+control     Control_L (0x25=37), Control_R (0x69)
+mod1        Alt_L (0x40=64),  Alt_R (0x6c=108),  Meta_L (0xcd)
+mod2        Num_Lock (0x4d)
+mod3
+mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)
+mod5        ISO_Level3_Shift (0x5c),  Mode_switch (0xcb)
+</code></pre></div></div>
+
+<p>To change modifier keys usually you should to <code class="highlighter-rouge">clear</code> them; <code class="highlighter-rouge">Lock</code>, <code class="highlighter-rouge">Shift</code>,
+<code class="highlighter-rouge">Control</code>, <code class="highlighter-rouge">Mod1</code> (this is alt) …  and than <code class="highlighter-rouge">add Control = Super_L ...</code>.
+Modifier <code class="highlighter-rouge">Mod4</code> is usually <code class="highlighter-rouge">Super_L</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>! This modifies CapsLock to Control, and keep CapsLock on Shift+CapsLock
+clear lock
+clear control
+keycode 66 = Control_L Caps_Lock NoSymbol NoSymbol
+add control = Caps_Lock Control_L Control_R
+</code></pre></div></div>
+
+<p>You can use dummy modifier on capslock and assign various key on that modifier.
+https://gist.github.com/bcremer/9caa54d0432531f80c1e</p>
+
+<p>For Apple keyboard you can use https://help.ubuntu.com/community/AppleKeyboard
+and this answer
+https://askubuntu.com/questions/131900/how-do-i-switch-the-command-key-and-control-key-on-a-macbook-pro
+for swapping controll and command (I use swapping option and command).
+For swapping fn and control use https://help.ubuntu.com/community/TroubleWithAppleKbdOnUbuntu
+https://wiki.archlinux.org/index.php/Apple_Keyboard#Treating_Apple_keyboards_like_regular_keyboards
+https://github.com/free5lot/hid-apple-patched#installation-via-dkms-recommended</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vi /etc/modprobe.d/hid_apple.conf
+cat /sys/module/hid_apple/parameters/swap_fn_leftctrl
+</code></pre></div></div>
+
+<p>I use mapping for all keys that I need right shift like underscore, brackets,
+html &gt;.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>! ~/.Xmodmap
+! remove caps lock modifier
+clear Lock
+! assign dummy modifier to capslock
+keycode 66 = ISO_Group_Shift ISO_Group_Shift ISO_First_Group NoSymbol
+keycode 43 = h H braceleft
+keycode 44 = j J parenleft
+keycode 45 = k K parenright
+keycode 46 = l L braceright
+keycode 59 = comma less less
+keycode 60 = period greater greater
+
+clear Mod1
+add Mod1 = Alt_L
+keycode 108 = underscore underscore underscore underscore
+
+! Colon and semicolon are just reversed.
+keycode 47 = colon semicolon colon semicolon
+</code></pre></div></div>
+
+<p>Also I like command+c / alt+c for copy/paste so I use this answer to copy
+selected text to clipboard https://askubuntu.com/questions/573663/command-to-copy-currently-selected-text
+and in terminal remap copy paste Terminal-&gt;Preferences-&gt;Shortcuts-&gt;Edit-&gt;Copy
+(Alt+C) Paste (Alt+V) so I can create keyboard shortcut for Alt+C and Alt+V
+which I can use both on terminal and non terminal</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /home/orlovic/config/bashrc/copy_from_x_selection.sh
+#!/bin/bash
+xclip -out -selection primary | xclip -in -selection clipboard
+</code></pre></div></div>
+
+<p>create two shortcuts, one for Alt+C
+<code class="highlighter-rouge">/home/orlovic/config/bashrc/copy_from_x_selection.sh</code> and another for Alt+V
+<code class="highlighter-rouge">/home/orlovic/config/bashrc/ctrl_browser.sh Control+v</code>.
+Do not forget to use old method of selecting text and middle mouse button or
+Shift+Insert (Insert does not exists on Apple Keyboard so that is the reason why
+I add this shortcuts, but also another helpers is ctrl+i which is remaped to
+shift+insert in .xbindkeysrc). This xclip is also used when you want to copy
+from vim to clipboard, you need just to yank and alt+c and alt+v (alt+c do not
+need to be inside vim).</p>
+
+<p>Run <code class="highlighter-rouge">/home/orlovic/config/bashrc/startup_xmodmap.sh 2&gt;&amp;1 | /usr/bin/logger</code> in
+both startup scripts and /lib/systemd/system-sleep/startup_after_sleep.sh</p>
+
+<p>Problem with system-sleep xmodmap: unable to open display can not be solved with
+https://ubuntuforums.org/showthread.php?t=2380045</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sleep 5
+declare -x DISPLAY=":0.0"
+declare -x XAUTHORITY="/home/&lt;your user&gt;/.Xauthority"
+</code></pre></div></div>
+
+<p>Maybe pm power manager is different than system sleep, but it needs some events
+to properly work. X server is not set in systemd script so we need to declare
+and export DISPLAY and XAUTHORITY.
+I success with <code class="highlighter-rouge">xhost +main</code> (enable connect from main, but since network
+manager is not yet initialized, that is not reliable).
+I also tried https://bbs.archlinux.org/viewtopic.php?pid=684936#p684936 so nm
+knows hostname in configuration</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/NetworkManager/NetworkManager.conf
+[keyfile]
+hostname=main
+</code></pre></div></div>
+
+<p>but not reliable…</p>
+
+<h1 id="tar">Tar</h1>
+
+<p>comress folder: <code class="highlighter-rouge">tar -zcvf folder.tar.gz folder</code>
+extract folder: <code class="highlighter-rouge">tar -zxvf folder.tar.gz</code></p>
+
+<p>compress file: <code class="highlighter-rouge">tar cvzf file_name.tar.gz file_name</code>
+Note that is file_name is relative to some subfolders (contains slash <code class="highlighter-rouge">/</code>) for
+example <code class="highlighter-rouge">/tmp/db.dump</code> than leading slash will be ignored and when you extract
+it will be in <code class="highlighter-rouge">tmp/db.dump</code></p>
+
+<h1 id="scrips-and-commands">Scrips and commands</h1>
+
+<ul>
+  <li>nice tutorial <a href="http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html">Bash Begginers
+Guide</a> and <a href="https://github.com/duleorlovic/config">example config scrips</a></li>
+  <li>input first param <code class="highlighter-rouge">$1</code>. <code class="highlighter-rouge">$@</code> is all params. Use <code class="highlighter-rouge">"$@"</code> is you pass to another
+script and you want to preserve quoted strings https://stackoverflow.com/questions/4824590/propagate-all-arguments-in-a-bash-shell-script
+So when variable contain spaces and you need to pass to a command than wrap
+around with quotes, for example <code class="highlighter-rouge">A="file with space.txt"; ls "$A"</code></li>
+  <li>exit from script with <code class="highlighter-rouge">exit 1</code></li>
+  <li>functions can accept <a href="http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion">default
+parameters</a>
+with <code class="highlighter-rouge">:-</code> syntax
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myFunc() {
+  echo first param is $(1:-not defined)
+}
+</code></pre></div>    </div>
+
+    <p>To use functions in xargs you need to export them</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myF() {
+  echo $1
+}
+export -f myF
+</code></pre></div>    </div>
+  </li>
+  <li>always use double square brackets <code class="highlighter-rouge">[[ ]]</code> instead of single <code class="highlighter-rouge">[ ]</code> since it is
+extension and support using <code class="highlighter-rouge">||</code> instead of <code class="highlighter-rouge">-o</code>, or regex match <code class="highlighter-rouge">=~</code></li>
+  <li>
+    <p>with <a href="http://tldp.org/LDP/abs/html/comparison-ops.html">comparison operators</a>
+you should use quotes since something could not be defined <code class="highlighter-rouge">if [ -n "$a" ]</code>.
+If you use double brackets you do not need quotes around variable name.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># check if $a is present (not null)
+if [[ -n $a ]]
+
+# if conditional to check if string is substring
+string='my long string'
+if [[ $string = *"long"* ]]; then
+  echo "its here"
+fi
+
+# string equal
+if [[ $a != $b ]]; then
+  echo string a is not equal to string b
+fi
+
+# split string and use last item
+number="$(echo "asd 123" | cut -d' ' -f2)"
+
+# integer equal
+if [[ $a -eq $b ]]; then
+  echo number a is equal to number b
+fi
+</code></pre></div>    </div>
+
+    <p>Find other test helpers in <code class="highlighter-rouge">man test</code>.
+Use conditional <code class="highlighter-rouge">or ||</code> and <code class="highlighter-rouge">and &amp;&amp;</code> and <code class="highlighter-rouge">group ()</code> and negative <code class="highlighter-rouge">!</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if [[ $a -eq $b || ($a -eq 2 &amp;&amp; $b &gt; 2) ]] || [[ ! -n $a ]] ; then
+  echo number a is equal to number b
+fi
+</code></pre></div>    </div>
+
+    <p>Use regular expression matching (not supported with <code class="highlighter-rouge">[ ]</code> single quote)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>w_name="Mozzila Firefox and Chrome"
+if [[ $w_name =~ 'Mozilla Firefox'|Chrome ]] ; then
+fi
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>loops and expressions example</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>attempts="0"
+while [ $attempts -lt 10 ] || [ -z "$window_id" ]
+do
+  echo $attempts
+  sleep 1
+  window_id=`wmctrl -l | grep $url | awk '{print $1}' | tail -n1`
+  attempts=$[$attempts+1]
+done
+echo move and mark window_id=$window_id
+</code></pre></div>    </div>
+  </li>
+  <li>find
+    <ul>
+      <li>find and remove files <code class="highlighter-rouge">find . -type f -name "test.log" -exec rm -f {} \;</code></li>
+      <li>find all html files <code class="highlighter-rouge">find . -name '*.html'</code>. Note that <code class="highlighter-rouge">find . -name *.html</code>
+will not work since wildcard will be changed to html file in current folder.</li>
+      <li>filter files based on their size: <code class="highlighter-rouge">find . -size -212c</code> show only small than
+212 bytes</li>
+    </ul>
+  </li>
+  <li>escape single quote <code class="highlighter-rouge">'</code> in linux scripts with <code class="highlighter-rouge">$'Hello I\'m here'</code>
+<a href="http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash">link</a></li>
+  <li>add task to crontab with linux command <code class="highlighter-rouge"># (crontab -l 2&gt;/dev/null; echo
+"@reboot /home/orlovic/my.sh") | crontab -</code></li>
+  <li>output goes to the mail but I prefer to redirect to some file. Also define
+shell since it will use sh (on which sleep does not work).
+~~~
+SHELL=/bin/bash
+    <ul>
+      <li>
+        <ul>
+          <li>
+            <ul>
+              <li>
+                <ul>
+                  <li>
+                    <ul>
+                      <li>/path/to/my/script.sh » /home/orlovic/Downloads/cron.log 2&gt;&amp;1
+~~~</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <p>cron format <code class="highlighter-rouge">Minute Hour Day_of_the_Month Month_of_the_Year Day_of_the_Week</code>
+and also <code class="highlighter-rouge">Year</code> as 6th field. For more information see the manual pages of
+crontab(5) and cron(8) <code class="highlighter-rouge">m h  dom mon dow   command</code>.
+For multiple values you can separate with comma, use dash or use slash, for
+example <code class="highlighter-rouge">0,15,30,45 0,6,12,18 1,15,31 * 1-5 *</code> is the same as <code class="highlighter-rouge">*/15 */6
+1,15,31 * 1-5 *</code>.</p>
+  </li>
+  <li>repeat last command with sudo <code class="highlighter-rouge">sudo !!</code></li>
+  <li>copy all files from folder (including hidden) <code class="highlighter-rouge">cp folder/. /some-other/ -r</code>
+Note <code class="highlighter-rouge">.</code> after folder name.</li>
+  <li>preserve env variables with sudo <code class="highlighter-rouge">sudo -E ruby some_script.rb</code>, but <code class="highlighter-rouge">rvmsudo
+ruby some_script.rb</code> works better</li>
+  <li><code class="highlighter-rouge">ps aux | grep process_name</code> will return always the grep process because it
+match. But you can use regex so it is not matched <code class="highlighter-rouge">ps aux | grep
+[p]rocess_name</code>. to show full command for process id you can use `ps -fp
+    <pid>`. You can kill one by one using `top` and `k`. To find proccess by port
+it is using you can `lsof -wni tcp:3000`.
+You can see top 5 proccesses and commands
+~~~
+ps aux | sort -nrk 3,3 | head -n 5
+watch "ps aux | sort -nrk 3,3 | head -n 5"
+
+# or with top
+top -b -n 1 | head -n 12  | tail -n 5
+
+# or better
+htop
+~~~
+</pid>
+  </li>
+  <li>edit long commands in bash <code class="highlighter-rouge">set -o vi</code> and than press Esc, and v (visual).
+Don’t recomment to put in bashrc since it will disable bash shortcuts like:
+ctrp+p, bind, ….</li>
+  <li>
+    <p><code class="highlighter-rouge">mount</code> <code class="highlighter-rouge">sudo fdisk -l</code> <code class="highlighter-rouge">sudo blkid</code> <code class="highlighter-rouge">sudo vi /etc/fstab</code> add line</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /ets/fstab
+UUID=428c1c5c-7ef4-480a-aa3b-1b62c3feab98 /mnt/moj_ssd    ext4    defaults  0  2
+</code></pre></div>    </div>
+
+    <p>run <code class="highlighter-rouge">sudo chown -R orlovic.orlovic /mnt/moj_ssd/</code> this is needed only one
+time.</p>
+  </li>
+  <li>if you need to answer yes and there is no <code class="highlighter-rouge">-y</code> parameter, you can use <code class="highlighter-rouge">echo
+-en "\n\n\n" | command</code> . Or you can install
+<a href="https://en.wikipedia.org/wiki/Yes_%28Unix%29">yes</a> command which outputs
+<code class="highlighter-rouge">y\n</code> in a infinite loop <code class="highlighter-rouge">yes | command</code></li>
+  <li>last folder in path <code class="highlighter-rouge">basename $(pwd)</code></li>
+  <li>
+    <p>to check if file does not exists you can use</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if [ ! -f tmp/memory_profile.png ]; then
+  echo "File not found"
+fi
+</code></pre></div>    </div>
+  </li>
+  <li>run multiple long running commands (like <code class="highlighter-rouge">watch</code> <code class="highlighter-rouge">tail -f</code>) with <code class="highlighter-rouge">;</code></li>
+  <li>
+    <p>show commands being executed</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set -x
+command
+set +x
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="pipe">Pipe</h1>
+
+<ul>
+  <li>you can pipe output of some command to file <code class="highlighter-rouge">c &gt;&gt; a.log</code>, and in other shell
+<code class="highlighter-rouge">tailf a.log</code> but output will be
+<a href="http://stackoverflow.com/questions/9752291/bash-output-stream-write-to-a-file">buffered</a>
+So you need to <code class="highlighter-rouge">sudo apt-get install expect-dev</code> and run with <code class="highlighter-rouge">unbuffer c &gt;&gt;
+a.log</code></li>
+  <li>if you need pipe inside string <code class="highlighter-rouge">heroku logs -t | -o app.web.1</code> than you have
+to <code class="highlighter-rouge">eval $my_string</code></li>
+  <li>you can add a row to some pipe <code class="highlighter-rouge">(echo first line; cat file; echo last line) |
+some_command</code> or with <code class="highlighter-rouge">ps | { echo "header"; grep "something"; }</code></li>
+  <li>
+    <p>replace a string in pipe with sed. You can create a long running pipe with
+<code class="highlighter-rouge">tailf</code> and <code class="highlighter-rouge">echo &gt;&gt;</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tailf my.txt | sed 's/000/111/g'
+
+echo "asd 000 asd 000" &gt;&gt; my.txt
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>for redirection standard error to standard output ` 2&gt;&amp;1</td>
+          <td>` there is shorthand</td>
+        </tr>
+        <tr>
+          <td><code class="highlighter-rouge">|&amp;</code> version.</td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>if you need to redirect all script output to a file use <code class="highlighter-rouge">exec</code>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">exec</span> <span class="o">&gt;&gt;</span> my_script.log
+<span class="nb">exec </span>2&gt;&amp;1
+<span class="nb">echo</span> <span class="s2">"This will be saved in a log when you run the script"</span>
+</code></pre></div>    </div>
+  </li>
+  <li>last command exit status <code class="highlighter-rouge">echo $?</code> (<code class="highlighter-rouge">0</code> is success)</li>
+  <li>current script pid <code class="highlighter-rouge">echo $$</code></li>
+  <li>last background process id <code class="highlighter-rouge">sleep 100 &amp;</code> <code class="highlighter-rouge">echo $!</code></li>
+  <li><code class="highlighter-rouge">jobs -l</code> is a list of processes in current bash session (it is <code class="highlighter-rouge">Running</code> if
+in background with <code class="highlighter-rouge">cmd &amp;</code>, or <code class="highlighter-rouge">Stopped</code> if <code class="highlighter-rouge">Ctrl+z</code> or <code class="highlighter-rouge">Terminated</code> when we
+kill and until it dissapear). Kill first of them with <code class="highlighter-rouge">kill %1</code>. If process id
+is saved in pid file than you can kill with <code class="highlighter-rouge">pkill -F tmp/pids/server.pid -9</code></li>
+</ul>
+
+<h1 id="parameter-expansion">Parameter expansion</h1>
+
+<p>You can find substring</p>
+
+<ul>
+  <li>call function with <code class="highlighter-rouge">$(function_name)</code>. Return value from function can be done
+with <code class="highlighter-rouge">$()</code> expansion:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>monitor_size() {
+result=`ls | cw`
+  echo $result
+}
+win_width=`expr $(monitor_size) / 36` # 7200 / 36 = 200
+</code></pre></div>    </div>
+  </li>
+  <li>print variable with <code class="highlighter-rouge">$variable_name</code> (without brackets). If you need to
+concatenate with other string you can use curly braces
+<code class="highlighter-rouge">${variable_name}other_string</code></li>
+  <li><a href="http://wiki.bash-hackers.org/syntax/pe#common_use">substring removal</a></li>
+</ul>
+
+<h1 id="arrays">Arrays</h1>
+
+<p><a href="http://www.linuxjournal.com/content/bash-arrays">linuxjournal</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arr=(Dule Orlovic)
+${arr[*]}         # Dule Orlovic All of the items in the array
+${!arr[*]}        # 0 1 All of the indexes in the array
+${#arr[*]}        # 2 Number of items in the array
+${#arr[0]}        # 4 Length of item zero
+
+# iterate array in for loog
+for var in "${arr[@]}"
+do
+  echo "${var}"
+done
+
+# iterate over sequence
+for i in {1..5}; do echo $i; done
+</code></pre></div></div>
+
+<h1 id="curl">Curl</h1>
+
+<p>https://gist.github.com/subfuzion/08c5d85437d5d4f00e58</p>
+
+<ul>
+  <li>same url to some variable
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export u=http://localhost:3000/api/v1/
+curl $u/expenses
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>you can add <code class="highlighter-rouge">-v</code> <code class="highlighter-rouge">--verbose</code> option to see more info or save all
+communications with <code class="highlighter-rouge">url $u --trace-ascii dump.txt</code></p>
+  </li>
+  <li>see headers</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl $u/expenses -I # or --head fetch the headers only
+curl $u/expenses -i # or --include show also the response headers
+</code></pre></div></div>
+
+<ul>
+  <li>to keep session in curl you can <code class="highlighter-rouge">-c</code> write and <code class="highlighter-rouge">-b</code> read from cookie file
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -c ~/Downloads/cookiefile -b ~/Downloads/cookiefile http://www.google.com
+</code></pre></div>    </div>
+  </li>
+  <li>test the speed on ssh on remote server:
+    <ul>
+      <li>download: <code class="highlighter-rouge">curl -o /dev/null http://speedtest.qsc.de/1GB.qsc</code></li>
+      <li>upload: generate large file <code class="highlighter-rouge">fallocate -l 1G gentoo_root.img</code> and use scp to
+test upload link</li>
+    </ul>
+  </li>
+  <li>limit the speed to simulate slow connections <code class="highlighter-rouge">curl $u limit-rate 100</code> or using</li>
+</ul>
+<p><a href="https://github.com/bcoe/crapify">https://github.com/bcoe/crapify</a>. But this is only for downloading, server
+renders quickly. Only way to simulate high response time is with <code class="highlighter-rouge">sleep 5</code></p>
+<ul>
+  <li>curl url must be inside <code class="highlighter-rouge">''</code>, for example <code class="highlighter-rouge">curl http://trk.in.rs?a=2&amp;b=3</code></li>
+  <li>to get json request use header tag Accept <code class="highlighter-rouge">curl -H "Accept: application/json"
+http://localhost:3001/</code></li>
+  <li>set authorization header <code class="highlighter-rouge">curl $u/expenses -H 'Authorization: Token token="c576f0136149a2e2d9127b3901015545"'</code></li>
+  <li>user agent <code class="highlighter-rouge">curl --user-agent "Mozilla/4.73 [en] (X11; U; Linux 2.2.15 i686)" $u</code></li>
+  <li>http basic auth <code class="highlighter-rouge">curl $u -u username:password</code> or <code class="highlighter-rouge">curl $u -u $ADMIN_USERNAME:$ADMIN_PASSWORD'</code>. Another format is inside uri <code class="highlighter-rouge">curl http://$username:$password@localhost:3000</code></li>
+  <li>follow redirection <code class="highlighter-rouge">curl $u --location</code> (it works also when performing POST,
+since it will perfome GET to redirected url).</li>
+  <li>referrer <code class="highlighter-rouge">curl $u --referer http://google.com</code></li>
+  <li>domain name resolution could be using resolve <code class="highlighter-rouge">curl http://a.b:3000 --resolve
+a.b:3000:127.0.0.1</code> so in rails <code class="highlighter-rouge">request.host == 'a.b'</code></li>
+  <li>POST request is with <code class="highlighter-rouge">--data</code> <code class="highlighter-rouge">curl $u --data "name=my name"</code> (recent curl
+will encode post data for you). To see how actual form sends data, save the page
+localy and change method to <code class="highlighter-rouge">GET</code> so when you submit you can see data separated
+with <code class="highlighter-rouge">?</code> and <code class="highlighter-rouge">&amp;</code></li>
+  <li>patch request on rails is done with <code class="highlighter-rouge">--request PATCH</code> option</li>
+  <li>
+    <p>verifyhost</p>
+
+    <p>some sites prevents curl and ruby scripts, if gives forbidden or empty
+response: https://www.theguardian.com</p>
+  </li>
+</ul>
+
+<h1 id="ssh">SSH</h1>
+
+<p>You can enable ssh agent forwaring so remote connection can use your keys. When
+is it enabled there is <code class="highlighter-rouge">env | grep SSH_AUTH_SOCK</code> environment variable. You can
+enable with <code class="highlighter-rouge">ssh -A</code> option.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -A vagrant@127.0.0.1 -p 2222 'env | grep SSH_AUTH_SOCK'
+</code></pre></div></div>
+
+<p>Connect using pem or rsa key is
+~~
+ssh -i $PEM_FILE host</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+You can see more logs
+```
+ssh host -vvv
+```
+When there is no connection to the host, you can check with
+```
+# you can see ssh version
+nc -w 10 192.168.1.3 22
+SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.6
+
+# or you can echo true or false in case of timeout
+nc -w 10 192.168.1.3 22 &amp;&amp; echo true || echo false
+```
+I had an issue with my old router connecting `SSH-2.0-OpenSSH_7.6p1
+Ubuntu-4ubuntu0.1` so I need to connect directly to my ADSL. This problem was
+related to IPv6 on the server.
+
+`Too many authentication failures for` error is caused by inadvertently offering
+multiple ssh keys to the server. You can limit to only one identity
+
+</code></pre></div></div>
+<p>ssh -i some_id_rsa -o IdentitiesOnly=yes host</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Rsyslog
+
+Install
+[mongo](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04)
+
+</code></pre></div></div>
+<p>sudo apt-key adv –keyserver hkp://keyserver.ubuntu.com:80 –recv EA312927
+echo “deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse” | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org</p>
+
+<p>cat « HERE_DOC | sudo tee -a /etc/systemd/system/mongodb.service
+[Unit]
+Description=High-performance, schema-free document-oriented database
+After=network.target</p>
+
+<p>[Service]
+User=mongodb
+ExecStart=/usr/bin/mongod –quiet –config /etc/mongod.conf</p>
+
+<p>[Install]
+WantedBy=multi-user.target
+HERE_DOC</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+<p>sudo systemctl start mongodb
+sudo systemctl status mongodb
+sudo systemctl enable mongodb</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+https://datatables.net/development/server-side/php_mongodb
+
+# MACBook macOS
+
+xprop for macos can be installed using: `sudo port install xdotool`
+Find and xargs can be used also:
+
+</code></pre></div></div>
+<p>find . -name .DS_Store -print0 | xargs -0 git rm -f –ignore-unmatch</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+[xsel](https://linux.die.net/man/1/xsel) equivalent is
+[pbcopy](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/pbcopy.1.html)
+so I use [is_mac_os]() to determine os.
+
+I like mac Cmd key so to use that on ubuntu, I need to remap keys. One solution
+is to switch ctrl and alt keys, but problem is that Alt+Tab, Alt+1, Ctrl+C,
+Crtl+D, should stay as it was.
+
+# Tips
+
+* history
+  * bash update history only on exit, but you can manually write with `history
+      -a` (do not do this for every command since multiple terminal will be
+      [interlieved](http://mywiki.wooledge.org/BashFAQ/088))
+  * to add command to history without executing it `history -s pwd`. Note that
+    this command if executing as param to bash will open new `history` file so
+    we can't have that command in history. Running history when you get console
+    is not the same when you pass history as param to bash command. For example
+    the following command will show pwd and empty history (if you repeat
+    `history` it will give you results) `gnome-terminal -x bash -lc "cd
+    ~/Downloads;bash --rcfile &lt;(echo 'pwd;history;watch ls')"`. Solution is to
+    add command before invoking bash like [here](
+* `cat /etc/issue` and `arch`
+
+</code></pre></div></div>
+<p>$ cat /etc/issue
+  # Ubuntu 16.04.1 LTS \n \l</p>
+
+<p>arch
+  # x86_64</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* move file to another file appending some suffix without writting filename
+twice
+
+</code></pre></div></div>
+<p>mv config/database.yml{,.example}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* get second string: `echo 'first second' | awk '{print $2}'`
+* in bash [3 kinds of variable
+substitution](http://www.linuxjournal.com/article/8919)
+  * pattern matching: deletes match `#` shortest from left, `##` longest from
+  left, `%` shortest from right, `%%` longest from right
+    * `NAME=${MYVAR%:*}`  retain the part before the colon `:`
+    * `NAME=${NAME##*/}`  retain the part after the last slash `/`
+  * substitution `${foo:-bar}`
+* [string manipulation](http://tldp.org/LDP/abs/html/string-manipulation.html)
+
+* `wget trk.in.rs --recursive` will download all files from the site.
+* sometimes when using multiprocess puma as rails server, I do not see what I'm
+typing in
+[bash](https://askubuntu.com/questions/171449/shell-does-not-show-typed-in-commands-reset-works-but-what-happened)
+so I need to run `reset` command
+* to select vim as default editor for root, run `update-alternatives --config
+editor` and choose vim.basic
+* files need bit `r` to be able to read, `w` to write and `x` to list, search or
+source included files.
+You can see permissions for particular directory with `ls -ld`. To set for
+example `chmod 644` is the same as `chmod u=rw,g=r,o=r`. To be able to source
+file, parent folder needs to have `x` flag enabled.
+* to detect if it is linux or MacOS you can use
+</code></pre></div></div>
+<p>if [ “$(uname -s)” = “Darwin” ]; then
+  echo “==&gt; Bootstrapping Homebrew OSX environment”
+fi</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* screen command
+  * `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
+  to go to copy mode.
+* cheatsheet https://devhints.io/bash
+* `pbcopy` is only on mac
+* to prevent `ctrl-d` to exit terminal bash you can set `IGNOREEOF=3` so shell
+  only exists after the 3 consecutive Ctrl-d.
+* https://github.com/wting/autojump use j or autojump instead of cd change
+  directory
+* split long text files with `split -C 50m input output --numeric-suffixes`
+
+* in scripts use
+</code></pre></div></div>
+<p>set -e # Any commands which fail will cause the shell script to exit immediately
+set -x # show command being executed</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+You can read user input
+
+</code></pre></div></div>
+<p>read -p “enter fullname: “ fullname
+read -p “Continue? (Y/N): “ confirm &amp;&amp; [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* xargs is used to convert stdin standard input to arguments for a commands.
+  can reference arguments with `-I '{}'`, limit number of lines `-L 2` before
+  it is executed (usefull for long running proccess to trigger commands). You
+  can not call custom functions since commands are executed in plain bash, but
+  you can use `sh` and params `{}` so there you can inline your script
+
+</code></pre></div></div>
+<p>echo 123 | xargs -0 -I ‘{}’ sh -c ‘echo {}’</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* read from stdin works fine http://tldp.org/LDP/abs/html/internal.html#READREF
+  but not with pipe
+  &lt;https://stackoverflow.com/questions/2746553/bash-script-read-values-from-stdin-pipe/6779351#6779351&gt;
+  For pipe you need to simulate with `{ }`
+
+* add tab suggestions for your script using `complete` command
+  https://iridakos.com/tutorials/2018/03/01/bash-programmable-completion-tutorial
+* strip new line from command output `xdotool search --classname
+  vp_3_class_slash | tr -d '\n'`
+* fan working when high temperature
+</code></pre></div></div>
+<p>sudo apt install lm-sensors
+  sudo sensors-detect
+  sensors</p>
+
+<p>sudo apt install hardinfo
+  hardinfo
+  ~~~</p>
+<ul>
+  <li>
+    <p>first line in scripts shebang for ruby using rvm instead of
+<code class="highlighter-rouge">/usr/local/bin/ruby</code> can be
+https://stackoverflow.com/questions/17447532/what-is-the-use-of-usr-local-bin-ruby-w-at-the-start-of-a-ruby-program</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
+</code></pre></div>    </div>
+  </li>
+  <li>list files with full path is using <code class="highlighter-rouge">find $PWD</code> or using <code class="highlighter-rouge">-d</code>
+option <code class="highlighter-rouge">ls -d -1 $PWD/*.*</code>
+list files by regexp https://www.linuxjournal.com/content/bash-extended-globbing
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls @(one|two).html
+</code></pre></div>    </div>
+    <p>ls sort by file size using <code class="highlighter-rouge">ls -S</code></p>
+  </li>
+  <li><code class="highlighter-rouge">df -h</code> and <code class="highlighter-rouge">du -sh</code> can show how much is used or free</li>
+  <li><code class="highlighter-rouge">df -i</code> show how much inodes are left. Zoneminder through mysql can use all of
+them so you need to find and remove those files.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df -i
+du -s --inodes /*
+find . -xdev -printf '%h\n' | sort | uniq -c | sort -k 1 -n
+</code></pre></div>    </div>
+
+    <p>To remove old kernel files you can run <code class="highlighter-rouge">sudo apt-get autoremove</code></p>
+  </li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Css And Html Tips</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Css And Html Tips</h1>
+    <p class="meta">Apr 13, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#examples"><span class="tocnumber">1</span> <span class="toctext">Examples</span></a></li><li class="toc_level-1 toc_section-2"><a href="#scss-sass"><span class="tocnumber">2</span> <span class="toctext">SCSS Sass</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#sass"><span class="tocnumber">2.1</span> <span class="toctext">SASS</span></a></li></ul></li><li class="toc_level-1 toc_section-4"><a href="#head-meta-tags"><span class="tocnumber">3</span> <span class="toctext">Head meta tags</span></a></li><li class="toc_level-1 toc_section-5"><a href="#css-helper-classes"><span class="tocnumber">4</span> <span class="toctext">Css helper classes</span></a></li><li class="toc_level-1 toc_section-6"><a href="#design"><span class="tocnumber">5</span> <span class="toctext">Design</span></a></li><li class="toc_level-1 toc_section-7"><a href="#image"><span class="tocnumber">6</span> <span class="toctext">Image</span></a></li><li class="toc_level-1 toc_section-8"><a href="#flex"><span class="tocnumber">7</span> <span class="toctext">Flex</span></a></li><li class="toc_level-1 toc_section-9"><a href="#css-box-alignment"><span class="tocnumber">8</span> <span class="toctext">CSS box alignment</span></a></li><li class="toc_level-1 toc_section-10"><a href="#table"><span class="tocnumber">9</span> <span class="toctext">Table</span></a></li><li class="toc_level-1 toc_section-11"><a href="#css-selectors"><span class="tocnumber">10</span> <span class="toctext">CSS Selectors</span></a></li><li class="toc_level-1 toc_section-12"><a href="#jquery"><span class="tocnumber">11</span> <span class="toctext">jQuery</span></a></li><li class="toc_level-1 toc_section-13"><a href="#tips"><span class="tocnumber">12</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><ul>
+  <li>when you want to have smaller input field type number (smaller in terms of
+width) you need to provide both <code class="highlighter-rouge">min</code> and <code class="highlighter-rouge">max</code>, like <code class="highlighter-rouge">&lt;input type="number"
+min="0" max="99"&gt;</code></li>
+  <li>to hide long text on div/dt <code class="highlighter-rouge">width: 100px</code> than you can:
+    <ul>
+      <li>long string  <code class="highlighter-rouge">overflow: hidden; text-overflow: ellipsis;</code> To show on hover,
+focus or active (when selecting text) use this helper
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// &lt;div class='long-string-three-dots'&gt;long long&lt;/div&gt;
+.long-string-three-dots {
+text-overflow: ellipsis;
+overflow: hidden;
+// white-space: nowrap;
+&amp;:active, &amp;:hover, &amp;:focus {
+  text-overflow: initial;
+  overflow: auto;
+}
+}
+</code></pre></div>        </div>
+      </li>
+      <li>long text can be in one line <code class="highlighter-rouge">white-space: nowrap;</code> no wrap means it will no
+go to the next line even for white space (this is used in <code class="highlighter-rouge">navbar-brand</code>). To
+make it go to next line define something like <code class="highlighter-rouge">.white-space-normal</code>.</li>
+      <li>long strings can be shown on multiple lines with <code class="highlighter-rouge">word-wrap: break-word</code>
+this will break long string to multiple lines (for text <code class="highlighter-rouge">white-space: normal</code>)</li>
+    </ul>
+  </li>
+  <li>if you have <code class="highlighter-rouge">&lt;small&gt;</code> position relative, and apply left -100px, it will still
+occupy the space where it was. It is better to use <code class="highlighter-rouge">position: absolute</code></li>
+  <li>to move element to the right but keep inside parent element you need to mark
+parent as <code class="highlighter-rouge">position: relative</code> and than use <code class="highlighter-rouge">position: absolute; right: 10px</code></li>
+  <li>align element at bottom use position relative/absolute pair, for parrent
+<code class="highlighter-rouge">position: relative</code> (does not have any effects) and for child: <code class="highlighter-rouge">position:
+absolute;bottom: 10px;</code>. This
+<a href="http://stackoverflow.com/questions/17656623/position-absolute-scrolling">question</a>
+explains why outer need to be relative.</li>
+  <li>use <code class="highlighter-rouge">mouseenter</code> instead <code class="highlighter-rouge">mouseover</code> (which will retrigger on inner elements).</li>
+  <li>
+    <p>use relative units instead of absolute
+<a href="http://www.w3schools.com/cssref/css_units.asp">http://www.w3schools.com/cssref/css_units.asp</a>, for example header <code class="highlighter-rouge">h1 {
+font-size: 20vh;}</code>. vh is 1% of vertical heigh of view port (window size, not
+page size). For width you can use horizontal width for example <code class="highlighter-rouge">width: 8vw;</code>.
+You should use relative size <code class="highlighter-rouge">rem</code> (to the html el) or <code class="highlighter-rouge">em</code> (to the current
+font) since you might want to change font size on whole page, and you do not
+need to go to all nested components to update that. 1rem is default font size
+usually 16px, bootstrap was 14px now is also 16px.</p>
+  </li>
+  <li>you can not set the width of inline elements, so to set width of <code class="highlighter-rouge">span</code> you
+need to make it <code class="highlighter-rouge">display:inline-block; width: 100px</code>. Also if you have text
+than <code class="highlighter-rouge">inline</code> or <code class="highlighter-rouge">inline-block</code> element with <code class="highlighter-rouge">block</code> inside, it will behave
+differently
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>          inline-block
+some_text nested_block
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>some_text inline
+nested_block
+</code></pre></div>    </div>
+  </li>
+  <li>also top and bottom padding has no efect for label since it is an inline
+element
+<a href="http://stackoverflow.com/questions/7168658/why-is-the-padding-not-working-on-my-label-elements">link</a>.
+You need to make the label a block level element for it to work.</li>
+  <li>space inside a element is important. for example <code class="highlighter-rouge">&lt;label&gt;1&lt;/label&gt;&lt;label&gt; 2
+&lt;/label&gt;&lt;label&gt; 3 &lt;/label&gt;</code> with <code class="highlighter-rouge">label { background: blue;}</code> this background
+will occupy only character and it will be disconnected from 1-2, but connected
+2-3. This margin-like separation will also be presented if <code class="highlighter-rouge">label { display:
+inline-block; }</code>. It seems that space is important only with inline elements.</li>
+  <li>
+    <p>if you need to render divs horizontaly (<code class="highlighter-rouge">float: left</code>) you need parent to have
+<code class="highlighter-rouge">width = number_of_items * (item_width+2*item_border_width)</code> I calculate that
+in javascript</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script&gt;
+  $(function() {
+    $('.slots-preview').width($('.slots-preview-item').first().outerWidth() * &lt;%= scheduler.number_of_free_slots.count %&gt;);
+  });
+&lt;/script&gt;
+</code></pre></div>    </div>
+
+    <p>You can add scrollbar by wrapping it <code class="highlighter-rouge">.outer { overflow-x: scroll }</code>
+<a href="http://stackoverflow.com/questions/9672176/prevent-floated-divs-from-wrapping-to-new-line">link</a></p>
+  </li>
+  <li>
+    <p>textarea (rails <code class="highlighter-rouge">f.text_area</code>) has constant size, so if you want bigger you
+can set <code class="highlighter-rouge">rows="30"</code> (and <code class="highlighter-rouge">cols="150"</code>) or use
+<a href="http://www.jacklmoore.com/autosize/">autosize</a></p>
+  </li>
+  <li>when you use padding than child with <code class="highlighter-rouge">width: 100%</code> it is calculated based on
+parent content (parent border and padding is added). Solution is to use
+<code class="highlighter-rouge">box-sizing: border-box</code> in which calculated size will include border and
+padding <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing">https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing</a>. This is
+usually included in bootstrap. Problem with padding arise when you use
+<code class="highlighter-rouge">position: relative</code> on parent and <code class="highlighter-rouge">position: absolute</code> on child
+<a href="https://stackoverflow.com/questions/17115344/absolute-positioning-ignoring-padding-of-parent">https://stackoverflow.com/questions/17115344/absolute-positioning-ignoring-padding-of-parent</a>
+Solution is to add relatively position div with no padding around absolutely
+position div. So when you are using padding and absolute position child,
+always add child relative wrapper with no padding.
+Another solution is to use <code class="highlighter-rouge">left: 0;</code> on absolutively child.</li>
+</ul>
+
+<h1 id="examples">Examples</h1>
+
+<ul>
+  <li>
+    <p>nice radio and checkbox <a href="http://codepen.io/BrianSassaman/pen/iLrpC?editors=1100">http://codepen.io/BrianSassaman/pen/iLrpC?editors=1100</a></p>
+  </li>
+  <li>
+    <p>to see cursor position just run this code in console (it works with bootstrap
+title)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>document.onmousemove = function(e){
+var x = e.pageX;
+var y = e.pageY;
+e.target.title = "X is "+x+" and Y is "+y;
+};
+}
+</code></pre></div>    </div>
+  </li>
+  <li>hide something but still occupy space you can use <code class="highlighter-rouge">visibility: hidden</code> and
+<code class="highlighter-rouge">visibility: visible</code></li>
+  <li>glitch efect <a href="https://tympanus.net/Development/GlitchSlideshow/index2.html">https://tympanus.net/Development/GlitchSlideshow/index2.html</a></li>
+</ul>
+
+<h1 id="scss-sass">SCSS Sass</h1>
+
+<ul>
+  <li>you can set default value of variable <code class="highlighter-rouge">$my-var: 123 !default;</code>. This has no
+effect if variable is already defined.
+In CSS you can define var with <code class="highlighter-rouge">--main-color: black;</code> and use with <code class="highlighter-rouge">color:
+var(--main-color);</code>. Var are usually decraler on pseudo class <code class="highlighter-rouge">:root {
+--main-color: black; }</code> so it is accessible everywhere, instead of local scope
+(since this is custom property, it is accessible only on matching selector and
+its descendants) which is used only for specific elements like BEM</li>
+  <li><a href="https://responsivedesign.is/develop/getting-started-with-sass">https://responsivedesign.is/develop/getting-started-with-sass</a></li>
+  <li>
+    <p>you can select <code class="highlighter-rouge">this</code> using <code class="highlighter-rouge">&amp;</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.a:hover {
+  background: blue;
+}
+// is the same as
+.a {
+  &amp;:hover {
+    background: blue;
+  }
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>prefer mixins to <code class="highlighter-rouge">@extend</code>. You can pass parameter to mixin and set default
+value</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@mixin grid($my_var: true) {
+  // code here
+}
+</code></pre></div>    </div>
+
+    <p>When defining mixin you can use <code class="highlighter-rouge">@content</code> for example</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@mixin hover-focus {
+  &amp;:hovoer,
+  &amp;:focus {
+    @content;
+  }
+}
+# usage:
+# .class {
+#   @include hover-focus {
+#     text-decoration: none;
+#   }
+# }
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="sass">SASS</h2>
+
+<p>Sass is shorter since it uses indent, and do not require semicolon.
+Atomatic convert scss to sass</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sass-convert -F scss -T sass application_styles.css.scss application_styles.css.sass
+</code></pre></div></div>
+
+<p>Instead of scss</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scss
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+
+.box {
+  @include border-radius(10px);
+}
+
+# sass
+=border-radius($radius)
+  border-radius: $radius
+
+.box
+  +border-radius(10px)
+</code></pre></div></div>
+
+<h1 id="head-meta-tags">Head meta tags</h1>
+
+<ul>
+  <li>here is a list of used tags <a href="https://github.com/joshbuchea/HEAD">HEAD</a></li>
+  <li>chrome 39 for android use different color for toolbar, just add <code class="highlighter-rouge">&lt;meta
+name="theme-color" content="#db5945"&gt;</code></li>
+</ul>
+
+<h1 id="css-helper-classes">Css helper classes</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// add some space below
+.m-b-10 {
+  margin-bottom: 10px;
+}
+
+// similar to pull-right just without float
+.text-align-right {
+  text-align: right;
+}
+
+// hide  submit buttons, since android has problems when element is not visible
+.hide-to-up {
+  position:absolute;
+  top: -1000px;
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Here is example to show hide buttons that are not allowed for first or last
+//
+// &lt;ol&gt;
+//   &lt;!-- iterate over li --&gt;
+//   &lt;li  class="hide-first-child hide-last-child"&gt;
+//     &lt;a class="hide-first-target"&gt;&lt;i class="fa fa-arrow-up"&gt;&lt;/li&gt;&lt;/a&gt;
+//     &lt;a class="hide-last-target"&gt;&lt;i class="fa fa-arrow-down"&gt;&lt;/li&gt;&lt;/a&gt;
+//   &lt;/li&gt;
+// &lt;/ol&gt;
+
+.hide-first-child:first-child .hide-first-target {
+  display: none;
+}
+
+.hide-last-child:last-child .hide-last-target {
+  display: none;
+}
+
+// if you need to nest two show hide (you have another ul inside li)
+.hide-first-child:first-child {
+  .hide-first-target {
+    display: none;
+  }
+  .hide-first-child {
+    .hide-first-target {
+      display: initial;
+    }
+    &amp;:first-child {
+      .hide-first-target {
+        display: none;
+      }
+    }
+  }
+}
+
+.hide-last-child:last-child {
+  .hide-last-target {
+    display: none;
+  }
+  .hide-last-child {
+    .hide-last-target {
+      display: initial;
+    }
+    &amp;:last-child {
+      .hide-last-target {
+        display: none;
+      }
+    }
+  }
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// show on hover
+//
+//  &lt;li class="show-on-hover"&gt;
+//    Text&lt;a href="" class="show-on-hover-target"&gt;X&lt;/a&gt;
+//  &lt;/li&gt;
+.show-on-hover-target {
+  visibility: hidden;
+}
+.show-on-hover:hover {
+  .show-on-hover-target {
+    visibility: visible;
+  }
+}
+
+// add class show to stay visible when not hovering, bootstrap dropdown does dat
+.show-on-hover-target.show {
+  visibility: visible;
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// expand on hover
+// used on index tables when some data is too long to be always shown
+//
+// &lt;td class="expand-on-hover"&gt;&lt;%= account.uuid %&gt;&lt;/td&gt;
+
+.expand-on-hover {
+  width: 20px;
+  height: 10px;
+  overflow: hidden;
+  float: left;
+}
+.expand-on-hover:hover {
+  width: inherit;
+}
+</code></pre></div></div>
+
+<p>To expand block on click use input checkbox
+https://www.sitepoint.com/pure-css-off-screen-navigation-menu/</p>
+
+<p>Note that input is before label, which is before target</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/common/show_hide.sass
+// toggle active without javascript
+// &lt;input type="checkbox" id="toggle-active" class="toggle-active" /&gt;
+// &lt;label for="toggle-active"&gt;&lt;%= t('add') %&gt;&lt;/label&gt;
+// &lt;div class="toggle-active-target hide-not-important"&gt;
+// &lt;/div&gt;
+// https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
+.toggle-active {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+
+  &amp;:checked ~ .toggle-active-target {
+    display: initial;
+  }
+}
+label[for="toggle-active"] {
+  cursor: pointer;
+}
+</code></pre></div></div>
+
+<p>To show active on click in pure css use <code class="highlighter-rouge">li:hover { color: blue }</code></p>
+
+<h1 id="design">Design</h1>
+
+<ul>
+  <li>when you are asking user to select items from long lists, you should have
+<code class="highlighter-rouge">Next</code> before and after the list so user does not need to scroll</li>
+  <li>be proactive with messages, when user needs to type password again (for
+example signin with fb and confirm) than write <code class="highlighter-rouge">Excellent, we need just...</code></li>
+  <li>
+    <p>when hover on footer link, other link in same block should be opacity
+<a href="https://www.parse.com/home/index">demo</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ul:hover li:hover {
+  opacity: 1;
+}
+ul:hover li {
+  opacity: 0.4;
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="image">Image</h1>
+
+<p>Swap images and zoom on hower https://www.filamentgroup.com/lab/sizes-swap/</p>
+
+<p>To set image as background and put some text and form on it you need to make the
+image transparent (or white) on that part.
+For navbar, easiest way is to use <code class="highlighter-rouge">fixed-top</code> and <code class="highlighter-rouge">z-index: 1031</code> on image so it
+is above navbar.
+Inside page links with anchor does not work with turbolinks, so you need to
+disable it.</p>
+
+<h1 id="flex">Flex</h1>
+
+<p>https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background
+https://medium.com/@js_tut/flexbox-the-animated-tutorial-8075cbe4c1b2</p>
+
+<p>Parent element is flex container and children are flex items. <code class="highlighter-rouge">flex-direction</code>
+determines main axis on which items will be laid out from <code class="highlighter-rouge">main-start</code>
+(<code class="highlighter-rouge">flex-start</code>) to <code class="highlighter-rouge">main-end</code> (<code class="highlighter-rouge">flex-end</code>), that is total <code class="highlighter-rouge">main-size</code>.
+Perpendicular to the main axis is <code class="highlighter-rouge">cross</code> axis with its <code class="highlighter-rouge">cross-start</code>
+<code class="highlighter-rouge">cross-end</code> and <code class="highlighter-rouge">cross-size</code>.</p>
+
+<p>On container <code class="highlighter-rouge">display: flex</code> (synonim is <code class="highlighter-rouge">inline-flex</code>) we can have:</p>
+<ul>
+  <li><code class="highlighter-rouge">flex-direction: row | row-reverse | column | column-reverse</code> row means that
+flexible items are aligned horizontally as row</li>
+  <li>
+    <p><code class="highlighter-rouge">flex-wrap: nowrap | wrap | wrap-reverse</code> default is no wrap so in single
+line, wrap means that it is allowed to go onto multiple lines. This two
+properites can be shorhanded in one <code class="highlighter-rouge">flex-flow: row nowrap</code> which is default
+(child with <code class="highlighter-rouge">width: 100px</code> will be <code class="highlighter-rouge">width: 12px</code> if there is no space, unless
+<code class="highlighter-rouge">flex-shrink</code> is used).</p>
+  </li>
+  <li><code class="highlighter-rouge">justify-content: flex-start | flex-end | center | space-between |
+space-around | space-evenly</code> alignment when items are inflexible. space around
+means that all items have same space around (before first there is no items so
+that’s why it is single space) if you need exactly same space from start to
+first and first to second, use space-evenly.</li>
+  <li><code class="highlighter-rouge">align-items: flex-start | flex-end | center | stretch | baseline</code> behavior
+along CROSS AXIS on current line similar to <code class="highlighter-rouge">justify-content</code> but for cross
+axis. <code class="highlighter-rouge">stretch</code> is from <code class="highlighter-rouge">cross-start</code> to <code class="highlighter-rouge">cross-end</code> still respect
+min-width/max-width. <code class="highlighter-rouge">baseline</code> when text are on the same line.</li>
+  <li><code class="highlighter-rouge">align-content: flex-start | flex-end | center | stretch | space-between |
+space-around</code> behavior of LINES (wrap is enabled) when there is extra space in
+cross-axis (no effect is single line) similar to <code class="highlighter-rouge">justify-content</code> for main
+axis, but for lines.</li>
+</ul>
+
+<p>on items https://www.w3.org/TR/css-flexbox-1/#flexibility</p>
+<ul>
+  <li><code class="highlighter-rouge">flex-grow: 0</code> ability to grow as proportion to other items (all items need to
+defined <code class="highlighter-rouge">flex-grow</code>). If one has 2 and all others have 1, first will be twice
+bigger (<code class="highlighter-rouge">width</code> is changed, but do not use it since it will have some impact,
+for example if <code class="highlighter-rouge">width: 150px</code> for sidebar and content <code class="highlighter-rouge">flex-grow: 1</code> than
+if content is smaller -&gt; sidebar 150px, but when content has a table than
+sidebar will be less than 150px, so better is to use <code class="highlighter-rouge">min-width: 150px</code>).</li>
+  <li><code class="highlighter-rouge">flex-shrink: 1</code> ability to shrik (compress), if <code class="highlighter-rouge">flex-shrink: 0</code> than it will
+keep it’s <code class="highlighter-rouge">width: 500px</code> property</li>
+  <li><code class="highlighter-rouge">flex-basis: 20% | auto</code> default size before remaining space is distributed
+(use this if you want max-size: 20%)
+This three items have shorthand <code class="highlighter-rouge">flex: flex-grow flex-shrink flex-basis
+(default 0 1 auto)</code> which you can attach to flex item. For example:
+    <ul>
+      <li><code class="highlighter-rouge">flex: auto</code> auto means that if item can use space it will use space. it is
+synonim to <code class="highlighter-rouge">flex: 1 1 auto</code> bigger item will take bigger space (on container
+remove <code class="highlighter-rouge">justify-content</code>)</li>
+      <li><code class="highlighter-rouge">flex: 1</code> is eq to <code class="highlighter-rouge">flex: 1 1 0</code> all items same width (flex-basis 0 so their
+content is not taken into consideration)</li>
+      <li><code class="highlighter-rouge">flex: 1 100%</code> (eq to <code class="highlighter-rouge">flex: 1 1 100%</code>) inside <code class="highlighter-rouge">wrap</code> all items takes row</li>
+      <li><code class="highlighter-rouge">flex: 3 0px</code> this item is 3 times bigger than others which are <code class="highlighter-rouge">1</code> (<code class="highlighter-rouge">wrap&gt;*
+ { flex: 1 auto}</code>) and do not take it’s initial size into account</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">align-self: flex-start | flex-end | center | stretch | baseline</code> override
+<code class="highlighter-rouge">align-items</code> for specific item, on cross axis</li>
+  <li>
+    <p><code class="highlighter-rouge">order: 0</code> when you want to show in different order <code class="highlighter-rouge">order: 1</code> <code class="highlighter-rouge">order: 2</code></p>
+  </li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/justify-items">justify-items</a>
+ property defines the default justify-self for all items for a <code class="highlighter-rouge">display: grid</code>.</li>
+</ul>
+
+<p>Examples:
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox</p>
+<ul>
+  <li>perfect centering horizontaly and vertically of one width/height card
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.card-container
+  display: flex
+  height: 20px
+  justify-content: center
+  align-items: center
+.card
+  width: 10px
+  height: 10px
+</code></pre></div>    </div>
+  </li>
+  <li>bootstrap layout for example <code class="highlighter-rouge">.col-md-6 { flex: 0 0 50%; max-witdh; 50% }</code>
+You can use <code class="highlighter-rouge">margin-left: auto</code> to separate group of items since auto margin
+will took as much space as it can. So you can align first three on left and last
+two on right by adding <code class="highlighter-rouge">.push</code> on firt right item.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.box {
+  display: flex;
+}
+.push {
+    margin-left: auto;
+}
+
+&lt;div class="box"&gt;
+  &lt;div&gt;One&lt;/div&gt;
+  &lt;div&gt;Two&lt;/div&gt;
+  &lt;div&gt;Three&lt;/div&gt;
+  &lt;div class="push"&gt;Four&lt;/div&gt;
+  &lt;div&gt;Five&lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>Om mobile you probably want all buttons to take all space so use <code class="highlighter-rouge">flex: auto</code> or
+<code class="highlighter-rouge">flex: 1</code> if you want same size buttons.</p>
+
+<p>https://hacks.mozilla.org/2018/01/new-flexbox-guides-on-mdn/
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox</p>
+
+<p>Flexbox</p>
+
+<p>Used in layout in one dimension at a time (either row or column).</p>
+
+<p>CSS Grid https://mozilladevelopers.github.io/playground/css-grid</p>
+
+<h1 id="css-box-alignment">CSS box alignment</h1>
+
+<p>https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Alignment
+older alignment methoods were:</p>
+<ul>
+  <li>align text using <code class="highlighter-rouge">text-align</code> In bootstra for text you can use <code class="highlighter-rouge">text-center</code>
+<code class="highlighter-rouge">text-right</code> helper classes for to align text center and right. Note that if
+you have some <code class="highlighter-rouge">floating</code> element before than text will not be centered like in
+<code class="highlighter-rouge">&lt;div class='float-right'&gt;log out&lt;/div&gt;&lt;div class='text-center'&gt;Text&lt;/div&gt;</code></li>
+  <li>center blocks using auto <code class="highlighter-rouge">margin</code> for block elemenent with <code class="highlighter-rouge">margin: auto</code>
+(bootstrap <a href="http://getbootstrap.com/css/#helper-classes-center">center-block</a>
+helper) does not have effect unless the element has the width (because it
+can not calculate margins)</li>
+  <li>in inline-block elements use <code class="highlighter-rouge">vertical-align: baseline</code> for image to be on
+same bootom as other elements</li>
+  <li>to make vertical align you need parent to be <code class="highlighter-rouge">position: relative</code>, and target
+to be <code class="highlighter-rouge">position:absolute; top: 50%; margin-top: -1rem;</code> (if you show text
+1rem).</li>
+</ul>
+
+<p>There are two axis: inline (main) and block (cros) axis.
+When aligning items on inline axis we use properties that starts with <code class="highlighter-rouge">justify-</code>
+and when aligning items on block axis we use <code class="highlighter-rouge">align-</code> (items, self, content).
+With <code class="highlighter-rouge">flex-direction: row</code> than main axis is block, and cross is inline.
+Three types of alignment:</p>
+<ul>
+  <li><strong>positional alignment</strong> for <code class="highlighter-rouge">-self</code> and <code class="highlighter-rouge">-content</code> specify position of
+subject with relation to container: <code class="highlighter-rouge">center</code>, <code class="highlighter-rouge">start</code>, <code class="highlighter-rouge">end</code>, <code class="highlighter-rouge">self-start</code>,
+<code class="highlighter-rouge">self-end</code>, <code class="highlighter-rouge">flex-start</code>, <code class="highlighter-rouge">flex-end</code>, <code class="highlighter-rouge">left</code>, <code class="highlighter-rouge">right</code>.</li>
+  <li><strong>baseline alignment</strong> for <code class="highlighter-rouge">-self</code> and <code class="highlighter-rouge">-content</code> specify relationship amount
+baselines of multiple subjects: <code class="highlighter-rouge">baseline</code>, <code class="highlighter-rouge">first baseline</code>, <code class="highlighter-rouge">last baseline</code></li>
+  <li><strong>distributed alignment</strong> for <code class="highlighter-rouge">-content</code> specify what happens to space after
+subject have been displayed: <code class="highlighter-rouge">strech</code>, <code class="highlighter-rouge">space-between</code>, <code class="highlighter-rouge">space-around</code>,
+<code class="highlighter-rouge">space-evenly</code></li>
+</ul>
+
+<h1 id="table">Table</h1>
+
+<p>Table has <a href="http://www.w3schools.com/cssref/pr_tab_table-layout.asp">two layouts</a></p>
+<ul>
+  <li><code class="highlighter-rouge">table-layout: auto</code> dependends on widest unbreakable content in the cells</li>
+  <li><code class="highlighter-rouge">fixed</code> faster since browser does not need full content</li>
+</ul>
+
+<p>Rotate header <a href="https://css-tricks.com/rotated-table-column-headers/">link</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;th class="rotate"&gt;&lt;div&gt;&lt;span&gt;Column header 1&lt;/span&gt;&lt;/div&gt;&lt;/th&gt;
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>th.rotate {
+  /* Something you can count on */
+  height: 140px;
+  white-space: nowrap;
+}
+
+th.rotate &gt; div {
+  transform:
+    /* Magic Numbers */
+    translate(25px, 51px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+  width: 30px;
+}
+th.rotate &gt; div &gt; span {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+</code></pre></div></div>
+
+<h1 id="css-selectors">CSS Selectors</h1>
+
+<p>https://www.w3.org/TR/2011/REC-css3-selectors-20110929/</p>
+
+<ul>
+  <li>type selector</li>
+  <li>universal</li>
+  <li>attribute</li>
+  <li>class</li>
+  <li>id</li>
+  <li>pseudo-classes</li>
+  <li>pseudo-elements</li>
+  <li>combinators</li>
+</ul>
+
+<p>To find you can use https://www.w3.org/TR/selectors-api/</p>
+
+<ul>
+  <li><code class="highlighter-rouge">querySelector('#bar, #foo')</code> for example return first in document order
+<code class="highlighter-rouge">#foo</code></li>
+  <li><code class="highlighter-rouge">var lis = querySelectorAll('ul&gt;li')</code> we can iterate using array notation
+<code class="highlighter-rouge">for(var i = 0; i &lt; lis.lenght; i++) { lis[i] }</code>. NodeList are static (not
+live) so changes in DOM do not affect content of the lis</li>
+</ul>
+
+<h1 id="jquery">jQuery</h1>
+
+<p><a href="https://code.tutsplus.com/tutorials/14-helpful-jquery-tricks-notes-and-best-practices--net-14405">some
+tips</a></p>
+
+<ul>
+  <li>jquery selectors
+    <ul>
+      <li><code class="highlighter-rouge">$('thead th[data-searchable!="false"]')</code> select all th that do not have
+<code class="highlighter-rouge">data-searchable</code> or have it but different than <code class="highlighter-rouge">false</code></li>
+    </ul>
+  </li>
+  <li>if jQuery finder returns <code class="highlighter-rouge">n,fn.init</code> that means it did not find DOM elemenent
+<a href="http://stackoverflow.com/questions/34494873/why-is-my-jquery-selector-returning-a-n-fn-init0-and-what-is-it">link</a></li>
+</ul>
+
+<blockquote>
+  <p>when found an element based on the selector criteria it returns the matched
+elements; when the criteria does not match anything it returns the prototype
+object of the function.</p>
+</blockquote>
+
+<p>With jquery you can create elements <code class="highlighter-rouge">$('&lt;div&gt;')</code>. If you want additional
+properties you can pass as additional params <code class="highlighter-rouge">var $div = $('&lt;div&gt;', { id: 'foo',
+class: 'my_class'})</code>.
+You can join elements with: append, prepend, after and before. Here you can use
+jquery objects or plain html: <code class="highlighter-rouge">$('#box').append($div).append('&lt;div
+id="foo"&gt;&lt;/div&gt;')</code>.</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>
+    <p>submit button outside of a form is
+<a href="http://stackoverflow.com/questions/7020659/submit-form-using-a-button-outside-the-form-tag">possible</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;form id="myform" method="get" action="something.php"&gt;
+&lt;input type="text" name="name" /&gt;
+&lt;/form&gt;
+
+&lt;input type="submit" form="myform" /&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>note that if you have multiple submit inputs and one text input field, when
+you press Enter, only first submit button will be used (so commit value will be
+it’s value). you can disable submit on enter with</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$('#notification-form').on('keyup keypress', function(e) {
+  var keyCode = e.keyCode || e.which;
+  if (keyCode === 13) {
+    e.preventDefault();
+    return false;
+  }
+});
+</code></pre></div>    </div>
+
+    <p>I made helper data function which will also click. put on document ready or
+turbolinks load.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/turbolinks_loads.coffee
+# f.text_field :email, 'data-prevent-submit-on-enter': '#email-continue'
+$(document).on 'turbolinks:load', -&gt;
+  $('[data-prevent-submit-on-enter]').on 'keyup keypress', (e) -&gt;
+    keyCode = e.keyCode || e.which
+    if keyCode == 13
+      e.preventDefault()
+      $($(this).data().preventSubmit).click() if $(this).data().preventSubmitOnEnter != true
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">&lt;input readonly="readonly"&gt;</code> is better to use than <code class="highlighter-rouge">&lt;input
+disabled="disabled"&gt;</code> since it can receive focus, included in tabbing navigation
+and values are successfully posted (disabled input is not send to server).</li>
+  <li>if you need two css files, than write two <code class="highlighter-rouge">&lt;link rel="stylesheet"
+type="text/css" href="1.css" /&gt;</code> . Do not use <code class="highlighter-rouge">@import url("2.css")</code> in
+<code class="highlighter-rouge">1.css</code> since it will prevent downloading files in parallel (2.css is
+downloaded only after 1.css). Only <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@import">use of
+@import</a> is when you
+provide media queries as parameter and load only for specific screen. Note
+that sass preprocessor scss <code class="highlighter-rouge">@import</code> will include inline the code.</li>
+  <li>
+    <p>if option select is required, we usually prompt user with one more option
+“Please select”, but it is bad to allow user to pick that option “Please
+select”. You can disable option, and you should force selected on it if other
+option is not selected <a href="http://jsfiddle.net/u8PWX/1/">demo</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;select onchange="this.form.submit()"&gt;
+    &lt;option selected="selected" disabled="true"&gt;--Please Select --&lt;/option&gt;
+    &lt;option value="volvo"&gt;Volvo&lt;/option&gt;
+    &lt;option value="saab"&gt;Saab&lt;/option&gt;
+  &lt;/select&gt;
+</code></pre></div>    </div>
+
+    <p>In rails, you can use with <code class="highlighter-rouge">select_tag</code>:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= select_tag "job[job_type_id]",("&lt;option #{ "selected='selected'".html_safe unless fjob.object.job_type_id } disabled='disabled'&gt;Job Type&lt;/option&gt;".html_safe+ options_from_collection_for_select(JobType.active.all, :id, :name,{selected: fjob.object.job_type_id})), { class: "e1" } %&gt;
+</code></pre></div>    </div>
+
+    <p>or with <code class="highlighter-rouge">f.collection_select</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.collection_select :user_id, User.all.unshift(User.new id: 0, name:
+  "Please Select User"), :id, :name), {}  %&gt;
+</code></pre></div>    </div>
+
+    <p>or <code class="highlighter-rouge">f.select</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.select :shopify_custom_collection_id, [['Please select collection',0]] + @shopify_custom_collections.map { |shopify_custom_collection| [shopify_custom_collection.title, shopify_custom_collection.id] }, disabled: 0, selected: 0 %&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>if you want to filet group select based on first option than use something
+like</li>
+</ul>
+<p><a href="https://stackoverflow.com/questions/32405077/show-second-dropdown-options-based-on-first-dropdown-selection-jquery">https://stackoverflow.com/questions/32405077/show-second-dropdown-options-based-on-first-dropdown-selection-jquery</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;a href="javascript:void(0)"&gt;</code> is required when you use <code class="highlighter-rouge">onclick=</code> and do not
+want page to reload</li>
+  <li><code class="highlighter-rouge">input type="checkbox" onchange="perform(this.checked)</code> you can get value with
+input.checked. with jquery <code class="highlighter-rouge">$(input).is(':checked')</code></li>
+  <li>in css file you can include comment for source maps, for example <code class="highlighter-rouge">/*#
+sourceMappingURL=bootstrap-datepicker3.css.map */</code></li>
+  <li>plain <code class="highlighter-rouge">&lt;input&gt;</code> has default with (probably 157px), but if you want to set
+size, use <code class="highlighter-rouge">style="width: 100%"</code></li>
+  <li>for modals you need overlay that cover content beside modal, also if you want
+to have background image that is blured, you can use overlay with opacity
+position absolute that cover whole area.
+https://css-tricks.com/snippets/css/transparent-background-images/
+This use case is when you have my-stuff with forms or something else so you need
+to interact with it. Another use case when you want to add overlay like for
+subscribed users only, so my-stuff can be opacited and with wrapping my-stuff.
+First is solved with sibling div <code class="highlighter-rouge">position: fixed</code> and <code class="highlighter-rouge">z-index: -1</code> and adding
+background image to the body (not to fixed element, which is only for overlay
+and opacity) so it scrolls down with content.</li>
+</ul>
+
+<p>Second is solved with position absolute relative pair.
+Note that you should NOT use <code class="highlighter-rouge">height: 100%</code> on cover because it will not cover
+the area which is not currently in view port (for example you have div height &gt;
+view port size). On <code class="highlighter-rouge">html, body { height: 100% }</code> is OK (and it will show window
+width and height) but when cover has greater height than body on smaller screen
+than it should have <code class="highlighter-rouge">min-height: 100%</code> (not <code class="highlighter-rouge">height: 100%</code>).
+Note that <code class="highlighter-rouge">my-stuff</code> should be inside <code class="highlighter-rouge">gradient</code> so gradient wraps it
+completelly (otherwise when they are sibling than gradient can not calculate
+if there is margin on my-stuff).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;style&gt;</span>
+      <span class="nt">html</span><span class="o">,</span> <span class="nt">body</span> <span class="p">{</span>
+        <span class="nl">min-height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+        <span class="nl">height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+        <span class="nl">padding</span><span class="p">:</span> <span class="m">0px</span><span class="p">;</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">0px</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nc">.position-relative</span> <span class="p">{</span>
+        <span class="nl">position</span><span class="p">:</span> <span class="nb">relative</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.position-absolute</span> <span class="p">{</span>
+        <span class="nl">position</span><span class="p">:</span> <span class="nb">absolute</span><span class="p">;</span>
+        <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+        <span class="c">/* we need this when my-stuff is less than view port */</span>
+        <span class="nl">min-height</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+        <span class="c">/* do not use top bottom, or height: 100% since that is relative to view port */</span>
+        <span class="c">/*
+        top: 0px;
+        bottom: 0px;
+        */</span>
+        <span class="c">/* height: 100%; */</span>
+      <span class="p">}</span>
+      <span class="nc">.my-stuff</span> <span class="p">{</span>
+        <span class="nl">width</span><span class="p">:</span> <span class="m">200px</span><span class="p">;</span>
+        <span class="nl">height</span><span class="p">:</span> <span class="m">200px</span><span class="p">;</span>
+        <span class="nl">margin</span><span class="p">:</span> <span class="m">10px</span> <span class="nb">auto</span><span class="p">;</span>
+        <span class="nl">background</span><span class="p">:</span> <span class="no">blue</span><span class="p">;</span>
+        <span class="nl">height</span><span class="p">:</span> <span class="m">600px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.my-stuff</span><span class="nd">:hover</span> <span class="p">{</span>
+        <span class="nl">height</span><span class="p">:</span> <span class="m">600px</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.blue-gradient</span> <span class="p">{</span>
+        <span class="nl">opacity</span><span class="p">:</span> <span class="m">.5</span><span class="p">;</span>
+        <span class="nl">-webkit-backface-visibility</span><span class="p">:</span> <span class="nb">hidden</span><span class="p">;</span>
+        <span class="nl">background-color</span><span class="p">:</span> <span class="m">#52d3aa</span><span class="p">;</span>
+        <span class="nl">background-image</span><span class="p">:</span> <span class="n">-webkit-gradient</span><span class="p">(</span><span class="n">linear</span><span class="p">,</span> <span class="m">0%</span> <span class="m">0%</span><span class="p">,</span> <span class="m">100%</span> <span class="m">100%</span><span class="p">,</span> <span class="n">color-stop</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">#3f95ea</span><span class="p">),</span> <span class="n">color-stop</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">#52d3aa</span><span class="p">));</span>
+        <span class="c">/* Android 2.3 */</span>
+        <span class="nl">background-image</span><span class="p">:</span> <span class="n">-webkit-repeating-linear-gradient</span><span class="p">(</span><span class="nb">top</span> <span class="nb">left</span><span class="p">,</span> <span class="m">#3f95ea</span> <span class="m">0%</span><span class="p">,</span> <span class="m">#52d3aa</span> <span class="m">100%</span><span class="p">);</span>
+        <span class="c">/* IE10+ */</span>
+        <span class="nl">background-image</span><span class="p">:</span> <span class="n">repeating-linear-gradient</span><span class="p">(</span><span class="n">to</span> <span class="nb">bottom</span> <span class="nb">right</span><span class="p">,</span> <span class="m">#3f95ea</span> <span class="m">0%</span><span class="p">,</span> <span class="m">#52d3aa</span> <span class="m">100%</span><span class="p">);</span>
+        <span class="nl">background-image</span><span class="p">:</span> <span class="n">-ms-repeating-linear-gradient</span><span class="p">(</span><span class="nb">top</span> <span class="nb">left</span><span class="p">,</span> <span class="m">#3f95ea</span> <span class="m">0%</span><span class="p">,</span> <span class="m">#52d3aa</span> <span class="m">100%</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nc">.position-fixed-cover</span> <span class="p">{</span>
+        <span class="nl">position</span><span class="p">:</span> <span class="nb">fixed</span><span class="p">;</span>
+        <span class="nl">top</span><span class="p">:</span> <span class="m">0px</span><span class="p">;</span>
+        <span class="nl">bottom</span><span class="p">:</span> <span class="m">0px</span><span class="p">;</span>
+        <span class="nl">width</span><span class="p">:</span> <span class="m">100%</span><span class="p">;</span>
+        <span class="nl">z-index</span><span class="p">:</span> <span class="m">-1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="nc">.background-image</span> <span class="p">{</span>
+        <span class="nl">background-image</span><span class="p">:</span> <span class="sx">url('cat.jpg')</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="nt">&lt;/style&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body</span> <span class="na">class=</span><span class="s">'position-relative background-image'</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'blue-gradient position-absolute'</span><span class="nt">&gt;</span>
+      blue-gradient position-absolute
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'my-stuff'</span><span class="nt">&gt;</span>
+        my-stuff
+        <span class="nt">&lt;button&gt;</span>OK<span class="nt">&lt;/button&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">'blue-gradient position-fixed-cover'</span><span class="nt">&gt;</span>blue-gradient position-fixed-cover<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>another problem is when you add <code class="highlighter-rouge">margin: 10px</code> to some innver div, than
+scrollbar shows up (we use <code class="highlighter-rouge">box-sizing: border-box;</code> so that is not the case).
+https://stackoverflow.com/questions/22539053/nested-div-with-margin-top-set-causes-scrollbar-to-appear
+The problem is in collapsing margins and workaround is: use padding instead of
+margin, add <code class="highlighter-rouge">overflow: auto</code> to the element with margin, or introduce new
+<a href="https://www.w3.org/TR/CSS2/visuren.html#block-formatting">block formating
+context</a> by changing
+to <code class="highlighter-rouge">display: inline-block</code></li>
+  <li>for phone you need to use <code class="highlighter-rouge">&lt;a href="tel:123123"&gt;+123-123&lt;/a&gt;</code> (rails <code class="highlighter-rouge">&lt;%=
+link_to "+123-123", "tel:123123" %&gt;</code>)</li>
+  <li>for mail <code class="highlighter-rouge">&lt;a href="mailto:asd@asdasd"&gt;asd@asd.asd&lt;/a&gt;</code> (rails <code class="highlighter-rouge">&lt;%= mail_to
+"asd@asd.asd", "asd@asd.asd" %&gt;</code>)</li>
+  <li>for event listeners always use <code class="highlighter-rouge">e.currentTarget</code> since it is element on which
+listener was bound. Do not use <code class="highlighter-rouge">e.target</code> since it could be child element.
+Example <code class="highlighter-rouge">$('[data-user-preferences]').click(function(e) {
+e.currentTarget.dataset.userPreferences
+})</code></li>
+  <li>if you need to click on the underlying elements under other, you can use
+<a href="https://stackoverflow.com/questions/3680429/click-through-a-div-to-underlying-elements">https://stackoverflow.com/questions/3680429/click-through-a-div-to-underlying-elements</a>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pointer-events: none
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>accordion is native in html (you do not need bootstrap accordion collapse in
+javascript)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;details&gt;
+  &lt;summary&gt;Hi&lt;/summary&gt;
+  Bye
+&lt;/details&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;How do I get to New Orleans?&lt;/summary&gt;
+  Use Google Maps.
+&lt;/details&gt;
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>details {
+  margin: 1rem;
+}
+summary {
+  font-weight: bold;
+}
+</code></pre></div>    </div>
+
+    <p>You can style different states of defails (<code class="highlighter-rouge">details[open]</code> and
+<code class="highlighter-rouge">details:not[open]</code>) https://codepen.io/jh3y/pen/mLaXRe</p>
+  </li>
+  <li>
+    <p>text input can have focus on page load with  <code class="highlighter-rouge">&lt;input autofocus&gt;</code>
+(<code class="highlighter-rouge">f.text_field :name, autofocus: true</code> in rails)</p>
+  </li>
+  <li>prevent auto completing text inputs can be prevented with `&lt;%= text_field_tag</li>
+  <li>
+    <p>:other_reason, nil, autocomplete: ‘off’ %&gt;` (note is should be ‘off’ not
+‘false’</p>
+  </li>
+  <li>arrows (triangles) can be done with border and before pseudo element
+http://krasimirtsonev.com/blog/article/CSS-before-and-after-pseudo-elements-in-practice just paste this snippet</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;style&gt;
+h2 {
+    float: left;
+    width: 170px;
+}
+.popup {
+    float: left;
+    width: 340px;
+    background: #727272;
+    padding: 10px;
+    border-radius: 6px;
+    color: #FFF;
+    position: relative;
+    font-size: 12px;
+    line-height: 20px;
+}
+.popup:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 12px solid #727272;
+    position: absolute;
+    top: 16px;
+    left: -12px;
+}
+&lt;/style&gt;
+
+&lt;h2&gt;What is CSS?&lt;/h2&gt;
+&lt;div class="popup"&gt;
+    Cascading Style Sheets is a style sheet language used for describing
+    the presentation semantics of a document written in a markup language.
+&lt;/div&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>usually space is not important in html but if you have some <code class="highlighter-rouge">float</code> and
+<code class="highlighter-rouge">width: 40%</code> than number of spaces is important</li>
+  <li>
+    <p>you can not have <code class="highlighter-rouge">&lt;a&gt;</code> tag inside other <code class="highlighter-rouge">&lt;a&gt;</code> tag, use this validator
+https://validator.w3.org/nu/#textarea</p>
+  </li>
+  <li>components and terminology (terms names) on a web page:
+    <ul>
+      <li>accordion is list of blocks that can collapse
+https://getbootstrap.com/docs/3.3/javascript/#collapse-example-accordion</li>
+      <li>carousel is big image slider
+https://getbootstrap.com/docs/3.3/javascript/#carousel</li>
+      <li>navbar is top header with menu links, in bootstrap_4 it is fluid (spans all
+width)</li>
+      <li>flush on some elements
+https://getbootstrap.com/docs/4.1/components/list-group/#flush means that
+rounded corners are removed</li>
+      <li>B4 cards replace our old panels, wells, and thumbnails</li>
+      <li>masonry type columns is when element are places optimally basedon vertical
+space (width is fixed, and height is variable)</li>
+    </ul>
+  </li>
+  <li>if you have two data attributes on click, to disable one from another, you can
+disable button, for example
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$('[data-enable-if-valid]').on 'click', (e) -&gt;
+  if need_to_disable_both_clicks
+    $button.prop('disabled', 'disabled')
+    setTimeout(
+      -&gt;
+        $button.prop('disabled', false)
+      100
+    )
+
+  # no need to add e.preventDefault() since button is disabled
+</code></pre></div>    </div>
+  </li>
+  <li>page scroll when image is loaded can be prevented with padding bottom https://www.smashingmagazine.com/2016/08/ways-to-reduce-content-shifting-on-page-load/
+padding can be defined in % of the page width so for full width page images
+you can set padding bottom in %.
+For not full width images you can set the height in css so it will occupy the
+space before loading (you can set background also if it is not transparent).
+Do not set only the width since than height is 0 untill the image is loaded.</li>
+  <li>elements with captions are:
+<code class="highlighter-rouge">&lt;figure&gt;&lt;img&gt;&lt;figcaption&gt;I'm caption&lt;/figcaption&gt;&lt;/figure&gt;</code> and 
+<code class="highlighter-rouge">&lt;fieldset&gt;&lt;legend&gt;I'm caption of this set&lt;/legent&gt;&lt;input&gt;&lt;/fieldset&gt;</code></li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

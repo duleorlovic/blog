@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Ruby Books</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ruby Books</h1>
+    <p class="meta">Nov 7, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#ruby"><span class="tocnumber">1</span> <span class="toctext">Ruby</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#object-and-classes"><span class="tocnumber">1.1</span> <span class="toctext">Object and classes</span></a></li></ul></li><li class="toc_level-1 toc_section-3"><a href="#keywords"><span class="tocnumber">2</span> <span class="toctext">Keywords</span></a></li><li class="toc_level-1 toc_section-4"><a href="#irb"><span class="tocnumber">3</span> <span class="toctext">Irb</span></a></li><li class="toc_level-1 toc_section-5"><a href="#expections"><span class="tocnumber">4</span> <span class="toctext">Expections</span></a></li><li class="toc_level-1 toc_section-6"><a href="#procs"><span class="tocnumber">5</span> <span class="toctext">Procs</span></a></li><li class="toc_level-1 toc_section-7"><a href="#fast-ruby-using-optimizations-for-speed"><span class="tocnumber">6</span> <span class="toctext">Fast ruby using optimizations for speed</span></a></li><li class="toc_level-1 toc_section-8"><a href="#rubocop"><span class="tocnumber">7</span> <span class="toctext">Rubocop</span></a></li><li class="toc_level-1 toc_section-9"><a href="#url-encode"><span class="tocnumber">8</span> <span class="toctext">Url encode</span></a></li><li class="toc_level-1 toc_section-10"><a href="#retry-from-rescue"><span class="tocnumber">9</span> <span class="toctext">Retry from rescue</span></a></li><li class="toc_level-1 toc_section-11"><a href="#pry"><span class="tocnumber">10</span> <span class="toctext">Pry</span></a></li><li class="toc_level-1 toc_section-12"><a href="#tips"><span class="tocnumber">11</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><p>Here is what I did not think about long time ago so I am writting here to better
+memorize.</p>
+
+<p>But first, more imporant is to list Resources:</p>
+
+<ul>
+  <li>http://ruby-doc.com/docs/ProgrammingRuby/</li>
+  <li>https://en.wikibooks.org/wiki/Ruby_Programming</li>
+  <li>http://www.toptal.com/ruby-on-rails</li>
+  <li>http://www.toptal.com/ruby</li>
+  <li><a href="http://www.rubyist.net/~slagell/ruby/">Ruby User’s Guide</a></li>
+  <li><a href="http://www.sapphiresteel.com/ruby-programming/The-Book-Of-Ruby.html">The Book Of
+Ruby</a> or
+shorter version <em>The Little Book Of Ruby</em></li>
+</ul>
+
+<p>Listing free books:</p>
+
+<ul>
+  <li>http://www.allrubybooks.com/</li>
+  <li>https://www.ruby-lang.org/en/documentation/</li>
+  <li>http://www.e-booksdirectory.com/programming.php</li>
+  <li>http://www.dmoz.org/Computers/Programming/Languages/Ruby/</li>
+  <li>http://iwanttolearnruby.com/</li>
+  <li>https://rubymonk.com/</li>
+  <li>
+    <p>github list of books
+<a href="https://github.com/EbookFoundation/free-programming-books/blob/master/free-programming-books.md#professional-development">https://github.com/EbookFoundation/free-programming-books/blob/master/free-programming-books.md#professional-development</a>
+Bundle</p>
+  </li>
+  <li>http://www.railsbookbundle.com/</li>
+  <li>http://rubybookbundle.com/</li>
+  <li>awesome coding style guides <a href="http://awesome-ruby.com/#-coding-style-guides">http://awesome-ruby.com/#-coding-style-guides</a></li>
+</ul>
+
+<p>Questions</p>
+
+<ul>
+  <li><a href="https://gist.github.com/ryansobol/5252653">https://gist.github.com/ryansobol/5252653</a> 15 questions</li>
+</ul>
+
+<h1 id="ruby">Ruby</h1>
+
+<h2 id="object-and-classes">Object and classes</h2>
+
+<p>As everything in Ruby is object, so <code class="highlighter-rouge">class A;end</code> is also object with type
+Class.  Instead of keyword <code class="highlighter-rouge">class</code> we can create a class object with <code class="highlighter-rouge">a =
+Class.new</code> and instance with <code class="highlighter-rouge">o = a.new</code>. <code class="highlighter-rouge">class Name;end</code> defines constant
+<code class="highlighter-rouge">Name</code> which holds class object.  Class <code class="highlighter-rouge">Class</code> extends a class called <code class="highlighter-rouge">Module</code>
+ie <code class="highlighter-rouge">A.class.superclass #=&gt; Module</code>. That is why classes has more features than
+modules (can be instantied, can be extended by other classes). On other side,
+module can be included (ie all module’s instance methods become avaiable as
+instance methods in the class) very similar to inheritance. Module can also be
+extended (ie all module’s instance methods become class methods). Also usefull
+is that module extends self <code class="highlighter-rouge">module M; extend self; def m;end;end</code> so you can
+use <code class="highlighter-rouge">M.m</code> instead of <code class="highlighter-rouge">M::m</code>.
+You can see all superclasses and mixin modules with
+<a href="http://ruby-doc.com/docs/ProgrammingRuby/html/ospace.html">A.ancestors</a>.
+Module class object have <code class="highlighter-rouge">new</code> method, but it’s instance (Module instance) does
+not have (on other hand <code class="highlighter-rouge">Class</code> object <code class="highlighter-rouge">a = Class.new</code> have <code class="highlighter-rouge">a.new</code> method).
+You can see all constants for particular class <code class="highlighter-rouge">Object.constants; A.constants</code></p>
+
+<p>Ruby gems use <code class="highlighter-rouge">self.included</code> hook to modify class that is including a module
+(Rails version of this is <code class="highlighter-rouge">ActiveSupport::Concern</code>). So when you include some
+module in your class, beside instance methods, it will extend and add some class
+methods as well. For example
+<a href="https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee">Linkable</a></p>
+
+<p>For rails concerns you can see <a href="/2016/04/12/rails-tips/#concerns">concerns</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Emailable
+  included do
+    # before_ has_ macros
+  end
+
+  # instance methods
+
+  def ClassMethods
+  end
+</code></pre></div></div>
+
+<p>Singleton mixin is used when you want to disallow multiple instance of some
+class, ie we set <code class="highlighter-rouge">private_class_method :new</code>, and create it in some other class
+method <code class="highlighter-rouge">def Logger.create;@@loger = new unless @logger;end</code></p>
+
+<p><code class="highlighter-rouge">true.class # TrueClass</code> there is only one copy of these objects (true, false,
+nil). This is example of singleton pattern.</p>
+
+<p>Access:</p>
+
+<ul>
+  <li>public methods can be called by anyone, all methods are public by default
+(except <code class="highlighter-rouge">initialize</code> which is private)</li>
+  <li>protected methods can be invoked by anyone (explicit receiver), but only
+within context of methods of defining class or its subclasses (at calling time
+self is from same class hierarchy) <code class="highlighter-rouge">a=A.new;a.protected_method</code> does not work
+if the call is outside of instance-method for A, but we can extend the class
+and than call it <code class="highlighter-rouge">class B&lt;A;def call_protected_method_for_a_and_self(a);
+a.protected_method;protected_method;end;end</code>
+<code class="highlighter-rouge">B.new.call_protected_method_for_a_and_self(a)</code>. Protected is like private but
+caller (self) and receiver object are from same class inheritance.</li>
+  <li>private methods can be called only for that object in defining class or
+subclasses. Can not be called with explicit receiver: <code class="highlighter-rouge">a.private_method</code> does
+not work, only exception is that you can call private writter method with
+explicit receiver as long as the receiver is exactly the self <code class="highlighter-rouge">self.value=1</code>.
+So private methods can be called inside any method of descendand class <code class="highlighter-rouge">class
+B&lt;A;def p;private_method_from_A;end;end</code>. Note that top-level methods are
+private instance method of Object class. Thats why thay can be easily called
+in bareword style (no explicit receiver).</li>
+</ul>
+
+<p>Methods:</p>
+
+<ul>
+  <li>top-level methods (outside of any definition block) are private to all objects</li>
+  <li>instance-method in class <code class="highlighter-rouge">class C;def m;self;end;end;</code> self is instance of C</li>
+  <li>instance-method in module <code class="highlighter-rouge">module M;def m;end;end;</code> self is object extended by
+M or instance of class that mixes in M</li>
+  <li>singleton method on specific object <code class="highlighter-rouge">def obj.m;self;end</code> self is that obj</li>
+  <li>class definition <code class="highlighter-rouge">class C;puts self;def self.class_method;self;end;end</code> self
+in both class definition (singleton on class object) and class method is class
+object</li>
+  <li>module definition is the same as class definition</li>
+</ul>
+
+<p>When you call <code class="highlighter-rouge">some_method</code> it is called on current self <code class="highlighter-rouge">self.some_method</code>.
+Only place where you need self is assignment <code class="highlighter-rouge">self.some_identifier = 1</code>.</p>
+
+<p><code class="highlighter-rouge">load "filename.rb"</code> includes that resource every time method is executed (like
+copy paste code), but <code class="highlighter-rouge">require</code> only once and only when needed. <code class="highlighter-rouge">ruby -e 'puts
+$:'</code> will list all load paths. <code class="highlighter-rouge">load</code> is usefull to overwrite with new changes
+of a particular file.</p>
+
+<p><code class="highlighter-rouge">require</code> is more suitable for features (no need <code class="highlighter-rouge">.rb</code>).  It does not know for
+current folder, so you need to use <code class="highlighter-rouge">./</code> dot that explicitly define path <code class="highlighter-rouge">require
+"./f.rb"</code> or <code class="highlighter-rouge">$: &lt;&lt; "."</code> or <code class="highlighter-rouge">require_relative "f"</code>(extension is not needed
+<code class="highlighter-rouge">.rb</code>)</p>
+
+<p>Variables are not objects. They just hold a reference to objects. You can use
+<code class="highlighter-rouge">var.dup</code> to create another object or you can <code class="highlighter-rouge">var.freeze</code> to prevent
+modifications. <code class="highlighter-rouge">var.clone</code> is the same as <code class="highlighter-rouge">dup</code> but if you clone freezed object,
+result is also freezed. <code class="highlighter-rouge">freeze</code> is only one level, nested objects are not
+freezed <code class="highlighter-rouge">a=["a","b"];a.freeze;a[0][0]='b'</code> or <code class="highlighter-rouge">a={a:{b:1}};a.freeze;a[:a][:b]=2</code></p>
+
+<p>Ruby look up for methods for current object metaclass (eigenclass) than in
+ancestors classes. Object metaclass contains those singleton methods defined
+only for that particular object after it was created <code class="highlighter-rouge">o={};def o.t;puts
+1;end;o.t()</code> - common in GUI - different action for different buttons.</p>
+
+<p>Module can be mixed in in two ways: <code class="highlighter-rouge">include M</code> and <code class="highlighter-rouge">prepend M</code>. Methods are
+searched in prepend modules, than in class methods and than in included methods.
+Last defined (first time, multiple includes do not have effect) module is
+searched first, the same as with same_name methods in class definition. You can
+see the order of modules with <code class="highlighter-rouge">C.ancestors</code> (prepended, class, included,
+prepended of superclass, superclass, included of superclass). <code class="highlighter-rouge">super</code> calls the
+same method at upper level. Since modules don’t have instances they generally
+represent properties of something of some class, and they have adjective names
+(albeit class tend to be nouns). Modules also can be used for namespacing some
+classes. When we see <code class="highlighter-rouge">M::C</code> we don’t know if <code class="highlighter-rouge">C</code> is constant, module or class,
+but <code class="highlighter-rouge">M</code> is a class or module since it has nested items.</p>
+
+<p>Proc are objects that can be called (executed) <code class="highlighter-rouge">p = proc { puts 1 };p.call</code></p>
+
+<p>Variables and scope</p>
+
+<p>Ruby define scope of variable using its name, precisely, first char:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">$</code> global <code class="highlighter-rouge">$FIRST_NAME</code> available on every scope</li>
+  <li><code class="highlighter-rouge">@</code> instance <code class="highlighter-rouge">@first_name</code> you can list with <code class="highlighter-rouge">self.instance_variables</code> and
+get value with <code class="highlighter-rouge">self.instance_variable_get :@first_name</code> (note that we need
+both <code class="highlighter-rouge">:</code> and <code class="highlighter-rouge">@</code>) and set value <code class="highlighter-rouge">self.instance_variable_set :@first_name,
+'me'</code></li>
+  <li>
+    <p><code class="highlighter-rouge">[a-z]|_</code> local <code class="highlighter-rouge">first_name</code> in every definition block: proc, loop, def end,
+class end, module end, and is reset on each call. Local variable is very
+scoped (you can not access in another nested method)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = 1
+def p
+  puts a
+end
+p # NameError: undefined local variable 'a'
+</code></pre></div>    </div>
+
+    <p>but you can access from closure definitions such: <code class="highlighter-rouge">define_method</code>, <code class="highlighter-rouge">proc</code> or
+<code class="highlighter-rouge">lambda</code> or plain old <code class="highlighter-rouge">begin end</code> block</p>
+  </li>
+  <li><code class="highlighter-rouge">[A-Z]</code> constant <code class="highlighter-rouge">FIRST_NAME</code> (only exception is <code class="highlighter-rouge">nil</code> which is constant and
+<code class="highlighter-rouge">self</code> which is global maintaned by interpreter). Constant can be changed
+(with warning) so you can include one file several times. Object that
+constant reffers can be changed freely. Constant has global reachability
+when you know the chain of nested definition <code class="highlighter-rouge">C::M::X</code>, absolute path is
+<code class="highlighter-rouge">::String</code></li>
+  <li>
+    <p><code class="highlighter-rouge">@@</code> class variable <code class="highlighter-rouge">@@class_variable</code> are shared only between class and all
+instances of that class. Instance variable for class object are not
+available in instances of class so can not be shared between instances :(
+also globals and constants can be changed everywhere so that’s bad too.
+It can be used in class definition, class methods and instance methods. It
+is shared with all ancestor classes so better is to store data at class
+object instance and create attr_accessor for that.
+<a href="https://apidock.com/ruby/Module/class_variable_set">class_variable_set</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Fred
+  @@foo = 99
+  def foo
+    @@foo
+  end
+end
+Fred.class_variable_set(:@@foo, 101)     #=&gt; 101
+Fred.new.foo                             #=&gt; 101
+</code></pre></div>    </div>
+
+    <p>In rails 5.2 we can have <code class="highlighter-rouge">class_attribute :settings, default: {}</code> so you can
+use <code class="highlighter-rouge">MyClass.settings = 'asd'</code> which will set <code class="highlighter-rouge">@@settings = 'asd'</code>.</p>
+  </li>
+</ul>
+
+<p>Every method call create its own local scope. Ruby does some preprocessing
+compile time where it recognizes all local variables (class @@x instance @x and
+global $x are recognized by their appearance)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if false
+  x = 1
+end
+puts x # x is created but not assigned
+puts y # Fatal error: y is unknown
+</code></pre></div></div>
+
+<p>In recursion, self is the same but scope is generated each time. But procedure
+local objects share the same scope with parent. That way we can create something
+similar to closures to simulate classes.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby&gt; def box
+    |   contents = nil
+    |   get = proc{contents}
+    |   set = proc{|n| contents = n}
+    |   return get, set
+    | end
+   nil
+ruby&gt; reader, writer = box
+   [#&lt;Proc:0x40170fc0&gt;, #&lt;Proc:0x40170fac&gt;]
+ruby&gt; reader.call
+   nil
+ruby&gt; writer.call(2)
+   2
+ruby&gt; reader.call
+   2
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">attr_accessor :price</code> creates getter and setter method. its better to write
+all instance variable like that at beggining so we know what defines state
+(in rails when including <code class="highlighter-rouge">ActiveModel::Model</code> you can call <code class="highlighter-rouge">Model.new
+model_params</code> and those accessor will be assigned, ie no need to write
+initialized and manually assign)</li>
+  <li>required and optional arguments for methods <code class="highlighter-rouge">def f(a, b=1, *c, d)</code> prefix
+asterix means that all other arguments will be sponged up an array <code class="highlighter-rouge">c</code>. <code class="highlighter-rouge">a</code>
+and <code class="highlighter-rouge">d</code> are required, ie you can not call <code class="highlighter-rouge">f(1)</code>. <code class="highlighter-rouge">b</code> has default value</li>
+  <li>
+    <p><a href="http://docs.ruby-lang.org/en/2.2.0/Matrix.html#method-c-5B-5D">matrix</a> <code class="highlighter-rouge">[]=</code>
+is private but we can
+<a href="http://stackoverflow.com/questions/12683772/how-to-modify-a-matrix-ruby-std-lib-matrix-class/21559458#21559458">open</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Matrix
+  public :"[]=", :set_element, :set_component
+end
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">(1..10).tap {|x| puts x.inspect}.to_a</code> is used to perfom operation on
+intermediate results of operations. It returns object <code class="highlighter-rouge">x</code>. Usually used with
+initialization of objects: <code class="highlighter-rouge">Class.new(name: name).tap do |c| ... end</code></li>
+</ul>
+
+<p>#loops</p>
+
+<h1 id="keywords">Keywords</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">C.superclass # =&gt; Object</code> shows superclass</li>
+  <li><code class="highlighter-rouge">ruby -e "class C;end;puts C.ancestors" # [C, Object, Kernel, BasicObject]</code>
+shows mixed in modules <code class="highlighter-rouge">Kernel</code> and superclases</li>
+  <li><code class="highlighter-rouge">C.public_method_defined? 'my_method'</code> to chech if method is defined</li>
+  <li><code class="highlighter-rouge">echo "puts RbConfig::CONFIG['sitedir']" | ruby - | xargs ls -R</code> will show all
+C extensions (.so files). Use <code class="highlighter-rouge">CONFIG["site_ruby"]</code> to list libraries.</li>
+  <li>global variables <code class="highlighter-rouge">$0</code> filename, <code class="highlighter-rouge">$$</code> processID, <code class="highlighter-rouge">$:</code> or <code class="highlighter-rouge">$LOAD_PATH</code> paths
+(you can add folder to load path with <code class="highlighter-rouge">$:.unshift 'lib'</code> or <code class="highlighter-rouge">$: &lt;&lt; '.'</code>)</li>
+  <li><code class="highlighter-rouge">defined? a</code> is operator that can say if variable is defined.</li>
+  <li><code class="highlighter-rouge">ruby -e 'p Kernel.private_instance_methods.sort'</code> prints all usefull script
+commands (require, load, raise)</li>
+  <li><code class="highlighter-rouge">puts caller</code> to print callstack</li>
+  <li><code class="highlighter-rouge">p method(:my_method).source_location</code> to find method implementation. To print
+method source you can use <code class="highlighter-rouge">user.method(:name).source.display</code></li>
+  <li>
+    <p>if <code class="highlighter-rouge">method</code> is overwritten in some class, we can unbind from kernel and
+rebind to request object
+<a href="https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html">link</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>method = Kernel.instance_method(:method)
+p method.bind(request).call(:headers).source_location
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to list all methods that are called from <code class="highlighter-rouge">render</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def index
+  @users = User.all
+  tp = TracePoint.new(:call) do |x|
+    p x
+  end
+  tp.enable
+  render 'index'
+ensure
+  tp.disable
+end
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">{}</code> and <code class="highlighter-rouge">do end</code> have <a href="https://github.com/bbatsov/rubocop/issues/1520">different
+precedence</a> so when rubocop
+alerts for <code class="highlighter-rouge">Style/Lambda: Use the </code>lambda<code class="highlighter-rouge"> method for multi-line lambdas</code> you
+need parenthesis for example <code class="highlighter-rouge">scope :active, (lambda do ... end)</code></li>
+  <li><code class="highlighter-rouge">! a == b</code> is not the same as <code class="highlighter-rouge">a != b</code></li>
+  <li>you should memoize with <code class="highlighter-rouge">return @current_isp if defined? @current_isp</code> instead
+of <code class="highlighter-rouge">@current_isp ||= blabla; return @current_isp</code> since it handles <code class="highlighter-rouge">false</code>
+value as well (it will not rerun the check if @current_isp = false)</li>
+  <li>
+    <p>when you iterate over some hashes you can assign variables with <code class="highlighter-rouge">name:</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[{name: 'Duke', value: 1},].each do |name:, value:|
+  puts name, value
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>big multiline strings can be concatenated from lines similar to HERE_DOC. It
+will show <code class="highlighter-rouge">\n</code> and will insert spaces because text is indented. There is
+<code class="highlighter-rouge">~HERE_DOC</code> version to strip spaces for all lines based on first line indent.
+Minus in <code class="highlighter-rouge">&lt;&lt;-HERE_DOC</code> means that it will not strip spaces based on first line.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MY_TEMPLATE = <span class="nt">&lt;</span><span class="err">&lt;</span><span class="na">HTML</span>
+  <span class="err">&lt;</span><span class="na">html</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/html&gt;</span>
+HTML
+
+MY_TEMPLATE #=&gt; "  <span class="nt">&lt;html&gt;</span>\n  <span class="nt">&lt;/html&gt;</span>\n"
+
+INDENT = <span class="nt">&lt;</span><span class="err">&lt;~</span><span class="na">HERE_DOC</span>
+  <span class="na">1</span>
+    <span class="na">2</span>
+  <span class="na">3</span>
+<span class="na">HERE_DOC</span>
+
+<span class="na">INDENT</span> <span class="err">#=</span><span class="nt">&gt;</span> "1\n  2\n3\n"
+
+# also without assignment
+def html_boilerplate
+  <span class="nt">&lt;</span><span class="err">&lt;~</span><span class="na">HTML</span>
+  <span class="na">HTML</span>
+<span class="na">end</span>
+
+<span class="err">#</span> <span class="na">you</span> <span class="na">can</span> <span class="na">create</span> <span class="na">single</span> <span class="na">line</span> <span class="na">from</span> <span class="na">it</span>
+<span class="na">sql = </span><span class="s">&lt;&lt;-SQL.gsub("\n",</span> <span class="err">'</span> <span class="err">').</span><span class="na">squish</span>
+  <span class="na">SELECT</span> <span class="na">MIN</span><span class="err">(</span><span class="na">u</span><span class="err">.</span><span class="na">popularity</span><span class="err">)</span>
+  <span class="na">FROM</span> <span class="na">users</span> <span class="na">u</span>
+  <span class="na">WHERE</span>
+    <span class="na">u</span><span class="err">.</span><span class="na">created_at</span> <span class="err">&lt;=</span> <span class="err">#{</span><span class="na">Time</span><span class="err">.</span><span class="na">now</span><span class="err">}</span> <span class="na">AND</span> <span class="na">u</span><span class="err">.</span><span class="na">created_at</span> <span class="nt">&gt;</span>= #{Time.now - 7.days}
+SQL
+
+# you can pass as parameter to method
+  Person.joins(<span class="nt">&lt;</span><span class="err">&lt;</span><span class="na">-SQL</span><span class="err">).</span>
+    <span class="na">LEFT</span> <span class="na">JOIN</span> <span class="na">people</span> <span class="na">managers</span>
+      <span class="na">ON</span> <span class="na">managers</span><span class="err">.</span><span class="na">id = </span><span class="s">people.manager_id</span>
+  <span class="na">SQL</span>
+  <span class="na">where</span><span class="err">(</span><span class="na">managers:</span> <span class="err">{</span> <span class="na">id:</span> <span class="na">Person</span><span class="err">.</span><span class="na">find_by</span><span class="err">!(</span><span class="na">name:</span> <span class="err">'</span><span class="na">Eve</span><span class="err">')</span> <span class="err">})</span>
+</code></pre></div>    </div>
+
+    <p>Same HERE_DOC functionality can be achieved with <code class="highlighter-rouge">%()</code> or <code class="highlighter-rouge">%Q()</code> with
+interpolation (downcase <code class="highlighter-rouge">%q()</code> is without interpolation, same as <code class="highlighter-rouge">'HTML'</code>).
+Indent is important since lines are joined with <code class="highlighter-rouge">\n</code>.  First character is not
+important <code class="highlighter-rouge">%Q()</code> is the same as <code class="highlighter-rouge">%Q{}</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_str = %(
+This is multiline
+1 + 1 is #{1+1}
+)
+</code></pre></div>    </div>
+
+    <p>You can also write as single line strings (long line), without new line <code class="highlighter-rouge">\n</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string = "this is a \
+          long string with a lot of spaces"
+string = "this is also one "\
+         "long string but without spaces"
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">%W</code> and <code class="highlighter-rouge">%w</code> returns arrays (interpolated or not). Same is with
+<code class="highlighter-rouge">HERE_DOC.split</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; %W(#{foo} Bar Bar\ with\ space)
+=&gt; ["Foo", "Bar", "Bar with space"]
+ 
+&gt;&gt; %w(#{foo} Bar Bar\ with\ space)
+=&gt; ["\#{foo}", "Bar", "Bar with space"]
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">%x(pwd)</code> is used to call system bash commands. Use Open3 to call system shell
+commands
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'open3'
+stdout, stderr, status = Open3.capture3("sleep 10")
+</code></pre></div>    </div>
+
+    <p>capture3 will wait for all output, even you use ampersand <code class="highlighter-rouge">sleep 10 &amp;</code> at the
+end of command. You can use <code class="highlighter-rouge">system 'sleep 10 &amp;'</code> to get immediatelly back to
+ruby. Also spawn</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pid = spawn('sleep 3') #=&gt; 45376
+# do something while process is running
+Process.wait pid # wait for process to finishs
+</code></pre></div>    </div>
+
+    <p>Also Open3.capture3 can return back from background process if you
+dont use <code class="highlighter-rouge">stdout.read</code> and use ampersand (sometimes do not block event without
+ampersand).
+https://www.rubydoc.info/stdlib/open3/Open3.popen3</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># tmp/r.rb
+# run with: ruby tmp/r.rb
+require 'open3'
+puts 'start'
+# system 'sleep 10 &amp;'
+stdin, stdout, stderr, wait_thr = Open3.popen3('sleep 10 &amp;&amp; ls &amp;')
+pid = wait_thr[:pid]  # pid of the started process
+stdin.close # stdin, stdout and stderr should be closed explicitly in this form.
+# if you uncommend this line, than it will wait for output
+# puts stdout.read
+stdout.close
+stderr.close
+exit_status = wait_thr.value  # Process::Status object returned.
+puts 'end'
+</code></pre></div>    </div>
+
+    <p>Another solution to run in background is using <code class="highlighter-rouge">IO</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'open3'
+require 'byebug'
+
+puts "start in #{Process.pid}"
+cmd = 'touch tmp/txt &amp;&amp; sleep 10 &amp;&amp; ls'
+io = IO.popen cmd
+puts "cmd started in #{io.pid}"
+# does not exist the loop
+# begin
+#   while true do
+#     Process.getpgid io.pid
+#     printf '.'
+#     sleep 1
+#   end
+# rescue Errno::ESRCH
+#   puts 'cmd exits'
+# end
+Process.wait io.pid
+puts 'end'
+</code></pre></div>    </div>
+
+    <p>Also <code class="highlighter-rouge">Process.fork { sleep 1 }</code>
+https://ruby-doc.org/core-2.1.3/Process.html#method-c-exit</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Process.kill("HUP", pid)
+</code></pre></div>    </div>
+  </li>
+  <li>to send some data as json you can do it <code class="highlighter-rouge">user.templates.map {|t| t.slice :id,
+:name}.to_json</code></li>
+  <li>return multiple values from method, you can use arrays and <code class="highlighter-rouge">a, b = method</code> but
+it is better to create new class for result.</li>
+  <li>if your service needs a lot of validation, raise exceptions to return message.
+Look at <a href="/2016/04/12/rails-tips/">rails tips service example</a>.</li>
+  <li>its convetion to use keyword <code class="highlighter-rouge">fail</code> instead of <code class="highlighter-rouge">raise</code> (it is used only if you re-raise exception)</li>
+  <li>ruby caret operator <code class="highlighter-rouge">^</code> is bitwise XOR, if you want square use power
+(exponent) <code class="highlighter-rouge">**</code></li>
+  <li>
+    <p>if you do not know where something is called, for example some validation
+errors is added, you can dynamically extend objects
+<a href="http://blog.iempire.ru/2016/09/23/breaking-points">link</a>. So create module in
+runtime and extend the object or class, so it will stop on next <code class="highlighter-rouge">errors#add</code>
+method</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mod = Module.new do
+  def add(*args)
+    binding.pry
+    super
+  end
+end
+credit_card.errors.extend(mod)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>you can open singleton_class of the object and redefine</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>num = Object.new
+num.instance_exec {
+  def == other
+    other == 3
+  end
+}
+num == 4
+# =&gt; false
+num == 3
+# =&gt; true
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>you can open a class with module_exec</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Thing
+end
+
+Thing.module_exec(arg) do |arg|
+  def hello
+    "Hi"
+  end
+end
+
+puts Thing.new.hello
+</code></pre></div>    </div>
+  </li>
+  <li>get class based on string <code class="highlighter-rouge">klass = Object.const_get "User"</code></li>
+  <li>get constant of class <code class="highlighter-rouge">User::MAX</code>, <code class="highlighter-rouge">User.const_get 'MAX'</code> or
+<code class="highlighter-rouge">user.class.const_get :MAX</code>. To check if exists use <code class="highlighter-rouge">const_defined?</code></li>
+  <li>random number <code class="highlighter-rouge">[*1..100].sample</code></li>
+  <li>iterate over elements until first match <code class="highlighter-rouge">a.take_while {|i| i &lt; 3}</code></li>
+  <li>get a class from value <code class="highlighter-rouge">my_string.constantize</code></li>
+  <li>
+    <p>you can call lambda in different ways</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_lambda = -&gt; { puts "hi" }
+
+my_lambda.call # preferred
+my_lambda[]
+my_lambda.()
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>lamda are strict about arguments but procs are not</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_lambda = -&gt;(a, b)  { a + b }
+my_proc   = Proc.new  { |a, b| a + b }
+
+my_lambda.call(2)
+# ArgumentError: wrong number of arguments (1 for 2)
+
+my_proc.call(2)
+# TypeError: nil can't be coerced into Fixnum
+</code></pre></div>    </div>
+  </li>
+  <li>you can find method using grep <code class="highlighter-rouge">o.methods.grep /iden/</code></li>
+  <li>you can list all instance methods in current class but not in parrent class
+with <code class="highlighter-rouge">o.methods - o.class.superclass.instance_methods</code></li>
+  <li>in rails it is enough to exclude all default object methods <code class="highlighter-rouge">o.methods -
+Object.methods</code></li>
+</ul>
+
+<h1 id="irb">Irb</h1>
+
+<ul>
+  <li>
+    <p>to suppress out of commands use <code class="highlighter-rouge">;</code> in irb</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'rest-client'
+RestClient.get('blackbytes.info');
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>underscore variable <code class="highlighter-rouge">_</code> holds value of the last command. When used in code
+than it means we are not going to use it.</p>
+  </li>
+</ul>
+
+<h1 id="expections">Expections</h1>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=BlTjn_SZQT0">exception ruby video</a></li>
+  <li>
+    <p>before ruby program exists it uses some callbacks</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trap("EXIT") { puts 'trap("EXIT")' }
+at_exit { puts "at_exit" }
+END { puts "END" }
+raise "Not handled"
+
+output:
+
+trap("EXIT")
+END
+at_exit
+a.rb:4:in `&lt;main&gt;': Not handled (RuntimeError)
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="procs">Procs</h1>
+
+<p><a href="https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Understanding_blocks.2C_Procs_and_methods">https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Understanding_blocks.2C_Procs_and_methods</a>
+Using Proc ruby can be used in functional programming (it enable first-class
+functions - function can be created at runtime, assigned to variable, passed as
+argument and be return value from other functions).
+Ruby differs from other functional languages for which we can use name of
+function as variable with function type (in ruby we need to use Proc).
+First-class functions can be used for higher-order functions (functions which
+takes other functions as arguments).</p>
+
+<blockquote>
+  <p>Proc objects are blocks of code that have been bound to a set of local
+variables. Once bound, the code may be called in different contexts and still
+access those variables.</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def gen_times(factor)
+  shared = 1
+  _proc = Proc.new {|n| n*factor*shared }
+  shared = 2
+  _proc
+end
+times3 = gen_times(3)
+times5 = gen_times(5)
+
+puts times3.call(12) # 12 * 3 * 2
+puts times5.call(5) # 5 * 5 * 2
+</code></pre></div></div>
+
+<p>That is very similar to <a href="/2016/02/10/javascript-theory/">closures</a></p>
+
+<p>You can exit from proc with <code class="highlighter-rouge">next</code> (<code class="highlighter-rouge">return</code> exits from method, <code class="highlighter-rouge">break</code> exits
+from loop). Or you can raise exception.</p>
+
+<p>Proc object can be used as argument for functor (functor is higher-order
+function, ie takes function as argument).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def functor(a, b)
+  a.call b
+end
+
+p = Proc.new { |i| puts i }
+functor(p, 1) # 1
+</code></pre></div></div>
+
+<p>Shorthand notation for creating Procs is <code class="highlighter-rouge">p = lambda {|i| puts i}</code> but there are
+differences:</p>
+
+<ul>
+  <li>proc object does not check the number of params (you can call <code class="highlighter-rouge">p.call 1,2,3</code>
+or <code class="highlighter-rouge">p.call</code> i will be nil). Lambda throws an error if number of params does not
+match</li>
+  <li>also if you use <code class="highlighter-rouge">return</code> inside proc object, it will stop current method, but
+for lambda it will not.</li>
+</ul>
+
+<p>You can call using <code class="highlighter-rouge">p.call some_param</code> or <code class="highlighter-rouge">p[some_param]</code>.
+Block can’t live alone, it is used as last param of methods. Every method has
+implicit argument for that block and since we do not have name, we use <code class="highlighter-rouge">yield</code>
+to call it. Someone prefer to use explicit argument so we know that method
+expects block.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f(a, &amp;p)
+  # we can use explicit
+  p.call a
+  # but also we can use
+  yield a
+end
+
+f(1) { |i| puts i }
+</code></pre></div></div>
+
+<p>Note that proc is not an actual argument and you can not use parenthesis around
+<code class="highlighter-rouge">f(1, lambda {|i| puts i})</code>. But you can use ampersand <code class="highlighter-rouge">&amp;</code> in method call to
+convert it to block.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f(a)
+  yield a
+end
+p = lambda {|i| puts i}
+f(1, &amp;p)
+</code></pre></div></div>
+
+<p>This is used for example in  <code class="highlighter-rouge">map</code> functor. If we use ampersand for symbol, than
+it will be converted <code class="highlighter-rouge">Symbol#to_proc</code> and passed in.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Symbol
+  def to_proc
+    lambda {|x, *args| x.send(self, *args)}
+  end
+end
+
+words = %w(Jane, aara, multiko)
+upcase_words = words.map {|w| w.upcase}
+upcase_words = words.map {|w| w.send :upcase}
+upcase_words = words.map(&amp;:upcase)
+</code></pre></div></div>
+
+<ul>
+  <li>there are special methods in ruby
+    <ul>
+      <li><code class="highlighter-rouge">method_missing(method, *args)</code> can be used to catch all missing methods</li>
+      <li><code class="highlighter-rouge">initialize</code> to instantiate class</li>
+    </ul>
+  </li>
+  <li>call method can be called (invoked) using three (maybe four) ways:
+    <ul>
+      <li>dot notation <code class="highlighter-rouge">o.my_method</code></li>
+      <li>send <code class="highlighter-rouge">o.send :my_method</code> or <code class="highlighter-rouge">o.send :my_property=, 'some_value'</code></li>
+      <li>grab method and call it <code class="highlighter-rouge">o.method(:my_method).call</code></li>
+      <li>interpolated method call is using send like <code class="highlighter-rouge">current_user.send
+"is_#{@model}_admin?"</code></li>
+    </ul>
+
+    <p><a href="https://gist.github.com/kidlab/72fff6e239b0af1dd3e5">https://gist.github.com/kidlab/72fff6e239b0af1dd3e5</a> for something that need
+test or we just want to showcase</p>
+  </li>
+  <li>
+    <p>in rails there is
+<a href="https://simonecarletti.com/blog/2009/09/inside-ruby-on-rails-extract_options-from-arrays/">args.extract_options!</a>
+modify args and return last hash (or empty hash if there is no hash). Userfull
+if you need to pass attrs by position and as keyword arguments</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def my_method(*args)
+  options = args.extract_options!
+  puts "Arguments (array):  #{args.inspect}"
+  puts "Options (hash):    #{options.inspect}"
+end
+
+my_method(1, 2, :a =&gt; :b)
+# Arguments:  [1, 2]
+# Options:    {:a=&gt;:b}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>in rails you can set up default options with <a href="https://apidock.com/rails/Hash/reverse_merge">reverse
+merge</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>options = options.reverse_merge(size: 25, velocity: 10)
+# is equivalent to
+options = { size: 25, velocity: 10 }.merge(options)
+</code></pre></div>    </div>
+
+    <p>if you need to deep merge (deep_merge method is deprecated) you can not use
+<code class="highlighter-rouge">merge</code> since it will override existing value. In this case it is better to
+set in initialization</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this will override params[:project][:subscriber_attributes]
+def _project_params
+  params.require(:project).permit(
+    :name, :description, :priority, subscriber_attributes: Subscriber::PARAMS
+  ).merge(
+    company: current_user.company,
+    subscriber_attributes: {
+      company_id: current_user.company.id
+    }
+  )
+end
+
+# so only way to put inside initialization
+  @project = current_user.company.projects.new(
+    subscriber: Subscriber.new(company: current_user.company),
+  )
+</code></pre></div>    </div>
+  </li>
+  <li>to merge hash in conditional way you can use:
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hash = {
+  a: 1
+}.merge(condition ? {b: 2} : {})
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hash.tap do |h|
+  h[:b] = 2 if condition
+end
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hash = {
+  a: 1,
+  b: (2 if condition),
+}.reject { |k, v| v.nil? }
+# or in Ruby 2.4
+}.compact
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hash = {
+  a: 1,
+  **(condition ? {b: 2} : {})
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to run script and require byebug you can use</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby -rbyebug my_script_with_byebug.rb
+</code></pre></div>    </div>
+
+    <p>if you want to debug some ruby cli you can write scripts that check for rvm
+ruby version</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
+</code></pre></div>    </div>
+    <p>If you use some gems like byebug, add <code class="highlighter-rouge">gem 'byebug'</code> to Gemfile and from that
+folder run</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby -rbyebug $(which vagrant) up
+bundle exec ruby -rbyebug $(which vagrant) up
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>you can use Resolv ruby class, but sometimes you get error <code class="highlighter-rouge">uninitialized
+constant Resolv</code>. You should reload all services or you can add to Gemfile</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># http://stackoverflow.com/questions/42967546/ruby-puma-error-unable-to-load-application-nameerror-uninitialized-constant
+gem 'rubysl-resolv'
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="fast-ruby-using-optimizations-for-speed">Fast ruby using optimizations for speed</h1>
+
+<p>List of methods that are faster than other methods
+<a href="https://github.com/PerfectMemory/fast-ruby">fast-ruby</a>
+<a href="https://www.youtube.com/watch?v=fGFM_UrSp70">video</a>
+<a href="https://github.com/ombulabs/benches">benches</a></p>
+
+<ul>
+  <li><code class="highlighter-rouge">enum.map { }.flatten(1)</code> should be replaced with <code class="highlighter-rouge">enum.flat_map {}</code> since we
+do not need to traverse twice</li>
+  <li><code class="highlighter-rouge">[1,2,3].map{ |n| next if n.even? ; 2*n }</code> will return <code class="highlighter-rouge">[2, nil, 6]</code> so if you
+need to filter you can apply <code class="highlighter-rouge">.compact</code></li>
+  <li>for big arrays you can use rails <code class="highlighter-rouge">User.find_each do |user| end</code> so it loads in
+batch of 1000 (It returns <code class="highlighter-rouge">nil</code>). You can use map, <code class="highlighter-rouge">User.find_each.map </code> but
+than you again load all users at once.</li>
+  <li>use mutation methods (with !) so you do not need to create new objects. For
+example <code class="highlighter-rouge">return hash.merge a: 1</code> should be replaced with <code class="highlighter-rouge">return hash.merge! a:
+1</code> but for hash we can also use <code class="highlighter-rouge">hash[:a] = 1</code> whih is faster.</li>
+  <li>hash fetch method can be used to define default value if the key does not
+exists. You can use block instead of second argument to define default value,
+and it is faster since block is not called if key is not found so
+<code class="highlighter-rouge">hash.fetch(:foo, :my_default_value_computation)</code> should be replaced with
+<code class="highlighter-rouge">hash.fetch(:foo) { my_default_value_computation }</code> so
+my_default_value_computation is only evaluated when <code class="highlighter-rouge">hash[:foo]</code> is nil</li>
+  <li><code class="highlighter-rouge">string.gsub("asd", "qwe")</code> should be replaced with <code class="highlighter-rouge">string.sub("asd", "qwe")</code>
+if we need to replace only first occurence, so no need to scan string to the
+end. Also you can use <code class="highlighter-rouge">string.tr(" ", "_")</code></li>
+  <li>
+    <p>replace all double new lines <code class="highlighter-rouge">"\n\n"</code> with single <code class="highlighter-rouge">"\n"</code> with
+<code class="highlighter-rouge">s.squeeze("\n")</code> so you can string with</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def strip(text)
+  text.tr("\n", " ").squeeze(" ")
+end
+</code></pre></div>    </div>
+  </li>
+  <li>do not use exception for controll flow, so better is to check before</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>begin
+  foo
+rescue NoMethodError
+  bar
+end
+</code></pre></div></div>
+
+<p>should be replaced</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if respond_to?(:foo)
+  foo
+else
+  bar
+end
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">Time.parse('2001-01-01 06:06:06 UTC')</code> should be raplaced with
+<code class="highlighter-rouge">Time.at(999232123).utc)</code> since we do not need to parse every time</li>
+  <li>instead of <code class="highlighter-rouge">map(&amp;:id)</code> use <code class="highlighter-rouge">pluck(:id)</code></li>
+  <li>
+    <p>to assign multiple attributes to active record object you can use <code class="highlighter-rouge">Hash.slice</code>
+(<code class="highlighter-rouge">pluck</code> is for database query) and <code class="highlighter-rouge">assign_attributes</code> to self</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user.assign_attributes other_user.slice :email, :phone
+</code></pre></div>    </div>
+
+    <p>On hash there is <code class="highlighter-rouge">values_at</code> but that is only values. To fetch all attributes
+use <code class="highlighter-rouge">other_user.attributes</code> or specific ones <code class="highlighter-rouge">other_user.attributes.values_at
+'id', 'email'</code> (if you have array of fields you need to expand
+<code class="highlighter-rouge">other_user.attributes.values_at *fields</code>). NOTE that we use string instead of
+symbols.
+On Rails 5.2 you can directly use slice on AR model <code class="highlighter-rouge">user.slice :id, :name</code>
+(before that you can do on <code class="highlighter-rouge">user.attributes.slice :id</code>)</p>
+  </li>
+  <li>safe navigation operator <code class="highlighter-rouge">&amp;.</code> can be used instead of <code class="highlighter-rouge">.try</code> for example: <code class="highlighter-rouge">user
+&amp;&amp; user.name</code> can be written as <code class="highlighter-rouge">user&amp;.name</code>. It is usefull with find_by for
+example <code class="highlighter-rouge">User.find_by(email: 'a@b.c')&amp;.tap { |u| }</code></li>
+  <li>In ruby 2.3 there is also <code class="highlighter-rouge">Array#dig</code> and <code class="highlighter-rouge">Hash#dig</code> so instead of
+<code class="highlighter-rouge">params[:a].try(:[], :b)</code> you can <code class="highlighter-rouge">params.dig(:a, :b)</code>. when you need to take
+value and not sure if provided (usually in some json response)</li>
+  <li>rails has hash except <code class="highlighter-rouge">my_hash.except :my_key</code> to ignore only my_key value and
+returns also the hash. Also oposite select is slice <code class="highlighter-rouge">my_hash.slice :my_key</code> to
+pick <code class="highlighter-rouge">{my_key: 1}</code> (also returns hash)</li>
+  <li>If you need only values for specific keys use <code class="highlighter-rouge">my_hash.values_at :my_key,
+:my_other_key</code>. Also given some value you can find key <code class="highlighter-rouge">my_hash.key some_value</code></li>
+  <li>rails has
+<a href="https://apidock.com/rails/v4.0.2/Hash/deep_transform_keys">deep_transform_keys</a>
+that can transform keys for your select <code class="highlighter-rouge">hash.deep_transform_keys{ |key|
+key.to_s.titleize }</code></li>
+  <li>find in array by object property and return array of selected items
+<code class="highlighter-rouge">array.select {|i| i.user == current_user }</code>.</li>
+  <li>ruby has <code class="highlighter-rouge">Hash#invert</code> which will replace keys and values.
+Hash#invert <code class="highlighter-rouge">{a: 1, b: 2}.invert # {1: a, 2: b}</code></li>
+  <li>you can create hash with <code class="highlighter-rouge">Hash[]</code>.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; [['a','b'], [1, 2]].transpose #=&gt; [["a", 1], ["b", 2]]
+&gt;&gt; Hash[[['a','b'], [1, 2]].transpose] #=&gt; {"a"=&gt;1, "b"=&gt;2}
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">map</code> and <code class="highlighter-rouge">collect</code> are the same methods</li>
+  <li>to check if string starts with or ends with some substring prefix sufix you
+can use <code class="highlighter-rouge">s.start_with? prefix</code> or <code class="highlighter-rouge">s.end_with? suffix</code></li>
+  <li>get substring based on position <code class="highlighter-rouge">s[3..-4]</code> or <code class="highlighter-rouge">s[3, s.length - 3]</code></li>
+</ul>
+
+<h1 id="rubocop">Rubocop</h1>
+
+<p>In old project you can generate <code class="highlighter-rouge">.rubocop.yml</code> file that will ignore all
+offenses, than you can gradually fix one by one.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rubocop --auto-gen-config
+# this will generate .rubocop_todo.yml which you can include
+cat &gt;&gt; .rubocop.yml &lt;&lt; HERE_DOC
+inherit_from: .rubocop_todo.yml
+HERE_DOC
+</code></pre></div></div>
+
+<h1 id="url-encode">Url encode</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">URI.escape</code></li>
+  <li><code class="highlighter-rouge">CGI::escape</code></li>
+  <li><code class="highlighter-rouge">ERB::Util.url_encode</code></li>
+</ul>
+
+<h1 id="retry-from-rescue">Retry from rescue</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>begin
+  retries ||= 0
+  puts "try ##{ retries }"
+  raise "the roof"
+rescue
+  retry if (retries += 1) &lt; 3
+end
+
+# output:
+# try #0
+# try #1
+# try #2
+</code></pre></div></div>
+
+<h1 id="pry">Pry</h1>
+
+<p>https://github.com/pry/pry
+Instert a line <code class="highlighter-rouge">binding.pry</code> (or <code class="highlighter-rouge">binding.irb</code> if you want irb)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pry
+u = User.last
+cd u
+
+ls # list all methods, constants and variables for this user object
+show-method full_name # or aliases: show-source or $
+find-method xpath Nokogiri
+stat Nokogiri::CSS.xpath_for
+edit full_name # edit the source and reload utomatically
+full_name
+
+play -l 123 # run line 123
+
+wtf? # show stack trace of last exception
+wtf??? # more lines
+cat --ex # show exact line of exception
+
+.git diff # run linux commands, just add prefix .
+</code></pre></div></div>
+
+<p>todo https://www.youtube.com/watch?v=4hfMUP5iTq8</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>insert in strings with percentage <code class="highlighter-rouge">"Nums are %f %f" % [1, 2]</code></li>
+  <li><a href="http://6ftdan.com/allyourdev/2016/01/13/101-ruby-code-factoids/">101 ruby code factoids</a></li>
+  <li>you can return only from methods, but not from <code class="highlighter-rouge">do end</code> blocks</li>
+  <li>
+    <p>ruby regex match will return
+<a href="https://ruby-doc.org/core-2.2.0/MatchData.html">matchData</a> for which you can
+call <code class="highlighter-rouge">captures</code> to get matched groups. You can use block instead of <code class="highlighter-rouge">if</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exception.message.match(/for column (.*) at row/) do |match_data|
+  detail += " for the field #{match_data.captures.first}"
+end
+</code></pre></div>    </div>
+
+    <p>for error <code class="highlighter-rouge">Lint/AmbiguousRegexpLiteral: Ambiguous regexp literal. Parenthesize
+the method arguments if it's surely a regexp literal, or add a whitespace to
+the right of the / if it should be a division</code> you can use alternative forms
+for regular expressions</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = '[\w\s]+'
+/#{a}/
+%r[#{a}]
+Regexp.new a
+
+
+Regexp.new(t('user_mailer.welcome'))
+</code></pre></div>    </div>
+  </li>
+  <li>decorators poro presenters
+<a href="https://robots.thoughtbot.com/evaluating-alternative-decorator-implementations-in">thoughtbot</a>
+example code <a href="http://nithinbekal.com/slides/decorator-pattern/#/">slides</a>
+<a href="https://www.youtube.com/watch?v=bHpVdOzrvkE">video railsconf</a></li>
+  <li>you can count non nil values in array with <code class="highlighter-rouge">[nil, 1, 2].compact # =&gt; [1,2]</code></li>
+  <li>you can call methods with dot but also with double colon <code class="highlighter-rouge">"a".size</code> or
+<code class="highlighter-rouge">"a"::size</code>. You can put spaces or new lines anywhere <code class="highlighter-rouge">a   .   size</code>.</li>
+  <li>if you see error <code class="highlighter-rouge">method_missing': undefined method this</code> than you need to
+reinstall ruby <code class="highlighter-rouge">rvm reinstall 2.3.1</code>. But is related to rubygems
+<a href="https://github.com/rubygems/rubygems/issues/1420">1420</a> and best patch is
+<a href="https://github.com/rubygems/rubygems/issues/1420#issuecomment-169178431">tenderlove
+comment</a></li>
+  <li>
+    <p>argument list length could be variable, there is
+<a href="https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Method_Calls#Variable_Length_Argument_List.2C_Asterisk_Operator">splat</a>
+star/asterix/expand <code class="highlighter-rouge">*</code> operator, where all other parameters are collected in
+array (note you can not use splat and last hash attribute) (splat is only for
+assignment for function parameters)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f(x, y, *allOtherValues)
+end
+f(1, 2, 3, c: 4) # allOtherValues = [3, { c: 4} ]
+f(1, 2) # allOtherValues = []
+</code></pre></div>    </div>
+
+    <p>If it is used in method call than it is oposed:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [1, 2]
+f(*a) # is the same as f(1, 2)
+</code></pre></div>    </div>
+
+    <p>Note that assigning variables by unpacking the array</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [1, 2, 3]
+b, *rest = *a
+
+b    # =&gt; 1
+rest # =&gt; [2, 3]
+a # =&gt; [1, 2, 3]
+</code></pre></div>    </div>
+
+    <p>so you can use destructuring block arguments (params), for example</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [[1, 2], [3, 4]]
+a.each_with_index do |(first, last), i|
+end
+</code></pre></div>    </div>
+
+    <p>Last argument could be hash so it can grab all params</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f(args)
+  puts args.inspect
+end
+f(a: 1, b: 2) # { a: 1, b: 2 }
+</code></pre></div>    </div>
+
+    <p>method default parameters can be set using ruby 2.0 keyword arguments <code class="highlighter-rouge">def
+my_method(name:, position: 1);end</code> They looks better than position arguments.
+It will be an error if we call without required arguments, for example
+<code class="highlighter-rouge">my_method position: 2</code>. It will be an error if we call with non existing arg
+<code class="highlighter-rouge">my_method name: 'me', date: 3</code>. You can mix with position arguments. It does
+not work if you instead of hash use object <code class="highlighter-rouge">ActionController::Parameters.new
+name: 'me'</code> so you need to call with <code class="highlighter-rouge">my_method name:
+ActionController::Parameters.new(name: 'me').name</code>
+In ruby &gt; 2.0 you can use keyword arguments (params are exploded decomposed),
+for which you can define default values or they need to be required (hash key
+is required)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f(x, y, c: , d: 1)
+end
+f(1, 2, c: 1, d: 2)
+f(1, 2) # ArgumentError: missing keyword: c
+</code></pre></div>    </div>
+
+    <p>There exists double splats (**) which is used for hashes
+<a href="https://alexcastano.com/everything-about-ruby-splats/">link</a>
+Single splat convert to array, but double splat convert to hash. Note that it
+only takes symbol keys (and leave string keys). And double splat differs from
+hash last arg since hash can have default value, but it can be overwritten
+with some non hash. So use splat if you really need last param to be hash</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f_with_hash(a, h = {})
+end
+def f_with_double(a, **d)
+end
+f_with_hash 1, 2 # =&gt; h = 2
+f_with_double 1, 2 # =&gt; ArgumentError: wrong number of arguments (given 2, expected 1)
+</code></pre></div>    </div>
+
+    <p>To see parameters of some function you can use</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Object.instance_method(:f).parameters
+</code></pre></div>    </div>
+
+    <p>Similar to asteriks, last parameter can be prefixed with ampersand (&amp;) which
+means function expect a code block. A Proc object will be created and assigned
+to parameter.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def f(a, &amp;p)
+  p.call a
+end
+# parenthesis for method params are required when passing using {}
+f(1) { |i| puts i } # output: 1
+# parenthesis are not required for do end
+f 1 do |i| puts i; end # output: 1
+</code></pre></div>    </div>
+
+    <p>Similarly, using ampersand in method call for a Proc object, it will be
+extrapolated/replaced with block <code class="highlighter-rouge">f2 &amp;p</code> for which you can use:
+<code class="highlighter-rouge">def f2; yield; end</code>. This <code class="highlighter-rouge">&amp;p</code> exists inside method with code block
+param.</p>
+  </li>
+  <li>sort hash by keys with <code class="highlighter-rouge">h.sort</code> and by values with <code class="highlighter-rouge">h.sort {|a,b|
+a[1]&lt;=&gt;b[1]}</code> or using <code class="highlighter-rouge">sort_by</code> with method <code class="highlighter-rouge">o.sort_by &amp;:published_at</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>h = { "a" =&gt; 20, "b" =&gt; 30, "c" =&gt; 10  }
+h.sort                       #=&gt; [["a", 20], ["b", 30], ["c", 10]]
+h.sort {|a,b| a[1]&lt;=&gt;b[1]}   #=&gt; [["c", 10], ["a", 20], ["b", 30]]
+</code></pre></div></div>
+
+<p>in rails you can get from ActiveRecord some objects by array of ids and if you
+want to keep order you can with <code class="highlighter-rouge">index_by(&amp;:id)</code> that will create hash of <code class="highlighter-rouge">{3:
+user3, 8: user8, 1: user1}</code> but with no order, so you can sort that or slice</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Something.find(array_of_ids).index_by(&amp;:id).slice(*array_of_ids).values
+
+# or
+people_by_id = Person.find(ids).index_by(&amp;:id) # Gives you a hash indexed by ID
+ids.map {|id| people_by_id[id] }
+</code></pre></div></div>
+
+<p>But also ordering and other filtering can be done in sql
+https://stackoverflow.com/questions/10150152/find-model-records-by-id-in-the-order-the-array-of-ids-were-given/38378457#38378457</p>
+
+<ul>
+  <li>switch case example</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>case a
+when 1..5
+  "between 1 and 5"
+else
+  "other"
+end
+</code></pre></div></div>
+
+<p>When you need to match object class to not use <code class="highlighter-rouge">object.class</code> in case statement
+http://batsov.com/articles/2012/10/14/ruby-tip-number-3-matching-on-an-objects-class-in-a-case-expression/</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># not case receiver.class
+# better not to use receiver.class == Customer, but receiver.is_a? Customer
+# triple equal is used for that (for a.is_a? b, I can put label b on a)
+# for module it tests for `.is_a?`
+# for range it test for `.includes?`
+# for regexp it test for `.match`
+case receiver
+when Customer
+end
+</code></pre></div></div>
+
+<p>New in  Ruby 2.5</p>
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">Module#attr, attr_accessor, attr_reader, attr_writer, define_method,
+alias_method, undef_method</code> and <code class="highlighter-rouge">remove_method</code> are now all public.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class A
+  def initialize
+    @some_instance = 1
+  end
+end
+
+a = A.new # &lt;A: @some_instance=1&gt;
+A.attr_accessor :some_instance
+a.some_instance = 2
+</code></pre></div>    </div>
+  </li>
+  <li>rescue/else/ensure are allowed inside do/end blocks (without begin/end)</li>
+  <li>bundler is standard library</li>
+  <li><code class="highlighter-rouge">Hash#transform_keys</code></li>
+  <li>yield_self (similar to rails’s <code class="highlighter-rouge">try</code>) (<code class="highlighter-rouge">tap</code> returns object instead of last
+line of the block).</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>to_upper = -&gt; (str) { str.upcase }
+"string".yield_self(&amp;to_upper)
+        .yield_self(&amp;add_greeting)`
+</code></pre></div></div>
+
+<ul>
+  <li>tripple equal <code class="highlighter-rouge">===</code> is operator that for ranges calls <code class="highlighter-rouge">.includes?</code>, for regexp
+calls <code class="highlighter-rouge">.match?</code>, for proc calls <code class="highlighter-rouge">.call</code></li>
+  <li>fake objects could be generated from hash with:
+  <code class="highlighter-rouge">Struct.new(:name, :type, :years).new 'Dule', :kayak, 35</code>
+  <code class="highlighter-rouge">OpenStruct.new name: 'Dule'</code>
+If you need recursively generated OpenStruct than you can convert to json and
+parse with Open struct class: <code class="highlighter-rouge">h = { a: 1, b: { c: 1 }};
+o=JSON.parse(h.to_json, object_class: OpenStruct); o.b.c # =&gt; '1'</code>. You can
+use rails <code class="highlighter-rouge">h = ActionController::Parameters.new</code> so you can <code class="highlighter-rouge">h.merge! b:1</code></li>
+  <li>raise error when hash key does not exists (instead of returning <code class="highlighter-rouge">nil</code>).
+<code class="highlighter-rouge">default_proc</code> will be executed if key does not exists</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/constants.rb
+class Constant
+  def self.hash_or_error_if_key_does_not_exists(h)
+    # https://stackoverflow.com/questions/30528699/why-isnt-an-exception-thrown-when-the-hash-value-doesnt-exist
+    # raise if key does not exists h[:non_exists] or h.values_at[:non_exists]
+    h.default_proc = -&gt; (_h, k) { raise KeyError, "#{k} not found!" }
+    # raise when value not exists h.key 'non_exists'
+    def h.key(value)
+      k = super
+      raise KeyError, "#{value} not found!" unless k
+      k
+    end
+    h
+  end
+
+  def self.CUSTOMER_EVENTS
+    hash_or_error_if_key_does_not_exists(
+      EDIT: 'edit',
+    )
+  end
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/models/constant_spec.rb
+RSpec.describe Constant do
+  it 'store string values' do
+    expect(Constant.CUSTOMER_EVENTS[:EDIT]).to eq 'edit'
+    expect(Constant.CUSTOMER_EVENTS.key 'edit').to eq :EDIT
+  end
+
+  it 'raise error if key does not exists' do
+    expect do
+      Constant.CUSTOMER_EVENTS[:not_exists]
+    end.to raise_error KeyError
+
+    expect do
+      Constant.CUSTOMER_EVENTS.values_at 'not_exists'
+    end.to raise_error KeyError
+
+    expect do
+      Constant.CUSTOMER_EVENTS.key 'not_exists'
+    end.to raise_error KeyError
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>use <code class="highlighter-rouge">enumerator.map do ... end</code> block when there is a side effects and curly
+braces than you need return value <code class="highlighter-rouge">enumerator.map { ... }</code></p>
+  </li>
+  <li>documentation using
+ <a href="https://en.wikibooks.org/wiki/Ruby_Programming/RubyDoc">rdoc</a> SimpleMarkup
+ format which is pretty mature, example is on
+ https://ruby-doc.org/core-2.4.0/String.html but also Rails uses it
+ https://guides.rubyonrails.org/api_documentation_guidelines.html
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test rdoc in command line
+echo "+:to_param+" | rdoc --pipe
+</code></pre></div>    </div>
+  </li>
+  <li>yard is newer and it supports links https://www.rubydoc.info/github/rails/rails</li>
+  <li>convert single value and array value to array <code class="highlighter-rouge">Array(1)</code> and <code class="highlighter-rouge">Array([1])</code>https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already</li>
+  <li>hash with indifferent access (symbol or string) this is Rails ActiveSupport
+<code class="highlighter-rouge">h = HashWithIndifferentAccess.new a: 2</code> so you can use <code class="highlighter-rouge">h[:a]</code> or <code class="highlighter-rouge">h['a']</code></li>
+  <li>inserting key value in hash at specific position
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># https://stackoverflow.com/a/17251424/287166
+class Hash
+def insert_before(key, kvpair)
+  arr = to_a
+  pos = arr.index(arr.assoc(key))
+  if pos
+    arr.insert(pos, kvpair)
+  else
+    arr &lt;&lt; kvpair
+  end
+  replace Hash[arr]
+end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>if you need snake case from class name, you can
+<code class="highlighter-rouge">described_class.name.underscore</code>. Of you need class from controller name
+<code class="highlighter-rouge">users_controller</code> you can <code class="highlighter-rouge">controller_name.classify.constantize</code> which returns
+<code class="highlighter-rouge">UsersController</code></li>
+  <li>to create array of hashes or array of new objects you can not use <code class="highlighter-rouge">[{}]*2</code> or
+<code class="highlighter-rouge">[User.new]*2</code> since that will be the same object in both places. You have to
+use <code class="highlighter-rouge">Array.new(2) { User.new }</code></li>
+</ul>
+
+<p>todo</p>
+
+<p>http://norswap.com/ruby-dark-corners/
+https://www.amazon.com/Eloquent-Ruby-Addison-Wesley-Professional/dp/0321584104
+http://www.confidentruby.com/
+http://www.poodr.com/
+http://poignant.guide/book/chapter-5.html
+https://prograils.com/posts/ruby-on-rails-books-experienced-level</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

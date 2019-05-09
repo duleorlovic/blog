@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Usefull plugins, services and opensource stuff</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Usefull plugins, services and opensource stuff</h1>
+    <p class="meta">Jul 26, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#misc"><span class="tocnumber">1</span> <span class="toctext">Misc</span></a></li><li class="toc_level-1 toc_section-2"><a href="#appviewspagespdf_viewerhtmlerb"><span class="tocnumber">2</span> <span class="toctext">app/views/pages/pdf_viewer.html.erb</span></a></li><li class="toc_level-1 toc_section-3"><a href="#cp-webviewercss-to-appassetsstylesheetspdf_viewerscss-and-replace-all"><span class="tocnumber">3</span> <span class="toctext">cp web/viewer.css to app/assets/stylesheets/pdf_viewer.scss and replace all</span></a></li><li class="toc_level-1 toc_section-4"><a href="#url-with-asset-urlpdf_viewerimagesvg--note-that-for"><span class="tocnumber">4</span> <span class="toctext">url with asset-url(‘pdf_viewer/image.svg’) # note that for</span></a></li><li class="toc_level-1 toc_section-5"><a href="#pdf_viewersgrabcur-there-is-double-quote"><span class="tocnumber">5</span> <span class="toctext">pdf_viewers/grab.cur there is double quote</span></a></li><li class="toc_level-1 toc_section-6"><a href="#copy-all-webimages-to-appassetsimagespdf_viewer"><span class="tocnumber">6</span> <span class="toctext">copy all web/images to app/assets/images/pdf_viewer/</span></a></li><li class="toc_level-1 toc_section-7"><a href="#cp-webviewerjs-and-build-to-appassetsjavascriptspdf_viewer"><span class="tocnumber">7</span> <span class="toctext">cp web/viewer.js and build/* to app/assets/javascripts/pdf_viewer/</span></a></li><li class="toc_level-1 toc_section-8"><a href="#add-your-domain-to-hosted_viewer_origins-viewerjserb1547"><span class="tocnumber">8</span> <span class="toctext">add your domain to HOSTED_VIEWER_ORIGINS viewer.js.erb:1547</span></a></li><li class="toc_level-1 toc_section-9"><a href="#update-to-point-to-worker-script"><span class="tocnumber">9</span> <span class="toctext">update to point to worker script</span></a></li><li class="toc_level-1 toc_section-10"><a href="#gems"><span class="tocnumber">10</span> <span class="toctext">Gems</span></a></li><li class="toc_level-1 toc_section-11"><a href="#alerts-and-notifications"><span class="tocnumber">11</span> <span class="toctext">Alerts and notifications</span></a><ul><li class="toc_level-2 toc_section-12"><a href="#jbox"><span class="tocnumber">11.1</span> <span class="toctext">Jbox</span></a></li></ul></li><li class="toc_level-1 toc_section-13"><a href="#input-mask"><span class="tocnumber">12</span> <span class="toctext">Input mask</span></a></li><li class="toc_level-1 toc_section-14"><a href="#select-something"><span class="tocnumber">13</span> <span class="toctext">Select something</span></a><ul><li class="toc_level-2 toc_section-15"><a href="#select2"><span class="tocnumber">13.1</span> <span class="toctext">Select2</span></a></li></ul></li><li class="toc_level-1 toc_section-16"><a href="#calendar-date-and-time-picker"><span class="tocnumber">14</span> <span class="toctext">Calendar date and time picker</span></a></li><li class="toc_level-1 toc_section-17"><a href="#image-file-upload-drag-and-drop-crop"><span class="tocnumber">15</span> <span class="toctext">Image file upload drag and drop crop</span></a></li><li class="toc_level-1 toc_section-18"><a href="#rich-text-editors-wyswyg"><span class="tocnumber">16</span> <span class="toctext">Rich text editors wyswyg</span></a><ul><li class="toc_level-2 toc_section-19"><a href="#quil"><span class="tocnumber">16.1</span> <span class="toctext">Quil</span></a></li></ul></li><li class="toc_level-1 toc_section-20"><a href="#fontawesome"><span class="tocnumber">17</span> <span class="toctext">Fontawesome</span></a></li><li class="toc_level-1 toc_section-21"><a href="#images"><span class="tocnumber">18</span> <span class="toctext">Images</span></a></li><li class="toc_level-1 toc_section-22"><a href="#slides"><span class="tocnumber">19</span> <span class="toctext">Slides</span></a></li><li class="toc_level-1 toc_section-23"><a href="#graphs"><span class="tocnumber">20</span> <span class="toctext">Graphs</span></a></li><li class="toc_level-1 toc_section-24"><a href="#email-services"><span class="tocnumber">21</span> <span class="toctext">Email services</span></a></li><li class="toc_level-1 toc_section-25"><a href="#user-tracking-services"><span class="tocnumber">22</span> <span class="toctext">User tracking services</span></a></li><li class="toc_level-1 toc_section-26"><a href="#user-support-services"><span class="tocnumber">23</span> <span class="toctext">User support services</span></a></li><li class="toc_level-1 toc_section-27"><a href="#user-intro-tour"><span class="tocnumber">24</span> <span class="toctext">User intro tour</span></a></li><li class="toc_level-1 toc_section-28"><a href="#visitor-user-analytics"><span class="tocnumber">25</span> <span class="toctext">Visitor user analytics</span></a><ul><li class="toc_level-2 toc_section-29"><a href="#opensource-heatmaps"><span class="tocnumber">25.1</span> <span class="toctext">Opensource heatmaps</span></a></li></ul></li><li class="toc_level-1 toc_section-30"><a href="#marketing"><span class="tocnumber">26</span> <span class="toctext">Marketing</span></a></li><li class="toc_level-1 toc_section-31"><a href="#optimisation"><span class="tocnumber">27</span> <span class="toctext">Optimisation</span></a></li><li class="toc_level-1 toc_section-32"><a href="#error-tracking"><span class="tocnumber">28</span> <span class="toctext">Error tracking</span></a></li><li class="toc_level-1 toc_section-33"><a href="#payment"><span class="tocnumber">29</span> <span class="toctext">Payment</span></a></li><li class="toc_level-1 toc_section-34"><a href="#ruby"><span class="tocnumber">30</span> <span class="toctext">Ruby</span></a></li><li class="toc_level-1 toc_section-35"><a href="#rails"><span class="tocnumber">31</span> <span class="toctext">Rails</span></a></li><li class="toc_level-1 toc_section-36"><a href="#templates"><span class="tocnumber">32</span> <span class="toctext">Templates</span></a></li><li class="toc_level-1 toc_section-37"><a href="#animations"><span class="tocnumber">33</span> <span class="toctext">Animations</span></a></li><li class="toc_level-1 toc_section-38"><a href="#scroll"><span class="tocnumber">34</span> <span class="toctext">Scroll</span></a></li><li class="toc_level-1 toc_section-39"><a href="#nice-design-and-ui-tools"><span class="tocnumber">35</span> <span class="toctext">Nice design and ui tools</span></a></li><li class="toc_level-1 toc_section-40"><a href="#fonts-and-icons"><span class="tocnumber">36</span> <span class="toctext">Fonts and icons</span></a></li><li class="toc_level-1 toc_section-41"><a href="#web-framework"><span class="tocnumber">37</span> <span class="toctext">Web framework</span></a></li><li class="toc_level-1 toc_section-42"><a href="#static-analysis"><span class="tocnumber">38</span> <span class="toctext">Static analysis</span></a></li><li class="toc_level-1 toc_section-43"><a href="#mockups-and-wireframes"><span class="tocnumber">39</span> <span class="toctext">Mockups and wireframes</span></a></li><li class="toc_level-1 toc_section-44"><a href="#continuous-integration"><span class="tocnumber">40</span> <span class="toctext">Continuous integration</span></a></li><li class="toc_level-1 toc_section-45"><a href="#ddns"><span class="tocnumber">41</span> <span class="toctext">DDNS</span></a></li><li class="toc_level-1 toc_section-46"><a href="#find-alternatives"><span class="tocnumber">42</span> <span class="toctext">Find alternatives</span></a></li><li class="toc_level-1 toc_section-47"><a href="#sms"><span class="tocnumber">43</span> <span class="toctext">SMS</span></a></li><li class="toc_level-1 toc_section-48"><a href="#dokku"><span class="tocnumber">44</span> <span class="toctext">Dokku</span></a></li></ul></td></tr></tbody></table></div><h1 id="misc">Misc</h1>
+
+<ul>
+  <li><a href="https://github.com/ftlabs/fastclick">fastclick</a></li>
+  <li><a href="https://github.com/zeroclipboard/zeroclipboard">zeroclipboard</a> to copy some
+text on click</li>
+  <li>
+    <p><a href="https://github.com/MrRio/jsPDF">jsPDF</a> pdf generator
+<a href="http://mrrio.github.io/jsPDF/#">examples</a>
+preview pdf in browser http://mozilla.github.io/pdf.js/
+https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website
+in rails there is <code class="highlighter-rouge">gem 'pdfjs_viewer-rails'</code> but check for domain is enabled
+so there is an error https://github.com/mozilla/pdf.js/issues/7153 Related
+rails issues https://github.com/senny/pdfjs_viewer-rails/issues/12
+https://github.com/senny/pdfjs_viewer-rails/issues/42 (gem also uses old pdfjs
+version).
+Better approach is to copy from
+<a href="https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website#from-examples">examples</a></p>
+
+    <p>```</p>
+    <h1 id="appviewspagespdf_viewerhtmlerb">app/views/pages/pdf_viewer.html.erb</h1>
+    <p>&lt;%# https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website#from-examples %&gt;</p>
+    
+  &lt;%= stylesheet_link_tag 'plugins/pdf_viewer', media: nil %&gt;
+  <!-- This snippet is used in production (included from viewer.html) -->
+  <link rel="resource" type="application/l10n" href="plugins/pdf_viewer.properties" />
+  &lt;%= javascript_include_tag 'plugins/pdf_viewer_build' %&gt;
+  &lt;%= javascript_include_tag 'plugins/pdf_viewer' %&gt;
+
+
+    <h1 id="cp-webviewercss-to-appassetsstylesheetspdf_viewerscss-and-replace-all">cp web/viewer.css to app/assets/stylesheets/pdf_viewer.scss and replace all</h1>
+    <h1 id="url-with-asset-urlpdf_viewerimagesvg--note-that-for">url with asset-url(‘pdf_viewer/image.svg’) # note that for</h1>
+    <h1 id="pdf_viewersgrabcur-there-is-double-quote">pdf_viewers/grab.cur there is double quote</h1>
+    <h1 id="copy-all-webimages-to-appassetsimagespdf_viewer">copy all web/images to app/assets/images/pdf_viewer/</h1>
+    <h1 id="cp-webviewerjs-and-build-to-appassetsjavascriptspdf_viewer">cp web/viewer.js and build/* to app/assets/javascripts/pdf_viewer/</h1>
+    <h1 id="add-your-domain-to-hosted_viewer_origins-viewerjserb1547">add your domain to HOSTED_VIEWER_ORIGINS viewer.js.erb:1547</h1>
+    <h1 id="update-to-point-to-worker-script">update to point to worker script</h1>
+    <p>workerSrc: {</p>
+  </li>
+  <li>value: ‘../build/pdf.worker.js’,</li>
+  <li>value: ‘&lt;%= asset_path ‘pdf_viewer/pdf.worker.js’ %&gt;’,
+  ```</li>
+</ul>
+
+<p>For error <code class="highlighter-rouge">Message: Failed to fetch</code> (console error <code class="highlighter-rouge">Access to fetch at
+  'http://s3.amazonaws.com/...' from origin 'http://localhost:3004' has been
+  blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on
+  the requested resource. If an opaque response serves your needs, set the
+  request's mode to 'no-cors' to fetch the resource with CORS disabled.</code>) you
+  need to add cors to a bucket https://stackoverflow.com/questions/25104448/pdf-js-cors-issue-for-s3-file</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;CORSConfiguration&gt;
+    &lt;CORSRule&gt;
+        &lt;AllowedOrigin&gt;*&lt;/AllowedOrigin&gt;
+        &lt;AllowedMethod&gt;GET&lt;/AllowedMethod&gt;
+        &lt;AllowedMethod&gt;HEAD&lt;/AllowedMethod&gt;
+        &lt;MaxAgeSeconds&gt;3000&lt;/MaxAgeSeconds&gt;
+        &lt;AllowedHeader&gt;Authorization&lt;/AllowedHeader&gt;
+    &lt;/CORSRule&gt;
+&lt;/CORSConfiguration&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>number input field <a href="https://github.com/vsn4ik/jquery.spinner">spinner</a></li>
+  <li>
+    <p>toggle checkbox: <a href="http://bootstrapswitch.com/examples.html">bootstrap
+switch</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install bootstrap-switch
+//= require bootstrap-switch/dist/js/bootstrap-switch.js
+ *= require bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css
+</code></pre></div>    </div>
+
+    <ul>
+      <li><a href="https://github.com/abpetkov/switchery">abpetkov/switchery</a></li>
+      <li><a href="https://codepen.io/Rplus/pen/LdjwZz">animated smile checkbox</a></li>
+      <li><a href="http://www.bootstraptoggle.com/">bootstraptoggle</a> only for bootstrap 3, for
+B4 use https://github.com/gitbrent/bootstrap4-toggle
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># http://www.bootstraptoggle.com/
+# https://github.com/gitbrent/bootstrap4-toggle
+$('[data-bootstrap-toggle').each -&gt;
+$(this).bootstrapToggle(
+  # this class will enable vimium
+  style: 'demo-button'
+)
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>trigger a function on scroll to an element <a href="http://imakewebthings.com/waypoints/">waypoints</a></li>
+  <li>drag and drop elements <a href="https://shopify.github.io/draggable/">https://shopify.github.io/draggable/</a></li>
+</ul>
+
+<h1 id="gems">Gems</h1>
+
+<ul>
+  <li>https://awesome-ruby.com/</li>
+</ul>
+
+<h1 id="alerts-and-notifications">Alerts and notifications</h1>
+
+<h2 id="jbox">Jbox</h2>
+
+<p><a href="http://stephanwagner.me/jBox">jbox</a> notifications, modals, tooltips, images
+and confirm windows. You need to install plugins that you use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add jbox
+
+// app/assets/javascripts/application.js
+//= require jbox/src/js/jBox.js
+//= require jbox/src/js/plugins/jBox.Notice.js
+
+// app/assets/javascripts/document_on_turbolinks_load.coffee
+  // add tooltip to all elements with title &lt;a title='Hi'&gt;
+  new jBox('Tooltip', {
+    attach: '[title]'
+  })
+
+// app/assets/javascripts/document_on.coffee
+# &lt;%= button_tag 'Edit', 'data-modal': new_admin_role_path, 'data-modal-title': 'Edit role', class: 'btn' %&gt;
+$(document).on 'click', '[data-modal]', (e) -&gt;
+  openModal(
+    url: e.currentTarget.dataset.modal
+    title: e.currentTarget.dataset.modalTitle
+    width: e.currentTarget.dataset.modalSize
+  )
+  console.log "data-modal #{e.currentTarget.dataset.modal}"
+
+// app/assets/javascripts/plugins/jbox_open_modal.coffee
+# https://stephanwagner.me/jBox/options#ajax
+window.openModal = ({url, title, width = 'auto'}) -&gt;
+  modal = new jBox 'Modal', {
+    title: e.currentTarget.dataset.modalTitle
+    ajax: {
+      url: e.currentTarget.dataset.modal
+      reload: 'strict'
+      setContent: true
+      complete: -&gt;
+        # we need to reposition when ajax returns
+        this.position()
+    }
+    onCloseComplete: -&gt;
+      $("##{this.options.id}").html('')
+  }
+  modal.open()
+  console.log "data-modal #{e.currentTarget.dataset.modal}"
+
+window.initializeJboxTooltip = -&gt;
+  # note that this will remove title attribute
+  new jBox 'Tooltip', {
+    attach: '[title]'
+    theme: 'TooltipDark'
+  }
+
+// app/assets/stylesheets/application.sass
+@import 'jbox/src/scss/jBox.scss'
+@import 'jbox/src/scss/plugins/jBox.Notice.scss'
+
+
+# app/controllers/application_controller.rb
+  after_action :_add_flash_message, if: -&gt; { request.xhr? }
+  after_action :_add_js_plugins_initialisations, if: -&gt; { request.xhr? }
+
+  # rubocop:disable Metrics/AbcSize
+  def _add_flash_message
+    return unless request.format == 'application/javascript'
+
+    response.body += "flash_alert('#{view_context.j flash.now[:alert]}');" if flash.now[:alert].present?
+    response.body += "flash_notice('#{view_context.j flash.now[:notice]}');" if flash.now[:notice].present?
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def _add_js_plugins_initialisations
+    code = 'initializeJboxTooltip();' if response.body.match? /title=/
+    return unless code.present?
+
+    response.body += if request.format == 'application/javascript'
+                       view_context.j(code)
+                     else
+                       "&lt;script&gt;#{code}&lt;/script&gt;"
+                     end
+  end
+
+
+# app/views/layouts/application.html.erb
+      &lt;div class="d-none-not-important" id='notice-holder'&gt;&lt;%= notice %&gt;&lt;/div&gt;
+      &lt;% if notice %&gt;
+        &lt;script&gt;
+          flash_notice('&lt;%= j notice %&gt;');
+        &lt;/script&gt;
+      &lt;% end %&gt;
+
+      &lt;div class="d-none-not-important" id='alert-holder'&gt;&lt;%= alert %&gt;&lt;/div&gt;
+      &lt;% if alert %&gt;
+        &lt;script&gt;
+          flash_alert('&lt;%= j alert %&gt;');
+        &lt;/script&gt;
+      &lt;% end %&gt;
+    &lt;/body&gt;
+  &lt;% end %&gt;
+&lt;/html&gt;
+
+# app/assets/javascripts/flash_messages.coffee
+# https://stephanwagner.me/jBox/get_started
+window.flash_alert = (message) -&gt;
+  flash_message message, 'red'
+
+window.flash_notice = (message) -&gt;
+  flash_message message, 'blue'
+
+window.flash_message = (message, color) -&gt;
+  # https://stephanwagner.me/jBox/documentation says that we need to wait for
+  # ready for page load, so we use setTimeout
+  setTimeout(
+    -&gt;
+      new jBox 'Notice',
+        autoClose: 10000
+        attributes:
+          x: 'right'
+          y: 'bottom'
+        stack: true
+        animation:
+          open:'bounce'
+          close:'fadeOut'
+        content: message
+        color: color
+    50 # tried with 0, 1, but it was triggered before page load and not working
+  )
+</code></pre></div></div>
+
+<h1 id="input-mask">Input mask</h1>
+
+<ul>
+  <li><a href="https://unmanner.github.io/imaskjs/">https://unmanner.github.io/imaskjs/</a></li>
+  <li>jquery form validation https://github.com/jquery-validation/jquery-validation
+to validate only part of a form, you can use element http://jqueryvalidation.org/Validator.element/ but the problem is that you do not know if it is changed
+https://forum.jquery.com/topic/using-jquery-validation-on-textboxes-in-a-specific-div</li>
+</ul>
+
+<h1 id="select-something">Select something</h1>
+
+<ul>
+  <li><a href="http://zellerda.com/projects/jquery/tokenize">tokenize</a> for tags,
+preselecting items</li>
+  <li>nice js filter <a href="http://codyhouse.co/demo/bouncy-content-filter/">bouncy content
+filter</a></li>
+  <li>javascript input filter</li>
+</ul>
+<p><a href="http://digitalbush.com/projects/masked-input-plugin/">http://digitalbush.com/projects/masked-input-plugin/</a></p>
+<ul>
+  <li><a href="http://brianreavis.github.io/selectize.js/">selectize</a> and
+<a href="https://github.com/manuelvanrijn/selectize-rails">selectize-rails</a></li>
+  <li><a href="http://loudev.com/">multiselect</a> nice way to select multiple items from
+opened select box. If you show in popup with different data, then call
+<code class="highlighter-rouge">select.multiSelect('refresh');</code> after you initialize multiSelect.
+    <ul>
+      <li>if you want to keep order <code class="highlighter-rouge">keepOrder</code> option shows nice order, but
+submitting the form do not preserve order. You can use this
+<a href="http://stackoverflow.com/a/22271944/287166">solution</a>
+<a href="https://github.com/lou/multi-select/issues/184">issue</a></li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select.multiSelect({
+  keepOrder: true,
+  afterSelect: function(value){
+    $('#templates-select option[value="'+value+'"]').remove();
+    $('#templates-select').append($("&lt;option&gt;&lt;/option&gt;").attr("value",value).attr('selected', 'selected'));
+  },
+});
+</code></pre></div>    </div>
+
+    <ul>
+      <li><code class="highlighter-rouge">keepOrder</code> does not work for preselected items, solution could be to
+manually select (not already select: selected):</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$.each(selectedTemplateIds, function(index, template_id) {
+  select.multiSelect('select', [String(template_id)]);
+});
+</code></pre></div>    </div>
+  </li>
+  <li><a href="https://github.com/wenzhixin/multiple-select">multiple select</a> it creates ul
+lists, if inside <code class="highlighter-rouge">overflow: hidden</code> you can use
+<a href="https://github.com/wenzhixin/multiple-select/pull/34">container</a> and
+<code class="highlighter-rouge">dropWidth: '100px'</code> options</li>
+</ul>
+
+<h2 id="select2">Select2</h2>
+
+<p>This nice <a href="https://select2.github.io/examples.html">select2 examples</a> works.</p>
+
+<ul>
+  <li>
+    <p>problem is when you have animations (like in modal, or collapsed-box) select
+can calculate full width. solution is to set inline <code class="highlighter-rouge">style="width:100%"</code> or to
+call with</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  $('#customer-name-select').select2({ placeholder: 'Search by Customer Name or Username', width: '100%'});
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to make it <code class="highlighter-rouge">inline</code> you can wraps inside <code class="highlighter-rouge">inline-block</code> element and set some
+size with <code class="highlighter-rouge">style='width:100px'</code> on select element (select2 will use that to
+calculate size).</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/select2.sass
+.select2-inline
+  display: inline-block
+  // by default .select2-container is block, which move it slightly to the top
+  // and then it is not inline with other inline text or buttons
+  .select2-container
+    display: inline-block
+</code></pre></div>    </div>
+
+    <p>one solution to make select wider is to use <code class="highlighter-rouge">select_tag :id, '',
+include_blank: 'Long sentence that make select width wider'</code></p>
+  </li>
+  <li>
+    <p>options like
+<a href="https://select2.github.io/options.html#dropdownParent">dropdownParent</a> could
+help</p>
+  </li>
+</ul>
+
+<p>You can use <code class="highlighter-rouge">data-(any option)</code> so for example you can use
+<code class="highlighter-rouge">data-placeholder="Please select"</code> to set select2 placeholder, or
+<code class="highlighter-rouge">data-tags="true"</code> to enable tagging (also need <code class="highlighter-rouge">multiple: true</code> for select to
+accept multiple options)</p>
+
+<p>I use this initializer <code class="highlighter-rouge">data-select2-initialize</code> (do not use <code class="highlighter-rouge">data-select2</code>
+since it is used already) and if you use turbolinks and have all select elements
+on main page</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/turbolinks_load.coffee.rb
+$(document).on 'turbolinks:load', -&gt;
+  console.log 'turbolinks:load'
+  $('[data-select2-initialize]').each -&gt;
+    options = {}
+    if $(this).attr 'placeholder'
+      # select_tag :id, options, include_blank: true, placeholder: 'Choose one'
+      options['placeholder'] = $(this).attr 'placeholder'
+    else
+      options['placeholder'] = '&lt;%= I18n.translate 'please_select' %&gt;'
+
+    options['language'] = determine_language()
+    $(this).select2 options
+</code></pre></div></div>
+
+<p>or without turbolinks or if you have select elements on some ajax responses, you
+can manually call <code class="highlighter-rouge">&lt;script&gt;initializeSelect2()&lt;/script&gt;</code>)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/data_select2_initialize.coffee
+@initializeSelect2 = -&gt;
+  $('[data-select2-initialize]').each -&gt;
+    if $(this).attr 'placeholder'
+      placeholder = $(this).attr 'placeholder'
+    else
+      placeholder = "Please select"
+    $(this).select2(
+      placeholder: placeholder
+    )
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.select :customer, options_from_collection_for_select(Customer.all, 'id', 'name_and_username'),  { include_blank: true }, 'data-select2-initialize': true, 'data-placeholder': 'Select customer' %&gt;
+  &lt;script&gt;
+    initializeSelect2();
+  &lt;/script&gt;
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># default options for all select
+# https://select2.github.io/options.html#setting-default-options
+# issue when select2 is used in modal or other elements that fades in
+$.fn.select2.defaults.set("width", "100%")
+</code></pre></div></div>
+
+<p>Problem is when select2 is inside modal with <code class="highlighter-rouge">tabindex="-1"</code>
+<a href="https://github.com/select2/select2/issues/119">example</a></p>
+
+<p>To select item on select2 with ajax source, you need to initialize with data and
+keep ajax source</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    $(selectTarget).select2({
+      data: [{id: selectValue, text: selectText}],
+      ajax: {
+        url: $(selectTarget).data('select2AjaxInitialize'),
+        dataType: 'json'
+      }
+    });
+</code></pre></div></div>
+
+<p>or for all</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(document).on 'turbolinks:load', -&gt;
+  $('[data-select2-ajax-initialize]').each -&gt;
+    url = $(this).data('select2AjaxInitialize')
+    options = {
+      ajax: {
+        url: url
+        dataType: 'json'
+      }
+    }
+    $(this).select2 options
+    # using label for select does not open select2 on focus, so on label click
+    # we should trigger open
+    # https://github.com/select2/select2/issues/2311#issuecomment-180666626
+    $(this).focus -&gt;
+      $(this).select2('open')
+</code></pre></div></div>
+
+<p>Search not only on text but on custom data attributes https://stackoverflow.com/questions/36021892/search-on-select-attribute-in-select2
+https://select2.org/searching
+I tried to add hidden divs to <code class="highlighter-rouge">&lt;option&gt;</code> but it seems that there could be only
+the text as inner object. So I add title and copy <code class="highlighter-rouge">matcher</code> function from
+Select2 and add</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/data_select2_initialize.coffee
+matcher = (params, data) -&gt;
+  # ... copy from original matcher ...
+  title = stripDiacritics(data.title).toUpperCase()
+  # check if title exists and contains the term
+  if title.indexOf(term) &gt; -1
+    return data
+
+@initializeSelect2 = -&gt;
+  $('[data-select2-initialize]').each -&gt;
+    # we need to remove tabindex attribute from modal if exists
+    # https://github.com/select2/select2/issues/119
+    $(this).parents(".modal").removeAttr('tabindex')
+    $(this).select2(
+      matcher: matcher
+    )
+</code></pre></div></div>
+
+<h1 id="calendar-date-and-time-picker">Calendar date and time picker</h1>
+
+<ul>
+  <li>Best option is <a href="http://www.daterangepicker.com/">daterangepicker</a> it can be
+used for singleDatePicker, dateTime picker
+    <ul>
+      <li>download with <code class="highlighter-rouge">bower install bootstrap-daterangepicker --save</code> (git should
+be <a href="https://github.com/dangrossman/bootstrap-daterangepicker">https://github.com/dangrossman/bootstrap-daterangepicker</a>)</li>
+      <li>autoApply (can’t be used when timePicker enabled)</li>
+      <li>autoUpdateInput (when you want to parse user selection, custom format)</li>
+      <li>it can contains predefined ranges (Last 7 days)</li>
+      <li>note that is uses <code class="highlighter-rouge">data-daterangepicker</code> so use with your own
+<code class="highlighter-rouge">data-bootstrap-datarangepicker</code></li>
+    </ul>
+  </li>
+  <li><a href="http://amsul.ca/pickadate.js/">pickdate</a></li>
+  <li><a href="https://jqueryui.com/datepicker/">jquery ui datepicker</a>
+Error on chrome if you use <code class="highlighter-rouge">type=date</code>
+<a href="http://stackoverflow.com/questions/16890376/chrome-type-date-and-jquery-ui-date-picker-clashing">link</a>
+so use <code class="highlighter-rouge">type=text</code></li>
+  <li><a href="https://bootstrap-datepicker.readthedocs.io/en/latest/index.html">bootstrap-datepicker</a></li>
+  <li>
+    <p>time picker <a href="http://jonthornton.github.io/jquery-timepicker/">http://jonthornton.github.io/jquery-timepicker/</a></p>
+  </li>
+  <li>“One minute ago” can be updated automatically in this
+<a href="http://timeago.yarp.com/">timeago</a> plugin. Similarly,
+<a href="https://github.com/hilios/jQuery.countdown">jquery.countdown</a> for future
+dates</li>
+</ul>
+
+<h1 id="image-file-upload-drag-and-drop-crop">Image file upload drag and drop crop</h1>
+
+<ul>
+  <li>
+    <p>http://plugins.krajee.com/file-input/demo</p>
+  </li>
+  <li><a href="http://rubaxa.github.io/jquery.fileapi/">jquery.fileapi</a> supports
+webcam, crop, dragndrop</li>
+  <li><a href="https://blueimp.github.io/jQuery-File-Upload/">jQuery-File-Upload</a></li>
+  <li><a href="https://davidwalsh.name/browser-camera">browser-camera</a> html5 getUserMedia</li>
+</ul>
+
+<p>For file input you can show preview file using
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader">FileReader</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/ready_page_load.coffee
+$(document).on 'ready page:load', -&gt;
+  # file image preview
+  $("[data-image-preview]").each -&gt;
+    return unless typeof FileReader != "undefined"
+    $preview_target = $($(this).data('imagePreview'))
+    $(this).change -&gt;
+      regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.png)$/
+      if regex.test $(this).val().toLowerCase()
+        reader = new FileReader()
+        reader.onload = (e) -&gt;
+          $preview_target.html $('&lt;img /&gt;', src: e.target.result)
+        reader.readAsDataURL this.files[0]
+
+# app/views/users/_form.html.erb
+      &lt;div class="admin-image-preview"&gt;
+        &lt;div class="admin-image-preview__thumbnail" id='preview-book-cover-picture'&gt;
+          &lt;% if f.object.book_cover_picture.present? %&gt;
+            &lt;%= image_tag f.object.book_cover_picture.url(:medium) %&gt;
+          &lt;% end %&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;%= f.file_field :book_cover_picture, 'data-image-preview': '#preview-book-cover-picture' %&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+</code></pre></div></div>
+
+<h1 id="rich-text-editors-wyswyg">Rich text editors wyswyg</h1>
+
+<p>list:</p>
+
+<ul>
+  <li><a href="http://wagn.org">http://wagn.org</a> wiki with cards with editor</li>
+  <li><a href="https://beefree.io/">https://beefree.io/</a></li>
+  <li><a href="https://github.com/coltaemanuela/FireEdit">fireEdit</a></li>
+  <li>counter how many characters left https://github.com/rikschennink/short-and-sweet</li>
+  <li>quill</li>
+</ul>
+
+<h2 id="quil">Quil</h2>
+
+<p><a href="https://quilljs.com/">quill</a> <a href="https://quilljs.com/playground">examples</a>
+You can edit by selecting content
+<a href="https://quilljs.com/docs/themes/#bubble">bubble</a></p>
+
+<p>Usually you do not need any additional styles when you want to show html (bold,
+italic, h1, quote, code, list). Color and background colors are defined inline
+with <code class="highlighter-rouge">style</code> attribute so it works (unless you use rails <code class="highlighter-rouge">sanitize</code> which remove
+inline styles). Other styles requires quill classes (center, right, direction,
+align, indent, large, huge, fonts) so you need to inlude that css and to wrap
+output inside <code class="highlighter-rouge">ql_editor</code> class (or you can use <a href="https://quilljs.com/playground/#class-vs-inline-style">inline
+style</a> but it seems )</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;div class="ql-editor"&gt;
+    &lt;%= raw @location.about_html %&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    loadFile("//cdn.quilljs.com/1.2.2/quill.snow.css");
+  &lt;/script&gt;
+</code></pre></div></div>
+
+<p>You can load in head section</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- app/views/layouts/application.html.erb --&gt;
+&lt;script src="//cdn.quilljs.com/1.2.2/quill.min.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;link href="//cdn.quilljs.com/1.2.2/quill.snow.css" rel="stylesheet"&gt;
+</code></pre></div></div>
+
+<p>or you can load dynamically using this helper</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/load_external_css_javascript.coffee
+# all files will be loaded defered so you can use callbak
+window.alreadyLoadedFiles = []
+window.loadFile = (filename, callback) -&gt;
+  if callback and filename in alreadyLoadedFiles
+    console.log "File #{filename} already loaded"
+    callback()
+    return
+  if filename.slice(-2) == "js"
+    fileref = document.createElement('script')
+    fileref.setAttribute("type","text/javascript")
+    fileref.setAttribute("src", filename)
+    fileref.onload = callback if callback
+  else if filename.slice(-3) == "css"
+    fileref = document.createElement("link")
+    fileref.setAttribute("rel", "stylesheet")
+    fileref.setAttribute("type", "text/css")
+    fileref.setAttribute("href", filename)
+  if (typeof fileref!="undefined")
+    document.getElementsByTagName("head")[0].appendChild(fileref)
+    alreadyLoadedFiles.push filename
+    console.log "Adding file #{filename}"
+</code></pre></div></div>
+
+<p>and use it with <code class="highlighter-rouge">loadQuill('editor-content', 'editor-container');</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/quill.coffee
+window.loadQuill = (editorContent, editorContainer) -&gt;
+  loadFile "//cdn.quilljs.com/1.2.2/quill.snow.css"
+  loadFile "//cdn.quilljs.com/1.2.2/quill.min.js", -&gt;
+    console.log "Loading quill editorContent=#{editorContent} " +
+      "editorContainer=#{editorContainer}"
+    # stripped example from https://quilljs.com/docs/modules/toolbar/
+    # so we do not need to load quill classes
+    options =
+      # debug: 'info'
+      modules:
+        toolbar: [
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }]
+          ['bold', 'italic', 'underline']
+          ['blockquote', 'code-block']
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+          ['clean']
+          ['link']
+        ]
+      theme: 'snow'
+
+    $editorContainer = $("##{editorContainer}")
+    quill = new Quill($editorContainer.get(0), options)
+    toolbar = quill.getModule 'toolbar'
+    toolbar.addHandler 'link', (value) -&gt;
+      if (value)
+        href = prompt('Enter the URL')
+        href = "http://#{href}" if href.substring(0,4) != "http"
+        this.quill.format('link', href)
+      else
+        this.quill.format('link', false)
+    quill.on 'text-change', -&gt;
+      newHtml = $($editorContainer).find('.ql-editor').html()
+      $("##{editorContent}").val newHtml
+</code></pre></div></div>
+
+<p>You can also get html on <a href="https://quilljs.com/playground/#form-submit">form
+submit</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascript/quill.coffee
+$(document).on 'ready page:load', -&gt;
+  options =
+    debug: 'info'
+    modules:
+      toolbar: [
+        ['bold', 'italic', 'underline']
+        ['blockquote', 'code-block']
+        [{ 'header': 1 }, { 'header': 2 }]
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+        [{ 'script': 'sub'}, { 'script': 'super' }]
+        [{ 'indent': '-1'}, { 'indent': '+1' }]
+        [{ 'direction': 'rtl' }]
+        [{ 'size': ['small', false, 'large', 'huge'] }]
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }]
+        [{ 'color': [] }, { 'background': [] }]
+        [{ 'font': [] }]
+        [{ 'align': [] }]
+        ['clean']
+      ]
+    theme: 'snow'
+  syncHtml = -&gt;
+
+  $('[data-quill-editor]').each -&gt;
+    editoContainer = $(this).get(0)
+    quill = new Quill(editoContainer, options)
+    $targetInput = $(this.dataset.quillEditor)
+    quill.on 'text-change', -&gt;
+      newHtml = $(editoContainer).find('.ql-editor').html()
+      $targetInput.val newHtml
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/admin/pages/show.html.erb %&gt;
+&lt;div data-quill-editor="#editor-content"&gt;
+  &lt;%# you can test with raw content but sanitized is safer %&gt;
+  &lt;%= sanitize @page.content %&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/admin/pages/_form.html.erb
+    &lt;div id="editor-container"&gt;
+      &lt;%= sanitize @location.about_html %&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+      loadQuill('editor-content', 'editor-container');
+    &lt;/script&gt;
+</code></pre></div></div>
+
+<h1 id="fontawesome">Fontawesome</h1>
+
+<p>Font awesome FA icons are very usefull for quick icons. Look for
+<a href="http://fontawesome.io/examples/">examples</a></p>
+
+<ul>
+  <li>color can be set with <code class="highlighter-rouge">bg-red</code></li>
+  <li>spinner <code class="highlighter-rouge">&lt;i class="fa fa-spinner fa-spin" style="font-size:24px"&gt;&lt;/i&gt;</code></li>
+  <li>in FA 5, by default should be used <code class="highlighter-rouge">fas</code> (solid), <code class="highlighter-rouge">far</code> (regular) and <code class="highlighter-rouge">fal</code>
+(light) is only for pro, but some icons like window-close is free for regular
+https://fontawesome.com/icons/window-close?style=regular</li>
+  <li>size can be with setting <code class="highlighter-rouge">style='font-size: 2rem'</code> or using class <code class="highlighter-rouge">fas fa-2x</code>
+https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons</li>
+  <li>padding between icon and text is with margin, and center with fixed width
+<code class="highlighter-rouge">&lt;i class='fas fa-tasks fa-fw mx-1' aria-hidden='true'&gt;&lt;/i&gt;&lt;%= t('home') %&gt;</code></li>
+</ul>
+
+<p>Other free fonts can be found on http://fontello.com/ where you can select icons
+and download only that batch of icons.</p>
+<ul>
+  <li>page loader progress bar <a href="http://ricostacruz.com/nprogress/">http://ricostacruz.com/nprogress/</a></li>
+  <li>page loader car <a href="https://codepen.io/igor0ser/pen/amJkvp">https://codepen.io/igor0ser/pen/amJkvp</a></li>
+</ul>
+
+<h1 id="images">Images</h1>
+
+<ul>
+  <li>free high resolution <a href="https://unsplash.com/">https://unsplash.com/</a></li>
+  <li>free online sample images https://unsplash.it/images</li>
+  <li>free stock photos <a href="https://burst.shopify.com">https://burst.shopify.com</a></li>
+  <li>sample placeholder https://placeholder.com/</li>
+  <li>free vector images kajak pictogram https://pixabay.com/en/sport-pictogram-olympia-water-swim-1580667/</li>
+  <li>flags http://flagpedia.net/india</li>
+</ul>
+
+<h1 id="slides">Slides</h1>
+
+<ul>
+  <li><a href="https://github.com/jaredwilli/io-slides">https://github.com/jaredwilli/io-slides</a> presentations
+ https://code.google.com/archive/p/io-2012-slides/
+ <a href="https://www.youtube.com/watch?feature=player_embedded&amp;v=WRvECXyWj80">video</a></li>
+</ul>
+
+<h1 id="graphs">Graphs</h1>
+
+<ul>
+  <li><a href="https://github.com/mbostock/d3/wiki/Gallery">graphs
+gallery</a> and
+<a href="http://bl.ocks.org/mbostock">bl.ocks.org/mbostock</a>
+<a href="http://square.github.io/crossfilter/">slider</a>
+<a href="http://www.findtheconversation.com/concept-map/#population">people</a>
+<a href="http://exposedata.com/parallel/">parallel</a> and the best is
+<a href="http://play.grafana.org/">grafana</a></li>
+  <li><a href="http://plottablejs.org/examples/">d3 for charts</a></li>
+  <li>
+    <p><a href="http://www.chartjs.org/">chartjs</a>. Labels and datasets should be inside
+<code class="highlighter-rouge">data</code> attribute. Labels are for all charts.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['2018-1-1', '2018-1-2'],
+    datasets: [
+    {
+      data: [1, 2],
+      label: 'Tavan',
+    },
+    ]
+  }
+})
+</code></pre></div>    </div>
+    <p>To add new data you can push to datasets and labels
+https://www.chartjs.org/docs/latest/developers/updates.html</p>
+  </li>
+  <li>
+    <p>arrows and grouping
+<a href="http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html">http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html</a></p>
+  </li>
+  <li>To draw diagrams and graphs
+<a href="http://js.cytoscape.org/demos/compound-nodes/">http://js.cytoscape.org/demos/compound-nodes/</a>
+Define elements with array of <code class="highlighter-rouge">{data: { id: 'a' }}</code>. Edges have
+<code class="highlighter-rouge">data: { id: 'ab', source: 'a', target: 'b' }</code>. Alternativelly you can define
+elements as objects of <code class="highlighter-rouge">nodes: [{data: {id:'a'}}], edges: [{data: {id: 'ab',
+source: 'a', target' b'}}]</code>.
+When you want to group inside squares (compound) than use <code class="highlighter-rouge">data: { parent: 'a'
+}</code> (in this case <code class="highlighter-rouge">a</code> will become square).
+Layout http://js.cytoscape.org/#layouts
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>layout: { name: 'grid' }
+</code></pre></div>    </div>
+    <p>Style is array of selectors style keys:</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>style: [
+  {
+    selector: 'node',
+    style: {
+      'label': 'data(id)'
+    }
+  }
+]
+</code></pre></div>    </div>
+
+    <p>Events like <code class="highlighter-rouge">dragfree</code> <code class="highlighter-rouge">tapdrag</code> http://js.cytoscape.org/#collection/events
+http://js.cytoscape.org/#core/events
+You can get position http://js.cytoscape.org/#notation/position</p>
+  </li>
+</ul>
+
+<h1 id="email-services">Email services</h1>
+
+<ul>
+  <li><a href="http://formspree.io/">formspree</a> sending emails in javascript</li>
+  <li><a href="http://www.freecontactform.com/free.php">http://www.freecontactform.com/free.php</a> free contact form</li>
+</ul>
+
+<h1 id="user-tracking-services">User tracking services</h1>
+
+<p><a href="https://mixpanel.com/">mixpanel</a></p>
+
+<ul>
+  <li>create tracking plan that defines each event and its properties (name and
+  type: string, number, boolean), In plan we should define: Event name,
+  description, why this event and for each property: property name, property
+  description, property type, why this property</li>
+  <li>call <code class="highlighter-rouge">identify</code> when user signup, or if there are existing users, when the
+  logs in, or use the app</li>
+  <li>you can also send push notifications from mixpanel</li>
+</ul>
+
+<p>https://www.fullstory.com/</p>
+
+<h1 id="user-support-services">User support services</h1>
+
+<ul>
+  <li>intercom <a href="https://demos.intercom.com/">https://demos.intercom.com/</a></li>
+  <li><a href="https://userdeck.com">user deck</a></li>
+</ul>
+
+<h1 id="user-intro-tour">User intro tour</h1>
+
+<p>User navigation to website with help tips should be only one, when user clicks
+something (so help is to interactivelly show tips, not on page load). Users will
+not remeber if you show them 8 steps for the page they just arrived.</p>
+
+<ul>
+  <li><a href="http://introjs.com/">introjs</a> commercial lincence after 2.1</li>
+  <li><a href="http://bootstraptour.com">http://bootstraptour.com</a>
+<a href="https://github.com/sorich87/bootstrap-tour">source</a>
+    <ul>
+      <li>intersting value is <code class="highlighter-rouge">backdrop: true</code> so element is highlighted <code class="highlighter-rouge">reflex:
+true</code>  so click on target element dismiss page tour</li>
+      <li>if you want to repeat tour you can use <code class="highlighter-rouge">yield</code> and <code class="highlighter-rouge">content_for</code>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# somewhere in support dropdown menu %&gt;
+&lt;% if content_for? :page_tour_script %&gt;
+  &lt;li&gt;
+    &lt;%= yield :page_tour_script %&gt;
+    &lt;a href="#" onclick="startTour()"&gt;
+      Start Page Tour
+    &lt;/a&gt;
+  &lt;/li&gt;
+&lt;% end %&gt;
+</code></pre></div>        </div>
+      </li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# on a page where we need tour %&gt;
+&lt;% content_for :page_tour_script do %&gt;
+  &lt;script&gt;
+    function startTour() {
+      // http://bootstraptour.com/api/
+      var tour = new Tour({
+        storage: false,
+        steps: [
+        {
+          element: "[data-target='#publish-location-package-modal']",
+          title: "Publish Package",
+          content: "You can publish package using this button",
+          placement: 'right',
+          backdrop: true,
+          reflex: true,
+        },
+      ]});
+
+      // Initialize the tour
+      tour.init();
+
+      // Start the tour
+      tour.start();
+    }
+  &lt;/script&gt;
+&lt;% end %&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="visitor-user-analytics">Visitor user analytics</h1>
+
+<ul>
+  <li><a href="https://www.hotjar.com/tour">https://www.hotjar.com/tour</a></li>
+  <li><a href="https://www.fullstory.com/features">https://www.fullstory.com/features</a></li>
+</ul>
+
+<p>To find new customers you can find sites that link to similar content. For
+example in google <code class="highlighter-rouge">link:kulakajak.org -site:kulakajak.org</code> will give all sites
+that links to kulakajak.org. You can scrape them to find admin contact email and
+suggest them to add your content that will be interesting to their audience</p>
+
+<blockquote>
+  <p>Do you feel it could be a good fit for your audience?  Might be worth a
+mention :)
+Here is the Link:
+I’d love to know what you think!
+Sincerely,</p>
+</blockquote>
+
+<h2 id="opensource-heatmaps">Opensource heatmaps</h2>
+
+<ul>
+  <li>example how to to track with firebase</li>
+</ul>
+<p><a href="https://github.com/seeyourvisitors/seeyourvisitors/blob/master/gg.dev.js">https://github.com/seeyourvisitors/seeyourvisitors/blob/master/gg.dev.js</a> and
+how to show results with <a href="https://github.com/pa7/heatmap.js">https://github.com/pa7/heatmap.js</a> example js is here
+<a href="https://github.com/seeyourvisitors/heatmap">https://github.com/seeyourvisitors/heatmap</a></p>
+
+<ul>
+  <li>another solution is <a href="https://github.com/dugwood/clickheat">https://github.com/dugwood/clickheat</a></li>
+</ul>
+
+<h1 id="marketing">Marketing</h1>
+
+<ul>
+  <li><a href="https://submit.co">https://submit.co</a> where to submit news about your project</li>
+  <li><a href="http://www.communitybuildingguide.com/">http://www.communitybuildingguide.com/</a> brick by brick guide for awesome
+communities</li>
+</ul>
+
+<h1 id="optimisation">Optimisation</h1>
+
+<ul>
+  <li><a href="http://caniuse.com/">caniuse.com</a> to see what is supported and what is not
+in modern browsers</li>
+  <li>optimization for speed <a href="https://developers.google.com/speed/pagespeed/insights/">google
+insights</a>
+<a href="https://gtmetrix.com/reports/www.scuddle.com/zP3xxAuZ">gtmetrix</a></li>
+</ul>
+
+<h1 id="error-tracking">Error tracking</h1>
+
+<ul>
+  <li>airbrake</li>
+  <li>sentry</li>
+</ul>
+
+<h1 id="payment">Payment</h1>
+
+<ul>
+  <li>https://www.braintreepayments.com/</li>
+  <li>https://www.paddle.co/</li>
+  <li>https://www.payola.io/</li>
+</ul>
+
+<h1 id="ruby">Ruby</h1>
+
+<ul>
+  <li><a href="https://github.com/zenchief/yml_gtranslate">yml_gtranslate</a> automatic
+generate translated yml locale files for rails localisations using google
+translate <code class="highlighter-rouge">for f in $(find config/locales/ -type d);do yml_gt en rs $f;done</code>.
+Also usefull when want to grep only en.yml <code class="highlighter-rouge">grep -i catar config/locales
+--include *.en.yml -R</code></li>
+</ul>
+
+<h1 id="rails">Rails</h1>
+
+<p><a href="https://github.com/eliotsykes/real-world-rails">https://github.com/eliotsykes/real-world-rails</a> realworldrails
+more are using rspec than test: <code class="highlighter-rouge">cd real-world-rails/apps</code> and <code class="highlighter-rouge">find . -name
+spec -maxdepth 2 | wc -l # 134</code> and <code class="highlighter-rouge">find . -name test -maxdepth 2 | wc -l # 52</code></p>
+
+<p>Those are nice to explore:</p>
+<ul>
+  <li>crowdsourcing <a href="https://github.com/catarse/catarse">catarse</a> <a href="https://github.com/crowdtilt/crowdtiltopen/">tilt</a> is not actually opensource, since their api should be used</li>
+  <li><a href="/2017/11/17/sharetribe/">sharetribe</a>
+opensource market peer-to-peer marketplace</li>
+  <li>diaspora
+    <ul>
+      <li>when you run localy, you can import new contacts and their posts, for
+example: hq@pod.diaspora.software</li>
+    </ul>
+  </li>
+  <li>openstreetmap</li>
+</ul>
+
+<h1 id="templates">Templates</h1>
+
+<ul>
+  <li><a href="https://github.com/puikinsh/gentelella">gentelella</a>
+<a href="https://colorlib.com/polygon/gentelella/index.html">preview</a> <a href="https://github.com/iogbole/gentelella_on_rails">rails
+version</a></li>
+  <li><a href="/2016/10/28/adminlte-free-template-on-rails/">adminLTE</a></li>
+  <li>free landing pages templates <a href="https://freehtml5.co">https://freehtml5.co</a>
+<a href="https://freehtml5.co/booster-free-html5-bootstrap-template/">booster</a> or
+<a href="https://freehtml5.co/demos/elate/">elate</a></li>
+  <li>bootstrap 4
+checkout original bootstrap themes https://themes.getbootstrap.com/preview/?theme_id=6743&amp;show_new=
+https://coderthemes.com/hyper_2/light/dashboard-crm.html
+<a href="https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio">https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio</a>
+<a href="https://blackrockdigital.github.io/startbootstrap-freelancer/">https://blackrockdigital.github.io/startbootstrap-freelancer/</a></li>
+  <li><a href="http://barbajs.org/demo/grid/index.html">four images</a></li>
+  <li><a href="http://thomasvaeth.com/trophy-jekyll/">trophy jekyll</a> nice template for jekyll</li>
+</ul>
+
+<p>Email templates</p>
+
+<ul>
+  <li>responsive <a href="https://github.com/InterNations/antwort">https://github.com/InterNations/antwort</a> documentation</li>
+</ul>
+<p><a href="http://internations.github.io/antwort/">http://internations.github.io/antwort/</a> guides
+<a href="https://github.com/InterNations/antwort/wiki/HTML-Styleguide-for-Email">https://github.com/InterNations/antwort/wiki/HTML-Styleguide-for-Email</a></p>
+<ul>
+  <li>three templates <a href="https://github.com/mailgun/transactional-email-templates">https://github.com/mailgun/transactional-email-templates</a>
+<a href="http://mailgun.github.io/transactional-email-templates/action.html">example</a></li>
+</ul>
+
+<h1 id="animations">Animations</h1>
+
+<ul>
+  <li><a href="http://animejs.com/">http://animejs.com/</a></li>
+  <li><a href="http://daneden.me/animate">http://daneden.me/animate</a> animate.css you need to add <code class="highlighter-rouge">class='animated
+fadeIn</code>. Check how it looks in Mac Safari.</li>
+  <li>
+    <p><a href="https://alexcambose.ro/motus/#/demos/svg">https://alexcambose.ro/motus/#/demos/svg</a> animate on scroll</p>
+  </li>
+  <li>detect element visibility and start animating when it is visible</li>
+</ul>
+<p><a href="https://xtianmiller.github.io/emergence.js/">https://xtianmiller.github.io/emergence.js/</a></p>
+
+<ul>
+  <li><a href="https://tympanus.net/Development/PerspectivePageViewNavigation/index6.html#">https://tympanus.net/Development/PerspectivePageViewNavigation/index6.html#</a></li>
+  <li><a href="https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#">https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#</a></li>
+  <li><a href="https://tympanus.net/Tutorials/3DShadingWithBoxShadows/">https://tympanus.net/Tutorials/3DShadingWithBoxShadows/</a></li>
+  <li>shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&amp;theme-id=1&amp;slug-hash=RNjRZz&amp;default-tab=result&amp;user=iamryanyu&amp;embed-version=2&amp;pen-title=Modern%20Button%20Collection#js-box</li>
+  <li>checkbox in css https://codepen.io/himalayasingh/pen/EdVzNL</li>
+  <li>rotate and shake on hover https://codepen.io/duleorlovic/pen/jdjYNE</li>
+</ul>
+
+<h1 id="scroll">Scroll</h1>
+
+<ul>
+  <li><a href="https://russellgoldenberg.github.io/scrollama/basic/">https://russellgoldenberg.github.io/scrollama/basic/</a> scrolling and changing
+the content</li>
+</ul>
+
+<h1 id="nice-design-and-ui-tools">Nice design and ui tools</h1>
+
+<ul>
+  <li><a href="https://sarcadass.github.io/granim.js/examples.html">granim.js</a></li>
+  <li><a href="https://airen.github.io/DemoHouse/">DemoHouse</a></li>
+  <li>CSS Tricks button rotate on lost hover</li>
+</ul>
+<p><a href="https://css-tricks.com/examples/DifferentTransitionsOnOff/">https://css-tricks.com/examples/DifferentTransitionsOnOff/</a></p>
+<ul>
+  <li>split cards <a href="https://designshack.net/tutorialexamples/splitreveal/index.html">https://designshack.net/tutorialexamples/splitreveal/index.html</a></li>
+  <li>cards which you can click (mobile) or hover (desktop) http://devjam.com/</li>
+  <li>nice project portfolio showcase <a href="https://madewithenvy.com/">https://madewithenvy.com/</a></li>
+  <li>nice example site sith custom drawings <a href="http://www.parkrun.com/">http://www.parkrun.com/</a></li>
+  <li>animations <a href="https://www.kronologic.ai/">https://www.kronologic.ai/</a></li>
+  <li>red bull <a href="https://www.bullandbeard.com/">https://www.bullandbeard.com/</a></li>
+  <li>project portfolio animated <a href="http://celialopez.fr/">http://celialopez.fr/</a></li>
+  <li>menu rotate on round image <a href="https://codepen.io/JoseRosario/pen/PeERry">https://codepen.io/JoseRosario/pen/PeERry</a></li>
+  <li>menu isometric https://codepen.io/ClementRoche/pen/yEPogx</li>
+  <li>menu in css, select sibling and opacity on all but the one being hovered https://medium.freecodecamp.org/how-to-make-the-impossible-possible-in-css-with-a-little-creativity-bd96bb42b29d</li>
+</ul>
+
+<h1 id="fonts-and-icons">Fonts and icons</h1>
+
+<ul>
+  <li><a href="https://github.com/Keyamoon/IcoMoon-Free">ico Moon Free</a>
+ <a href="https://icomoon.io/#preview-free">https://icomoon.io/#preview-free</a></li>
+  <li><a href="http://simplelineicons.com/">simple-line-icons</a></li>
+  <li><a href="http://getbootstrap.com/components/">bootstrap glyphs</a></li>
+  <li><a href="https://fonts.google.com/">google webfonts</a>
+    <ul>
+      <li><a href="https://fonts.google.com/specimen/Cabin+Sketch">cabin sketch</a></li>
+    </ul>
+  </li>
+  <li>set specific font styles <a href="http://www.cssfontstack.com/Arial-Narrow">http://www.cssfontstack.com/Arial-Narrow</a></li>
+</ul>
+
+<h1 id="web-framework">Web framework</h1>
+
+<p><a href="https://github.com/kemalyst/kemalyst">https://github.com/kemalyst/kemalyst</a> based on <a href="https://crystal-lang.org/">https://crystal-lang.org/</a></p>
+
+<h1 id="static-analysis">Static analysis</h1>
+
+<ul>
+  <li><a href="https://github.com/koalaman/shellcheck">shellckeck</a> static analysis tool for
+shell scripts</li>
+</ul>
+
+<h1 id="mockups-and-wireframes">Mockups and wireframes</h1>
+
+<ul>
+  <li>https://balsamiq.com/products/ trial one month</li>
+  <li>https://moqups.com/ free up to 300 objects</li>
+  <li>https://wireframe.cc/ free for public one page</li>
+</ul>
+
+<p>To create mockups you can use: Invision, Marvel, Baslamiq, Sketch. There is one
+opensource free mokup tool: Pencil Project https://pencil.evolus.vn/</p>
+
+<h1 id="continuous-integration">Continuous integration</h1>
+
+<p>see [ci cd post] /2018/04/10/continuous-delivery-integration-ci-cd-pronto/)</p>
+
+<h1 id="ddns">DDNS</h1>
+
+<ul>
+  <li><a href="https://www.duckdns.org/vascript:; install.jsp">duckdns install</a></li>
+  <li>https://www.nsupdate.info to run on ubuntu just <code class="highlighter-rouge">sudo apt-get install
+ddclient</code> and provide config params (or update <code class="highlighter-rouge">/etc/ddclient.conf</code>) and it
+will run every hour</li>
+</ul>
+
+<p>Problem with dynamic dns is that their servers (hosted on AWS) sometime fails.
+Currently it shows correct ip</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig +noall +answer trkcam.duckdns.org
+trkcam.duckdns.org.	60	IN	A	77.46.227.151
+</code></pre></div></div>
+
+<p>but sometimes it resolves to <code class="highlighter-rouge">ec2-54-80-18-240j.compute-1.amazonaws.com</code> or
+<code class="highlighter-rouge">ec2-52-91-66-51.compute-1.amazonaws.com</code>, and errors is raised:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mysql2::Error::ConnectionError: Access denied for user 'cablecrm_staging_user'@'ec2-52-91-66-51.compute-1.amazonaws.com' (using password: (redacted)))
+</code></pre></div></div>
+<p>or</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A Neo4j::Core::CypherSession::ConnectionFailedError occurred in chats#show:
+
+  Faraday::ConnectionFailed: Couldn't resolve host name
+</code></pre></div></div>
+
+<p>Best way is to use static ip address.</p>
+
+<h1 id="find-alternatives">Find alternatives</h1>
+
+<p>https://alternativeto.net</p>
+
+<h1 id="sms">SMS</h1>
+
+<ul>
+  <li>twilio gem</li>
+</ul>
+
+<h1 id="dokku">Dokku</h1>
+
+<p>Heroku-like self hosted platform as a service</p>
+
+<p>https://pawelurbanek.com/rails-heroku-dokku-migration
+<a href="https://github.com/dokku/dokku">https://github.com/dokku/dokku</a>
+https://github.com/githubsaturn/captainduckduck</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

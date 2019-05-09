@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Vim</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Vim</h1>
+    <p class="meta">Dec 1, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#internals"><span class="tocnumber">1</span> <span class="toctext">Internals</span></a></li><li class="toc_level-1 toc_section-2"><a href="#my-vimrc"><span class="tocnumber">2</span> <span class="toctext">My Vimrc</span></a></li><li class="toc_level-1 toc_section-3"><a href="#plugins"><span class="tocnumber">3</span> <span class="toctext">Plugins</span></a></li><li class="toc_level-1 toc_section-4"><a href="#running-ruby-in-vim-and-show-in-separate-window"><span class="tocnumber">4</span> <span class="toctext">Running ruby in vim and show in separate window</span></a></li><li class="toc_level-1 toc_section-5"><a href="#seeing-is-believing"><span class="tocnumber">5</span> <span class="toctext">Seeing is believing</span></a></li><li class="toc_level-1 toc_section-6"><a href="#theory"><span class="tocnumber">6</span> <span class="toctext">Theory</span></a></li><li class="toc_level-1 toc_section-7"><a href="#movements-and-navigation"><span class="tocnumber">7</span> <span class="toctext">Movements and Navigation</span></a></li><li class="toc_level-1 toc_section-8"><a href="#motions-and-selections"><span class="tocnumber">8</span> <span class="toctext">Motions and selections</span></a></li><li class="toc_level-1 toc_section-9"><a href="#motion-in-visual-mode"><span class="tocnumber">9</span> <span class="toctext">Motion in visual mode</span></a></li><li class="toc_level-1 toc_section-10"><a href="#copy-paste"><span class="tocnumber">10</span> <span class="toctext">Copy paste</span></a></li><li class="toc_level-1 toc_section-11"><a href="#exploring"><span class="tocnumber">11</span> <span class="toctext">Exploring</span></a></li><li class="toc_level-1 toc_section-12"><a href="#tips"><span class="tocnumber">12</span> <span class="toctext">Tips</span></a><ul><li class="toc_level-2 toc_section-13"><a href="#netrw"><span class="tocnumber">12.1</span> <span class="toctext">Netrw</span></a></li><li class="toc_level-2 toc_section-14"><a href="#nerd-tree"><span class="tocnumber">12.2</span> <span class="toctext">NERD tree</span></a></li></ul></li><li class="toc_level-1 toc_section-15"><a href="#searching"><span class="tocnumber">13</span> <span class="toctext">Searching</span></a></li><li class="toc_level-1 toc_section-16"><a href="#windows-buffers-and-tabs"><span class="tocnumber">14</span> <span class="toctext">Windows buffers and tabs</span></a></li><li class="toc_level-1 toc_section-17"><a href="#completion"><span class="tocnumber">15</span> <span class="toctext">Completion</span></a></li><li class="toc_level-1 toc_section-18"><a href="#tips-1"><span class="tocnumber">16</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-19"><a href="#books-videos-tutorials"><span class="tocnumber">17</span> <span class="toctext">Books, videos tutorials</span></a></li><li class="toc_level-1 toc_section-20"><a href="#ctags"><span class="tocnumber">18</span> <span class="toctext">CTAGS</span></a></li><li class="toc_level-1 toc_section-21"><a href="#syntastic-checker"><span class="tocnumber">19</span> <span class="toctext">Syntastic checker</span></a><ul><li class="toc_level-2 toc_section-22"><a href="#syntastic-deprecated-use-ale-instead"><span class="tocnumber">19.1</span> <span class="toctext">Syntastic (deprecated, use ALE instead)</span></a></li></ul></li><li class="toc_level-1 toc_section-23"><a href="#vimium-chrome-extension"><span class="tocnumber">20</span> <span class="toctext">Vimium chrome extension</span></a></li><li class="toc_level-1 toc_section-24"><a href="#vimum-vimfx"><span class="tocnumber">21</span> <span class="toctext">Vimum VimFx</span></a></li><li class="toc_level-1 toc_section-25"><a href="#rails-vim"><span class="tocnumber">22</span> <span class="toctext">Rails vim</span></a></li><li class="toc_level-1 toc_section-26"><a href="#create-scripts-for-vim"><span class="tocnumber">23</span> <span class="toctext">Create scripts for vim</span></a><ul><li class="toc_level-2 toc_section-27"><a href="#vim-scripts-in-ruby"><span class="tocnumber">23.1</span> <span class="toctext">Vim scripts in ruby:</span></a></li><li class="toc_level-2 toc_section-28"><a href="#vim-ruby-support"><span class="tocnumber">23.2</span> <span class="toctext">Vim ruby support</span></a></li></ul></li><li class="toc_level-1 toc_section-29"><a href="#whereami-my-plugin-to-show-dedented-lines"><span class="tocnumber">24</span> <span class="toctext">WHEREAMI my plugin to show dedented lines</span></a></li><li class="toc_level-1 toc_section-30"><a href="#rubocopfix-vim-plugin-rubocop"><span class="tocnumber">25</span> <span class="toctext">RubocopFix vim plugin rubocop</span></a></li><li class="toc_level-1 toc_section-31"><a href="#graph-visualization-in-markdown"><span class="tocnumber">26</span> <span class="toctext">Graph visualization in markdown</span></a></li><li class="toc_level-1 toc_section-32"><a href="#debug-profile-startup-time"><span class="tocnumber">27</span> <span class="toctext">Debug profile startup time</span></a></li><li class="toc_level-1 toc_section-33"><a href="#undo"><span class="tocnumber">28</span> <span class="toctext">Undo</span></a></li><li class="toc_level-1 toc_section-34"><a href="#vim-test"><span class="tocnumber">29</span> <span class="toctext">Vim test</span></a></li><li class="toc_level-1 toc_section-35"><a href="#vim-plugin"><span class="tocnumber">30</span> <span class="toctext">Vim plugin</span></a></li><li class="toc_level-1 toc_section-36"><a href="#vim-color-scheme"><span class="tocnumber">31</span> <span class="toctext">Vim Color Scheme</span></a></li><li class="toc_level-1 toc_section-37"><a href="#folding"><span class="tocnumber">32</span> <span class="toctext">Folding</span></a></li><li class="toc_level-1 toc_section-38"><a href="#database"><span class="tocnumber">33</span> <span class="toctext">Database</span></a></li><li class="toc_level-1 toc_section-39"><a href="#tmux"><span class="tocnumber">34</span> <span class="toctext">Tmux</span></a></li></ul></td></tr></tbody></table></div><h1 id="internals">Internals</h1>
+
+<p>keynames:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;c-d&gt;</code> is control Ctrl + d, in help it can be written as <code class="highlighter-rouge">CTRL-D</code></li>
+  <li><code class="highlighter-rouge">&lt;esc&gt;</code> is escape key</li>
+  <li><code class="highlighter-rouge">&lt;space&gt;</code> space</li>
+  <li><code class="highlighter-rouge">&lt;cr&gt;</code> sometimes it is <code class="highlighter-rouge">&lt;Enter&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;bs&gt;</code> backspace</li>
+  <li><code class="highlighter-rouge">&lt;left&gt;</code> left arrow</li>
+  <li><code class="highlighter-rouge">&lt;s-left&gt;</code> shift left</li>
+  <li><code class="highlighter-rouge">&lt;c-left&gt;</code> control left</li>
+  <li><code class="highlighter-rouge">^I</code> is when we insert <code class="highlighter-rouge">&lt;tab&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;nl&gt;</code> new line. If you use <code class="highlighter-rouge">echom "a\nb"</code> you will see <code class="highlighter-rouge">a^@b</code> (<code class="highlighter-rouge">CTRL-v</code> +
+<code class="highlighter-rouge">CTRL-j</code>)</li>
+  <li><code class="highlighter-rouge">&lt;tab&gt;</code> tab</li>
+</ul>
+
+<p>If you press <code class="highlighter-rouge">c-s</code> ctrl+s than terminal will freeze all output and looks like
+vim hangs and stop working, but you need to run <code class="highlighter-rouge">c-q</code> ctrl+q to exit from that.</p>
+
+<p>special variables</p>
+
+<ul>
+  <li><code class="highlighter-rouge">&lt;leader&gt;</code> by default is <code class="highlighter-rouge">\ </code> but I use <code class="highlighter-rouge">&lt;space&gt;</code>. To check current value use:
+<code class="highlighter-rouge">:echo mapleader</code>, to set use <code class="highlighter-rouge">:let mapleader=" "</code></li>
+  <li><code class="highlighter-rouge">&lt;localleader&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;non-keyword-character&gt;</code> maps all non keyword chars: <code class="highlighter-rouge">:set iskeyword?</code>
+returns <code class="highlighter-rouge">iskeyword=@,48-57,_,192-255,-</code> ie alphabetic ascii, digits 0-9, _ ,
+and some special chars</li>
+  <li><code class="highlighter-rouge">&lt;nop&gt;</code> no operation, usefull when you want to disable some keys</li>
+</ul>
+
+<h1 id="my-vimrc">My Vimrc</h1>
+
+<p>Good starting poing for <strong>.vimrc</strong> is  <a href="http://vim.wikia.com/wiki/Example_vimrc">http://vim.wikia.com/wiki/Example_vimrc</a>
+You can find my <a href="https://github.com/duleorlovic/config/blob/master/.vimrc">.vimrc</a></p>
+
+<p>Note that control key can be written as caret <code class="highlighter-rouge">^</code> so instead <code class="highlighter-rouge">Ctrl + n</code> it can
+be written as <code class="highlighter-rouge">^n</code>.</p>
+
+<p>Use vim help, with:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">:help</code></li>
+  <li><code class="highlighter-rouge">:helpgrep windows</code></li>
+  <li><code class="highlighter-rouge">:help ctrl-i</code> what Ctrl + i do in normal mode (normal is by default searched)
+we could also write <code class="highlighter-rouge">:help ^i</code></li>
+  <li><code class="highlighter-rouge">:help i_^i</code> what ctrl+i do in insert mode</li>
+  <li><code class="highlighter-rouge">:help v_^i</code> what ctrl+i do in visual mode</li>
+  <li><code class="highlighter-rouge">:help c_^i</code> what ctrl+i do in command mode</li>
+</ul>
+
+<p>other help commands can be found <code class="highlighter-rouge">:help usr_02.txt</code>. Follow link with <code class="highlighter-rouge">ctrl+]</code>
+and jump back with <code class="highlighter-rouge">ctrl+o</code></p>
+
+<p>Instead of <code class="highlighter-rouge">^o</code> I would write <code class="highlighter-rouge">ctrl-o</code>.</p>
+
+<p>Some keys:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;c-o&gt;</code> is ctrl-o, take to normal mode for just one command, so if you want to
+go up in insert mode <code class="highlighter-rouge">&lt;c-o&gt; k</code>. Other usefull commands in insert mode:
+    <ul>
+      <li><code class="highlighter-rouge">&lt;c-o&gt; &lt;c-t&gt;</code> <code class="highlighter-rouge">&lt;c-o&gt; &lt;c-d&gt;</code> indent deindent in insert mode</li>
+      <li><code class="highlighter-rouge">&lt;c-o&gt; d</code> delete everything to the right of cursor</li>
+      <li><code class="highlighter-rouge">&lt;c-u&gt;</code> delete everything to the left</li>
+      <li><code class="highlighter-rouge">&lt;c-w&gt;</code> delete word to the left of cursor</li>
+      <li><code class="highlighter-rouge">&lt;c-h&gt;</code> backspace</li>
+      <li><code class="highlighter-rouge">&lt;c-j&gt;</code> return</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">&lt;c-o&gt;&lt;s-o&gt;</code> (i don’t know exactly but it stays in insert mode and run s-o)</li>
+</ul>
+
+<p>Command line mode <code class="highlighter-rouge">:help usr_20.txt</code> is when using <code class="highlighter-rouge">:</code> or search <code class="highlighter-rouge">/</code>,<code class="highlighter-rouge">?</code>.</p>
+
+<ul>
+  <li>You can press <code class="highlighter-rouge">&lt;Enter&gt;</code> anywhere inside line</li>
+  <li>Navigation with cursors <code class="highlighter-rouge">&lt;Left&gt;</code>, <code class="highlighter-rouge">&lt;S-Left&gt;</code> (one word left) and
+<code class="highlighter-rouge">CTRL+B</code>/<code class="highlighter-rouge">CTRL+E</code> begin/end of line (only difference with bash is that <code class="highlighter-rouge">CTRL+B</code>
+is char left and <code class="highlighter-rouge">CTRL+F</code> enters <em>Replace mode</em> in comand line window)</li>
+  <li>
+    <p>Delete with <code class="highlighter-rouge">&lt;BS&gt;</code> or <code class="highlighter-rouge">CTRL-W</code> delete whole word, <code class="highlighter-rouge">CTRL+U</code> delete all before
+text</p>
+  </li>
+  <li>tab completetion works and you can see all matches with <code class="highlighter-rouge">CTRL-D</code> (match is
+when command starts or short name starts with that)</li>
+  <li>
+    <p>command line history can be used when you type start of command and <code class="highlighter-rouge">:se&lt;UP&gt;</code>
+<code class="highlighter-rouge">CTRL-P</code> ignore what is already typed.</p>
+  </li>
+  <li>Command line window <code class="highlighter-rouge">q:</code> or <code class="highlighter-rouge">CTRL-F</code> is used to edit long commands. <code class="highlighter-rouge">&lt;CR&gt;</code> to
+execute comand end exit. Exit with <code class="highlighter-rouge">:q</code> or <code class="highlighter-rouge">CTRL-C</code>.</li>
+</ul>
+
+<p>You can join multiple commands with <code class="highlighter-rouge">|</code> or <code class="highlighter-rouge">&lt;NR&gt;</code> (more help with
+<code class="highlighter-rouge">cmdline-lines</code>)</p>
+
+<p>Update to vim 8 use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo add-apt-repository ppa:jonathonf/vim
+sudo apt-get update
+sudo apt-get install vim
+</code></pre></div></div>
+
+<h1 id="plugins">Plugins</h1>
+
+<p>Pathogen is no longer needed since you can install packages to
+<code class="highlighter-rouge">.vim/pack/my-packages/start</code>.</p>
+
+<p>Install <a href="https://github.com/tpope/vim-pathogen">pathogen</a> and other interesting
+plugins:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir -p ~/.vim/autoload ~/.vim/bundle &amp;&amp; \
+curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+cd ~/.vim/bundle
+git clone git://github.com/tpope/vim-rails.git # example: Rview
+</code></pre></div></div>
+
+<p>You can find <a href="https://github.com/duleorlovic/config/blob/master/vim/update_vim_bundle.sh#L8">my list of
+plugins</a></p>
+
+<ul>
+  <li>rails-vim is nice
+    <ul>
+      <li>if you want to use rspec instead of minitest, you need to remove <code class="highlighter-rouge">tests</code>
+folder so <code class="highlighter-rouge">:Espec</code> works</li>
+      <li>run <code class="highlighter-rouge">&lt;leader&gt;s</code> to run nearest spec (also <code class="highlighter-rouge">t,l,a</code> for file, last and all
+specs)</li>
+      <li>there are mappings for minitests: <code class="highlighter-rouge">Efunctionaltest</code> are controller tests,
+<code class="highlighter-rouge">Eunittest</code> are model tests, <code class="highlighter-rouge">Eintegrationtest</code> are integration between
+controllers. Do not know how to jump system tests.</li>
+      <li>use projections to add custom commands, for example <code class="highlighter-rouge">app/services</code></li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let g:rails_projections = {
+    \ "app/services/*.rb": {
+    \   "command": "service",
+    \   "template":
+    \     ["class {camelcase|capitalize|colons}", "end"],
+    \   "test": [
+    \     "test/services/{}_test.rb",
+    \     "spec/models/{}_spec.rb"
+    \   ],
+    \ }}
+</code></pre></div>    </div>
+  </li>
+  <li>ctrlp ctrl+p
+    <ul>
+      <li>to seach already opened buffers, hit <code class="highlighter-rouge">&lt;c-p&gt;</code> and than <code class="highlighter-rouge">&lt;c-f&gt;</code></li>
+      <li>to open in horizontal sprit use <code class="highlighter-rouge">&lt;c-p&gt;</code> and <code class="highlighter-rouge">&lt;c-x&gt;</code></li>
+      <li>to open in current buffer, instead of patching <code class="highlighter-rouge">autoload/ctrlp.vim:1309</code> to
+use <code class="highlighter-rouge">let md = 'r'</code> instead of  <code class="highlighter-rouge">let md = argmaps</code> you can configure
+different prompt mappings for <code class="highlighter-rouge">&lt;c-o&gt;</code> to immediatelly replace buffer.</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" make ctrl-o immediatelly replace buffer so we don't need to answer OpenMulti prompt
+" Open Selected: [t]ab/[v]ertical/[h]orizontal/[r]eplace/h[i]dden? 
+let g:ctrlp_prompt_mappings = {
+\ 'PrtSelectMove("j")':   ['&lt;down&gt;'],
+\ 'AcceptSelection("r")': ['&lt;c-j&gt;'],
+\ }
+</code></pre></div>    </div>
+  </li>
+  <li><a href="https://github.com/AndrewRadev/splitjoin.vim">splitjoin</a> for inline ruby
+blocks <code class="highlighter-rouge">{ }</code> to convert do multiline <code class="highlighter-rouge">do\n end</code>.</li>
+</ul>
+
+<p>Some not used anymore</p>
+
+<ul>
+  <li>
+    <p>You complete me: its too much visualisation</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># http://vimawesome.com/plugin/vim-rspec-sad-beautiful-tragic # :RunSpec
+git clone git@github.com:Valloric/YouCompleteMe.git &amp;&amp; cd YouCompleteMe &amp;&amp; ./install.sh &amp;&amp; cd -
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><a href="https://github.com/plasticboy/vim-markdown">vim-markdown</a>: issue with syntax
+highlight for * inside code block</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/Townk/vim-autoclose">vim-autoclose</a>: annoying O char
+waiting next input</p>
+  </li>
+</ul>
+
+<h1 id="running-ruby-in-vim-and-show-in-separate-window">Running ruby in vim and show in separate window</h1>
+
+<p><a href="http://vim.wikia.com/wiki/Preview_output_from_interpreter_in_new_window">link</a>
+Press <code class="highlighter-rouge">F7</code> to run selected or all code. Shift + F7 close the window.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"save code, run ruby, show output in preview window
+function! Ruby_eval_vsplit() range
+  let src = tempname()
+  let dst = tempname()
+  execute ": " . a:firstline . "," . a:lastline . "w " . src
+  execute ":silent ! ruby " . src . " &gt; " . dst . " 2&gt;&amp;1 "
+  execute ":pclose!"
+  execute ":redraw!"
+  execute ":vsplit"
+  execute "normal \&lt;C-W&gt;l"
+  execute ":e! " . dst
+  execute ":set pvw"
+  execute "normal \&lt;C-W&gt;h"
+endfunction
+vmap &lt;silent&gt; &lt;F7&gt; :call Ruby_eval_vsplit()&lt;CR&gt;
+nmap &lt;silent&gt; &lt;F7&gt; mzggVG&lt;F7&gt;`z
+imap &lt;silent&gt; &lt;F7&gt; &lt;Esc&gt;&lt;F7&gt;a
+map &lt;silent&gt; &lt;S-F7&gt; &lt;C-W&gt;l:bw&lt;CR&gt;
+imap &lt;silent&gt; &lt;S-F7&gt; &lt;Esc&gt;&lt;S-F7&gt;a
+</code></pre></div></div>
+
+<h1 id="seeing-is-believing">Seeing is believing</h1>
+
+<p>Show ruby return values on each line in vim.
+Install <a href="https://github.com/JoshCheek/seeing_is_believing">seeing_is_believing</a>
+with <code class="highlighter-rouge">gem install seeing_is_believing --version 3.0.0.beta.7</code> and add plugin <code class="highlighter-rouge">cd
+~/.vim/bundle &amp;&amp; git clone https://github.com/hwartig/vim-seeing-is-believing</code>
+and add mappins: <code class="highlighter-rouge">F4</code> mark, <code class="highlighter-rouge">F5</code> run (not in visual) and <code class="highlighter-rouge">enter</code> mark and run
+(not in insert mode)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" .vimrc Enable seeing-is-believing mappings only for Ruby
+augroup seeingIsBelievingSettings
+  autocmd!
+
+  autocmd FileType ruby nmap &lt;buffer&gt; &lt;Enter&gt; &lt;Plug&gt;(seeing-is-believing-mark-and-run)
+  autocmd FileType ruby xmap &lt;buffer&gt; &lt;Enter&gt; &lt;Plug&gt;(seeing-is-believing-mark-and-run)
+
+  autocmd FileType ruby nmap &lt;buffer&gt; &lt;F4&gt; &lt;Plug&gt;(seeing-is-believing-mark)
+  autocmd FileType ruby xmap &lt;buffer&gt; &lt;F4&gt; &lt;Plug&gt;(seeing-is-believing-mark)
+  autocmd FileType ruby imap &lt;buffer&gt; &lt;F4&gt; &lt;Plug&gt;(seeing-is-believing-mark)
+
+  autocmd FileType ruby nmap &lt;buffer&gt; &lt;F5&gt; &lt;Plug&gt;(seeing-is-believing-run)
+  autocmd FileType ruby imap &lt;buffer&gt; &lt;F5&gt; &lt;Plug&gt;(seeing-is-believing-run)
+augroup END
+</code></pre></div></div>
+
+<h1 id="theory">Theory</h1>
+
+<ul>
+  <li><a href="http://tnerual.eriogerg.free.fr/vimqrc.html">quick reference card</a></li>
+  <li><a href="http://www.viemu.com/a_vi_vim_graphical_cheat_sheet_tutorial.html">tutorial</a></li>
+  <li><code class="highlighter-rouge">nnoremap ,html :asd</code> first letter <code class="highlighter-rouge">n</code> means that this applies only in normal
+mode, <code class="highlighter-rouge">no remap</code> means do not reinvoke if those commands <code class="highlighter-rouge">,html</code> are used for
+something else, <code class="highlighter-rouge">map</code> means simply when I type <code class="highlighter-rouge">,html</code> please type <code class="highlighter-rouge">:asd</code>
+Other modes are: <code class="highlighter-rouge">cmap</code> control.</li>
+  <li><code class="highlighter-rouge">cabbrev E e</code> can be used to replace <code class="highlighter-rouge">E </code> with <code class="highlighter-rouge">e </code> on command line.</li>
+  <li><code class="highlighter-rouge">normal!</code> (with bang) means execute this exactly as I write (<code class="highlighter-rouge">normal</code> will not
+ignore mappings that user could have written and destroy your commands)</li>
+  <li>
+    <p>functions can be used to wrap some commands and give it a name.
+Use <code class="highlighter-rouge">function!</code> so you can overwrite it without error. Undo will undo whole
+function at once.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function! MyFuction()
+  normal! mmu`m
+endfunction
+nnoremap &lt;leader&gt;sp :call MyFuction()&lt;cr&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>source current file <code class="highlighter-rouge">nnoremap &lt;leader&gt;sop :source %&lt;cr&gt;</code> is used to source
+.vimrc so you do not need to exit and start vim again. You can reload any
+<code class="highlighter-rouge">.vim</code> file, for example <code class="highlighter-rouge">:source ~/config/vim/syntastic.vim</code></li>
+  <li>
+    <p>conditionals</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function! MF(level)
+  if a:level == 1
+    normal! yy
+  elseif a:level == 2
+    " ....
+  endif
+endfunction
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="movements-and-navigation">Movements and Navigation</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">gj</code> <code class="highlighter-rouge">gk</code> for long lines that are wrapped to multiple lines, it will go up and
+down</li>
+  <li><code class="highlighter-rouge">$</code> end of line, <code class="highlighter-rouge">0</code> start of line (or <code class="highlighter-rouge">^</code>), use <code class="highlighter-rouge">_</code> to select end of line
+before new line character</li>
+  <li><code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">-</code> move line up or down on the first letter</li>
+  <li><code class="highlighter-rouge">{</code> and <code class="highlighter-rouge">}</code> move on paragraph (empty line)</li>
+  <li><code class="highlighter-rouge">^B</code>(<code class="highlighter-rouge">^U</code>) or <code class="highlighter-rouge">^F</code> (<code class="highlighter-rouge">^D</code>) scroll up (half) or down (half) page</li>
+  <li><code class="highlighter-rouge">H</code> <code class="highlighter-rouge">M</code> <code class="highlighter-rouge">L</code> move to the top/middle/bottom of the window, so you can scroll</li>
+  <li><code class="highlighter-rouge">mA</code> then <code class="highlighter-rouge">'A</code> jump there (downcase letter <code class="highlighter-rouge">a</code> can jump only on current
+buffer), <code class="highlighter-rouge">:marks</code> gives the jump location, two ‘ <code class="highlighter-rouge">''</code> is jump back, <code class="highlighter-rouge">'.</code> jump to
+last change</li>
+  <li><code class="highlighter-rouge">^o</code> and <code class="highlighter-rouge">^i</code> will jump to previos and next location. <code class="highlighter-rouge">^]</code> to jump to section
+under cursor - hyperlink - ctags</li>
+  <li><code class="highlighter-rouge">%</code> jump closing brackets or other matching brace</li>
+  <li><code class="highlighter-rouge">5G</code> or <code class="highlighter-rouge">:5</code> goes to the line 5</li>
+  <li><code class="highlighter-rouge">gg</code> goes top, <code class="highlighter-rouge">G</code> goes bottom</li>
+  <li><code class="highlighter-rouge">g,</code> and <code class="highlighter-rouge">g;</code> jump to next/prev change on current buffer</li>
+  <li><code class="highlighter-rouge">:set scrollbind</code> in two buffers will make them scroll simultaneously. toggle
+scrolling with <code class="highlighter-rouge">:set scb!</code></li>
+  <li>show line numbers <code class="highlighter-rouge">:set number</code> or relative numbers <code class="highlighter-rouge">:set relativenumber</code> (or
+shorter <code class="highlighter-rouge">:set rnu</code>. To disable you can <code class="highlighter-rouge">:set norelativenumber</code></li>
+  <li>show approx position in text <code class="highlighter-rouge">^G</code></li>
+  <li><code class="highlighter-rouge">gf</code> follow that file</li>
+</ul>
+
+<h1 id="motions-and-selections">Motions and selections</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">ciw</code> change inner word, <code class="highlighter-rouge">caw</code> including spaces that follows the word
+    <ul>
+      <li><code class="highlighter-rouge">ca]</code> change all inside brackets including both [ ]</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">daw</code> removes the inner word</li>
+  <li><code class="highlighter-rouge">dt </code> delete until the space, <code class="highlighter-rouge">df </code> delete until the space including space</li>
+  <li><code class="highlighter-rouge">dap}p</code> switch two paragraph</li>
+  <li><code class="highlighter-rouge">dE</code> removes to the End of the string</li>
+  <li><code class="highlighter-rouge">vit</code> inner or <code class="highlighter-rouge">vat</code> outer visual select (including html tag) <code class="highlighter-rouge">:h tag-blocks</code>
+    <ul>
+      <li>repeat <code class="highlighter-rouge">at</code> to select wraped tag</li>
+      <li>jump to closing (Oposite) html tag with <code class="highlighter-rouge">o</code>. more on <code class="highlighter-rouge">:help
+visual-operators</code> <code class="highlighter-rouge">:help v_it</code></li>
+      <li><code class="highlighter-rouge">vap</code> select paragraph (until next empty line, including that empty line)</li>
+      <li><code class="highlighter-rouge">dst</code> delete surround tag with vim surround plugin.</li>
+      <li><code class="highlighter-rouge">cil</code> change inner line with line text object plugin</li>
+      <li><code class="highlighter-rouge">vii</code> select same indent level with indent text object</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">va'</code> visually select all inside ‘ including ‘</li>
+  <li><code class="highlighter-rouge">cgn</code> change visually selected text using previous search</li>
+  <li>recording macro to q with <code class="highlighter-rouge">qq</code>, exit with <code class="highlighter-rouge">q</code>, run with <code class="highlighter-rouge">@q</code></li>
+  <li>paste commands in insert mode with <code class="highlighter-rouge">^Rq</code></li>
+  <li><code class="highlighter-rouge">^T</code> indent <code class="highlighter-rouge">^D</code> dedent in insert mode.
+In normal mode you can select and indent with <code class="highlighter-rouge">=</code>
+To indent whole file you can jump to begging and indent to last line <code class="highlighter-rouge">gg=G</code>.
+In visual mode <code class="highlighter-rouge">gq</code> will format text to 80 char lines (good for markdown)</li>
+</ul>
+
+<p>HTML indent works fine but note when to avoid erb tags. It detects <code class="highlighter-rouge">%&gt;</code> as
+closed tag except when line starts with <code class="highlighter-rouge">&lt;%</code>. Do not use comment in the middle
+of erb since that line somehow is not indented. Better is to add another comment
+tag inline <code class="highlighter-rouge">&lt;%# if condition? %&gt;</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Instead
+&lt;div&gt;
+  text node &lt;%= name %&gt;
+&lt;/div&gt;
+
+Use
+&lt;div&gt;
+  text node
+  &lt;%= name %&gt;
+&lt;/div&gt;
+
+For if else anotation use separated tag
+&lt;% if b %&gt;
+&lt;% else %&gt;&lt;%# if b %&gt;
+&lt;% end %&gt;&lt;%# if b %&gt;
+
+For multiline ruby there is a problems so use single line erb
+&lt;% one %&gt;
+&lt;% two %&gt;
+
+For case switch there is a problem since it is not recognized as valid ruby
+    &lt;fieldset&gt;
+      &lt;% case searchable %&gt;
+      &lt;% when Book %&gt;
+        &lt;legend&gt;Book&lt;/legend&gt;
+        &lt;%= searchable.title %&gt;
+      &lt;% when User %&gt;
+      &lt;% end %&gt;
+only solution is to merge two line into one
+    &lt;fieldset&gt;
+      &lt;% case searchable when Book %&gt;
+        &lt;legend&gt;Book&lt;/legend&gt;
+        &lt;%= searchable.title %&gt;
+      &lt;% when User %&gt;
+      &lt;% end %&gt;
+</code></pre></div></div>
+
+<h1 id="motion-in-visual-mode">Motion in visual mode</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">'&lt;</code> to the first line (<code class="highlighter-rouge">\</code>&lt;` char) of last selected visual area. Note that
+you need to exit current visual area and than jump to first or last line/char</li>
+  <li><code class="highlighter-rouge">gv</code> to select previous selected visual area</li>
+</ul>
+
+<p>ragtag plugin in insert mode:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;c-x&gt;/</code> close last html tag</li>
+  <li><code class="highlighter-rouge">&lt;c-x&gt;=</code> append <code class="highlighter-rouge">&lt;%= %&gt;</code>, use <code class="highlighter-rouge">&lt;c-x&gt;+</code> to wrap around last line</li>
+  <li><code class="highlighter-rouge">&lt;c-x&gt;-</code> append <code class="highlighter-rouge">&lt;% %&gt;</code>, use <code class="highlighter-rouge">&lt;c-x&gt;_</code> to wrap around last line</li>
+  <li><code class="highlighter-rouge">&lt;c-x&gt;@</code> insert stylesheet or <code class="highlighter-rouge">&lt;c-x&gt;$</code> javascript tags</li>
+</ul>
+
+<h1 id="copy-paste">Copy paste</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">"+y</code> copy visual selection to system clipboard, ubuntu should run <code class="highlighter-rouge">sudo
+apt-get install vim-gtk</code>.</li>
+  <li>select which register to use with (use character not number) for example:
+yank link to register <code class="highlighter-rouge">a</code> and paste: <code class="highlighter-rouge">"add</code> <code class="highlighter-rouge">"ap"</code>. When deleting or changing it
+will override default register, so you need to select some other register, like
+black hole register <code class="highlighter-rouge">"_</code> if you want to paste same stuff multiple times, for
+example <code class="highlighter-rouge">"_d</code> or <code class="highlighter-rouge">"_c</code> will keep default register untouched.</li>
+  <li><code class="highlighter-rouge">%y+</code> copy all lines to clipboard</li>
+  <li>to move a line to buffer on the left you can record macro (something like
+<code class="highlighter-rouge">yy ^wh p ^wl</code>)</li>
+  <li>to paste with proper indend use <a href="https://github.com/tpope/vim-unimpaired">vim-unimpaired</a> <code class="highlighter-rouge">]p</code> , also from plugin <code class="highlighter-rouge">:help unimpaired</code></li>
+  <li><code class="highlighter-rouge">[l</code> <code class="highlighter-rouge">]l</code> ale errors</li>
+  <li><code class="highlighter-rouge">]b</code> buffers</li>
+  <li><code class="highlighter-rouge">]q</code> go next <code class="highlighter-rouge">[q</code> prev Quick fix, Alss next error or warning with <code class="highlighter-rouge">:lnext</code> or
+<code class="highlighter-rouge">:lpr</code> or using <code class="highlighter-rouge">[l</code> <code class="highlighter-rouge">]l</code>. More are in <code class="highlighter-rouge">:help unimpaired-next</code></li>
+  <li><code class="highlighter-rouge">]ow</code> to enable wrap, toggle with <code class="highlighter-rouge">yow</code>, more <code class="highlighter-rouge">:help unimpaired-toggling</code></li>
+</ul>
+
+<p>To close error window you need to <code class="highlighter-rouge">:lcl</code>. I use map for quickfix to <code class="highlighter-rouge">:.cc</code></p>
+
+<ul>
+  <li>insert text from external command is with <code class="highlighter-rouge">:read !date</code></li>
+</ul>
+
+<h1 id="exploring">Exploring</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">:edit .</code> (short <code class="highlighter-rouge">:e.</code>) opens (<code class="highlighter-rouge">:vsp</code>) splits netrw of folder,</li>
+</ul>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>open file on specific line <code class="highlighter-rouge">vi +10 README</code></li>
+</ul>
+
+<h2 id="netrw">Netrw</h2>
+
+<p><a href="https://github.com/duleorlovic/config/blob/master/vim/netrw.vim">netrw.vim</a> is
+native exprorer.
+<code class="highlighter-rouge">:Explore</code>(short <code class="highlighter-rouge">:E</code>) <code class="highlighter-rouge">:Vex</code> of current editing file
+To change current folder just press c on folder line <code class="highlighter-rouge">help :netrw-c</code>.
+That’s better than <code class="highlighter-rouge">cd ../path</code> which change in all tabs. It will not affect
+already opened windows, so it should be done on the first window in the tab.</p>
+
+<p>Inside netrw:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">%</code> create new file, more info <code class="highlighter-rouge">:help netrw-%</code></li>
+  <li><code class="highlighter-rouge">d</code> create new directory</li>
+  <li><code class="highlighter-rouge">R</code> rename file/directory under cursor</li>
+  <li><code class="highlighter-rouge">D</code> delete file/directory under cursor</li>
+</ul>
+
+<h2 id="nerd-tree">NERD tree</h2>
+
+<ul>
+  <li>to change current directory to selected folder, type in normal mode <code class="highlighter-rouge">cd</code>. It
+will change directory only in current buffer.</li>
+  <li>refresh with <code class="highlighter-rouge">r</code> (selected dir) or <code class="highlighter-rouge">R</code> (all)</li>
+</ul>
+
+<h1 id="searching">Searching</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">/</code> for searching, to search in oposite direction <code class="highlighter-rouge">?</code> (<code class="highlighter-rouge">n</code> and <code class="highlighter-rouge">N</code> for next
+and previous result). If search string is all lowercased than it will search
+ignore case, but if you have at leat on uppercased letter than case is important</li>
+  <li><code class="highlighter-rouge">:grep subject -R *
+--exclude-dir={log,spec,public,features,tmp,vendor,assets,db} -I</code>. Instead of
+<code class="highlighter-rouge">:grep</code> I use <code class="highlighter-rouge">:Ack</code> (which uses ag)</li>
+</ul>
+<p><a href="https://github.com/ggreer/the_silver_searcher">https://github.com/ggreer/the_silver_searcher</a>. It will ignore all from
+<code class="highlighter-rouge">.gitignore</code> so no need to exclude dir. Here are some ack.vim helpers:</p>
+<ul>
+  <li><code class="highlighter-rouge">?</code> quick summary of keys, <code class="highlighter-rouge">h</code> open in horizontal split</li>
+  <li>
+    <p><code class="highlighter-rouge">ag pattern -G show</code> will search only filenames like <code class="highlighter-rouge">show.html.erb</code> (<code class="highlighter-rouge">-G</code>
+  is short for <code class="highlighter-rouge">--file-search-regex patter</code>), <code class="highlighter-rouge">-i</code> ignore case, <code class="highlighter-rouge">-l</code> show only
+  filenames. <code class="highlighter-rouge">--ignore-dir=lib</code> will ignore specific folders (regex not
+  supported). Filter only specific file type <code class="highlighter-rouge">ag --list-file-types| less</code> you
+  can use <code class="highlighter-rouge">ag MyClass --ruby</code>.</p>
+  </li>
+  <li>grep end of the word <code class="highlighter-rouge">/usan\&gt;</code> help with <code class="highlighter-rouge">:h /\&gt;</code></li>
+  <li><code class="highlighter-rouge">:%s/old/new/gc</code></li>
+  <li><code class="highlighter-rouge">q:</code> shows history of commands</li>
+  <li><code class="highlighter-rouge">q/</code> shows history of searches</li>
+  <li><code class="highlighter-rouge">:argdo %s/foo/bar/ge | update</code>  replace (substitute) in all arg</li>
+  <li><code class="highlighter-rouge">:set nowrapscan</code> is usefull when you want to stop search when you hit bottom
+of a file. With <code class="highlighter-rouge">gg</code> you can jump to begging. <code class="highlighter-rouge">:set wrapscan</code> when you want to
+back to wrapped search</li>
+  <li>clear highlights until nex search <code class="highlighter-rouge">:noh</code>, to clear completely <code class="highlighter-rouge">set nohlsearch</code>
+or toggle <code class="highlighter-rouge">nnoremap &lt;F3&gt; :set hlsearch!&lt;CR&gt;</code></li>
+  <li><code class="highlighter-rouge">vim my_string **/*.md | copen</code> search only md files for my_string and show
+results</li>
+  <li>beggining and end of line marks like <code class="highlighter-rouge">/^asd</code> and <code class="highlighter-rouge">/asd$</code> works fine (not in
+the middle <code class="highlighter-rouge">/asd^qwe</code>. For multiline search you can use: <code class="highlighter-rouge">\n</code> new line, <code class="highlighter-rouge">\_s</code>
+space,tab or newline, <code class="highlighter-rouge">\_.</code> any char including new line, <code class="highlighter-rouge">\_^</code> and <code class="highlighter-rouge">\_$</code> are
+beggining and end of line. You can use minimum matcher <code class="highlighter-rouge">\{-}</code> to stop as soon as
+possible (instead of <code class="highlighter-rouge">*</code> which will stop at last occurrence).
+    <ul>
+      <li><code class="highlighter-rouge">/asd\_.\{-}qwe</code> find asd followed with any character (including new line)
+and stop at qwe. You can use <a href="http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command">S and S!
+snippet</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p><code class="highlighter-rouge">:Ack</code> can be used to find in files. In vim it uses <code class="highlighter-rouge">ag</code> instead of <code class="highlighter-rouge">grep</code> or
+<code class="highlighter-rouge">Ack</code>. To search specific types use option <code class="highlighter-rouge">-G</code> and regexp like: <code class="highlighter-rouge">:Ack
+montserrat -G 'css$'</code>
+For two line search you can use: <code class="highlighter-rouge">:Ack 'destroy\n.*authorize'  app/controllers/</code>
+For multiline (dot not matter how many lines are in between) <code class="highlighter-rouge">:Ack
+'destroy(\n.*)*flash.now..notice'  app/controllers/</code></p>
+
+<h1 id="windows-buffers-and-tabs">Windows buffers and tabs</h1>
+
+<p><a href="http://vim.wikia.com/wiki/Easier_buffer_switching">terminology</a></p>
+
+<ul>
+  <li><code class="highlighter-rouge">:tabe file</code> open file in new tab, <code class="highlighter-rouge">gt</code> switch between tabs</li>
+  <li><code class="highlighter-rouge">:help Ctrl-W_T</code> move current buffer in new tab, Disable default Terminal -&gt;
+Preferences -&gt; Shortcuts</li>
+  <li><code class="highlighter-rouge">gx</code> open link under cursor with <code class="highlighter-rouge">gnome-open</code>.
+<a href="https://github.com/vim/vim/issues/1386">Issue #1386</a></li>
+  <li><code class="highlighter-rouge">:vsp #1</code>  vertically split window with file #1</li>
+  <li><code class="highlighter-rouge">:on</code> or <code class="highlighter-rouge">Ctrl+W+o</code> closes all windord except current</li>
+  <li><code class="highlighter-rouge">:buffers</code>, <code class="highlighter-rouge">:b1</code>, <code class="highlighter-rouge">:bun</code> closes the buffer</li>
+  <li><code class="highlighter-rouge">CTRL+^</code> (shift+6) jump to previous buffer</li>
+  <li><code class="highlighter-rouge">retab</code> this will actually reformat all source</li>
+  <li><code class="highlighter-rouge">ctrl+w+f</code> is the same as <code class="highlighter-rouge">gf</code> but opens in new vertical split window</li>
+  <li><code class="highlighter-rouge">b substring_of_filename</code> open buffer that matches substring (press tab in
+case of multiple mathces)</li>
+</ul>
+
+<p>Quickfix window can be opened with <code class="highlighter-rouge">:copen</code></p>
+
+<h1 id="completion">Completion</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">^n</code> or <code class="highlighter-rouge">^p</code> in insert mode to autocomplete strings and get next/previous item</li>
+  <li><code class="highlighter-rouge">^x^o</code> to autocomplete using omni completion <code class="highlighter-rouge">:set
+omnifunc=csscomplete#CompleteCSS</code></li>
+  <li><code class="highlighter-rouge">^x^n</code> only strings from current file</li>
+  <li><code class="highlighter-rouge">^x^l</code> complete whole lines</li>
+  <li><code class="highlighter-rouge">^x^f</code> to complete filename (keep <code class="highlighter-rouge">^x^f</code> when you navigate subfolders)</li>
+  <li><code class="highlighter-rouge">^x^]</code> for tags find other shortcuts with <code class="highlighter-rouge">:help ins-completion</code></li>
+  <li><code class="highlighter-rouge">^a</code> and <code class="highlighter-rouge">^x</code> to increment and decrement numbers
+<a href="https://github.com/tpope/vim-speeddating">speeddating</a> if you want to increment
+dates</li>
+  <li>for commands you can use <code class="highlighter-rouge">^d</code> to show all completion and <code class="highlighter-rouge">&lt;tab&gt;</code> to use it</li>
+</ul>
+
+<h1 id="tips-1">Tips</h1>
+
+<ul>
+  <li>Repeat last colon command <code class="highlighter-rouge">@:</code>, repeat last command <code class="highlighter-rouge">@@</code></li>
+  <li><code class="highlighter-rouge">:args app/*/*</code>  to add all files to arg list</li>
+  <li><code class="highlighter-rouge">:nnoremap _ f_x~</code> find next <code class="highlighter-rouge">_</code>, remove and uppercase
+<a href="http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case">link</a>
+for moving underscore to CamelCase</li>
+  <li>using vim inside irb or rails console with gem
+<a href="https://github.com/jberkel/interactive_editor">interactive_editor</a>. Its
+usefull since you can paste only limited number of chars to irb line. Now you
+can write your input data in file/ruby code and insert byebug/debugger/pry in
+rails code, and start hunting for bugs</li>
+  <li><code class="highlighter-rouge">set showcmd</code> enable showing all keys that I’m typing in bottom right corner,
+very usefull when explaining to someone</li>
+  <li>snippet <code class="highlighter-rouge">nnoremap ,html :-1read $HOME/.vim/.skeleton.html&lt;CR&gt;3jwf&gt;a</code> <a href="https://github.com/duleorlovic/config/tree/master/vim/snippets">my
+snippets</a></li>
+  <li><code class="highlighter-rouge">K</code> in normal mode opens documentation for that keyword, for example
+<code class="highlighter-rouge">image_tag</code> or <code class="highlighter-rouge">select</code> will open documentation for all gems which defines that
+keyword</li>
+  <li>black screen is caused to silent command
+https://github.com/vim/vim/issues/1253 use <code class="highlighter-rouge">:redraw!</code></li>
+</ul>
+
+<h1 id="books-videos-tutorials">Books, videos tutorials</h1>
+
+<ul>
+  <li>vim begginer tutorial <code class="highlighter-rouge">:help vimtutor</code> or run in shell <code class="highlighter-rouge">vimtutor</code></li>
+  <li><a href="/2017/06/05/vim-theory/">vim theory</a></li>
+  <li><a href="https://www.youtube.com/watch?v=5r6yzFEXajQ">https://www.youtube.com/watch?v=5r6yzFEXajQ</a></li>
+  <li>
+    <p>start vim without plugin , no plugins
+<a href="https://www.youtube.com/watch?v=XA2WjJbmmoM">–noplugin</a> or start vanila vim
+without vimrc initialization <code class="highlighter-rouge">vim -u NONE</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># fuzzy finder
+set path+=**
+find *-vim #
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="ctags">CTAGS</h1>
+
+<p>You need to generate tags file with <code class="highlighter-rouge">ctags -R .</code>. You can use default params.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/.ctags
+--recurse=yes
+--exclude=.git
+--exclude=log
+--languages=ruby
+</code></pre></div></div>
+
+<p>Some vim keys:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^] # ctrl + ] : jump to tag under cursos
+^t # jump back in tags stack (stack is when you go into definition with ^])
+^o ^i # similar move back and forward, but all jumps (not just tags)
+^x^] # autocomplete tags
+g] # list all ambiguous tags: same method could be defined in multiple classes
+
+:ts my_met # select tags for this search, also ctrp tags
+</code></pre></div></div>
+
+<p>To generate tags for all gems install <a href="https://github.com/tpope/gem-ctags">https://github.com/tpope/gem-ctags</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install gem-ctags
+gem ctags
+</code></pre></div></div>
+
+<p>Create template to git hook
+<a href="http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html">http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<p>Also use CtrlPTag so you can navigate to tag</p>
+
+<h1 id="syntastic-checker">Syntastic checker</h1>
+
+<p>Instead of synstastic I use ALE <a href="https://github.com/w0rp/ale">https://github.com/w0rp/ale</a>
+Results are put in location list so you can navigate with <code class="highlighter-rouge">] l</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" config/vim/ale.vim
+" change message
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+" disable linter on change
+let g:ale_lint_on_text_changed = 'never'
+
+" use only erubylint
+let g:ale_linters = {'eruby': ['erubylint']}
+
+" enable airline
+let g:airline#extensions#ale#enabled = 1
+
+" use less invansive color for warnings
+highlight ALEWarning ctermbg=DarkMagenta
+
+" disable ale for all subrepositories under real-world-rails
+let g:ale_pattern_options = {
+\ '.*real-world-rails.*': { 'ale_enabled': 0},
+\}
+</code></pre></div></div>
+
+<p>You can disable ALE with <code class="highlighter-rouge">ALEToggle</code>. You can see error message <code class="highlighter-rouge">ALEDetail</code>. Yo
+see all configuration options <code class="highlighter-rouge">ALEInfo</code>.
+There was issue with erb <a href="https://github.com/w0rp/ale/issues/580">https://github.com/w0rp/ale/issues/580</a> but this
+erubylint was recently removed from ale linters.</p>
+
+<h2 id="syntastic-deprecated-use-ale-instead">Syntastic (deprecated, use ALE instead)</h2>
+
+<p><a href="https://github.com/scrooloose/syntastic">syntastic</a> vim plugin is great to
+write your code. Just need to install external syntac checkers and they will be
+eabled. <code class="highlighter-rouge">SyntasticInfo</code> can give you current checkers and <code class="highlighter-rouge">help
+syntastic-checkers</code> will show you all available checkers.</p>
+
+<p>To check if some checker is installed you can try with system command (here we
+show current path):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:echo syntastic#util#system('echo "$PATH"')
+</code></pre></div></div>
+
+<p>You need to activate checkers for specific <strong>filetype</strong> and you can customise
+speific <strong>checker</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let g:syntastic_&lt;filetype&gt;_checkers = ['&lt;checker-name&gt;']
+let g:syntastic_&lt;filetype&gt;_&lt;checker&gt;_args = "--my --args --here"
+</code></pre></div></div>
+
+<p>Here is my configuration for syntastic and vim
+<a href="https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim">https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim</a>
+You need to install this tools:</p>
+
+<ul>
+  <li>Markdown <code class="highlighter-rouge">gem install mdl</code></li>
+  <li>Ruby, Rails <code class="highlighter-rouge">gem install rubocop</code>. You can automatically fix some errors with
+<code class="highlighter-rouge">rubocop --auto-correct Gemfile</code>.
+Configuration is in .rubocop.yml in $HOME or project root. You can disable all
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .rubocop.yml
+AllCops:
+  DisabledByDefault: true
+</code></pre></div>    </div>
+
+    <p>My preferred configuration is
+https://github.com/duleorlovic/config/blob/master/.rubocop.yml</p>
+
+    <ul>
+      <li>inline in comment <code class="highlighter-rouge"># rubocop:disable Metrics/AbcSize, Metrics/MethodLength</code></li>
+      <li>gem ‘rubocop-rspec’ is nice linter for rspec.
+You can run manually with <code class="highlighter-rouge">-D</code> param to see cop names.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>To disable some errors define quiet messages in <code class="highlighter-rouge">syntastic.vim</code> (<code class="highlighter-rouge">:help
+syntastic_quiet_messages</code>)
+  <a href="https://github.com/duleorlovic/config/blob/master/vim/syntastic.vim#L21">g:syntastic_eruby_ruby_quiet_message</a></p>
+<ul>
+  <li>
+    <p>fix <code class="highlighter-rouge">possibly useless use of a constant in void context</code> in erb is with
+<code class="highlighter-rouge">&lt;%= CONST.to_s %&gt;</code>, when is problem with + than fix with assign <code class="highlighter-rouge">&lt;%= total =
+a + b; total %&gt;</code></p>
+  </li>
+  <li>for js I use <code class="highlighter-rouge">jshint</code> with es6 and disabled semicolons</li>
+  <li>semicolons also disabled in <code class="highlighter-rouge">eslint</code> (which extends from airbnb-base)</li>
+  <li>for styleles I use <code class="highlighter-rouge">stylelint</code> and local <code class="highlighter-rouge">.stylelintrc</code> since version 9.10
+does not pick my home configuration</li>
+  <li>Javascript <code class="highlighter-rouge">npm install -g jscs jscs-angular</code> and create files [.jscs](</li>
+  <li>
+    <p>json <code class="highlighter-rouge">npm install -g jsonlint</code> <a href="https://github.com/jaxbot/syntastic-react/issues/4">link to issue</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" .vimrc
+au BufRead,BufNewFile *.json set filetype=json
+let g:syntastic_json_checkers=['jsonlint']
+</code></pre></div>    </div>
+  </li>
+  <li>coffeescript <code class="highlighter-rouge">npm install -g coffeelint</code></li>
+</ul>
+
+<h1 id="vimium-chrome-extension">Vimium chrome extension</h1>
+
+<p>https://github.com/philc/vimium</p>
+
+<p>Normal mode:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">j</code> and <code class="highlighter-rouge">k</code> down and up on a page</li>
+  <li><code class="highlighter-rouge">f</code> follow links <code class="highlighter-rouge">F</code> follow in new tab</li>
+  <li><code class="highlighter-rouge">H</code> and <code class="highlighter-rouge">L</code> back and forward in history</li>
+  <li><code class="highlighter-rouge">J</code> and <code class="highlighter-rouge">K</code> prev and next tab</li>
+  <li><code class="highlighter-rouge">o</code> search and open history links</li>
+  <li><code class="highlighter-rouge">T</code> search open tabs</li>
+  <li><code class="highlighter-rouge">r</code> reload the page</li>
+  <li><code class="highlighter-rouge">gg</code> top or <code class="highlighter-rouge">G</code> bottom of the page</li>
+  <li><code class="highlighter-rouge">gi</code> go to first input element</li>
+</ul>
+
+<p>Additional navigation commands:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">yy</code> copy current url to clipboard</li>
+  <li><code class="highlighter-rouge">gu</code> go up one level in URL path</li>
+  <li><code class="highlighter-rouge">gU</code> go to root of domain</li>
+</ul>
+
+<p>Find mode, enter with <code class="highlighter-rouge">/</code>:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">n</code> and <code class="highlighter-rouge">N</code> next and prev search match</li>
+</ul>
+
+<p>Insert mode, enter with <code class="highlighter-rouge">i</code>. So if you notice that <code class="highlighter-rouge">x</code> closes tab even you are
+inside input, jump into insert mode first…</p>
+
+<p>Since gmail has own <code class="highlighter-rouge">j</code> <code class="highlighter-rouge">k</code> prev and next email, I added rule to ignore all
+(<code class="highlighter-rouge">*</code>) keys</p>
+
+<p>Do not know https://stackoverflow.com/questions/53918093/why-is-class-demo-button-so-special-in-vimium?noredirect=1#comment94679088_53918093</p>
+
+<h1 id="vimum-vimfx">Vimum VimFx</h1>
+
+<p><a href="https://addons.mozilla.org/ru/firefox/addon/vimfx/">VimFx</a>
+<a href="https://github.com/akhodakivskiy/VimFx">source</a> is vimium for
+firefox. <code class="highlighter-rouge">f</code> for navigation and clicks, <code class="highlighter-rouge">/</code> for search (n N), <code class="highlighter-rouge">x</code> <code class="highlighter-rouge">X</code> for close
+and reopen tab, <code class="highlighter-rouge">J</code> <code class="highlighter-rouge">K</code> switch, <code class="highlighter-rouge">space</code> <code class="highlighter-rouge">shift+space</code> page down up.
+<a href="https://github.com/akhodakivskiy/VimFx/blob/master/documentation/commands.md">Hints
+mode</a>:</p>
+<ul>
+  <li><code class="highlighter-rouge">f</code> anything clicable <code class="highlighter-rouge">F</code> opens in new tab (or press Ctrl) <code class="highlighter-rouge">ew</code> new window</li>
+  <li>by default lowercase letter will filter hint strings, but you can use
+uppercase letter to filter by text (you can see what is entered in lower right
+corner)</li>
+  <li><code class="highlighter-rouge">yf</code> copy text and links</li>
+</ul>
+
+<h1 id="rails-vim">Rails vim</h1>
+
+<p>Some todos:</p>
+
+<p>Pluralize</p>
+
+<ul>
+  <li>When I type <code class="highlighter-rouge">:Rcontroller customer</code> it should go to <code class="highlighter-rouge">:Rcontroller customers</code>
+instead of error: <code class="highlighter-rouge">No such controller customer</code>. This usually happens when I
+have a lot of models <code class="highlighter-rouge">customer_invoices</code>, <code class="highlighter-rouge">customer_payments</code> and <code class="highlighter-rouge">customers</code>.</li>
+</ul>
+
+<p>Localize</p>
+
+<ul>
+  <li>When I’m in <code class="highlighter-rouge">index.html.erb</code> and I type <code class="highlighter-rouge">:Rcontroller</code> than I jump to
+controller, but if I’m on <code class="highlighter-rouge">index.in.html.erb</code> than there is an error <code class="highlighter-rouge">Argument
+required</code>. Also problem with <code class="highlighter-rouge">:Eview another_</code></li>
+</ul>
+
+<p>Jump to system tests</p>
+
+<h1 id="create-scripts-for-vim">Create scripts for vim</h1>
+
+<p><code class="highlighter-rouge">help usr_41.txt</code> is Write a vim script in user manual.
+<a href="https://en.wikibooks.org/wiki/Learning_the_vi_Editor/Vim/VimL_Script_language">https://en.wikibooks.org/wiki/Learning_the_vi_Editor/Vim/VimL_Script_language</a></p>
+
+<p>Detect if some features are enabled, for example only on macOS <code class="highlighter-rouge">:help
+feature-list</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" copy to clipboard on macOS need to use pbcopy
+if has('macunix')
+  vnoremap "+y :w !pbcopy&lt;cr&gt;&lt;cr&gt;
+endif
+</code></pre></div></div>
+
+<h2 id="vim-scripts-in-ruby">Vim scripts in ruby:</h2>
+
+<p>https://subvisual.co/blog/posts/139-how-to-program-vim-using-ruby/</p>
+
+<h2 id="vim-ruby-support">Vim ruby support</h2>
+
+<p><code class="highlighter-rouge">:help ruby</code>
+Some integrated stuff in vim
+https://github.com/vim-ruby/vim-ruby/blob/master/doc/vim-ruby.txt
+https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport</p>
+
+<h1 id="whereami-my-plugin-to-show-dedented-lines">WHEREAMI my plugin to show dedented lines</h1>
+
+<p>When looking at large files in small window (I have 4 vim windows in my single
+terminal window) than I want to see to which block current line belongs.
+In schema.rb, current line in which table ?</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::Schema.define(version: 20170124131420) do
+  create_table "projects", force: :cascade do |t|
+    ... long ...
+    t.integer title
+</code></pre></div></div>
+
+<p>In ability.rb, current ability to which user ?</p>
+
+<p>When I’m in long spec file, I want to see setup block for current example and
+all outer example groups (maybe to group all descriptions in one sentence).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.describe Project do
+ let(:project) { Project.new }
+ before
+ ... long ...
+ describe "create task" do
+   ... long ...
+   it "order by date" do
+     project
+</code></pre></div></div>
+
+<p>Also in view, I want to be able where current element belongs, so list all
+wrapped elements. And when I’m in scss I want to see all parent selector,
+classes and media queries.</p>
+
+<p>Solution is to use similar row as in https://github.com/chrisbra/csv.vim
+<code class="highlighter-rouge">:Header</code></p>
+
+<h1 id="rubocopfix-vim-plugin-rubocop">RubocopFix vim plugin rubocop</h1>
+
+<p>Fix current rubocop error, by adding <code class="highlighter-rouge">rubocop:disable</code></p>
+
+<h1 id="graph-visualization-in-markdown">Graph visualization in markdown</h1>
+
+<p><a href="https://markvis-editor.js.org/">https://markvis-editor.js.org/</a></p>
+
+<h1 id="debug-profile-startup-time">Debug profile startup time</h1>
+
+<ul>
+  <li>if vim does not show properly, blank or empty screen, try <code class="highlighter-rouge">:redraw!</code></li>
+</ul>
+<p><a href="https://github.com/bchretien/vim-profiler">https://github.com/bchretien/vim-profiler</a></p>
+<ul>
+  <li><a href="https://github.com/vim-scripts/Decho">https://github.com/vim-scripts/Decho</a></li>
+</ul>
+
+<h1 id="undo">Undo</h1>
+
+<p><a href="https://github.com/mbbill/undotree">https://github.com/mbbill/undotree</a> and remaped to F5 so you can easilly revert
+back to some earlier file.</p>
+
+<h1 id="vim-test">Vim test</h1>
+
+<p>https://8thlight.com/blog/chris-jordan/2016/06/13/running-tests-in-vim.html</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" run single rspec test example for current line
+nnoremap &lt;leader&gt;rs :execute "!rspec %:" . line(".")&lt;cr&gt;
+
+" set compiler
+:compiler rspec
+:make %
+</code></pre></div></div>
+
+<p>Place language specific (file type) plugins inside <code class="highlighter-rouge">~/.vim/ftplugin/ruby.vim</code> so
+they are automatically loaded when you open ruby file.</p>
+
+<p>Use https://github.com/janko-m/vim-test</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;leader&gt;t</code> test nearest spec to the line (if not inside example, whole file
+will be run) <code class="highlighter-rouge">:TestNearest</code></li>
+  <li><code class="highlighter-rouge">&lt;leader&gt;T</code> test whole file <code class="highlighter-rouge">:TestFile</code></li>
+  <li><code class="highlighter-rouge">&lt;leader&gt;a</code> test whole suite <code class="highlighter-rouge">:TestSuite</code></li>
+  <li><code class="highlighter-rouge">&lt;leader&gt;l</code> test last, usefull if you navigate to the code and see if test
+pass <code class="highlighter-rouge">:TestLast</code></li>
+  <li><code class="highlighter-rouge">&lt;leader&gt;g</code> visit test, jump back to the test to write more tests <code class="highlighter-rouge">:TestVisit</code></li>
+</ul>
+
+<p>I use strategy <code class="highlighter-rouge">let test#strategy = "dispatch"</code>. Asyncrun will not correctly
+parse errors:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># instead of one error
+# AsyncRun show two
+
+expected `#&lt;User id: 1061, email: "my-user@asd.asd", created_at: "2017-09-23 09|19| 48", updated_at: "2017-09-23 09:19:48"&gt;.confirmed?` to return true, got false
+spec/features/user_confirmation_spec.rb|25| in `block (2 levels) in &lt;top (required)&gt;'
+</code></pre></div></div>
+
+<p>I prefer to use xdotool and send command to actual window</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" config/vim/ftplugin/ruby.vim
+function! EchoStrategy(cmd)
+  let current_window = system('xdotool getactivewindow | tr -d "\n"')
+  let target_window = system('xdotool search --classname vp_3_class_slash | tr -d "\n"')
+  execute 'Dispatch!  xdotool windowactivate --sync '.target_window.' type "'.a:cmd.'"; xdotool key --delay 50 space Return windowactivate '.current_window
+endfunction
+
+let g:test#custom_strategies = {'echo': function('EchoStrategy')}
+let g:test#strategy = 'echo'
+</code></pre></div></div>
+
+<h1 id="vim-plugin">Vim plugin</h1>
+
+<p><a href="https://github.com/junegunn/vim-plug">https://github.com/junegunn/vim-plug</a> vim plugin manager is installed with one
+command <code class="highlighter-rouge">curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim</code> and setup
+in .vimrc</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>call plug#begin('~/.vim/plugged')
+" Make sure you use single quotes
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+Plug 'junegunn/vim-easy-align'
+call plug#end()
+</code></pre></div></div>
+
+<p>And install with <code class="highlighter-rouge">PlugInstall</code></p>
+
+<h1 id="vim-color-scheme">Vim Color Scheme</h1>
+
+<p><a href="https://github.com/nightsense/vimspectr">https://github.com/nightsense/vimspectr</a> is installed using vim-plug</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Plug 'nightsense/vimspectr'
+colorscheme vimspectr60flat-dark
+</code></pre></div></div>
+
+<p>but I prefer to tweek one by one color</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>highlight Comment cterm=underline ctermbg=Blue ctermfg=White
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">cterm</code> accepts <code class="highlighter-rouge">bold</code> <code class="highlighter-rouge">underline</code> <code class="highlighter-rouge">reverse</code> <code class="highlighter-rouge">italic</code> but no colors.
+<code class="highlighter-rouge">ctermfg</code> and <code class="highlighter-rouge">ctermbg</code> accepts colors, list of all on <code class="highlighter-rouge">:help cterm-color</code>
+Highlight groups can be found on
+<a href="http://vimdoc.sourceforge.net/htmldoc/syntax.html#highlight-groups">highlight-groups</a></p>
+
+<p>To see where the color is defined use <code class="highlighter-rouge">verbose</code>, for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>verbose hi Comment
+</code></pre></div></div>
+
+<p>Using ALE I see <code class="highlighter-rouge">:help g:ale_set_highlights</code> that groups are <code class="highlighter-rouge">ALEError</code>,
+<code class="highlighter-rouge">ALEWarning</code> … so I use less invasive color:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hi ALEWarning m
+</code></pre></div></div>
+
+<h1 id="folding">Folding</h1>
+
+<p>You can hide copy right sections of other comments.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" .vimrc
+" https://stackoverflow.com/questions/2250011/can-i-have-vim-ignore-a-license-block-at-the-top-of-a-file
+function! FoldCopyright()
+  if !exists( "b:foldedCopyright" )
+    let b:foldedCopyright = 1
+    silent! 1,/# Copyright/;/USA\.$/fold
+  endif
+endfunction
+autocmd BufNewFile,BufRead *.rb call FoldCopyright()
+</code></pre></div></div>
+
+<p>If you use <code class="highlighter-rouge">autocmd FileType vim setlocal foldmethod=marker</code> marker method than
+any lines that starts and ends with <em>{ { { …. }}}</em> can be toggled with <code class="highlighter-rouge">za</code></p>
+
+<h1 id="database">Database</h1>
+
+<p>Use https://github.com/tpope/vim-db and access with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:DB mysql://username:password@localhost/my_db_test
+</code></pre></div></div>
+
+<h1 id="tmux">Tmux</h1>
+
+<p>Not using for now</p>
+
+<ul>
+  <li>strange characters instead of single quote I see <code class="highlighter-rouge">&lt;91&gt;</code> and <code class="highlighter-rouge">&lt;92&gt;</code> in vim.
+https://superuser.com/questions/199799/vim-shows-strange-characters-91-92 run
+<code class="highlighter-rouge">:%s/[\x91\x92]/'/g</code> to replace them</li>
+</ul>
+
+<p>https://handbook.infinum.co/books/rails/Editors/Vim
+https://emily.st/2018/11/13/vim-in-the-future/</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

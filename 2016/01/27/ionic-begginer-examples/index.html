@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Ionic Begginer Examples</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ionic Begginer Examples</h1>
+    <p class="meta">Jan 27, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#setup"><span class="tocnumber">1</span> <span class="toctext">Setup</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#android-sdk"><span class="tocnumber">1.1</span> <span class="toctext">Android SDK</span></a></li><li class="toc_level-2 toc_section-3"><a href="#download-ionic"><span class="tocnumber">1.2</span> <span class="toctext">Download Ionic</span></a></li></ul></li><li class="toc_level-1 toc_section-4"><a href="#run-ionic"><span class="tocnumber">2</span> <span class="toctext">Run ionic</span></a><ul><li class="toc_level-2 toc_section-5"><a href="#sass"><span class="tocnumber">2.1</span> <span class="toctext">Sass</span></a></li><li class="toc_level-2 toc_section-6"><a href="#coffeescript"><span class="tocnumber">2.2</span> <span class="toctext">Coffeescript</span></a></li><li class="toc_level-2 toc_section-7"><a href="#jade"><span class="tocnumber">2.3</span> <span class="toctext">Jade</span></a></li></ul></li><li class="toc_level-1 toc_section-8"><a href="#adding-constant-for-server_url"><span class="tocnumber">3</span> <span class="toctext">Adding CONSTANT for SERVER_URL</span></a></li><li class="toc_level-1 toc_section-9"><a href="#adding-other-packages-for-example-railsresource"><span class="tocnumber">4</span> <span class="toctext">Adding other packages, for example RailsResource</span></a></li><li class="toc_level-1 toc_section-10"><a href="#adding-tabs-templates"><span class="tocnumber">5</span> <span class="toctext">Adding tabs templates</span></a></li><li class="toc_level-1 toc_section-11"><a href="#ionicmodal"><span class="tocnumber">6</span> <span class="toctext">IonicModal</span></a></li><li class="toc_level-1 toc_section-12"><a href="#common-errors"><span class="tocnumber">7</span> <span class="toctext">Common errors</span></a><ul><li class="toc_level-2 toc_section-13"><a href="#emulator-tips"><span class="tocnumber">7.1</span> <span class="toctext">Emulator tips</span></a></li><li class="toc_level-2 toc_section-14"><a href="#virtualbox-and-android-emulator"><span class="tocnumber">7.2</span> <span class="toctext">VirtualBox and Android Emulator</span></a></li><li class="toc_level-2 toc_section-15"><a href="#adb-devices-offline"><span class="tocnumber">7.3</span> <span class="toctext">Adb devices offline</span></a></li></ul></li><li class="toc_level-1 toc_section-16"><a href="#debug-with-adb"><span class="tocnumber">8</span> <span class="toctext">Debug with ADB</span></a></li><li class="toc_level-1 toc_section-17"><a href="#dns-for-local-server"><span class="tocnumber">9</span> <span class="toctext">DNS for local server</span></a></li><li class="toc_level-1 toc_section-18"><a href="#root-android-device"><span class="tocnumber">10</span> <span class="toctext">Root android device</span></a></li><li class="toc_level-1 toc_section-19"><a href="#releasing-the-app-and-deploy-to-google-play-store"><span class="tocnumber">11</span> <span class="toctext">Releasing the app and deploy to google play store</span></a></li><li class="toc_level-1 toc_section-20"><a href="#old-browsers"><span class="tocnumber">12</span> <span class="toctext">Old browsers</span></a></li><li class="toc_level-1 toc_section-21"><a href="#ngcordova"><span class="tocnumber">13</span> <span class="toctext">NgCordova</span></a></li><li class="toc_level-1 toc_section-22"><a href="#notifications"><span class="tocnumber">14</span> <span class="toctext">Notifications</span></a></li><li class="toc_level-1 toc_section-23"><a href="#content-security-policy"><span class="tocnumber">15</span> <span class="toctext">Content security policy</span></a></li><li class="toc_level-1 toc_section-24"><a href="#ready"><span class="tocnumber">16</span> <span class="toctext">Ready</span></a></li><li class="toc_level-1 toc_section-25"><a href="#local-storage"><span class="tocnumber">17</span> <span class="toctext">Local storage</span></a></li><li class="toc_level-1 toc_section-26"><a href="#devise-authentication"><span class="tocnumber">18</span> <span class="toctext">Devise authentication</span></a></li><li class="toc_level-1 toc_section-27"><a href="#tips"><span class="tocnumber">19</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-28"><a href="#android-studio"><span class="tocnumber">20</span> <span class="toctext">Android studio</span></a></li></ul></td></tr></tbody></table></div><h1 id="setup">Setup</h1>
+
+<h2 id="android-sdk">Android SDK</h2>
+
+<p>Download <a href="http://developer.android.com/sdk/installing/index.html?pkg=tools">Android
+SDK</a> and
+export path in your <code class="highlighter-rouge">.bashrc</code> like <code class="highlighter-rouge">export
+ANDROID_HOME=/home/orlovic/Android/Sdk/</code>.</p>
+
+<p>Make <code class="highlighter-rouge">android</code>, <code class="highlighter-rouge">adb</code> and <code class="highlighter-rouge">emulator</code> accessible with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo ln -s /home/orlovic/Android/Sdk/platform-tools/adb /usr/bin/
+echo 'export PATH="$PATH:$HOME/orlovic/Android/Sdk/tools"' &gt;&gt; ~/.bashrc
+# or
+sudo ln -s /home/orlovic/Android/Sdk/tools/android /usr/bin/
+
+android avd
+emulator @n4 &amp;
+</code></pre></div></div>
+
+<p><a href="http://source.android.com/source/initializing.html#configuring-usb-access">Configure USB
+access</a> with this command:</p>
+
+<p><code class="highlighter-rouge">wget -S -O - http://source.android.com/source/51-android.rules | sed
+"s/&lt;username&gt;/$USER/" | sudo tee &gt;/dev/null /etc/udev/rules.d/51-android.rules;
+sudo udevadm control --reload-rules</code></p>
+
+<p>On new device go to settings to enable USB Debugging. Settings is hidden by
+default, to enable go Settings -&gt; About Phone -&gt; Build number then tap 5 times.
+Then go to Settings -&gt; Developer options and enable USB debugging. Also usefull
+is to enable Stay awake (screen will never sleep while charging).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsusb # find your model
+sudo vi /etc/udev/rules.d/51-android.rules
+# add your model with idVendor and idProduct
+sudo udevadm control --reload-rules
+# plug again your device
+adb kill-server
+adb devices
+</code></pre></div></div>
+
+<h2 id="download-ionic">Download Ionic</h2>
+
+<p>Download ionic and cordova</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install -g cordova ionic
+ionic start myIonic blank
+cd myIonic
+cat &gt;&gt; .gitignore &lt;&lt; HERE_DOC
+# from command ionic upload
+.io-config.json
+# bower packages
+./www/lib/
+# cordova js is managed by ionic
+./hooks/
+HERE_DOC
+git init . &amp;&amp; git add . &amp;&amp; git commit -m "ionic start"
+</code></pre></div></div>
+
+<h1 id="run-ionic">Run ionic</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ionic platform add android # this will install cordova-plugins-(console,device, splashscreeen,statusbar,whitelist)
+cordova plugin add ionic-plugin-keyboard # this is default plugin
+# prefer ionic CLI to cordova CLI because it adds to package.json
+ionic plugin add cordova-plugin-camera
+ionic state save # others pull the code, sync with `ionic state restore`
+ionic upload
+git add . &amp;&amp; git commit -m "ionic add android &amp;&amp; ionic upload"
+ionic share some@email.com
+
+ionic serve # to see it in browser (rebuild also)
+# to run in emulator with live reload and logs (rebuild also)
+# --target to select emulator
+ionic emulate -lcs --target=googleapi21
+ionic run --target 123123 # to run on device, find device name with adb devices
+# note that `run` will not rebuild, it will just install latest configured apk
+# note that it will rebuild and use env vars if `-l` parameter is used
+ionic serve --nobrowser # it will not open new browser, so you can use existing
+</code></pre></div></div>
+
+<p><a href="https://github.com/driftyco/ionic-cli#advanced-serve-options">livereload</a> use
+ionic.config.yml to look <code class="highlighter-rouge">watchPatterns</code> (default is <code class="highlighter-rouge">www/js/*</code> and
+<code class="highlighter-rouge">!www/css/**/*</code>).
+To run gulp task you an use <code class="highlighter-rouge">gulpStartupTasks: ['watch']</code> in <code class="highlighter-rouge">ionic.config.yml</code>.
+Ionic cli 2 <a href="https://forum.ionicframework.com/t/ionic2-cli-doesnt-run-gulp-tasks-on-ionic-serve/49085/3">does not run gulp task on ionic
+serve</a>
+so you need to add in gulpfile.js (gulpSartupTasks will not help).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// gulpfile.js
+gulp.task('serve:before', ['default']);
+gulp.task('emulate:before', ['default']);
+gulp.task('run:before', ['default']);
+
+// default should run all tasks and watch task
+gulp.task('default', ['sass', 'coffee', 'jade', 'watch']);
+</code></pre></div></div>
+
+<h2 id="sass">Sass</h2>
+
+<p>Note that sass is already in gulpfile, but it is not started. Follow <a href="https://github.com/driftyco/ionic-cli/blob/master/README.md#using-sass">using
+sass</a>
+instructions to link to compiled sass file.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ionic setup sass
+cat &gt;&gt; .gitignore &lt;&lt; HERE_DOC
+# when using /scss css is autogenerated
+./www/css/
+HERE_DOC
+git rm www/css -r
+git add . &amp;&amp; git commit -m "ionic setup sass"
+</code></pre></div></div>
+
+<h2 id="coffeescript">Coffeescript</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; .gitignore &lt;&lt; HERE_DOC
+# coffee script files are all appended to one file
+www/js/_coffeescript_build.js
+HERE_DOC
+
+sed -i ionic.project -e '/gulpSartupTasks/a "coffee",'
+
+sed -i gulpfile.js -e '/var sass/a \
+var coffee = require("gulp-coffee");'
+
+sed -i gulpfile.js -e '/var paths/a \
+  coffee: ["./www/**/*.coffee"],'
+
+sed -i gulpfile.js -e '/gulp.task..watch/a \
+  gulp.watch(paths.coffee, ["coffee"]);'
+
+sed -i gulpfile.js -e '/gulp.task..default/c \
+  gulp.task("default", ["sass", "coffee", "watch"]);'
+
+cat &gt;&gt; gulpfile.js &lt;&lt; 'HERE_DOC'
+
+gulp.task('coffee', function(done) {
+  gulp.src(paths.coffee)
+  .pipe(coffee({bare: true}).on('error', gutil.log))
+  .pipe(concat('_coffeescript_build.js'))
+  .pipe(gulp.dest('./www/js'))
+  .on('end', done);
+});
+HERE_DOC
+
+# add to package.json
+npm install gulp-coffee gulp-concat --save
+sed -i www/index.html -e '/&lt;\/head&gt;/i \
+    &lt;!-- coffe script is bundled to this file --&gt;\
+    &lt;script src="js/_coffeescript_build.js"&gt;&lt;/script&gt;'
+
+git add . &amp;&amp; git commit -m "Enable coffee script"
+touch www/js/_coffeescript_build.js # just to not raise file not found error
+</code></pre></div></div>
+
+<p><del>Note that it does not work nice on first run <code class="highlighter-rouge">ionic serve</code> , you need to
+update some coffee file to get pipe to reload.</del> 
+<del>Note that we added coffee to ionic.project gulpStartupTasks, but sometimes
+browser cache will prevent some changes to show up, so try to reload the
+page.</del></p>
+
+<p>When I add dependency for default task, than javascript changes are not
+recognized, sometimes… wip</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// gulpfile.js
+gulp.task('default', ['sass', 'coffee', 'jade']);
+</code></pre></div></div>
+
+<h2 id="jade">Jade</h2>
+
+<p>Adding jade with: <code class="highlighter-rouge">npm install gulp-jade --save-dev</code>. Than</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; .gitignore &lt;&lt; HERE_DOC
+# here we will build html from jade
+www/jade_build
+HERE_DOC
+sed -i ionic.project -e '/gulpSartupTasks/a "jade",'
+sed -i gulpfile.js -e '/var sass/a \
+var jade = require("gulp-jade");'
+sed -i gulpfile.js -e '/var paths/a \
+  jade: ["./www/**/*.jade"],'
+sed -i gulpfile.js -e '/gulp.task..watch/a \
+  gulp.watch(paths.jade, ["jade"]),'
+cat &gt;&gt; gulpfile.js &lt;&lt; 'HERE_DOC'
+
+gulp.task('jade', function (done) {
+  return gulp.src(paths.jade)
+    .pipe(jade())
+    .pipe(gulp.dest('www/jade_build/'));
+});
+HERE_DOC
+git commit -am "Enable jade"
+# gulpfile.js
+gulp.task('default', ['sass', 'jade']);
+</code></pre></div></div>
+
+<p>You can convert <a href="/2016/04/05/javascript-coffeescript-tips/#jade">all html files to jade</a> but please
+check them. <code class="highlighter-rouge">index.html</code> should be in html format since that path <code class="highlighter-rouge">www</code> is
+fixed.</p>
+
+<p>Also note that template path should be prefixed with <code class="highlighter-rouge">jade_build</code> in your router
+file, for example <code class="highlighter-rouge">templateUrl: 'jade_build/js/dashboard/dashboard.html'</code> Check
+example  of <a href="/2015/12/20/devise-oauth-angular/#angular-devise">login controller for ionic</a></p>
+
+<h1 id="adding-constant-for-server_url">Adding CONSTANT for SERVER_URL</h1>
+
+<p>You probably need to change api url from command line, since ionic does not pass
+arguments to gulp command, we need to use env variables (note that they must be
+prefix ie before actual command). <a href="http://stackoverflow.com/questions/32179464/pass-parameters-to-gulp-task-through-ionic-serve?rq=1">ionic has some problems passing parameters to gul</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># run with prefix env
+SERVER_URL=my-domain.local:3001 ionic serve
+SERVER_URL=production ionic emulate
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># put in your app
+cat &gt;&gt; www/js/app.constant.coffee &lt;&lt; HERE_DOC
+PRODUCTION_SERVER_URL = 'https://www.trk.in.rs'
+STAGING_SERVER_URL = 'http://trk.herokuapp.com'
+LOCAL_SERVER_URL = 'http://mylocationsubdomain.my-domain.local:3001'
+SERVER_ENV_URL = 'staging' # this is default
+SERVER_URL = switch SERVER_ENV_URL
+  when 'production' then PRODUCTION_SERVER_URL
+  when 'staging' then STAGING_SERVER_URL
+  when 'local' then LOCAL_SERVER_URL
+  else SERVER_ENV_URL
+angular.module 'starter'
+  .constant 'CONSTANT',
+    SERVER_URL: SERVER_URL
+    ENV: SERVER_ENV_URL
+HERE_DOC
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># put to your gulpfile.js
+npm install gulp-if gulp-replace --save-dev
+sed -i gulpfile.js -e '/shelljs/a \
+var replace = require("gulp-replace");\
+var gulpif = require("gulp-if");\
+\
+var serverEnvUrl = false; // default is what is defined in constants.coffee\
+if (["production", "staging", "local"].indexOf(process.env.SERVER_ENV_URL) != -1) {\
+  serverEnvUrl = process.env.SERVER_ENV_URL;\
+  console.log("Using serverEnvUrl=" + serverEnvUrl);\
+} else if (process.env.SERVER_ENV_URL) {\
+  serverEnvUrl = "http://" + process.env.SERVER_ENV_URL;\
+  console.log("Using serverEnvUrl=" + process.env.SERVER_ENV_URL);\
+} else {\
+  console.log("Using default SERVER_ENV_URL");\
+}'
+
+sed -i gulpfile.js -e '/gulp.src(paths.coffee/a \
+  .pipe(gulpif(!!serverEnvUrl, replace(/SERVER_ENV_URL =.*/g, "SERVER_ENV_URL = '" + serverEnvUrl + "'")))'
+</code></pre></div></div>
+
+<h1 id="adding-other-packages-for-example-railsresource">Adding other packages, for example RailsResource</h1>
+
+<p>When you add using <code class="highlighter-rouge">bower install angularjs-rails-resource --save</code> you need also to include it in <code class="highlighter-rouge">www/index.html</code> (it can be before or after app.js) and you need to declare dependency in <code class="highlighter-rouge">www/app.js</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;!-- Rails Resource
+    https://github.com/FineLinePrototyping/angularjs-rails-resource --&gt;
+    &lt;script src="lib/angularjs-rails-resource/angularjs-rails-resource.js.min"&gt;&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Checkout <a href="/2015/12/20/devise-oauth-angular/#angular-devise">adding angular-devise authentication</a></p>
+
+<h1 id="adding-tabs-templates">Adding tabs templates</h1>
+
+<p>This patch was generated with <code class="highlighter-rouge">git diff &gt; patchfile</code> and can be applied with
+<code class="highlighter-rouge">patch -p1 &lt; patchfile</code></p>
+
+<p>You can create different tabs for different users. Just <code class="highlighter-rouge">$state.go
+'customer-tabs.dashboard'</code> after customer logs in. Customer tabs are the same as
+user tabs (abstract state, controller, template).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gh">diff --git a/mobileApp/www/index.html b/mobileApp/www/index.html
+index c0d6225..faa3c73 100644
+</span><span class="gd">--- a/mobileApp/www/index.html
+</span><span class="gi">+++ b/mobileApp/www/index.html
+</span><span class="gu">@@ -22,12 +22,18 @@
+</span>   &lt;/head&gt;
+   &lt;body ng-app="starter"&gt;
+ 
+<span class="gd">-    &lt;ion-pane&gt;
+-      &lt;ion-header-bar class="bar-stable"&gt;
+-        &lt;h1 class="title"&gt;Ionic Blank Starter&lt;/h1&gt;
+-      &lt;/ion-header-bar&gt;
+-      &lt;ion-content&gt;
+-      &lt;/ion-content&gt;
+-    &lt;/ion-pane&gt;
+</span><span class="gi">+    &lt;!--
++      The nav bar that will be updated as we navigate between views.
++    --&gt;
++    &lt;ion-nav-bar class="bar-stable"&gt;
++      &lt;ion-nav-back-button&gt;
++      &lt;/ion-nav-back-button&gt;
++    &lt;/ion-nav-bar&gt;
++    &lt;!--
++      The views will be rendered in the &lt;ion-nav-view&gt; directive below
++      Templates are in the /templates folder (but you could also
++      have templates inline in this html file if you'd like).
++    --&gt;
++    &lt;ion-nav-view&gt;&lt;/ion-nav-view&gt;
+</span>   &lt;/body&gt;
+ &lt;/html&gt;
+<span class="gh">diff --git a/mobileApp/www/js/_coffeescript_build.js b/mobileApp/www/js/_coffeescript_build.js
+</span>deleted file mode 100644
+<span class="gh">index e69de29..0000000
+diff --git a/mobileApp/www/js/account/account.controller.coffee b/mobileApp/www/js/account/account.controller.coffee
+</span>new file mode 100644
+<span class="gh">index 0000000..ddcd815
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/account/account.controller.coffee
+</span><span class="gu">@@ -0,0 +1,3 @@
+</span><span class="gi">+angular.module 'starter'
++  .controller 'AccountController', -&gt;
++    vm = this
+</span><span class="gh">diff --git a/mobileApp/www/js/account/account.html b/mobileApp/www/js/account/account.html
+</span>new file mode 100644
+<span class="gh">index 0000000..2e72f67
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/account/account.html
+</span><span class="gu">@@ -0,0 +1,9 @@
+</span><span class="gi">+&lt;ion-view view-title="Account"&gt;
++  &lt;ion-content&gt;
++    &lt;ion-list&gt;
++    &lt;ion-toggle  ng-model="settings.enableFriends"&gt;
++        Enable Friends
++    &lt;/ion-toggle&gt;
++    &lt;/ion-list&gt;
++  &lt;/ion-content&gt;
++&lt;/ion-view&gt;
+</span><span class="gh">diff --git a/mobileApp/www/js/app.config.coffee b/mobileApp/www/js/app.config.coffee
+</span>new file mode 100644
+<span class="gh">index 0000000..ba02b6e
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/app.config.coffee
+</span><span class="gu">@@ -0,0 +1,37 @@
+</span><span class="gi">+angular.module 'starter'
++  .config ($stateProvider, $urlRouterProvider) -&gt;
++    $stateProvider
++      .state 'tab',
++        url: '/tab'
++        abstract: true
++        templateUrl: 'js/tabs/tabs.html'
++      .state 'tab.dashboard',
++        url: '/dashboard'
++        views:
++          'tab-dashboard':
++            templateUrl: 'js/dashboard/dashboard.html'
++            controller: 'DashboardController'
++            controllerAs: 'vm'
++    .state 'tab.chats',
++        url: '/chats'
++        views:
++          'tab-chats':
++            templateUrl: 'js/chats/chats.html'
++            controller: 'ChatsController'
++            controllerAs: 'vm'
++      .state 'tab.chat-detail',
++        url: '/chats/:chatId'
++        views:
++          'tab-chats':
++            templateUrl: 'js/chats/chatDetails.html'
++            controller: 'ChatDetailsController'
++            controllerAs: 'vm'
++      .state 'tab.account',
++        url: '/account'
++        views:
++          'tab-account':
++            templateUrl: 'js/account/account.html'
++            controller: 'AccountController'
++            controllerAs: 'vm'
++
++    $urlRouterProvider.otherwise '/tab/dashboard'
+</span><span class="gh">diff --git a/mobileApp/www/js/chats/chatDetails.controller.coffee b/mobileApp/www/js/chats/chatDetails.controller.coffee
+</span>new file mode 100644
+<span class="gh">index 0000000..f7768da
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/chats/chatDetails.controller.coffee
+</span><span class="gu">@@ -0,0 +1,4 @@
+</span><span class="gi">+angular.module 'starter'
++  .controller 'ChatDetailsController', ($stateParams, Chats) -&gt;
++    vm = this
++    vm.chat = Chats.get $stateParams.chatId
+</span><span class="gh">diff --git a/mobileApp/www/js/chats/chatDetails.html b/mobileApp/www/js/chats/chatDetails.html
+</span>new file mode 100644
+<span class="gh">index 0000000..9ea8222
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/chats/chatDetails.html
+</span><span class="gu">@@ -0,0 +1,8 @@
+</span><span class="gi">+&lt;ion-view view-title=""&gt;
++  &lt;ion-content class="padding"&gt;
++    &lt;img ng-src="" style="width: 64px; height: 64px"&gt;
++    &lt;p&gt;
++      
++    &lt;/p&gt;
++  &lt;/ion-content&gt;
++&lt;/ion-view&gt;
+</span><span class="gh">diff --git a/mobileApp/www/js/chats/chats.controller.coffee b/mobileApp/www/js/chats/chats.controller.coffee
+</span>new file mode 100644
+<span class="gh">index 0000000..029eedc
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/chats/chats.controller.coffee
+</span><span class="gu">@@ -0,0 +1,15 @@
+</span><span class="gi">+angular.module 'starter'
++  .controller 'ChatsController', (Chats) -&gt;
++    # With the new view caching in Ionic, Controllers are only called
++    # when they are recreated or on app start, instead of every page change.
++    # To listen for when this page is active (for example, to refresh data),
++    # listen for the $ionicView.enter event:
++    #
++    #$scope.$on('$ionicView.enter', function(e) {
++    #});
++
++    vm = this
++    vm.chats = Chats.all()
++    vm.remove = (chat) -&gt;
++      Chats.remove(chat)
++    console.log vm.chats
+</span><span class="gh">diff --git a/mobileApp/www/js/chats/chats.html b/mobileApp/www/js/chats/chats.html
+</span>new file mode 100644
+<span class="gh">index 0000000..89ad519
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/chats/chats.html
+</span><span class="gu">@@ -0,0 +1,17 @@
+</span><span class="gi">+&lt;ion-view view-title="Chats"&gt;
++  &lt;ion-content&gt;
++    &lt;ion-list&gt;
++      &lt;ion-item class="item-remove-animate item-avatar item-icon-right"
++        ng-repeat="chat in vm.chats" type="item-text-wrap" href="#/tab/chats/"&gt;
++        &lt;img ng-src=""&gt;
++        &lt;h2&gt;&lt;/h2&gt;
++        &lt;p&gt;&lt;/p&gt;
++        &lt;i class="icon ion-chevron-right icon-accessory"&gt;&lt;/i&gt;
++
++        &lt;ion-option-button class="button-assertive" ng-click="vm.remove(chat)"&gt;
++          Delete
++        &lt;/ion-option-button&gt;
++      &lt;/ion-item&gt;
++    &lt;/ion-list&gt;
++  &lt;/ion-content&gt;
++&lt;/ion-view&gt;
+</span><span class="gh">diff --git a/mobileApp/www/js/dashboard/dashboard.coffee b/mobileApp/www/js/dashboard/dashboard.coffee
+</span>new file mode 100644
+<span class="gh">index 0000000..520b24e
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/dashboard/dashboard.coffee
+</span><span class="gu">@@ -0,0 +1,4 @@
+</span><span class="gi">+angular.module 'starter'
++  .controller 'DashboardController', -&gt;
++    vm = this
++
+</span><span class="gh">diff --git a/mobileApp/www/js/dashboard/dashboard.html b/mobileApp/www/js/dashboard/dashboard.html
+</span>new file mode 100644
+<span class="gh">index 0000000..88c3906
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/dashboard/dashboard.html
+</span><span class="gu">@@ -0,0 +1,5 @@
+</span><span class="gi">+&lt;ion-view view-title="Dashboard"&gt;
++  &lt;ion-content class="padding"&gt;
++    &lt;h2&gt;Welcome to Ionic&lt;/h2&gt;
++  &lt;/ion-content&gt;
++&lt;/ion-view&gt;
+</span><span class="gh">diff --git a/mobileApp/www/js/resources/chats.resource.coffee b/mobileApp/www/js/resources/chats.resource.coffee
+</span>new file mode 100644
+<span class="gh">index 0000000..4aa4755
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/resources/chats.resource.coffee
+</span><span class="gu">@@ -0,0 +1,33 @@
+</span><span class="gi">+angular.module('starter')
++  .factory 'Chats', -&gt;
++    # Might use a resource here that returns a JSON array
++    # Some fake testing data
++    chats = [
++      {
++        id: 0
++        name: 'Ben Sparrow'
++        lastText: 'You on your way?'
++        face: 'img/ben.png'
++      }
++      {
++        id: 1
++        name: 'Max Lynx'
++        lastText: 'Hey, it\'s me'
++        face: 'img/max.png'
++      }
++    ]
++    {
++      all: -&gt;
++        chats
++      remove: (chat) -&gt;
++        chats.splice chats.indexOf(chat), 1
++        return
++      get: (chatId) -&gt;
++        i = 0
++        while i &lt; chats.length
++          if chats[i].id == parseInt(chatId)
++            return chats[i]
++          i++
++        null
++
++    }
+</span><span class="gh">diff --git a/mobileApp/www/js/tabs/tabs.html b/mobileApp/www/js/tabs/tabs.html
+</span>new file mode 100644
+<span class="gh">index 0000000..8fb1726
+</span><span class="gd">--- /dev/null
+</span><span class="gi">+++ b/mobileApp/www/js/tabs/tabs.html
+</span><span class="gu">@@ -0,0 +1,25 @@
+</span><span class="gi">+&lt;!--
++Create tabs with an icon and label, using the tabs-positive style.
++Each tab's child &lt;ion-nav-view&gt; directive will have its own
++navigation history that also transitions its views in and out.
++--&gt;
++&lt;ion-tabs class="tabs-icon-top tabs-color-active-positive"&gt;
++
++  &lt;!-- Dashboard Tab --&gt;
++  &lt;ion-tab title="Status" icon-off="ion-ios-pulse"
++    icon-on="ion-ios-pulse-strong" href="#/tab/dashboard"&gt;
++    &lt;ion-nav-view name="tab-dashboard"&gt;&lt;/ion-nav-view&gt;
++  &lt;/ion-tab&gt;
++
++  &lt;!-- Chats Tab --&gt;
++  &lt;ion-tab title="Chats" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/chats"&gt;
++    &lt;ion-nav-view name="tab-chats"&gt;&lt;/ion-nav-view&gt;
++  &lt;/ion-tab&gt;
++
++  &lt;!-- Account Tab --&gt;
++  &lt;ion-tab title="Account" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account"&gt;
++    &lt;ion-nav-view name="tab-account"&gt;&lt;/ion-nav-view&gt;
++  &lt;/ion-tab&gt;
++
++
++&lt;/ion-tabs&gt;
+</span></code></pre></div></div>
+
+<p>Some version of node have problem starting emulator, so you can start manually
+<code class="highlighter-rouge">emulator @n4 &amp;</code></p>
+
+<p>Generate
+<a href="http://ionicframework.com/blog/automating-icons-and-splash-screens/">icons</a>
+with <code class="highlighter-rouge">ionic resources</code>. If you update icons than you should run with option
+<code class="highlighter-rouge">--ignore-cache</code> so it does not use cached tmp files <code class="highlighter-rouge">ionic resources
+--ignore-cache</code> (maybe size is too big).</p>
+
+<h1 id="ionicmodal">IonicModal</h1>
+
+<p>Nice feature is to put forms inside
+<a href="http://ionicframework.com/docs/api/service/$ionicModal/">$ionicModal</a>
+You should clear data when modal is canceled</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># www/js/login/login.jade
+          .text-center
+            a(ng-click="vm.resetPasswordModal.show()") Forgot Password?
+
+# www/js/login/login.controller.coffee
+angular.module 'starter'
+  .controller 'LoginController', ($ionicModal, $scope) -&gt;
+    vm.usernameOrMobileNo = ''
+    $ionicModal.fromTemplateUrl(
+      'jade_build/js/login/resetPassword.html'
+      scope: $scope
+    ).then (modal) -&gt;
+      vm.resetPasswordModal = modal
+
+    # clear modal fields when user cancel modal
+    $scope.$on 'modal.hidden', -&gt;
+      vm.usernameOrMobileNo = ''
+
+    vm.resetPassword = (usernameOrMobileNo) -&gt;
+      CustomerAuth.resetPassword(usernameOrMobileNo).then(
+        (response) -&gt;
+          vm.resetPasswordModal.hide()
+          NotifyService.toast response.data.message
+          vm.usernameOrMobileNo = ''
+        NotifyService.errorToast
+      )
+
+# www/js/login/resetPassword.jade
+ion-modal-view
+  ion-header-bar.bar.bar-header.bar-positive
+    h1.title Reset Password
+    button.button.button-clear.button-primary(ng-click="vm.resetPasswordModal.hide()") Cancel
+  ion-content
+    form(ng-submit='vm.resetPassword(vm.usernameOrMobileNo)' ng-autodisable
+      ng-autodisable-class="processing")
+      label.item.item-input.item-stacked-label
+        span.input-label Username Or Mobile Number
+        input(type="text" placeholder="Enter your username or mobile number"
+        ng-init="vm.usernameOrMobileNo=''"
+        ng-model="vm.usernameOrMobileNo")
+      .padding
+        button.button.button-block.button-positive(type="submit") Submit
+
+</code></pre></div></div>
+
+<h1 id="common-errors">Common errors</h1>
+
+<p>For <code class="highlighter-rouge">INSTALL_FAILED_OLDER_SDK</code> you need to lower sdk version requirement.
+Ionic drop support below <a href="http://stackoverflow.com/questions/30203266/cordova-build-release-android-always-picks-the-highest-api-level">SDK
+14</a>
+so in your <code class="highlighter-rouge">config.xml</code> put</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;preference name="android-minSdkVersion" value="14"/&gt;
+</code></pre></div></div>
+
+<p>On <code class="highlighter-rouge">adb install my_app.apk</code> you could get <code class="highlighter-rouge">Failure
+[INSTALL_FAILED_ALREADY_EXISTS] rm failed for -f, No such file or directory</code>.
+Or Failure <code class="highlighter-rouge">[INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES]</code> or
+<code class="highlighter-rouge">[INSTALL_FAILED_UPDATE_INCOMPATIBLE]</code></p>
+
+<p>Solution is to remove old application. You can use my helper
+<code class="highlighter-rouge">ionic_find_package_name</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>adb uninstall `ionic_find_package_name my_app.apk`
+
+# to find package name use ionic_find_package_name my_app.apk that is similar to
+~/Android/Sdk/build-tools/21.1.2/aapt dump badging my-app-debug.apk  | grep package
+</code></pre></div></div>
+
+<p>You can start cordova app main activity from command line with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>adb shell am start -a android.intent.action.MAIN -n `ionic_find_package_name my_app.apk`/.MainActivity
+</code></pre></div></div>
+
+<h2 id="emulator-tips">Emulator tips</h2>
+
+<ul>
+  <li>copy paste links to emulator or device <code class="highlighter-rouge">adb shell input text "some text"</code></li>
+  <li>new chrome will upcase first leter for some fields first name</li>
+  <li>old native browser on Android 4.0.3 does not support WebSockets</li>
+</ul>
+
+<h2 id="virtualbox-and-android-emulator">VirtualBox and Android Emulator</h2>
+
+<p>If you want to emulate and get this error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ioctl(KVM_CREATE_VM) failed: Device or resource busy
+ko:failed to initialize KVM
+</code></pre></div></div>
+
+<p>it’s because VirtualBox is running and using kvm. You can edit emulator
+<code class="highlighter-rouge">tools/android --avd</code> to use some other than x86, for example <code class="highlighter-rouge">armeabi-v7a</code>. Then they can work in the same time <code class="highlighter-rouge">ionic serve --target myArmeabiDevice</code> <a href="http://stackoverflow.com/questions/16168799/android-emulator-and-virtualbox-cannot-run-at-same-time">l</a>.
+But <em>Intel Atom (x86)</em> is much faster. Also enable <em>Emulation Options:</em> <em>Use
+Host GPU</em>.</p>
+
+<h2 id="adb-devices-offline">Adb devices offline</h2>
+
+<p>If your phone is <code class="highlighter-rouge">offline</code>, try to shut down and turn on again.</p>
+
+<h1 id="debug-with-adb">Debug with ADB</h1>
+
+<p>You can see android device logs with grep (key with space does not work)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>adb help 2&gt;&amp;1 | less -R
+# option needs to be before other arguments
+adb -e shell
+adb -d logcat | grep 'Web Console' # -d is for device only
+adb logcat | grep 'chromium\|Web Console' # new androids use chromium
+adb install -r platforms/android/build/outputs/apk/android-debug.apk
+# adb help will show you that -r means replace
+
+adb -s emulator-5556 install my-app.apk # if you have two emulators you can
+# specify which emulator
+adb -d install my-app.apk # directs to only connected usb device
+
+telnet localhost 5554
+  geo fix 19 45 # to fix gps location, first is longitude than latitude
+</code></pre></div></div>
+
+<h1 id="dns-for-local-server">DNS for local server</h1>
+
+<p>On Android emulator <code class="highlighter-rouge">127.0.0.1</code> will not point to your machine! Also your
+<code class="highlighter-rouge">/etc/hosts</code> file will not be used. You can change <em>hosts</em> file on android
+phone. On old sdk all changes last only until you reboot emulator so in order to
+make it permanent, we copied <strong>system.img</strong> to <strong>system-qemu.img</strong> (from your
+android sdk system image folder to your avd folder in your home) <a href="https//developer.android.com/studio/run/emulator-commandline.html#defaultimages">about
+images</a>.
+<code class="highlighter-rouge">cp $ANDROID_HOME/system-images/android-17/default/x86/system.img ~/.android/avd/n4.avd/system-qemu.img</code>
+We also needed to increase <strong>partition-size</strong>.</p>
+
+<p>On new SDK you only need to start emulator with option <strong>-writable-system</strong> and
+<strong>adb root;adb remount</strong> before those changes. You need to use
+<code class="highlighter-rouge">-writable-system</code> option for all future starting of emulator because if won’t
+boot up.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>emulator -writable-system -avd n4 &amp;
+adb root
+adb remount
+adb pull /system/etc/hosts .
+echo "192.168.2.4 my-domain.local" &gt;&gt; hosts
+echo "192.168.2.4 mylocationsubdomain.my-domain.local" &gt;&gt; hosts
+adb push hosts /system/etc
+adb shell 'cat /etc/hosts'
+</code></pre></div></div>
+
+<h1 id="root-android-device">Root android device</h1>
+
+<p><a href="https://www.xda-developers.com/root/">xda root</a>.</p>
+
+<h1 id="releasing-the-app-and-deploy-to-google-play-store">Releasing the app and deploy to google play store</h1>
+
+<p>If you don’t have a key, you should generate and always use that. If app is
+already installed on a phone with different keys, user can not update it (since
+it uses the same package name, he needs to remove the app and than install
+again).
+If you lost the keystore, than only solution is to publish as different package
+on <a href="https://play.google.com/apps/publish">google play</a>. You need to rename
+existing app <code class="highlighter-rouge">Store Listing -&gt; Title</code> so you can create new one with same name.
+Also you can not use the same package name so choose different if you are using
+different key to sign.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool -genkey -v -keystore ~/config/keys/my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+</code></pre></div></div>
+
+<p>You should remove all unnecessary stuff for
+<a href="http://ionicframework.com/docs/guide/publishing.html">publishing</a> like <code class="highlighter-rouge">cordova
+plugin rm cordova-plugin-console</code></p>
+
+<p>Also you need to update <code class="highlighter-rouge">config.xml</code> to customize your project.</p>
+
+<ul>
+  <li>use your reverse domain for widget id: <code class="highlighter-rouge">id=rs.in.trk.123</code></li>
+  <li>customize name, description and author</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cordova build --release android
+# this will generate platforms/android/build/outputs/apk/android-release-unsigned.apk
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ~/config/keys/my-release-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk alias_name # this change the file inline
+zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk my_app.apk
+</code></pre></div></div>
+
+<p>You can use
+<a href="https://github.com/duleorlovic/config/blob/master/my_bashrc.sh">ionic_publish</a>
+my bash function.</p>
+
+<p>When you want to publish another release, you need to update <code class="highlighter-rouge">config.xml</code>
+version attribute (do not touch id attribute).</p>
+
+<p>On google play, when you create new application and upload apk, you need to fill
+store listing: title, short and full description, high-res icon, feature
+graphic, 2 non android screenshots, target country, mark as free app…</p>
+
+<h1 id="old-browsers">Old browsers</h1>
+
+<p>Since old phones without Chromium suffer from poor javascript performance, maybe
+<a href="https://crosswalk-project.org/">crosswalk</a> could help.</p>
+
+<h1 id="ngcordova">NgCordova</h1>
+
+<p>When you use wrapper around some plugin than you need to install
+<a href="http://ngcordova.com/docs/install/">ngCordova</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install ngCordova
+sed -i www/index.html -e '/&lt;\/head&gt;/i \
+    &lt;!-- ngCordova that is installed using bower --&gt;\
+    &lt;script src="lib/ngCordova/dist/ng-cordova.js"&gt;&lt;/script&gt;'
+</code></pre></div></div>
+
+<p>Angular <a href="https://docs.angularjs.org/api/ng/provider/$logProvider">$log</a>
+service <code class="highlighter-rouge">$log.debug(myObj);</code> can be used and disabled easilly in
+app.config.js with <code class="highlighter-rouge">$logProvider.debugEnabled(false)</code> so only <code class="highlighter-rouge">$log.error()</code>
+or <code class="highlighter-rouge">$log.info()</code> will be shown (don’t know how to disable those two).</p>
+
+<p>If you see <code class="highlighter-rouge">[object Object]</code> (probably old angular version) than you can use
+<code class="highlighter-rouge">$log.debug(JSON.stringify(response.data));</code>. Better way is to create
+<code class="highlighter-rouge">window.log</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># www/js/app.js
+window.old_console = window.console;
+window.console = (function() {
+  var console = {};
+  console.log = function(message) {
+    if (typeof(message) == 'object')
+      message = JSON.stringify(message);
+    window.old_console.log(message);
+  };
+  return console;
+})();
+</code></pre></div></div>
+
+<h1 id="notifications">Notifications</h1>
+
+<p>I would rather user android toast instead of ngMessages.
+<a href="https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin">Toast-PhoneGap-Plugin</a>
+is a source for cordova-plugin-x-toast.
+We could use wrapper <a href="http://ngcordova.com/docs/plugins/toast/">$cordovaToast</a>,
+but it is not neccessary.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cordova plugin add cordova-plugin-x-toast # or https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git
+ionic state save
+mkdir www/js/services
+cat &gt;&gt; www/js/services/notify.service.coffee &lt;&lt; 'HERE_DOC'
+angular.module('starter')
+  .service 'NotifyService', () -&gt;
+    prepareMessage = (message) -&gt;
+      text = message;
+      if typeof message == 'object'
+        text = JSON.stringify(message)
+      text
+    this.toast = (message) -&gt;
+      text = prepareMessage(message)
+      if window.plugins &amp;&amp; window.plugins.toast
+        window.plugins.toast.show text, 'long', 'center'
+      else
+        alert text
+      console.log text
+    this.errorToast = (message) -&gt;
+      # if message is response, try to get message.data.error
+      this.toast(message)
+      # notify your server
+    this.log = (message) -&gt;
+      text = prepareMessage(message)
+      $log.debug text
+    return
+HERE_DOC
+</code></pre></div></div>
+
+<h1 id="content-security-policy">Content security policy</h1>
+
+<p><a href="http://content-security-policy.com/">http://content-security-policy.com/</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"Content-Security-Policy"</span> <span class="na">content=</span><span class="s">"
+    default-src * 'self' data: gap: https://ssl.gstatic.com;
+    style-src 'self' 'unsafe-inline';
+    script-src * 'unsafe-inline';
+    media-src *;
+    "</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>ui-router can add <code class="highlighter-rouge">resolve: { auth: function($auth) { return
+$auth.validateUser() } }</code>, it will hang if user is not logged in. In ionic
+screens are nested states so it will be blank page. Better is to use
+completelly different state and resolve auth on abstract tabs</li>
+  <li>ui-router for subpages should be on same level as page, since we render them
+on whole <code class="highlighter-rouge">&lt;ion-nav-view&gt;</code></li>
+  <li><a href="https://github.com/cyu/rack-cors">rack-cors</a> use all actions <code class="highlighter-rouge">[:get, :post,
+:delete, :put, :patch, :options, :head]</code>. I have strange error that all
+requests were <em>OPTIONS</em> instead of <em>POST</em>.</li>
+</ul>
+
+<h1 id="ready">Ready</h1>
+
+<p>For cordova plugins you should wait for ready and test if it exists.
+<code class="highlighter-rouge">$ionicPlatform.ready</code> is also fired in browser, so you need to check if plugin
+exists.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module 'starter'
+  .controller 'DashCtrl', ($scope, $ionicPlatform) -&gt;
+    $ionicPlatform.ready -&gt;
+      window.SignalStrength &amp;&amp; window.SignalStrength.dbm (db) -&gt;
+        $scope.signal = db
+</code></pre></div></div>
+
+<h1 id="local-storage">Local storage</h1>
+
+<p>Cookies are sent for each request, so do not use it to store data.
+<code class="highlighter-rouge">localStorage</code> or <code class="highlighter-rouge">sessionStorage</code> (expires when browser tab or window is
+closed) is much more reliable.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>window.localStorage.setItem("url", "http://trk.in.rs");
+window.localStorage.getItem("url");
+window.localStorage.removeItem("url");
+</code></pre></div></div>
+
+<h1 id="devise-authentication">Devise authentication</h1>
+
+<p>For backend you should <a href="/2015/11/26/angular-and-ruby-on-rails/#cors">enable CORS</a></p>
+
+<p><a href="/2015/12/20/devise-oauth-angular/">angular_devise</a>
+gem works nice.
+Just follow README.</p>
+
+<p><a href="https://github.com/lynndylanhurley/ng-token-auth#authvalidateuser">ng-token-auth#validateUser</a>
+is called on page load so user does not need to log in again.</p>
+
+<p>Token can be save to localStorage to work on device and emulator.
+I’ve not succeed to have working auth in browser for ionic.</p>
+
+<p>if something is not working, wipe <code class="highlighter-rouge">node_modules</code> and run <code class="highlighter-rouge">npm install</code></p>
+
+<p>LocalStorage (or ng-token-auth) does not work with <code class="highlighter-rouge">emulator -l</code> livereload, so
+don’t use <code class="highlighter-rouge">-l</code>.</p>
+
+<p>Do not check if user is valid with <code class="highlighter-rouge">angular.equals($scope.user, {})</code> in
+controller since <code class="highlighter-rouge">validateUser</code> returns promise that will resolve after
+controller has been initialized.
+Better is to</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// login.controller.js
+  $auth.validateUser()
+  .then(function() {
+    $state.go('tab.dashboard');
+  });
+</code></pre></div></div>
+
+<p>Or the best approach is to store all login state redirections in run</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<p><a href="http://yeghishe.github.io/2015/08/13/my-gulp-files-ionic-app.html">http://yeghishe.github.io/2015/08/13/my-gulp-files-ionic-app.html</a>
+<a href="https://github.com/pluralsight/guides/blob/master/published/front-end-javascript/ionic-framework-a-definitive-10-000-word-guide/article.md">https://github.com/pluralsight/guides/blob/master/published/front-end-javascript/ionic-framework-a-definitive-10-000-word-guide/article.md</a></p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>to find ionic version run in browser and type in console <code class="highlighter-rouge">ionic.version</code> (or
+grep <code class="highlighter-rouge">bower.json</code> file). <code class="highlighter-rouge">ionic -v</code> will give you ionic CLI version which is
+not related to ionic version</li>
+  <li>to clean files that are inside www but git ignored, you can <code class="highlighter-rouge">git clean -xdf
+www</code> but you need to <code class="highlighter-rouge">npm install &amp;&amp; bower install</code></li>
+  <li>
+    <p><a href="http://ionicframework.com/docs/api/directive/ionRefresher/">ion-refresher</a> is
+nice widget to refresh on pulling. For automatic refresh when you navigate to
+preview view</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  # With the new view caching in Ionic, Controllers are only called
+  # when they are recreated or on app start, instead of every page change.
+  # To listen for when this page is active (for example, to refresh data),
+  # listen for the $ionicView.enter event:
+  #
+  #$scope.$on('$ionicView.enter', function(e) {
+  #});
+</code></pre></div>    </div>
+
+    <p>This is also called on initial navigation (when controller is instantiated).
+So I write like</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  # www/js/customers/customers.controller.coffee
+  $scope.$on '$ionicView.enter', (e) -&gt;
+    vm.doRefresh()
+</code></pre></div>    </div>
+
+    <p>If you want to reload whole app (probably you want to clear some cache of
+controllers and services), go to root or login url and reload. On some old
+devices it will stay on that page (account page) and reload, which is not as
+intended.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  console.log "You have been signed out"
+  $state.go 'login'
+  window.location.reload() # this is not necessary
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>external links can not be used but you can use plugin inappbrowser
+<a href="https://www.thepolyglotdeveloper.com/2014/07/launch-external-urls-ionicframework/">link</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cordova plugin add cordova-plugin-inappbrowser
+
+# www/js/login/login.controller.coffee
+  vm.open = -&gt;
+    cordova.InAppBrowser.open(
+      'http://www.google.com'
+      '_blank'
+      'location=yes'
+    )
+</code></pre></div>    </div>
+
+    <p>if you want to run some javascript than you should use
+<a href="https://gist.github.com/esfand/9638882">jQueryLite</a> since it already exists
+in app or <a href="https://gist.github.com/thegitfather/9c9f1a927cd57df14a59c268f118ce86">vanila
+javascript</a>
+<code class="highlighter-rouge">console.log</code> inside page will be the same as in ionic app. If you need to
+post to external url which did not enable cors, you can not use <code class="highlighter-rouge">$http.post</code>
+but plain form submittion. Since I like to keep working in browser and
+emulator, I moved submit button outsite of form and than ng-click will submit
+the form or load inappbrowser and pass the data.
+Closing inappbrowser could be navigating to <code class="highlighter-rouge">mobile/close</code> for which I set
+eventListener. Passing data to inappbrowser could be with <code class="highlighter-rouge">executeScript</code> and
+retrieving with <code class="highlighter-rouge">executeScript</code> with callback.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# www/js/dashboard.controller.coffee
+  vm.proceedOnlinePayment = (paymentFields) -&gt;
+    # since cors is not enabled we will use inappbrowser for device,
+    # or submit form for emulation
+    if window.cordova &amp;&amp; window.cordova.InAppBrowser
+      browser = cordova.InAppBrowser.open(
+        'payu-form.html'
+        '_blank'
+        'location=yes'
+      )
+      browser.addEventListener 'loadstop', -&gt;
+        console.log 'loadstop'
+        data =
+          form_fields: paymentFields.form_fields
+          url: paymentFields.payu_link
+        browser.executeScript(
+          code:
+            """
+            processData('#{JSON.stringify(data)}');
+            console.log("calling processData from inappbrowser");
+
+            """
+        )
+    else
+      document.forms.myForm.submit()
+
+// www/js/dashboard/onlinePaymen.jade
+ion-modal-view
+  ion-header-bar.bar.bar-header.bar-positive
+    h1.title 
+    button.button.button-clear.button-primary(ng-click="onlinePaymentModal.hide()") Cancel
+  ion-content
+    form(id="payment-form" action="https://test.payu.in/_payment.php"
+      accept-charset="UTF-8" method="post" name='myForm')
+      input(type="hidden" ng-repeat="i in vm.paymentFields.form_fields"
+      name="" id="" value="")
+      label.item.item-input.item-stacked-label
+        span.input-label Total Amount
+        strong 
+
+      div(ng-if="vm.paymentFields.example_credit_card")
+        span This is example card used only in development
+        input(value="")
+        div Name 
+        div CCV 
+        div Month/Year
+          | /
+    .padding
+      button.button.button-block.button-positive(ng-click="vm.proceedOnlinePayment(vm.paymentFields)") Pay Now
+</code></pre></div>    </div>
+  </li>
+  <li>you can push your code and assets without going through app store. Ionic
+Deploy, Code Push, PhoneGap ContentSync, PhoneGap hydration.</li>
+  <li>use authentication can we implemented with 3th party service: Firebase Auth,
+GCP Auth, Auth.io, Auth0, Stormpath, Fabric Digits, Amazon Cognito, Azure Auth,
+Ionic Auth</li>
+</ul>
+
+<h1 id="android-studio">Android studio</h1>
+
+<p>if you receive error</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:transformClassesAndResourcesWithProguardForDebug'.
+</code></pre></div></div>
+
+<p>than disable minify</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/build.gradle
+#android {
+#  buildTypes {
+#    debug {
+-      minifyEnabled true
++     minifyEnabled false
+</code></pre></div></div>
+
+<p>if you receive error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>java.lang.RuntimeException: com.android.builder.dexing.DexArchiveMergerException: Error while merging dex archives:
+</code></pre></div></div>
+
+<p>than</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/build.gradle
+# android {
+#   defaultConfig {
++     multiDexEnabled true //important
+</code></pre></div></div>
+
+<p>if you receive error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:transformClassesWithMultidexlistForDebug'.
+</code></pre></div></div>
+
+<p>than you need to increase memory for dex
+https://stackoverflow.com/questions/32807587/com-android-build-transform-api-transformexception</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># local.properties
++ org.gradle.jvmargs=-XX:MaxHeapSize\=512m -Xmx512m
+
+# maybe this could help, but not neccessary
+# app/build.gradle
+# android {
++    dexOptions {
++        javaMaxHeapSize "4g" //specify the heap size for the dex process
++    }
+</code></pre></div></div>
+
+<p>To Invalidate gradle cache you should go to File -&gt; Invalidate Caches /
+Restart…</p>
+
+<p>Build -&gt; Clean Project</p>
+
+<p>rm -rf .gradle/ app/build
+~~~</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

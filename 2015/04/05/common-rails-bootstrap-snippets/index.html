@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Common Rails bootstrap snippets</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Common Rails bootstrap snippets</h1>
+    <p class="meta">Apr 5, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#rvm-and-other-tools"><span class="tocnumber">1</span> <span class="toctext">RVM and other tools</span></a></li><li class="toc_level-1 toc_section-2"><a href="#initial-commit"><span class="tocnumber">2</span> <span class="toctext">Initial commit</span></a></li><li class="toc_level-1 toc_section-3"><a href="#uuid"><span class="tocnumber">3</span> <span class="toctext">UUID</span></a></li><li class="toc_level-1 toc_section-4"><a href="#sample-page"><span class="tocnumber">4</span> <span class="toctext">Sample page</span></a></li><li class="toc_level-1 toc_section-5"><a href="#font-icons"><span class="tocnumber">5</span> <span class="toctext">Font icons</span></a></li><li class="toc_level-1 toc_section-6"><a href="#gitignore"><span class="tocnumber">6</span> <span class="toctext">Gitignore</span></a></li><li class="toc_level-1 toc_section-7"><a href="#gemfile-development--production-tools"><span class="tocnumber">7</span> <span class="toctext">Gemfile development &amp; production tools</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#fonts"><span class="tocnumber">7.1</span> <span class="toctext">Fonts</span></a></li><li class="toc_level-2 toc_section-9"><a href="#twitter-bootstrap-gem"><span class="tocnumber">7.2</span> <span class="toctext">Twitter bootstrap Gem</span></a></li><li class="toc_level-2 toc_section-10"><a href="#adding-flash-both-from-server-and-client"><span class="tocnumber">7.3</span> <span class="toctext">Adding flash (both from server and client)</span></a></li><li class="toc_level-2 toc_section-11"><a href="#bourbon-css-mixins"><span class="tocnumber">7.4</span> <span class="toctext">Bourbon css mixins</span></a></li><li class="toc_level-2 toc_section-12"><a href="#slim"><span class="tocnumber">7.5</span> <span class="toctext">Slim</span></a></li><li class="toc_level-2 toc_section-13"><a href="#angular"><span class="tocnumber">7.6</span> <span class="toctext">Angular</span></a></li></ul></li><li class="toc_level-1 toc_section-14"><a href="#simplify-secrets-and-add-smtp-credentials"><span class="tocnumber">8</span> <span class="toctext">Simplify secrets and add smtp credentials</span></a></li><li class="toc_level-1 toc_section-15"><a href="#basic-mail-settings"><span class="tocnumber">9</span> <span class="toctext">Basic mail settings</span></a></li><li class="toc_level-1 toc_section-16"><a href="#skip-generators"><span class="tocnumber">10</span> <span class="toctext">Skip generators</span></a></li><li class="toc_level-1 toc_section-17"><a href="#authentication"><span class="tocnumber">11</span> <span class="toctext">Authentication</span></a><ul><li class="toc_level-2 toc_section-18"><a href="#cleareance-gem"><span class="tocnumber">11.1</span> <span class="toctext">Cleareance gem</span></a></li></ul></li><li class="toc_level-1 toc_section-19"><a href="#company-scaffold-with-skipped-unused-files"><span class="tocnumber">12</span> <span class="toctext">Company scaffold with skipped unused files</span></a></li><li class="toc_level-1 toc_section-20"><a href="#puma"><span class="tocnumber">13</span> <span class="toctext">Puma</span></a></li><li class="toc_level-1 toc_section-21"><a href="#heroku-deploy"><span class="tocnumber">14</span> <span class="toctext">Heroku deploy</span></a><ul><li class="toc_level-2 toc_section-22"><a href="#deploy-javascript-npm-required-tasks"><span class="tocnumber">14.1</span> <span class="toctext">Deploy javascript npm required tasks</span></a></li><li class="toc_level-2 toc_section-23"><a href="#heroku-dyno-puma-settings"><span class="tocnumber">14.2</span> <span class="toctext">Heroku dyno puma settings</span></a></li></ul></li><li class="toc_level-1 toc_section-24"><a href="#google-app-engine"><span class="tocnumber">15</span> <span class="toctext">Google app engine</span></a></li></ul></td></tr></tbody></table></div><p>Paste this code to create some basic starting application <em>myapp.com</em> with
+authentication and other funny tools. I extensively use <a href="/2016/05/18/echo-sed-grep-command-line-editing/">echo sed grep</a>
+commands here.</p>
+
+<blockquote>
+  <p>give a man a fish and you feed him for a day. teach a man to fish and you feed
+him for a lifetime</p>
+</blockquote>
+
+<h1 id="rvm-and-other-tools">RVM and other tools</h1>
+
+<p>If you do not have <code class="highlighter-rouge">rails</code> or <code class="highlighter-rouge">git</code> you need to install</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash
+rvm install 2.3.0
+gem install bundle
+
+sudo apt install git postgresql libpq-dev nodejs
+</code></pre></div></div>
+
+<h1 id="initial-commit">Initial commit</h1>
+
+<p>You can choose database with rails param <code class="highlighter-rouge">rails new myapp --database=postgresql</code>
+but it is better to create <code class="highlighter-rouge">.railsrc</code> so it is used for all rails</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; ~/.railsrc &lt;&lt; HERE_DOC
+-d postgresql # use postgresql
+HERE_DOC
+</code></pre></div></div>
+
+<p>Create new app</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new myapp
+# to specify version you can use
+rails _5.2.1_ new myapp
+cd myapp
+rails db:create
+git init . &amp;&amp; git add . &amp;&amp; git commit -m "rails new myapp"
+</code></pre></div></div>
+
+<p>For error</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Webpacker can't find application in /home/orlovic/Downloads/rails_6_beta2_stimulus/public/packs/manifest.json. Possible causes:
+</code></pre></div></div>
+<p>you need to install webpack and run initial compilation</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add @rails/webpacker
+bin/webpack
+</code></pre></div></div>
+
+<h1 id="uuid">UUID</h1>
+
+<p>https://github.com/trkin/contact_form/commit/52532f3378604f59fb16c1e6432cc567542c391d</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/rails g migration enable_extension_for_uuid
+last_migration
+# add following line to migration
+  def change
+    enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
+  end
+
+cat &gt;&gt; config/initializers/generators.rb &lt;&lt; HERE_DOC
+Rails.application.config.generators do |g|
+  g.orm :active_record, primary_key_type: :uuid
+end
+HERE_DOC
+
+rake db:create db:migrate
+git add .
+git commit -m 'Enable uuid in postgresql'
+</code></pre></div></div>
+
+<p>Later, if you add some references, you need to specify <code class="highlighter-rouge">type: :uuid</code> like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  t.references :post, type: :uuid, index: true
+</code></pre></div></div>
+
+<p>or error will be raised:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DETAIL:  Key columns "post_id" and "id" are of incompatible types: bigint and uuid.
+</code></pre></div></div>
+
+<p>Note that ordering by id, uuid is not possible. It is hard to implement on
+existing projects and on MySQL db.</p>
+
+<h1 id="sample-page">Sample page</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g controller pages home --skip-helper --skip-assets
+sed -i config/routes.rb -e "/^end$/i \\
+  # root page\n\
+  root 'pages#home'\
+"
+</code></pre></div></div>
+<p>Rubocop cli</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rubocop --auto-correct # to autocorrent correct some files (except lineLength)
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># initial scale on mobile devices
+sed -i app/views/layouts/application.html.erb -e '/title/a \
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;'
+</code></pre></div></div>
+
+<h1 id="font-icons">Font icons</h1>
+
+<p>Fontello provides a icons which you can include in your project using
+https://github.com/railslove/fontello_rails_converter</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# pick icons
+gem 'fontello_rails_converter'
+
+# select some fonts http://fontello.com/ and download zip to `tmp/fontello.zip`
+bundle exec fontello convert --no-download
+gnome-open http://localhost:3001/fontello-demo.html
+
+# when you want to update you can
+fontello open
+# select new icons
+bundle exec fontello convert
+</code></pre></div></div>
+<p>To configure in rails you need to import</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/application.sass
+// vendor
+@import 'fontello'
+</code></pre></div></div>
+<p>And use with classes</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/layouts/application.html.erb
+&lt;i class="demo-icon icon-mobile"&gt;&lt;/i&gt;
+</code></pre></div></div>
+
+<p>Prepare icons https://github.com/fontello/fontello/wiki/How-to-use-custom-images#preparing-images-in-inkscape</p>
+
+<h1 id="gitignore">Gitignore</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; .gitignore &lt;&lt; 'HERE_DOC'
+# vim temp files
+*.swp
+*.swo
+# carrierwave upload files
+/public/uploads
+# gedit files
+*~
+# vagrant files
+.vagrant
+# byebug
+.byebug_history
+# rspec temporary file
+spec/examples.txt
+HERE_DOC
+git commit -am "Update .gitignore"
+</code></pre></div></div>
+
+<h1 id="gemfile-development--production-tools">Gemfile development &amp; production tools</h1>
+
+<p>Some of the gems could be found on <a href="https://github.com/thoughtbot/suspenders">thoughtbot
+suspenders</a>
+Paid 3th party service alternative for <code class="highlighter-rouge">bullet</code> is scoutapp, for
+<code class="highlighter-rouge">exception_notification</code> is sentry, informantapp.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+group :development do
+  # pretty print Ruby objects in full color
+  gem 'awesome_print', require: 'ap'
+  # static analysis security vulnerability scanner, run: `brakeman`
+  gem 'brakeman', '~&gt; 3.5.0', require: false
+  # detect N+1 sql queries
+  gem 'bullet'
+  # detect out-of-date or vulnerable gems, run: `gemsurance`
+  gem 'gemsurance'
+  # automatic reload
+  gem 'guard-livereload', require: false
+  # open emails in browser
+  gem 'letter_opener'
+  # detect file changes
+  gem 'listen', '~&gt; 3.0.5'
+  # support for Rails Panel - chrome extension
+  gem 'meta_request'
+  # debugger
+  gem 'pry'
+  gem 'pry-rails'
+  # ruby static code analyzer
+  gem 'rubocop', require: false
+  # spring speeds up development by keeping your application running in the
+  # background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~&gt; 2.0.0'
+HERE_DOC
+</code></pre></div></div>
+
+<p>Some not used gems</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  # do not show assets in log\
+  # gem "quiet_assets # can not find rails 5 version"\
+
+  # irbtools includes interactive_editor gem (vim inside irb)\
+  # just create ~/.irbrc with\
+  # require "rubygems"\
+  # require "irbtools"\
+  gem "irbtools", require: "irbtools/binding"\
+
+  # is not needed since rails will show line on which there is
+  # exception (no need to insert console and use on web page).
+  gem better_errors
+
+  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
+  gem 'web-console', '&gt;= 3.3.0'
+
+  # config/application.rb
+  # run with rails s -p b 0.0.0.0 to allow local network, allow remote requests\
+  config.web_console.whiny_requests = false'
+</code></pre></div></div>
+
+<p>Production gems and configurations</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# adding vendor prefixes to css rules
+gem "autoprefixer-rails"
+
+# sets timezone based on browser timezone for each request
+gem "browser-timezone-rails"
+HERE_DOC
+
+# need some js for timezone
+cat &gt;&gt; app/assets/javascripts/application.js &lt;&lt; HERE_DOC
+//= require js.cookie
+//= require jstz
+//= require browser_timezone_rails/set_time_zone
+HERE_DOC
+
+bundle
+guard init livereload
+# gem https://github.com/guard/guard-livereload suggest some old extension
+# https://addons.mozilla.org/en-US/firefox/addon/livereload/ but there is new
+# https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension
+# or you can use rack-livereload
+# I receive error No such middleware to insert before: ActionDispatch::Static
+# so better is to use browser plugin instead of gem 'rack-livereload'
+# sed -i config/environments/development.rb -e '/^end/i \
+#   # livereload\
+#   # use rack-livereload or browser extension\
+#   # if guard is not running, there is an error in js console:\
+#   # Cross-origin plugin content from  must have a visible size larger than 400 x\
+#   # 300 pixels, or it will be blocked. Invisible content is always blocked.\
+#   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
+# '
+
+When I get error with command RAILS_ENV=production rails assets:precompile
+ No such middleware to insert before: ActionDispatch::Static
+Than solution is to add `gem 'rails_12factor`, group: :production`
+https://github.com/AssetSync/asset_sync/issues/221#issuecomment-75492905
+
+
+cat &gt; config/initializers/bullet.rb &lt;&lt; HERE_DOC
+if defined? Bullet
+  Bullet.enable = true
+  Bullet.alert = true
+  Bullet.rails_logger = true
+end
+HERE_DOC
+
+git add . &amp;&amp; git commit -m "Adding guard and other useful gems"
+
+# to run guard live reload, first increase max watches than just run guard
+# https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
+# echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo
+sysctl -p
+guard -d
+# livereload debug with `guard -d`. Error if you also run it on another project
+# there should not be eventmachine.rb:530:in `start_tcp_server': no acceptor (port is in use or requires root privileges) (RuntimeError)
+</code></pre></div></div>
+
+<p>Customize log output of rails logger in production with
+https://github.com/roidrage/lograge#handle-actioncontrollerroutingerror</p>
+
+<h2 id="fonts">Fonts</h2>
+
+<p>Copy definition from node_modules css files where font-face is defined, and
+change from <code class="highlighter-rouge">url</code> to <code class="highlighter-rouge">asset-url</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install typeface-roboto
+mkdir app/assets/stylesheets/plugins
+cat &gt;&gt; app/assets/stylesheets/plugins &lt;&lt; HERE_DOC
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Regular'), local('Roboto-Regular'), asset-url('typeface-roboto/files/roboto-latin-400.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Roboto Medium'), local('Roboto-Medium'), asset-url('typeface-roboto/files/roboto-latin-500.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Roboto SemiBold'), local('Roboto-SemiBold'), asset-url('typeface-roboto/files/roboto-latin-500.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), asset-url('typeface-roboto/files/roboto-latin-700.woff') format('woff'), asset-url('typeface-roboto/files/roboto-latin-700.woff2') format('woff2');
+}
+HERE_DOC
+
+cat &gt;&gt; app/assets/stylesheets/application.sass &lt;&lt; HERE_DOC
+// plugins
+@import 'plugins/roboto_font_face'
+HERE_DOC
+
+cat &gt;&gt; app/assets/stylesheets/common/body.sass &lt;&lt; HERE_DOC
+body
+  font-family: 'Roboto', sans-serif
+HERE_DOC
+</code></pre></div></div>
+
+<h2 id="twitter-bootstrap-gem">Twitter bootstrap Gem</h2>
+
+<h2 id="adding-flash-both-from-server-and-client">Adding flash (both from server and client)</h2>
+
+<p>You can use <a href="http://getbootstrap.com/css/#type-alignment">text-center</a> bootstrap
+helper (ie <code class="highlighter-rouge">text-align: center;</code>). Also the collors</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i app/views/layouts/application.html.erb -e '/yield/c \
+  &lt;div class="text-center"&gt;\
+    &lt;span class="notice text-success" id="notice"&gt;&lt;/span&gt;\
+    &lt;span class="alert text-danger" id="alert"&gt;&lt;/span&gt;\
+  &lt;/div&gt;\
+  &lt;script&gt;\
+    &lt;%=raw "flash_message(document.getElementById('notice'), '#{j notice}');" if notice %&gt;\
+    &lt;%=raw "flash_message(document.getElementById('alert'), '#{j alert}');" if alert %&gt;\
+  &lt;/script&gt;\
+\
+  &lt;article&gt;\
+    &lt;%= yield %&gt;\
+  &lt;/article&gt;'
+
+cat &gt; app/assets/javascripts/main.js.erb &lt;&lt; 'HERE_DOC'
+var FLASH_LETTER_STEP = 10;
+var FLASH_DURATION = 5000;
+function flash_appear(element, message, i) {
+  if (i == undefined)
+    i = 0;
+  element.innerText = message.substring(0,i);
+   setTimeout(function(){ 
+    if (i&lt;message.length)
+      flash_appear(element, message, i+1);
+  }, FLASH_LETTER_STEP);
+}
+function flash_dissapear(element, message, i) {
+  if (message == undefined)
+    message = element.innerText;
+  if (i == undefined)
+    i = message.length-1;
+  element.innerText = message.substring(0,i);
+  setTimeout(function(){ 
+    if (i&gt;0)
+      flash_dissapear(element, message,i-1);
+  }, FLASH_LETTER_STEP);
+}
+
+function flash_message(element, message) {
+  flash_appear(element, message);
+  setTimeout(function(){ flash_dissapear(element); }, FLASH_DURATION);
+}
+HERE_DOC
+git add . &amp;&amp; git commit -m "Adding flash to layout"
+</code></pre></div></div>
+
+<h2 id="bourbon-css-mixins">Bourbon css mixins</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo '
+# css mixin library http://bourbon.io/
+gem "bourbon", '~&gt; 5.0.0.beta' # bourbon 5 is requred by bitters 1.3
+# https://github.com/thoughtbot/bitters/issues/235
+gem "neat"
+' &gt;&gt; Gemfile
+echo '
+@import "bourbon";
+@import "base/base"; // this is http://bitters.bourbon.io/
+@import "neat";
+' &gt; app/assets/stylesheets/application.scss
+git rm app/assets/stylesheets/application.css
+
+bundle
+gem install bitters
+cd app/assets/stylesheets &amp;&amp; bitters install
+sed -i '/grid-settings/c @import "grid-settings";' base/_base.scss
+cd -
+
+git add . &amp;&amp; git commit -m "Adding bourbon, neat and bitters scss"
+</code></pre></div></div>
+
+<h2 id="slim">Slim</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development do/a  \
+  # slim templating\
+  gem "slim-rails"'
+
+gem install html2slim
+erb2slim app/views/leads/index.html.erb
+</code></pre></div></div>
+
+<h2 id="angular">Angular</h2>
+
+<p>For various ways of integrating Angular look at
+<a href="/2015/11/26/angular-and-ruby-on-rails/">angular-and-ruby-on-rails</a></p>
+
+<h1 id="simplify-secrets-and-add-smtp-credentials">Simplify secrets and add smtp credentials</h1>
+
+<p>YML file can use anchor (<code class="highlighter-rouge">&amp;</code>) and reference (<code class="highlighter-rouge">*</code>) so you do not repeat the code.
+When you use reference <code class="highlighter-rouge">*</code> (as for testing) you can not add or update keys, but
+with <code class="highlighter-rouge">&lt;&lt;</code> you can (as for production) (more on <a href="/2017/01/10/get-syntax-right-in-jade-yaml-haml/#yaml">get syntax right</a>)
+Note that you can use default values for env variables but only for those
+strings. Do not use boolean since <code class="highlighter-rouge">&lt;%= ENV['MY_VAR'} || true %&gt;</code> will always
+resolve to true.
+Instead of this</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>development: &amp;default
+  secret_key_base: &lt;%= ENV["SECRET_KEY_BASE"] || 'some_secret' %&gt;
+
+test: *default
+production:
+  &lt;&lt;: *default
+  monitor_mode: true
+</code></pre></div></div>
+
+<p>In rails 5 there are <code class="highlighter-rouge">shared</code> key which will use all stuff.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt; config/secrets.yml &lt;&lt; HERE_DOC
+shared:
+  secret_key_base: &lt;%= ENV["SECRET_KEY_BASE"] || 'some_secret' %&gt;
+
+  # sending emails
+  smtp_username: &lt;%= ENV["SMTP_USERNAME"] %&gt;
+  smtp_password: &lt;%= ENV["SMTP_PASSWORD"] %&gt;
+
+  # for all outgoing emails
+  mailer_sender: &lt;%= ENV["MAILER_SENDER"] || "My Company &lt;support@example.com&gt;" %&gt;
+
+  # default_url is required for links in email body or in links in controller
+  # when url host is not available (for example rails console)
+  default_url:
+    host: &lt;%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "www.myapp.localhost") %&gt;
+    port: &lt;%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : nil) %&gt;
+
+# `shared` is automatically included, no need to write
+# shared: &amp;default
+# development: *default
+# or
+# development:
+#   &lt;&lt;: *default
+HERE_DOC
+
+git add . &amp;&amp; git commit -m "Simplify secrets"
+</code></pre></div></div>
+
+<h1 id="basic-mail-settings">Basic mail settings</h1>
+
+<p>We can generate application mailer with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails generate mailer UserMailer hello
+git add . &amp;&amp; git commit -am "rails generate mailer UserMailer hello"
+</code></pre></div></div>
+
+<p>Change default from address:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i app/mailers/application_mailer.rb -e '/default/c \
+  default from: Rails.application.secrets.mailer_sender'
+</code></pre></div></div>
+
+<p>Set default url option, that is domain for <code class="highlighter-rouge">root_url</code>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># if you need to get from rails 4 use { port: Rails::Server.new.options[:Port] }
+# in config/environments/development.rb and also include
+# require 'rails/commands/server` on the top of the file
+
+# for rails 5 you can use Rack::Server.new.options[:Port] and no need to
+# require anything, but it works only if you provide -p param to rails s
+
+# config/application.rb
+    link = Rails.application.secrets.default_url.symbolize_keys
+    # for link urls in emails
+    config.action_mailer.default_url_options = link
+    # for link urls in rails console
+    config.after_initialize do
+      Rails.application.routes.default_url_options = link
+    end
+    # for asset-url or img_tag in emails
+    config.action_mailer.asset_host = "http://#{link[:host]}:#{link[:port]}"
+</code></pre></div></div>
+
+<p>For <a href="/2015/12/20/devise-oauth-angular/">devise</a></p>
+
+<p>For local development use Letter opener:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i '/group :development do/a  \
+  # open emails in browser\
+  gem "letter_opener"' Gemfile
+sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
+bundle &amp;&amp; git add . &amp;&amp; git commit -m "Letter opener to see emails in browser"
+rails runner UserMailer.hello.deliver
+</code></pre></div></div>
+
+<p>For production see
+<a href="/2016/05/17/send-and-receive-emails-in-rails/">send and receive emails in rails</a></p>
+
+<h1 id="skip-generators">Skip generators</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i '/Rails::Application/a \
+    config.i18n.enforce_available_locales = true\
+    config.generators do |generate|\
+      generate.helper false\
+      generate.javascript_engine false\
+      generate.request_specs false\
+      generate.routing_specs false\
+      generate.stylesheets false\
+      generate.test_framework :rspec\
+      generate.view_specs false\
+    end\
+    config.action_controller.action_on_unpermitted_parameters = :raise\
+' config/application.rb
+git add . &amp;&amp; git commit -m "Skip generators"
+</code></pre></div></div>
+
+<h1 id="authentication">Authentication</h1>
+
+<h2 id="cleareance-gem">Cleareance gem</h2>
+
+<p><a href="https://github.com/thoughtbot/clearance">Clearance</a> is simple email authorization. It could work with <a href="https://gist.github.com/stevebourne/2394427">facebook auth</a> but it’s designed to be only email auth.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'clearance'" &gt;&gt; Gemfile &amp;&amp; bundle
+rails generate clearance:install
+rake db:migrate
+rails generate clearance:routes
+git add . &amp;&amp; git commit -m "rails g clearance:install"
+
+sed -i '/&lt;body&gt;/a \\n\
+  &lt;nav&gt;\
+    &lt;% if signed_in? %&gt;\
+      &lt;%= current_user.email %&gt;\
+      &lt;%= button_to "Sign out", sign_out_path, method: :delete %&gt;\
+    &lt;% else %&gt;\
+      &lt;%= link_to "Sign in", sign_in_path %&gt;\
+    &lt;% end %&gt;\
+  &lt;/nav&gt;\
+' app/views/layouts/application.html.erb
+git add . &amp;&amp; git commit -m "Adding sign signout path"
+</code></pre></div></div>
+
+<h1 id="company-scaffold-with-skipped-unused-files">Company scaffold with skipped unused files</h1>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g scaffold company name:string user:references --no-stylesheets --no-fixture --no-test-framework --no-helper --no-assets --no-jbuilder
+sed -i '/companies/a \  root "companies#index"' config/routes.rb
+rake db:migrate &amp;&amp; git add . &amp;&amp; git commit -m "rails g scaffold company name:string user:references"
+</code></pre></div></div>
+
+<h1 id="puma">Puma</h1>
+
+<p>Puma is now default webserver on rails. But by default it runs in single mode
+WEB_CONCURRENCY=1 so on heroku it will allow RAILS_MAX_THREADS connections if GIL is
+not trigered.
+You can simulate slow connection with <code class="highlighter-rouge">sleep 10</code>, it does not triggel GIL.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export RAILS_MAX_THREADS=1
+curl $u/action_with_sleep_10 &amp;
+curl $u/action_with_sleep_10 &amp;
+# real 10s
+# real 20s
+
+
+export RAILS_MAX_THREADS=2
+curl $u/action_with_sleep_10 &amp;
+curl $u/action_with_sleep_10 &amp;
+# real 10s
+# real 10s
+</code></pre></div></div>
+
+<p>You can follow <a href="https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server">heroku article</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt;HERE_DOC
+gem 'puma'
+HERE_DOC
+bundle
+
+# Rails 5 puma is default, and config/puma.rb is used, so do not need Procfile
+# but is it advisable to write it and put rakek db:migrate so you do not need to
+# run migration after you deploy. Restart is not needed as it was needed after
+# heroku run rake db:migrate (there are no exception, but update was not
+# actually saved in new columns, so restart was needed)
+cat &gt;&gt; Procfile &lt;&lt;HERE_DOC
+web: bundle exec puma -C config/puma.rb
+release: rake db:migrate
+HERE_DOC
+
+# default puma config is fine, but on production should include those lines
+cat &gt;&gt; config/puma.rb &lt;&lt;HERE_DOC
+workers Integer(ENV['WEB_CONCURRENCY'] || 2)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
+threads threads_count, threads_count
+
+preload_app!
+
+rackup      DefaultRackup
+port        ENV['PORT']     || 3000
+environment ENV['RACK_ENV'] || 'development'
+
+on_worker_boot do
+  # Worker specific setup for Rails 4.1+
+  # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
+  ActiveRecord::Base.establish_connection
+end
+HERE_DOC
+
+# on development always use single mode
+mkdir config/puma
+cat &gt;&gt; config/puma/development.rb &lt;&lt;HERE_DOC
+workers 0
+HERE_DOC
+</code></pre></div></div>
+
+<h1 id="heroku-deploy">Heroku deploy</h1>
+
+<p>If you need to run separate command for background jobs, you need to write
+<code class="highlighter-rouge">Procfile</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export MYAPP_NAME=my-app # only dash, not underscore
+# # postgresql on production
+# sed -i Gemfile -e "/gem 'sqlite3/c \
+# gem 'pg'"
+# sed -i '/adapter: sqlite3/c \  adapter: postgresql' config/database.yml
+# sed -i "/development.sqlite3/c \  database: ${MYAPP_NAME}_dev" config/database.yml
+# sed -i "/test.sqlite3/c \  database: ${MYAPP_NAME}_test" config/database.yml
+# sed -i "/production.sqlite3/c \  database: ${MYAPP_NAME}_prod" config/database.yml
+#
+# rails in production use: production: url: &lt;%= ENV['DATABASE_URL'] %&gt;
+
+cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# heroku uses this 12 factor gem
+gem 'rails_12factor', group: :production
+HERE_DOC
+bundle
+git commit -am "Heroku uses 12factor gem"
+
+heroku apps:create $MYAPP_NAME
+heroku addons:create heroku-postgresql:hobby-dev # this will set DATABASE_URL
+git push heroku master --set-upstream
+
+heroku run rake db:migrate db:seed
+# heroku run rake db:setup will raise error:
+# PG::ConnectionBad: FATAL:  permission denied for database "postgres"
+# DETAIL:  User does not have CONNECT privilege
+# https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps try
+# heroku pg:reset --confirm $MYAPP_NAME
+# heroku restart
+#
+# I do not know how to drop db since db:migrate:reset does not work either
+
+# sometimes you need to recompile assets when you change secrets but assets are
+# not changed, and you need to purge cache, install plugin
+# https://github.com/heroku/heroku-repo
+# heroku plugins:install heroku-repo
+# heroku repo:purge_cache
+
+heroku open
+</code></pre></div></div>
+
+<p>Heroku use ubuntu 16 or Ubuntu 18, you can change</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku apps:info
+heroku stack
+heroku stack:set heroku-16
+</code></pre></div></div>
+
+<p>You can pull from heroku databse https://devcenter.heroku.com/articles/heroku-postgresql#pg-push-and-pg-pull
+You need to find the name of heroku database by clicking on Postgresl plugin</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails db:drop
+heroku pg:pull postgresql-name-on-heroku my_rails_app_development
+
+# also pushing
+heroku pg:reset
+heroku pg:push buyers_development postgresql-animate-86842
+</code></pre></div></div>
+
+<p>If you need to provision new database (upgrade from free to hobby) than you can
+use pg copy
+https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases#upgrading-with-pg-copy</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_TEAL_URL
+heroku pg:promote HEROKU_POSTGRESQL_TEAL_URL
+heroku config # find color of old database
+heroku addons:destroy HEROKU_POSTGRESQL_NAVY_URL
+</code></pre></div></div>
+
+<p>If you need to compile node packages than you need need custom
+<a href="https://devcenter.heroku.com/articles/nodejs-support#customizing-the-build-process">buildpack</a>.
+We could use 3th party gulp buildpacks but default
+<a href="https://docs.npmjs.com/misc/config">node</a>
+<a href="https://github.com/heroku/heroku-buildpack-nodejs">buildpack</a> works fine.</p>
+
+<p>There is also for mysql <a href="https://github.com/Shopify/heroku-buildpack-mysql">https://github.com/Shopify/heroku-buildpack-mysql</a> or
+<a href="https://github.com/din-co/heroku-buildpack-mysql">https://github.com/din-co/heroku-buildpack-mysql</a></p>
+
+<p><code class="highlighter-rouge">devDependencies</code> need to be renamed to <code class="highlighter-rouge">dependecies</code> since it runs node
+production mode (I tried to disable production mode using NPM_CONFIG_ONLY but
+than other thinks does not work). Imporant is
+<a href="https://devcenter.heroku.com/articles/nodejs-support#cache-behavior">NODE_MODULES_CACHE</a>.
+If we (by default) cache <code class="highlighter-rouge">/node_modules</code> it will not build new version to public
+folder.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># deploy to heroku
+heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+
+heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
+# alternativelly, we can define then in file .buildpacks
+# echo 'https://github.com/heroku/heroku-buildpack-ruby
+# https://github.com/heroku/heroku-buildpack-nodejs ' &gt; .buildpacks
+# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rm -rf public
+echo '/public
+/node_modules' &gt;&gt; .gitignore
+git add .gitignore
+git commit -m "Remove public folder from git repo"
+
+echo '{
+  "name": "rootApp",
+  "scripts": {
+  },
+  "dependencies": {
+    "myappAngular": "file:./client"
+  },
+  "cacheDirectories": [
+    "client/node_modules",
+    "client/bower_components"
+  ]
+}
+' &gt; package.json
+git add package.json &amp;&amp; git commit -m "Add package.json for nodejs buildpack detect"
+
+cd client
+sed -i "/dist: 'dist/c \  dist: '../../public'," gulp/conf.js
+sed -i '/"scripts":/a \    "postinstall": "bower install &amp;&amp; gulp build",' package.json
+sed -i '/"devDependencies":/c \  "dependencies": {\
+    "bower": "*",' package.json
+git add . &amp;&amp; git commit -m "Configure postinstall gulp build"
+cd ..
+
+git push heroku
+heroku config # NPM_CONFIG_PRODUCTION=true NODE_ENV=production NODE_MODULES_CACHE=true
+heroku open
+# usefull command to test is `npm install`
+# git commit --amend --allow-empty --no-edit &amp;&amp; echo "output is saved: cat log/heroku.log" &amp;&amp; git push heroku -f &gt; log/heroku.log 2&gt;&amp;1 &amp;&amp; heroku run bash -c 'mysql -v'
+</code></pre></div></div>
+
+<p>On heroku add <em>Papertrail</em> add-on and go to the
+<a href="https://papertrailapp.com/events">https://papertrailapp.com/events</a> and search
+for “Started GET” , save and create email alert or <a href="/2016/05/17/send-and-receive-emails-in-rails/">add internal
+notification</a></p>
+
+<p><a href="https://devcenter.heroku.com/articles/custom-domains">https://devcenter.heroku.com/articles/custom-domains</a>
+For custom domain just add on settings your domain name and create CNAME record
+for <code class="highlighter-rouge">www</code> with value <code class="highlighter-rouge">myapp.herokuapp.com</code>.
+If you need to match all subdomains (wildcard), you can put <em>Domain Name</em>
+<code class="highlighter-rouge">*.kontakt.in.rs</code> and CNAME record for <code class="highlighter-rouge">*</code> with same value
+<code class="highlighter-rouge">myapp.herokuapp.com</code>.
+If you need to add root domain (naked, bare, zone apex) than you can’t use
+loopia but some other suggested domain name providers.</p>
+
+<h2 id="deploy-javascript-npm-required-tasks">Deploy javascript npm required tasks</h2>
+
+<h2 id="heroku-dyno-puma-settings">Heroku dyno puma settings</h2>
+
+<p><a href="https://youtu.be/itbExaPqNAE">https://youtu.be/itbExaPqNAE</a>
+Some Things in system = arrival rate X time spent in system so for server it is:
+hequests_in_system = requests per second X average_response_time (115 req/s *
+0.147s = 16 request in system, so we need at leat 16 workers in same time).
+utilization = requests_in_system / how_many_workers
+for example = 115 req/s X 147ms response / 45 workers = 37%</p>
+
+<p>Use 3 WEB_CONCURRENCY workers and 3-5 RAILS_MAX_THREADS (not more since each thread
+need connection to database, and use some on memory).
+https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#workers suggests 2-4 workers
+<code class="highlighter-rouge">sleep</code> also do not lock GIL (so all threads are working).</p>
+<blockquote>
+  <p>On MRI, there is a Global Interpreter Lock (GIL) that ensures only one thread
+can be run at any time. IO operations such as database calls, interacting with
+the file system, or making external http calls will not lock the GIL. Most
+Rails applications heavily use IO, so adding additional threads will allow
+Puma to process multiple threads, gaining you more throughput. `</p>
+</blockquote>
+
+<p>https://devcenter.heroku.com/articles/scaling#autoscaling</p>
+
+<p>Also increase database, redis and memcached connections.
+Heroku postgresql hobby-basic has limit of 20 connections (enought for 3x5=15)</p>
+
+<h1 id="google-app-engine">Google app engine</h1>
+
+<p>It is not hard to deploy to <a href="https://cloud.google.com/ruby/rails/appengine">google ap engine
+</a></p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Free SSL for https on apache or nginx</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Free SSL for https on apache or nginx</h1>
+    <p class="meta">Oct 8, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#lets-encrypt-for-heroku"><span class="tocnumber">1</span> <span class="toctext">Lets encrypt for heroku</span></a></li><li class="toc_level-1 toc_section-2"><a href="#old-way"><span class="tocnumber">2</span> <span class="toctext">Old way</span></a></li><li class="toc_level-1 toc_section-3"><a href="#startssl"><span class="tocnumber">3</span> <span class="toctext">StartSSL</span></a></li><li class="toc_level-1 toc_section-4"><a href="#signup-and-install-browser-certificate"><span class="tocnumber">4</span> <span class="toctext">Signup and install browser certificate</span></a></li><li class="toc_level-1 toc_section-5"><a href="#validation-wizard-for-domain"><span class="tocnumber">5</span> <span class="toctext">Validation wizard for domain</span></a></li><li class="toc_level-1 toc_section-6"><a href="#certificates-wizard"><span class="tocnumber">6</span> <span class="toctext">Certificates wizard</span></a></li><li class="toc_level-1 toc_section-7"><a href="#final-cert-files"><span class="tocnumber">7</span> <span class="toctext">Final cert files</span></a></li><li class="toc_level-1 toc_section-8"><a href="#local-test"><span class="tocnumber">8</span> <span class="toctext">Local test</span></a><ul><li class="toc_level-2 toc_section-9"><a href="#install-ssl-on-apache2"><span class="tocnumber">8.1</span> <span class="toctext">Install ssl on apache2</span></a></li><li class="toc_level-2 toc_section-10"><a href="#install-on-ngxin"><span class="tocnumber">8.2</span> <span class="toctext">Install on ngxin</span></a></li></ul></li></ul></td></tr></tbody></table></div><h1 id="lets-encrypt-for-heroku">Lets encrypt for heroku</h1>
+
+<p>https://letsencrypt.org/
+Is free and Heroku supports it using
+<a href="https://devcenter.heroku.com/articles/automated-certificate-management">ACM</a>
+but only for paid dynos.
+Use cloudflare.com for free ssl, and we point directly to https herokuapp (no
+need to setup dns on heroku).
+On Crypto tab on Cloud Flare select FULL (not Flexible) SSL.
+You can check the Always use HTTPS (<code class="highlighter-rouge">Redirect all requests with scheme “http” to
+“https”. This applies to all http requests to the zone</code>) or create Page rules
+that redirects from http to https.
+There could be a problem when we using http on Rails and submitting the form on
+https, heroku logs will give</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP Origin header (https://www.premesti.se) didn't match request.base_url (http://www.premesti.se)
+Completed 422 Unprocessable Entity in 6ms
+ActionController::InvalidAuthenticityToken (ActionController::InvalidAuthenticityToken):
+</code></pre></div></div>
+
+<p>On Page rules add redirect non www to www.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://premesti.se/* -&gt; https://www.premesti.se/$1
+
+# Also we you did not use  `Always use HTTPS` you can add rules that redirects
+http://premesti.se/* -&gt; https://www.premesti.se/$1
+http://www.premesti.se/* -&gt; https://www.premesti.se/$1
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig premesti.se
+# should have
+;; ANSWER SECTION:
+premesti.se.		78	IN	A	104.28.14.137
+premesti.se.		78	IN	A	104.28.15.137
+
+curl premesti.se -I
+# should have
+HTTP/1.1 301 Moved Permanently
+Location: https://www.premesti.se/
+
+curl https://premesti.se -I
+# should have
+HTTP/1.1 301 Moved Permanently
+Location: https://www.premesti.se/
+</code></pre></div></div>
+
+<h1 id="old-way">Old way</h1>
+
+<p>Following <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-with-a-free-signed-ssl-certificate-on-a-vps">this tutorial</a> here are some screenshots from Startssl how I registered <a href="http://www.kontakt.in.rs">www.kontakt.in.rs</a>.</p>
+
+<h1 id="startssl">StartSSL</h1>
+
+<p>StartSSL is not working since they issues certs for sites that did not check.
+Here is example only for reference.</p>
+
+<p>Go to the <a href="http://www.startssl.com/">www.startssl.com</a> and on left menu find: <em>StartSSL Products</em> &gt; <em>StartSSL Free</em> . Before you can get the keys, you need to authenticate yourself. Go to <a href="https://www.startssl.com/?app=12">Certificate Control Panel</a>. There are links for login using existing keys, but we will use signup.</p>
+
+<h1 id="signup-and-install-browser-certificate">Signup and install browser certificate</h1>
+
+<p><img src="/assets/post_free_ssl/1_signup_form.jpg" alt="Sign up form" /></p>
+
+<p>than you will receive a code in email, and it should be pasted on</p>
+
+<p><img src="/assets/post_free_ssl/2_complete_registration.jpg" alt="Somplete registration" /></p>
+
+<p>Wait until they authorize your email account</p>
+
+<p><img src="/assets/post_free_ssl/3_notice_for_review.jpg" alt="Notice for review" /></p>
+
+<p>Once your account is approved and you receive email, click on link provided and copy verification code</p>
+
+<p><img src="/assets/post_free_ssl/4_verify_approved_request.jpg" alt="Verify approved request" /></p>
+
+<p>Generate private key</p>
+
+<p><img src="/assets/post_free_ssl/5_generate_private_key.jpg" alt="Generate private key" /></p>
+
+<p>Install certificate</p>
+
+<p><img src="/assets/post_free_ssl/6_install_certificate.jpg" alt="Install certificate" /></p>
+
+<p>Congratulations for browser certificate</p>
+
+<p><img src="/assets/post_free_ssl/7_congratulations_for_browser_certificate.jpg" alt="Congratulations for browser certificate" /></p>
+
+<h1 id="validation-wizard-for-domain">Validation wizard for domain</h1>
+
+<p>Pick web ssl</p>
+
+<p><img src="/assets/post_free_ssl/validation_wizard1_chose_web_ssl.jpg" alt="Chose web ssl" /></p>
+
+<p>Enter domain name</p>
+
+<p><img src="/assets/post_free_ssl/validation_wizard2_enter_domain_name.jpg" alt="Enter domain name" /></p>
+
+<p>Choose email</p>
+
+<p><img src="/assets/post_free_ssl/validation_wizard3_choose_email.jpg" alt="Choose email" /></p>
+
+<p>Verify email</p>
+
+<p><img src="/assets/post_free_ssl/validation_wizard4_verify_email.jpg" alt="Verify email" /></p>
+
+<p>Success</p>
+
+<p><img src="/assets/post_free_ssl/validation_wizard5_success.jpg" alt="Success" /></p>
+
+<h1 id="certificates-wizard">Certificates wizard</h1>
+
+<p>Pick web ssl</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard1_chose_web_ssl.jpg" alt="chose web ssl" /></p>
+
+<p>Enter password</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard2_enter_password.jpg" alt="Enter password" /></p>
+
+<p>Save <strong>ssl.key</strong></p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard3_save_ssl_key.jpg" alt="save ssl.key" /></p>
+
+<p>Pick domain</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard4_select_domain.jpg" alt="Select domain" /></p>
+
+<p>Add subdomain www</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard5_add_subdomain_www.jpg" alt="Add subdomain www" /></p>
+
+<p>Processing</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard6_processing.jpg" alt="Processing" /></p>
+
+<p>Additinal check</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard7_additional_check.jpg" alt="Additional check" /></p>
+
+<h1 id="final-cert-files">Final cert files</h1>
+
+<p>After you got email that certificate is ready, go to toolbox and download it</p>
+
+<p><img src="/assets/post_free_ssl/cert_wizard7_download_certificate.jpg" alt="Download certificate" /></p>
+
+<p>We need two additional files:</p>
+
+<ul>
+  <li>StartCom Root CA (ca.pem)</li>
+  <li>StartSSL’s Class 1 Intermediate Server CA (sub.class1.server.ca)</li>
+</ul>
+
+<p>which you can find in Toolbox section.</p>
+
+<p>Since server needs unencrypted version we need to create that (so it won’t ask for password)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rsa -in ssl.key -out private.key 
+</code></pre></div></div>
+
+<p>Copy those four files to server</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp {ca.pem,private.key,sub.class1.server.ca.pem,ssl.crt} YOURSERVER:~ 
+</code></pre></div></div>
+
+<h1 id="local-test">Local test</h1>
+
+<p>You can test localy in virtual box, we will use ports 8080 and 8081</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant init
+sed -i '/base/c \  config.vm.box = "ubuntu/trusty64"\
+  config.vm.network "forwarded_port", guest: 80, host: 8080\
+  config.vm.network "forwarded_port", guest: 443, host: 8081\
+' Vagrantfile
+vagrant up
+vagrant ssh
+</code></pre></div></div>
+
+<h2 id="install-ssl-on-apache2">Install ssl on apache2</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update # get right sources
+sudo apt-get -y install apache2
+sudo a2enmod ssl
+sudo mkdir /etc/apache2/ssl
+cd /vagrant
+sudo cp {ca.pem,private.key,sub.class1.server.ca.pem,ssl.crt} /etc/apache2/ssl
+# copy configuration for http
+cat /etc/apache2/sites-enabled/000-default.conf | sudo tee -a /etc/apache2/sites-enabled/000-default.conf
+# add ssl configuration
+sudo sed -i '1c &lt;VirtualHost *:443&gt;' /etc/apache2/sites-enabled/000-default.conf
+sudo sed -i '/VirtualHost...443/a SSLEngine on\
+  SSLProtocol all -SSLv2\
+  SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM\
+  SSLCertificateFile /etc/apache2/ssl/ssl.crt\
+  SSLCertificateKeyFile /etc/apache2/ssl/private.key\
+  SSLCertificateChainFile /etc/apache2/ssl/sub.class1.server.ca.pem \
+' /etc/apache2/sites-enabled/000-default.conf
+sudo service apache2 restart
+sudo tail -f /var/log/apache2/error.log
+</code></pre></div></div>
+
+<h2 id="install-on-ngxin">Install on ngxin</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update # get right sources
+sudo apt-get -y install nginx
+sudo mkdir /etc/nginx/ssl
+sudo sed -i '/listen.80.default_server/a \\tlisten 443 ssl;\
+\tssl_certificate /etc/nginx/ssl/ssl.crt;\
+\tssl_certificate_key /etc/nginx/ssl/private.key;\
+' /etc/nginx/sites-enabled/default
+sudo cp /vagrant/private.key /vagrant/ssl.crt /etc/nginx/ssl
+sudo service nginx restart
+sudo tail -f /var/log/nginx/error.log
+</code></pre></div></div>
+
+<p>Temporary change <code class="highlighter-rouge">www.kontakt.in.rs</code> to point to localhost <code class="highlighter-rouge">127.0.0.1</code> and go to
+<a href="http://www.kontakt.in.rs:8080">http://www.kontakt.in.rs:8080</a> 
+<a href="https://www.kontakt.in.rs:8081">https://www.kontakt.in.rs:8081</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo -e "127.0.0.1\twww.kontakt.in.rs" | sudo tee -a /etc/hosts
+</code></pre></div></div>
+
+<p>You should see certificate on apache</p>
+
+<p><img src="/assets/post_free_ssl/final_apache_cert.jpg" alt="final apache cert" /></p>
+
+<p>and green lock on ngxin</p>
+
+<p><img src="/assets/post_free_ssl/final_nginx_cert.jpg" alt="final nginx cert" /></p>
+
+<p>Don’t forget to remove temporary dns in hosts</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo sed -i '/www.kontakt.in.rs/c #127.0.0.1\twww.kontakt.in.rs' /etc/hosts
+</code></pre></div></div>
+
+<p>On ubuntu, you can rename <code class="highlighter-rouge">ssl.crt</code> to <code class="highlighter-rouge">ssl.crt.p12</code> (or ssl.crt.key) and double click will show you
+details of certificate.</p>
+
+<p>For heroku you can follow <a href="https://gist.github.com/meskyanichi/3354578">https://gist.github.com/meskyanichi/3354578</a></p>
+
+<p>If in windows 7 can not open www.xda-developers.com because
+of invalid certificate, The certificate cannot be verified up to a trused
+certification authority… This server could not prove that it is
+www.xda-developers.com its secity certificate is not trusted by your computer’s
+operating system…</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Svg Css3 Transforms And Animations</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Svg Css3 Transforms And Animations</h1>
+    <p class="meta">Aug 22, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#animatecss-and-wow"><span class="tocnumber">1</span> <span class="toctext">Animate.css and WoW</span></a></li><li class="toc_level-1 toc_section-2"><a href="#transform-property"><span class="tocnumber">2</span> <span class="toctext">Transform property</span></a></li><li class="toc_level-1 toc_section-3"><a href="#transition-property"><span class="tocnumber">3</span> <span class="toctext">Transition property</span></a></li><li class="toc_level-1 toc_section-4"><a href="#animation-property"><span class="tocnumber">4</span> <span class="toctext">Animation property</span></a></li><li class="toc_level-1 toc_section-5"><a href="#inkscape"><span class="tocnumber">5</span> <span class="toctext">Inkscape</span></a></li><li class="toc_level-1 toc_section-6"><a href="#svg"><span class="tocnumber">6</span> <span class="toctext">Svg</span></a></li><li class="toc_level-1 toc_section-7"><a href="#css-animations"><span class="tocnumber">7</span> <span class="toctext">CSS Animations</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#svg-animate-with-css"><span class="tocnumber">7.1</span> <span class="toctext">SVG Animate with css</span></a></li></ul></li></ul></td></tr></tbody></table></div><h1 id="animatecss-and-wow">Animate.css and WoW</h1>
+
+<p>Before you dive into details, you can try
+<a href="https://github.com/daneden/animate.css">animate</a> and
+<a href="https://github.com/matthieua/WOW">wow</a> to trigger it on scroll.
+So you can just add classes to your elements, like <code class="highlighter-rouge">hinge</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.css"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;script&gt;</span>
+    <span class="k">new</span> <span class="nx">WOW</span><span class="p">().</span><span class="nx">init</span><span class="p">();</span>
+  <span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"animated fadeInRightBig"</span><span class="nt">&gt;</span>
+      Content to Reveal Here
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<h1 id="transform-property">Transform property</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>div {
+  transform: scale(2,3);
+}
+</code></pre></div></div>
+
+<p>Note that element still occupy initial size. If you wrap with <code class="highlighter-rouge">&lt;span&gt;</code> than you
+need to set <code class="highlighter-rouge">display: inline-block</code> (<code class="highlighter-rouge">width</code> and <code class="highlighter-rouge">height</code> can only be applied to
+inline-block or block).</p>
+
+<p>2D transforms:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">translate(50px, 100px)</code> is 50px right and 100px down</li>
+  <li><code class="highlighter-rouge">rotate(20deg)</code> clockwise</li>
+  <li><code class="highlighter-rouge">scale(2,3)</code> width 2 times and height 3 times bigger</li>
+  <li><code class="highlighter-rouge">skewX(20deg)</code> <code class="highlighter-rouge">skewY(-10deg)</code> and <code class="highlighter-rouge">skew(20deg,-10deg)</code></li>
+  <li><code class="highlighter-rouge">matrix(6 params)</code></li>
+</ul>
+
+<p>another usefull property is <code class="highlighter-rouge">transform-origin: 50% 50% 0</code> which
+move the base of transform, on x, y and z axis (for 3D).</p>
+
+<p>3D transforms:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">rotateX(20deg)</code> around X axis (horizontal)</li>
+  <li><code class="highlighter-rouge">rotateY(20deg)</code> around Y axis (vertical)</li>
+  <li><code class="highlighter-rouge">rotateZ(20deg)</code> around Z axis (toward user)</li>
+  <li>translate3d scale3d rotate3d</li>
+</ul>
+
+<p>usefull property is <code class="highlighter-rouge">perspective: 400px</code> is how many pixes is
+3D element placed from the view and <code class="highlighter-rouge">perspective-origin: 10% 10%</code> bootom
+position on x and y axis.</p>
+
+<h1 id="transition-property">Transition property</h1>
+
+<p>Transition allows that element change property smoothly, over given duration.
+Some of the timing functions could be: <code class="highlighter-rouge">ease</code>, <code class="highlighter-rouge">ease-in</code>, <code class="highlighter-rouge">ease-in-out</code>,
+<code class="highlighter-rouge">linear</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>div {
+  transition: width 2s ease-out 1s;
+  // or
+  transition-property: width;
+  transition-duration: 2s;
+  transition-timing-function: ease-out;
+  transition-delay: 1s;
+}
+</code></pre></div></div>
+
+<p>usually we change properties on hover.</p>
+
+<h1 id="animation-property">Animation property</h1>
+
+<p>so you don’t need user action to animate…</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>div {
+  animation: example 5s linear 2s infinite alternate;
+  // or
+  animation-name: example;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+
+  animation-fill-mode: forwards;
+}
+
+@keyframes example {
+  0% { width: 10px; }
+  25% { width: 100px; }
+  100% { width: 110px; }
+}
+</code></pre></div></div>
+
+<h1 id="inkscape">Inkscape</h1>
+
+<p>Usefull shortcuts:</p>
+
+<ul>
+  <li>select two elements and <code class="highlighter-rouge">CTRL + +</code> union, <code class="highlighter-rouge">CTRL + -</code> difference (top image is
+substracted from bottom image)</li>
+  <li>to see the SVG code use Edit -&gt; XML Editor</li>
+  <li>inkspace fish <a href="https://www.youtube.com/watch?v=l3BHcregNUs&amp;t=300s">https://www.youtube.com/watch?v=l3BHcregNUs&amp;t=300s</a></li>
+  <li>sozi <a href="http://sozi.baierouge.fr/pages/10-about.html">http://sozi.baierouge.fr/pages/10-about.html</a></li>
+</ul>
+
+<h1 id="svg">Svg</h1>
+
+<p>You can create SVG in Inkscape (Gimp can not export in SVG).
+If you open existing svg or copy paste some paths, in Inkscape you can Edit -&gt;
+“Resize page to selection” to crop to fit size to include only paths.
+When you export you should optimize online
+<a href="https://jakearchibald.github.io/svgomg/">https://jakearchibald.github.io/svgomg/</a> or inline</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svgo file_name.svg --pretty --disable=cleanupIDs
+</code></pre></div></div>
+
+<p>or download inkscape extension
+<a href="https://github.com/juanfran/svgo-inkscape">https://github.com/juanfran/svgo-inkscape</a> and use <code class="highlighter-rouge">Save as "optimized with
+svgo"</code> and uncheck <code class="highlighter-rouge">Plugin 2 -&gt; CleanupIDS</code> if you want your grouped ids to
+remain, so you can target them in css.</p>
+
+<p>In rails you can use svg inliner <a href="https://github.com/jamesmartin/inline_svg">https://github.com/jamesmartin/inline_svg</a>
+In inkscape we can use multiple layers with same name, so id is autogenerated,
+and cleaned with svgo, so better is to use groups.</p>
+
+<ul>
+  <li>main <code class="highlighter-rouge">&lt;svg width="123" height="123" viewBox="0 0 123 123"&gt;</code>
+    <ul>
+      <li>view box has four params: x, y, width, height (those are units inside svg)</li>
+    </ul>
+  </li>
+  <li>group <code class="highlighter-rouge">&lt;g id="petals" fill="#f00"&gt;</code> group elements</li>
+  <li>text <code class="highlighter-rouge">&lt;text x="0" y="200" dx="10"&gt;Some text&lt;/text&gt;</code> x is distance from left, y
+from top, dx is another drift</li>
+  <li>circle <code class="highlighter-rouge">&lt;circle cx="1" cy="1" r="5" stroke="green"/&gt;</code> cx is center x, r is
+radius.</li>
+  <li>rectangle <code class="highlighter-rouge">&lt;rect x="1" y="1" width="10" height="10" rx="1" style="" /&gt;</code> rx is
+radius of corner</li>
+  <li>ellipse <code class="highlighter-rouge">&lt;ellipse cx cy rx="10" ry="20"/&gt;</code> cx is horizontal radius</li>
+  <li>line <code class="highlighter-rouge">&lt;line x1="0" y1="0" x2="10" y2="20" /&gt;</code></li>
+  <li>polygon and polyline <code class="highlighter-rouge">&lt;polygon points="200,10 250,190 160,210"/&gt;</code></li>
+  <li>path: M - moveto, L - lineto, Z - closepath, H - horizontal, V -vertical
+lowercase letters is relative position, uppercase is absolutely.
+<code class="highlighter-rouge">&lt;path d="M 50 0 L 75 200 L 225 200 Z" /&gt;</code></li>
+</ul>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Curve_commands">https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#Curve_commands</a>
+C cubic curve <code class="highlighter-rouge">C x1 y1, x2, y2, x, y</code> first two are control points, (x,y) is end
+of curve.
+C followed with S <code class="highlighter-rouge">S x2 y2, x y</code> is shorten version of C which is reflection.
+Q quadratic curve <code class="highlighter-rouge">Q x1 y1, x y</code> is simpler since both slopes are equal. Also it
+could be followed with T <code class="highlighter-rouge">T x y</code> which will use same reflection.</p>
+
+<p>Elliptical arcs are complex to write <code class="highlighter-rouge">A rx ry x-axis-rotation large-arc-flag
+sweep-flag x y</code></p>
+
+<p>Reuse components with <code class="highlighter-rouge">&lt;defs&gt;</code> and <code class="highlighter-rouge">&lt;simbol&gt;</code>.
+<a href="http://vanseodesign.com/web-design/svg-definition-reuse/">http://vanseodesign.com/web-design/svg-definition-reuse/</a></p>
+
+<p>Attach another element with <code class="highlighter-rouge">&lt;marker&gt;</code>
+<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker">https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker</a></p>
+
+<h1 id="css-animations">CSS Animations</h1>
+
+<p>You can animate using 3 ways: with css, with <code class="highlighter-rouge">&lt;animate&gt;</code> and with javascript.
+<a href="https://www.youtube.com/watch?v=lM7cuk5DPgc&amp;feature=youtu.be">video</a></p>
+
+<h2 id="svg-animate-with-css">SVG Animate with css</h2>
+
+<p>For SVG there are custom css which can be inline like <code class="highlighter-rouge">fill="blue"</code> or in css</p>
+
+<ul>
+  <li><code class="highlighter-rouge">fill: blue</code> color of element area</li>
+  <li><code class="highlighter-rouge">stroke: pink</code> color of line, text or outline</li>
+  <li><code class="highlighter-rouge">stroke-width: 5</code> thickness or line, text or outline</li>
+  <li><code class="highlighter-rouge">stroke-linecap: butt</code> <code class="highlighter-rouge">round</code> <code class="highlighter-rouge">square</code> ending of open path</li>
+  <li><code class="highlighter-rouge">stroke-dasharray: 10</code> length of dashes and spaces</li>
+  <li><code class="highlighter-rouge">stroke-dashoffset: 10</code> when to start dash or space, this is used for
+line animation along the path</li>
+  <li><code class="highlighter-rouge">transform:rotate(20deg)</code> <code class="highlighter-rouge">translate(x,y)</code></li>
+</ul>
+
+<p>Here is some example of text shadows:
+https://www.w3.org/People/Dean/svg/texteffects/index.html
+https://www.w3schools.com/graphics/svg_feoffset.asp</p>
+<ul>
+  <li>to add blur
+~~~
+    <defs>
+  <filter id="f1" x="0" y="0">
+    <fegaussianblur stddeviation="0.1"></fegaussianblur>
+  </filter>
+</defs>
+    <text filter="url(#f1)">asd</text>
+  </li>
+</ul>
+<p>&lt;/degs&gt;</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+But better is to add another original item after filtered (so filtered is in
+background).
+
+If you want to apply multiple times (so it is bolder) you can use `feMergeNode`
+
+</code></pre></div></div>
+<filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+  <fegaussianblur stddeviation="1" result="glow"></fegaussianblur>
+  <femerge>
+    <femergenode in="glow"></femergenode>
+    <femergenode in="glow"></femergenode>
+    <femergenode in="glow"></femergenode>
+  </femerge>
+</filter>
+<p>&lt;/defs&gt;</p>
+<text style="filter: url(#glow); fill: #0c9" x="5" y="5">Simple Glow</text>
+<text x="5" y="5" style="fill: white">Simple Glow</text>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* to show text along the path use
+
+</code></pre></div></div>
+<path id="ca" class="abc__color-c" d="M 3 90 Q 3 3, 47 3 "></path>
+
+<text class="abc__title--ca abc__color-multistroke-3"><textpath xlink:href="#ca" startoffset="80%">&lt;%= t 'site_title' %&gt;</textpath></text>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+![text along path](/assets/text_along_path.png "Text along
+path")
+
+* pure text in pure css can be different color with help of fill transparend and
+  background
+  https://mawla.io/team/
+
+</code></pre></div></div>
+<p>.colorize-text-background
+    background: radial-gradient($color-a, $color-b 60%, $color-c %20)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  You can also animate saturation or sepia using filter
+  https://www.cssfilters.co/
+
+# SVG Mask
+
+* jpeg does not support mask (png does but is not optimized for big images), to
+use jpeg and png mask and one svg to combine them
+
+</code></pre></div></div>
+<mask id="mars-mask">
+  <image width="1" heigh="1" xlink:href="images/mars-mask.png">
+&lt;/mask&gt;
+<image width="1" height="1" xlink:href="images/mars.jpg" mask="url(#mars-mask)"></image>
+~~~
+
+* fill in text with png mask
+[video](https://www.youtube.com/watch?v=B5ol4ss-mi4&amp;index=9&amp;list=PLWjCJDeWfDdeYtU0NMvYvfqqFA1Jsh3NM)
+~~~
+<style><![CDATA[
+  text {
+  mask: url(#text-mask);
+  }
+]]></style>
+<defs>
+  <mask id="text-mask">
+    <image width="10" height="10" xlink:href="images/text-mask.png">
+  &lt;/mask&gt;
+&lt;/defs&gt;
+<text x="0" y="0">Mars</text>
+~~~
+
+* fill in text with jpg image
+[video](https://www.youtube.com/watch?v=lSNnVbfvJJ0&amp;index=11&amp;list=PLWjCJDeWfDdeYtU0NMvYvfqqFA1Jsh3NM)
+~~~
+<svg width="1500" height="500">
+  <style><![CDATA[
+    #kup {
+      font-size: 15rem;
+      font-family: 'Modak', cursive;
+      fill: url(#text-pattern);
+    }
+  ]]></style>
+  <defs>
+    <pattern width="500" height="500" id="text-pattern" patternunits="userSpaceOnUse">
+      <image width="500" height="500" xlink:href="&lt;%= asset_path 'snow.jpg' %&gt;"></image>
+    </pattern>
+  </defs>
+  <text x="0" y="200" id="kup">Novosadski Kup</text>
+</svg>
+~~~
+
+* default color is black and that means it is transparent. To cover everything
+except text, that fill rectangle and keep text as black (transparent).
+&lt;https://codepen.io/SimonEvans/pen/weoLLB&gt;
+* another example of video inside text https://css-tricks.com/responsive-knockout-text-with-looping-video/
+* curved text
+
+~~~
+    <svg id="a" width="100%" height="100%" viewbox="0 0 500 500">
+      <path id="path12" d="M17.413 103.763a86.935 65.39 0 0 1 33.07-49.74 86.935 65.39 0 0 1 72.012-12.602" fill="transparent"></path>
+      <text width="500">
+        <textpath xlink:href="#path12">
+          TEXTTTTTTTTTTTTTTTTT
+        </textpath>
+      </text>
+    </svg>
+~~~
+
+# Animate with <animatemotion>
+
+&lt;https://developer.mozilla.org/en-US/docs/Web/SVG/Element/animateMotion&gt;
+Examples can be seen on https://css-tricks.com/guide-svg-animations-smil/
+
+To move along the path but only on portion of the path, use:
+
+~~~
+<animatemotion calcmode="linear" keypoints="0;0.5" keytimes="0;1"></animatemotion>
+~~~
+
+## Animate SVG with javascript
+
+There is nice library to move elements along path
+&lt;https://github.com/lmgonzalves/path-slider&gt;
+
+To move arrow and increase line you can also use js libraries:
+[snap.svg](https://github.com/adobe-webplatform/Snap.svg)
+&lt;https://codepen.io/mattsince87/pen/snqLy&gt;
+&lt;https://codepen.io/duleorlovic/pen/zpmXOw&gt;
+[animejs](http://animejs.com/)
+&lt;https://maxwellito.github.io/vivus/&gt;
+&lt;https://codepen.io/Zaku/pen/ALChE&gt;
+
+live coding https://www.youtube.com/watch?v=-zLiw1GeEGo
+
+* smooth transitions between different svg
+[flubber](https://github.com/veltman/flubber)
+* radial or any path progress bars
+  &lt;https://daverupert.com/2018/03/animated-svg-radial-progress-bars&gt;
+* star heart animation with morphing
+https://css-tricks.com/creating-star-heart-animation-svg-vanilla-javascript/
+
+
+# Example of nice landing page with animation
+
+* https://scrumpy.io cat is working on laptop
+* http://taotajima.jp/works/ images and video on hover
+
+# Tips
+
+[scalling](https://css-tricks.com/scale-svg/) raster images like jpg, png and
+gif have defined size and aspect ratio of width to height. You can auto scale to
+cover `width="100%"` (or to cover `height="100%"`). all images has default size
+300px wide 150px tail.  if we change width or heigh of svg, inner image will
+stay the same (similar that font is the same if we scale div).  We can scale to
+fit with and without distorting. CSS `width: 100%` will overwrite width
+attribute on top svg element.  `viewBox="x y width height"` for example
+`viewBox="0 0 100 100"` defined top left corner as (0,0) and bottom right as
+(100,100).  `preserveAspectRatio="xMidYMin slice"` or
+`preserveAspectRatio="none"` if you want to preserve aspect ratio.
+
+
+# Angular
+
+Include `ngAnimate` and for `ngRepeat` use `ng-enter` and `ng-enter-active` [old
+doc](https://code.angularjs.org/1.2.22/docs/api/ngAnimate/service/$animate). We
+could just also watch `ng-leave`, `ng-move` with ngRepeat, `ng-add` and
+`ng-remove` with ngClass, `ng-hide` with ngShow.
+
+There is nice [ng-fx](https://github.com/AngularClass/ng-fx)
+[egghead](https://egghead.io/lessons/angularjs-introduction-to-ngfx-for-angular-animations)
+so you can use their animations. To install just run `bower instal ng-fx --save`
+and include `ngFx` in your module file. Just add some of [the
+supported](https://github.com/AngularClass/ng-fx/blob/master/animationList.txt)
+animations like `div(ng-repeat="item in items" class="fx-zoom-left fx-speed-500
+fx-ease-sin fx-stagger-10")`
+
+# Anime.js
+
+[Animejs](http://animejs.com/documentation/) is nice tool that can animate
+any css properties (opacity, color), transforms (translate, rotate), any dom
+attribute with numberical value (svg points).
+
+http://bouncejs.com/
+
+
+# Examples and Tricks
+
+* decorative text animations &lt;https://tympanus.net/Development/DecorativeLetterAnimations/&gt;
+* letter effects short to long words &lt;https://codepen.io/duleorlovic/pen/mXwyGj&gt;
+* infinite loader &lt;https://codepen.io/duleorlovic/pen/rJwaZL&gt;
+* animated download button
+  &lt;https://scotch.io/tutorials/build-a-download-button-full-of-micro-interactions&gt;
+* indent list items
+  ~~~
+  ul {
+    list-style: none;
+  }
+  li {
+    transition: all 0.1s ease-out;
+  }
+  li:hover {
+    margin-left: 8px;
+  }
+  ~~~
+
+
+UI animation tips
+https://uxdesign.cc/good-to-great-ui-animation-tips-7850805c12e5
+
+https://24ways.org/2010/intro-to-css-3d-transforms/
+https://www.youtube.com/watch?v=aVcs-zQ1q4U
+https://codepen.io/maattt/pen/RWxOjd
+https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Basic_Shapes
+</animatemotion></image></mask></defs></image></mask>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

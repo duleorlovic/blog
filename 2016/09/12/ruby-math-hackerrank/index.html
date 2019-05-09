@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Ruby Math Hackerrank</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ruby Math Hackerrank</h1>
+    <p class="meta">Sep 12, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#install"><span class="tocnumber">1</span> <span class="toctext">Install</span></a></li><li class="toc_level-1 toc_section-2"><a href="#links"><span class="tocnumber">2</span> <span class="toctext">Links</span></a></li><li class="toc_level-1 toc_section-3"><a href="#just-enough-ruby"><span class="tocnumber">3</span> <span class="toctext">Just enough ruby</span></a></li><li class="toc_level-1 toc_section-4"><a href="#example-code"><span class="tocnumber">4</span> <span class="toctext">Example code</span></a></li><li class="toc_level-1 toc_section-5"><a href="#complexity"><span class="tocnumber">5</span> <span class="toctext">Complexity</span></a></li><li class="toc_level-1 toc_section-6"><a href="#counting-of-elements"><span class="tocnumber">6</span> <span class="toctext">Counting of elements</span></a></li><li class="toc_level-1 toc_section-7"><a href="#prefix-sums"><span class="tocnumber">7</span> <span class="toctext">Prefix sums</span></a></li><li class="toc_level-1 toc_section-8"><a href="#counting-sort-onm"><span class="tocnumber">8</span> <span class="toctext">Counting sort O(n+m)</span></a></li><li class="toc_level-1 toc_section-9"><a href="#merge-sort-onlogn"><span class="tocnumber">9</span> <span class="toctext">Merge sort O(n*log(n))</span></a></li><li class="toc_level-1 toc_section-10"><a href="#prime-numbers"><span class="tocnumber">10</span> <span class="toctext">Prime Numbers</span></a></li><li class="toc_level-1 toc_section-11"><a href="#euclidean-algorithm"><span class="tocnumber">11</span> <span class="toctext">Euclidean algorithm</span></a></li><li class="toc_level-1 toc_section-12"><a href="#geometry"><span class="tocnumber">12</span> <span class="toctext">Geometry</span></a></li><li class="toc_level-1 toc_section-13"><a href="#math"><span class="tocnumber">13</span> <span class="toctext">Math</span></a></li><li class="toc_level-1 toc_section-14"><a href="#tutorial"><span class="tocnumber">14</span> <span class="toctext">Tutorial</span></a></li><li class="toc_level-1 toc_section-15"><a href="#constrains"><span class="tocnumber">15</span> <span class="toctext">Constrains</span></a></li></ul></td></tr></tbody></table></div><h1 id="install">Install</h1>
+
+<p>Install vim plugin <a href="/2015/12/01/vim-tips/#seeing-is-believing">seeing-is-believing</a> and write Gemfile</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+source 'https://rubygems.org'
+
+ruby '2.2.3'
+
+# for instant output of commands
+gem 'seeing_is_believing'
+
+# irbtools includes interactive_editor (vim inside irb)
+# just create ~/.irbrc with
+# require 'rubygems'
+# require 'irbtools'
+gem 'irbtools'
+
+# debugging
+gem 'byebug'
+
+# simple test assertions
+gem 'minitest'
+</code></pre></div></div>
+
+<h1 id="links">Links</h1>
+
+<p>Math and algorith tasks</p>
+
+<ul>
+  <li>https://www.hackerrank.com
+    <ul>
+      <li>nice editor, solution have to be memory effiction (it raises Timeout or Run
+Time Error)</li>
+    </ul>
+  </li>
+  <li>https://projecteuler.net/</li>
+  <li>http://www.beatmycode.com/</li>
+  <li>http://codility.com/programmers/</li>
+</ul>
+
+<p>Codility Solutions</p>
+
+<ul>
+  <li>https://github.com/GNakayama/codility/tree/master/src/python and blog
+http://blog.nkbits.com/</li>
+  <li>http://codesays.com/ http://codesays.com/solutions-to-training-by-codility/</li>
+  <li>http://www.martinkysel.com/codility-solutions/</li>
+</ul>
+
+<h1 id="just-enough-ruby">Just enough ruby</h1>
+
+<ul>
+  <li>
+    <p>read from STDIN or from a file if you run with <code class="highlighter-rouge">ruby script.rb my_data</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n = gets.to_i
+array = gets.strip.split(' ').map(&amp;:to_i)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>write to a file</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>File.open "my_file_name", 'w' do |file|
+  file.puts "first line (no need for new line char \ n)"
+  file &lt;&lt; "second line \n"
+  file.write "third line \n"
+end
+</code></pre></div>    </div>
+
+    <p>or in single line <code class="highlighter-rouge">File.write '/path/to/file', 'My Text', mode: 'a'</code></p>
+  </li>
+  <li>division is integer division, so that <code class="highlighter-rouge">1/2 == 0</code> in ruby. You need to convert
+to float <code class="highlighter-rouge">x = x.to_f</code></li>
+  <li>iterate range <code class="highlighter-rouge">(1..10).each</code> or <code class="highlighter-rouge">1.upto(10).each</code></li>
+  <li>exponent is <code class="highlighter-rouge">2**2 == 4</code></li>
+</ul>
+
+<h1 id="example-code">Example code</h1>
+
+<p>We can use <a href="https://ruby-doc.org/stdlib-2.1.0/libdoc/pp/rdoc/PP.html">pp</a>
+standard library to print arrays just <code class="highlighter-rouge">require 'pp'</code>. But if you need to print
+matrix, than you can use ppp <code class="highlighter-rouge">require './ppp'</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ppp.rb
+def ppp(x)
+  if x.class == Array
+    puts_array(x)
+  else
+    puts x
+  end
+end
+
+def puts_array(x)
+  need_new_line = false
+  x.each do |e|
+    if e.class == Array
+      puts e.join(', ')
+    else
+      print e.to_s + ', '
+      need_new_line = true
+    end
+  end
+  puts if need_new_line
+end
+</code></pre></div></div>
+
+<p>Here is example for one solution that is submitted on site (it can not
+<code class="highlighter-rouge">require byebug</code>) so it use constant PRODUCTION. Test are in the same file.
+If the task is to read from file and to submit generated file, than use second
+tempalte.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 0_short_palindrome.rb
+# https://www.hackerrank.com/challenges/short-palindrome
+# string s of n lowecase letters s_i 0&lt;=i&lt;n
+# (a, b, c, d)
+# s_a = s_b chars at a and d are the same
+# s_b = s_c
+# constrains:
+# 0&lt;=a&lt;b&lt;c&lt;d&lt;n
+# input: string s
+# 1&lt;= |s| &lt; 10^6
+# output: number of (a, b, c, d) tuples, use moduo 10^9 + 7
+PRODUCTION = false
+if PRODUCTION
+  def ppp(_arg = nil); end
+
+  def pp(_arg = nil); end
+else
+  require 'pp'
+  require './ppp'
+  require 'byebug'
+end
+
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/AbcSize
+def solution(a)
+  r = a.length
+  ppp "r=#{r}"
+  r
+end
+
+if PRODUCTION
+  n = gets.to_i
+  a = []
+  n.times do
+    # strip is needed since on hackerrank, new line is at the end of gets
+    r = gets.strip.split('').map { |c| c == '*' ? 0 : 1 }
+    a &lt;&lt; r
+  end
+  puts solution(a)
+end # if PRODUCTION
+
+require 'minitest/autorun'
+class Test &lt; Minitest::Test
+  def test_sample
+    s = 'kkkkkkz'
+    assert_equal 12, solution(prepare(s))
+  end
+
+  def test_long
+    s = %(***.*
+**..*
+***.*
+*****
+*****)
+    assert_equal 12, solution(prepare(s))
+  end
+
+  def test_float
+    asert_in_delta 0.5, solution(1,2) # default delta=0.001
+  end
+
+  def test_that_is_skipped
+    skip "later"
+  end
+
+  private
+
+  def prepare(s)
+    s
+  end
+end
+</code></pre></div></div>
+
+<p>This template has separate test and actual code</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># my_script.rb
+# description of a problem
+require 'pp'
+require './ppp'
+require 'byebug'
+
+def solution(aa:, l:, h:)
+end
+
+# when we run: ruby my_script.rb data/example.in
+# output is saved in data/example.out
+if ARGV.length == 1
+  file_name = ARGV.last.split('.').first
+  r, _c, l, h = gets.split(' ').map(&amp;:to_i)
+  aa = []
+  r.times do
+    # strip is needed since on hackerrank, new line is at the end of gets
+    aa &lt;&lt; gets.strip.split('').map { |c| c == 'M' ? 1 : 0 }
+  end
+  results = solution(aa: aa, l: l, h: h)
+  File.open "#{file_name}.out", 'w' do |file|
+    # puts results.length
+    file.puts results.length
+    results.each do |row|
+      # puts row.join(' ')
+      file.puts row.join(' ')
+    end
+  end
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test_my_script.rb
+require 'minitest/autorun'
+require './pizza'
+class Test &lt; Minitest::Test
+  def test_solution
+    a =
+    [
+      1,
+    ]
+    res = 1
+    assert_equal res, solution(a)
+  end
+end
+</code></pre></div></div>
+
+<p>If you want to run only one test, than run <code class="highlighter-rouge">ruby 0_short_palindrome.rb --name
+test_sample</code></p>
+
+<p>If you want to print all local variables, you can use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>local_variables.map { |vn| { vn =&gt; eval(vn.to_s) } }
+</code></pre></div></div>
+
+<p>Run with colors <code class="highlighter-rouge">ruby my_class_test.rb -p</code>, or <code class="highlighter-rouge">ruby -r
+minitest/pride my_class_test.rb</code> or put <code class="highlighter-rouge">require 'pride'</code> in test file.</p>
+
+<p>For minitests you can use <code class="highlighter-rouge">describe</code> and <code class="highlighter-rouge">it</code> blocks.</p>
+
+<p>TIPS:</p>
+
+<ul>
+  <li>if you need to perform big number of tests, and you can not calculate solution
+but you need to iterate something, than use table of solutions. First call
+<code class="highlighter-rouge">create_table</code> of results and query that <code class="highlighter-rouge">@table[n]</code> (if you can, fill just
+what it needs)</li>
+  <li>two dimensional 2d array <code class="highlighter-rouge">@table = Array.new(n) { Array.new(n) }</code></li>
+  <li>if stack level too deep then try to use <code class="highlighter-rouge">@table</code> class variables instead of
+passing them as arguments (not much help since arguments are passed by
+reference, but there are less number of arguments
+<a href="http://stackoverflow.com/questions/28703587/systemstackerror-when-pushing-more-than-130798-objects-into-an-array">link</a>)</li>
+</ul>
+
+<h1 id="complexity">Complexity</h1>
+
+<p>Ruby <code class="highlighter-rouge">Array#find</code> method has O(n) complexity. If array is big, you should use
+<a href="http://ruby-doc.org/core-2.1.5/Array.html#method-i-bsearch">bsearch</a> O(log(n)).
+Array needs to be sorted. Binary search works in two modes:</p>
+<ul>
+  <li>find minimum: block must return true or false and there must be an index <code class="highlighter-rouge">i</code>
+so that: block returns false elements whose index is less than <code class="highlighter-rouge">i</code>, block
+returns true for any element whose index is greater than or equal to <code class="highlighter-rouge">i</code>.
+This method returns <code class="highlighter-rouge">i</code>-th element.</li>
+  <li>find any: block returns number and there are must be two indices <code class="highlighter-rouge">i</code> and <code class="highlighter-rouge">j</code>
+(<code class="highlighter-rouge">0&lt;=i&lt;=j&lt;=ary.size</code>) so that: block returns positive number for <code class="highlighter-rouge">0&lt;=k&lt;i</code>,
+returns zero for <code class="highlighter-rouge">i&lt;=k&lt;j</code> and negative for <code class="highlighter-rouge">j&lt;=k&lt;ary.size</code>.
+This method returns any element whose index is within <code class="highlighter-rouge">i..j</code>.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [1, 4, 7, 10]
+# find minimum that satisfy block
+a.bsearch { |x| x &gt;= 6 } #=&gt; 7
+
+# find any
+ary = [0, 4, 7, 10, 12]
+# try to find v such that 4 &lt;= v &lt; 8
+ary.bsearch {|x| 1 - x / 4 } #=&gt; 4 or 7
+# try to find v such that 8 &lt;= v &lt; 10
+ary.bsearch {|x| 4 - x / 2 } #=&gt; nil
+</code></pre></div></div>
+
+<p>Array <code class="highlighter-rouge">a.include?</code> is O(n) but hash <code class="highlighter-rouge">a.key?</code> (or <code class="highlighter-rouge">a.include?</code>) is O(1). So
+instead of big time, you can use big space by using Hashtables.</p>
+
+<h1 id="counting-of-elements">Counting of elements</h1>
+
+<p><a href="https://codility.com/media/train/2-CountingElements.pdf">tutorial</a>
+if we need to check if some elements exists, we can create counting array in
+O(N) time and query in constant time</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [0, 3, 1, 3]
+counting = [0]*(a.max+1)
+a.each { |e| counting[e]+=1 }
+counting # =&gt;  [1, 1, 0, 2]
+counting[2] == 0 # true in constant time
+</code></pre></div></div>
+
+<h1 id="prefix-sums">Prefix sums</h1>
+
+<p><a href="https://codility.com/media/train/3-PrefixSums.pdf">tutorial</a> In O(N) time we
+can calculate p_1, …p_n, where p_k= a_0+a_1+…+a_(k-1). Note that p_k does
+not use a_k, and p_0 == 0 Than we can calculate sum of any slice (x,y) in
+constant time instead of O(y-x) (that is usually needed for query several
+results).  Slice could be defined on 1..n (index starts from 1 and include
+bounds), slice(x,y) = prefix_sum[y] - prefix_sum[x-1] for example</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>slice(a_0,a_0) = slice(1,1) = prefix_sum[1]-prefix_sum[0]
+slice(a_1,a_3) = slice(2,4) = prefix_sum[4]-prefix_sum[1]
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [1, 4, 0, 4, 2]
+prefix_sum = [0] * (a.length+1)
+a.each_with_index do |e,i|
+  prefix_sum[i+1] = prefix_sum[i] + e
+end
+# slice a_1 + a_2 + a_3
+prefix_sum[3+1]-prefix_sum[1] # =&gt; 8
+</code></pre></div></div>
+
+<h1 id="counting-sort-onm">Counting sort O(n+m)</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a=[4,2,0,2,3]
+c=[0] * (a.max+1)
+a.each_with_index do |e,i|
+  c[e] += 1
+end
+s=[]
+i=0
+c.each_with_index do |n,v| # =&gt; [1, 0, 2, 1, 1]
+  n.times do
+    s[i] = v
+    i+=1
+  end
+end
+s # =&gt; [0, 2, 2, 3, 4]
+</code></pre></div></div>
+
+<h1 id="merge-sort-onlogn">Merge sort O(n*log(n))</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a=[4,2,0,2,3]
+
+def sort(a)
+
+  if a.length == 1
+    return a # =&gt; [4], [2], [0], [2], [3]
+  else
+    middle = a.length/2
+    a[0..middle-1] # =&gt; [4, 2], [4], [0], [2]
+    a[middle..-1] # =&gt; [0, 2, 3], [2], [2, 3], [3]
+    left = sort(a[0..middle-1]) # =&gt; [4], [2, 4], [0], [2]
+    right = sort(a[middle..-1]) # =&gt; [2], [3], [2, 3], [0, 2, 3]
+    i = 0
+    j = 0
+    r = []
+    while ! left[i].nil? || ! right[j].nil?
+      if ! left[i].nil? &amp;&amp; (right[j].nil? || left[i] &lt;= right[j])
+        r &lt;&lt; left[i] # =&gt; [2, 4], [2], [0], [0, 2], [0, 2, 2, 3, 4]
+        i += 1
+      else
+        r &lt;&lt; right[j] # =&gt; [2], [2, 3], [0, 2], [0, 2, 3], [0], [0, 2, 2], [0, 2, 2, 3]
+        j += 1
+      end
+    end
+    return r # =&gt; [2, 4], [2, 3], [0, 2, 3], [0, 2, 2, 3, 4]
+  end
+end
+sort(a) # =&gt; [0, 2, 2, 3, 4]
+</code></pre></div></div>
+
+<ul>
+  <li>leader (value on more than half elements) is the same when we remove pair of
+different items</li>
+  <li>
+    <p>maximum slice is a slice (a_p..a_q) with max sum, can be computed in O(n^2)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># max_slice O(n^2)
+a=[5,-7,3,5,-2,4,-1]
+res = 0
+a.each_with_index do |p,i|
+  sum = 0
+  a[i..-1].each do |q|
+    sum += q
+    res = [res,sum].max
+  end
+end
+res # =&gt; 10
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>positive ending sum slice is wrapped with negative elements (or bounds
+first/last) because we can always choose empty slice (sum is 0) we can deduce
+that positive_ending_sum = max(0, positive_ending_sum_prev + a)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># max_slice O(n)
+a=[5,-7,3,5,-2,4,-1]
+
+res = 0
+positive_ending_sum = 0
+a.each do |p| # =&gt; [5, -7, 3, 5, -2, 4, -1]
+  positive_ending_sum = [0, positive_ending_sum+ p].max # =&gt; 5, 0, 3, 8, 6, 10, 9
+  res = [res,positive_ending_sum].max # =&gt; 5, 5, 5, 8, 8, 10, 10
+end
+res # =&gt; 10
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="prime-numbers">Prime Numbers</h1>
+
+<ul>
+  <li>count number of divisors of N is O(sqrt(N)) since every divisor a has symetric
+divisor b, <code class="highlighter-rouge">n = a * b</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n = 30
+i = 1
+result = 0
+while i * i &lt; n
+  result += 2 if n % i == 0
+  i += 1
+end
+result += 1 if i * i == n
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>finding all primes less than N is in O(N<em>log(log(N))) Sieve of Eratosthenes.
+Find first prime (until sqrt(N) since we do not need to mark greater than N) and
+mark all multiplies of prime, starting from prime</em>prime (since i<em>prime will be
+marked with prime divisor of i) untill N, that is n/2 + n/3+ n/5 … =
+n</em>log(log(n)
+Rembember that largest prime factor of N can not be greated than Math.sqrt(N).
+0, 1 are not prime numbers.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>m = 10
+definitely_non_prime = Array.new m + 1, false
+definitely_non_prime[0] = definitely_non_prime[1] = true
+2.upto(Math.sqrt(m)) do |i|
+  next if definitely_non_prime[i]
+  prime = i
+  non_prime = prime * prime
+  while non_prime &lt;= m
+    definitely_non_prime[non_prime] = true
+    non_prime += prime
+  end
+end
+definitely_non_prime.each_with_index { |e,i| puts i if e == false }
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>factorization is to find prime numbers and its order. We can create fixed F
+where F[i] is smallest prime that divides i, ie F[12] = 2, F[6] = 2, F[2] = 0.
+If we already have that F, than we can factorize in O(log(n)) time</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n = 12
+f = [0]*(n+1)
+i=2
+while i*i &lt;= n
+  if f[i] == 0
+    prime = i
+    temp = prime * prime
+    while temp &lt;= n
+      f[temp] = prime if f[temp] == 0
+      temp += prime
+    end
+  end
+  i += 1
+end
+f # =&gt; [0, 0, 0, 0, 2, 0, 2, 0, 2, 3, 2, 0, 2]
+
+def factorization(n, f)
+  res = []
+  while f[n] &gt; 0
+    res &lt;&lt; f[n] # =&gt; [2], [2, 2]
+    n /= f[n] # =&gt; 6, 3
+  end
+  res &lt;&lt; n # =&gt; [2, 2, 3]
+end
+
+factorization(n,f) # =&gt; [2, 2, 3]
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>we can find all divisors, for example 12 has [1,2,3,4,6,12] divisor list, with
+simply iterate to all numbers and add number (for example 2) to set for
+product (divisors[4].add(2), divisors[6].add(2) …).  Better perfomance is
+when we stop at <code class="highlighter-rouge">number * number &lt;= n</code> and we add
+<code class="highlighter-rouge">divisors[product].add(product/number)</code> (note that we still iterate to n in
+inner loop).</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>n = 12
+divisors = [] * (n+1)
+[*1..n].each do |i| # =&gt; [1, 2, 3, 4, 5, 6]
+  divisors[i] = Set.new([1,i]) # =&gt; #&lt;Set: {1}&gt;, #&lt;Set: {1, 2}&gt;, #&lt;Set: {1, 3}&gt;, #&lt;Set: {1, 4}&gt;, #&lt;Set: {1, 5}&gt;, #&lt;Set: {1, 6}&gt;
+end
+number = 2
+while number &lt;= n  # number * number &lt;= n
+  product = number # =&gt; 2, 3, 4, 5, 6
+  while product &lt;= n
+    if ! divisors[product].include? number
+      divisors[product].add number # =&gt; #&lt;Set: {1, 4, 2}&gt;, #&lt;Set: {1, 6, 2}&gt;, #&lt;Set: {1, 6, 2, 3}&gt;
+      # divisors[product].add(product/number)
+    end
+    product += number
+  end
+  number += 1
+end
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="euclidean-algorithm">Euclidean algorithm</h1>
+
+<p>Theory:</p>
+
+<p>Def: integer m divides n (m|n) if exists r such that m*r = n
+Def: gcm(m, n) is the largest positive integer d which divides both m and n.
+That means d|m, d|n and for any c which c|m and c|n we have d&gt;=c</p>
+
+<p>The: for a, b nonzero integer, their gcd(a,b) is linear combination of a and b
+ie: exists s and t such that s<em>a+t</em>b=gcd(a,b)
+Proof: let d be least positive linear combination d = s<em>a+t</em>b . We can show that
+d|a.
+We can write <code class="highlighter-rouge">a = d*q+r (0 &lt;= r &lt; d )</code> so `r = a - d<em>q = a - (s</em>a + t<em>b)</em>q = (1</p>
+<ul>
+  <li>q<em>s)</em>a + (-qt)<em>b<code class="highlighter-rouge">. Since d is least positive and </code>r&lt;d<code class="highlighter-rouge"> that means </code>r = 0`.
+Similarly d|b. We can show it is the greatest common divisor because if
+d1=gcd(a,b) &lt; d it will be that d1|a d1|b and from d=s</em>a+t*b that d1|d which is
+contradiction so d1==d</li>
+</ul>
+
+<p>gcd(k, 1) = 1
+if a|b*c and gcd(a,b)==1 than a|c</p>
+
+<p>Lem: if a = b<em>q + r than gcd(a,b) == gcd(b,r)
+Proof: gcd(a,b)=gcd(b</em>q+r,b)=gcd(r,b)
+GCD will not change if you can add multiple of b, ie gcd(a,b)=gcd(a+k*b,b)</p>
+
+<p>Def: The integers a and b are relatively prime if and only if there exist
+integers α and β such that aα + bβ = 1</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Def: Lcm(a,b) least common multiple is =</td>
+      <td>a*b</td>
+      <td>/gcd(a,b)</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td>The: a<em>x+b</em>y=d has integer solution iff gcd(a,b)</td>
+      <td>d</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If (x0,y0) is solution, we can add +- a<em>b/d  ie a</em>x+b<em>y + a</em>b/d - b<em>a/d =
+a</em>(x+b/d) +b(y-a/d)  so (x+ b/d, y-a/d) is solution.
+General solutions are { (x0+k<em>b/d, y0-k</em>a/d) for k in Z}</p>
+
+<ul>
+  <li>
+    <p>Found gcd(a,b) with Euclidean algorithm by subtraction in O(a+b) steps, or by
+division in O(log(a+b))</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def gcd(a,b)
+  if a % b == 0
+    return b
+  else
+    gcd(b, a % b)
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>lcm(a,b) = a*b/gcd(a,b)  and lcm(a,b,c) = lcm(a, lcm(b,c))</p>
+  </li>
+  <li>Fibonacci numbers F[n] = F[n-1] + F[n-2] and F[0] = 0 and F[1] = 1 and can be
+generated in O(N)</li>
+  <li>
+    <p>faster could be with matrix calculation</p>
+  </li>
+  <li>
+    <p>binary search for sorted array could be in O(log(N)) time. We found middle
+element and test condition.  Array should be sorted (ascending) so we can test
+(mid&lt;=target) and pick next item. Result is last middle when condition was
+true (max element &lt;= target). If it is true go with (bigger) elements,
+othervise go with lower elements. We do not stop when we found solution since
+usual we have optimization problem (min or max). When we pass solution and set
+first = middle +1 (could be equal last) next iteration will be false (or last
+= new_middle -1 until last &lt; first).  If we search for min, then if condition
+is true we took lower elements (last = mid - 1). That is easy to replace in
+check function but result should be taken from that as well. So general check
+function store result if test is true with max, or test is false with min.
+Another nice non general solution is to return last for max, or first for min.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a=[1,2,3,4,5] #[12,15,15,19,24,31,53,59,60,61]
+target = 3 # 13 
+def check(a, middle, target, result)
+  if a[middle] &lt;= target
+    result.value = middle
+    true
+  else
+    false
+  end
+end
+#a = [0,1,1,0,1,1,0,1,1]
+#target = 3 # k boards 3 boards
+#def check(a, middle, target, result)
+#  last_board = -1
+#  boards = 0
+#  middle # =&gt; 4, 1, 2
+#  for i in 1..a.length
+#    if a[i] == 1 &amp;&amp; last_board &lt; i
+#      boards += 1 # =&gt; 1, 2, 1, 2, 3, 4, 5, 6, 1, 2, 3
+#      last_board = i + middle - 1 # =&gt; 4, 8, 1, 2, 4, 5, 7, 8, 2, 5, 8
+#    end
+#  end
+#  boards # =&gt; 2, 6, 3
+#  if boards &lt;= target # =&gt; true, false, true
+#    # since we search to min, we invert return value
+#    result.value = middle
+#    false
+#  else
+#    true
+#  end
+#end
+class Result
+  attr_accessor :value
+end
+def binary_search(a, target)
+  first = 0
+  last = a.length - 1
+  result = Result.new
+  result.value = -1
+  while first &lt;= last
+    first     # =&gt; 0, 3
+    last    # =&gt; 4, 4
+    middle = (first+last)/2 # =&gt; 2, 3
+    if check(a, middle, target, result) # =&gt; true, false
+      first = middle + 1 # =&gt; 3
+    else
+      last = middle - 1 # =&gt; 2
+    end
+  end
+  return result.value
+end
+binary_search(a, target) # =&gt; 2
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>caterpillar method. found subseqence which total sum equals s</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = [6,2,7,4,1,3,6]
+target_sum = 12
+
+back = 0
+front = 0
+sum = 0
+a.each_with_index do |e, back|
+  while front &lt; a.length &amp;&amp; sum + a[front] &lt;= target_suM
+    sum += a[front]
+    front += 1
+  end
+  if sum == target_sum
+    puts "je"
+  end
+  sum -= e
+end
+</code></pre></div>    </div>
+  </li>
+  <li>greedy algorithm is simplest possible algorithm</li>
+  <li>
+    <p>dinamic programming</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def dynamic_coin_changing(c, k)
+  n = c.length
+  dp = [0] + [1/0.0]* k # =&gt; [0, Infinity, Infinity, Infinity, Infinity, Infinity, Infinity]
+  for i in 1..n # =&gt; 1..3
+    for j in c[i-1] .. k # =&gt; 1..6, 3..6, 4..6
+       # =&gt; 1..6, 3..6, 4..6
+      dp[j-c[i-1]]+1 # =&gt; 1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 1, 2, 3
+dp[j] # =&gt; Infinity, Infinity, Infinity, Infinity, Infinity, Infinity, 3, 4, 5, 6, 2, 3, 2
+      dp[j] = [dp[j-c[i-1]]+1, dp[j]].min # =&gt; 1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 1, 2, 2
+    end
+    dp # =&gt; [0, 1, 2, 3, 4, 5, 6], [0, 1, 2, 1, 2, 3, 2], [0, 1, 2, 1, 1, 2, 2]
+  end
+  dp
+end
+dynamic_coin_changing([1,3,4],6) # =&gt; [0, 1, 2, 1, 1, 2, 2]
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="geometry">Geometry</h1>
+
+<ul>
+  <li>Find line that is perpendicular to line <code class="highlighter-rouge">y = 2*x + 11</code> and contains <code class="highlighter-rouge">(6, -7)</code>
+<a href="https://www.khanacademy.org/math/geometry/hs-geo-analytic-geometry/hs-geo-parallel-perpendicular-eq/e/line_relationships">video</a>
+Perpendicular means slope is negative inverse ie <code class="highlighter-rouge">-1/2</code>. Note that in ruby you
+need to use <code class="highlighter-rouge">x = x.to_f</code> since <code class="highlighter-rouge">1/2==0</code> for integer division</li>
+  <li>maximum area for fixed length sides (edges) polygon has edges on circle
+(descripted circuit) and orders does not matter
+<a href="http://www.drking.org.uk/hexagons/misc/polymax.html">link</a></li>
+  <li>triangle area <code class="highlighter-rouge">s = (a+b+c)/2; P = Math.sqrt(s*(s-a)*(s-b)*(s-c));</code></li>
+</ul>
+
+<h1 id="math">Math</h1>
+
+<ul>
+  <li><code class="highlighter-rouge">radius = Math.sqrt((l1/2)**2 + (l2/2)**2)</code></li>
+</ul>
+
+<h1 id="tutorial">Tutorial</h1>
+
+<ul>
+  <li><a href="https://www.toptal.com/algorithms/interview-questions">https://www.toptal.com/algorithms/interview-questions</a></li>
+</ul>
+
+<h1 id="constrains">Constrains</h1>
+
+<ul>
+  <li>memory: usually if you need to loop more than 10**6 (1MB) that could be a
+problem</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

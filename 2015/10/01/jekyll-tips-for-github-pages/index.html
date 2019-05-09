@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Jekyll tips for github pages</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Jekyll tips for github pages</h1>
+    <p class="meta">Oct 1, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installation"><span class="tocnumber">1</span> <span class="toctext">Installation</span></a></li><li class="toc_level-1 toc_section-2"><a href="#custom-domain"><span class="tocnumber">2</span> <span class="toctext">Custom domain</span></a></li><li class="toc_level-1 toc_section-3"><a href="#loopia"><span class="tocnumber">3</span> <span class="toctext">Loopia</span></a></li><li class="toc_level-1 toc_section-4"><a href="#jekyll-on-github"><span class="tocnumber">4</span> <span class="toctext">Jekyll on github</span></a></li><li class="toc_level-1 toc_section-5"><a href="#travis"><span class="tocnumber">5</span> <span class="toctext">Travis</span></a></li><li class="toc_level-1 toc_section-6"><a href="#heroku"><span class="tocnumber">6</span> <span class="toctext">Heroku</span></a></li><li class="toc_level-1 toc_section-7"><a href="#serve-under-subfolder"><span class="tocnumber">7</span> <span class="toctext">Serve under subfolder</span></a></li><li class="toc_level-1 toc_section-8"><a href="#development-environment"><span class="tocnumber">8</span> <span class="toctext">Development environment</span></a></li><li class="toc_level-1 toc_section-9"><a href="#automatic-deploy-to-gh-pages-using-rake"><span class="tocnumber">9</span> <span class="toctext">Automatic deploy to gh-pages using rake</span></a></li><li class="toc_level-1 toc_section-10"><a href="#adding-table-of-content"><span class="tocnumber">10</span> <span class="toctext">Adding Table of Content</span></a></li><li class="toc_level-1 toc_section-11"><a href="#adding-sitemap"><span class="tocnumber">11</span> <span class="toctext">Adding sitemap</span></a></li><li class="toc_level-1 toc_section-12"><a href="#jekyll-variables-and-categories"><span class="tocnumber">12</span> <span class="toctext">Jekyll variables and categories</span></a></li><li class="toc_level-1 toc_section-13"><a href="#search"><span class="tocnumber">13</span> <span class="toctext">Search</span></a></li><li class="toc_level-1 toc_section-14"><a href="#404"><span class="tocnumber">14</span> <span class="toctext">404</span></a></li><li class="toc_level-1 toc_section-15"><a href="#config"><span class="tocnumber">15</span> <span class="toctext">Config</span></a></li><li class="toc_level-1 toc_section-16"><a href="#theme"><span class="tocnumber">16</span> <span class="toctext">Theme</span></a><ul><li class="toc_level-2 toc_section-17"><a href="#running-example-site"><span class="tocnumber">16.1</span> <span class="toctext">Running example site</span></a></li><li class="toc_level-2 toc_section-18"><a href="#editing-theme"><span class="tocnumber">16.2</span> <span class="toctext">Editing theme</span></a></li><li class="toc_level-2 toc_section-19"><a href="#using-theme"><span class="tocnumber">16.3</span> <span class="toctext">Using theme</span></a></li></ul></li><li class="toc_level-1 toc_section-20"><a href="#markdown"><span class="tocnumber">17</span> <span class="toctext">Markdown</span></a></li><li class="toc_level-1 toc_section-21"><a href="#liquid-in-markdown"><span class="tocnumber">18</span> <span class="toctext">Liquid in markdown</span></a></li><li class="toc_level-1 toc_section-22"><a href="#liquid-tags"><span class="tocnumber">19</span> <span class="toctext">Liquid Tags</span></a></li><li class="toc_level-1 toc_section-23"><a href="#types"><span class="tocnumber">20</span> <span class="toctext">Types:</span></a></li><li class="toc_level-1 toc_section-24"><a href="#filters"><span class="tocnumber">21</span> <span class="toctext">Filters</span></a></li><li class="toc_level-1 toc_section-25"><a href="#debug"><span class="tocnumber">22</span> <span class="toctext">Debug</span></a></li><li class="toc_level-1 toc_section-26"><a href="#adding-tag-filter"><span class="tocnumber">23</span> <span class="toctext">Adding tag, filter</span></a></li><li class="toc_level-1 toc_section-27"><a href="#scss"><span class="tocnumber">24</span> <span class="toctext">Scss</span></a></li><li class="toc_level-1 toc_section-28"><a href="#coffee-script"><span class="tocnumber">25</span> <span class="toctext">Coffee script</span></a></li><li class="toc_level-1 toc_section-29"><a href="#rails"><span class="tocnumber">26</span> <span class="toctext">Rails</span></a></li><li class="toc_level-1 toc_section-30"><a href="#tips"><span class="tocnumber">27</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-31"><a href="#slides"><span class="tocnumber">28</span> <span class="toctext">Slides</span></a></li></ul></td></tr></tbody></table></div><h1 id="installation">Installation</h1>
+
+<p>Here are the steps you can follow to generate myblog</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll
+jekyll new myblog
+cd myblog
+git init .
+git add .
+git commit -m "Initial jekyll new myblog"
+</code></pre></div></div>
+
+<p>Live reload is now built in (no need for <code class="highlighter-rouge">guard-livereload</code>). You just need to
+run with option <code class="highlighter-rouge">jekyll serve --livereload</code></p>
+
+<p>For livereload you need to install <a href="https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related?hl=en">Chrome
+plugin</a>
+enable it and activate by clicking on icon when you open a page.
+There is also plugin for firefox https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension/
+You can use javascript version.</p>
+
+<h1 id="custom-domain">Custom domain</h1>
+
+<p>If your repo is the only or is primary, you can use <duleorlovic.github.io> url
+you just need to rename repository to that name.</duleorlovic.github.io></p>
+
+<p>Do not need to rename if you want custom domain, you can  enable it from
+settings <a href="https://github.com/duleorlovic/trk.in.rs/settings">https://github.com/duleorlovic/trk.in.rs/settings</a> or you can just
+create CNAME file manually since that is the same</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git chechout -t origin/gh-pages
+echo "www.trk.in.rs" &gt; CNAME
+</code></pre></div></div>
+
+<p>You need to configure your domain name provider to point to your github
+respository with <a href="https://help.github.com/articles/setting-up-a-www-subdomain/">CNAME
+record</a>
+to point to <code class="highlighter-rouge">{username}.github.io</code>, for example <code class="highlighter-rouge">CNAME duleorlovic.github.io</code>.
+Check when it is updated, usually in one hour</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># note that second column is TTL time to live in secods
+dig +nostats +nocomments +nocmd www.trk.in.rs
+;www.trk.in.rs.			IN	A
+www.trk.in.rs.		3600	IN	CNAME	kulakajak.github.io.
+kulakajak.github.io.	3600	IN	A	185.199.111.153
+kulakajak.github.io.	3600	IN	A	185.199.110.153
+</code></pre></div></div>
+
+<p>Use this only for subdomains (www.trk.in.rs, blog.trk.in.rs) and not for apex
+domain. Adding CNAME record to the root of your domain will disable MX and TXT
+records. If you need to apex domain (and not to destroy other records) you can
+try with ANAME record (not supported in loopia), or use Cloudflare
+<a href="https://support.cloudflare.com/hc/en-us/articles/200169056-CNAME-Flattening-RFC-compliant-support-for-CNAME-at-the-root">flattening</a></p>
+
+<p>Default <code class="highlighter-rouge">duleorlovic.github.io</code> is serverd under HTTPS, but custom domain is
+serverd under HTTP. To enable HTTPS for custom domains you can try
+<a href="https://www.cloudflare.com/">cloudflare</a> but recently, all github pages are
+enypted with free <a href="https://letsencrypt.org/">https://letsencrypt.org/</a> certificate.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig  +nostats +nocomments +nocmd projektor.trk.in.rs
+;projektor.trk.in.rs.		IN	A
+projektor.trk.in.rs.	3405	IN	CNAME	d1ub4fmsp3scvp.cloudfront.net.
+d1ub4fmsp3scvp.cloudfront.net. 47 IN	A	13.32.22.82
+</code></pre></div></div>
+
+<h1 id="loopia">Loopia</h1>
+
+<p>If you want redirection from non www to www, than use Forwatd -&gt; Url redirect
+(301 or 302) but uncheck “Synchronize the domain and subdomain www”
+<img src="/assets/posts/loopia_dns.png" alt="loopia dns" title="Loopia DNS" /></p>
+
+<h1 id="jekyll-on-github">Jekyll on github</h1>
+
+<p>Easiest way to start a blog on github it to fork
+<a href="https://github.com/barryclark/jekyll-now">https://github.com/barryclark/jekyll-now</a> and rename it to
+<code class="highlighter-rouge">duleorlovic.github.io</code> and start editing using <a href="http://prose.io/">http://prose.io/</a>. There is
+nothing special there, just simple jekyll project, with
+<a href="https://github.com/duleorlovic/jekyll-now/tree/master/_includes">_includes</a> for
+discuss, analytics, meta and uses <code class="highlighter-rouge">gems: jekyll-sitemap</code> which github supports.
+It does not use theme. It is very similar to default jekyll theme
+<a href="https://github.com/jekyll/minima">minima</a></p>
+
+<p>Jekyll default template minima can be overriden with</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle show minima
+# ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0
+mkdir _includes
+cp `bundle show minima`/_includes/@(footer|header|head).html _includes/
+git add .
+git commit -am 'cp `bundle show minima`/_includes/@(footer|header|head).html _includes/'
+</code></pre></div></div>
+
+<h1 id="travis">Travis</h1>
+
+<p>This <a href="https://gist.github.com/domenic/ec8b0fc8ab45f39403dd">gist</a> explain what
+to do. In additional you need to use <code class="highlighter-rouge">bundle install &amp;&amp; bundle exec jekyll build
+-d out</code> as build command, use proper ruby supported by travis <code class="highlighter-rouge">rvm: - 2.2</code>,
+exclude <code class="highlighter-rouge">vendor</code> from jekyll, and note the label string that <code class="highlighter-rouge">travis</code> cli
+generate when you encrypt.</p>
+
+<p>You need to generate keys which Travis will use to deploy. You need to write to
+<code class="highlighter-rouge">deploy_key</code> and to not label from travis cli.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com" deploy_key
+travis encrypt-file deploy_key
+git add deploy_key.enc
+mv deploy_key deploy_key.pub ~/.ssh/
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; deploy.sh &lt;&lt; HERE_DOC
+#!/bin/bash
+set -e # Exit with nonzero exit code if anything fails
+
+SOURCE_BRANCH="master"
+TARGET_BRANCH="gh-pages"
+
+function doCompile {
+  bundle install
+  bundle exec jekyll build -d out
+}
+
+# Pull requests and commits to other branches shouldn't try to deploy, just build to verify
+if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
+    echo "Skipping deploy; just doing a build."
+    doCompile
+    exit 0
+fi
+
+# Save some useful information
+REPO=`git config remote.origin.url`
+SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+SHA=`git rev-parse --verify HEAD`
+
+# Clone the existing gh-pages for this repo into out/
+# Create a new empty branch if gh-pages doesn't exist yet (should only happen on first deply)
+git clone $REPO out
+cd out
+git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
+cd ..
+
+# Clean out existing contents
+rm -rf out/**/* || exit 0
+
+# Run our compile script
+doCompile
+
+# Now let's go have some fun with the cloned repo
+cd out
+git config user.name "Travis CI"
+git config user.email "$COMMIT_AUTHOR_EMAIL"
+
+# If there are no changes to the compiled out (e.g. this is a README update) then just bail.
+if [ -z `git diff --exit-code` ]; then
+    echo "No changes to the output on this push; exiting."
+    exit 0
+fi
+
+# Commit the "changes", i.e. the new version.
+# The delta will show diffs between new and old versions.
+git add .
+git commit -m "Deploy to GitHub Pages: ${SHA}"
+
+# Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
+ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
+ENCRYPTED_IV_VAR="encrypted_${ENCRYPTION_LABEL}_iv"
+ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
+ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
+openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy_key.enc -out deploy_key -d
+chmod 600 deploy_key
+eval `ssh-agent -s`
+ssh-add deploy_key
+
+# Now that we're all set up, we can push.
+git push $SSH_REPO $TARGET_BRANCH
+HERE_DOC
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; .travis.yml &lt;&lt; HERE_DOC
+language: ruby
+script: bash ./deploy.sh
+rvm:
+  - 2.2
+env:
+  global:
+  - ENCRYPTION_LABEL: "find-label-in-output"
+  - COMMIT_AUTHOR_EMAIL: "your-email@gmail.com"
+HERE_DOC
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; _config.yml &lt;&lt; HERE_DOC
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - deploy.sh
+HERE_DOC
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add deploy.sh .travis.yml _config.yml deploy_key.enc
+git commit -m "Adding travis deploy scripts"
+</code></pre></div></div>
+
+<p>Very usefull one line command when debugging travis</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add . &amp;&amp; git commit --amend --no-edit &amp;&amp; git push -f
+</code></pre></div></div>
+
+<p>You can edit online with <a href="http://prose.io">http://prose.io</a>. Make sure you are editing <code class="highlighter-rouge">master</code>
+branch. Make sure github setting
+<a href="https://github.com/duleorlovic/blog/settings/branches">https://github.com/duleorlovic/blog/settings/branches</a>
+default branch is master branch.</p>
+
+<p>You can add prose related
+<a href="https://github.com/prose/prose/wiki/Prose-Configuration">config</a>.
+You can exclude files with <code class="highlighter-rouge">ignore: </code>.
+You can add custom fields for some front matter with <code class="highlighter-rouge">metadata: _posts: ...</code>.
+First key is folder name not the ruby class so if you have page or post inside
+folder, than use folder name instead of <code class="highlighter-rouge">_posts</code>. 
+Title is updated in header so do not need to define title metadata. Use <code class="highlighter-rouge">""</code> for
+all files. Nice <a href="https://github.com/ccppbrasil/ccppbrasil.github.io/blob/master/_config.yml">example of
+prose</a>.</p>
+
+<h1 id="heroku">Heroku</h1>
+
+<p>There is heroku buildpack than can build jekyll for you and serve static site so
+you can use any plugins.
+https://blog.heroku.com/jekyll-on-heroku</p>
+
+<h1 id="serve-under-subfolder">Serve under subfolder</h1>
+
+<p>Since github pages serve your project under subfolder
+<code class="highlighter-rouge">username.github.io/project-name</code> you need to use special <a href="http://jekyllrb.com/docs/configuration/">config
+variable</a> <code class="highlighter-rouge">baseurl</code>.  Add to your
+<code class="highlighter-rouge">_config.yml</code> a line <code class="highlighter-rouge">baseurl: /blog</code>. This is not needed if you use custom
+domain like <a href="blog.trk.in.rs">blog.trk.in.rs</a></p>
+
+<p>To properly serve your assets and link your pages you need to prepend all links
+with <em>site.baseurl</em>. For example in markdown <code class="highlighter-rouge">![My picture]({ { site.baseurl
+}}/assets/my_picture.png)</code> or <code class="highlighter-rouge">&lt;link rel="stylesheet" href="{ { site.baseurl
+}}/assets/css/main.css"&gt;</code> or <code class="highlighter-rouge">&lt;a class="post-link" href="{ { post.url | prepend:
+site.baseurl }}"&gt;{ { post.title }}&lt;/a&gt;</code></p>
+
+<h1 id="development-environment">Development environment</h1>
+
+<p>If you need to separate production from development (for example analytics), you
+can use liquid variable <code class="highlighter-rouge">jekyll.environment</code> which can be exported or used
+inline with <code class="highlighter-rouge">JEKYLL_ENV=development jekyll serve --watch</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- index.html --&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    {% if jekyll.envirnoment == "development" %}
+      Hello admin
+    {% endif %}
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<h1 id="automatic-deploy-to-gh-pages-using-rake">Automatic deploy to gh-pages using rake</h1>
+
+<p>Rake tasks are perfect for deploying since you need just to type <code class="highlighter-rouge">rake</code> and it
+will be live (if you set up properly). This is my Rakefile that builds my blog
+(stored on bitbucket) and push to github.
+This is nice since I do not want to share history (all commits from the
+beggining). On github, you can find only one commit “Site updated at …”</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add origin git@bitbucket.org:duleorlovic/trk.in.rs.git
+git remote add github git@github.com:duleorlovic/trk.in.rs.git
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Rakefile
+#
+# You need to set up git remote to github, for example:
+#
+# git remote add github git@github.com:duleorlovic/blog.git
+#
+# Require jekyll to compile the site.
+require "jekyll"
+require 'tmpdir'
+
+task :default =&gt; "blog:publish"
+# Github pages publishing.
+namespace :blog do
+  #
+  # Because we are using 3rd party plugins for jekyll to manage the asset pipeline
+  # and suchlike we are unable to just branch the code, we have to process the site
+  # localy before pushing it to the branch to publish.
+  #
+  # We built this little rake task to help make that a little bit eaiser.
+  #
+
+  # Usaage:
+  # bundle exec rake blog:publish
+  desc "Publish blog to gh-pages"
+  task :publish do
+    # Compile the Jekyll site using the config.
+    Jekyll::Site.new(Jekyll.configuration({
+      "source"      =&gt; ".",
+      "destination" =&gt; "_site",
+      "config" =&gt; "_config.yml"
+    })).process
+
+    # Get the origin to which we are going to push the site.
+    origin = `git config --get remote.github.url`
+
+    # Make a temporary directory for the build before production release.
+    # This will be torn down once the task is complete.
+    Dir.mktmpdir do |tmp|
+      # Copy accross our compiled _site directory.
+      cp_r "_site/.", tmp
+
+      # Switch in to the tmp dir.
+      Dir.chdir tmp
+
+      # Prepare all the content in the repo for deployment.
+      system "git init" # Init the repo.
+      system "git add . &amp;&amp; git commit -m 'Site updated at #{Time.now.utc}'" # Add and commit all the files.
+
+      # Add the origin remote for the parent repo to the tmp folder.
+      system "git remote add origin #{origin}"
+
+      # Push the files to the gh-pages branch, forcing an overwrite.
+      system "git push origin master:refs/heads/gh-pages --force"
+    end
+
+    # Done.
+  end
+end
+</code></pre></div></div>
+
+<h1 id="adding-table-of-content">Adding Table of Content</h1>
+
+<p>If you need automatic Toc than use
+<a href="https://github.com/dafi/jekyll-toc-generator">dafi jekyll-toc-generator</a>.</p>
+
+<p>I modify to use original id-s (that is hypernated version of header content) in
+<a href="https://github.com/duleorlovic/jekyll-toc-generator/commit/9c83b67e183600bb51dcea533aaa8eeeae4eb18a">duleorlovic/jekyll-toc-generator</a></p>
+
+<p>You can put
+<a href="http://jekyllrb.com/docs/configuration/#front-matter-defaults">defaults</a> to not
+have a Toc, and enable on post that you want Toc to show.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _config.yml
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      noToc: true
+</code></pre></div></div>
+
+<h1 id="adding-sitemap">Adding sitemap</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'jekyll-sitemap'" &gt;&gt; Gemfile
+bundle
+echo "url: https://trk.in.rs
+gems:
+  - jekyll-sitemap
+" &gt;&gt; _config.yml
+</code></pre></div></div>
+
+<p>Sitemap will be automatically generated with <code class="highlighter-rouge">jekyll serve</code>. Add <code class="highlighter-rouge">sitemap:
+false</code> for pages that you don’t want to appear in sitemap (like google site
+verification).</p>
+
+<h1 id="jekyll-variables-and-categories">Jekyll variables and categories</h1>
+
+<p>Jekyll contains <a href="https://jekyllrb.com/docs/variables/">variables</a>: <code class="highlighter-rouge">site</code>,
+<code class="highlighter-rouge">layout</code>, <code class="highlighter-rouge">content</code>, <code class="highlighter-rouge">paginator</code> and <code class="highlighter-rouge">page</code>.</p>
+
+<p><code class="highlighter-rouge">{ { site }}</code> is <code class="highlighter-rouge">Jekyll::Drops::SiteDrop</code> class and contains</p>
+<ul>
+  <li><code class="highlighter-rouge">site.posts</code> array of all posts objects <code class="highlighter-rouge">Jekyll::Document collection=post</code></li>
+  <li><code class="highlighter-rouge">site.pages</code> array of all pages <code class="highlighter-rouge">Jekyll::Page</code></li>
+</ul>
+
+<p><code class="highlighter-rouge">{ { page }}</code> is an object with</p>
+<ul>
+  <li><code class="highlighter-rouge">page.content</code> preproccessed content</li>
+  <li><code class="highlighter-rouge">page.name</code> like <code class="highlighter-rouge">contact.md</code></li>
+  <li><code class="highlighter-rouge">page.path</code> like <code class="highlighter-rouge">example/contact.md</code></li>
+  <li>
+    <p><code class="highlighter-rouge">page.url</code> like <code class="highlighter-rouge">/example/contact.html</code></p>
+  </li>
+  <li>all front matters variables like <code class="highlighter-rouge">page.layout</code>, <code class="highlighter-rouge">page.title</code></li>
+</ul>
+
+<p>if current page is post we have additional properties</p>
+
+<ul>
+  <li><code class="highlighter-rouge">page.title</code></li>
+  <li><code class="highlighter-rouge">page.excerpt</code></li>
+  <li><code class="highlighter-rouge">page.date</code></li>
+  <li><code class="highlighter-rouge">page.id</code></li>
+  <li><code class="highlighter-rouge">page.categories</code></li>
+  <li><code class="highlighter-rouge">page.tags</code></li>
+  <li><code class="highlighter-rouge">page.next</code> <code class="highlighter-rouge">page.previous</code></li>
+</ul>
+
+<p>You can put your posts inside folder, for examle <code class="highlighter-rouge">kayak/canoe/_posts</code>. This
+means that posts will have <code class="highlighter-rouge">['kayak', 'canoe']</code> categories. You can add more
+categories using front matter <code class="highlighter-rouge">categories: sprint</code>.</p>
+
+<p>Since pages do not have category, you cat mark them manually or check path, like
+this</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{ % capture page_category = page.path | split: '/' | first %}
+</code></pre></div></div>
+
+<p>To list similar posts you can  use this snippet in <code class="highlighter-rouge">_layout/default.html</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;style type='text/css'&gt;
+  .similar-links {
+    display: inline-block;
+    padding: 10px;
+  }
+&lt;/style&gt;
+{% for cat in page.categories %}
+  {% if site.categories.[cat].size != 1  %}
+    &lt;ul class="similar-links"&gt;
+      &lt;li&gt;Look similar &lt;b&gt; {{ cat }}&lt;/b&gt; tag:&lt;/li&gt;
+      {% for p in site.categories.[cat] %}
+        {% unless p.url == page.url  %}
+          &lt;li&gt;
+            &lt;a href="{{ p.url }}"&gt;{{ p.title }}&lt;/a&gt;
+          &lt;/li&gt;
+        {% endunless %}
+      {% endfor %}
+    &lt;/ul&gt;
+  {% endif  %}
+{% endfor %}
+</code></pre></div></div>
+
+<h1 id="search">Search</h1>
+
+<p>Just copy and paste <code class="highlighter-rouge">search.json</code> and other snippets from
+<a href="https://github.com/christian-fei/Simple-Jekyll-Search">Simple-Jekyll-Search</a></p>
+
+<h1 id="404">404</h1>
+
+<p>For gh-pages, you just need <code class="highlighter-rouge">404.html</code> at root for server to use it when it does
+not find the page.</p>
+
+<h1 id="config">Config</h1>
+
+<p>You can serve using different port, just add <code class="highlighter-rouge">port: 4001</code> to your <code class="highlighter-rouge">_config.yml</code>
+file.</p>
+
+<h1 id="theme">Theme</h1>
+
+<p>If you want to <a href="https://jekyllrb.com/docs/themes/#creating-a-gem-based-theme">create
+theme</a> you can
+follow this steps:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll new-theme jekyll-theme-booster
+vi jekyll-theme-booster.gemspec
+# edit description and url
+gem build jekyll-theme-booster.gemspec
+gem install jekyll-theme-booster-0.1.0.gem
+</code></pre></div></div>
+
+<h2 id="running-example-site">Running example site</h2>
+
+<p>You can put posts inside root folder but than you do not know which file belongs
+to theme and which is just example. So better is to use separated folder and use
+<code class="highlighter-rouge">rake example</code> to run that site.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Rakefile
+# based on
+# https://github.com/mmistakes/minimal-mistakes/blob/master/Rakefile
+require "bundler/gem_tasks"
+require "jekyll"
+require "listen"
+
+def listen_ignore_paths(base, options)
+  [
+    /_config\.ya?ml/,
+    /_site/,
+    /\.jekyll-metadata/
+  ]
+end
+
+def listen_handler(base, options)
+  site = Jekyll::Site.new(options)
+  Jekyll::Command.process_site(site)
+  proc do |modified, added, removed|
+    t = Time.now
+    c = modified + added + removed
+    n = c.length
+    relative_paths = c.map{ |p| Pathname.new(p).relative_path_from(base).to_s }
+    print Jekyll.logger.message("Regenerating:", "#{relative_paths.join(", ")} changed... ")
+    begin
+      Jekyll::Command.process_site(site)
+      puts "regenerated in #{Time.now - t} seconds."
+    rescue =&gt; e
+      puts "error:"
+      Jekyll.logger.warn "Error:", e.message
+      Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+    end
+  end
+end
+
+task :example do
+  base = Pathname.new('.').expand_path
+  options = {
+    "source"        =&gt; base.join('example').to_s,
+    "destination"   =&gt; base.join('example/_site').to_s,
+    "force_polling" =&gt; false,
+    "serving"       =&gt; true,
+    "theme"         =&gt; "jekyll-theme-booster"
+  }
+
+  options = Jekyll.configuration(options)
+
+  ENV["LISTEN_GEM_DEBUGGING"] = "1"
+  listener = Listen.to(
+    base.join("_includes"),
+    base.join("_layouts"),
+    base.join("_sass"),
+    base.join("assets"),
+    options["source"],
+    :ignore =&gt; listen_ignore_paths(base, options),
+    :force_polling =&gt; options['force_polling'],
+    &amp;(listen_handler(base, options))
+  )
+
+  begin
+    listener.start
+    Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'"
+
+    unless options['serving']
+      trap("INT") do
+        listener.stop
+        puts "     Halting auto-regeneration."
+        exit 0
+      end
+
+      loop { sleep 1000 }
+    end
+  rescue ThreadError
+    # You pressed Ctrl-C, oh my!
+  end
+
+  Jekyll::Commands::Serve.process(options)
+end
+</code></pre></div></div>
+
+<h2 id="editing-theme">Editing theme</h2>
+
+<p>Only files that are in repository are used for gem. gemspec uses <code class="highlighter-rouge">git ls-files</code>
+and default gemspec is to inlude <code class="highlighter-rouge">assets</code>, <code class="highlighter-rouge">_includes</code>, <code class="highlighter-rouge">_layouts</code> and <code class="highlighter-rouge">_sass</code>.
+You can see what is in gem with <code class="highlighter-rouge">gem open jekyll-theme-booster</code>.</p>
+
+<p>Some files will not be used: <code class="highlighter-rouge">_config.yml</code>.</p>
+
+<h2 id="using-theme">Using theme</h2>
+
+<p>When you edit template, you need to build, install and restart your jekyll serve
+proccess to load updated gem.</p>
+
+<p>It is enough to specify
+path as <code class="highlighter-rouge">&lt;link rel="stylesheet" href="assets/css/animate.css"&gt;</code> but for relative
+folder <code class="highlighter-rouge">&lt;link rel="stylesheet" href="{ { "assets/css/animate.css" | relative_url }}"&gt;</code> (that is needed for all navigational links).</p>
+
+<p>It is advised to be in same ruby version <code class="highlighter-rouge">rvm list</code> and <code class="highlighter-rouge">rvm gemset list</code>.</p>
+
+<p>Another theme example is
+<a href="https://github.com/mmistakes/minimal-mistakes">minimal-mistakes-jekyll</a></p>
+
+<p>Yet another theme
+<a href="https://tympanus.net/codrops/2018/04/20/freebie-oasis-jekyll-website-template">https://tympanus.net/codrops/2018/04/20/freebie-oasis-jekyll-website-template</a></p>
+
+<h1 id="markdown">Markdown</h1>
+
+<ul>
+  <li><a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#tables">table</a>
+can be generated with <code class="highlighter-rouge">|header1|header2</code></li>
+  <li>url can be written like <code class="highlighter-rouge">&lt;http://projektor.trk.in.rs&gt;</code> (<code class="highlighter-rouge">http://</code> at the
+beggining is mandatory) instead of writting it twice
+<code class="highlighter-rouge">[http://projektor.trk.in.rs](http://projektor.trk.in.rs)</code></li>
+  <li>internal link to post is with <code class="highlighter-rouge">{% %}</code> like
+<code class="highlighter-rouge">[My page]({% link 2016-03-02-my-page.markdown %})</code></li>
+  <li>images <code class="highlighter-rouge">![alt text]({ { site.base_url }}/assets/path_to_image "Title text")</code></li>
+  <li>strikethrough (words crossed, deleted, removed text) can be used with
+<code class="highlighter-rouge">&lt;s&gt;Example&lt;/s&gt;</code> or <code class="highlighter-rouge">&lt;del&gt;Example&lt;/del&gt;</code> (with kramdown no shortcut works
+like <code class="highlighter-rouge">-- ~~</code>)</li>
+  <li>for code you can use <code class="highlighter-rouge">{% highlight javascript  %}</code>, <code class="highlighter-rouge">{%
+highlight ruby %}</code>, <code class="highlighter-rouge">{% highlight bash %}</code></li>
+</ul>
+
+<h1 id="liquid-in-markdown">Liquid in markdown</h1>
+
+<ul>
+  <li>to show jekyll mustache inline you can add space, like <code class="highlighter-rouge">{ % bla_tag %}</code>. Note
+that in blocks of code you can use mustache, so this is only for inside tick.</li>
+  <li>to show <code class="highlighter-rouge">{{  }}</code> using <em>markdown</em> you need to escape them like
+<code class="highlighter-rouge">{{ '{{  ' }} }}</code> first closing brackets will close everything that
+comes after first opening brackets. All other closing brackets are simply
+rendered. This does not work if that line breaks in mutliple lines (probably
+string need + or something). To simplify I just put space between first
+<code class="highlighter-rouge">{ { }}</code></li>
+  <li>if you need to show <strong>`</strong> than use backslash or put a space ` so it
+wont be applied`</li>
+</ul>
+
+<h1 id="liquid-tags">Liquid Tags</h1>
+
+<p><a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">Liquid for
+designers</a> and
+<a href="http://shopify.github.io/liquid/">http://shopify.github.io/liquid/</a> are all docs you need.
+<a href="http://cheat.markdunkley.com/">http://cheat.markdunkley.com/</a></p>
+
+<ul>
+  <li><code class="highlighter-rouge">{ % assign my_var = [1, 2] %}</code> assigns some value to variable</li>
+  <li><code class="highlighter-rouge">{ % capture my_id %} name-{ { item.name | handleize }} { % endcapture %}</code>
+captures block text</li>
+  <li><code class="highlighter-rouge">{ % include some_file id="some_value" %}</code> include snippet, you can pass
+arguments to include and use it inside like <code class="highlighter-rouge">{ % if include.id %} { % assign
+target_page = page.[include.id] %} { % endif %}</code></li>
+  <li><code class="highlighter-rouge">{ % comment %} my comment { % endcomment %}</code></li>
+  <li><code class="highlighter-rouge">{ % if statement %} { % elsif false %} { % endif %}</code> where statement can be
+    <ul>
+      <li>comparison <code class="highlighter-rouge">==</code>, <code class="highlighter-rouge">!=</code>, <code class="highlighter-rouge">&lt;=</code></li>
+      <li>arrays <code class="highlighter-rouge">contains</code></li>
+      <li>boolean operator <code class="highlighter-rouge">and</code> <code class="highlighter-rouge">or</code></li>
+      <li>There is no negative, not <code class="highlighter-rouge">!</code> and there is no parentheses (use nested if)</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">{ % for item in array %} { % break %} { % continue %} { % endfor %}</code>
+    <ul>
+      <li>when iterating a hash <code class="highlighter-rouge">item[0]</code> is key and <code class="highlighter-rouge">item[1]</code> is value</li>
+      <li>iterating over ranges <code class="highlighter-rouge">{ % for i in (1..item.quantity) %}</code> or <code class="highlighter-rouge">{ % for
+member in ste.data.members %}</code></li>
+      <li>helper variables inside loop <code class="highlighter-rouge">forloop.length</code>, <code class="highlighter-rouge">forloop.index0</code>,
+<code class="highlighter-rouge">forloop.last</code></li>
+      <li>3 optional arguments <code class="highlighter-rouge">{ % for item in array limit:2 offset:3 reversed %}</code></li>
+      <li>you can use <code class="highlighter-rouge">{ % else %}</code> to show when array is empty</li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">{ % cycle 'blue', 'white', 'red' %}</code> will repeat those colors, Usefull when
+iterating for bootstrap row col</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">{ % case my_var %} { % when 'dule' or 'mile' %} { % else } { % endcase %}</code></li>
+</ul>
+
+<p>Internal jekyll tags</p>
+
+<p><a href="https://jekyllrb.com/docs/templates/#links">link</a>
+Note that you do not have to use quotes: <code class="highlighter-rouge">'</code> or <code class="highlighter-rouge">"</code>.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">{ % post_url %}</code>. Note that you can not use string filters like <code class="highlighter-rouge">prepend: </code>
+ inside tags (works only with double curly brackets <code class="highlighter-rouge">{ { }}</code>, so for link to
+another post (by it’s file name) when <code class="highlighter-rouge">site.baseurl</code> is set, <a href="https://github.com/jekyll/jekyll/issues/3708">you
+need</a> <code class="highlighter-rouge">[my-post]({ {
+site.baseurl }}{ % post_url 2015-12-20-my-post %})</code></li>
+  <li>when you want to link assets you can use <code class="highlighter-rouge">{ { "/assets/style.css" |
+relative_url }}</code></li>
+  <li>you can link to (link_to) pages also (not just posts) with <code class="highlighter-rouge">{ { site.baseurl
+}}{ % link news/index.html %}</code>. Parameter for <code class="highlighter-rouge">link</code> should contain extension
+(for example <code class="highlighter-rouge">.md</code>).</li>
+</ul>
+
+<h1 id="types">Types:</h1>
+
+<ul>
+  <li>boolean, nil, string, integer, array and hash
+    <ul>
+      <li>integer can be incremented <code class="highlighter-rouge">{ % increment my_int %}</code> or <code class="highlighter-rouge">{ % decrement
+my_int %}</code></li>
+      <li>range is defined similar to ruby <code class="highlighter-rouge">{ % for i in (1..my_int) %}</code></li>
+      <li>to use sum operation, for example add two number you can use</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  
+{ % for i in (1..number_of_columns) %}
+</code></pre></div>    </div>
+  </li>
+  <li>array elements can be accessed only like <code class="highlighter-rouge">my_array[2]</code></li>
+  <li>hash elements can be accessed with <code class="highlighter-rouge">my_hash['name']</code> or <code class="highlighter-rouge">my_hash.name</code></li>
+  <li>you can call <code class="highlighter-rouge">my_array.size</code> or <code class="highlighter-rouge">my_hash.size</code></li>
+  <li>all yml files from <code class="highlighter-rouge">_data</code> folder will be available under
+<code class="highlighter-rouge">site.data.file_name.item</code></li>
+</ul>
+
+<h1 id="filters">Filters</h1>
+
+<p>Filters or pipes is used to process data inside <code class="highlighter-rouge">{ { }}</code>. Filter nam could be
+followed with colon <code class="highlighter-rouge">:</code> to pass additinal params, for example <code class="highlighter-rouge">{ { page.path |
+split: '/' | first | alert }}</code></p>
+
+<ul>
+  <li><a href="https://help.shopify.com/themes/liquid/filters/string-filters">strings</a>
+<code class="highlighter-rouge">append</code>, <code class="highlighter-rouge">prepend</code>, <code class="highlighter-rouge">capitalize</code>, <code class="highlighter-rouge">date</code>, <code class="highlighter-rouge">escape</code>, <code class="highlighter-rouge">lstrip</code>, <code class="highlighter-rouge">replace</code>,
+<code class="highlighter-rouge">strip_html</code>, <code class="highlighter-rouge">truncate</code>, <code class="highlighter-rouge">url_encode</code>
+    <ul>
+      <li><code class="highlighter-rouge">{ { page.date| date: 'B %d, %Y' }}</code> or <code class="highlighter-rouge">{ { page.date | date_to_string }}</code>
+or <code class="highlighter-rouge">{ { page.date | date: '%d-%m-%Y]]</code></li>
+    </ul>
+  </li>
+  <li><a href="https://help.shopify.com/themes/liquid/filters/array-filters">arrays</a>
+<code class="highlighter-rouge">first</code>, <code class="highlighter-rouge">join</code>, <code class="highlighter-rouge">last</code>, <code class="highlighter-rouge">map</code>, <code class="highlighter-rouge">reverse</code>, <code class="highlighter-rouge">size</code>, <code class="highlighter-rouge">slice</code>, <code class="highlighter-rouge">uniq</code>
+    <ul>
+      <li><code class="highlighter-rouge">map</code> uses string as argument (<code class="highlighter-rouge">" "</code> are required). Another example is
+<a href="https://shopify.github.io/liquid/filters/map/">liquid github</a></li>
+      <li>create with <code class="highlighter-rouge">{ % assign my_array = "ants, bugs, bees, bugs, ants" | split:
+", " %}</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>If you need to assign filter output to variable you can use <code class="highlighter-rouge">{ % capture
+my_var %} { { var | my_filter }} { % endcapture %}</code> or use it inside 
+assign tag <code class="highlighter-rouge">{ % assign all_categories = site.posts | map: "categories" %}</code>.</p>
+
+<p>Note that in liquid version 4 you can use <code class="highlighter-rouge">concat</code> filter but it is not
+supported in jekyll 3.4 (liquid 3.0.6) <a href="https://help.shopify.com/themes/liquid/filters/array-filters#concat">concat
+example</a>.
+In old liquid you can use <code class="highlighter-rouge">append</code> but that is only for strings.
+You should point to latest jekyll from github which uses Liquid 4</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get latest jekyll which uses liquid 4
+gem "jekyll", github: 'jekyll/jekyll'
+</code></pre></div></div>
+
+<h1 id="debug">Debug</h1>
+
+<p>Debug liquid is simply output <code class="highlighter-rouge">{ { my_var | inspect }}</code></p>
+
+<p>Somehow if I use <code class="highlighter-rouge">contains_</code> variable name</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{ % assign contains_sidebar = true %}
+{ { contains_sidebar }}
+</code></pre></div></div>
+
+<p>than I got error like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[:comparison, "contains"] is not a valid expression in "contains_sidebar ==
+false" in /_layouts/page.html`
+</code></pre></div></div>
+
+<p>Show I rename variable ``</p>
+
+<h1 id="adding-tag-filter">Adding tag, filter</h1>
+
+<p>All <a href="https://jekyllrb.com/docs/plugins/">plugins</a> will be loaded from <code class="highlighter-rouge">_plugins</code>
+folder. Githib ignore this folder.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _plugins/alert_tag.rb
+module Jekyll
+  module AlertFilter
+    def alert(text)
+      unescaped = if text.class == String
+                  CGI.unescapeHTML text
+               else
+                 text.to_s
+               end
+      %(&lt;script&gt;
+        alert('#{unescaped}');
+        &lt;/script&gt;)
+    end
+  end
+end
+Liquid::Template.register_filter(Jekyll::AlertFilter)
+</code></pre></div></div>
+
+<p>This is used to alert text <code class="highlighter-rouge">{ % alert this is text %}</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _plugins/alert_filter.rb
+module Jekyll
+  module AlertFilter
+    def alert(text)
+      unescaped = if text.class == String
+                  CGI.unescapeHTML text
+               else
+                 text.to_s
+               end
+      %(&lt;script&gt;
+        alert('#{unescaped}');
+        &lt;/script&gt;)
+    end
+  end
+end
+Liquid::Template.register_filter(Jekyll::AlertFilter)
+</code></pre></div></div>
+
+<p>Filter is used like <code class="highlighter-rouge">{ { page | alert }}</code></p>
+
+<h1 id="scss">Scss</h1>
+
+<p>For adding scss support, you need to put your main scss file inside for example
+<code class="highlighter-rouge">css/main.scss</code> and it needs to have double three lines <code class="highlighter-rouge">---</code>. From there you
+can use <code class="highlighter-rouge">@import "file_from_scss";</code> to load partials from <code class="highlighter-rouge">_sass</code> folder</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+# this is css/main.scss which imports other scss files
+---
+
+@import "overrides";
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- override default template file _includes/head.html --&gt;
+...
+  &lt;link rel="stylesheet" href="/assets/main.css"&gt;
+</code></pre></div></div>
+
+<h1 id="coffee-script">Coffee script</h1>
+
+<p>To enable coffee script you need to add to config.yml</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; _config.yml &lt;&lt; HERE_DOC
+gems:
+  - jekyll-coffeescript
+HERE_DOC
+</code></pre></div></div>
+
+<p>And you coffee files need to have three lines <code class="highlighter-rouge">---</code> for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+# assets/js/cart.coffee
+---
+class Cart
+  constructor: (@buttons, @cart) -&gt;
+    @buttons.click (event) =&gt;
+      @textContent = 'Added'
+      do event.preventDefault
+      itemContainer = event.target.parentNode.parentNode.parentNode
+      itemNumber = do $ itemContainer
+      .find 'h3.panel-title'
+      .text
+
+      listItem = do $ @cart
+      .find 'li:last'
+      .clone
+
+      listItem.text itemNumber
+      @cart.append listItem
+      .hide()
+      .fadeIn 'slow'
+
+
+      console.log itemContainer
+
+$ -&gt;
+  cart = new Cart $('form button'), $('ul#cart')
+</code></pre></div></div>
+
+<p>and they will be compiled, so you can include them <code class="highlighter-rouge">&lt;script
+src="assets/js/cart.js"&gt;&lt;/script&gt;</code></p>
+
+<h1 id="rails">Rails</h1>
+
+<p>https://www.sitepoint.com/jekyll-rails/</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>if you want to move page it is advised to leave old page some time so you do
+not confuse crawlers. You can add redirection in html</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">&lt;!-- narucivanje.html --&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"refresh"</span> <span class="na">content=</span><span class="s">"0; url=http://tasterkljuc.rs/naruci"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    You are redirected to http://tasterkljuc.rs/naruci
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<h1 id="slides">Slides</h1>
+
+<p>Google io slides can be found https://github.com/willnorris/io-slides
+After you clone the repository</p>
+
+<p><a href="https://jekyllrb.com/docs/plugins/">https://jekyllrb.com/docs/plugins/</a>
+<a href="https://github.com/planetjekyll/awesome-jekyll">https://github.com/planetjekyll/awesome-jekyll</a>
+<a href="https://github.com/planetjekyll/awesome-jekyll-plugins">https://github.com/planetjekyll/awesome-jekyll-plugins</a></p>
+
+<p>https://mademistakes.com/articles/using-jekyll-2016/</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

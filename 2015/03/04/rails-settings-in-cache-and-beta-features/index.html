@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Rails settings in cache and beta features</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Rails settings in cache and beta features</h1>
+    <p class="meta">Mar 4, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#tests"><span class="tocnumber">1</span> <span class="toctext">Tests</span></a></li><li class="toc_level-1 toc_section-2"><a href="#administrate"><span class="tocnumber">2</span> <span class="toctext">Administrate</span></a></li><li class="toc_level-1 toc_section-3"><a href="#activeadmin"><span class="tocnumber">3</span> <span class="toctext">ActiveAdmin</span></a></li></ul></td></tr></tbody></table></div><p>Did you ever wanted to use some configuration options, but you find very difficult to use secrets.yml file (<em>secrets.yml</em> file should be used for secrets, right ?), tired of using <code class="highlighter-rouge">heroku config</code> to often, or even worse, deploying each time you change some constant in your code ?</p>
+
+<p>Here is a nice solution how to use <em>Rails.cache</em> to quickly change some params
+without need to restart rails application. Its Rails 3 ready. Some credits go
+to
+<a href="https://github.com/catarse/catarse_settings_db/blob/master/app/models/catarse_settings_db/setting.rb">catarse_settings</a>.</p>
+
+<p>For Heroku, you need addon
+<a href="https://devcenter.heroku.com/articles/memcachier">MemCachier</a> since FileStore
+is not shared between dynos (rails console is separate dyno).
+<a href="https://devcenter.heroku.com/articles/rack-cache-memcached-rails31">rack-cache</a>
+is even better. It is not needed if you have activeAdmin page for updating
+settings.
+So here is my beta features code that is accessible for <em>admin</em> user:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/my_setting.rb
+# frozen_string_literal: true
+class MySetting &lt; ActiveRecord::Base
+  validates :name, presence: true
+
+  # Migration file:
+  # rails g migration CreateMySettings name value:text description:text
+  #
+  # class CreateMySettings &lt; ActiveRecord::Migration
+  #   def change
+  #     create_table :my_settings do |t|
+  #       t.string :name
+  #       t.text :value
+  #       t.text :description
+  #     end
+  #   end
+  # end
+
+  # Never update values directly, use MySetting[:foo]='one,two'
+  # You can update using rails console or in your custom methods
+  # Return value is always string.
+  # For unknown key, nil is returned
+  # Integers are OK in format "123" so .to_i can be safelly performed
+  # (all money value should be in cents)
+
+  class &lt;&lt; self
+    # This method returns the values of the config simulating a Hash, like:
+    #   MySetting[:foo]
+    # It can also bring Arrays of keys, like:
+    #   MySetting[:foo, :bar]
+    # ... so you can pass it to a method using *.
+    # It is memoized, so it will be correctly cached.
+    def [](*keys)
+      if keys.size == 1
+        get keys.shift
+      else
+        keys.map { |key| get key }
+      end
+    end
+
+    def []=(key, value)
+      set key, value
+    end
+
+    def get_without_cache(key)
+      my_setting = find_by_name(key)
+      return my_setting.value if my_setting
+      # to return nil in case of unknown key
+      nil
+    end
+
+    private
+
+    def get(key)
+      Rails.cache.fetch("/configurations/#{key}") do
+        get_without_cache(key)
+      end
+    end
+
+    def set(key, value)
+      find_or_create_by!(name: key).update(value: value)
+      Rails.cache.write("/configurations/#{key}", value)
+      value
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>In all places in my rails application I use this <code class="highlighter-rouge">beta</code> helper method that uses
+two MySetting variable. <code class="highlighter-rouge">live_features</code> are comma separated list of feature
+names that are live, and <code class="highlighter-rouge">beta_users</code> are emails for users that can see non live
+features (of course only when they are logged in).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/helpers/beta_helper.rb
+module BetaHelper
+  # example of usage:
+  # &lt;% if beta :name_of_feature %&gt;
+  #   &lt;div&gt;Something&lt;/div&gt;
+  # &lt;% end %&gt;
+  # &lt;%= beta :name_of_feature, render( "something") %&gt;
+  # redirect_to(root_path) if view_context.beta(:name_of_feature)
+  #
+  # to make feature available to all, add it to MySetting[:live_features]
+  # some can see non live features if it is listed in MySettings[:beta_users]
+  # for features on non logged in pages (for example GET homepage) you can
+  # override default with url param: ?enable_feature=name_of_feature
+  # rubocop:disable CyclomaticComplexity
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  # rubocop:disable PerceivedComplexity
+  helper_method :beta
+  def beta(symbol_of_feature, content = nil)
+    # to catch emails without blank and , from "asd@asd.asd,\r\ndsa@dsa.dsa"
+    r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\b/)
+    if MySetting[:live_features].split(/[\s,]+/).include? symbol_of_feature.to_s
+      live_feature = true
+    elsif defined?(current_user) &amp;&amp;
+          current_user.class == User &amp;&amp;
+          MySetting[:beta_users].scan(r).include?(current_user.email)
+      beta_user = true
+    elsif defined?(params) &amp;&amp;
+          # in mailer params are not available so check before use it
+          params[:enable_feature] == symbol_of_feature.to_s
+      live_feature_by_param = true
+    end
+
+    if live_feature || beta_user || live_feature_by_param
+      if content.present?
+        content
+      else
+        true
+      end
+    else
+      false
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>To keep track of features I usually write them in seed file</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># db/seeds.rb
+[
+  {
+    name: 'beta_users',
+    value: 'asd@asd.asd, admin@asd.asd',
+    description: 'List of emails of users that can see non live features'
+  },
+  {
+    name: 'live_features',
+    value: 'phone_confirmation_feature',
+    description: 'List of features that all users can use.'\
+                 ' Note that beta_users can always see all features'
+  },
+  {
+    name: 'embed_video_url_for_popup_on_home_page',
+    value: 'https://www.youtube.com/embed/cQr4ua3dxiM',
+    description: 'Url for video in modal, should be embed, something like' \
+                 ' https://www.youtube.com/embed/'
+  },
+].each do |doc|
+  next if MySetting.find_by name: doc[:name]
+  MySetting[doc[:name]] = doc[:value]
+  MySetting
+    .find_by(name: doc[:name])
+    .update_attribute(:description, doc[:description])
+  puts "MySetting #{doc[:name]} seeded."
+end
+</code></pre></div></div>
+
+<h1 id="tests">Tests</h1>
+
+<p>In your tests simply add  <code class="highlighter-rouge">before { MySetting[:live_features] = 'phone_confirmation_feature' }</code></p>
+
+<h1 id="administrate">Administrate</h1>
+
+<p>For administrate gem, we need to call <code class="highlighter-rouge">MySetting[]</code> methods because we need to update cache</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g administrate:dashboard MySetting
+# add :my_settings to DASHBOARDS in app/dashboards/dashboard_manifest.rb
+# add following code to app/controllers/admin/my_settings_controller.rb
+    def update
+      super
+      MySetting[resource_params[:name]] = resource_params[:value]
+    end
+    def create
+      super
+      MySetting[resource_params[:name]] = resource_params[:value]
+    end
+    def destroy
+      MySetting[requested_resource.name] = ""
+      super
+    end
+</code></pre></div></div>
+
+<h1 id="activeadmin">ActiveAdmin</h1>
+
+<p><a href="https://github.com/activeadmin/activeadmin">activeadmin gem</a> is nice way to
+edit stuff. It contains generators, for example <code class="highlighter-rouge">rails g active_admin:resource
+Banner</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/admin/my_setting.rb
+ActiveAdmin.register MySetting do
+  permit_params :name, :value, :description
+  controller do
+    def update
+      super
+      MySetting[resource.name] = resource.value
+    end
+    def create
+      super
+      MySetting[resource.name] = resource.value
+    end
+    def destroy
+      MySetting[resource.name] = ""
+      super
+    end
+  end
+end
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

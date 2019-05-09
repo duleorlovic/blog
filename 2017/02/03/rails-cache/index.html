@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Rails cache</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Rails cache</h1>
+    <p class="meta">Feb 3, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#redis-cache-store"><span class="tocnumber">1</span> <span class="toctext">Redis cache store</span></a></li><li class="toc_level-1 toc_section-2"><a href="#install-memcached"><span class="tocnumber">2</span> <span class="toctext">Install memcached</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#install-memcached-using-rubber"><span class="tocnumber">2.1</span> <span class="toctext">Install memcached using rubber</span></a></li><li class="toc_level-2 toc_section-4"><a href="#install-in-plain-irb"><span class="tocnumber">2.2</span> <span class="toctext">Install in plain irb</span></a></li></ul></li><li class="toc_level-1 toc_section-5"><a href="#manual-check-if-it-is-working"><span class="tocnumber">3</span> <span class="toctext">Manual check if it is working</span></a></li><li class="toc_level-1 toc_section-6"><a href="#fragment-caching"><span class="tocnumber">4</span> <span class="toctext">Fragment caching</span></a></li><li class="toc_level-1 toc_section-7"><a href="#low-level-caching"><span class="tocnumber">5</span> <span class="toctext">Low level caching</span></a></li><li class="toc_level-1 toc_section-8"><a href="#theory"><span class="tocnumber">6</span> <span class="toctext">Theory</span></a></li></ul></td></tr></tbody></table></div><p><a href="http://guides.rubyonrails.org/caching_with_rails.html">Guide</a> tells that page
+and action caching has been extracted to gems. Now we can use fragment caching</p>
+
+<p>By default caching in rails development environment is disabled. To enable you
+need to <code class="highlighter-rouge">touch tmp/caching-dev.txt</code> AND to comment out <code class="highlighter-rouge">config.cache_store =
+:memory_store</code> from <code class="highlighter-rouge">config/environments/development.rb</code> so it use
+<code class="highlighter-rouge">ActiveSupport::Cache::FileStore</code>. Instead of file you should use
+<code class="highlighter-rouge">dalli+memcached</code> or <code class="highlighter-rouge">redis</code>  (you already have redis you use background jobs
+like Sidekiq).
+Another way to start caching is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails dev:cache
+</code></pre></div></div>
+
+<p>Filestore will create files on <code class="highlighter-rouge">tmp/cache/:rand/:rand/cache_key</code> so you can find
+them <code class="highlighter-rouge">ls -R tmp/cache/</code>. If cache_key is array, it is joined with <code class="highlighter-rouge">/</code>.
+On heroku <code class="highlighter-rouge">heroku run bash</code> I do not see cache files <code class="highlighter-rouge">ls tmp/cache</code> probably
+because heroku is read only system (only buildpack can add stuff) so it is
+better to use memcached.</p>
+
+<h1 id="redis-cache-store">Redis cache store</h1>
+
+<p>In Rails 5.2 you can use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'hiredis'
+gem 'redis', require: ['redis', 'redis/connection/hiredis']
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application/environments/production.rb
+# config/application/environments/development.rb
+config.cache_store = :redis_cache_store
+</code></pre></div></div>
+
+<p>In coonsole you can check keys and values</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pp Rails.cache.redis.keys
+</code></pre></div></div>
+
+<h1 id="install-memcached">Install memcached</h1>
+
+<p>For ubuntu you need to install memcached service.
+Note that memcached will <strong>automatically</strong> remove old cache files.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install memcached
+sudo service memcached status
+</code></pre></div></div>
+
+<p>For heroku you need addon
+<a href="https://devcenter.heroku.com/articles/memcachier">memcachier</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku addons:create memcachier:dev
+</code></pre></div></div>
+
+<p>This will create env variables which you can use in secrets</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i config/secrets.yml -e '/^test:/i \
+  # caching server\
+  memcachier_servers: &lt;%= ENV["MEMCACHIER_SERVERS"] %&gt;\
+  memcachier_username: &lt;%= ENV["MEMCACHIER_USERNAME"] %&gt;\
+  memcachier_password: &lt;%= ENV["MEMCACHIER_PASSWORD"] %&gt;\
+'
+</code></pre></div></div>
+
+<p>Use <a href="https://github.com/petergoldstein/dalli">gem dalli</a> in your Gemfile</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# for caching
+gem "dalli"
+HERE_DOC
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; config/initializers/dalli.rb &lt;&lt; HERE_DOC
+Rails.application.configure do
+  config.cache_store = :dalli_store # this will use local memcached service
+  if secrets.memcachier_servers.present?
+    config.cache_store = :dalli_store,
+                         secrets.memcachier_servers.split(','),
+                         {
+                           username: secrets.memcachier_username,
+                           password: secrets.memcachier_password,
+                           failover: true,
+                           socket_timeout: 1.5,
+                           socket_failure_delay: 0.2,
+                           down_retry_delay: 60
+                         }
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<h2 id="install-memcached-using-rubber">Install memcached using rubber</h2>
+
+<p>Read about <a href="/2016/09/07/cap3-capistrano-deployment-rubber-provision/">capistrano and rubber</a> how to
+set up, so you can add memcached with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this will copy deploy-memcached.rb and rubber-memcached.yml and role files
+bundle exec rubber vulcanize memcached
+</code></pre></div></div>
+
+<p>Add role <code class="highlighter-rouge">memcached</code> to Vagrantfile or your hosts.
+Since vagrant machine do not have
+<a href="https://github.com/rubber/rubber/blob/master/templates/memcached/config/rubber/role/memcached/memcached.conf#L4">image_type</a>
+which is used to determine max_mem, you need to define it</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber-memcached.yml
+memcached_max_mem: 2048
+memcached_max_mem_hash:
+  ...
+</code></pre></div></div>
+
+<p>Also we need to enable listening on all required ports.</p>
+
+<p>To use in rails you need to add</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; config/initializers/dalli.rb &lt;&lt; HERE_DOC
+Rails.application.configure do
+  dalli_config = Rails.root.join('config','dalli.rb')
+  if File.exists?(dalli_config)
+    require dalli_config; include ::Rubber::Dalli::Config
+  else
+    config.cache_store = :dalli_store # this will use local memcached service
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<h2 id="install-in-plain-irb">Install in plain irb</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "rubygems"
+require "dalli"
+CACHE = Dalli::Client.new("127.0.0.1", { :namespace =&gt; “my_project”, :expires_in =&gt; 3600, :socket_timeout =&gt; 3, :compress =&gt; true }) # Options are self-explanatory
+CACHE.set("key", "value", 180) # last option is expiry time in seconds
+CACHE.get("key") 2
+</code></pre></div></div>
+
+<h1 id="manual-check-if-it-is-working">Manual check if it is working</h1>
+
+<p>You can check from bash if memcached service is running</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>netstat -ap   | grep 11211
+# tcp        0      0 localhost:11211         *:*                     LISTEN      17897/memcached
+# udp        0      0 localhost:11211         *:*                                 17897/memcached
+
+# if listening on all ip addresses is enabled than you should see
+tcp        0      0 *:11211                 *:*                     LISTEN      16065/memcached
+udp        0      0 *:11211                 *:*                                 16065/memcached
+</code></pre></div></div>
+
+<p>You should be able to connect</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>telnet localhost 11211
+stats
+
+# another command is
+/usr/share/memcached/scripts/memcached-tool localhost:11211 stats
+</code></pre></div></div>
+
+<p>If you use vagrant, than <code class="highlighter-rouge">config/rubber/role/memcached/dalli.rb</code> will use
+<code class="highlighter-rouge">rubber_instance.full_name</code> which is <code class="highlighter-rouge">default.foo.com</code> but I’m not able to
+connect using that domain name. So you need to change
+<code class="highlighter-rouge">config/rubber/role/memcached/memcached.conf</code> to add below comment <code class="highlighter-rouge"># -l
+127.0.0.1</code> add this option</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># we want to listen on all IP addresses
+-l 0.0.0.0
+</code></pre></div></div>
+
+<p>You can check in console if properly enabled</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails.cache.class
+# if not enabled =&gt; ActiveSupport::Cache::NullStore
+</code></pre></div></div>
+
+<p>And if check its stats</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails.cache.stats
+# {"127.0.0.1:11211"=&gt;{"pid"=&gt;"14592", "uptime"=&gt;"8319", ...
+
+# if service is not working you can expect something like
+[DEBUG] Dalli::Server#connect mylocationsubdomain.my-domain.vagrant:11211
+[WARNING] mylocationsubdomain.my-domain.vagrant:11211 failed (count: 0) Errno::ECONNREFUSED: Connection refused - connect(2) for "mylocationsubdomain.my-domain.vagrant" port 11211
+</code></pre></div></div>
+
+<p>We can ask ActiveSupport for that also</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveSupport::Cache.lookup_store(:mem_cache_store).stats
+</code></pre></div></div>
+
+<p>If cache is using filestore exception will be raised</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails.cache.stats
+NoMethodError: undefined method `stats' for #&lt;ActiveSupport::Cache::FileStore:0x000000058a45d0&gt;
+</code></pre></div></div>
+
+<p>You can see <a href="http://www.pal-blog.de/entwicklung/perl/memcached-statistics-stats-command.html">more info about
+stats</a></p>
+
+<h1 id="fragment-caching">Fragment caching</h1>
+
+<p>Main usage is like this</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% cache item do %&gt;
+  bla
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>Key will contain template path, item id, item updated_at and template digest so
+if you change anything, cache will be expired.</p>
+
+<p>For index pages I use key to be string, that is maximum updated at (also
+template digest will invalidate cache).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% cache ['todos', @tasks.maximum(:updated_at)] do %&gt;
+  My todos list
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>Note that if you use translations on different subdomain than put default locale
+in the key also.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% cache ['moves-markers', I18n.locale, latest_move_timestamp] do %&gt;
+</code></pre></div></div>
+
+<p>Note that you should not use same keys on multiple places on the page.
+So if you have to use on same page, use different first string.</p>
+
+<p>You can clear cache in rails console : <code class="highlighter-rouge">Rails.cache.clear</code></p>
+
+<p>You can use conditional caching you can use <code class="highlighter-rouge">cache_if</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% cache_if admin?, product do %&gt;
+  &lt;%= render product %&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>If you show some data from nested resources, for example product comment, you
+need to add relation so any update will also trigger parent update, and
+invalidate parent cache.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/comment.rb
+  belongs_to :product, touch: true
+</code></pre></div></div>
+
+<p>Inside json jbuilder you need to call <code class="highlighter-rouge">json.cache!</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/users/index.json.jbuilder
+json.cache! ['users', @users.maxium(:updated_at)] do
+  ...
+end
+</code></pre></div></div>
+
+<h1 id="low-level-caching">Low level caching</h1>
+
+<p>In console or in code you can cache</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails.cache.write 'my_key', 123
+Rails.cache.read 'my_key'
+Rails.cache.fetch 'my_key' do
+  123
+end
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">fetch</code> will read from cache if exists or write to cache
+For any ActiveRecord instance, you have method <code class="highlighter-rouge">cache_key</code> which you can use
+for example in <code class="highlighter-rouge">fetch</code> block.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Product &lt; ApplicationRecord
+  def competing_price
+    Rails.cache.fetch("#{cache_key}/competing_price", expires_in: 12.hours) do
+      Competitor::API.find_price(id)
+    end
+  end
+end
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">cache key</code> uses <code class="highlighter-rouge">id</code> and <code class="highlighter-rouge">updated_at</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Task.new.cache_key
+# =&gt; "tasks/new"
+Task.last.cache_key
+# =&gt; "tasks/2-20170511114115000000"
+</code></pre></div></div>
+
+<p>Note that <a href="http://guides.rubyonrails.org/caching_with_rails.html#sql-caching">sql
+caching</a> is
+only inside one action. Usually rails do not perform sql query untill it is
+needed. If you only read <code class="highlighter-rouge">current_user</code> in before actions, that query will be
+cached. But if you update current_user, than following <code class="highlighter-rouge">current_user</code> is not
+reading from cache (for example if you use current_user in view or in other
+before actions).</p>
+
+<p>You can use this <a href="http://vinsol.com/blog/2014/02/11/guide-to-caching-in-rails-using-memcache/">snippets
+</a></p>
+
+<h1 id="theory">Theory</h1>
+
+<p><a href="https://www.mnot.net/cache_docs/">mnot cache_docs</a></p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

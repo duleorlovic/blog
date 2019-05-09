@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Datatables</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Datatables</h1>
+    <p class="meta">Feb 13, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#install"><span class="tocnumber">1</span> <span class="toctext">Install</span></a></li><li class="toc_level-1 toc_section-2"><a href="#data"><span class="tocnumber">2</span> <span class="toctext">Data</span></a></li><li class="toc_level-1 toc_section-3"><a href="#server-side-processing"><span class="tocnumber">3</span> <span class="toctext">Server side processing</span></a></li><li class="toc_level-1 toc_section-4"><a href="#using-data-from-datatables"><span class="tocnumber">4</span> <span class="toctext">Using data from datatables</span></a></li><li class="toc_level-1 toc_section-5"><a href="#export"><span class="tocnumber">5</span> <span class="toctext">Export</span></a></li><li class="toc_level-1 toc_section-6"><a href="#dom"><span class="tocnumber">6</span> <span class="toctext">DOM</span></a></li><li class="toc_level-1 toc_section-7"><a href="#seach-or-filter-is-used-for-filtering-out"><span class="tocnumber">7</span> <span class="toctext">Seach (or filter is used for filtering out)</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#select-column"><span class="tocnumber">7.1</span> <span class="toctext">Select column</span></a></li></ul></li><li class="toc_level-1 toc_section-9"><a href="#order-sort"><span class="tocnumber">8</span> <span class="toctext">Order (sort)</span></a></li><li class="toc_level-1 toc_section-10"><a href="#responsive"><span class="tocnumber">9</span> <span class="toctext">Responsive</span></a></li><li class="toc_level-1 toc_section-11"><a href="#custom-types"><span class="tocnumber">10</span> <span class="toctext">Custom types</span></a></li><li class="toc_level-1 toc_section-12"><a href="#tips"><span class="tocnumber">11</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-13"><a href="#ajax-datatable-rails"><span class="tocnumber">12</span> <span class="toctext">Ajax datatable rails</span></a></li></ul></td></tr></tbody></table></div><h1 id="install">Install</h1>
+
+<p><a href="https://datatables.net/">datatables.net</a> install by simply <a href="https://datatables.net/download/#bs-3.3.7/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.3/b-html5-1.2.3/b-print-1.2.3">select packages and
+download</a>
+but it will be 3M in one file. I think it is better to use yarn
+and install all dependencies that you have selected <a href="https://datatables.net/download/bower">bower
+packages</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add datatables.net-bs4
+</code></pre></div></div>
+<p>include them in application.js</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net-bs4/js/dataTables.bootstrap4.js
+</code></pre></div></div>
+<p>and application.sass</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@import 'datatables.net-bs4/css/dataTables.bootstrap4.css'
+</code></pre></div></div>
+
+<p>Here is old bower example</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install --save datatables.net datatables.net-bs \
+  Stuk/jszip pdfmake \
+  datatables.net-buttons datatables.net-buttons-dt datatables.net-buttons-bs \
+  select2 bootstrap-datepicker
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/javascript/application.js
+//= require jszip/dist/jszip.js
+//= require pdfmake/build/pdfmake.js
+//= require pdfmake/build/vfs_fonts.js
+//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net-bs/js/dataTables.bootstrap.js
+//= require datatables.net-buttons/js/dataTables.buttons.js
+//= require datatables.net-buttons/js/buttons.html5.js
+//= require datatables.net-buttons/js/buttons.print.js
+//= require select2/dist/js/select2
+//= require bootstrap-datepicker/dist/js/bootstrap-datepicker
+
+// app/assets/stylesheets/application.scss
+@import "datatables.net-bs/css/dataTables.bootstrap";
+@import "datatables.net-buttons-dt/css/buttons.dataTables";
+@import "datatables.net-buttons-bs/css/buttons.bootstrap";
+@import "select2/dist/css/select2";
+@import "bootstrap-datepicker/dist/css/bootstrap-datepicker3";
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$('#clicks-table').DataTable({
+  dom: 'Bfrtip',
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print'
+    ]
+});
+</code></pre></div></div>
+
+<p>You can use
+<a href="https://github.com/rweng/jquery-datatables-rails">jquery-datatables-rails</a>
+gem. Add gem to Gemfile and run <code class="highlighter-rouge">rails g jquery:datatables:install</code>.
+If you have <code class="highlighter-rouge">Uncaught TypeError: Cannot read property 'mData' of undefined</code> than
+you need to replace <code class="highlighter-rouge">&lt;th colspan="3"&gt;&lt;/th&gt;</code> with three `&lt;th&gt;&lt;/th&gt; &lt;th&gt;&lt;/th&gt;</p>
+<th></th>
+<p>`</p>
+
+<h1 id="data">Data</h1>
+
+<p>Initial data could be inside (<a href="https://datatables.net/manual/data/#DOM">DOM</a>) or
+you can use ajax call to load all items. That is client side processing and it
+works for less than <a href="https://datatables.net/manual/data/#Processing-modes">10 000
+rows</a>. For greater than
+100 000 you should use server side processing. But problem is delay that occurs
+(at leat on rails) when it need to render 1000 rows, so we have to use server
+side processing. In that case we need to implement searching and ordering on
+server.</p>
+
+<p>When using ajax you need to point where <a href="https://datatables.net/manual/ajax#Data-array-location">data
+array</a> is in JSON object
+(<code class="highlighter-rouge">dataSrc: ''</code> if we return array, or <code class="highlighter-rouge">dataSrc: 'data'</code> if we return object with
+data array).
+We need to point where each column is on array item. If item is object
+we can use their keys <code class="highlighter-rouge">columns: [ { data: 'name' }, { data: 'price' } ]</code>.
+If item is also array we can use their index <code class="highlighter-rouge">columns: [ { data: 0 }, { data: 1
+} ]</code>. We can also omit <code class="highlighter-rouge">columns</code> definition than it will use first column, first
+data from array, second column second data …</p>
+
+<h1 id="server-side-processing">Server side processing</h1>
+
+<p><a href="https://datatables.net/manual/server-side">Server side processing</a> is enabled
+with <code class="highlighter-rouge">serverSide: true</code> and use <code class="highlighter-rouge">data</code> or <code class="highlighter-rouge">ajax</code> options. Note
+that in this case any existing data will be discarded (you can not mix).</p>
+
+<p>There was a forum question to add data manually
+<a href="https://datatables.net/forums/discussion/16440/best-way-to-do-deferred-loading-client-side">deferred loading client
+side</a>
+Best option is <a href="https://datatables.net/examples/server_side/defer_loading.html">defer
+loading</a>
+Just add option <code class="highlighter-rouge">deferLoading: &lt;%= @users.count %&gt;</code> than initially data from the
+page will be shown, than on any search, reorder or page, server side request
+will be made. Note that you can not use <code class="highlighter-rouge">data-order</code> and <code class="highlighter-rouge">data-search</code> on
+initial page (error is like <code class="highlighter-rouge">datatables warning requested unknown parameter
+'[ojbect Object]' for row 0 column 7</code>).
+Note that when deferred loading is enabled, you can not use <code class="highlighter-rouge">stateSave: true</code>
+option (which will remember sort and search inside localstorage).</p>
+
+<p>If you have long column names and a lot of columns (for example 10), than it
+could be that url is too long, you can see in console <code class="highlighter-rouge">414 (Request-URI Too
+Large)</code>. Than you should switch to method POST and since post is used to create
+items, you need to use another route <code class="highlighter-rouge">search_products_path format: :json</code></p>
+
+<p>Request send a lot of params:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">"draw"=&gt;"1"</code> sequence counter so we know which one is last</li>
+  <li><code class="highlighter-rouge">"start"=&gt;"0", "length"=&gt;"10"</code> for pagination</li>
+  <li><code class="highlighter-rouge">"search"=&gt;{"value"=&gt;"323", "regex"=&gt;"false"}</code> global search for all coulmns
+with searchable true</li>
+  <li><code class="highlighter-rouge">"order"=&gt;{"0"=&gt;{"column"=&gt;"0", "dir"=&gt;"asc"}}</code> for ordering</li>
+  <li><code class="highlighter-rouge">"columns"=&gt;{"0"=&gt;{"data"=&gt;"name", "name"=&gt;"", "searchable"=&gt;"true",
+"orderable"=&gt;"true", "search"=&gt;{"value"=&gt;"", "regex"=&gt;"false"}}</code> name and
+other properties of columns</li>
+</ul>
+
+<p>Server need to returns:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">draw</code> should be echo</li>
+  <li><code class="highlighter-rouge">recordsTotal</code> total number before filtering</li>
+  <li><code class="highlighter-rouge">recordsFiltered</code> total number after filtering</li>
+  <li><code class="highlighter-rouge">data</code> array with data used in ajax option</li>
+</ul>
+
+<p>Example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# for pagination
+gem 'will_paginate'
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/products.coffee
+jQuery -&gt;
+  $('#products').dataTable(
+    ajax:
+      url: $('#products').data('source')
+      dataSrc: 'data'
+      error: (xhr, message, error) -&gt;
+        flash_alert("Please refresh the page. #{error}")
+    columns: [
+      { data: 'name' }
+      { data: 'price' }
+      { data: 'description' }
+    ]
+    deferLoading: $('#products').data('total')
+    serverSide: true
+  )
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/datatables/products_datatable.rb
+# http://railscasts.com/episodes/340-datatables?autoplay=true
+class ProductsDatatable
+  delegate :params, :page, :per_page, to: :@view
+  def initialize(view)
+    @view = view
+  end
+
+  def as_json(options = {})
+    {
+      draw: params[:draw].to_i,
+      recordsTotal: Product.count,
+      recordsFiltered: products.total_entries,
+      data: data,
+    }
+  end
+
+  private
+
+  def data
+    products.map do |product|
+      product.slice :name, :price, :description
+    end
+  end
+
+  def products
+    @products ||= fetch_products
+  end
+
+  def fetch_products
+    products = Product.order("#{sort_column } #{sort_direction}")
+    products = products.page(page).per_page(per_page)
+    if params[:search][:value].present?
+      # ILIKE is case insensitive LIKE
+      sql = "name ILIKE :search OR description ILIKE :search"
+      # you can reference association but than references is needed
+      # sql += " OR customers.name ILIKE :search"
+      # sql += " OR DATE_FORMAT(updated_at, '%d-%b-%Y') ILIKE :search"
+      products = products
+        .where(sql, search: "%#{params[:search][:value]}%")
+        # .include(:customer)
+        # .references(:customer)
+    end
+    products
+  end
+
+  def page
+    params[:start].to_i / per_page + 1
+  end
+
+  def per_page
+    params[:length].to_i &gt; 0 ? params[:lenght].to_i : 10
+  end
+
+  def sort_column
+    columns = %w[name price description]
+    columns[params[:order]["0"][:column].to_i]
+  end
+
+  def sort_direction
+    params[:order]["0"][:dir] == "desc" ? "desc" : "asc"
+  end
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/products_controller.rb
+class ProductsController &lt; ApplicationController
+  def index
+    @products = Product.all.limit 10
+  end
+
+  def search
+    render json: ProductsDatatable.new(view_context)
+  end
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/products/index.html.erb %&gt;
+&lt;table id="products" data-source="&lt;%= products_path format: :json %&gt;" data-total="&lt;%= Product.count %&gt;"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Price&lt;/th&gt;
+      &lt;th&gt;Description&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+
+  &lt;tbody&gt;
+    &lt;% @products.each do |product| %&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;%= product.name %&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;%= product.price %&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;%= product.description %&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;% end %&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</code></pre></div></div>
+
+<p>If you have nested models, you can order by <code class="highlighter-rouge">customers.name asc</code> and search
+<code class="highlighter-rouge">customers.name like '%a%'</code>, but you should use references since includes works
+only with hash params: <code class="highlighter-rouge">includes(:customer).where("customers.name like
+'%d%').references(:customer)</code>.</p>
+
+<h1 id="using-data-from-datatables">Using data from datatables</h1>
+
+<p>Columns are defined using</p>
+
+<ul>
+  <li><a href="https://datatables.net/reference/option/columns">columns</a> option which define
+all columns by its index (zero based). Note that all columns need to be defined</li>
+  <li><a href="https://datatables.net/reference/option/columnDefs">columnDefs</a> <code class="highlighter-rouge">targets</code> key
+which can use: number (index or negative index), string (class name without dot
+on th element) <code class="highlighter-rouge">targets: 'username'</code> for <code class="highlighter-rouge">&lt;th class="username"&gt;</code>. Note that we
+do not need to define all columns, just those that we need to set up some
+property <code class="highlighter-rouge">columnDefs: [ { targets: '_all', visible: false } ]</code></li>
+</ul>
+
+<p>Columns can be selected
+<a href="https://datatables.net/reference/type/column-selector">column-selector</a> by:</p>
+
+<ul>
+  <li>its index</li>
+  <li>jQuery selector</li>
+  <li>columns.name (names should be
+<a href="https://datatables.net/reference/option/columns.name">defined</a>).</li>
+</ul>
+
+<h1 id="export">Export</h1>
+
+<p><a href="https://datatables.net/extensions/buttons/examples/initialisation/export.html">export to csv,
+pdf</a></p>
+
+<ul>
+  <li>you can configure that only visible columns will
+<a href="https://datatables.net/extensions/buttons/examples/print/columns.html">print</a></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$('#clicks-table').DataTable({
+  dom: 'B',
+  buttons: [
+    {
+      extend: 'pdf',
+      exportOptions: {
+        columns: ':not(.non-for-export),:visible',
+      }
+    },
+  ]
+});
+</code></pre></div></div>
+
+<p>If you have special simbols, you can try to enable <code class="highlighter-rouge">bom: true</code> option.</p>
+
+<p>Export server side datatable
+https://diogenesggblog.wordpress.com/2017/02/02/how-to-export-all-rows-from-datatables-using-server-side-ajax/</p>
+
+<h1 id="dom">DOM</h1>
+
+<p><a href="https://datatables.net/reference/option/dom">dom</a> control buttons: <code class="highlighter-rouge">l</code> for
+lenght change menu, <code class="highlighter-rouge">B</code> buttons, <code class="highlighter-rouge">t</code> table, <code class="highlighter-rouge">p</code> pagination, <code class="highlighter-rouge">r</code> processing
+display, <code class="highlighter-rouge">f</code> filtering.
+You can add class <code class="highlighter-rouge">move-up</code> for info and length <code class="highlighter-rouge">il</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/clicks/index.html.erb
+$('#clicks-table').DataTable({
+  dom: 'Bfrtp&lt;"move-up"il&gt;',
+  processing: true,
+  oLanguage: {
+    // loader
+    sProcessing: '&lt;i class="fa fa-spinner fa-spin" style="font-size:24px"&gt;&lt;/i&gt; Processing...'
+  },
+});
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/stylesheets/datatable.scss
+@media(min-width:$screen-sm) {
+  .move-up {
+    margin-top: -50px;
+    position: relative;
+    z-index: -1;
+  }
+}
+</code></pre></div></div>
+
+<h1 id="seach-or-filter-is-used-for-filtering-out">Seach (or filter is used for filtering out)</h1>
+
+<p>For search you can use html data attribute <code class="highlighter-rouge">&lt;td
+data-search="Novembar"&gt;2.2.2012&lt;/td&gt;</code></p>
+
+<ul>
+  <li>when using <code class="highlighter-rouge">data-search</code> then original text is not used, so it is better to
+merge original text to <code class="highlighter-rouge">data-search</code></li>
+  <li>when you are using <code class="highlighter-rouge">&lt;a href="some-text"&gt;</code> that <code class="highlighter-rouge">some-text</code> will be matched
+also</li>
+  <li>default <a href="https://datatables.net/reference/api/search()">search(input, regex,
+smart)</a> is <code class="highlighter-rouge">regex=false,
+smart=true</code>, that means any order of strings and matching substring. For example
+<code class="highlighter-rouge">my name</code> is matched with <code class="highlighter-rouge">my n a m m e e e e</code>. You can also use double quotes
+<code class="highlighter-rouge">"my name"</code>.</li>
+  <li>it is usefull to add param search term and using regex, for example
+<code class="highlighter-rouge">dule|mile</code>. Note that you HAVE TO disable smart search and use second param
+(false).</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  table.search("&lt;%= params[:search_term] %&gt;", true, false).draw();
+</code></pre></div></div>
+
+<p>or you can search specific columns.</p>
+
+<h2 id="select-column">Select column</h2>
+
+<p><a href="https://datatables.net/reference/api/column().search()">link</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  table.columns( '.select-filter' ).every( function () {
+    var that = this;
+
+    // Create the select list and search operation
+    var select = $('&lt;select /&gt;')
+      .appendTo(
+        this.footer()
+      )
+      .on( 'change', function () {
+        that
+          .search( $(this).val() )
+          .draw();
+      } );
+
+    // Get the search data for the first column and add to the select list
+    this
+      .cache( 'search' )
+      .sort()
+      .unique()
+      .each( function ( d ) {
+          select.append( $('&lt;option value="'+d+'"&gt;'+d+'&lt;/option&gt;') );
+      });
+  });
+</code></pre></div></div>
+
+<h1 id="order-sort">Order (sort)</h1>
+
+<ul>
+  <li>disable ordering with
+<a href="https://datatables.net/reference/option/columns.orderable">orderable</a> property 
+or as data attribute on th element: <code class="highlighter-rouge">&lt;th data-orderable="false"&gt;</code></li>
+  <li>read about <a href="http://legacy.datatables.net/usage/columns">usage columns</a> to
+define sort based on another column. Also hide some <code class="highlighter-rouge">&lt;td class="hidden"&gt;&lt;%=
+index %&gt;&lt;/td&gt;</code> column both in css and in datatable
+<a href="https://datatables.net/examples/basic_init/hidden_columns.html">hidden_columns</a></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  "aoColumnDefs": [
+    { "aDataSort": [1], "aTargets": [0] },
+    { "bVisible": false, "bSearchable": false, "aTargets": [1] },
+  ],
+</code></pre></div></div>
+
+<ul>
+  <li>orthogonal data can be defined using <a href="https://datatables.net/manual/data/orthogonal-data#HTML-5">html 5
+attributes</a> for
+ordering data-sort is <code class="highlighter-rouge">&lt;td data-order="&lt;%= post.created_at.to_datetime.to_i
+%&gt;"&gt;2 Novemeber&lt;/td&gt;</code>.</li>
+  <li>
+    <p>you can also achieve sorting if you have ajax data</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/users/index.json.erb
+json.my_date do
+  json.display user.my_date.to_s
+  json.timestamp user.my_date.to_datetime.to_i
+end
+json.amount do
+  json.display humanized_money_with_symbol user.amount
+  json.cents user.amount.to_s
+end
+json.user do
+  json.display user.name
+  json.username user.username
+end
+
+# app/views/users/index.html.erb
+columns: [
+  { data: { _: 'my_date.display', sort: 'my_date.timestamp' } },
+  { data: { _: 'amount.display', sort: 'amount.cents' } },
+  { data: { _: 'user.display', filter: 'user.username' } },
+  ]
+</code></pre></div>    </div>
+  </li>
+  <li><a href="https://datatables.net/plug-ins/sorting/datetime-moment">ultimate date time
+sorting</a> <a href="https://editor.datatables.net/examples/dates/datetime.html">datetime
+input</a></li>
+  <li><a href="https://datatables.net/examples/advanced_init/length_menu.html">select page
+length</a> with
+<a href="https://datatables.net/reference/option/lengthMenu">lengthMenu</a> option</li>
+</ul>
+
+<h1 id="responsive">Responsive</h1>
+
+<p>There are a lot of tools for
+<a href="https://datatables.net/extensions/responsive/examples/">responsive</a>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>responsive: true # enable responsive styles
+scrollX: true # enable horizontal scroll, problem on big screens because it does
+              # not occupy 100% width. if false, than only data will scroll but
+              # header will still be fixed
+scrollY: "55vh" # 55% of the vertical height of the browser window. Usefull
+                # since user can see footer navigation links
+scrollCollapse: true # if there are not data (when filtering) than table body
+                     # will collapse
+autoWidth: false # disable auto calculation for column width so on big screens
+                 # it occupy 100% width
+</code></pre></div></div>
+
+<p>Note that bootstrap tooltip won’t work since it is inside <code class="highlighter-rouge">overflow-y: scroll;</code>
+element (or <code class="highlighter-rouge">overflow: hidden</code>) so you need to change where it is attached
+<code class="highlighter-rouge">$.fn.tooltip.Constructor.DEFAULTS.container = 'body'</code>. Only <code class="highlighter-rouge">&lt;select&gt;</code> element
+is natively shown over borders. You can use trick <code class="highlighter-rouge">position:fixed</code></p>
+
+<p>Without horizontal scrolling you can hide some columns by <a href="https://datatables.net/extensions/responsive/examples/column-control/columnPriority.html">column priority and
+expand</a>
+or you can show <a href="https://datatables.net/extensions/responsive/examples/display-types/bootstrap-modal.html">details in
+modal</a></p>
+<ul>
+  <li>you can use <a href="https://datatables.net/extensions/fixedcolumns/examples/initialisation/left_right_columns.html">fixed
+columns</a>
+so they always stays fixed, but all other columns can be scrolled</li>
+  <li>user can select which columns to see
+<a href="https://datatables.net/extensions/fixedcolumns/examples/initialisation/colvis.html">colvis</a>
+note: retired</li>
+</ul>
+
+<h1 id="custom-types">Custom types</h1>
+
+<p><a href="https://datatables.net/development/type-detection">type detection</a> is automati
+for numeric, date and string, so default sorting works fine. If you want to do
+custom searching than you need to use
+<a href="https://datatables.net/forums/discussion/36925">$.fn.dataTableExt.afnFiltering.push</a>
+or newer
+<a href="https://datatables.net/manual/plug-ins/search">$.fn.dataTable.ext.search</a>
+Note that is used on global search. If we add manually, than we need to remove
+also.This
+<a href="https://codepen.io/markmichon/pen/tmeGD">codepen</a> show how to add and remove
+filter</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li><a href="https://datatables.net/extensions/select/examples/styling/bootstrap.html">multiselect with ctrl or
+shift</a></li>
+  <li><a href="https://datatables.net/extensions/rowreorder/examples/">drag and drop
+reorder</a></li>
+  <li>
+    <p>when you have a lot of columns (x-axis scrollbar is shown) than you can use
+<a href="https://datatables.net/extensions/fixedcolumns/examples/">fixedColumns</a> which
+are always shown</p>
+  </li>
+  <li>another nice
+<a href="http://issues.wenzhixin.net.cn/bootstrap-table/index.html">bootstrap-table</a></li>
+</ul>
+
+<h1 id="ajax-datatable-rails">Ajax datatable rails</h1>
+
+<p>For this <a href="https://github.com/jbox-web/ajax-datatables-rails">gem</a> you need to
+define view_columns, by default <code class="highlighter-rouge">orderable</code> and <code class="highlighter-rouge">searchable</code> are true, and
+<code class="highlighter-rouge">cond</code> is <code class="highlighter-rouge">:like</code> (<code class="highlighter-rouge">:start_with</code>, <code class="highlighter-rouge">:end_with</code>, <code class="highlighter-rouge">:string_in</code>,… )</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def view_columns
+    @view_columns ||= {
+      name: { source: "User.name", cond: :like }
+    }
+  end
+</code></pre></div></div>
+
+<p>https://www.youtube.com/watch?v=bn9arlhfaXc&amp;t=302s</p>
+
+<p>https://datatables.net/forums/discussion/32542/datatables-and-webpack
+https://www.datatables.net/download/npm
+https://datatables.net/manual/server-side</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

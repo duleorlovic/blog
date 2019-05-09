@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Minitests Rails</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Minitests Rails</h1>
+    <p class="meta">Jan 22, 2018</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#minitest"><span class="tocnumber">1</span> <span class="toctext">Minitest</span></a></li><li class="toc_level-1 toc_section-2"><a href="#fixtures"><span class="tocnumber">2</span> <span class="toctext">Fixtures</span></a></li><li class="toc_level-1 toc_section-3"><a href="#minitest-classes"><span class="tocnumber">3</span> <span class="toctext">Minitest classes</span></a></li><li class="toc_level-1 toc_section-4"><a href="#minitest-model"><span class="tocnumber">4</span> <span class="toctext">Minitest model</span></a></li><li class="toc_level-1 toc_section-5"><a href="#minitest-services"><span class="tocnumber">5</span> <span class="toctext">Minitest services</span></a></li><li class="toc_level-1 toc_section-6"><a href="#minitest-controllers"><span class="tocnumber">6</span> <span class="toctext">Minitest controllers</span></a></li><li class="toc_level-1 toc_section-7"><a href="#minitest-integration"><span class="tocnumber">7</span> <span class="toctext">Minitest integration</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#minitest-routing"><span class="tocnumber">7.1</span> <span class="toctext">Minitest routing</span></a></li><li class="toc_level-2 toc_section-9"><a href="#minitest-helper"><span class="tocnumber">7.2</span> <span class="toctext">Minitest helper</span></a></li><li class="toc_level-2 toc_section-10"><a href="#minitest-system"><span class="tocnumber">7.3</span> <span class="toctext">Minitest system</span></a></li><li class="toc_level-2 toc_section-11"><a href="#webmock"><span class="tocnumber">7.4</span> <span class="toctext">Webmock</span></a></li><li class="toc_level-2 toc_section-12"><a href="#minitest-helpers"><span class="tocnumber">7.5</span> <span class="toctext">Minitest helpers</span></a></li><li class="toc_level-2 toc_section-13"><a href="#minitest-mock"><span class="tocnumber">7.6</span> <span class="toctext">Minitest Mock</span></a></li><li class="toc_level-2 toc_section-14"><a href="#minitest-mocha-feature-tests"><span class="tocnumber">7.7</span> <span class="toctext">Minitest mocha feature tests</span></a></li></ul></li><li class="toc_level-1 toc_section-15"><a href="#guard"><span class="tocnumber">8</span> <span class="toctext">Guard</span></a></li></ul></td></tr></tbody></table></div><h1 id="minitest">Minitest</h1>
+
+<p>Minitest real test examples: openstreetmap, redmine</p>
+
+<p>Mini test for rails <code class="highlighter-rouge">TestCase</code>s (like <code class="highlighter-rouge">ActiveSupport::TestCase</code>) inherits from
+<code class="highlighter-rouge">Minitest::Test</code> so you can use it <code class="highlighter-rouge">def test_method</code>, but Rails adds <code class="highlighter-rouge">test</code>
+method so it can be used like <code class="highlighter-rouge">test "my method" do</code>.  In minitests you can not
+have same test descriptions since it will be converted to same
+<code class="highlighter-rouge">test_my_method</code>.</p>
+
+<p>You can run specific test use <code class="highlighter-rouge">:line</code> or <code class="highlighter-rouge">-n test_name</code>.
+This also works for system test (so you do not need <code class="highlighter-rouge">system</code> in <code class="highlighter-rouge">rails
+test:system somefile</code>)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails test
+rails test:system
+# invoke test by line
+rails test test/models/article_test.rb:6
+# or name
+rails test -n test_example
+</code></pre></div></div>
+
+<p>You could also use ENV variables <code class="highlighter-rouge">rails test
+TEST=test/machine_with_callbacks_test.rb
+TESTOPTS="--name=test_should_run_validations_for_specific_state -v"</code></p>
+
+<p>Each test run will load all fixture data, run setup blocks, run test method, run
+teardown block, rollback fixtures.</p>
+
+<h1 id="fixtures">Fixtures</h1>
+
+<p>http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html</p>
+
+<p>Rails performs loading fixtures in tree steps: removing old fixture data, load
+fixture data and dump data into a method inside test case <code class="highlighter-rouge">users(:david)</code></p>
+
+<p>Defining fixtures:</p>
+<ul>
+  <li>use labels for associated belongs_to and has_many items (separated by comma)
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/fixtures/users.yml
+my_user:
+  name: My User
+  company: my_company
+
+# test/fixtures/companies.yml
+my_company:
+  name: My Company
+</code></pre></div>    </div>
+  </li>
+  <li>if you have polymorphic than put class name in brackets
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/fixtures/notifications.yml
+notification_for_task:
+  notifiable: my_task (Task)
+notification_for_comment:
+  notifiable: my_comment (Comment)
+</code></pre></div>    </div>
+
+    <p>No need to use brackets if you have <code class="highlighter-rouge">belongs_to :associated, class_name:
+'Activity'</code></p>
+  </li>
+  <li><code class="highlighter-rouge">created_at</code>, <code class="highlighter-rouge">updated_at</code>, <code class="highlighter-rouge">created_on</code> and <code class="highlighter-rouge">updated_on</code> is automatically
+Time.now</li>
+  <li>use ERB for dynamic creation. Note that you should use fixed dates instead of
+<code class="highlighter-rouge">published_at: &lt;%= Date.today.strftime('%Y-%m-%d')</code> so they are stable.
+Note that erb is evaluated before yml (for example <code class="highlighter-rouge">$LABEL</code>)
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% 15.times do |i| %&gt;
+medium_&lt;%= i %&gt;:
+  media_name: My &lt;%= i %&gt; Medium
+  published_at: 2018-10-11
+&lt;% end %&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>fixture label interpolation (<code class="highlighter-rouge">$LABEL</code> is <code class="highlighter-rouge">me</code>)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>me:
+  name: 'duke'
+  subdomain: me
+  # or use label
+  subdomain: $LABEL
+  email: $LABEL@email.com
+</code></pre></div>    </div>
+
+    <p>$Label is not interpolated within object like <code class="highlighter-rouge">name: { en: $LABEL }</code> (so I18n
+mobility does not work)</p>
+  </li>
+  <li>defaults
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DEFAULTS: &amp;DEFAULTS
+  name: $LABEL Name
+  created_on: &lt;%= 3.weeks.ago.to_s(:db) %&gt;
+
+first:
+  name: Smurf
+  &lt;&lt;: *DEFAULTS
+
+second:
+  name: Fraggle
+  &lt;&lt;: *DEFAULTS
+</code></pre></div>    </div>
+  </li>
+  <li>if you really want hardcoded ids you can use
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_language:
+  id: 5
+  name: English
+
+course:
+  language_id: 5
+  # note that this is just yml so you can not use
+  language_id: my_language.id
+  # but you can use erb
+  language_id: &lt;%= ActiveRecord::FixtureSet.identify :my_language %&gt;
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">pre_loaded_fixtures</code></li>
+  <li>
+    <p><code class="highlighter-rouge">use_transactional_tests</code>. In Rails 4 it was
+<code class="highlighter-rouge">use_transactional_fixtures</code> but since it could be factories not fixtures,
+that is renamed to <code class="highlighter-rouge">use_transactional_tests</code>. So to disable it you can use</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class FooTest &lt; ActiveSupport::TestCase
+  self.use_transactional_tests = false
+end
+</code></pre></div>    </div>
+  </li>
+  <li>when defining new fixtures, add them to the end, so you do not break current
+test for first page (when you use pagination)</li>
+  <li>load fixtures in development <code class="highlighter-rouge">rake db:fixtures:load</code> (put in your seed</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># db/seed.rb
+Rake::Task['db:fixtures:load'].invoke
+# https://github.com/rails/rails/blob/master/activerecord/lib/active_record/fixtures.rb
+already_proccessed = []
+Dir.entries("#{Rails.root}/test/fixtures").each do |file_name|
+  next unless file_name[-4..-1] == '.yml'
+
+  # foreach will read line by line
+  File.foreach("#{Rails.root}/test/fixtures/#{file_name}").grep /LABEL/ do |line|
+    column = line.match(/(\w*):.*\$LABEL/)[1]
+    klass = file_name[0..-5].singularize.camelize
+    next if already_proccessed.include? "#{klass}-#{column}"
+
+    puts "klass=#{klass} column=#{column}"
+    klass.constantize.find_each do |item|
+      item.send "#{column}=", item.send(column).tr('_', ' ')
+      item.save # email can not be saved with spaces
+    end
+    already_proccessed.append "#{klass}-#{column}"
+  end
+end
+puts 'db:seed and db:fixtures:load completed'
+</code></pre></div></div>
+<ul>
+  <li>to set devise password, you can add encrypted password on specific items
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>admin_user:
+  encrypted_password: &lt;%= User.new.send(:password_digest, 'password') %&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>if there are no colomns you can use <code class="highlighter-rouge">user: {}</code> curly brackets</li>
+  <li>
+    <p>Usage of fixtures</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># note that we are calling method users()
+users(:my_user)
+# we can get two
+users(:duke, mike)
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="minitest-classes">Minitest classes</h1>
+
+<p>To see all 6 base test clases go
+<a href="http://guides.rubyonrails.org/testing.html#a-brief-note-about-test-cases">http://guides.rubyonrails.org/testing.html#a-brief-note-about-test-cases</a>
+ActiveSupport::TestCase
+ActionMailer::TestCase
+ActionView::TestCase
+ActionDispatch::IntegrationTest
+ActiveJob::TestCase
+ActionDispatch::SystemTestCase</p>
+
+<h1 id="minitest-model">Minitest model</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'test_helper'
+
+class TaskTest &lt; ActiveSupport::TestCase
+  test 'a completed' do
+    task = Task.new
+    refute(task.complete?)
+    task.mark_completed
+    assert(task.complete?)
+  end
+
+  def test_that_is_skipped
+    skip "later"
+  end
+
+  test 'valid fixture' do
+    assert_valid_fixture activities
+  end
+
+  # test/test_helper.rb
+  def assert_valid_fixture(items)
+    assert items.map(&amp;:valid?).all?, (items.reject(&amp;:valid?).map { |c| (c.respond_to?(:name) ? "#{c.name} " : '') + c.errors.full_messages.to_sentence })
+  end
+end
+</code></pre></div></div>
+
+<p>Assertions
+<a href="http://docs.seattlerb.org/minitest/Minitest/Assertions.html">all</a></p>
+
+<ul>
+  <li><code class="highlighter-rouge">assert true</code> or <code class="highlighter-rouge">assert_block do end</code></li>
+  <li><code class="highlighter-rouge">assert_nil</code></li>
+  <li><code class="highlighter-rouge">assert_empty</code></li>
+  <li><code class="highlighter-rouge">assert_raises(NameError) do end</code></li>
+  <li><code class="highlighter-rouge">assert_match regex, actual_string</code></li>
+  <li><code class="highlighter-rouge">assert_includes(collection, object)</code></li>
+  <li><code class="highlighter-rouge">assert_equal(expected, actual)</code></li>
+</ul>
+
+<p>They all have oposite <code class="highlighter-rouge">refute_</code> methods, or <code class="highlighter-rouge">assert_not</code>
+They all accept additional string param that will be error message.</p>
+
+<p><a href="http://guides.rubyonrails.org/testing.html#rails-specific-assertions">http://guides.rubyonrails.org/testing.html#rails-specific-assertions</a>
+Rails also defines <code class="highlighter-rouge">assert_difference</code>, <code class="highlighter-rouge">assert_blank</code>, <code class="highlighter-rouge">assert_presence</code>,
+<code class="highlighter-rouge">assert_response</code>, <code class="highlighter-rouge">assert_redirected_to</code>, <code class="highlighter-rouge">assert_select</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    assert_difference "User.count", 1 do
+    end
+</code></pre></div></div>
+
+<p>You can create your own assertiongs (assert sorted)
+Reopen <code class="highlighter-rouge">module MiniTest::Assertions</code> when helper is used in all tests. If you
+need only for system tests (assert_selector) or integration test (assert select)
+than you need to reopen that particular class
+https://github.com/duleorlovic/premesti.se/blob/master/test/support/assert_equal_when_sorted_by_id.rb</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/application_system_test_case.rb
+require 'test_helper'
+
+class ApplicationSystemTestCase &lt; ActionDispatch::SystemTestCase
+  def assert_alert_message(text)
+    assert_selector 'div#alert-debug', text: text, visible: false
+  end
+
+  def assert_notice_message(text)
+    assert_selector 'div#notice-debug', text: text, visible: false
+  end
+end
+</code></pre></div></div>
+
+<p>for integration tests</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/support/assert_flash_message.rb
+class ActionDispatch::IntegrationTest
+  # assert_flash_message
+  def assert_alert_message(text)
+    assert_select 'div#alert-debug', text
+  end
+
+  def assert_notice_message(text)
+    assert_select 'div#notice-debug', text
+  end
+
+  def assert_select_field_error(text)
+    assert_select 'div.invalid-feedback', text
+  end
+end
+</code></pre></div></div>
+
+<p>For any method? you can assert for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assert_kind_of Array, exp
+</code></pre></div></div>
+
+<h1 id="minitest-services">Minitest services</h1>
+
+<p>Similar to model test you can create tests for services since there are PORO</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/services/credit_card_service_test.rb
+
+require 'test_helper'
+
+class CreditCardServiceTest &lt; ActiveSupport::TestCase
+  test 'it creates charges' do
+  end
+end
+</code></pre></div></div>
+
+<h1 id="minitest-controllers">Minitest controllers</h1>
+
+<p>Deprecated, use minitest integration tests</p>
+
+<h1 id="minitest-integration">Minitest integration</h1>
+
+<p>For integration we use <code class="highlighter-rouge">ActionDispatch::IntegrationTest</code> which gives methods:</p>
+<ul>
+  <li><code class="highlighter-rouge">get '/'</code>, <code class="highlighter-rouge">post path, params: {}</code> (params is required in rails_post_5),</li>
+  <li>also <code class="highlighter-rouge">put</code>, <code class="highlighter-rouge">patch</code>, <code class="highlighter-rouge">head</code>, <code class="highlighter-rouge">delete</code></li>
+  <li>for ajax use <code class="highlighter-rouge">post path, xhr: true</code></li>
+  <li>add <code class="highlighter-rouge">as: :json</code> as third param for json requests so you can use something like</li>
+  <li>
+    <p><code class="highlighter-rouge">assert_equal({ id: Article.last.id,
+title: "Ahoy!" }, response.parsed_body)</code>.</p>
+  </li>
+  <li><code class="highlighter-rouge">follow_redirect!</code></li>
+  <li><code class="highlighter-rouge">assert_redirected_to post_url(Post.last)</code></li>
+  <li><code class="highlighter-rouge">assert_response :success</code> (for http codes 200-299), <code class="highlighter-rouge">:redirect</code> (300-399), <code class="highlighter-rouge">:missing</code> (404), <code class="highlighter-rouge">:error</code> (500-599).</li>
+  <li><code class="highlighter-rouge">assert_select 'h1', user.email</code> . Note that white spaces and new lines are
+ignored</li>
+  <li><code class="highlighter-rouge">assert_difference "User.count", 1 do</code></li>
+  <li>You have access to <code class="highlighter-rouge">@request</code>, <code class="highlighter-rouge">@controller</code> and <code class="highlighter-rouge">@response</code> object, but only
+after you call <code class="highlighter-rouge">get</code>, <code class="highlighter-rouge">post</code>. You can set <code class="highlighter-rouge">request.remote_ip</code> by passing
+headers (note that http referrer is written as http referer (single r)
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>get sign_up_path, params: { user: { email: 'new@email.com' } }, headers: { 'REMOTE_ADDR': '123.123.123.123', HTTP_REFERER: 'http://domain.com' }
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">assert_select 'h1', 'Welcome'</code> is used to test view. View can be tested with
+<code class="highlighter-rouge">assert_match /Welcome/', response.body</code>.
+There are two forms of <em>assert_select selector, [equality], [message]</em> or
+using Nokogiri::XML::Node as element <em>assert_select element, selector,
+[equality]</em>.
+selector can be CSS selector as one string, or array with substitutions
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assert_select 'div#123' # exists &lt;div id='123'&gt;
+assert_select "a[href='http://www.example.com/diary/new']"
+assert_select 'a[href=?]', tasks_path
+assert_select 'input[value=?]', username   # substitute username
+assert_select 'input[value*=?]', username   # match when containing username
+
+# use custom pseudo class `:match(attribute_name, attribute_value)`
+assert_select "ol&gt;li:match('id', ?)", /item-\d+/       # exists li id='item-1'
+assert_select "div:match('id',?)", /\d+/        # exists div with non empty id
+
+assert_select 'div', 'Hello' # exists &lt;div&gt;Hello&lt;/div&gt;
+assert_select 'div', /hello/ # if div text matches
+assert_select 'div', false # no divs exists
+assert_select 'div', 4 # exactly 4 divs
+assert_select 'div', 4..5 # number of dives is in range
+</code></pre></div>    </div>
+
+    <p>To perform more than one quality tests in one assert you can use hash
+(assert_selector also use this hash param)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># instead of refute_select, for no div with my_name you can use
+assert_select 'a[href=?]', link, text: /my_name/, count: 0
+assert_select 'div', html: 'p', minimum: 2
+</code></pre></div>    </div>
+
+    <p>To check html in emails use assert_select_email</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assert_select_email do
+  items = assert_select "ol&gt;li"
+  items.each do
+    Work with items here...
+  end
+end
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Those integration tests are similar to Rspec request spec, and works full stack
+with no use of capybara. More info
+  https://github.com/rails/rails-dom-testing/blob/master/lib/rails/dom/testing/assertions/selector_assertions.rb
+similar to capybara <code class="highlighter-rouge">have_selector</code> but separate implementation <code class="highlighter-rouge">html selector</code>.
+<a href="http://www.rubydoc.info/github/rails/rails-dom-testing/Rails%2FDom%2FTesting%2FAssertions%2FSelectorAssertions%3Aassert_select">http://www.rubydoc.info/github/rails/rails-dom-testing/Rails%2FDom%2FTesting%2FAssertions%2FSelectorAssertions%3Aassert_select</a>
+  After request is made you can also access <code class="highlighter-rouge">@controller</code>, <code class="highlighter-rouge">@request</code> and
+  <code class="highlighter-rouge">@response</code> (same as <code class="highlighter-rouge">response</code>).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/controllers/projects_controller_test.rb
+require 'test_helper'
+
+class ProjectsControllerTest &lt; ActionDispatch::IntegrationTest
+  setup do
+    @project = create :project
+  end
+
+  # called after every single test
+  teardown do
+    # when controller is using cache it may be a good idea to reset it afterwards
+    Rails.cache.clear
+  end
+
+  test 'show' do
+    get project_path(@project)
+    assert_select "#tutorial-#{tutorials(:priced_course_first_free_tutorial).id}", /Watch this lesson now/
+    assert_select "#tutorial-#{tutorials(:priced_course_third_tutorial).id}", text: /Watch this lesson now/, count: 0
+
+    # or you can parse `response.body` do it manually
+
+    doc = Nokogiri::HTML response.body
+    # you can get all text with doc.text.split.join(' ')
+    el = doc.search "#tutorial-#{tutorials(:priced_course_first_free_tutorial).id}"
+    assert_match 'Watch this lesson now', el.text
+    el = doc.search "#tutorial-#{tutorials(:priced_course_third_tutorial).id}"
+    assert_no_match 'Watch this lesson now', el.text
+  end
+
+  test "the create method creates project" do
+    post projects_url, params: { project: { name: 'Duke' } }
+    assert_redirected_to projects_path
+    # also available: assert_response :redirect
+    follow_redirect!
+    assert_select '#my-id', /dule/
+  end
+end
+</code></pre></div></div>
+
+<h2 id="minitest-routing">Minitest routing</h2>
+
+<p>It uses <code class="highlighter-rouge">assert_routing</code>.</p>
+
+<h2 id="minitest-helper">Minitest helper</h2>
+
+<p>Uses <code class="highlighter-rouge">assert_dom_equal</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/helpers/projects_helper_test.rb
+require 'test_helper'
+class ProjectsHelperTest &lt; ActionView::TestCase
+  test "project on schedule" do
+    project = Project.new name: 'Duke'
+    project.stubs(:on_schedule?).returns(true)
+    actual= name_with_status(project)
+    expected = "&lt;span class='on-schedule'&gt;Duke&lt;/span&gt;"
+    assert_dom_equal expected, actual
+  end
+end
+</code></pre></div></div>
+
+<h2 id="minitest-system">Minitest system</h2>
+
+<p>Feature tests are run in different process than rails so we need database
+cleaner gem. With system tests, we can use internal mechanism to roll back db
+changes.
+Before we used feature specs for full application integration testing, but now
+we should use system specs (which also uses capybara and webdriver with chrome).</p>
+
+<p>System tests are not included in default test suite if you run <code class="highlighter-rouge">rails test</code> (you
+should run <code class="highlighter-rouge">rake test:system</code>), but if you run specific test than it will be run
+<code class="highlighter-rouge">rails test test/system/my_test.rb</code>.</p>
+
+<p>Note that if you use puma with multiple workers than
+<code class="highlighter-rouge">ActionMailer::Base.deliveries.size</code> could be different in rails process and in
+test process, so use <code class="highlighter-rouge">workers 0</code> in <code class="highlighter-rouge">config/puma/test.rb</code>.</p>
+
+<p>In system test you can’t mock OmniAuth.mock_auth so use integration test for
+that.</p>
+
+<p>Capybara assertions
+<a href="http://www.rubydoc.info/gems/capybara/Capybara/Minitest/Assertions">http://www.rubydoc.info/gems/capybara/Capybara/Minitest/Assertions</a></p>
+
+<ul>
+  <li><code class="highlighter-rouge">assert_text /dule/</code></li>
+  <li><code class="highlighter-rouge">assert_selector 'a', text: 'duke'</code></li>
+  <li><code class="highlighter-rouge">assert_equal admin_path, page.current_url</code></li>
+  <li><code class="highlighter-rouge">page.accept_confirm</code> to confirm alert dialog box</li>
+</ul>
+
+<h2 id="webmock">Webmock</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'webmock'
+
+# config/initializers/webmock.rb
+if Rails.env.test?
+  require 'webmock'
+  WebMock.disable_net_connect!(allow_localhost: true)
+end
+
+# test/test_helper.rb
+require 'webmock/minitest'
+</code></pre></div></div>
+
+<h2 id="minitest-helpers">Minitest helpers</h2>
+
+<p>Add a line in <code class="highlighter-rouge">test/test_helper.rb</code> to include files from <code class="highlighter-rouge">test/a</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/test_helper.rb
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../../config/environment', __FILE__)
+Dir[Rails.root.join('test/a/**/*.rb')].each { |f| require f }
+require 'rails/test_help'
+require 'minitest/autorun'
+require 'webmock/minitest'
+
+class ActiveSupport::TestCase
+  # create(:user) instead FactoryBot.create :user
+  include FactoryBot::Syntax::Methods
+  # stub_something
+  include WebmockHelper
+  # t('successfully') instead I18n.t('successfully')
+  include AbstractController::Translation
+  # devise method: sign_in user
+  include Devise::Test::IntegrationHelpers
+  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
+  fixtures :all
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/a/webmock_helper.rb
+module WebmockHelper
+  def stub_s3
+    stub_request(:get, /s3.amazonaws.com/).to_return(status: 200, body: 'text')
+    yield if block_given?
+  end
+end
+</code></pre></div></div>
+
+<p>I prefer to use factories on specific integration test so when I need to remove
+specific fixtures I use rails <code class="highlighter-rouge">Courses.delete_all</code>. I do not use database
+cleaner because it complicates thinks because I need to load some specific
+fixtures (like users) and remove other. Not sure if that will remove fixtures
+for other tests
+https://stackoverflow.com/a/28539464/287166</p>
+
+<p>For pause</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/a/pause_helper.rb
+module PauseHelper
+  # you can use byebug, but it will stop rails so you can not navigate to other
+  # pages or make another requests in chrome while testing
+  def pause
+    $stderr.write('Press CTRL+j or ENTER to continue') &amp;&amp; $stdin.gets
+  end
+end
+
+class ActionDispatch::SystemTestCase
+  include PauseHelper
+end
+</code></pre></div></div>
+
+<h2 id="minitest-mock">Minitest Mock</h2>
+
+<p>You need to require autorun</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/test_helper.rb
+require 'minitest/autorun'
+</code></pre></div></div>
+
+<p>http://ruby-doc.org/stdlib-2.0.0/libdoc/minitest/rdoc/MiniTest/Mock.html</p>
+
+<p>You can mock return values:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@mock = Minitest::Mock.new
+@mock.expect(:meaning_of_life, 42)
+@mock.meaning_of_life # =&gt; 42
+</code></pre></div></div>
+
+<p>and also for arguments and verify their type or value</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@mock.expect(:do_something_with, true, [some_obj, true])
+@mock.do_something_with(some_obj, true) # =&gt; true
+
+@mock.expect(:uses_any_string, true, [String])
+@mock.uses_any_string("foo") # =&gt; true
+@mock.verify  # =&gt; true
+
+@mock.expect(:uses_one_string, true, ["foo"]
+@mock.uses_one_string("bar") # =&gt; true
+@mock.verify  # =&gt; raises MockExpectationError
+</code></pre></div></div>
+
+<p>You can use <code class="highlighter-rouge">Object.stub</code> https://github.com/seattlerb/minitest#stubs
+https://github.com/seattlerb/minitest#mocks
+https://stackoverflow.com/questions/10990622/how-do-i-stub-a-method-to-raise-an-error-using-ruby-minitest</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">require</span> <span class="s2">"minitest/autorun"</span>
+
+<span class="n">class</span> <span class="n">MyModel</span>
+  <span class="n">def</span> <span class="n">my_method</span><span class="p">;</span> <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">class</span> <span class="n">TestRaiseException</span> <span class="p">&lt;</span> <span class="n">MiniTest</span><span class="p">::</span><span class="n">Unit</span><span class="p">::</span><span class="n">TestCase</span>
+  <span class="n">def</span> <span class="n">test_raise_exception</span>
+    <span class="k">model</span> <span class="p">=</span> <span class="n">MyModel</span><span class="p">.</span><span class="n">new</span>
+    <span class="n">raises_exception</span> <span class="p">=</span> <span class="n">Proc</span><span class="p">.</span><span class="n">new</span> <span class="p">{</span> <span class="n">raise</span> <span class="n">ArgumentError</span><span class="p">.</span><span class="n">new</span> <span class="p">}</span>
+    <span class="k">model</span><span class="p">.</span><span class="n">stub</span> <span class="p">:</span><span class="n">my_method</span><span class="p">,</span> <span class="n">raises_exception</span> <span class="k">do</span>
+      <span class="n">assert_raises</span><span class="p">(</span><span class="n">ArgumentError</span><span class="p">)</span> <span class="p">{</span> <span class="k">model</span><span class="p">.</span><span class="n">my_method</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Stub works also with some custom doubles mock. You can define singleton method
+on mock <code class="highlighter-rouge">def mock.apply; end</code> but can not use other methods or variables… in
+this case use <code class="highlighter-rouge">mock.expect :method, return_value</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/models/user_test.rb
+require 'test_helper'
+class UserTest &lt; ActiveSupport::TestCase
+  test '#apply_subscription' do
+    mock = Minitest::Mock.new
+    def mock.apply; true; end
+    # or
+    mock.expect :apply, true
+
+    SubscriptionService.stub :new, mock do
+      user = users(:one)
+      assert user.apply_subscription
+    end
+  end
+end
+</code></pre></div></div>
+
+<h2 id="minitest-mocha-feature-tests">Minitest mocha feature tests</h2>
+
+<p>Rails calls “integration tests” as “request tests” and it covers both controller
+and view code. If logic is more complex, it should be written in model anyway,
+and use lower level tests.</p>
+
+<p>With capybara:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+  gem "minitest-rails-capybara"
+  gem "mocha", require: false
+
+# test/test_helper.rb
+require "minitest/rails/capybara"
+require "mocha/mini_test"
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  test "full double" do
+    stubby = stub(name: "Dule", wight: 100)
+    assert_equal("Dule", stubby.name)
+  end
+
+  test "verifying double" do
+    stubby = stub(name: "Dule", weight: 100)
+    stubby.responds_like(Project.new)
+    # or
+    stubby.responds_like_instance_of(Project)
+    # this is find since project.name exists
+    stubby.name
+    # this will raise error
+    skip
+    stubby.weight
+  end
+
+  test "partial double" do
+    project = Project.new name: 'Dule'
+    # we can stub method on any ruby object
+    project.stubs(:name)
+    # returns nothing unless we use returns
+    assert_nil(project.name)
+    # we can stub non existing methods
+    project.stubs(:asd)
+    assert_nil(project.asd)
+    # we can define return
+    project.stubs(:due_date).returns(Date.today)
+    assert_equal(project.due_date, Date.today)
+    # we can stub classes
+    Project.stubs(:find).returns(Project.new(name: 'dule'))
+    project = Projet.find(1)
+    assert_equal('dule', project.name)
+    # we can stub any instance
+    Project.any_instance.stubs(:save).returns(false)
+  end
+
+  test "mock expectation" do
+    mock_project = Project.new name: 'Not important since expect returns'
+    mock_project.expects(:name).returns('Duke')
+    # previous expectation will fail if we have not called it
+    assert_equal('Duke', mock_project.name)
+    # we can set number of times it is called
+    mock_project.expects(:name).twice
+    mock_project.name
+    mock_project.name
+    # we can set arguments
+    mock_task = Task.new
+    mock_task.expects(:mark_as_completed).with(instance_of(Date)).returns(instance_of(Date))
+    mock_task.mark_as_completed Date.today
+    mock_task.expects(:mark_as_completed).with(instance_of(String)).returns(nil)
+    mock_task.mark_as_completed "bla"
+  end
+</code></pre></div></div>
+
+<h1 id="guard">Guard</h1>
+
+<p>For guard minitest use <code class="highlighter-rouge">guard-minitest</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development do/a  \
+  gem 'guard'
+  gem 'guard-minitest'
+bundle
+guard init minitest
+vi Guardfile
+# uncomment rails section
+# change some lines in Guardfile
+guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
+</code></pre></div></div>
+
+<ul>
+  <li>to show full backtrace use <code class="highlighter-rouge">BACKTRACE=blegga rails test</code></li>
+  <li>
+    <p>to take screenshot you can call <code class="highlighter-rouge">take_screenshot</code> in tests.
+Automatically taking screenshot when tast fails is included in teardown by
+default, and you can override it
+https://api.rubyonrails.org/v5.2/classes/ActionDispatch/SystemTesting/TestHelpers/ScreenshotHelper.html#method-i-take_screenshot
+By default <code class="highlighter-rouge">image_name</code> is
+<a href="https://github.com/rails/rails/blob/fc5dd0b85189811062c85520fd70de8389b55aeb/actionpack/lib/action_dispatch/system_testing/test_helpers/screenshot_helper.rb#L42">method_name</a>
+By default <code class="highlighter-rouge">display_image</code> will print <code class="highlighter-rouge">puts image_path</code> but we can open image</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/application_system_test_case.rb
+require 'test_helper'
+
+class ApplicationSystemTestCase &lt; ActionDispatch::SystemTestCase
+  driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+
+  def display_image
+    system "gnome-open #{image_path} &amp;"
+    "Opening screenshot: gnome-open #{image_path}"
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>test og meta tags for jekyll</li>
+  <li>https://gist.github.com/thbar/10be2ea924b81f78d24ab800461bfee3</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

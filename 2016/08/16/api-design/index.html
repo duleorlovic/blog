@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Api design</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Api design</h1>
+    <p class="meta">Aug 16, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#rest-and-json"><span class="tocnumber">1</span> <span class="toctext">REST and JSON</span></a></li><li class="toc_level-1 toc_section-2"><a href="#jsonapi-resources-jr"><span class="tocnumber">2</span> <span class="toctext">JSONAPI Resources JR</span></a></li><li class="toc_level-1 toc_section-3"><a href="#postman"><span class="tocnumber">3</span> <span class="toctext">Postman</span></a></li><li class="toc_level-1 toc_section-4"><a href="#current-user-or-me"><span class="tocnumber">4</span> <span class="toctext">Current user or me</span></a></li><li class="toc_level-1 toc_section-5"><a href="#post-vs-put"><span class="tocnumber">5</span> <span class="toctext">POST vs PUT</span></a></li><li class="toc_level-1 toc_section-6"><a href="#use-nouns"><span class="tocnumber">6</span> <span class="toctext">Use nouns</span></a></li><li class="toc_level-1 toc_section-7"><a href="#response-status-codes"><span class="tocnumber">7</span> <span class="toctext">Response status codes:</span></a></li><li class="toc_level-1 toc_section-8"><a href="#generate-json"><span class="tocnumber">8</span> <span class="toctext">Generate JSON</span></a></li><li class="toc_level-1 toc_section-9"><a href="#activemodelserializer"><span class="tocnumber">9</span> <span class="toctext">ActiveModelSerializer</span></a></li><li class="toc_level-1 toc_section-10"><a href="#json-api"><span class="tocnumber">10</span> <span class="toctext">json api</span></a></li><li class="toc_level-1 toc_section-11"><a href="#jbuilder"><span class="tocnumber">11</span> <span class="toctext">JBuilder</span></a></li><li class="toc_level-1 toc_section-12"><a href="#api-documentation"><span class="tocnumber">12</span> <span class="toctext">API Documentation</span></a><ul><li class="toc_level-2 toc_section-13"><a href="#test-and-documentation-from-rspec"><span class="tocnumber">12.1</span> <span class="toctext">Test and Documentation from rspec</span></a></li><li class="toc_level-2 toc_section-14"><a href="#swagger-ui-grape"><span class="tocnumber">12.2</span> <span class="toctext">Swagger ui grape</span></a></li><li class="toc_level-2 toc_section-15"><a href="#swagger-docs"><span class="tocnumber">12.3</span> <span class="toctext">Swagger docs</span></a></li></ul></li><li class="toc_level-1 toc_section-16"><a href="#apipie-rails"><span class="tocnumber">13</span> <span class="toctext">Apipie rails</span></a></li><li class="toc_level-1 toc_section-17"><a href="#grape"><span class="tocnumber">14</span> <span class="toctext">Grape</span></a></li><li class="toc_level-1 toc_section-18"><a href="#guide"><span class="tocnumber">15</span> <span class="toctext">Guide</span></a></li><li class="toc_level-1 toc_section-19"><a href="#tips"><span class="tocnumber">16</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-20"><a href="#jwt-json-web-tokens"><span class="tocnumber">17</span> <span class="toctext">JWT Json web tokens</span></a></li></ul></td></tr></tbody></table></div><h1 id="rest-and-json">REST and JSON</h1>
+
+<p>Just to note that <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST
+api</a> means:
+Statelessness (no data between requests), Resource identification per request
+(update only one row, get could have more rows), Representational state transfer
+(returned representation JSON is enough to identify and manipulate row). REST
+enable cacheability so we can scale to large number of components.</p>
+
+<p>Once API is exposed, you should not modify it, except for critical bugfixes. Use
+namespace</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace :api, default: { format: :json } do
+  namespace :v1 do
+    resources :expenses, only: [:index, :create, :update, :destroy]
+  end
+end
+</code></pre></div></div>
+
+<p>If you use jbuilder, than create folder <code class="highlighter-rouge">app/views/api/v1/expenses</code> for view and
+controller <code class="highlighter-rouge">Api::V1::ExpensesController</code></p>
+
+<h1 id="jsonapi-resources-jr">JSONAPI Resources JR</h1>
+
+<p><a href="https://github.com/cerebris/jsonapi-resources">jsonapi-resources</a> give us
+implementation of JSONAPI</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g jsonapi:resource Api::V1::Post
+rails g jsonapi:controller Api::V1::Post
+
+namespace :api do
+  namespace :v1 do
+    jsonapi_resources :posts
+  end
+end
+
+# config/initializers/jsonapi_resources.rb:
+JSONAPI.configure do |config|
+  # built in paginators are :none, :offset, :paged
+  config.default_paginator = :paged
+  config.default_page_size = 50
+  config.maximum_page_size = 1000
+
+  # Do this if you use UUID's instead of Integers for id's
+  config.resource_key_type = :uuid
+end
+</code></pre></div></div>
+
+<p>Each <a href="http://jsonapi-resources.com/v0.9/guide/resources.html">resource</a> can be
+configured with:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">attributes</code> <code class="highlighter-rouge">attribute</code>
+    <ul>
+      <li>there are also <code class="highlighter-rouge">id</code> and <code class="highlighter-rouge">type</code>. Computed fields can use <code class="highlighter-rouge">@model</code> but also
+need to be defined with <code class="highlighter-rouge">attribute</code></li>
+      <li><code class="highlighter-rouge">fetchable_fields</code> all attributes are fetchable, and if you want to remove
+some than override method</li>
+      <li><code class="highlighter-rouge">self.updatable_fields</code>, <code class="highlighter-rouge">self.creatable_fields</code> to override use class methods
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ContactResource &lt; JSONAPI::Resource
+attributes :name_first, :name_last, :full_name
+def full_name
+  "#{@model.name_first}, #{@model.name_last}"
+end
+def self.updatable_fields(context)
+  super - [:full_name]
+end
+# class method can be defines inside class &lt;&lt;
+class &lt;&lt; self
+  def creatable_fields(context)
+    super - [:full_name]
+  end
+end
+end
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">has_many</code></li>
+  <li><code class="highlighter-rouge">filters</code>, <code class="highlighter-rouge">filter</code></li>
+</ul>
+
+<h1 id="postman">Postman</h1>
+
+<p>You can use plugin
+<a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en">Postman packaged
+app</a>
+or <a href="https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en">Postman REST
+client</a>
+to send API requests.</p>
+
+<p>If you want to send json request from Postman than use header <code class="highlighter-rouge">Accept:
+application/json</code>. If server responds with json, it can set header
+<code class="highlighter-rouge">Content-type: Application/json</code>.</p>
+
+<p>Nice extension is <a href="https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa">JSON
+Formatter</a>
+that will render json response in readable way.</p>
+
+<p>Curl commands:</p>
+
+<p><a href="/2016/02/01/bash/#curl">curl commands</a></p>
+
+<h1 id="current-user-or-me">Current user or me</h1>
+
+<p>Instead of <code class="highlighter-rouge">/users/123/settings</code> you can create <code class="highlighter-rouge">/me/settings</code> endpoint.</p>
+
+<h1 id="post-vs-put">POST vs PUT</h1>
+
+<p>When an user has one image (image is part of the user) than it is fine to do
+<code class="highlighter-rouge">PUT /users/1/image</code> when you want to update or create image.
+<code class="highlighter-rouge">PUT</code> should be idempotent (also <code class="highlighter-rouge">DELETE</code> so you can call it several times).</p>
+
+<p>If user have multiple images, than do not use nested, but use <code class="highlighter-rouge">POST
+/users/1/images</code> to create and <code class="highlighter-rouge">PUT /images/1</code> to update image.</p>
+
+<h1 id="use-nouns">Use nouns</h1>
+
+<p>Only verb should be HTTP method (GET, POST, PUT, DELETE). Url should contain
+only nouns that represent resource. So instead <code class="highlighter-rouge">POST /users/1/send-message</code> it’s
+better to use <code class="highlighter-rouge">POST /users/1/messages</code> with <code class="highlighter-rouge">Content-Type: application/json
+{ "message": "Hello" }</code>.</p>
+
+<p>If you need to send messages to multiple users, you can create new endpoint and
+send data there <code class="highlighter-rouge">POST /group-messages; Content-Type: application/json; { [ {
+"user" : { "id" : 1 }, "message" : "Hello 1" },...] }</code></p>
+
+<p>Use url params for search/filter <code class="highlighter-rouge">GET /places?lat=123&amp;lon=123</code>.</p>
+
+<p>For authorization use headers <code class="highlighter-rouge">POST /users/1/message; Authorization: Bearer
+123</code>.</p>
+
+<p>HTTP body can contain json data.</p>
+
+<h1 id="response-status-codes">Response status codes:</h1>
+
+<p><a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">w3</a></p>
+
+<p>Success:</p>
+
+<ul>
+  <li><em>200 OK</em> (for GET)</li>
+  <li><em>201 Created</em> successful POST, login</li>
+  <li><em>202 Accepted</em> Accepted but is being processed async</li>
+  <li><em>204 No Content</em> <code class="highlighter-rouge">:no_content</code> success delete, log out, sign out</li>
+</ul>
+
+<p>For errors we could respond with <code class="highlighter-rouge">head :not_found</code> (and hide sensitive
+information) but its better to send the reason and some info (<code class="highlighter-rouge">render json:
+{ error: 'Some problem', error_status: 401, error_code: 1234 }, status: 401</code>)</p>
+
+<ul>
+  <li><em>303 See Other</em> when session create (login) email does not exists</li>
+  <li><em>400 Bad Request</em>  <code class="highlighter-rouge">:bad_request</code> when we have <code class="highlighter-rouge">ParameterMissing</code></li>
+  <li><em>401 Unauthorized</em> <code class="highlighter-rouge">:unauthorized</code> used for wrong password on login form, or
+when there is no current_user but it should exists.
+    <ul>
+      <li>note that it should not send <code class="highlighter-rouge">:unauthorized</code> when user is changing password
+and type incorect old one (he still should be logged in, and not automatically
+logged out since unauthorized request occurs).</li>
+    </ul>
+  </li>
+  <li><em>403 Forbidden</em> <code class="highlighter-rouge">:forbidden</code> when current user exists but is forbidden from
+accessing this data</li>
+  <li><em>404 Not Found</em> <code class="highlighter-rouge">:not_found</code> url is not valid router or resource does not
+exist</li>
+  <li><em>410 Gone</em> data has been deleted, deactivated …</li>
+  <li><em>422 Unprocessable Entity</em> <code class="highlighter-rouge">:unprocessable_entity</code> change password form but
+current password is bad, or form validation errors <code class="highlighter-rouge">if ! @user.update() render
+json: @user.errors.full_messages.join(','), status: :unprocessable_entity</code>, or
+when creating new resource but uniqueness validation (already exists) prevents</li>
+</ul>
+
+<p>Server errors</p>
+
+<ul>
+  <li><code class="highlighter-rouge">500 Internal Server Error</code> unexpected happened on server side</li>
+  <li><code class="highlighter-rouge">503 Service Unavailable</code> api is overloaded or in maintenance mode</li>
+</ul>
+
+<p>Common responses:
+Rails does not come with <code class="highlighter-rouge">:unauthorized</code> exception
+https://stackoverflow.com/questions/25892194/does-rails-come-with-a-not-authorized-exception
+so you can create one</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/authorization_exception.rb
+class AuthorizationException &lt; Exception
+end
+</code></pre></div></div>
+<p>and you can use for example in <code class="highlighter-rouge">login</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/api/v2/sessions_controller.rb
+  def subscriber_login
+    # this will raise ActiveRecord::RecordNotFound
+    subscriber = Subscriber.find_by! username: params[:username]
+    # instead of bang we could use find_by and manually raise, result is the same
+    raise ActiveRecord::RecordNotFound.new("Couldn't find Subscriber") unless subscriber
+    raise AuthorizationException.new('Password is not correct') unless subscriber.authenticate(params[:password])
+    render json: { auth_token: JwtAuth.encode_subscriber_id(subscriber.id) }
+</code></pre></div></div>
+
+<p>and rescue from those exceptions and show json message</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+  rescue_from JWT::DecodeError do |e|
+    render json: { error: e.message }, status: :bad_request
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |e|
+    render json: { error: e.message }, status: :not_found
+  end
+
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  # used with params.permit(:domain).fetch(:domain)
+  rescue_from ActionController::ParameterMissing do |e|
+    render json: { error: e.message }, status: :bad_request
+  end
+
+  rescue_from AuthorizationException do |e|
+    render json: { error: e.message }, status: :unauthorized
+  end
+</code></pre></div></div>
+
+<p>Usually in case of validation error, I put only all error messages in one field
+<code class="highlighter-rouge">error</code> for example :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/users_controller.rb
+
+  def send_password
+    alert = "Failed to send new password"
+    format.json { render json: { error: alert }, status: :unprocessable_entity }
+  end
+
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      render json: @user, status: :created
+    else
+      render json: { error: @user.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
+
+  def update
+    unless @user.update(user_params)
+      render json: { error: @user.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
+  end
+</code></pre></div></div>
+
+<p>In angular, I use <code class="highlighter-rouge">connectionInterceptor</code> to set that <code class="highlighter-rouge">data.error</code> in case of
+other errors like: server offline.</p>
+
+<p>In case of success, I use <code class="highlighter-rouge">message</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  message = "Successfully updated"
+  format.json { render json: { message: message } }
+</code></pre></div></div>
+
+<h1 id="generate-json">Generate JSON</h1>
+
+<p><a href="http://api.rubyonrails.org/classes/ActiveModel/Serializers/JSON.html">default ActiveModel JSON
+Serializer</a>
+can be customized with <code class="highlighter-rouge">render json: @phones.as_json(only: [:id], expect:
+[:created_at], include: :posts)</code>
+but for larger API you need to have centralized serializers.</p>
+
+<h1 id="activemodelserializer">ActiveModelSerializer</h1>
+
+<p>To generate json you can use
+<a href="https://github.com/rails-api/active_model_serializers">active_model_serializers</a>
+<a href="https://github.com/rails-api/active_model_serializers/tree/0-10-stable/docs">documents</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# serializer for api
+gem 'active_model_serializers', '~&gt;0.10.0'
+HERE_DOC
+bundle
+
+rails g serializer user
+</code></pre></div></div>
+
+<p>If you rely on rails convention (empty <code class="highlighter-rouge">def show;end</code>, implicit render json and
+not specify <code class="highlighter-rouge">render @user</code>) than serializer will not be used. If you specify
+<code class="highlighter-rouge">render json: @user</code> or <code class="highlighter-rouge">render json: @users</code> than it will use <code class="highlighter-rouge">UserSerialier</code>.
+If you have some other structure like <code class="highlighter-rouge">render json: { user: @user }</code> than
+serializer will not be used. You can manully call <code class="highlighter-rouge">render json: @user,
+serializer: UserSerialier</code> or <code class="highlighter-rouge">render json: @users, each_serializer:
+UserSerialier</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/serializers/application_serializer.rb
+class ApplicationSerializer&lt; ActiveModel::Serializer
+  include Rails.application.routes.url_helpers
+end
+# app/serializers/user_serializer.rb
+def UserSerializer &lt; ApplicationSerializer
+  attributes :id, :name
+end
+</code></pre></div></div>
+
+<p>Associations are handled in
+<a href="http://www.rubydoc.info/gems/active_model_serializers/ActiveModel/Serializer/Reflection">reflections</a></p>
+
+<p>You can call <code class="highlighter-rouge">@users.active_model_serializer.new(@users, options).to_json</code>
+For grape you can use
+<a href="https://github.com/ruby-grape/grape-active_model_serializers">https://github.com/ruby-grape/grape-active_model_serializers</a></p>
+
+<h1 id="json-api">json api</h1>
+
+<p><a href="http://jsonapi.org/">http://jsonapi.org/</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; config/initializers/active_model_serializers.rb &lt;&lt; HERE_DOC
+ActiveModelSerializers.config.adapter = :json_api
+HERE_DOC
+</code></pre></div></div>
+
+<h1 id="jbuilder">JBuilder</h1>
+
+<p>jBuilder is already included in rails and is nice if you already have some
+views.</p>
+
+<h1 id="api-documentation">API Documentation</h1>
+
+<p>If you use rspec then go with
+<a href="https://github.com/zipmark/rspec_api_documentation">rspec_api_documentation</a>,
+or swagger</p>
+
+<h2 id="test-and-documentation-from-rspec">Test and Documentation from rspec</h2>
+
+<p>rspec_api_documentations/dsl and generate api docs <code class="highlighter-rouge">rake docs:generate</code> and
+<code class="highlighter-rouge">gnome-open docs/</code>:
+You need to put tests in <code class="highlighter-rouge">/spec/acceptance</code> in order to get <a href="https://github.com/zipmark/rspec_api_documentation#rake-task">generate docs
+working</a>
+Configuration</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/support/rspec_api_documentation.rb
+RspecApiDocumentation.configure do |config|
+  config.docs_dir = Rails.root.join('public', 'api')
+  config.format = :json
+  config.curl_host = 'admin.xceednet.com'
+  used_headers = ['Content-Type', 'Authentication']
+  ignored_headers = ['Cookie', 'Host']
+  config.curl_headers_to_filter = ignored_headers
+  config.request_headers_to_include = used_headers
+  config.response_headers_to_include = used_headers
+end
+</code></pre></div></div>
+
+<p>Usage:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">resource</code> synonim for describe, but you need to use <code class="highlighter-rouge">resource</code> if you want to
+generate docs and have</li>
+  <li><code class="highlighter-rouge">get</code>, <code class="highlighter-rouge">post</code>, <code class="highlighter-rouge">patch</code>, <code class="highlighter-rouge">delete</code>
+    <ul>
+      <li>you can validate <code class="highlighter-rouge">response_status</code> and <code class="highlighter-rouge">response_body</code> which is
+<code class="highlighter-rouge">JSON.parse(response.body)</code></li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">parameter</code> used to define params</li>
+  <li><code class="highlighter-rouge">example_request</code> is the same as calling <code class="highlighter-rouge">example</code> (synonim for <code class="highlighter-rouge">it</code>) and
+<code class="highlighter-rouge">do_request</code></li>
+  <li><code class="highlighter-rouge">send :name</code> to get value of <code class="highlighter-rouge">name</code></li>
+  <li><code class="highlighter-rouge">no_doc</code></li>
+  <li><code class="highlighter-rouge">explanation</code> can be inside resource or it block</li>
+</ul>
+
+<p>If you got <a href="http://www.rubydoc.info/gems/jsonapi-resources/JSONAPI">415 error UNSUPPORTED_MEDIA_TYPE
+</a> than set header.
+If you got <code class="highlighter-rouge">is not a valid resource</code> code 101, than you mispelled <code class="highlighter-rouge">type</code> top
+level attribute (for example <code class="highlighter-rouge">users</code>) on <a href="http://jsonapi.org/format/#document-resource-objects">resource
+object</a>.
+If you got <code class="highlighter-rouge">"no implicit conversion of nil into Hash"</code> than problem is that we
+need to declare <code class="highlighter-rouge">attribute</code> on the resource.
+If you for <code class="highlighter-rouge">does not contain a key</code> code 109, than you need to add <code class="highlighter-rouge">:id</code> to both
+“data” and “url” and use different name, for example this is duplication for
+update resources:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  patch '/v1/organizations/:organization_id' do
+    let(:organization) { create :organization, name: 'My Organization' }
+    let(:organization_id) { organization.id }
+    parameter :id, 'Id of the organization.', required: true
+    let(:id) { organization.id }
+  end
+</code></pre></div></div>
+
+<p>HTTP codes are standard (200 get, 201 created, 204 deleted).</p>
+
+<p>You can debug with:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tail -f log/test.log
+</code></pre></div></div>
+
+<h2 id="swagger-ui-grape">Swagger ui grape</h2>
+
+<p><a href="https://github.com/kendrikat/grape-swagger-ui">https://github.com/kendrikat/grape-swagger-ui</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'grape-swagger'
+gem 'grape-swagger-ui'
+
+
+# app/api/v1/root.rb
+require 'grape-swagger'
+module API
+  module V1
+    class Root &lt; Grape::API
+      mount Events
+      add_swagger_documentation
+    end
+  end
+end
+
+# config/initializers/assets.rb
+config.assets.precompile += %w(swagger_ui.js swagger_ui.css swagger_ui_print.css swagger_ui_screen.css)
+</code></pre></div></div>
+
+<h2 id="swagger-docs">Swagger docs</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development do/a  \
+  # use github until it is merged https://github.com/richhollis/swagger-docs/pull/144
+  gem 'swagger-docs', git: 'https://github.com/kwerle/swagger-docs'
+o
+</code></pre></div></div>
+
+<p>Basepath is important since other json files will be looked there.</p>
+
+<p><code class="highlighter-rouge">param</code> first argument is: <code class="highlighter-rouge">:query</code>, <code class="highlighter-rouge">:path</code> or <code class="highlighter-rouge">:form</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  swagger_controller :customer_sessions, "Customer Sessions"
+
+  swagger_api :create do
+    summary "Customer sign in"
+    notes "Sign in form"
+    param :form, :email, :string, :required, :Email"
+  end
+</code></pre></div></div>
+
+<p>To generate json, you need to run <code class="highlighter-rouge">rake swagger:docs</code> or overide precompile task</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/precompile_overrides.rake
+namespace :assets do
+  task :precompile do
+    Rake::Task['assets:precompile'].invoke
+    Rake::Task['swagger:docs'].invoke
+  end
+end
+</code></pre></div></div>
+
+<p>Usually for precompile is disabled for production, so you need to enable it in
+<code class="highlighter-rouge">config/environments/production.rb</code></p>
+
+<p>Copy <code class="highlighter-rouge">dist</code> content to your <code class="highlighter-rouge">public/apidocs</code> and update all paths in
+<code class="highlighter-rouge">public/apidocs/index.html</code> to match your <code class="highlighter-rouge">/apidocs</code>, and change js <code class="highlighter-rouge">url =
+"/apidocs/api-docs.json";</code></p>
+
+<ul>
+  <li>default sort is alphabetical for path and methods (delete, get, path…). You
+can provide a function for <code class="highlighter-rouge">apisSorter</code> <code class="highlighter-rouge">operationsSorter</code> but too complicated.
+Order in server response if not supported.</li>
+</ul>
+
+<h1 id="apipie-rails">Apipie rails</h1>
+
+<p>If you are using minitest there is not automatic way to generate docs, so you
+can use <a href="https://github.com/Apipie/apipie-rails">apipie-rails</a> for
+documentation.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'apipie-rails'" &gt;&gt; Gemfile
+bundle install
+rails g apipie:install # this will generate config/initializers/apipie.rb and update routes
+</code></pre></div></div>
+
+<p>Jus add option <code class="highlighter-rouge">config.translate = false</code></p>
+
+<h1 id="grape">Grape</h1>
+
+<p>If grape is used than we can rescue from all exceptions, but that needs to be
+before <code class="highlighter-rouge">mount</code> methods and only for StandardError exceptions</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/api/v1/root.rb
+module API
+  module V1
+    class Root &lt; Grape::API
+      rescue_from Koala::Facebook::AuthenticationError, MyappExceptions::Base do |e|
+        ExceptionNotifier.notify_exception(
+                        Exception.new(e.message),
+                        data: {
+                          message: e.message,
+                          stack: e.backtrace,
+                          error: e
+                        }
+        )
+        Rack::Response.new(["#{e.class} #{e.message}"], 500, 'Content-type' =&gt; 'text/error').finish
+      end
+      # now we can mount ...
+      mount Users
+      ....
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/myapp_exceptions.rb
+module MyappExceptions
+  # use this base class so it is easier to rescue only that
+  # grape rescue only from standard error
+  class Base &lt; StandardError
+  end
+  class UserNotFound &lt; Base
+  end
+end
+</code></pre></div></div>
+
+<h1 id="guide">Guide</h1>
+
+<p><a href="https://github.com/interagent/http-api-design">https://github.com/interagent/http-api-design</a></p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>model skill level as string, but consider using array. For example if someone
+wants to cover all skill levels.</li>
+</ul>
+
+<h1 id="jwt-json-web-tokens">JWT Json web tokens</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'jwt'
+
+t = JWT.encode( {a: 1}, 'secret')
+=&gt; "eyJhbGciOiJIUzI1NiJ9.eyJhIjoxfQ.LrlPmSL4FxrzAHJSYbKzsA997COXdYCeFKlt3zt5DIY"
+&gt;&gt; JWT.decode t, 'secret' #=&gt; [{"a"=&gt;1}, {"alg"=&gt;"HS256"}]
+</code></pre></div></div>
+
+<p><a href="https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two">https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two</a></p>
+
+<p>https://medium.com/@stevenpetryk/providing-useful-error-responses-in-a-rails-api-24c004b31a2e#.lp6e0sjpf</p>
+
+<p>https://github.com/tuwukee/jwt_sessions</p>
+
+<p>In email search for Chris Kottom Lesson 9: Token-Based Authentication with JWTs
+Accessing Google oauth to list my videos https://martinfowler.com/articles/command-line-google.html</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

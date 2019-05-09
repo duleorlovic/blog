@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Es6 Esnext</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Es6 Esnext</h1>
+    <p class="meta">Mar 25, 2019</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#esnext"><span class="tocnumber">1</span> <span class="toctext">Esnext</span></a></li><li class="toc_level-1 toc_section-2"><a href="#promise"><span class="tocnumber">2</span> <span class="toctext">Promise</span></a></li><li class="toc_level-1 toc_section-3"><a href="#modules"><span class="tocnumber">3</span> <span class="toctext">Modules</span></a></li></ul></td></tr></tbody></table></div><h1 id="esnext">Esnext</h1>
+
+<p>https://medium.freecodecamp.org/es5-to-esnext-heres-every-feature-added-to-javascript-since-2015-d0c255e13c6e
+https://blog.bitsrc.io/6-tricks-with-resting-and-spreading-javascript-objects-68d585bdc83</p>
+
+<p>ES6 is ES2015, ES7 is published on 2016 and so on (latest is
+ES#{curent_year%2010+(month &gt; june) ? 1 : 0 }).
+ES6 features:</p>
+
+<ul>
+  <li>
+    <p>defining variable was using <code class="highlighter-rouge">var a</code> (in strict mode, which is default in ES6,
+ error is raised for using undefined variables). If it was defined inside
+ function, it was visible only inside it, otherwise global scope. It should be
+ declarad at the beggining of a function, because it can be still referecenced
+ before declaration and used like a function parameter (hoisting). ES6
+ introduced <code class="highlighter-rouge">let</code> and <code class="highlighter-rouge">const</code> with <em>block scope</em>. For example inside <code class="highlighter-rouge">if ()
+ { let myVar=1; }</code> (<code class="highlighter-rouge">myVar</code> is not accesible outside of <code class="highlighter-rouge">if</code> block). Also you
+ can NOT use variable before we <code class="highlighter-rouge">let variable</code>. Also you can NOT redeclare same
+ variable name (or if name is same as param declaration <code class="highlighter-rouge">function f(myName) {
+ let myName; }</code>. Notice difference in</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for (var i = 1; i&lt; 5; i++) {
+  console.log(i)
+  setTimeout(function() {
+    console.log(i) # here we have i = 5,5,5,5 since same variable is used
+    # if we used let i=1;i&lt;5;i++ than it will be different variable: 1,2,3,4
+  }, 1000)
+}
+</code></pre></div>    </div>
+    <p><code class="highlighter-rouge">const MY_CONST = document.querySelect(".my-class");</code> have block scope,
+and it should be used for all non volatile variables. If you use object than
+nested values can change <code class="highlighter-rouge">const k = { a: 3 }; k.a = 4</code></p>
+  </li>
+  <li>interpolation of template literals with backticks and curly braces
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var name = "Duke";
+console.log(`Hello ${name}`);
+
+const multiLine = `this
+is
+multi
+line`
+
+// use trim() so you can go to new line at beggining
+let n = `
+hi
+bye`.trim()
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>array functions are abbreviated syntax for anonymouse functions. If there is
+ only one parameter than you can omit parenthesis, if there are no params than
+ you can replace parenthesis with <code class="highlighter-rouge">_</code>. One liner syntax (without block) use
+ implicit return, for other you need explicit return if you need. If returning
+ object, remember to wrap inside parethenses</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var sayHello = (name) =&gt; ({name: `Hello ${name}!`})
+var sayCiao = name =&gt; {
+  return `Ciao ${name}!`
+}
+</code></pre></div>    </div>
+
+    <p>Note that <code class="highlighter-rouge">self</code> inside arrow functions does not bind to current object for
+object methods. It binds to outer <code class="highlighter-rouge">this</code> (it is inherited from the execution
+context). So <code class="highlighter-rouge">this</code> is usefull only if you have function inside method that is
+defined in clasical way, ie do not use arrow functions for methods, use
+old functions (when dynamic context is not needed)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let o = {
+  name: 'name',
+  myMethod: function() {
+    setTimeout( () =&gt; {
+      console.log(this.name) // o.name
+    }, 3000)
+  }
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>destructuring with default values and renaming
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># destructuring arrays
+let [, month, date = 1] = '2010-10-11'.split('-')
+# month = '10' and date = '11'
+let [f, s, ...rest] = [1, 2, 3, 4]
+# f=1, s=2, rest = [3,4]
+
+# destructuring objects
+let { name, age, gender:sex = 'male' } = { name: 'Duke', age: '33', gender: 'male' }
+# is the same as
+let name = o.name
+let age = o.age
+let sex = o.gender # here we also renaming and have default value
+</code></pre></div>    </div>
+
+    <p>You can also use destructuring when defining methods</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function call({
+  name: 'My Name',
+  phone: '123123',
+} = {}) {
+  console.log(name + ' ' + phone)
+}
+</code></pre></div>    </div>
+
+    <p>You can also destructure nested objects in function params</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var car = {
+  model: 'bmw 2018',
+  engine: {
+    turbo: true,
+    vin: 12345
+  }
+}
+
+// es6 shorthand instead of
+// { vin: vin }
+// you can use just
+// { vin }
+const modelAndVIN = ({model, engine: {vin}}) =&gt; {
+  console.log(`model: ${model} vin: ${vin}`);
+}
+
+modelAndVIN(car); // =&gt; model: bmw 2018  vin: 12345
+</code></pre></div>    </div>
+
+    <p>There exists rest <code class="highlighter-rouge">...</code> parameter which convers to array</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const sum = (...a) =&gt; a.reduce((sum, current) =&gt; sum + current, 0)
+</code></pre></div>    </div>
+
+    <p>and same operator <code class="highlighter-rouge">...</code> inside method call is called <em>spread</em> and it expands
+array to params (coffee calls this splats <code class="highlighter-rouge">f(items...)</code>)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let a = [1, 2, 3]
+f(...a)
+# is the same as
+f(1, 2, 3)
+</code></pre></div>    </div>
+
+    <p>you can also spread objects <code class="highlighter-rouge">let d = { a: 3}; let db = { ...d, b: 3}</code>. But if
+object has methods, it wont be expanded. If you spread two objects, later will
+override: <code class="highlighter-rouge">let object1 = { a:1, b:2 }; let object2 = { b:30, c:40}; let merged
+= {…object1, …object2} // {a:1, b:30, c:40}</code>. You can de-duplicate array with
+<code class="highlighter-rouge">let arr = [1, 1, 2, 2, 3, 3]; let deduped = [...new Set(arr)] // [1, 2, 3]</code></p>
+  </li>
+  <li>default parameter values <code class="highlighter-rouge">function g(a=2){}</code>. It
+can be combined with default destructing params <code class="highlighter-rouge">function g({a=1, b}={b:2}){}</code>
+and <code class="highlighter-rouge">g({a: 2})</code> (ok b=2), <code class="highlighter-rouge">g()</code> (ok a=1, b=2), but <code class="highlighter-rouge">g({})</code> error, b is required.</li>
+  <li>
+    <p>if you need some param to be required you can use this trick</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const required = () =&gt; {throw new Error('Missing parameter')};
+
+//The below function will trow an error if either "a" or "b" is missing.
+const add = (a = required(), b = required()) =&gt; a + b;
+
+add(1, 2) //3
+add(1) // Error: Missing parameter.
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">for(i=0;i&lt;cars.length;i++) {}</code> is not concise <code class="highlighter-rouge">cars.forEach(myFunction)</code> is
+concise but can not break out of the loop. ES6 gives <code class="highlighter-rouge">for(let ... of ..) {}</code>
+(for values in array) and <code class="highlighter-rouge">for..in</code> (for object property names)) is concise
+and can break. Use <code class="highlighter-rouge">.entries()</code> to get index
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for(let [i, car] of cars.entries()) { car }`
+</code></pre></div>    </div>
+
+    <p>To convert HtmlCollection to array you can use <code class="highlighter-rouge">Array.from(htmlCollection)</code></p>
+  </li>
+  <li><code class="highlighter-rouge">array.reduce(function, init_value)</code> can be used as filtering if <code class="highlighter-rouge">init_value</code>
+is array, than function takes two arguments (init_value, array_item)
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const numbers = [10, 20, 30, 40];
+
+const doubledOver50 = numbers.reduce((finalList, num) =&gt; {
+  num = num * 2; //double each number (i.e. map)
+  //filter number &gt; 50
+  if (num &gt; 50) {
+    finalList.push(num);
+  }
+  return finalList;
+}, []);
+doubledOver50; // [60, 80]
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">class Person</code> can be used to instantiate objects <code class="highlighter-rouge">new Person()</code>. For
+initialization you can use <code class="highlighter-rouge">constructor(name) { this.name = name }</code>
+Instead of hash method <code class="highlighter-rouge">full_name: function() {}</code> we can write <code class="highlighter-rouge">full_name(){}</code>
+Extend classes <code class="highlighter-rouge">class Employee extends Person {}</code> so we don’t need to write
+<code class="highlighter-rouge">Employee.prototype = new Person</code> (or <code class="highlighter-rouge">var e = { __proto__: person }</code>.
+Inside <code class="highlighter-rouge">class</code> we can define instance and <code class="highlighter-rouge">static</code> methods. Static methods are
+called without instantiating their class (used for utility functions).
+Multiple inheritance can be achieved with mix-ins https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins
+You can use getter (or setter) which binds an object property to a function
+that will be called when that property is looked up (or attempt to set that
+property <code class="highlighter-rouge">e.full_name =</code>)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Empoyee extends Person {
+  constructor(name) {
+    super(name);
+
+    this.proffessional_name = name;
+  }
+  get full_name() {
+    return this.name;
+  }
+  set full_name(name) {
+    this.name = name;
+  }
+
+  static myUtilityFunction(uppercase) {
+    return uppercase;
+  }
+
+  hello() {
+    return `Hi, I'm ${name}`
+  }
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>new data structure called <code class="highlighter-rouge">Map</code> and <code class="highlighter-rouge">WeakMap</code> (keys are objects, not plain
+values like number, string or symbol)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var map = new Map();
+map.set('year', '123');
+map.get('year'); // '123'
+
+# or use initialization
+m = new Map([['color', 'red'],['owner', 'me']])
+m.size
+m.keys()
+m.values()
+m.delete('color')
+m.clear()
+</code></pre></div>    </div>
+  </li>
+  <li>new data structure called <code class="highlighter-rouge">Set</code> and <code class="highlighter-rouge">WeakSet</code></li>
+  <li>new string functions
+<code class="highlighter-rouge">'asd'.startsWith('a');'asd'.endsWith('a');'asd'.includes('as');'a'.repeat(3);</code></li>
+  <li>new Array functions
+    <ul>
+      <li><code class="highlighter-rouge">Array.from([1,2,3], x =&gt; x + x)</code></li>
+      <li><code class="highlighter-rouge">Array.find( user =&gt; user.age &gt; 15)</code> same as <code class="highlighter-rouge">Array.findIndex</code> but returns
+ object instead of index</li>
+      <li><code class="highlighter-rouge">[1,2,3].filter( (n) =&gt; n &gt; 2 )</code></li>
+      <li><code class="highlighter-rouge">[1,2].includes(3)</code> returns false</li>
+    </ul>
+  </li>
+  <li>
+    <p>property value shorthands, when you define object and you already have
+variable with same name as key, you can use</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const name = 'dule'
+const anPerson = {
+  name
+}
+// is the same as
+const aPerson = {
+  name: name
+}
+</code></pre></div>    </div>
+
+    <p>it also exists for methods</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const aPerson = {
+  speak (word) {},
+  // same as
+  speak: function (word) {},
+  // do not use array because you can not acsess this
+  // speak: () =&gt; {},
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>computed object property names</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const name = 'dule'
+
+const aPerson = {
+  'mile': 'value',
+  [name]: 'dule is key and value',
+  [name+'car']: 'value',
+}
+</code></pre></div>    </div>
+  </li>
+  <li>generators
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function *calculator(input) {
+  var doubleThat = 2 * (yield (input / 2))
+  var another = yield (doubleThat)
+  return (input * doubleThat * another)
+}
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const calc = calculator(10)
+// start
+&gt; c.next()
+{ value: 5, done: false }
+&gt; c.next(7)
+{ value: 14, done: false }
+&gt; c.next(100)
+{ value: 14000, done: true }
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>ES2017</p>
+
+<ul>
+  <li>in function declarations and function calls you can use trailing commas
+<code class="highlighter-rouge">doSomething(p1, p2,)</code></li>
+</ul>
+
+<p>ES2019 ESNext</p>
+
+<ul>
+  <li><code class="highlighter-rouge">[1,[2]].flat(Infinity)</code> and
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>['My dog', 'is awesome'].flatMap(words =&gt; words.split(' '))
+//[ 'My', 'dog', 'is', 'awesome' ]
+</code></pre></div>    </div>
+  </li>
+  <li>create object from entries <code class="highlighter-rouge">newPerson =
+Object.fromEntries(Object.entries(person))</code></li>
+</ul>
+
+<h1 id="promise">Promise</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let done = true
+
+const isItDoneYet = new Promise((resolve, reject) =&gt; {
+  if (done) {
+    const workDone = 'Here is the thing I built'
+    resolve(workDone)
+  } else {
+    const why = 'Still working on something else'
+    reject(why)
+  }
+})
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Promise.all([p1, p2]).then</code> will be executed when all are resolved
+<code class="highlighter-rouge">Promise.race([p1, p2]).then</code> will be executed when first (any) is resolved</p>
+
+<p>Async/Await</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const doSomethingAsync = () =&gt; {
+  return new Promise(resolve =&gt; {
+    setTimeout( () =&gt; resolve('Here is thing I built after some delay'), 2000);
+  })
+}
+
+const doSomething = async () =&gt; {
+  console.log(await doSomethingAsync())
+}
+</code></pre></div></div>
+
+<p>Using <code class="highlighter-rouge">async</code> to a function means that it will return promise, so those two
+functions are the same:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const aFunction = async () =&gt; {
+  return 'test'
+}
+
+const aFunction = () =&gt; {
+  return Promise.resolve('test')
+}
+
+aFunction().then(console.log)
+</code></pre></div></div>
+
+<p>ES2018 there is <code class="highlighter-rouge">for await (const line of readLines(filePath)) { log(line) }</code></p>
+
+<p><code class="highlighter-rouge">.finnaly()</code> is executed regardless of the successful or not promise.</p>
+
+<h1 id="modules">Modules</h1>
+
+<p>Import bindings which are exported by another module (js file). Module is just
+js script (no need for special keyword) but everything defined inside module is
+local to the module, except when you use <code class="highlighter-rouge">export</code>.
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function myModule() {
+  this.hello = function() {
+    return 'hello
+  }
+}
+
+module.exports = myModule
+</code></pre></div></div>
+
+<p>Note that for Webpack you can use CommonJS module and use with <code class="highlighter-rouge">require</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var myModule = require('myModule');
+
+var myModuleInstance = new myModule();
+myModuleInstance.hello(); // 'hello!'
+</code></pre></div></div>
+
+<p>Using Asynchronous Module Definition AMD can load modules async using <code class="highlighter-rouge">define</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>define(['myModule', 'myOtherModule'], function(myModule, myOtherModule) {
+  console.log(myModule.hello());
+});
+</code></pre></div></div>
+
+<p>Universal Module Definition UMD combines AMD and CommonJS. But ECMASCRIPT 6
+introduce <code class="highlighter-rouge">import</code> and <code class="highlighter-rouge">export</code> methods which replace all those functions…
+So if you write libs for web you should create all variations so it can be
+used in webpack or directly
+https://medium.com/@kelin2025/so-you-wanna-use-es6-modules-714f48b3a953
+http://krasimirtsonev.com/blog/article/javascript-library-starter-using-webpack-es6</p>
+
+<p>You can export any top level function, class, var, let or const.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// lim/math.js
+export function sum(x, y) {
+  return x + y;
+}
+export let pi = 3.141593;
+
+// or you could use export list
+export { sum, pi };
+</code></pre></div></div>
+
+<p>You can name the export as <code class="highlighter-rouge">default</code> and in this case you can use anonymous
+functions (otherwise you have to name each export so it can be distinquished
+from other exports)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let myObject = {
+  field1: value1,
+  field2: value2
+};
+export {myObject as default};
+// or better use shorthand
+export default {
+  field1: value1,
+  field2: value2
+};
+</code></pre></div></div>
+
+<p>Note that with <code class="highlighter-rouge">import</code> you should use brackets if there is no default export,
+and check the form of the <code class="highlighter-rouge">export</code> command.
+https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/export
+Default import</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// import what is default exported and bind bind to defaultExport
+import defaultExport from "module-name";
+// this is shorthand of
+import { default as defaultExport } from 'module-name';
+</code></pre></div></div>
+
+<p>Namespace import</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import * as name from "module-name";
+</code></pre></div></div>
+<p>Named import</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import { export } from "module-name";
+import { export as alias } from "module-name";
+import { export1 , export2 } from "module-name";
+import { export1 , export2 as alias2 , [...] } from "module-name";
+</code></pre></div></div>
+<p>combination of default import and named or namespaces import</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import defaultExport, { export [ , [...] ] } from "module-name";
+import defaultExport, * as name from "module-name";
+// just run the code, not importing anything
+import "module-name";
+</code></pre></div></div>
+
+<p>module-name is relative (<code class="highlighter-rouge">./lib/math</code> or <code class="highlighter-rouge">lib/math</code>) or absolute path name to
+the <code class="highlighter-rouge">.js</code> file</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import * as math from "lib/math";
+console.log("2pi = " + math.sum(math.pi, math.pi));
+
+// or we could
+import { pi, sum } from "lib/math";
+console.log("2pi = " + sum(pi, pi));
+</code></pre></div></div>
+
+<p>In html you can include using script tag with <code class="highlighter-rouge">type='module'</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">'module'</span> <span class="na">src=</span><span class="s">'./app.js'</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    asd up is
+    <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">'up'</span><span class="nt">&gt;&lt;/span&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+
+# app.js
+import toUp from './t.js'
+document.getElementById('up').innerHTML = toUp('asd')
+
+# t.js
+export default (str) =&gt; str.toUpperCase()
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

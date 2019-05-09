@@ -1,0 +1,3844 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Rails Tips</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Rails Tips</h1>
+    <p class="meta">Apr 12, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#validations"><span class="tocnumber">1</span> <span class="toctext">Validations</span></a></li><li class="toc_level-1 toc_section-2"><a href="#hooks"><span class="tocnumber">2</span> <span class="toctext">Hooks</span></a></li><li class="toc_level-1 toc_section-3"><a href="#default-order"><span class="tocnumber">3</span> <span class="toctext">Default Order</span></a></li><li class="toc_level-1 toc_section-4"><a href="#format-date"><span class="tocnumber">4</span> <span class="toctext">Format date</span></a></li><li class="toc_level-1 toc_section-5"><a href="#multiline-render-js-response"><span class="tocnumber">5</span> <span class="toctext">Multiline render js response</span></a></li><li class="toc_level-1 toc_section-6"><a href="#autosize"><span class="tocnumber">6</span> <span class="toctext">Autosize</span></a></li><li class="toc_level-1 toc_section-7"><a href="#upload-file"><span class="tocnumber">7</span> <span class="toctext">Upload file</span></a></li><li class="toc_level-1 toc_section-8"><a href="#database"><span class="tocnumber">8</span> <span class="toctext">Database</span></a><ul><li class="toc_level-2 toc_section-9"><a href="#active-record"><span class="tocnumber">8.1</span> <span class="toctext">Active record</span></a></li><li class="toc_level-2 toc_section-10"><a href="#add-json-and-hstore"><span class="tocnumber">8.2</span> <span class="toctext">Add json and hstore</span></a></li><li class="toc_level-2 toc_section-11"><a href="#dump-database"><span class="tocnumber">8.3</span> <span class="toctext">Dump database</span></a></li><li class="toc_level-2 toc_section-12"><a href="#restore-database"><span class="tocnumber">8.4</span> <span class="toctext">Restore database</span></a></li><li class="toc_level-2 toc_section-13"><a href="#heroku-upgrade-database-plan"><span class="tocnumber">8.5</span> <span class="toctext">Heroku upgrade database plan</span></a></li><li class="toc_level-2 toc_section-14"><a href="#postgres-tips"><span class="tocnumber">8.6</span> <span class="toctext">Postgres tips</span></a></li><li class="toc_level-2 toc_section-15"><a href="#migrations"><span class="tocnumber">8.7</span> <span class="toctext">Migrations:</span></a></li><li class="toc_level-2 toc_section-16"><a href="#has_many-through"><span class="tocnumber">8.8</span> <span class="toctext">Has_many through</span></a></li><li class="toc_level-2 toc_section-17"><a href="#database-indexes"><span class="tocnumber">8.9</span> <span class="toctext">Database indexes</span></a></li><li class="toc_level-2 toc_section-18"><a href="#deadlocks"><span class="tocnumber">8.10</span> <span class="toctext">Deadlocks</span></a></li></ul></li><li class="toc_level-1 toc_section-19"><a href="#mysql"><span class="tocnumber">9</span> <span class="toctext">MySql</span></a></li><li class="toc_level-1 toc_section-20"><a href="#turbolinks"><span class="tocnumber">10</span> <span class="toctext">Turbolinks</span></a></li><li class="toc_level-1 toc_section-21"><a href="#seed"><span class="tocnumber">11</span> <span class="toctext">Seed</span></a></li><li class="toc_level-1 toc_section-22"><a href="#custom-logger"><span class="tocnumber">12</span> <span class="toctext">Custom logger</span></a></li><li class="toc_level-1 toc_section-23"><a href="#mustache"><span class="tocnumber">13</span> <span class="toctext">Mustache</span></a></li><li class="toc_level-1 toc_section-24"><a href="#rake-tasks"><span class="tocnumber">14</span> <span class="toctext">Rake tasks</span></a></li><li class="toc_level-1 toc_section-25"><a href="#sessions-and-share-cookies-on-multiple-subdomains"><span class="tocnumber">15</span> <span class="toctext">Sessions and share cookies on multiple subdomains</span></a></li><li class="toc_level-1 toc_section-26"><a href="#subdomains-and-long-domains"><span class="tocnumber">16</span> <span class="toctext">Subdomains and long domains</span></a></li><li class="toc_level-1 toc_section-27"><a href="#text-syntax-on-buttons-and-messages"><span class="tocnumber">17</span> <span class="toctext">Text syntax on buttons and messages</span></a></li><li class="toc_level-1 toc_section-28"><a href="#7-patterns"><span class="tocnumber">18</span> <span class="toctext">7 patterns</span></a><ul><li class="toc_level-2 toc_section-29"><a href="#service-objects"><span class="tocnumber">18.1</span> <span class="toctext">Service objects</span></a></li><li class="toc_level-2 toc_section-30"><a href="#form-objects"><span class="tocnumber">18.2</span> <span class="toctext">Form Objects</span></a></li><li class="toc_level-2 toc_section-31"><a href="#decorators"><span class="tocnumber">18.3</span> <span class="toctext">Decorators</span></a></li><li class="toc_level-2 toc_section-32"><a href="#concerns"><span class="tocnumber">18.4</span> <span class="toctext">Concerns</span></a></li><li class="toc_level-2 toc_section-33"><a href="#observable"><span class="tocnumber">18.5</span> <span class="toctext">Observable</span></a></li></ul></li><li class="toc_level-1 toc_section-34"><a href="#unsubscribe-links"><span class="tocnumber">19</span> <span class="toctext">Unsubscribe links</span></a></li><li class="toc_level-1 toc_section-35"><a href="#run-rails-in-production-mode"><span class="tocnumber">20</span> <span class="toctext">Run rails in production mode</span></a></li><li class="toc_level-1 toc_section-36"><a href="#get-template-name"><span class="tocnumber">21</span> <span class="toctext">Get template name</span></a></li><li class="toc_level-1 toc_section-37"><a href="#money"><span class="tocnumber">22</span> <span class="toctext">Money</span></a></li><li class="toc_level-1 toc_section-38"><a href="#carrierwave-for-uploading"><span class="tocnumber">23</span> <span class="toctext">Carrierwave for uploading</span></a><ul><li class="toc_level-2 toc_section-39"><a href="#store-on-server"><span class="tocnumber">23.1</span> <span class="toctext">Store on server</span></a></li><li class="toc_level-2 toc_section-40"><a href="#store-on-aws-s3"><span class="tocnumber">23.2</span> <span class="toctext">Store on AWS S3</span></a></li><li class="toc_level-2 toc_section-41"><a href="#store-directly-on-aws-s3-and-upload-the-key-to-the-server"><span class="tocnumber">23.3</span> <span class="toctext">Store directly on AWS S3 and upload the key to the server</span></a></li><li class="toc_level-2 toc_section-42"><a href="#carrier-wave-in-seed"><span class="tocnumber">23.4</span> <span class="toctext">Carrier wave in seed</span></a></li></ul></li><li class="toc_level-1 toc_section-43"><a href="#pdf"><span class="tocnumber">24</span> <span class="toctext">PDF</span></a><ul><li class="toc_level-2 toc_section-44"><a href="#wicked-pdf"><span class="tocnumber">24.1</span> <span class="toctext">Wicked PDF</span></a></li><li class="toc_level-2 toc_section-45"><a href="#prawn"><span class="tocnumber">24.2</span> <span class="toctext">Prawn</span></a></li><li class="toc_level-2 toc_section-46"><a href="#pdf-reader"><span class="tocnumber">24.3</span> <span class="toctext">PDF reader</span></a></li></ul></li><li class="toc_level-1 toc_section-47"><a href="#style-guide"><span class="tocnumber">25</span> <span class="toctext">Style guide</span></a></li><li class="toc_level-1 toc_section-48"><a href="#geocoder"><span class="tocnumber">26</span> <span class="toctext">Geocoder</span></a></li><li class="toc_level-1 toc_section-49"><a href="#authorization-policy"><span class="tocnumber">27</span> <span class="toctext">Authorization policy</span></a><ul><li class="toc_level-2 toc_section-50"><a href="#cancan"><span class="tocnumber">27.1</span> <span class="toctext">Cancan</span></a></li><li class="toc_level-2 toc_section-51"><a href="#pundig"><span class="tocnumber">27.2</span> <span class="toctext">Pundig</span></a></li><li class="toc_level-2 toc_section-52"><a href="#other-authorization"><span class="tocnumber">27.3</span> <span class="toctext">Other authorization</span></a></li></ul></li><li class="toc_level-1 toc_section-53"><a href="#autoloading"><span class="tocnumber">28</span> <span class="toctext">Autoloading</span></a></li><li class="toc_level-1 toc_section-54"><a href="#action-cable"><span class="tocnumber">29</span> <span class="toctext">Action Cable</span></a></li><li class="toc_level-1 toc_section-55"><a href="#tips"><span class="tocnumber">30</span> <span class="toctext">Tips</span></a><ul><li class="toc_level-2 toc_section-56"><a href="#run-tests-with-a-command"><span class="tocnumber">30.1</span> <span class="toctext">run tests with a command</span></a></li><li class="toc_level-2 toc_section-57"><a href="#rails-test-configinitializerscolorizerb"><span class="tocnumber">30.2</span> <span class="toctext">rails test config/initializers/colorize.rb</span></a></li></ul></li><li class="toc_level-1 toc_section-58"><a href="#configinitializerscolorizerb"><span class="tocnumber">31</span> <span class="toctext">config/initializers/colorize.rb</span></a></li><li class="toc_level-1 toc_section-59"><a href="#require-minitestautorun"><span class="tocnumber">32</span> <span class="toctext">require ‘minitest/autorun’</span></a></li><li class="toc_level-1 toc_section-60"><a href="#class-test--minitesttest"><span class="tocnumber">33</span> <span class="toctext">class Test &lt; Minitest::Test</span></a></li><li class="toc_level-1 toc_section-61"><a href="#def-test_one_substring"><span class="tocnumber">34</span> <span class="toctext">def test_one_substring</span></a></li><li class="toc_level-1 toc_section-62"><a href="#s--my-name-is-john"><span class="tocnumber">35</span> <span class="toctext">s = ‘My name is John.’</span></a></li><li class="toc_level-1 toc_section-63"><a href="#assert_equal-my-name-is-e31mjohne0m-scolorizejohn-return_nil-false"><span class="tocnumber">36</span> <span class="toctext">assert_equal “My name is \e[31mJohn\e[0m.”, s.colorize(‘John’, return_nil: false)</span></a></li><li class="toc_level-1 toc_section-64"><a href="#end"><span class="tocnumber">37</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-65"><a href="#def-test_two_substrings"><span class="tocnumber">38</span> <span class="toctext">def test_two_substrings</span></a></li><li class="toc_level-1 toc_section-66"><a href="#s--john-is-my-name-john"><span class="tocnumber">39</span> <span class="toctext">s = ‘John is my name, John.’</span></a></li><li class="toc_level-1 toc_section-67"><a href="#r--e31mjohne0m-is-my-name-e31mjohne0m"><span class="tocnumber">40</span> <span class="toctext">r = “\e[31mJohn\e[0m is my name, \e[31mJohn\e[0m.”</span></a></li><li class="toc_level-1 toc_section-68"><a href="#assert_equal-r-scolorizejohn-return_nil-false"><span class="tocnumber">41</span> <span class="toctext">assert_equal r, s.colorize(‘John’, return_nil: false)</span></a></li><li class="toc_level-1 toc_section-69"><a href="#end-1"><span class="tocnumber">42</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-70"><a href="#def-test_no_found"><span class="tocnumber">43</span> <span class="toctext">def test_no_found</span></a></li><li class="toc_level-1 toc_section-71"><a href="#s--my-name-is-john-1"><span class="tocnumber">44</span> <span class="toctext">s = ‘My name is John.’</span></a></li><li class="toc_level-1 toc_section-72"><a href="#assert_equal-my-name-is-john-scolorizemike-return_nil-false"><span class="tocnumber">45</span> <span class="toctext">assert_equal “My name is John.”, s.colorize(‘Mike’, return_nil: false)</span></a></li><li class="toc_level-1 toc_section-73"><a href="#end-2"><span class="tocnumber">46</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-74"><a href="#def-test_whole"><span class="tocnumber">47</span> <span class="toctext">def test_whole</span></a></li><li class="toc_level-1 toc_section-75"><a href="#s--my-name-is-john-2"><span class="tocnumber">48</span> <span class="toctext">s = ‘My name is John.’</span></a></li><li class="toc_level-1 toc_section-76"><a href="#assert_equal-e31mmy-name-is-johne0m-scolorizes-return_nil-false"><span class="tocnumber">49</span> <span class="toctext">assert_equal “\e[31mMy name is John.\e[0m”, s.colorize(s, return_nil: false)</span></a></li><li class="toc_level-1 toc_section-77"><a href="#end-3"><span class="tocnumber">50</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-78"><a href="#def-test_return"><span class="tocnumber">51</span> <span class="toctext">def test_return</span></a></li><li class="toc_level-1 toc_section-79"><a href="#s--my-name-is-john-3"><span class="tocnumber">52</span> <span class="toctext">s = ‘My name is John.’</span></a></li><li class="toc_level-1 toc_section-80"><a href="#assert_nil-scolorizejohn"><span class="tocnumber">53</span> <span class="toctext">assert_nil s.colorize(‘John’)</span></a></li><li class="toc_level-1 toc_section-81"><a href="#end-4"><span class="tocnumber">54</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-82"><a href="#def-test_only_matched_lines"><span class="tocnumber">55</span> <span class="toctext">def test_only_matched_lines</span></a></li><li class="toc_level-1 toc_section-83"><a href="#s--first_linensecond_line-johnnthird_linenjohn-fourth_line"><span class="tocnumber">56</span> <span class="toctext">s = “first_line\nsecond_line John\nthird_line\nJohn fourth_line”</span></a></li><li class="toc_level-1 toc_section-84"><a href="#assert_equal-second_line-johnrednjohnred-fourth_line-scolorizejohn-only_matched_lines-true-return_nil-false"><span class="tocnumber">57</span> <span class="toctext">assert_equal “second_line #{‘John’.red}\n#{‘John’.red} fourth_line”, s.colorize(‘John’, only_matched_lines: true, return_nil: false)</span></a></li><li class="toc_level-1 toc_section-85"><a href="#end-5"><span class="tocnumber">58</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-86"><a href="#end-6"><span class="tocnumber">59</span> <span class="toctext">end</span></a></li></ul></td></tr></tbody></table></div><h1 id="validations">Validations</h1>
+
+<p>Some usefull validations, like validate email regexp</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
+validates :email, format: { with: User.email_regexp, allow_blank: true }
+validates :email, uniqueness: { scope: :user_id }
+</code></pre></div></div>
+
+<p>When validating associations, always is <code class="highlighter-rouge">_id</code> since we use that in select input
+inside form (don’t validate object <code class="highlighter-rouge">validates :job_type, presence: true</code> since
+error will not be shown on <code class="highlighter-rouge">:job_type_id</code>).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>validates :job_type_id, presence: true
+
+&lt;%= f.select :job_type_id, Job.all.map { |job| [job.name, job.id] }, {
+prompt: true }, class: 'my-class' %&gt;
+</code></pre></div></div>
+
+<p>NOTE that in Rails 5.2 we do not need to add presence validations but if you
+want to disable you can do with <code class="highlighter-rouge">belongs_to :job_type, optional: true</code></p>
+
+<p><a href="https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select">form
+select</a>
+can accept as 2th param (choices) two variant:</p>
+
+<ul>
+  <li>flat collection <code class="highlighter-rouge">[['name', 123],...]</code></li>
+  <li>if you need manual tags <code class="highlighter-rouge">&lt;select&gt;&lt;option&gt;&lt;/option&gt;&lt;/select&gt;</code> than you can use
+<code class="highlighter-rouge">&lt;%= select tag "statuses[]", options_for_select([[]], selected: 1) %&gt;</code></li>
+  <li>
+    <p>nested collection <code class="highlighter-rouge">grouped_options_for_select()</code></p>
+
+    <p>Preselected value can be defined as second param in <code class="highlighter-rouge">options_for_select([],
+selected: f.object.user_id</code>, or as 4th param in
+<code class="highlighter-rouge">options_from_collection_for_select(User, :id, :email, selected:
+f.object.user_id)</code>. Note that it can be <code class="highlighter-rouge">value</code> or hash <code class="highlighter-rouge">selected: value</code>.</p>
+  </li>
+</ul>
+
+<p>as 3th param (options):</p>
+
+<p>Sometimes when options do not include value that you want to set and you
+use prompt to be shown, please preform check <code class="highlighter-rouge">{ prompt: 'Select package'
+}.merge( options.present? ? { selected: @customer.some_other_package.id
+} : {} )</code>. If target selected value is not in options, that first option will be
+used, or prompt is shown when options is empty.</p>
+<ul>
+  <li><code class="highlighter-rouge">disabled: [values]</code> to disable some options</li>
+  <li><code class="highlighter-rouge">label: 'My label'</code></li>
+  <li><code class="highlighter-rouge">prompt: 'Please select'</code> this is shown only if not already have some value</li>
+  <li><code class="highlighter-rouge">include_blank: 'Please select'</code> this is shown always (even already have
+value) I found usefull only with select2 where we use custom placeholder and
+blank option is not selectable <code class="highlighter-rouge">&lt;%= f.select :customer_name_and_username,
+options_from_collection_for_select(current_location.customers, 'id',
+'name_and_username'),  { include_blank: true, label: 'Customer' },
+'data-select2': true, placeholder: 'Search by Customer Name or Username' %&gt;</code></li>
+</ul>
+
+<p>as 4th params (html options)</p>
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">multiple: true</code> so it is multi_select (instead of dropdown). Multi select
+will be shown with its own scrollbar (use <code class="highlighter-rouge">size: 5</code> to limit the size).
+In controller you need to allow arrays</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def event_params
+  params.require(:event).permit(
+    :title, skills: []
+  )
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Form array can be set on any input, use square brackets <code class="highlighter-rouge">name='user_ids[]'</code>.
+  In view you can set array of hidden fields</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;% @isp_push_packages.isp_package_ids.each do |isp_package_id| %&gt;
+   &lt;%= f.hidden_field 'isp_package_ids[]', value: isp_package_id %&gt;
+ &lt;% end %&gt;
+</code></pre></div>    </div>
+    <p>or using select <code class="highlighter-rouge">multiple: true</code> (it will automatically add <code class="highlighter-rouge">[]</code> to the name)</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.select isp_package_ids, options, {}, multiple: true %&gt;
+</code></pre></div>    </div>
+    <p>You can also nest in two dimensions ie it will be a hash with array values
+  <code class="highlighter-rouge">name='user_ids[#{company.id}][]</code>. In this case you need to permit hash
+  (Rails 5.2) or whitelist in before Rails 5.2</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  params.require(:post).permit(reseller_location_ids: {}) # Rails 5.2
+  permit(files: params[:post][:files].key # before Rails 5.2
+
+  &lt;%= select_tag 'reseller_location_ids[#{operator.id}]', options, multiple: true %&gt;
+  # do not know how to use f.select since can not have method with a name
+  `name[name]`
+</code></pre></div></div>
+<p>Note that if it is not required and nothing is selected than nothing will be
+  sent, you should use hidden field or default value <code class="highlighter-rouge">{}</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= hidden_field_tag 'reseller_location_ids[0][]' %&gt;
+  # or
+  location_ids = (params[:reseller_location_ids] || {})[params[:reseller_operator_id]] || []
+</code></pre></div></div>
+
+<ul>
+  <li>And in model you need to clean empty strings <code class="highlighter-rouge">[""]</code> when nothing is selected
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  before_validation :clean_empty_skills
+  def clean_empty_skills
+ self.skills = skills.select &amp;:present?
+  end
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>You should avoid saving without validation <code class="highlighter-rouge">save(validate: false)</code> or
+<code class="highlighter-rouge">update_attribute :name, 'my name'</code>. It is risky to save without validations.
+Other methods also do not check validation
+http://www.davidverhasselt.com/set-attributes-in-activerecord/
+<code class="highlighter-rouge">update_column</code>, <code class="highlighter-rouge">@users.update_all</code>.</p>
+
+<p>Conditional validations can be used with proc new like <code class="highlighter-rouge">if: -&gt; { }</code> but with
+parameters. Also <code class="highlighter-rouge">if: lambda {|a| }</code> (difference in required params to block)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>validates :password, confirmation: true, if: Proc.new { |a|
+a.password.present?}
+</code></pre></div></div>
+
+<p>Validate occurs <code class="highlighter-rouge">:on</code> <code class="highlighter-rouge">:save</code> by default (but you can not use <code class="highlighter-rouge">validate :d, on:
+:save</code>).  http://guides.rubyonrails.org/active_record_validations.html#on you
+can split and specify to run on <code class="highlighter-rouge">on: :create</code> or <code class="highlighter-rouge">on: :update</code>. To run
+validation on destroy you need hook <code class="highlighter-rouge">before_destroy</code> where you can <code class="highlighter-rouge">errors.add</code>
+and <code class="highlighter-rouge">return false</code> so hook reverts.</p>
+
+<h1 id="hooks">Hooks</h1>
+
+<p><strong>NOTE THAT YOU SHOULD NOT USE HOOKS… Better is to just call a method where
+needed, because you will not needed it always (for example in tests you want
+different value) If you really need (default value that you really want) than
+please use ||= conditional assignment</strong>
+Default value for column could be in migration but than you need another
+migration if you want to change value. If we put on <code class="highlighter-rouge">after_initialize
+:default_values_on_initialize</code> than it is called also when you read object (that
+is required if you want to change default values for existing objects) If you
+have <code class="highlighter-rouge">validates :logo</code> than you can not put on <code class="highlighter-rouge">before_save :default_logo</code> since
+validation will fail before that. We need <code class="highlighter-rouge">before_validation</code> which occurs only
+on update and create.</p>
+
+<p>Note that business logic could be that some fields could be cleared. For example
+some logo is default value, but someone could completely remove logo.
+So you need to separate <code class="highlighter-rouge">default_values_on_create</code> and
+<code class="highlighter-rouge">default_values_on_update</code> (which could get <code class="highlighter-rouge">nil</code> on update some fields)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># do not use after initialize since it will be run on every load
+&gt; after_initialize :default_values_on_initialize
+before_validation :default_values_on_create, on: :create
+before_validation :default_values_on_update, on: :update
+
+private
+
+def default_values_on_create
+  self.logo ||= Rails.application.secrets.default_restaurant_logo
+  # do not use self.some_true_value ||= true since that will override if
+  # some_true_value = false
+  self.some_true_value = true if some_true_value.nil?
+  # http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution
+  # return value should be true or nil
+  true
+end
+</code></pre></div></div>
+
+<p>TO calculate some files you can use <code class="highlighter-rouge">after_save :update_total</code>. Do not use
+<code class="highlighter-rouge">after_update :update_total</code> since you can not update in that method.</p>
+
+<p>Custom validations <code class="highlighter-rouge">validate :my_method</code> or <code class="highlighter-rouge">validate { |customer|
+customer.check_permissions }</code> should add <code class="highlighter-rouge">errors</code> to the object (return value is
+not important and could be false).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Customer
+  def my_method
+    errors.add(:name) if name != 'Duke'
+  end
+  def check_permissions
+    errors.add(:name) if name != 'Duke'
+  end
+end
+</code></pre></div></div>
+
+<h1 id="default-order">Default Order</h1>
+
+<p>Do not use <code class="highlighter-rouge">default_scope</code>, since you need to use <code class="highlighter-rouge">.reoder</code> instead of <code class="highlighter-rouge">.order</code>.
+If you really want to use, here is example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>default_scope { order('created_at DESC') }
+</code></pre></div></div>
+
+<p>Usually default scope is not good practice (except for order). Even to trashable
+concern is bad usage, for example if you use trashed on user and comments model</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g migration add_trashed_to_users trashed:boolean
+rails g migration add_trashed_to_comments trashed:boolean
+
+# user.rb &amp; comment.rb
+  default_scope { where(trashed: nil) }
+  scope :trashed, -&gt; { unscoped.where(trashed: true) }
+  scope :by_status_param, -&gt; (status_argument) { where status: status_argument }
+  scope :for_user, (lambda do |user|
+    where user: user
+  end)
+</code></pre></div></div>
+
+<p>than query <code class="highlighter-rouge">User.first.comments.trashed</code> will return all trashed comments from
+ALL users! <code class="highlighter-rouge">unscoped</code> will remove even association scopes, thanks Joseph
+Ndungu on
+<a href="http://www.victorareba.com/tutorials/creating-a-trashing-concern-in-rails-5">comment</a>.</p>
+
+<p>Uncope can receive params what to unscope, example <code class="highlighter-rouge">User.unscope(:where)</code>. If
+you use this in <code class="highlighter-rouge">belongs_to :location, -&gt; { unscope :where }</code> than it will also
+remove association belongs to condition, so you have to unscoped only columns
+from default_scope <code class="highlighter-rouge">belongs_to :location, -&gt; { unscope where: :operator_id }</code>
+<a href="https://singlebrook.com/2015/12/18/how-to-carefully-remove-a-default-scope-in-rails/">excellent link how to remove
+scope</a>
+I usually create additional classes with <code class="highlighter-rouge">self.default_scopes = []</code> so it does
+not use default scope. Also set table name so I can use sql.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class UnscopedCustomer &lt; Customer
+  self.default_scopes = []
+  self.table_name = "customers"
+  belongs_to :unscoped_company, foreign_key: :company_id
+end
+
+class UnscopedCompany &lt; Company
+  self.default_scopes = []
+  self.table_name = "companies"
+  has_many :customers, foreign_key: :company_id
+end
+</code></pre></div></div>
+
+<h1 id="format-date">Format date</h1>
+
+<p>Write datetime in specific my_time format
+https://apidock.com/ruby/DateTime/strftime</p>
+
+<p>You can see default date formats but they are used only when locales are used
+(for example byebug in a view)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(byebug) I18n.translate('date.formats.default')
+"%m/%d/%Y"
+(byebug) Date.today.to_s :default
+"2018-11-05"
+(byebug) l Date.today, format: :default
+"11/05/2018"
+</code></pre></div></div>
+
+<p>So I override default to_s (output). For parsing (input) best way is to use
+month name in select date <code class="highlighter-rouge">2/Nov/2001</code> is it can parse collectly. For inputs
+with two numbers it can not guess the month or date <code class="highlighter-rouge">2/3/2000</code> so you need to
+use <code class="highlighter-rouge">Date.strptime '2/3/2000' , '%m/%d/%y'</code> to return 3 Februar.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/date_time_formats.rb
+# all 3 classes
+# puts user.updated_at.to_s :myapp_time
+# puts Time.now.to_s :myapp_time
+# puts Date.today.to_time :myapp_time # Date need to be type casted to Time
+# puts Time.now.to_date :myapp_date # Time object to Date if we want myapp_date
+
+Time::DATE_FORMATS[:default] = "%d-%b-%Y %I:%M %p" # this is same as for
+# datepicker format = 'DD-MMM-YYYY h:mm A'
+Time::DATE_FORMATS[:at_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
+
+Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
+Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Time.now</code> and <code class="highlighter-rouge">Date.today</code> are using system time. If you are using
+<code class="highlighter-rouge">browser-timezone-rails</code> than timezone will be set for each request. But if you
+need something from rails console, you need to set timezone manually.
+<code class="highlighter-rouge">Time.zone = 'Belgrade'</code> (list all in <code class="highlighter-rouge">rake time:zones:all</code>). It is good to
+always use <code class="highlighter-rouge">Time.zone.now</code> and <code class="highlighter-rouge">Time.zone.today</code>. Rails helpres use zone
+(<code class="highlighter-rouge">1.day.from_now</code>)</p>
+
+<ul>
+  <li>prefer using <code class="highlighter-rouge">Time.current</code> over <code class="highlighter-rouge">Time.now</code>, and <code class="highlighter-rouge">Date.current</code> over
+<code class="highlighter-rouge">Date.today</code></li>
+  <li>to get weekday from <code class="highlighter-rouge">ActiveSupport::TimeWithZone</code> use
+<a href="http://api.rubyonrails.org/classes/ActiveSupport/TimeWithZone.html">link</a>
+<code class="highlighter-rouge">weekday = t.to_a[6]</code></li>
+  <li>to get a weekday from a date use</li>
+</ul>
+<p><a href="https://ruby-doc.org/stdlib-2.4.2/libdoc/date/rdoc/Date.html#method-i-cwday">https://ruby-doc.org/stdlib-2.4.2/libdoc/date/rdoc/Date.html#method-i-cwday</a></p>
+<ul>
+  <li><code class="highlighter-rouge">d.wday</code> (0-6, Sunday is zero)</li>
+  <li><code class="highlighter-rouge">d.cwday</code> (1-7. Sunday is 7, Moday is 1)</li>
+  <li>to get first calendar date <code class="highlighter-rouge">Time.zone.today.beginning_of_month</code> or
+<code class="highlighter-rouge">Time.zone.today.end_of_month</code>
+    <ul>
+      <li>get interval for previous month: <code class="highlighter-rouge">'Last Month':
+[Time.zone.today.prev_month.at_beginning_of_month,
+Time.zone.today.prev_month.at_end_of_month],</code></li>
+    </ul>
+  </li>
+  <li>to get month date use <code class="highlighter-rouge">d.day</code></li>
+</ul>
+
+<p>Change system timezone (which is used by browsers) with <code class="highlighter-rouge">sudo dpkg-reconfigure
+tzdata</code>. Note that <code class="highlighter-rouge">rails c</code> uses UTC <code class="highlighter-rouge">Time.zone # =&gt; "UTC"</code>, but byebug in
+rails s returns default time zone <code class="highlighter-rouge">Time.zone # CEST Europe</code>. You can use users
+timezone with
+<a href="https://github.com/kbaum/browser-timezone-rails">browser-timezone-rails</a>.
+<code class="highlighter-rouge">Time.zone.now.utc_offset</code> will return offset to UTC in seconds. I do not know
+why <code class="highlighter-rouge">Time.zone.utc_offset</code> returns different results (3600 instead of 7200).</p>
+
+<h1 id="multiline-render-js-response">Multiline render js response</h1>
+
+<p>Write long string in multiple lines with <code class="highlighter-rouge">%()</code>, for example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>format.js do
+  render js: %(
+    $('##{key}').replaceWith('#{view_context.j view_context.render partial: 'product_table', locals: { products: Product.send( key).all, product_type_string: key.to_s}} ');
+    jQuery(".best_in_place").best_in_place();
+    )
+end
+
+format.js { render js: "windnw.location.assign('#{user_path}');" }
+</code></pre></div></div>
+
+<p>If you receive a lot of errors <code class="highlighter-rouge">An ActionView::MissingTemplate occurred in</code> and
+<code class="highlighter-rouge">Missing template customer/sessions/new, customer_application/new,
+application/new with {:locale=&gt;[:in, :en], :formats=&gt;["Application/*"],
+:variants=&gt;[], :handlers=&gt;[:erb, :builder, :raw, :ruby, :coffee, :jbuilder]}.
+Searched in:</code> on some landing or login pages than simply add:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/home_controller.rb
+class HomeController &lt; ApplicationController
+  respond_to :html
+
+  def index
+    respond_with do |format|
+      format.html { render :index }
+      format.any { render :index }
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Another solution to respond to all formats is to add <code class="highlighter-rouge">formats</code> argument</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/home_controller.rb
+class HomeController &lt; ApplicationController
+  def index
+    render :index, formats: [:html]
+  end
+end
+</code></pre></div></div>
+
+<p>So this will render index for any type of requests</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://loc:3001
+curl http://loc:3001 -H "Accept: application/json"
+</code></pre></div></div>
+
+<h1 id="autosize">Autosize</h1>
+
+<p>Textarea should be <a href="http://www.jacklmoore.com/autosize/">autosized</a> (download
+<code class="highlighter-rouge">autosize.js</code> from <code class="highlighter-rouge">dist/</code> folder). Put below your textarea for ajax responses
+and put in your main.js file on jQuery load.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/forms/_form.html.erb %&gt;
+&lt;%= f.text_area :title %&gt;
+&lt;%= javascript_tag "autosize($('textarea'))" if request.xhr? %&gt;
+
+// app/assets/javascripts/main.js.erb
+$(function() {
+  autosize($('textarea'));
+});
+</code></pre></div></div>
+
+<h1 id="upload-file">Upload file</h1>
+
+<p>Since default file button does not look nice we just hide it (android has some
+probles when it is hidden, so we just move it), and use label to trigger it and
+<code class="highlighter-rouge">on change</code> we submit the form. Note that we use <code class="highlighter-rouge">id</code> because we could have more
+than one form on a page.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# _suppression_list.html.erb %&gt;
+  &lt;div class="pull-right"&gt;
+    &lt;%= form_tag import_suppression_path(suppression_list), multipart:true, class: 'pull-right' do %&gt;
+      &lt;span data-chosen-filename&gt;&lt;/span&gt; &amp;nbsp;
+      &lt;%= label_tag :file, 'Upload CSV', for: "upload-file-#{suppression_list.id}", style: 'display:inline' %&gt;
+      &lt;%= file_field_tag :file, id: "upload-file-#{suppression_list.id}", 'data-upload-file': true, style: 'position:absolute; top: -1000px' %&gt;
+    &lt;% end %&gt;
+  &lt;/div&gt;
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># javascripts/leads.coffee
+$(document).on 'change', '[data-upload-file]', (e) -&gt;
+  console.log("upload csv")
+  e.preventDefault()
+  file = this.files[0]
+  allowedExtensions = /^(text\/csv)$/
+  $(this).closest('form').find("[data-chosen-filename]").text this.value
+  if (this.files.length == 0 )
+    alert("Please chose one csv file")
+    return
+  if(! allowedExtensions.test(file.type))
+    alert("File type is not allowed")
+    return
+  $(this).closest('form').submit()
+</code></pre></div></div>
+
+<h1 id="database">Database</h1>
+
+<p>Show all databases in postgresql, first change user to postgres</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo su -l postgres
+psql
+
+# or in one command
+sudo -u postgres psql
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\list
+\connect database_name
+\dt
+
+CREATE USER orlovic WITH CREATEDB PASSWORD '&lt;password&gt;';
+</code></pre></div></div>
+
+<p>In rails you can access database using ‘rails db’ and see table definition</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails db
+\d users
+</code></pre></div></div>
+
+<h2 id="active-record">Active record</h2>
+
+<ul>
+  <li>one issue is when you use different table name <code class="highlighter-rouge">self.table_name =
+'something_other'</code> than relations could not be picked correctly</li>
+  <li>
+    <p>union is not supported <a href="https://github.com/rails/rails/issues/939">issue 929</a>
+but you can try with raw sql and <code class="highlighter-rouge">from</code> statement. Union should have same
+number and type of columns. Also use <code class="highlighter-rouge">.from([Arel.sql('...')])</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sql = &lt;&lt;~SQL
+  ( ( SELECT id, location_id, package_saleid, customer_id, customer_name, location_package_id, sale_date, -total_amount_cents as total_amount_cents, total_amount_currency, customer_invoice_id, (bytes_uploaded_total + bytes_downloaded_total) as total_data_used
+      FROM location_package_sales
+    ) UNION (
+      SELECT id, location_id, balance_refillid as package_saleid, NULL as customer_id, 'refill' as customer_name, NULL as location_package_id, created_at as sale_date, refill_amount_cents as total_amount_cents, refill_amount_currency as total_amount_currency, NULL as customer_invoice_id, NULL as total_data_used
+      FROM location_balance_refills
+    )
+  ) AS location_package_sales_or_location_balance_refills
+  SQL
+  @all_location_package_sales_or_location_balance_refills = LocationPackageSaleOrLocationBalanceRefill
+    .includes(:location, :customer, :customer_invoice, :location_package)
+    .from([Arel.sql(sql)])
+    .where(location_id: current_location)
+</code></pre></div>    </div>
+  </li>
+  <li>execute sql from rails console. When you run sql result is iteratable (array
+ of arrays of selected fields).</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>s = 'SELECT * FROM users'
+r = ActiveRecord::Base.connection.execute s
+r.each { |l| puts l }
+</code></pre></div></div>
+
+<ul>
+  <li>for single item, always use <code class="highlighter-rouge">@post.destroy</code> instead of <code class="highlighter-rouge">@post.delete</code> because
+it propagates to all <code class="highlighter-rouge">has_many :comments, dependent: :destroy</code> (also need to
+define this dependent param). If you use delete or use destroy without
+<code class="highlighter-rouge">has_many dependent: destroy</code> than <code class="highlighter-rouge">ActiveRecord::InvalidForeignKey:
+SQLite3::ConstraintException: FOREIGN KEY constraint failed</code> for sqlite db…
+For mysql and postgres, error will be triggered if there are foreign keys
+defined.</li>
+  <li>for multiple items <code class="highlighter-rouge">Post.destroy_all</code> will run one by one (triggering
+callbacks) so it is probably slow, so it is better to use <code class="highlighter-rouge">Post.delete_all</code>
+which will remove in single sql query. To prevent foreign keys errors, you
+should first <code class="highlighter-rouge">Comment.where(post: Post.all).delete_all</code> and than call
+<code class="highlighter-rouge">Post.delete_all</code>. Watch out if you call delete_all on collection proxy
+<code class="highlighter-rouge">post.comments.delete_all</code></li>
+</ul>
+<p><a href="https://stackoverflow.com/questions/23879841/activerecord-delete-all-method-updating-instead-of-deleting">https://stackoverflow.com/questions/23879841/activerecord-delete-all-method-updating-instead-of-deleting</a>
+Default strategy is <code class="highlighter-rouge">:nullify</code> ie keep row, but set <code class="highlighter-rouge">post_id = nil</code>. So always
+use <code class="highlighter-rouge">has_many :association, dependent: :destroy</code> so it will not use <code class="highlighter-rouge">nullify</code>
+but <code class="highlighter-rouge">delete_all</code> strategy
+<a href="http://api.rubyonrails.org/classes/ActiveRecord/Associations/CollectionProxy.html#method-i-delete_all">link</a></p>
+
+<h2 id="add-json-and-hstore">Add json and hstore</h2>
+
+<p>Note that you can use simple text column (without default value) and add
+<code class="highlighter-rouge">serialize :preferences, Hash</code> in your model, so <code class="highlighter-rouge">user.prefereces # =&gt; {}</code> is
+defined for initial empty value.
+You can not search serialized columns (you are limited to reading and writing
+data) <code class="highlighter-rouge">User.where(params: { a: 1 })</code> gives error. You can only use raw sql, for
+example <code class="highlighter-rouge">User.where('params = ?', { a: 1}.to_yaml)</code>.</p>
+
+<p>Adding array of any type and hstore is easy, just add default value <code class="highlighter-rouge">[]</code> and
+<code class="highlighter-rouge">''</code> (breaks for <code class="highlighter-rouge">{}</code>). You can create hstore extension in migration. If you
+need arrays of hstore than you need to go for json or jsonb (better optimization
+only pq 9.4) or json/jsonb array.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CreatePhones &lt; ActiveRecord::Migration
+  def change
+    execute "create extension hstore"
+    create_table :phones do |t|
+      t.string :my_array, array: true, default: []
+      t.hstore :my_hash, default: ''
+      t.jsonb :my_json, default: []
+      t.jsonb :my_array_of_json, array: true, default: []
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>DB user need to be superuser to be able to create extension. If you need to
+run <code class="highlighter-rouge">rake db:migrate:reset</code> to rerun all migration to check if db/schema is in
+sync, than the best way is to alter user to have superuser privil <code class="highlighter-rouge">sudo su
+postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"</code> where
+orlovic is database username (you can see those usernames - roles using
+pqadmin visual program)
+<a href="https://github.com/diogob/activerecord-postgres-hstore/issues/99">link</a>.</p>
+
+<p>You can enable hstore manually
+<a href="https://gist.github.com/terryjray/3296171">link</a> <code class="highlighter-rouge">sudo psql -d
+Scuddle_app_development -U orlovic</code> and <code class="highlighter-rouge">CREATE EXTENSION hstore;</code> or in one
+command: <code class="highlighter-rouge">sudo su postgres -c "psql Scuddle_app_test -c 'CREATE EXTENSION
+hstore;'"</code>. You should do this also for <em>test</em> and <em>development</em> database. If
+you don’t know database name you can use <a href="http://guides.rubyonrails.org/command_line.html#rails-runner">rails
+runner</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations["production"]["database"]'` -c 'CREATE EXTENSION hstore;'"
+</code></pre></div></div>
+
+<h2 id="dump-database">Dump database</h2>
+
+<p>Dump database from production for local inspection, you can download from
+heroku manually or using commands:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku pg:backups:capture # it will create b002.dump
+heroku pg:backups:download # it will download to latest.dump
+</code></pre></div></div>
+
+<p>Save it for example <code class="highlighter-rouge">tmp/b001.dump</code>.</p>
+
+<p>You can dump LOCAL database with <code class="highlighter-rouge">pg_dump</code>. Note that this is plain sql, but
+heroku dump is binary format (size is much smaller).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pg_dump $DATABASE_NAME &gt; $DUMP_FILE
+#
+# or heroku style, replace: mypassword myuser and mydb
+# PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME &gt; $DUMP_FILE
+</code></pre></div></div>
+
+<h2 id="restore-database">Restore database</h2>
+
+<p>Restore from local textual and binary dump</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export DUMP_FILE=tmp/b001.dump
+export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
+chmod a+r $DUMP_FILE
+
+rake db:drop db:create
+
+# textual dump
+psql $DATABASE_NAME &lt; $DUMP_FILE
+
+# binary dump
+sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
+</code></pre></div></div>
+
+<p>Or you can use <a href="https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39">duleorlovic’s load_dump
+helper</a></p>
+
+<p>To restore on heroku you need to dump with same flags (dump is binary) and push
+the file somewhere on internet, for example AWS S3 and than run in console</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorlovic-test-us-east-1/b001.dump DATABASE_URL
+</code></pre></div></div>
+
+<h2 id="heroku-upgrade-database-plan">Heroku upgrade database plan</h2>
+
+<p>Upgrade heroku <em>hobby-dev</em> na <em>hobby-basic</em> ($9/month max 10M rows).
+All plans https://elements.heroku.com/addons/heroku-postgresql</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku addons:create heroku-postgresql:hobby-basic
+# Creating heroku-postgresql:hobby-basic on ⬢ myapp... $9/month
+# Database has been created and is available
+#  ! This database is empty. If upgrading, you can transfer
+#  ! data from another database with pg:copy
+# Created postgresql-defined-42601 as HEROKU_POSTGRESQL_CHARCOAL_URL
+# Use heroku addons:docs heroku-postgresql to view documentation
+
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
+# ▸    WARNING: Destructive action
+#  ▸    This command will remove all data from CHARCOAL
+#  ▸    Data from DATABASE will then be transferred to CHARCOAL
+#  ▸    To proceed, type myapp or re-run this command with --confirm myapp
+# 
+# &gt; myapp
+# Starting copy of DATABASE to CHARCOAL... done
+# Copying... done
+</code></pre></div></div>
+
+<p>Change DATABASE_URL</p>
+
+<p>Upgrading from hobby-basic to standard-0</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku pg:info
+heroku addons:create heroku-postgresql:standard-0
+# save the variable name HEROKU_POSTGRESQL_{some color}_URL
+heroku maintenance:on
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_color_URL
+heroku pg:promote HEROKU_POSTGRESQL_color_URL
+heroku maintenance:off
+heroku config:set DATABASE_URL=....url from config
+heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
+</code></pre></div></div>
+
+<h2 id="postgres-tips">Postgres tips</h2>
+
+<ul>
+  <li>you should explicitly add timestamps with <code class="highlighter-rouge">t.timestamps</code></li>
+  <li>
+    <p>upgrade postgres from 9.3 to 9.4
+<a href="https://gist.github.com/dideler/60c9ce184198666e5ab4">link</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" &gt;&gt; /etc/apt/sources.list.d/postgresql.list'
+
+# Also probably optional but I like to update sources and upgrade
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install postgresql-9.4
+sudo pg_dropcluster 9.4 main --stop
+sudo pg_upgradecluster 9.3 main
+sudo pg_dropcluster 9.3 main
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>To disable sql logs in rails logger put this in initializer file</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/silent_sql_log.rb
+ActiveRecord::Base.logger.level = Logger::INFO
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to disable assets logs use this</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/environments/development.rb
+config.assets.quiet = true
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to allow any user to log in to database, ie any user in config/database.yml
+even without password, you need to change postgres config:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vi /etc/postgresql/9.1/main/pg_hba.conf
+# change all this words [md5, ident, peer] to trust
+sudo /etc/init.d/postgresql restart
+</code></pre></div>    </div>
+
+    <p>create one user:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo su - postgres
+psql postgres
+CREATE ROLE "orlovic" WITH CREATEDB LOGIN;
+\q
+
+# you can remove with DROP ROLE orlovic;
+# or you can change anything on role
+# https://www.postgresql.org/docs/9.3/static/sql-alterrole.html
+# if you need uppercased (it was created `orlovic` instead of `Orlovic`)
+ALTER ROLE orlovic RENAME TO "Orlovic";
+# or
+pgadmin3 # login as postgres without password and chage it to Orlovic
+
+# create database is with linux command
+createdb # this will create db with same name as current user
+createdb orlovic
+</code></pre></div>    </div>
+  </li>
+  <li>you can use production database locally with url from heroku config env
+variable <code class="highlighter-rouge">HEROKU_POSTGRESQL_CRIMSON_URL:
+postgres://flvmstxfdk:3fo9O62B-Q4BZ7EP8N4YU@ec2-107-20-191-205.compute-1.amazonaws.com:5432/d5ttgvqpjs1ftb</code>
+and put it inside <code class="highlighter-rouge">config/database.yml</code> under <code class="highlighter-rouge">development</code> under <code class="highlighter-rouge">url:
+postgres://asd.asd@asd.com:123/asd</code> item</li>
+  <li>
+    <p>you can use <a href="http://guides.rubyonrails.org/association_basics.html#options-for-belongs-to-counter-cache">rails counter
+cache</a>
+with <code class="highlighter-rouge">belongs_to :author, counter_cache: true</code> but than you need to have
+<code class="highlighter-rouge">authors.books_count</code> column. It is easier to have <a href="https://medium.com/@eric.programmer/the-sql-alternative-to-counter-caches-59e2098b7d7#.cmuuhtayh">sql for counter
+cache</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/author.rb
+class Author &lt; ApplicationRecord
+  scope :with_counts, -&gt; {
+    select &lt;&lt;~SQL
+      authors.*,
+      (
+        SELECT COUNT(books.id) FROM books
+        WHERE author_id = authors.id
+      ) AS books_count
+    SQL
+  }
+end
+
+# app/controllers/authors_controller.rb
+
+@authors = Author.with_counts.all
+@author = Author.with_counts.find params[:id]
+
+# app/views/authors/index.html.erb
+
+&lt;% @authors.each do |author| %&gt;
+  &lt;% autor.books_count %&gt;
+&lt;% end %&gt;
+&lt;%= @author.books_count %&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="migrations">Migrations:</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">rails g model user email_address</code> will generate migration and model. It is
+good to edit <code class="highlighter-rouge">last_migration</code> and add <code class="highlighter-rouge">null: false</code> to not null fields
+(particularly for foreign keys) also usefull since in sql <code class="highlighter-rouge">where col != NULL</code>
+will not return any value (also <code class="highlighter-rouge">where NULL = NULL</code>), you need to use <code class="highlighter-rouge">where col
+IS NOT NULL</code> (which is default for active record <code class="highlighter-rouge">.where.not(col: nil)</code>). So
+better is to use <code class="highlighter-rouge">false</code> since <code class="highlighter-rouge">where col != false</code> will return some results.
+Add index <code class="highlighter-rouge">add_index :users, :email_address, unique: true</code>…
+if you want to add index in different step (not in <code class="highlighter-rouge">t.references :c, index:
+false</code> because name is too long (error like <code class="highlighter-rouge">Index name 'index_table_column' on
+table 'table' is too long; the limit is 64 characters</code>) than you can use
+different name NOTE that you need to use exact column name (with <code class="highlighter-rouge">_id</code>)
+<code class="highlighter-rouge">add_index :users, :company_id, name: 'index company on users'</code>
+https://github.com/gregnavis/active_record_doctor to help you find columns
+without index</li>
+  <li>In migration Product.save will probably break in the future, because <em>Product</em>
+will be validated for something that we did not know on that time.
+We can call <code class="highlighter-rouge">Product.update_all fuzz: 'fuzzy'</code> or <code class="highlighter-rouge">Product.update_all 'new_col =
+old_col'</code> to update all records in single sql query, without triggering
+callbacks or validations.
+You can also replace substring for example: <code class="highlighter-rouge">User.update_all('email =
+REPLACE(email, "a", "x")')</code>
+Better is to create local class and call reset column information. Also if we
+are adding not null column we need to do it in two steps to populate existing
+records.</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># db/migrate/20161010121212_update_fuzz.rb
+class UpdateFuzz &lt; ActiveRecord::Migration
+  # this is local Product class used only inside this migration
+  class Product &lt; ActiveRecord::Base
+  end
+  def change
+    add_column :products, :fuzz, :string
+    # this is needed since renamed columns will be ignored on "save"
+    # Product.reset_column_information
+    # check with Product.columns or Product.column_names
+    Product.update_all fuzz: 'fuzzy'
+    Product.find_each { |product| product.save! }
+    change_column :products, :fuzz, :string, null: false
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>to change type from string to integer (using cast)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ChangeScoreTypeInFilledAnswers &lt; ActiveRecord::Migration 
+  def up
+    change_column :filled_answers, :score, 'integer USING CAST(score AS integer)'
+  end
+  def down
+    change_column :filled_answers, :score, :string
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>use <em>db/seed.rb</em> to add some working data (users, products) that should not go
+to production. add data to migration file if something needs to be in db
+(select box, customer plans)</li>
+  <li>when you restore database you can see that list of performed migrations <code class="highlighter-rouge">rake
+db:migrate:status</code> does not show that any migration was perfomed. You can
+manually perform run specific single or all migrations
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># status
+rake db:migrate:status
+# all including until this version
+rake db:migrate VERSION=20161114162031`
+# only this migration file
+rake db:migrate:up VERSION=20161114162031`
+# reverse if it is reversible
+rake db:migrate:down VERSION=20161114162031`
+# to remove migration so you can redo
+mysql&gt; DELETE FROM schema_migrations WHERE version = 20161114162031
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>if you want to redo migration (revert and migrate again) you can use <code class="highlighter-rouge">redo</code> 
+To drop database in console you can <code class="highlighter-rouge">ActiveRecord::Migration.drop_table(:users)</code></p>
+<ul>
+  <li>you can use <code class="highlighter-rouge">rake db:migrate:redo STEP=2</code> to redo last two migrations, or you
+can run all migrations to certain point with <code class="highlighter-rouge">rake db:migrate
+VERSION=20161114162031</code> (note that <code class="highlighter-rouge">:up</code> <code class="highlighter-rouge">:down</code> only run one migration)</li>
+  <li><code class="highlighter-rouge">rake db:migrate</code> will also invoke <code class="highlighter-rouge">db:schema:dump</code> task
+<a href="http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations">link</a></li>
+  <li>to check current metaga data, for example schema enviroment you can run
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails runner "ActiveRecord::Base.connection.execute('select * from ar_internal_metadata').each {|r|puts r}"
+
+# or for test database
+rails runner "ActiveRecord::Base.connection.execute('select * from ar_internal_metadata').each {|r|puts r}" -e test
+
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="has_many-through">Has_many through</h2>
+
+<p><code class="highlighter-rouge">has_many :roles; has_many :projects, through: roles</code> can be used for many to
+many associations. You can automatically add new role, no need to <code class="highlighter-rouge">user.save</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user.roles.create project: project
+# or
+user.projects &lt;&lt; project
+</code></pre></div></div>
+
+<p><a href="http://guides.rubyonrails.org/association_basics.html#the-has-and-belongs-to-many-association">has_and_belongs_to_many</a>
+(habtm) can be generated with <code class="highlighter-rouge">rails g migration create_campaigns_templates
+campaign:references template:references</code> and add <code class="highlighter-rouge">id: false</code> as
+<a href="http://guides.rubyonrails.org/association_basics.html#updating-the-schema">suggested</a>
+Note that both model names are plural.
+But rubocop suggest to use separate model for habtm relation (in that case I use
+singular first model).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CreateCampaignsTemplates &lt; ActiveRecord::Migration
+  def change
+    create_table :campaigns_templates, id: false do |t|
+      t.references :campaign, foreign_key: true, null: false
+      t.references :template, foreign_key: true, null: false
+
+      t.timestamps
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>and adding <code class="highlighter-rouge">has_and_belongs_to_many :templates</code> in those classes.</p>
+
+<p>You can force uniq with <code class="highlighter-rouge">add_index :campaign_templates, [:campaign_id,
+:template_id], unique: true</code> and check in rails with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># add if not exists
+campaign.templates &lt;&lt; template unless campaign.templates.include? template
+
+# remove
+campaign.templates.delete template
+</code></pre></div></div>
+
+<p>If you have different name of the table: <code class="highlighter-rouge">t.references :donor, foreign_key:
+true, null: false</code> but donor is actually in users table, than you need to change
+foreign key (note that <code class="highlighter-rouge">add_foreign_key</code> params are in plurals!)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># to_table is in rails5
+t.references :donor, foreign_key: { to_table: :users }, null: false
+# in rails4 use references keyword also as parameter, not that foreight key
+# constrains need to be added in separate command. note suffix "_id"
+t.references :donor, foreign_key: false, null: false, references: :users
+add_foreign_key :table, :users, column: :donor_id
+</code></pre></div></div>
+
+<p>or manually write relation</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create_table :donations
+  t.belongs_to :donor, index: true, null: false
+end
+add_foregn_key :donations, :users, column: :donor_id
+</code></pre></div></div>
+
+<p>Also in model you need to write: <code class="highlighter-rouge">has_many :donations, foreign_key: :donor_id</code>
+and <code class="highlighter-rouge">belongs_to :donor, class_name: "User"</code>. If you need to specify class name
+in has_many through association, use option <code class="highlighter-rouge">source: :user</code></p>
+
+<p>Note that <code class="highlighter-rouge">t.references</code> should be used with <code class="highlighter-rouge">foreign_key: true, null: false</code>
+since foreign_key is not automatically used (<code class="highlighter-rouge">t.references</code> automatically add
+<code class="highlighter-rouge">index</code>).
+Note that <code class="highlighter-rouge">t.belongs_to</code> by default use <code class="highlighter-rouge">index: false</code>, so you need to use
+<code class="highlighter-rouge">index: true</code> (or <code class="highlighter-rouge">add_index</code> later) (<code class="highlighter-rouge">add_column :users, :token, :string,
+index: true</code> will not create index, you need to use <code class="highlighter-rouge">add_index</code> separatelly).
+But usually you use <code class="highlighter-rouge">add_foreign_key</code> that
+will also add index (name will be like: <code class="highlighter-rouge">fk_rails_123123</code>) if it is not added by
+belongs_to, so you can safelly use <code class="highlighter-rouge">t.belongs_to ... index: false</code> if you are
+using <code class="highlighter-rouge">add_foregn_key</code>.</p>
+
+<p>For MySql I have to use <code class="highlighter-rouge">unsigned: true</code> in <code class="highlighter-rouge">t.belongs_to :user, null: false,
+unsigned: true</code> or for <code class="highlighter-rouge">t.references :user, unsigned: true</code>
+You can add column at specific location <code class="highlighter-rouge">add_column :feeds, :last_modified,
+:datetime, after: :url</code> (after column does not work in psql since you need to
+change table) https://stackoverflow.com/questions/27214251/postgresql-add-column-after-option-usage-in-rails-migration</p>
+
+<p>If you need to update specific fields of association, add validation or cdd
+ustom order then you should create the model and use <code class="highlighter-rouge">has_many :templates,
+through: campaign_templates, order: 'campaign_templates.created_at ASC'</code>
+Note that here we user singular first part so model name looks better</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CampaignTemplate &lt; ActiveRecord::Base
+  belongs_to :campaign
+  belongs_to :template
+end
+</code></pre></div></div>
+
+<p>If you accidentaly use <code class="highlighter-rouge">belongs_to :templates</code> (pluralized) than error is
+<code class="highlighter-rouge">undefined method relation_delegate_class' for Templates:Module</code></p>
+
+<h2 id="database-indexes">Database indexes</h2>
+
+<p>Indexes should be on all columns that are references in <code class="highlighter-rouge">WHERE, HAVING, ORDER
+BY</code> parts of sql.
+For example if you find using specific column <code class="highlighter-rouge">User.find_by! column: 'val'</code>. Use
+bang version instead of <code class="highlighter-rouge">@user = User.find_by name: 'Duke'</code> since that will
+return <code class="highlighter-rouge">nil</code> instead of <code class="highlighter-rouge">raise ActiveRecord::RecordNotFound unless @user</code>
+Also we can add index to <code class="highlighter-rouge">:updated_at</code> column since we sometimes order by
+that column.</p>
+
+<p>All foreign keys need to have index.
+You can use <code class="highlighter-rouge">add_reference</code> (adding column and index) note that second param is
+in singular.
+If you want to add or remove reference in migration <code class="highlighter-rouge">rails g migration
+add_user_to_leads user:references</code> which will generate</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class AddUserToLeads &lt; ActiveRecord::Migration
+  def change
+    # reference will automatically include index on that column
+    add_reference :leads, :contact, foreign_key: true
+  end
+end
+</code></pre></div></div>
+
+<p>For polymorphic associations <code class="highlighter-rouge">owner_id</code> and <code class="highlighter-rouge">owner_type</code> you can create in
+migration <code class="highlighter-rouge">rails g model project owner:references{polymorphic}</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Organization &lt; ActiveRecord::Base
+  has_many :projects, :as =&gt; :owner
+end
+
+class User &lt; ActiveRecord::Base
+  has_many :projects, :as =&gt; :owner
+end
+
+class Project &lt; ActiveRecord::Base
+  belongs_to :owner, :polymorphic =&gt; true
+end
+</code></pre></div></div>
+
+<p>You can eager load polymorphic association https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#module-ActiveRecord::Associations::ClassMethods-label-Eager+loading+of+associations
+but can not use it in where https://stackoverflow.com/questions/16123492/eager-load-polymorphic
+For using in where you need to define specific associations (note: you need to
+add <code class="highlighter-rouge">optional: true</code>)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Notification &lt; ApplicationRecord
+  belongs_to :notifiable, polymorphic: true
+  # notifiable: Comment, Task, Project need to implement subscribed_users since
+  # we send body text to them
+
+  belongs_to :comment, -&gt; { where notifications: { notifiable_type: 'Comment' } }, foreign_key: :notifiable_id, optional: true
+  belongs_to :task, -&gt; { where notifications: { notifiable_type: 'Task' } }, foreign_key: :notifiable_id, optional: true
+
+  scope :for_comments_on_tasks, (lambda do
+    joins(:comment)
+      .where(comments: { commentable_type: 'Task' })
+  end)
+</code></pre></div></div>
+
+<p>When you create you can use <code class="highlighter-rouge">references</code> and <code class="highlighter-rouge">polymorphic: true</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  t.references :featureable, polymorphic: true, null: false
+</code></pre></div></div>
+
+<p>If you add one by one column than you need to add double index:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>t.string :owner_type
+t.integer :owner_id
+
+# Bad: This will not improve the lookup speed
+add_index :projects, :owner_id
+add_index :projects, :owner_type
+
+# Good: This will create the proper index
+add_index :projects, [:owner_type, :owner_id]
+</code></pre></div></div>
+
+<p>You can add unique index on some existing columns (to see
+validation error instead of database esception, should also be in rails
+<code class="highlighter-rouge">validates :email, uniqueness: { scope: :user_id }</code>)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class AddUniqContacts &lt; ActiveRecord::Migration
+  def change
+    add_index :contacts, [:email, :user_id], unique: true
+  end
+end
+</code></pre></div></div>
+
+<p>Do not add index for tables that has a lot or removing, since perfomance will be
+bad. Also huge tables need huge indexes, so pay attention on size.</p>
+
+<p>Remove index and foreign key if you want to remove column</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  remove_foreign_key :online_payment_responses, :location_packages
+  remove_column :online_payment_responses, :location_package_id
+  if index_exists?(:online_payment_responses, name: 'fk_rails_b36eeaa704')
+    remove_index :online_payment_responses, name: 'fk_rails_b36eeaa704'
+  end
+</code></pre></div></div>
+
+<p>In mysql sometimes <code class="highlighter-rouge">LIMIT 10</code> is slower than <code class="highlighter-rouge">LIMIT 100</code> since it won’t use
+index for small stuff, but if table is huge than it’s much slower without index.
+To force index use something like <code class="highlighter-rouge">User.from("'users' FORCE INDEX
+(my_user_index")</code>
+<a href="http://fuzzyblog.io/blog/rails/2017/02/24/understanding-low-level-index-issues-in-mysql.html">link</a>
+If you receive error <code class="highlighter-rouge">undefined method map for "'users' FORCE INDEX
+(my_user_index)":Arel::Nodes::SqlLiteral</code> than you can try to replace
+<code class="highlighter-rouge">includes/references</code> with <code class="highlighter-rouge">joins</code>.</p>
+
+<h2 id="deadlocks">Deadlocks</h2>
+
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlock-example.html">https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlock-example.html</a>
+<a href="http://api.rubyonrails.org/v5.1/classes/ActiveRecord/Locking/Pessimistic.html">http://api.rubyonrails.org/v5.1/classes/ActiveRecord/Locking/Pessimistic.html</a>
+<a href="http://www.chriscalender.com/advanced-innodb-deadlock-troubleshooting-what-show-innodb-status-doesnt-tell-you-and-what-diagnostics-you-should-be-looking-at/">http://www.chriscalender.com/advanced-innodb-deadlock-troubleshooting-what-show-innodb-status-doesnt-tell-you-and-what-diagnostics-you-should-be-looking-at/</a></p>
+
+<p><a href="https://vimeo.com/12941188">https://vimeo.com/12941188</a></p>
+
+<p>For errors</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mysql2::Error: Lock wait timeout exceeded; try restarting transaction
+Mysql2::Error: Deadlock found when trying to get lock; try restarting transaction: UPDATE
+</code></pre></div></div>
+<p>you can see examples on https://github.com/duleorlovic/deadlock_mysql
+To get latest deadlock in mysql run <code class="highlighter-rouge">msql&gt; SHOW ENGINE INNODB STATUS</code></p>
+
+<p><code class="highlighter-rouge">Farmer.lock.find</code> will wait untill it is free to lock this farmer.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alert = nil
+ActiveRecord::Base.transaction do
+  if something_wrong?
+    alert = 'Can not ...'
+    raise ActiveRecord::Rollback
+  end
+end
+if alert
+</code></pre></div></div>
+
+<p>Race conditions</p>
+
+<p>When you have a lot of users and long db update commands than you probably have
+exceptions for deadlocks and duplicate entries. You can retry
+https://speakerdeck.com/rstankov/zero-exceptions-in-production?slide=71</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/users_controller.rb
+  def update
+    retries ||= 2
+    # perform some long task and in another browser and thread try to lock it
+  rescue ActiveRecord::RecordNotUnique
+    retries -= 1
+    raise unless retries.nonzero?
+    retry
+  end
+</code></pre></div></div>
+
+<h1 id="mysql">MySql</h1>
+
+<ul>
+  <li>if you have
+<code class="highlighter-rouge">/home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2.rb:31:in
+require: libmysqlclient.so.18: cannot open shared object file: No such file
+or directory -
+/home/orlovic/.rvm/gems/ruby-2.2.4/gems/mysql2-0.4.4/lib/mysql2/mysql2.so
+(LoadError)</code> than try <code class="highlighter-rouge">gem uninstall mysql2;gem install mysql2</code></li>
+  <li>
+    <p>on mac os if you have <code class="highlighter-rouge">Mysql2::Error: Can't connect to local MySQL server
+through socket '/var/run/mysqld/mysqld.sock' (2)</code> than create a link to socket
+file whish is located using <code class="highlighter-rouge">mysql_config --socket</code> or <code class="highlighter-rouge">mysqladmin variables</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mkdir /var/run/mysqld
+sudo ln -s /tmp/mysql.sock /var/run/mysqld/mysqld.sock
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>create mysql user</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -u root -p
+CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'asdf';
+
+# list all
+SELECT User FROM mysql.user;
+# change password
+SET PASSWORD FOR 'user-name-here'@'hostname-name-here' = PASSWORD('new-password-here');
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>restore mysql sql dump</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -u myuser -pMYPASSWORD my_database_name &lt; tmp/web001db.sql
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>create database with specific character set</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE DATABASE my_app DEFAULT CHARACTER SET 'ascii';
+</code></pre></div>    </div>
+
+    <p>or in <code class="highlighter-rouge">config/database.yml</code> with</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>development:
+  adapter: mysql2
+  encoding: ascii
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>On Heroku it is better to use <em>JawsDB MySQL</em> than <em>ClearDB MySQL</em> since it has
+more MB in for free usage.</p>
+
+<ul>
+  <li>
+    <p>to chech if mysql database exists use mysqlshow</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists = capture("echo $(mysqlshow --user=#{env.db_user} --password=#{env.db_pass} #{env.db_name} | grep -V Wildcard | grep -o #{env.db_name})")
+if exists.strip.size == 0
+  # does not exists
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="turbolinks">Turbolinks</h1>
+
+<p><code class="highlighter-rouge">$(function)</code> is shorthand for <code class="highlighter-rouge">$(document).ready(function(){})</code> (and is not the
+same as <code class="highlighter-rouge">$(document).on('ready', function(){})</code>) and it is when DOM is ready. If
+you need to know when all images and iframes are loaded than use
+<code class="highlighter-rouge">$(window).on('load', function() {})</code>.
+Turbolinks is installed with adding <code class="highlighter-rouge">gem 'turbolinks'</code> and include in
+application.js <code class="highlighter-rouge">//= require turbolinks</code>.</p>
+
+<blockquote>
+  <p>Turbolinks intercepts all clicks on <a href=""> links to the same domain. When
+you click an eligible link, Turbolinks prevents the browser from following it.
+Instead, Turbolinks changes the browser’s URL using the History API, requests
+the new page using XMLHttpRequest, and then renders the HTML response.</a></p>
+</blockquote>
+
+<blockquote>
+  <p>During rendering, Turbolinks replaces the current &lt;body&gt; element outright and
+merges the contents of the &lt;head&gt; element. The JavaScript window and document
+objects, and the HTML &lt;html&gt; element, persist from one rendering to the next.</p>
+</blockquote>
+
+<p>With turbolinks rails acts as single page application. It will intercept <code class="highlighter-rouge">&lt;a&gt;</code>
+links, but if you want to redirect using javascript <code class="highlighter-rouge">window.location</code> than you
+can use <code class="highlighter-rouge">Turbolinks.visit link</code>, for example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(document).on 'click', '[data-click]', (e) -&gt;
+  Turbolinks.visit $(this).data('click')
+</code></pre></div></div>
+
+<p>Each visit can be <code class="highlighter-rouge">advance</code> or <code class="highlighter-rouge">replace</code>, than can be set with
+<code class="highlighter-rouge">data-turbolinks-action="replace"</code> or <code class="highlighter-rouge">Turbolinks.visit link, { action:
+'replace' })</code>.
+<code class="highlighter-rouge">restore</code> visit is when we click <code class="highlighter-rouge">Back</code> and can not be canceled.
+You can disable turbolink on specific link with <code class="highlighter-rouge">data-turbolinks="false"</code></p>
+
+<p>Since <code class="highlighter-rouge">window</code> and <code class="highlighter-rouge">document</code> remains, all objects remain in memory.</p>
+
+<p>So if you want to do something on every page and on first load than you need to
+bind on <code class="highlighter-rouge">turbolinks:load</code>
+Without turbolinks it would be on ready_page_load.coffee <code class="highlighter-rouge">$(document).on 'ready
+page:load', -&gt;</code>
+This file is used when you need to iterate some elements <code class="highlighter-rouge">.each</code>, to activate
+some plugins or when you need to bind click event listener and prevent it in
+another data event click</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/javascripts/turbolinks_load.coffee
+$(document).on('turbolinks:load', -&gt;
+  # in previous rails we used to catch up on 'ready page:load'
+  console.log "document on turbolinks:load"
+
+  # Activating Best In Place
+  jQuery(".best_in_place").best_in_place()
+  autosize $('textarea')
+
+  $('[data-disable-button-if-empty]').on('change paste keyup input', -&gt;
+    disabled = this.value.length == 0
+    button = $(this).parents('form').first().find('[type=submit]')
+    button.prop('disabled', disabled)
+
+  # initial status
+  $.each $('[data-disable-button-if-empty]'), (index, el) -&gt;
+    $(el).trigger('change')
+
+  # for infinite pagination use two divs, second need to have pagination links
+  # &lt;div data-scroll='true'&gt;
+  #   &lt;div data-scroll-content='true'&gt;
+  #     &lt;% @items.each do |item| %&gt;
+  #     &lt;% end %&gt;
+  #     &lt;%= will_paginate, class: 'hide-not-important' %&gt;
+  #
+  # when you do not want auto trigger you can use
+  # &lt;div data-scroll='true' data-scroll-auto-trigger='false'&gt;
+  #   &lt;div data-scroll-content='true'&gt;
+  #     ...
+  #     &lt;%= will_paginate @items, next_label: 'Show more...', class: 'show-more-pagination', page_links: false %&gt;
+  $('[data-scroll]').each -&gt;
+    if $(this).data('scrollAutoTrigger') == undefined
+      autoTrigger = true
+    else
+      autoTrigger = $(this).data('scrollAutoTrigger')
+    $(this).jscroll(
+      nextSelector: 'a.next_page'
+      autoTrigger: autoTrigger
+      contentSelector: '[data-scroll-content]'
+      loadingHtml: "&lt;div class='col-xs-12 text-center mtb20 widget-loader'&gt;&lt;img src='https://d1bnwaoqvo9ynq.cloudfront.net/assets/images/loader_widget_sb.gif' alt='loading'&gt;&lt;p&gt;Loading more...&lt;/p&gt;&lt;/div&gt;"
+      callback: -&gt;
+        console.log 'jscroll callback'
+    )
+
+  # we can not use $(document).on 'click', '[data-enable-if-valid]', (e) -&gt;
+  # since we can not prevent already bubbled click event in case of invalid input
+  $('[data-enable-if-valid]').on 'click', (e) -&gt;
+    $button = $(this)
+    # http://jqueryvalidation.org/Validator.element/
+    # https://johnnycode.com/2014/03/27/using-jquery-validate-plugin-html5-data-attribute-rules/
+    validator = $button.parents('form').validate()
+    $inputs = $($button.data().enableIfValid).find('input')
+    all_valid = true
+    $inputs.each -&gt;
+      unless validator.element $(this)
+        all_valid = false
+    if all_valid
+      console.log $button.data().enableIfValid + " is valid"
+    else
+      # this hack will prevent other data- events, like data-active-next
+      $button.prop('disabled', 'disabled')
+      setTimeout(
+        -&gt;
+          $button.prop('disabled', false)
+        200
+      )
+      console.log $button.data().enableIfValid + " is not valid"
+</code></pre></div></div>
+
+<p>When you are using <code class="highlighter-rouge">data-remote-true</code> for show edit form than request is JS and
+any javascript inside <code class="highlighter-rouge">js.erb</code> or inside partial <code class="highlighter-rouge">$('#id').replaceWith('&lt;%= j
+render 'partial' %&gt;');</code> is executed every time. Problem is with bootstrap
+modals where request is HTML. remote modal content is deprecated in
+<a href="https://getbootstrap.com/docs/3.3/javascript/#modals-options">v4</a> so it’s
+better to use custom implementation</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/document_on.coffee
+$(document).on 'click', '[data-js-modal]', (e) -&gt;
+  arget = this.dataset.jsModal
+  remote_link = this.href || this.dataset.jsModalHref
+  $(target).modal('show')
+  # use $.ajax and replaceWith since $.load use .html which discard scripts
+  $.ajax(
+    url: remote_link
+  ).done (responseText) -&gt;
+    $(target + " .modal-content").replaceWith responseText
+  e.preventDefault()
+
+$(document).on 'click change', '[data-toggle-active]', (e) -&gt;
+  target = $(this).data().toggleActive
+  if $(this).is(':checkbox')
+    # if we click directly on checkbox, it will receive also the click event,
+    # but usually that is fine (also when you are using bootstrap toggle)
+    to_show = e.currentTarget.checked
+  else
+    to_show = !$(target).hasClass('active')
+  if to_show
+    $(target).addClass 'active'
+  else
+    $(target).removeClass 'active'
+  console.log "data-toggle-active #{target}"
+</code></pre></div></div>
+
+<p>and trigger turbolinks load so it can catch new items. Instead of triggering,
+you can call <code class="highlighter-rouge">initializeDatepicker()</code>. That is also needed below the
+forms since ajax request in remote-true forms also need to run the initializaion
+scripts.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/initialize_datepicker.coffee
+window.initializeDatepicker = -&gt;
+  $date_elements = $('.date')
+  return unless $date_elements
+  ...
+</code></pre></div></div>
+
+<p>If you want to perform something on click for existing and new elements, but
+only on particular page, you can bind bind click on document on that page inside
+body. But when you navigate 10 times, it will trigger 10 times. So you can
+unbind on <code class="highlighter-rouge">page:before-change</code>. Note that you should write that after function
+declaration because when you click on page again, it will assign “on” on
+previous version, and unassign latest version of your_function</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script&gt;
+function your_function() {
+  LOG &amp;&amp; console.log("your_function call");
+}
+$(document).on('click', '.class', your_function);
+$(document).one('page:before-change',function() {
+  LOG &amp;&amp; console.log("unassign your_function");
+  $(document).off('click', your_function);
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>disable turbolinks <code class="highlighter-rouge">document.body.setAttribute('data-no-turbolink','true')</code></li>
+  <li>
+    <p>turbolinks are good if some of page content is changed using ajax.
+Browser back button when turbolink is enabled shows last content
+(not first that was fatched). When turbolinks is disabled, you can
+force refreshing the page with set_cache_buster before filter.
+Note that any input field stays populated (also hidden input field
+which you eventually populated in javascript):</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def set_cache_buster
+  response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+  response.headers["Pragma"] = "no-cache"
+  response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+end
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="seed">Seed</h1>
+
+<p>If you want indempotent seeds data you should have some identifier (for example
+<code class="highlighter-rouge">id</code>) for wich you can run <code class="highlighter-rouge">where(id: id).first_or_create! do...end</code>.
+User should use <code class="highlighter-rouge">first_or_initialize</code> since we can’t create without
+password, but we don’t have password field. <code class="highlighter-rouge">do ... end</code> block is used only if
+that object is not found.
+<code class="highlighter-rouge">slice</code> is used for uniq fields (not generated by faker), but all other fields
+should be populated in block. Slice is nice method to get params hash from
+current active record object <code class="highlighter-rouge">user.slice :email, :name # { email: '', name: ''
+}</code></p>
+
+<p>Use <code class="highlighter-rouge">faker</code> gem to generate example strings:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Faker::Internet.email</code></li>
+  <li><code class="highlighter-rouge">Faker::Name.name</code> <code class="highlighter-rouge">Faker::PhoneNumber.cell_phone</code> <code class="highlighter-rouge">Faker::Avatar.image("my-own-slug", "50x50")</code></li>
+  <li><code class="highlighter-rouge">Faker::Company.name</code> <code class="highlighter-rouge">Faker::Company.logo</code> <strong>real logo</strong></li>
+  <li><code class="highlighter-rouge">Faker::Address.street_address</code> <code class="highlighter-rouge">Faker::Address.city</code></li>
+  <li><code class="highlighter-rouge">Faker::Lorem.sentence</code> <code class="highlighter-rouge">Faker::ChuckNorris.fact</code></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># db/seeds.rb
+# we keep all variables (defined as property var: :name) in global b hash
+# so you an access them later as `b[:name]`
+b = {}
+
+# rubocop:disable Rails/Output
+# JobType
+[
+  { var: :my_job_type, name: 'Admin/Office' }
+].each do |doc|
+  r = JobType.where(doc.except(:var)).first_or_create! do |job_type|
+    # you do not need to call save! here
+    # put common stuff here
+    job_type.domain = 'my_domain'
+    puts "JobType #{doc[:name]}"
+  end
+  b[doc[:var]] = r if doc[:var]
+end
+
+# deterministic and random data
+1.upto(10).map do |i|
+  { email: "user#{i}@asd.asd", password: Faker::Internet.password }
+end.each do |doc|
+  User.where(doc.except(:password, :remote_avatar_url)).first_or_create! do |user|
+    user.password = doc[:password]
+    user.remote_avatar_url = doc[:remote_avatar_url]
+    user.confirm! # do not skip_confirmation!, we need to have confirmed so
+    # we can log in as this user from admin panel. sign_in will fail for
+    # autogenerated users who did not confirm or skip confirmation
+    # note that admin can NOT sign in as any not confirmed user
+    puts "User #{user.email}"
+  end
+end
+
+asd_user = User.find_by! email: 'asd@asd.asd'
+</code></pre></div></div>
+
+<h1 id="custom-logger">Custom logger</h1>
+
+<p>You can add tags (methods for request object), for example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+config.log_tags = [:remote_ip]
+</code></pre></div></div>
+
+<p>But if you want custom logger, than you can override existing</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/logger_formatter.rb
+class ActiveSupport::Logger::SimpleFormatter
+  # from activesupport/lib/active_support/core_ext/logger.rb
+  def call(severity, time, progname, msg)
+    "#{severity_color severity} #{String === msg ? msg : msg.inspect}\n"
+  end
+
+private
+
+  def severity_color(severity)
+    case severity
+    when "DEBUG"
+      "\033[0;34;40m[DEBUG]\033[0m" # blue
+    when "INFO"
+      "\033[1;37;40m[INFO]\033[0m" # bold white
+    when "WARN"
+      "\033[1;33;40m[WARNING]\033[0m" # bold yellow
+    when "ERROR"
+      "\033[1;31;40m[ERROR]\033[0m" # bold red
+    when "FATAL"
+      "\033[7;31;40m[FATAL]\033[0m" # bold black, red bg
+    else
+      "[#{severity}]" # none
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>I need to put backtrace in reverse order, so I wrap that code (for example whole
+seeds.rb).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>begin
+# code
+# never rescue from Exception, but use Standard error
+rescue StandardError =&gt; e
+  puts e.backtrace.reverse
+  puts e.class, e.message
+end
+</code></pre></div></div>
+
+<p>I do not know how to catch all exceptions without wrapping (maybe to use rack
+app as the exception_notification does).  I will try to create new logger, it
+is used for whole Rails application.
+<a href="http://stackoverflow.com/questions/6407141/how-can-i-have-ruby-logger-log-output-to-stdout-as-well-as-file">http://stackoverflow.com/questions/6407141/how-can-i-have-ruby-logger-log-output-to-stdout-as-well-as-file</a></p>
+
+<h1 id="mustache">Mustache</h1>
+
+<p><a href="https://github.com/mustache/mustache">mustache</a> is nice to render user
+templates <code class="highlighter-rouge">Hi </code>, where <code class="highlighter-rouge">name</code> is placeholder which is inside handlebars</p>
+
+<p>Usage is simple as</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data_for_body == current_user.contacts.first
+@template_body = TemplateRenderService.new(@template.body, data_for_body).render
+# in view use &lt;%= simple_format @template_body %&gt; to convert \n to &lt;br&gt;
+</code></pre></div></div>
+
+<p>It is usefull to delegate fields in contacts model to some belongs_to
+association, like <code class="highlighter-rouge">delegate User::FIELD_NAMES, to: :user</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/services/template_render_service.rb
+class TemplateRenderService
+  attr_reader :template_body, :data_for_body
+
+  def initialize template_body, data_for_body
+    @template_body = template_body
+    @data_for_body = data_for_body
+  end
+
+  def render
+    m = Mustache.new
+    m.raise_on_context_miss = true
+    m.render(template_body, data_for_body)
+  rescue Mustache::ContextMiss, Mustache::Parser::SyntaxError =&gt; e
+    e.message
+  end
+end
+</code></pre></div></div>
+
+<h1 id="rake-tasks">Rake tasks</h1>
+
+<p>You can write tasks with arguments <a href="http://guides.rubyonrails.org/command_line.html#custom-rake-tasks">rails
+rake</a></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/db.rake
+namespace :db do
+  desc 'This task does nothing'
+  task nothing: :environment do
+    # environment is needed to load rails
+  end
+end
+</code></pre></div></div>
+
+<p>Instead of <code class="highlighter-rouge">:env</code> or <code class="highlighter-rouge">:environment</code> you can use other tasks on which it depends.
+Also you can receive parameters into <code class="highlighter-rouge">args</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/update_subdomain.rake
+# instead of puts, we can use Rails.logger.info
+Rails.logger = Logger.new(STDOUT)
+namespace :update_subdomain do
+  desc "update subdomains for my-user. default value is 'my_subdomain'"
+  task :my_user, [:subdomain] =&gt; :environment do |task, args|
+    args.with_defaults subdomain: 'my_subdomain'
+    user = User.find_by name: 'my-user'
+    fail "Can't find user 'my-user'" unless user
+    user.subdomain = args.subdomain
+    user.save!
+    Rails.logger.info "Updated #{user.subdomain}" || next if return_from_rake_task_now?
+    Rails.logger.info 'Finished'
+  end
+end
+
+# run with
+rake update_subdomain:my_user
+rake update_subdomain:my_user[]
+rake update_subdomain:my_user[new_subdomain]
+</code></pre></div></div>
+
+<p>Another use of rake is to seed</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/seed.rake
+namespace :seed do
+  task :bid_types =&gt; :environment do
+    ["live", "silent", "teacup"].each do |name|
+      BidType.find_or_create_by! name: name
+    end
+  end
+end
+
+# db/seed.rb
+Rake::Task["seed:bid_types"].invoke
+
+# call task from another task
+Rake::Task['translate:copy'].invoke Rails.env
+</code></pre></div></div>
+
+<p>so you can create with <code class="highlighter-rouge">rake db:seed</code> or <code class="highlighter-rouge">rake seed:bid_types</code></p>
+
+<p>If you want to know inside some code whether you run from rake or from rails
+(for example you do not want to send emails for seed users), you can use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if File.basename($0) == "rake"
+  # I'm from rake
+else
+  # I'm from rails
+end
+</code></pre></div></div>
+
+<h1 id="sessions-and-share-cookies-on-multiple-subdomains">Sessions and share cookies on multiple subdomains</h1>
+
+<p>If you use
+<a href="http://makandracards.com/makandra/31381-sharing-cookies-across-subdomains-with-rails-3">sharing-cookies-across-subdomains-with-rails-3</a>
+or
+<a href="http://stackoverflow.com/questions/4060333/what-does-rails-3-session-store-domain-all-really-do">what-does-rails-3-session-store-domain-all-really-do</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/session_store.rb
+Rails.application.config.session_store :cookie_store, key: '_myapp_session',
+domain: :all, expire_after: 60.minutes
+</code></pre></div></div>
+
+<p>If you do not use <code class="highlighter-rouge">expired_after</code> than it will be <code class="highlighter-rouge">-1</code> ie in Dev Tools -&gt;
+Application -&gt; Cookies it will be <code class="highlighter-rouge">1969-12-31T23:59:59.000Z</code> 1970 - 1 second, ie
+cookie will be discarded when browser is closed (on mobile when phone restarts,
+since closing browser keeps current session).</p>
+
+<p>This works fine for top level domains and subdomains for them.</p>
+
+<p>For example if you have <code class="highlighter-rouge">domain: :all</code> and you sign in at <code class="highlighter-rouge">asd.local</code>, than you
+will be signed in also on <code class="highlighter-rouge">asd.asd.local</code> and <code class="highlighter-rouge">asd.asd.asd.local</code> and so on…
+Cookie will be with domain <code class="highlighter-rouge">.asd.local</code> for all those sites.</p>
+
+<p>You need to know that some domains like <code class="highlighter-rouge">herokuapp.com</code> belongs to <a href="https://devcenter.heroku.com/articles/cookies-and-herokuapp-com">Public
+Suffix List</a> so
+browser will prevent setting <code class="highlighter-rouge">domain: :all</code> cookie for them (because someone can
+use attacker.herokuapp.com to read cookies from myapp.herokuapp.com).</p>
+
+<p>Note you can not login at <code class="highlighter-rouge">in.rs</code> (PSL and browser will prevent cookie).</p>
+
+<p>Rails cookie store knows for public suffix list, so for <code class="highlighter-rouge">trk.in.rs</code> it will use
+<code class="highlighter-rouge">.trk.in.rs</code> and all others like <code class="highlighter-rouge">asd.in.local</code> it will use <code class="highlighter-rouge">.in.local</code>.</p>
+
+<p>You can login at <code class="highlighter-rouge">trk.in.rs</code> but it wont be shared to <code class="highlighter-rouge">asd.in.rs</code>. Cookie will
+be with domain <code class="highlighter-rouge">.trk.in.rs</code>, so you will be signed in also on <code class="highlighter-rouge">1.trk.in.rs</code>
+<code class="highlighter-rouge">2.1.trk.in.rs</code> …</p>
+
+<p>Cookie are send on each request. Cookies usually does not expire, but you can
+set <code class="highlighter-rouge">expire_after: 60.minutes</code>. They are send again when you refresh close &amp;
+open window.</p>
+
+<p>Note that flash messages are also for each domain. So if you redirect from one
+domain to another, you can not use flash messages. Old flash message will be
+shown when user come back to previous domain (on which request flash was set).</p>
+
+<h1 id="subdomains-and-long-domains">Subdomains and long domains</h1>
+
+<p>Rails has method <a href="http://api.rubyonrails.org/classes/ActionDispatch/Http/URL.html#method-c-extract_domain">extract
+domains</a>
+but it requires second param which determine if it is top level and second level
+domain.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionDispatch::Http::URL.extract_domain 'dule.asd.zxc.com', 1 # 'zxc.com'
+ActionDispatch::Http::URL.extract_domain 'dule.asd.zxc.com', 2 # 'asd.zxc.com'
+</code></pre></div></div>
+
+<p>You could try to guess based on next to last string and determine if it
+is shorter or equal than 3 chars.
+Rails domain is always last two strings.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># dule.asd.zxc.com
+request.host = 'dule.asd.zxc.com'
+request.domain = 'zxc.com'
+request.subdomain = 'dule.asd'
+
+# you can specify different tld length
+request.domain(2) = 'asd.zxc.com'
+</code></pre></div></div>
+
+<p>When you use url for, you can pass <code class="highlighter-rouge">host</code> parameter.
+But if you pass also <code class="highlighter-rouge">subdomain</code> than host param will be trimmed to only last
+two strings <a href="https://github.com/rails/rails/issues/2025">issue</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>url_for
+ActionDispatch::Http::URL.url_for host: 'dule.asd.zxc.com'
+# http://dule.asd.zxc.com
+ActionDispatch::Http::URL.url_for host: 'dule.asd.zxc.com', subdomain: 'sub'
+# http://sub.zxc.com
+# note that we are missing 'asd' in domain name
+</code></pre></div></div>
+
+<h1 id="text-syntax-on-buttons-and-messages">Text syntax on buttons and messages</h1>
+
+<ul>
+  <li>labels on buttons, titles,…  should be upper case with no period: <code class="highlighter-rouge">This Job
+Is Paused</code></li>
+  <li>sentences on error messages, flash messages…  should have period at the end:
+<code class="highlighter-rouge">Job has been copied.</code></li>
+</ul>
+
+<p>Use “Register” or “Sign up” for registrations and “Log in” and “Log out” for
+sessions (since it is easy to differentiate from “sign up”).</p>
+
+<h1 id="7-patterns">7 patterns</h1>
+
+<p>From
+<a href="http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/">7-ways-to-decompose-fat-activerecord-models</a>
+suggestions for code organization I use mostly:</p>
+
+<p>You can check also <a href="http://trailblazer.to/">http://trailblazer.to/</a>
+You can organize domain (controller, model and view) into separate folders
+<a href="https://github.com/NullVoxPopuli/drawers">drawers</a></p>
+
+<p>If there is a lot of business logic in view, I prefer to put that in controller
+so it is more visible.</p>
+
+<h2 id="service-objects">Service objects</h2>
+
+<p>Always define only one public method: <code class="highlighter-rouge">call</code>, <code class="highlighter-rouge">perform</code> or <code class="highlighter-rouge">process</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/services/match_posts.rb
+def MatchPosts
+  def initialize(posts)
+    @posts = posts
+  end
+
+  def perform
+  end
+end
+</code></pre></div></div>
+
+<p>You should return object that can be success and hold some data</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/result.rb
+class Result
+  attr_accessor :message, :data
+
+  # you can return in service like:
+  #   return Result.new 'Next task created', next_task: next_task
+  # and use in controller:
+  #   if result.success? &amp;&amp; result.data[:next_task] == task
+  def initialize(message, data = {})
+    @message = message
+    @data = data
+  end
+
+  def success?
+    true
+  end
+end
+
+# app/models/error.rb
+class Error &lt; Result
+  def success?
+    false
+  end
+end
+</code></pre></div></div>
+
+<p>and you can rescue from exceptions:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/services/my_service.rb
+class MyService
+  # Some custom exception if needed
+  class ProcessException &lt; Exception
+  end
+
+  def initialize(h)
+    @user = h[:user]
+  end
+
+  def process(posts)
+    success_message = do_something posts
+    Result.new success_message
+  rescue ProcessException =&gt; e
+    Error.new e.message
+  end
+
+  private
+
+  def do_something(posts)
+    raise ProcessException, "Error: empty posts" unless posts
+    "Done with do_something"
+  end
+end
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># main.rb
+require './my_service.rb'
+
+my_service = MyService.new user: 'me'
+puts my_service.process(1).success? # true
+puts my_service.process(1).message # Done with do_something
+puts my_service.process(false).success? # false
+puts my_service.process(false).message # empty posts
+</code></pre></div></div>
+
+<p>Service object is similar to Command pattern which is implemented in gem
+<a href="https://github.com/collectiveidea/interactor">https://github.com/collectiveidea/interactor</a></p>
+
+<h2 id="form-objects">Form Objects</h2>
+
+<p>form objects (query objects) for multiple in multiple out data</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/form_objects/landing_signup.rb
+class LandingSignup
+  include ActiveModel::Model
+  FIELDS = %i[ current_city current_location current_group prefered_group email].freeze
+  attr_accessor(*FIELDS)
+
+  validates :email, presence: true
+
+  def save
+    _create_users
+    _create_roles
+  end
+
+  # no need for initialize since AR will pick from params
+  # but if you need to set default values, here is a code
+  def initialize(attributes)
+    super(attributes)
+    _after_initialize
+  end
+
+  def _after_initialize
+    self.send_email_invitation = true if send_email_invitation.nil?
+  end
+end
+</code></pre></div></div>
+
+<p>Usage</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/pages_controller.rb
+class PagesController &lt; ApplicationController
+  def home
+    @landing_signup = LandingSignup.new
+    @landing_signup.current_city = City.first
+  end
+
+  def landing_signup
+    @landing_signup = LandingSignup.new landing_signup_params
+    @landing_signup.current_city = City.first
+    if @landing_signup.save
+      sign_in @landing_signup.user
+      redirect_to dashboard_path, notice: @landing_signup.notice
+    else
+      flash.now[:alert] = @landing_signup.errors.full_messages.to_sentence
+      render :home
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>To define url for ActiveModel you need to overwrite some instance vars
+https://stackoverflow.com/questions/3736759/ruby-on-rails-singular-resource-and-form-for
+so better is to define url param <code class="highlighter-rouge">form_for @form, url: users_path</code></p>
+
+<h2 id="decorators">Decorators</h2>
+
+<p>Decorators can be used instead of callbacks. Differs from service object because
+it just decorate existing model (it can be used instead of that model, usefull
+for forms). Form object is like a decorator, but for multiple models.
+So instead using <code class="highlighter-rouge">method_missing</code> you can use standard ruby <code class="highlighter-rouge">SimpleDelegator</code>
+which delegates any method to object that was passed in initialization</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/decorators/message_decorator.rb
+class MessageDecorator &lt; SimpleDelegator
+  def message
+    __getobj__
+  end
+
+  def save_and_send_notifications
+    message.save &amp;&amp; _send_notifications
+  end
+
+  def _send_notifications
+    message.chat.moves.each do |move|
+      next if move.user == message.user
+      UserMailer.new_message(move.id, message.id).deliver_later
+    end
+    true
+  end
+end
+</code></pre></div></div>
+
+<p>Use in controller</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def show
+    @message_decorator = MessageDecorator.new Message.new
+  end
+
+  def create_message
+    @message_decorator = MessageDecorator.new Message.new _message_params
+    if @message_decorator.save_and_send_notifications
+      redirect_to chat_path(@chat), notice: t_crud('success_create', Message)
+    else
+      render :show
+    end
+  end
+
+</code></pre></div></div>
+
+<h2 id="concerns">Concerns</h2>
+
+<p><a href="https://signalvnoise.com/posts/3372-put-chubby-models-on-a-diet-with-concerns">DHH</a> and interesting is
+<a href="https://github.com/discourse/discourse/blob/master/app/models/concerns/trashable.rb">trashable</a>
+<a href="https://youtu.be/bHpVdOzrvkE?t=1640">video</a>
+<a href="http://www.monkeyandcrow.com/blog/reading_rails_concern/">blog</a>
+example usage https://github.com/rails/rails/blob/87b0de450761d4404deb615c9b83307316ddb050/activesupport/lib/active_support/rescuable.rb#L11</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Someable
+  extend ActiveSupport::Concern
+
+  included do
+    # define validations, callbacks and associations here (before_ has_  macros)
+    # access module variables @@my_module_variable or class variable
+    # self.class.class_variable_get :@@someable_value
+    has_many :something_else, as: :someable
+    class_attribute :tag_limit
+  end
+
+  # instance methods are defined here
+
+  # methods defined here are going to extend the class, not the instance of it
+  # do not use "self." in method definition
+  # you can set "@@my_module_variable" here
+  # better is to set class_variable:  self.ancestors.first.class_variable_set :@@someable_value, 'some value'
+  # also you can include other concerns here
+  class_methods do
+    def tag_limit(value)
+      klass = self.ancestors.first
+      previous_columns = klass.class_variable_get(:@@monetized_columns) if klass.class_variables.include? :@@monetized_columns
+      previous_columns ||= []
+      klass.class_variable_set :@@monetized_columns, previous_columns + columns
+      self.tag_limit_value = value
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>My implementation of friendly_id gem
+<script src="https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee.js"></script></p>
+
+<h2 id="observable">Observable</h2>
+
+<p>We an use observable objects to send notifications <a href="http://www.diatomenterprises.com/observer-pattern-in-3-languages-ruby-c-and-elixir/">implementation in 3
+languages</a>
+It could looks like <a href="https://en.wikipedia.org/wiki/Action_at_a_distance_(computer_programming)">action as a
+distance</a>
+antipattern but if we explicitly add than is it fine.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ObservableImplementation
+  def observers
+    @observers ||= []
+  end
+
+  def notify_observers(*args)
+    observers.each do |observer|
+      observer.update(*args)
+    end
+  end
+
+  def add_observer(object)
+    observers &lt;&lt; object
+  end
+end
+
+class Task
+  include ObservableImplementation
+  attr_accessor :counter
+  def initialize
+    self.counter = 0
+  end
+
+  def tick
+    self.counter += 1
+    notify_observers(counter)
+  end
+end
+
+class PutsObserver
+  def initialize(observable)
+    observable.add_observer self
+  end
+
+  def update(counter)
+    puts "Count has increased by #{counter}"
+  end
+end
+
+class DotsObserver
+  def initialize(observable)
+    observable.add_observer self
+  end
+
+  def update(counter)
+    puts "." * counter
+  end
+end
+
+task = Task.new
+task.tick
+DotsObserver.new(task)
+task.tick # ..
+PutsObserver.new(task)
+task.tick # ...
+# Count has increased by 3
+</code></pre></div></div>
+
+<h1 id="unsubscribe-links">Unsubscribe links</h1>
+
+<p>You can use
+https://api.rubyonrails.org/v5.2.2.1/classes/ActiveSupport/MessageVerifier.html
+to encode strings or id</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  @unsubscribe = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
+</code></pre></div></div>
+
+<p>Old example</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/layouts/_email_footer.html.erb
+&lt;p&gt;
+  &lt;%= link_to "Unsubscribe", link_for_unsubscribe(user, controller.mapping_to_unsubscribe_group(controller.action_name)) %&gt; from this type of email.
+&lt;/p&gt;
+&lt;p&gt;
+  &lt;%= link_to "Manage", settings_user_url(user) %&gt; which emails you receive.
+&lt;/p&gt;
+
+# app/controllers/application_mail.rb
+  def mapping_to_unsubscribe_group method_name
+    group = ApplicationHelper::UNSUBSCRIBE_MAPPING_METHOD_TO_GROUP[method_name.to_s]
+    if group.nil?
+      puts "!!!!! No group found for method_name=#{method_name.to_s}"
+      ExceptionNotifier.notify_exception(Exception.new("just to notify that there is no group for method_name #{method_name}") )
+    end
+    group
+  end
+
+# app/helpers/application_helper.rb
+  UNSUBSCRIBE_MAPPING_METHOD_TO_GROUP = {
+    "first_application_instructions" =&gt; "tips_and_help_emails_jobseeker",
+    "application_in_review_instructions" =&gt; "tips_and_help_emails_jobseeker",
+    "new_candidate_email" =&gt; "new_candidate_or_applicant",
+    }
+  def link_for_unsubscribe user, unsubscribe_group
+    referral_token_and_unsubscribe_group = user.referral_token + unsubscribe_group.to_s
+    unsubscribe_url key: Base64.encode64(referral_token_and_unsubscribe_group)
+  end
+
+# config/routes.rb
+  get 'unsubscribe', to: 'welcome#unsubscribe'
+
+# app/controllers/welome_controller.rb
+  # GET /unsubscribe
+  def unsubscribe
+    referral_token_and_unsubscribe_group = Base64.decode64 params[:key] 
+    referral_token = referral_token_and_unsubscribe_group[0..User::REFERRAL_TOKEN_LENGTH-1]
+    @unsubscribe_group = referral_token_and_unsubscribe_group[User::REFERRAL_TOKEN_LENGTH..-1]
+    if current_user
+      if current_user.referral_token == referral_token
+        @user = current_user
+        @user.unsubscribe[ @unsubscribe_group] = "true"
+        @user.save!
+      else
+        redirect_to root_path, alert: "This key is for different user, please log out"
+      end
+    else
+      if @user = User.find_by( referral_token: referral_token)
+        # we found the user
+        @user.unsubscribe[ @unsubscribe_group] = "true"
+        @user.save!
+      else
+        flash[:alert] = "Can't find user by this key. You need to signin in order to unsubscribe"
+        redirect_to new_user_session_path and return
+      end
+    end
+  end
+
+# db/migrate/_add_unsubscribe_to_user.rb
+class AddUnsubscribeToUser &lt; ActiveRecord::Migration
+  def change
+    add_column :users, :unsubscribe, :hstore, default: {}
+  end
+end
+</code></pre></div></div>
+
+<h1 id="run-rails-in-production-mode">Run rails in production mode</h1>
+
+<p>You probably need to set up database user for production env.</p>
+
+<p>Also set <code class="highlighter-rouge">config.force_ssl = false</code> in <em>config/environments/production.rb</em></p>
+
+<h1 id="get-template-name">Get template name</h1>
+
+<p>You can try directly in controller to <code class="highlighter-rouge">byebug</code> and try something like</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>view_context.view_renderer.instance_variable_get('@lookup_context').instance_variable_get('@view_paths').instance_variable_get('@paths').first.instance_variable_get('@cache').instance_variable_get('@data').instance_variable_get('@backend').values.first.instance_variable_get('@backend').values.first.instance_variable_get('@backend').values.first.instance_variable_get('@backend').values.first.values
+</code></pre></div></div>
+
+<p>Another is with patch
+<a href="http://stackoverflow.com/questions/4973699/rails-3-find-current-view-while-in-the-layout/8310881#8310881">ActionView::TemplateRenderer</a>
+and this is only accessible in view.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># getting current template is not possible in rails
+# https://github.com/rails/rails/issues/4876
+# patch taken from
+# http://stackoverflow.com/questions/4973699/rails-3-find-current-view-while-in-the-layout/8310881#8310881
+# note 3th comment (Lukas) about exception notification issue
+class ActionController::Base
+  attr_accessor :active_template
+
+  def active_template_virtual_path
+    self.active_template.virtual_path if self.active_template
+  end
+end
+
+class ActionView::TemplateRenderer
+  alias_method :_render_template_original_, :render_template
+
+  def render_template(template, layout_name = nil, locals = {})
+    if @view.controller &amp;&amp; @view.controller.respond_to?('active_template=')
+      @view.controller.active_template = template
+      result = _render_template_original_( template, layout_name, locals)
+      @view.controller.active_template = nil
+    else
+      result = _render_template_original_( template, layout_name, locals)
+    end
+    result
+  end
+end
+</code></pre></div></div>
+
+<h1 id="money">Money</h1>
+
+<p>Dealing with money with <a href="https://github.com/RubyMoney/money-rails">https://github.com/RubyMoney/money-rails</a></p>
+
+<p>Add money column is using <code class="highlighter-rouge">add_money</code> instead <code class="highlighter-rouge">add_column</code>. You can define where
+to put cents and currency column</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  add_money :invoices, :round_off, amount: { after: :round_off_applicable }, currency: { after: :round_off_cents }
+
+</code></pre></div></div>
+
+<h1 id="carrierwave-for-uploading">Carrierwave for uploading</h1>
+
+<h2 id="store-on-server">Store on server</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+gem 'carrierwave'
+HERE_DOC
+bundle
+rails generate uploader Document
+# we need just one field type string to store file url
+rails g migration add_document_to_companies document:string
+rake db:migrate
+sed -i app/models/company.rb -e '/class Company/a \
+  mount_uploader :document, DocumentUploader'
+git add . &amp;&amp; git commit -m "Adding carrierwave gem document uploader"
+</code></pre></div></div>
+
+<p>Replace <code class="highlighter-rouge">f.text_field :document</code> with <code class="highlighter-rouge">f.file_field :document</code> in your form. In
+view you can use <code class="highlighter-rouge">company.document.url</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/companies/_form.html.erb %&gt;
+  &lt;%  if @company.document.present?  %&gt;
+    &lt;%= image_tag @company.document, class: 'image-small'%&gt;
+    &lt;%= f.check_box :remove_document %&gt;
+  &lt;% end %&gt;
+  &lt;%= f.file_field :document %&gt;
+  &lt;%# keep the file on reload in case of other validation errors %&gt;
+  &lt;%= f.hidden_field :document_cache %&gt;
+
+# app/controllers/companies_controller.rb
+  def company_params
+    params.require(:company).permit(:document, :remove_document)
+  end
+</code></pre></div></div>
+
+<p>It is straightforward to use uploader in multiple fields. Also you can use
+single table field for multiple files (field type json) but than you need
+postgres database.</p>
+
+<p>When you rendering json, than
+<a href="http://stackoverflow.com/questions/28184975/carrierwave-causing-json-output-to-become-nested-on-photo-key">carrierwave will add nested
+url</a>.
+Solution is render json manually with <code class="highlighter-rouge">json.document_url company.document.url</code>
+or to override uploader serilization with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/uploaders/document_uploader.rb
+  def serializable_hash
+    url
+  end
+</code></pre></div></div>
+
+<p>Resizing is by adding mini magick and configure uploader. It works on Heroku
+too. You can process files,
+create new versions based on
+<a href="https://github.com/carrierwaveuploader/carrierwave#conditional-versions">condition</a> or process based on <a href="http://stackoverflow.com/questions/11778464/conditional-versions-process-with-carrierwave">condition</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'mini_magick'" &gt;&gt; Gemfile
+bundle
+
+# app/uploaders/document_uploader.rb
+  include CarrierWave::MiniMagick
+  process resize_to_limit: [200, 300]
+  process resize_to_limit: [300, 300], if: :logo?
+  def logo?(picture)
+    # check if we mount_uploader :logo_url or something else
+    picture.file.headers.match(/logo_url/)
+  end
+  version :thumb do
+    process resize_to_fill: [200, 300]
+  end
+</code></pre></div></div>
+
+<h2 id="store-on-aws-s3">Store on AWS S3</h2>
+
+<p>For <a href="https://github.com/carrierwaveuploader/carrierwave#using-amazon-s3">Amazon
+S3</a> you need
+to set up your AWS keys in <em>~/.bashrc</em> <code class="highlighter-rouge">export AWS_ACCESS_KEY_ID=123123</code> and
+<code class="highlighter-rouge">export AWS_SECRET_ACCESS_KEY=123123</code>. Bucket should be created as standard USA
+bucket.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+gem 'fog'
+HERE_DOC
+cat &gt; config/initializers/carrierwave.rb &lt;&lt; 'HERE_DOC'
+# https://github.com/jnicklas/carrierwave#using-amazon-s3
+CarrierWave.configure do |config|
+  config.fog_credentials = {
+    :provider               =&gt; 'AWS',
+    :aws_access_key_id      =&gt; Rails.application.secrets.aws_access_key_id,
+    :aws_secret_access_key  =&gt; Rails.application.secrets.aws_secret_access_key,
+    :region                 =&gt; Rails.application.secrets.aws_region # us-east-1
+  }
+  config.fog_directory  = Rails.application.secrets.aws_bucket_name
+end
+HERE_DOC
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # aws s3\
+  aws_bucket_name: &lt;%= ENV["AWS_BUCKET_NAME"] %&gt;\
+  aws_access_key_id: &lt;%= ENV["AWS_ACCESS_KEY_ID"] %&gt;\
+  aws_secret_access_key: &lt;%= ENV["AWS_SECRET_ACCESS_KEY"] %&gt;\
+  # region is important for all non us-east-1 regions\
+  aws_region: &lt;%= ENV["AWS_REGION"] || "us-east-1" %&gt;\
+'
+
+sed -i app/uploaders/document_uploader.rb -e '/storage :file/r \
+  # storage :file\
+  storage :fog'
+
+git add . &amp;&amp; git commit -m "Configure AWS S3"
+</code></pre></div></div>
+
+<h2 id="store-directly-on-aws-s3-and-upload-the-key-to-the-server">Store directly on AWS S3 and upload the key to the server</h2>
+
+<p>You can put the <code class="highlighter-rouge">direct_upload_form_for</code> on any page, let’s use show:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# direct upload to S3
+gem 'carrierwave_direct'
+HERE_DOC
+bundle
+
+sed -i app/uploaders/document_uploader.rb -e '/DocumentUploader/a \
+  include CarrierWaveDirect::Uploader'
+
+sed -i app/uploaders/document_uploader.rb -e '/store_dir/c \
+  # we do not use store_dir because of dirrect carrierwave\
+  def store_dir_origin'
+
+cat &gt;&gt; app/views/companies/show.html.erb &lt;&lt; 'HERE_DOC'
+&lt;%= direct_upload_form_for @uploader do |f| %&gt;
+  &lt;%= f.file_field :document %&gt;
+  &lt;%= f.submit %&gt;
+&lt;% end %&gt;
+HERE_DOC
+
+sed -i app/controllers/companies_controller.rb -e '/def show/a \
+   # @uploader = @company.document # do not use old since key will remain\
+   @uploader = DocumentUploader.new\
+   # default key is /uploads/&lt;unique_guid&gt;/foo.png\
+   # you can change, but use ONLY ONE folder ie "1/2/a.txt" -&gt; "2/a.txt"\
+   # it always adds prefix "uploads" so it does not need to be written\
+   @uploader.key = "uploads/#{@company.id}-#{request.ip}/${filename}"\
+   @uploader.success_action_redirect = company_url(@company)\
+   if params[:key]\
+     @company.document.key = params[:key]\
+     @company.save!\
+     # we need to reload since old key is there\
+     @company = Company.find(@company.id)\
+     # or to redirect\
+     redirect_to company_path(@company)\
+   end\
+   # you can call @company.remove_document! to remove from aws, but please\
+   # reload after that with @company = Company.find(@company.id)'
+
+sed -i config/initializers/carrierwave.rb -e '/^end/i \
+  # max_file_size is not originally on carrierwave, but is added on CWDirect\
+  # if file is greater than allowed than error is from Amazon EntityTooLarge\
+  config.max_file_size = 20.megabytes  # defaults to 5.megabytes'
+</code></pre></div></div>
+
+<h2 id="carrier-wave-in-seed">Carrier wave in seed</h2>
+
+<p>You can open file and use it in seed <code class="highlighter-rouge">user.image url =
+File.open(File.join(Rails.root, 'public/my_image.png'))</code>. But if your storage is
+<code class="highlighter-rouge">fox</code> than you can use <code class="highlighter-rouge">user.remote_image_url_url =
+'http://www.gstatic.com/webp/gallery/1.jpg'</code>. Note that file will be downloaded
+and uploaded to your aws bucket so better is to set <code class="highlighter-rouge">storage
+Rails.env.development? ? :file : :fog</code> and use first file.open method so it does
+not need to download file.</p>
+
+<h1 id="pdf">PDF</h1>
+
+<h2 id="wicked-pdf">Wicked PDF</h2>
+
+<p><a href="https://github.com/mileszs/wicked_pdf">https://github.com/mileszs/wicked_pdf</a></p>
+
+<p>Generate pdf from html files.
+Just put in gemfile</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# pdf generation from html
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+HERE_DOC
+</code></pre></div></div>
+
+<p>And in your controller put the name of the downloaded file</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ThingsController &lt; ApplicationController
+  def show
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "thing-#{params[:id]}"   # Excluding ".pdf" extension.
+      end
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>You can also set template to another file, layout to pdf and header</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>render template: 'periods/visits', pdf: "visits-#{@period.end_date}", layout: 'pdf', header: { right: '[page] of [topage]' }
+</code></pre></div></div>
+
+<p>Template</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/things/show.pdf.erb
+&lt;h1&gt;Hi&lt;/h1&gt;
+&lt;div class="alwaysbreak"&gt;&lt;/div&gt;
+&lt;h1&gt;Second page&lt;/h1&gt;
+</code></pre></div></div>
+
+<p>Layout</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;</span><span class="err">%#</span> <span class="na">app</span><span class="err">/</span><span class="na">views</span><span class="err">/</span><span class="na">layouts</span><span class="err">/</span><span class="na">pdf</span><span class="err">.</span><span class="na">pdf</span><span class="err">.</span><span class="na">erb</span>
+<span class="err">&lt;!</span><span class="na">doctype</span> <span class="na">html</span><span class="nt">&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">'utf-8'</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">stylesheet_link_tag</span> <span class="na">wicked_pdf_asset_base64</span><span class="err">("</span><span class="na">pdf</span><span class="err">")</span> <span class="err">%</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"content"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;</span><span class="err">%=</span> <span class="na">yield</span> <span class="err">%</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>Styles</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/stylesheets/pdf.scss
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: center;
+}
+* {
+  font-size: 12px;
+}
+div.alwaysbreak { page-break-before: always; }
+</code></pre></div></div>
+
+<p>Since we did not include this style in asset pipeline, we need to precompile it:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/assets.rb
+Rails.application.config.assets.precompile += ['pdf.css']
+</code></pre></div></div>
+
+<p>If you want to use existing html template than use param <code class="highlighter-rouge">render pdf: 'name',
+template: 'show.html'</code> and create <code class="highlighter-rouge">app/views/layouts/pdf.html.erb</code> and use
+helper classes to show hide content:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.pdf-hidden {
+  display: none;
+}
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.html-hidden {
+  display: none;
+}
+</code></pre></div></div>
+
+<h2 id="prawn">Prawn</h2>
+
+<ul>
+  <li>
+    <p>if you need custom symbols in prawn than you need to use ttf fonts. Not all
+contains every symbol. I downloaded from
+<a href="http://dejavu-fonts.org/wiki/Download">dejavu-fonts.org</a></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/pdfs/common_pdf.rb
+module CommonPdf
+  def h(amount)
+    ActionController::Base.helpers.humanized_money_with_symbol amount
+  end
+
+  def set_up_common_font
+    # http://dejavu-fonts.org/wiki/Download
+    font_families.update(
+      "DejaVu Sans" =&gt; {
+        normal: "#{Rails.root}/lib/DejaVuSans.ttf",
+        bold: "#{Rails.root}/lib/DejaVuSans-Bold.ttf",
+      }
+    )
+    font "DejaVu Sans"
+  end
+end
+
+# app/pdfs/my.pdf.rb
+class MyPdf &lt; Prawn::Document
+  include CommonPdf
+  set_up_common_font
+  text h 10
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>when you need a image logo in pdf than you can use <code class="highlighter-rouge">fit</code> option https://www.rubydoc.info/gems/prawn/0.12.0/Prawn/Images</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  require 'open-uri'
+  uri_escaped = URI.escape "http:#{tax_holder.logo_url}"
+  image open(uri_escaped), fit: [column_2_width, 89], position: :right
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="pdf-reader">PDF reader</h2>
+
+<p>https://github.com/yob/pdf-reader</p>
+
+<h1 id="style-guide">Style guide</h1>
+
+<p><a href="https://github.com/thoughtbot/guides/tree/master/best-practices">toughtbot style
+guide</a></p>
+
+<ul>
+  <li>do not reference model class directly from a view (how to render counts than
+?)</li>
+  <li>do not use SQL outside of models</li>
+  <li>use <code class="highlighter-rouge">touch: true</code> on <code class="highlighter-rouge">belongs_to</code> associations</li>
+  <li>use <code class="highlighter-rouge">ENV.fetch</code> instead of <code class="highlighter-rouge">ENV[]</code> so it raises exception when env variable
+does not exists</li>
+</ul>
+
+<p>My style in rails models use following order:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">include</code> and <code class="highlighter-rouge">extend</code> other modules, <code class="highlighter-rouge">devise</code> or, <code class="highlighter-rouge">serialize :col, Hash</code></li>
+  <li>constants <code class="highlighter-rouge">FIELDS = %i[name]</code></li>
+  <li><code class="highlighter-rouge">attr_accessor</code></li>
+  <li><code class="highlighter-rouge">belongs_to :workflow</code> associations with plugins <code class="highlighter-rouge">acts_as_list scope:
+1  [:workflow_id]</code></li>
+  <li><code class="highlighter-rouge">has_many :users</code> associations</li>
+  <li>enums <code class="highlighter-rouge">enum status: %i[draft accepted]</code></li>
+  <li>validations <code class="highlighter-rouge">validates :name, presence: true</code></li>
+  <li>validate declarations <code class="highlighter-rouge">validate :_check_nested_resource</code></li>
+  <li>callbacks declarations <code class="highlighter-rouge">before_validation :_default_values_on_create, on: :create</code></li>
+  <li>scopes <code class="highlighter-rouge">scope :by_status_param, -&gt;(status_argument) { where status: status_argument }</code></li>
+  <li>class methods <code class="highlighter-rouge">def self.find_first_unpublished</code></li>
+  <li>instance methods <code class="highlighter-rouge">def full_name</code></li>
+  <li>validate definitions <code class="highlighter-rouge">def _check_nested_resource</code></li>
+  <li>callbacks definitions <code class="highlighter-rouge">def _default_values_on_create</code></li>
+</ol>
+
+<h1 id="geocoder">Geocoder</h1>
+
+<p>If you need to search with association, for example <a href="https://stackoverflow.com/questions/14188568/using-geocoder-on-a-child-association-how-to-find-all-parents-in-a-given-locati">User has many
+locations</a>
+you can with joins to geocoded model on which <code class="highlighter-rouge">near</code> is defined.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>near = Location.near('Paris, France')
+users = User.joins(:locations).merge(near)
+</code></pre></div></div>
+
+<p>also if you need to get associated objects you can (location has many views)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>near = Location.near([latitude, longitude], MAX_USER_DISTANCE_MILES)
+views.
+  joins(:location).
+  select("views.*"). # somehow we need this so we got views, instead of users
+  merge(near).
+  includes(:sport). # so we can get sport.name without N+1
+  where(sport: sport) # conditional on view
+</code></pre></div></div>
+
+<h1 id="authorization-policy">Authorization policy</h1>
+
+<h2 id="cancan">Cancan</h2>
+
+<p>use cancancan and define all your actions in app/models/ability. If you want to
+use
+<a href="https://github.com/ryanb/cancan/wiki/authorizing-controller-actions#load_resource">load_resource</a>,
+you should separately define: index (with hash), show/edit/update/destroy (with
+block or hash), new/create (with hash). For nested resources just write parent
+association</p>
+
+<p>Note that following next <code class="highlighter-rouge">cannot</code> rule will override a previous <code class="highlighter-rouge">can</code> rule, so
+it is enough to set <code class="highlighter-rouge">can :manage, :all</code> and than write what <code class="highlighter-rouge">cannot :destroy,
+Project</code></p>
+
+<h2 id="pundig">Pundig</h2>
+
+<p>https://github.com/varvet/pundit</p>
+
+<h2 id="other-authorization">Other authorization</h2>
+
+<ul>
+  <li>https://github.com/palkan/action_policy</li>
+</ul>
+
+<h1 id="autoloading">Autoloading</h1>
+
+<p><a href="https://www.bigbinary.com/videos/learn-ruby-on-rails/how-autoloading-works-in-rails">https://www.bigbinary.com/videos/learn-ruby-on-rails/how-autoloading-works-in-rails</a>
+In development rails uses Constant Missing hooks to auto load new files from
+<code class="highlighter-rouge">app/controllers helpers mailers and models</code>
+If you need to load files from lib, you can <code class="highlighter-rouge">config.autoload_paths +=
+%W(#{config.root}/lib)</code>. Rails look for file name that is snake case of constant
+name, for example <code class="highlighter-rouge">SeniorDeveloper</code> should be defined in <code class="highlighter-rouge">senior_developer.rb</code>.
+You can <code class="highlighter-rouge">require_dependency 'not_conventional_file_name'</code></p>
+
+<p>There is ruby <code class="highlighter-rouge">autoload :Jeep, 'Jeep'</code> which is usefull since it will not
+<code class="highlighter-rouge">require 'jeep'</code> if <code class="highlighter-rouge">Jeep</code> is not used. If we use <code class="highlighter-rouge">Jeep</code> in a file, than it will
+required.</p>
+
+<h1 id="action-cable">Action Cable</h1>
+
+<p>https://www.sitepoint.com/create-a-chat-app-with-rails-5-actioncable-and-devise/
+example
+https://github.com/duleorlovic/premesti.se/commit/ad7cefe192cbbb6b97c13860eb6410d1b02cb5fc</p>
+
+<p>Consumer is a client of a web socket connection that can subscribe to one or
+multiple channels. Each ActionCable server may handle multuple connections (it
+is created per browser tab).</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g channel chat
+# app/assets/javascripts/channels/chat.coffee
+# app/channels/chat_channel.rb
+</code></pre></div></div>
+
+<p>You can broadcast with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionCable.server.broadcast("chat:#{chat.id}", data: data)
+ChatChannel.broadcast_to chat, data: data
+</code></pre></div></div>
+
+<p>or in javascript</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>App.chat = App.cable.subscriptions.create 'ChatChannel'
+App.chat.send({data: data})
+</code></pre></div></div>
+
+<p>You can call server method with <code class="highlighter-rouge">@perform 'away', my_id:
+$('main').data('my-id')</code></p>
+
+<p>You can not use devise <code class="highlighter-rouge">current_user</code> when rendering for actioncable, there will
+be an error</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionView::Template::Error (Devise could not find the `Warden::Proxy` instance on your request environment.
+Make sure that your application is loading Devise and Warden as expected and that the `Warden::Manager` middleware is present in your middleware stack.
+If you are seeing this on one of your tests, ensure that your tests are either executing the Rails middleware stack or that your tests are using the `Devise::Test::ControllerHelpers` module to inject the `request.env['warden']` object for you.):
+</code></pre></div></div>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>I got an error <code class="highlighter-rouge">ActionDispatch::Cookies::CookieOverflow
+(ActionDispatch::Cookies::CookieOverflow):</code> when there is <code class="highlighter-rouge">flash[:notice]</code>
+that is greater than certain value for example: <code class="highlighter-rouge">flash.now[:notice] =
+'1'*1972</code>, <code class="highlighter-rouge">flash.now[:alert] = '1'*1_974</code> and <code class="highlighter-rouge">flash[:notice] = '1'*1980</code>,
+<code class="highlighter-rouge">flash[:alert] = '1'*1981</code></li>
+  <li>There is a new line in <code class="highlighter-rouge">Base64.encode64 string</code> so use <code class="highlighter-rouge">Base64.strict_encode64
+string</code> https://stackoverflow.com/questions/2620975/strange-n-in-base64-encoded-string-in-ruby</li>
+  <li>
+    <p>parse url to get where user come from <code class="highlighter-rouge">URI.parse(request.referrer).host</code> or
+just <code class="highlighter-rouge">URI(request.referrer).host</code>. You can parse uri query with CGI (values
+are arrays) and Rack utils parse query (values are strings)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(byebug) CGI::parse uri.query
+{"dst"=&gt;["http://www.trk.in.rs/?a=1"]}
+(byebug) Rack::Utils.parse_query uri.query
+{"dst"=&gt;"http://www.trk.in.rs/?a=1"}
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">spring stop</code> in many cases:
+    <ul>
+      <li>when you export some ENV and use them in <code class="highlighter-rouge">config/secrets.yml</code> but can’t see
+in <code class="highlighter-rouge">rails c</code></li>
+      <li>when you put <code class="highlighter-rouge">byebug</code> in some of the gem source</li>
+    </ul>
+  </li>
+  <li>load databe from <code class="highlighter-rouge">db/schema.rb</code> (instead of <code class="highlighter-rouge">rake db:migrate</code>) is with <code class="highlighter-rouge">rake
+db:schema:load</code>.</li>
+  <li>run at port 80 <code class="highlighter-rouge">sudo service apache2 stop</code> and <code class="highlighter-rouge">rvmsudo rails s -p 80</code>. Note
+that db user will to <em>root</em> instead of <em>orlovic</em> so you need to hardcode it in
+<em>config/database.yml</em>. Rember to <code class="highlighter-rouge">-b 0.0.0.0</code> if you access from outside.
+You can make default option to bind on localhost 0.0.0.0
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/boot.rb
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+
+require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
+
+# https://fullstacknotes.com/make-rails-4-2-listen-to-all-interface/
+require 'rubygems'
+require 'rails/commands/server'
+
+module Rails
+  class Server
+    alias :default_options_bk :default_options
+    def default_options
+      default_options_bk.merge!(Host: '0.0.0.0')
+    end
+  end
+end
+</code></pre></div>    </div>
+    <p>When you are using <code class="highlighter-rouge">local.trk.in.rs</code> you can set local ip <em>192.168.0.4</em> as
+Redirection (301 or 302) (but not as Forwarding since that does not work for
+some api requests from android).</p>
+  </li>
+  <li><code class="highlighter-rouge">Rails.logger</code> is stdout and every controller, model and view has <code class="highlighter-rouge">logger</code>
+method which you can use like <code class="highlighter-rouge">logger.debug my_var</code></li>
+  <li>if you want to join some fields with <code class="highlighter-rouge">,</code> but do not know if they all exists,
+you can <code class="highlighter-rouge">[phone1, phone2].keep_if(&amp;:present?).join(', ')</code></li>
+  <li>use include for n+1 query (bullet) and joins when you don’t need associated
+models. Both are using INNER JOIN
+    <ul>
+      <li><code class="highlighter-rouge">Comment.all(include: :user, conditions: { users: { admin: true}})</code> will
+load also the user model</li>
+    </ul>
+  </li>
+  <li><a href="http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations">N+1</a>
+problem is solved with <code class="highlighter-rouge">includes(:associated_table)</code> wich is actually LEFT
+OUTER JOINS, <code class="highlighter-rouge">joins(:associated_table)</code> is INNER JOIN and do not load the
+models. Works also for nested joins <code class="highlighter-rouge">includes(jobs: :user)</code> or for multuple
+you can use array <code class="highlighter-rouge">includes(jobs: [:user, :company])</code>.
+    <ul>
+      <li>Inner <code class="highlighter-rouge">joins</code> differs if you have has_many or belongs_to association. For
+<code class="highlighter-rouge">has_many :associated_table</code> <code class="highlighter-rouge">joins</code> will return multiple values
+because of multi values of :associated_table per item, or none is
+:associated_table does not exists for current item. For <code class="highlighter-rouge">belongs_to :a</code> it
+will return single if data exists, or nothing will be returned, if belongs_to
+is empty, so better is to use left join. (expecially when you search by
+description OR teacher name, you should not exclude books without teacher)</li>
+      <li>custom joins if you want to use left inner join
+https://thoughtbot.com/upcase/videos/advanced-querying-custom-joins
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Person.joins(&lt;&lt;-SQL).
+  LEFT JOIN people managers
+    ON managers.id = people.manager_id
+SQL
+where(managers: { id: Person.find_by!(name: 'Eve') })
+</code></pre></div>        </div>
+        <p>custom left joins are better than includes because you are explicit about
+joining and you do not eager load (do not create AR objects) if not need.
+In Rails 5 there is a method <code class="highlighter-rouge">left_outer_joins</code>
+https://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins
+when you want to perform custom sql you can use</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>task.projects
+    .select('projects.*')
+     .select(&lt;&lt;-SQL)
+       activities.name AS last_task_activity_name,
+       tasks.updated_at AS last_task_updated_at
+     SQL
+     .joins(&lt;&lt;-SQL)
+       INNER JOIN tasks ON tasks.project_id = projects.id
+       INNER JOIN activities
+       INNER JOIN (
+         SELECT project_id, MAX(id) as max_id
+         FROM tasks
+         GROUP BY project_id
+       ) last_task
+       ON last_task.project_id = projects.id AND
+         last_task.max_id = tasks.id AND
+         tasks.activity_id = activities.id
+     SQL
+</code></pre></div>        </div>
+      </li>
+      <li><code class="highlighter-rouge">includes</code> will return the same number of items, with association object
+loaded in memory. eager load <code class="highlighter-rouge">includes</code> can be defined in association
+definition <code class="highlighter-rouge">has_many :comments, -&gt; { includes :author }</code> but this is bad since
+it will <strong>always</strong> load two tables.  Better is to make a query
+<code class="highlighter-rouge">Post.includes(:comments).all</code> or for instance
+<code class="highlighter-rouge">@post.comments.includes(:author)</code>. You need to eager load before calling
+<code class="highlighter-rouge">.all</code> or <code class="highlighter-rouge">.each</code>. Do not need eager load belongs_to association.
+You can use procs to further filter relations. Note that in case of
+<code class="highlighter-rouge">Customer.joins(:radaccts)</code> customer argument is not a Customer but a relation
+so this filter only works for <code class="highlighter-rouge">customer.radaccts</code>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>has_many   :radaccts, -&gt; (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>In rails belongs_to foreign_key https://guides.rubyonrails.org/v5.2/association_basics.html#options-for-belongs-to-foreign-key
+is used is you have different name of the column than name_of_association_id</p>
+
+<p>You can specify conditions in relation</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Company &lt; ApplicationRecord
+  has_many :company_users, dependent: :destroy
+  # has_many :users, through: :company_users # do not use this since company
+  # users can be disabled, so better is to use active_users
+  has_many :active_users, -&gt; { where(company_users: { status: :active }) },
+           through: :company_users, source: :user
+</code></pre></div></div>
+<ul>
+  <li>If you want to filter with raw SQL like: <code class="highlighter-rouge">.where('jobs.title ILIKE "%duke%"')</code>
+you need to <code class="highlighter-rouge">reference</code> them (see below) or use join (filtering using hash works
+without referencing since rails knows which table to look <code class="highlighter-rouge">.where(jobs: { title:
+}, user: company.users)</code>). Along with
+<a href="http://apidock.com/rails/ActiveRecord/QueryMethods/includes">includes</a>
+<code class="highlighter-rouge">includes(user: :user_profile).where("user_profiles.name = 'dule'")</code>
+you need to explicitly reference them <code class="highlighter-rouge">includes(user:
+:user_profile).where("user_profiles.name = 'dule'").references(user:
+:user_profile)</code></li>
+  <li>note that you should not use <code class="highlighter-rouge">joins</code> and <code class="highlighter-rouge">includes</code> in the same time, for the
+same columns (you can use it for different columns). Joins
+could be replaced with <code class="highlighter-rouge">references</code>. But I have some problems with <code class="highlighter-rouge">references</code>
+since it remove my custom selected data, so instead <code class="highlighter-rouge">references</code> I use
+<code class="highlighter-rouge">joins('LEFT OUTER JOIN sports ON sports.id = users.sport_id')</code> and <code class="highlighter-rouge">distinct</code>.
+Distinct is needed to remove duplicated since inner join with has_many relation
+(also habtm) returns multiple results (single is only for belongs_to relation).
+Here is example of how includes/references do not let me use counts as
+calculated columns, but joins let works fine (even .to_sql is similar)
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>all = Model
+.select(%(
+  users.id,
+  COUNT(projects.id) as projects_count
+))
+.includes(:projects)
+.references(:projects)
+all.last.projects_count # does not work
+all = Model
+.select(%(
+  users.id,
+  COUNT(projects.id) as projects_count
+))
+.joins(%(
+  LEFT JOIN projects ON user_id = users.id
+))
+
+# do not use .joins(:projects) since it will inner join, ie you will get rows
+# for each user and each project.
+# It is fine if it is belongs_to relation (only one corresponding project)
+all.last.projects_count # here it works
+</code></pre></div>    </div>
+    <p>Rails 5 has method
+<a href="http://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins">left_outer_joins</a></p>
+  </li>
+  <li>
+    <p>when you need to eager load for a single object (show action) than you can
+simply repeat rails default before action <code class="highlighter-rouge">set_post</code> with: <code class="highlighter-rouge">@post =
+Post.includes(:comments).find params[:id]</code></p>
+  </li>
+  <li><code class="highlighter-rouge">some_2d_array.each_with_index do |(col1, col2),index|</code> when you need
+<a href="http://docs.ruby-lang.org/en/2.1.0/syntax/assignment_rdoc.html#label-Array+Decomposition">decomposition
+array</a>
+to some variables, you can use parenthesis.</li>
+  <li>long output of a command (for example segmentation fault) can be catched with
+<code class="highlighter-rouge">rails s 2&gt;&amp;1 | less -R</code></li>
+  <li>
+    <p>use different layout and template based on different params is easy using
+locales <a href="/2016/10/28/adminlte-free-template-on-rails/">look for adminlte example</a></p>
+  </li>
+  <li>title and meta tags for the template can be added using helper functions</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/helpers/page_helper.rb
+module PagesHelper
+  def login_layout(login_title = nil)
+    @login_title = login_title
+    @login_layout = true
+  end
+
+  def login_layout?
+    @login_layout
+  end
+
+  def login_title
+    @login_title
+  end
+
+  def title(name)
+    @title = name
+  end
+
+  def fetch_title
+    @title || fetch_breadcrumb_list.keys.last
+  end
+
+  def page_description(description)
+    content_for(:page_description) { description.html_safe }
+  end
+
+  def breadcrumb(list)
+    @breadcrumb = list
+  end
+
+  def fetch_breadcrumb_list
+    @breadcrumb || {}
+  end
+end
+
+# app/views/layouts/_breadcrumb.html.erb
+&lt;nav aria-label="breadcrumb"&gt;
+  &lt;ol class="breadcrumb"&gt;
+    &lt;% if fetch_breadcrumb_list.blank? %&gt;
+      &lt;li class='breadcrumb-item active' aria-current='page'&gt;
+        &lt;i class="fa fa-dashboard"&gt;&lt;/i&gt;
+        &lt;%= t('dashboard') %&gt;
+      &lt;/li&gt;
+    &lt;% else %&gt;
+      &lt;li class='breadcrumb-item'&gt;
+        &lt;%= link_to dashboard_path do %&gt;
+          &lt;i class="fa fa-dashboard"&gt;&lt;/i&gt;
+          &lt;%= t('dashboard') %&gt;
+        &lt;% end %&gt;
+      &lt;/li&gt;
+    &lt;% end %&gt;
+    &lt;% fetch_breadcrumb_list.each_with_index do |(text, link), i| %&gt;
+      &lt;% last_item = i == fetch_breadcrumb_list.length - 1 %&gt;
+      &lt;li class="breadcrumb-item &lt;%= 'active' if last_item %&gt;" &lt;%= 'aria-current="page"' if last_item %&gt;&gt;
+        &lt;% if link.present? %&gt;
+          &lt;%= link_to link do %&gt;
+            &lt;%= text %&gt;
+          &lt;% end %&gt;
+        &lt;% else %&gt;
+          &lt;%= text %&gt;
+        &lt;% end %&gt;
+      &lt;/li&gt;
+    &lt;% end %&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;
+
+# app/views/customers/index.html
+&lt;%
+  page_title "Customers List"
+  case params[:non_table_filter]
+  when "registered_today"
+    page_description "Registered Today"
+  when "registered_this_month"
+    page_description "Registered This Month"
+  when "renewed_in_advance"
+    page_description "Renewed In Advance"
+  end
+  breadcrumb "Customers": nil
+%&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>to change class <strong>fields_with_error</strong> you can override
+ActionView::Base.field_error_proc in any controller</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionView::Base.field_error_proc = Proc.new { |html_tag, instance|
+  #html = %(&lt;div class="field_with_errors"&gt;#{html_tag}&lt;/div&gt;).html_safe
+  # add nokogiri gem to Gemfile
+  elements = Nokogiri::HTML::DocumentFragment.parse(html_tag).css "label, input"
+  elements.each do |e|
+    if e.node_name.eql? 'input'
+      e['class'] ||= ''
+      e['class'] = e['class'] &lt;&lt; " error"
+      html_tag = "#{e}".html_safe
+    end
+  end
+  html_tag
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>for clone with associations you can use dup or clone but easiest way to with
+new (build is deprecated) json except. If you use method <code class="highlighter-rouge">as_json.exept "id"</code>
+than pass string arguments (or splat array <code class="highlighter-rouge">(*%(id))</code>), if it is param
+<code class="highlighter-rouge">as_json except: [:id]</code> than you can use symbols. Please note that <code class="highlighter-rouge">as_json</code>
+returns hash with string keys so if you merge something you should use string
+<code class="highlighter-rouge">chat.as_json(except: [:id]).merge("sport_id" =&gt; view.sport.id)</code>. <code class="highlighter-rouge">to_json</code>
+returns string, so <code class="highlighter-rouge">as_json</code> it much better.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># http://stackoverflow.com/questions/5976684/cloning-a-record-in-rails-is-it-possible-to-clone-associations-and-deep-copy
+def clone_with_associations
+  # except bookmarks since we do not need them
+  # copy all fields and belongs_to associations
+  new_job = self.user.jobs.new self.as_json except: * %(id created_at first_published_at)
+  new_job.job_title = "(Copy) " + new_job.job_title
+  # if status is active put paused
+  new_job.status = :paused if new_job.active?
+  # copy location, ie create new one
+  if self.location
+    new_job.location_name = self.location.address
+  end
+  # cloning images
+  # todo with fog
+  # cloning questions with answers
+  self.questions.each do |question|
+    new_question = new_job.questions.new question.as_json except: * %(id created_at)
+    question.answers.each do |answer|
+      new_answer = new_question.answers.new answer.as_json except: * %(id created_at)
+    end
+  end
+  new_job
+end
+
+# job is not saved so you need to call
+# new_job = @job.clone_with_associations
+# new_job.save!
+</code></pre></div>    </div>
+  </li>
+  <li>if you put <code class="highlighter-rouge">byebug</code> inside <code class="highlighter-rouge">User.first_or_initialize</code> than you will see empty
+for <code class="highlighter-rouge">User.all</code>. Notice that if you use
+<code class="highlighter-rouge">User.where(params.slice(:mobile)).first_or_initialize</code> than it is a problem
+when <code class="highlighter-rouge">params[:mobile]</code> does not exists, and first User fill be used (not new
+user)</li>
+  <li>
+    <p>for <code class="highlighter-rouge">gon</code> gem you should <code class="highlighter-rouge">include_gon</code> before other javascript files. Note
+that <code class="highlighter-rouge">if gon</code> will still raise error if <code class="highlighter-rouge">gon</code> is not called in controller (so
+<code class="highlighter-rouge">gon</code> is undefined)</p>
+  </li>
+  <li>access helpers outside of a view
+    <ul>
+      <li>if it is standard base helper, than just call it from ActionController,
+ActionView instance or Rails application routes.</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActionController::Base.helpers.pluralize(count, 'mystring')
+ActionController::Base.helpers.strip_tags request.body # html to text
+ActionController::Base.helpers.link_to 'name', link
+ActionController::Base.helpers.j "can't be blank" # can\'t be blank
+
+ActionView::Base.new.number_to_human 123123
+
+Rails.application.routes.url_helpers.jobs_path
+
+ERB::Util.html_escape t('errors.messages.blank') # can&amp;#39;t be blank
+</code></pre></div>    </div>
+
+    <ul>
+      <li>if it your custom helper you can call from <em>ApplicationController</em></li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ApplicationController.helpers.my_custom_helper
+</code></pre></div>    </div>
+
+    <p>If you want to use it inside controller or any other class you can include</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include MyHelper
+</code></pre></div>    </div>
+
+    <p>But best options in controllers in Rails 5 is to use <code class="highlighter-rouge">helpers</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyController &lt; ApplicationController
+  def index
+    alert helpers.titleize_message
+  end
+end
+</code></pre></div>    </div>
+
+    <ul>
+      <li>you can include all</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include ActionView::Helpers::TextHelper
+include Rails.application.routes.url_helpers
+</code></pre></div>    </div>
+
+    <ul>
+      <li>or you can delegate it</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  delegate :url_helpers, to: 'Rails.application.routes'
+  # call with `url_helpers.jobs_url` in you class
+  delegate :form_tag, :text_field_tag, to: 'ActionController::Base.helpers'
+</code></pre></div>    </div>
+  </li>
+  <li>do not use <code class="highlighter-rouge">form_tag path</code> without block, since chrome will autoclose tags,
+but IE10 wont.</li>
+  <li>do not name your model with <code class="highlighter-rouge">Template</code> since there is module <code class="highlighter-rouge">Template</code>
+somewhere.</li>
+  <li>request object contains a lot of data:
+    <ul>
+      <li><code class="highlighter-rouge">request.xhr?</code> is it ajax</li>
+      <li><code class="highlighter-rouge">request.ip</code> <code class="highlighter-rouge">request.referrer</code> <code class="highlighter-rouge">request.remote_ip</code></li>
+      <li><code class="highlighter-rouge">request.env["HTTP_USER_AGENT"]</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>if you want to add flash_alert for all <code class="highlighter-rouge">flash.now[:alert]='message'</code> you can
+use</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+after_action :check_flash_message
+
+# rubocop:disable Metrics/AbcSize
+def check_flash_message
+  return unless request.xhr? &amp;&amp; request.format.js?
+  response.body += "flash_alert('#{view_context.j flash.now[:alert]}');" if flash.now[:alert].present?
+  response.body += "flash_notice('#{view_context.j flash.now[:notice]}');" if flash.now[:notice].present?
+end
+# rubocop:enable Metrics/AbcSize
+</code></pre></div>    </div>
+  </li>
+  <li>Heroku problems:</li>
+  <li>
+    <p><code class="highlighter-rouge">undefined method url_options' for #&lt;Module:</code> maybe problem with
+<a href="https://gist.github.com/IAMRYO/e8bee5a8e6710ad4b970">puma</a></p>
+  </li>
+  <li>rails router
+    <ul>
+      <li>you can mount namespace under different path</li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace :admin, path: 'aadmin' do
+  get '/', to: 'admin#index'
+end
+</code></pre></div>    </div>
+
+    <ul>
+      <li>
+        <p>you can get dynamic path resoulution with <code class="highlighter-rouge">link_to "Dynamic #{e}",
+controller: :pages, action: e, id: @user.id</code></p>
+      </li>
+      <li>
+        <p>you can catch all error using routes https://coderwall.com/p/w3ghqq/rails-3-2-error-handling-with-exceptions_app We can rescue in application controller
+but not for <code class="highlighter-rouge">ActionController::RoutingError</code> since that is done before rails
+so you need to use <code class="highlighter-rouge">config.exceptions_app</code>, for example:</p>
+      </li>
+    </ul>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+  rescue_from ActiveRecord::RecordNotFound, ActionController::UnknownController, ::AbstractController::ActionNotFound, ActionController::RoutingError do |exception|
+    redirect_to error_path title: 'Record Not Found', description: 'Could not find resource: ' + request.url
+  end
+
+# config/application.rb
+class Application &lt; Rails::Application
+  config.exceptions_app = self.routes
+end
+
+# config/routes.rb
+MyApp::Application.routes.draw do
+  get 'error', controller: 'home'
+  get '/404', controller: 'home', action: 'routing_error'
+  get '/500', controller: 'home', action: 'internal_server_error'
+end
+
+# app/controllers/home_controller.rb
+class HomeController &lt; ApplicationController
+  def error
+    @title = params[:title]
+    @description = params[:description]
+    render :error, formats: [:html]
+  end
+
+  def routing_error
+    @title = 'Page Not Found'
+    @description = 'Cound not find this page'
+    render :error, formats: [:html]
+  end
+
+  def internal_server_error
+    @title = 'Internal Server Error'
+    @description = 'There was an error and administrators were notified'
+    render :error, formats: [:html]
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>export csv</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+def self.to_csv
+  CSV.generate do |csv|
+    csv &lt;&lt; %w(Name Email Sports)
+    all.each do |user|
+      csv &lt;&lt; [user.name, user.email, user.sports.map(&amp;:name).join(', ')]
+    end
+  end
+end
+
+# app/controllers/users_controller.rb
+  respond_to do |format|
+    format.html
+    format.csv { send_data @users.to_csv, filename: 'users.csv', type:
+    'text/csv', disposition: 'inline' }
+  end
+
+# app/views/index.html.erb
+&lt;%= link_to "Export csv", users_path(sport: params[:sport], format: :csv) %&gt;
+</code></pre></div>    </div>
+  </li>
+  <li><a href="https://github.com/swanandp/acts_as_list">acts_as_lists</a> is nice gem, you
+just need to <code class="highlighter-rouge">rails g migration add_priority_to_comment priority:integer</code>,
+add a line in model
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>acts_as_list scope: :post, column: :priority
+default_scope { order('position ASC') }
+</code></pre></div>    </div>
+    <p>use that priority in associations <code class="highlighter-rouge">has_many :comments, -&gt; { order priority:
+:asc }, dependent: :destroy</code>
+Position is starting from 1, 2…
+To perform bulk update, use form to pass ids</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def sort
+  @job.questions.each do |question|
+    # check if this question is in params, since there could be several request of sorting when we save them all
+    if params['question'].include? question.id.to_s
+      question.position = params['question'].index(question.id.to_s) + 1
+      question.save!
+    end
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">enum status: [:paused]</code> should be type integer, or it will return nil. Use
+synonim for new, like unproccessed, draft. You can access values with symbols
+<code class="highlighter-rouge">:draft</code> and outside of class with <code class="highlighter-rouge">Class.statuses</code>.</p>
+  </li>
+  <li>
+    <p>params usually need to be striped, so you can use this code to get rid of all
+unnecessary spaces (not that we create new object that is returned, params
+stays unschanged)</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params_contact_striped = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.split.join(" ") } # strip spaces
+</code></pre></div>    </div>
+
+    <p>or you can do in before save callback</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/contact.rb
+  before_save :strip_fields
+
+  def strip_fields
+    self.email.strip! if email.present?
+    self.first_name.strip! if first_name.present?
+  end
+</code></pre></div>    </div>
+
+    <p>also if you want to replace ‘\n’ new lines in text area (<code class="highlighter-rouge">f.text_area</code>) with
+<br /> so it looks the same when displaying it (alternativelly you can use <code class="highlighter-rouge">&lt;%=
+simple_format @contact.text %&gt;</code>).  Example is with nested associated elements:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>params[:contact] = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.each_with_object({}) { |(k1,v1),o1| o1[k1] = (v1.class == String ? v1.gsub(/\n/,'&lt;br&gt;'): v1) } }
+</code></pre></div>    </div>
+
+    <p>If you want to strip params globaly (for every non get request) you can use:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>before_action :strip_params
+def strip_params
+  return if request.get?
+  params
+    .values
+    .select {|v| [ActionController::Parameters, ActiveSupport::HashWithIndifferentAccess].include? v.class }
+    .each do |item_parameters|
+      item_parameters.each do |k,v|
+        next unless v.class == String
+        item_parameters[k] = v.split.join(' ')
+      end
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>if you notice in logs double requests (messages are double rendered) it is
+probably that you use <code class="highlighter-rouge">gem 'rails_12factor'</code> which should be only on
+production <code class="highlighter-rouge">group: :production</code></li>
+  <li>
+    <p>when we use CDN for assets, in root folder it should contain crossdomain.xml
+file so flash recorder works nice.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0"?&gt;</span>
+<span class="c">&lt;!-- http://www.osmf.org/crossdomain.xml --&gt;</span>
+<span class="cp">&lt;!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd"&gt;</span>
+<span class="nt">&lt;cross-domain-policy&gt;</span>
+    <span class="nt">&lt;allow-access-from</span> <span class="na">domain=</span><span class="s">"*"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;site-control</span> <span class="na">permitted-cross-domain-policies=</span><span class="s">"all"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/cross-domain-policy&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>very nasty issue is when your before action returns
+false <a href="http://guides.rubyonrails.org/active_record_callbacks.html#halting-execution">halting
+execution</a>
+so check if return value could be <code class="highlighter-rouge">false</code> and make sure before filters (like
+before_create) always return not false value (you can return <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">nil</code>).
+I noticed that if you raise validation exception in <code class="highlighter-rouge">before_</code> callbacks than
+exception will be ignored, but <code class="highlighter-rouge">before_</code> block will return false</li>
+  <li>callbacks are defined executed in the order they are defined, or you can use
+<code class="highlighter-rouge">:prepend</code> option</li>
+  <li>in callbacks should only be some value format correction or other simple task.
+In callback should not be Mailer to send email or other external task since it
+will be triggered even in you test when you prepare some data, or when creating
+seed data</li>
+  <li>in action pack (action controller) if you <code class="highlighter-rouge">render</code> something in before_filter
+than execution will be halted (return value is not important for
+ActionController callbacks)</li>
+  <li>subclasses can use <code class="highlighter-rouge">skip_callback</code> if you want to skip callback</li>
+  <li>
+    <p>do not use callbacks, expecially after_callbacks since it ties with save, for
+example, you should be able to repeat some actions (sending email, charging)
+without saving. Use delegator instead</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class FacebookNotifyComment &lt; SimpleDelegator
+  def initialize(comment)
+    super(comment)
+  end
+
+  def save
+    if __getobj__save
+      post_to_wall
+    end
+  end
+
+  private
+
+  def post_to_wall
+    Facebook.post(title: title)
+  end
+end
+
+class CommentsController &lt; ApplicationController
+  def create
+    @comment = FacebookNotifyComment.new(Comment.new(comments_params))
+    if @comment.save
+      redirect_to blog_path, notice: "Comment was posted'
+    else
+     render 'new'
+    end
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>to start new project from specific rails, run <code class="highlighter-rouge">rails _4.2.7.1_ new myapp</code> .
+<code class="highlighter-rouge">gem list | grep rails</code> can show you installed versions</li>
+  <li>
+    <p><code class="highlighter-rouge">"data-disable-with": "&lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt; #{name}"</code> works
+on any element except <code class="highlighter-rouge">f.submit</code> since it is <code class="highlighter-rouge">input</code> element and you will see
+<code class="highlighter-rouge">&lt;i&gt;</code> tags… better is to use <code class="highlighter-rouge">f.button</code> but than you lose <code class="highlighter-rouge">params[:commit]</code>
+which is included in <code class="highlighter-rouge">f.submit</code>. So solution is to include <code class="highlighter-rouge">hidden_field_tag
+:commit, "Some label"</code></p>
+  </li>
+  <li>when you call render partial with current object than first param is string
+(not hash <code class="highlighter-rouge">partial: </code>) <code class="highlighter-rouge">&lt;%= render 'layouts/audit_log', current_object: @user
+%&gt;</code></li>
+  <li>
+    <p>you can use config inside your initializers so you do not need to write
+<code class="highlighter-rouge">Rails.application.</code> again, but does not work for <code class="highlighter-rouge">cache_store</code></p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/dalli.rb
+Rails.application.configure do
+  secrets.internal_notification_email
+  config.,,,
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>for complex forms, it is advised to be able to easily populate all required
+fields, so I populate data in controller or in model. For unique fields you need
+to iterate…</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/items/_form.html.erb
+&lt;% if Rails.env.development? %&gt;
+  &lt;%= link_to "Example", new_item_path(example: true) %&gt;
+&lt;% end %&gt;
+
+# app/constrollers/items_controller.rb
+def new
+  @item = Item.new
+  @item = Item.new example_params if Rails.env.development? &amp;&amp; params[:example]
+  end
+end
+
+private
+
+def example_params
+  i = 1
+  while Item.find_by name: "Example Name #{i}"
+    i += 1
+  end
+  self.name = "Example Name #{i}"
+end
+
+# or
+# app/controllers/items_controller.rb
+def new
+  @item = Item.new
+  @item.example if Rails.env.development? &amp;&amp; params[:example] == "true"
+end
+
+# app/models/item.rb
+def example
+  i = 1
+  while self.class.find_by name: "Example Name #{i}"
+    i += 1
+  end
+  self.name = "Example Name #{i}"
+end
+</code></pre></div>    </div>
+  </li>
+  <li>you can iterate in groups batches <code class="highlighter-rouge">&lt;% company.jobs.group_by(&amp;:user).each do
+|user, jobs| %&gt;</code></li>
+  <li><code class="highlighter-rouge">Person.find_in_batches do |people|</code> will iterate but load only 1000 per run.
+Or shorter is <code class="highlighter-rouge">Person.find_each do |person|</code></li>
+  <li>to count by grouping you can group_by specific column
+<code class="highlighter-rouge">User.group(:company_id).count.values.max</code>
+if you want to order in sql, than you need to name the count and order by that
+name (note that we need to use string not symbol for <code class="highlighter-rouge">'count_id'</code>:
+<code class="highlighter-rouge">User.group(:company_id).order('count_id desc').count(:id)</code>.
+you can group by joined table, for example  https://thoughtbot.com/upcase/videos/advanced-querying-aggregations
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Person.joins(:employees).group('people.name').count('employees_people.id')
+</code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">User.all(joins: :comments, select: "users.*, count(comments.id) as
+comments_count", group: "users.id")</code> you can provide string to select and output
+just specific value like comments_count.</li>
+  <li>you can use <code class="highlighter-rouge">.having</code> with rails just write before <code class="highlighter-rouge">.count</code>, like
+<code class="highlighter-rouge">c=Item.reorder("").group([:url, :title, :feed_id]).having('COUNT(*) &gt;
+1').count(:id)</code></li>
+</ul>
+
+<p>Maybe find can help</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mail.find(
+    :all, 
+    :select =&gt; 'count(*) count, country', 
+    :group =&gt; 'country', 
+    :conditions =&gt; ['validated = ?', 't' ], 
+    :order =&gt; 'count DESC',
+    :limit =&gt; 5)
+</code></pre></div></div>
+
+<ul>
+  <li>to run ruby script with rails you can include</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require File.expand_path('/home/orlovic/rails/myApp/config/environment', __FILE__)
+puts User.all
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>even when you are using rails data attritubes you have to use <code class="highlighter-rouge">to_json</code> (as
+you need in html).
+And if you use jQuery data method than you do not need to use JSON.parse.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= f.text_field :name, "data-predefined-range": {a: 3} %&gt;
+&lt;input data-predefined-rage="&lt;%= {a: 3}.to_json %&gt;"&gt;
+&lt;%= f.select :current_city, options_from_collection_for_select(City.all, :uuid, :name), {}, 'data-select-target': '#current-location', 'data-select-options': Location.all_by_city_uuid.to_json %&gt;
+
+&lt;script&gt;
+range = JSON.parse(input.dataset.predefinedRange);
+range = $(input).data("predefinedRage");
+
+&lt;model&gt;
+# return hash {city_uuid: [{id: l1.id, name: l1.name}, ...], ...}
+def self.all_by_city_uuid
+  Location.all.each_with_object({}) do |location, result|
+    if result[location.city_id].present?
+      result[location.city_id].append(id: location.id, name: location.name)
+    else
+      result[location.city_id] = [{ id: location.id, name: location.name }]
+    end
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>security tips</p>
+  </li>
+</ul>
+<p><a href="https://github.com/brunofacca/zen-rails-security-checklist">https://github.com/brunofacca/zen-rails-security-checklist</a></p>
+
+<ul>
+  <li>
+    <p>if you want to use <code class="highlighter-rouge">key.to_sym</code> for all keys you can use <code class="highlighter-rouge">hash.symbolize_keys</code>
+but if you want that recursively for nested hashes as well you can use
+<code class="highlighter-rouge">params[:some_pararam].deep_symbolize_keys</code></p>
+  </li>
+  <li>
+    <p>memoization is nice if you have network calls or sql calls or db query</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def MyClass
+  def self.issues
+    @issues ||= Brand.find(1).issues.inject({}) do |hash, issue|
+      hash[issue.title] = issue
+      hash
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>If the value is falsy <code class="highlighter-rouge">nil</code> or <code class="highlighter-rouge">false</code> than you should not use <code class="highlighter-rouge">||=</code> since it
+will have affect as <code class="highlighter-rouge">=</code>. You should check if instance variable is defined. You
+can also use <code class="highlighter-rouge">begin</code> <code class="highlighter-rouge">end</code> for multiline definition</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class User &lt; ActiveRecord::Base
+def main_address
+   return @main_address if defined? @main_address
+    @main_address = begin
+      main_address = home_address if prefers_home_address?
+      main_address ||= work_address
+      main_address ||= addresses.first # some semi-sensible default
+    end
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>read raw column value before typecast
+<code class="highlighter-rouge">task.read_attribute_before_type_cast('completed_on')</code></p>
+  </li>
+  <li>
+    <p>chechbox change can activate ajax call, just define requect src and method
+Usefull inside form if you want to show validation errors before actual submit,
+or outside of foem if you want to submit change without form (no need to click
+on submit button). I do not know how to send value…</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.check_box :renew, data: { url: customer_path(@customer), remote: true, method: :patch } %&gt;
+  &lt;%= check_box_tag name, value, checked, data: { url: toggle_todo_path(todo), remote: true } %&gt;
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">printf '.'</code> if you need to print single dot</li>
+  <li>turn of sql debug log messages in console <code class="highlighter-rouge">ActiveRecord::Base.logger = nil</code></li>
+  <li>to show full backtrace and lines from gems you can call
+<code class="highlighter-rouge">Rails.backtrace_cleaner.remove_silencers!</code></li>
+  <li>put <code class="highlighter-rouge">gem 'irbtools', require: 'irbtools/binding'</code> in Gemfile so you can load
+scripts in rails console: <code class="highlighter-rouge">vi 'tmp/my_script.rb'</code> and later you can use just
+<code class="highlighter-rouge">vi</code>. Do not exit with <code class="highlighter-rouge">&lt;leader&gt;q</code>. but use <code class="highlighter-rouge">:wq</code>.</li>
+  <li>single file rails application in one file</li>
+</ul>
+<p><a href="https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/">https://christoph.luppri.ch/articles/2017/06/26/single-file-rails-applications-for-fun-and-bug-reporting/</a>
+<a href="https://gist.github.com/kidlab/72fff6e239b0af1dd3e5">https://gist.github.com/kidlab/72fff6e239b0af1dd3e5</a> for something that need
+test or we just want to showcase in one file onepage rails</p>
+<ul>
+  <li>use <code class="highlighter-rouge">.blank?</code> instead of <code class="highlighter-rouge">.empty?</code> since it will work for <code class="highlighter-rouge">nil</code> and <code class="highlighter-rouge">""</code></li>
+  <li>rails has <code class="highlighter-rouge">attribute_was</code> to get original value of some field. That previous
+value can be read in any hook, for example <code class="highlighter-rouge">after_validation</code> you can read for
+<code class="highlighter-rouge">operator_id &amp;&amp; operator_id_was</code>.</li>
+  <li>reject empty associated params <code class="highlighter-rouge">params.require(:visit).permit(:post_id).reject
+{ |_, v| v.blank? }</code></li>
+  <li>debug network request <a href="https://github.com/aderyabin/sniffer">https://github.com/aderyabin/sniffer</a></li>
+  <li>use <a href="https://github.com/burke/zeus">https://github.com/burke/zeus</a> gem to speed up preload rails like spring</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zeus init
+zeus start
+touch config/boot
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://github.com/kikyous/simple-captcha2">simple captcha 2</a> is
+<a href="https://github.com/kikyous/simple-captcha2/blob/master/lib/simple_captcha/view.rb#L119">generating</a>
+a key (session id) and value (6 chars) when <code class="highlighter-rouge">view.show_simple_captcha</code> is
+called.</li>
+  <li>instead of guard clauses <code class="highlighter-rouge">errors.add :name, 'is invalid' and return false
+unless item.save</code> you can move important things in front <code class="highlighter-rouge">item.save ||
+(errors.add :name, 'is invalid' and return false)</code></li>
+  <li>gem <a href="https://github.com/hexorx/countries">countries</a> uses
+<a href="https://github.com/RubyMoney/money">money</a> gem.
+Also
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# country select box and store value as ISO code
+gem 'country_select'
+</code></pre></div>    </div>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= f.form_group :country, label: { text: 'Country' } do %&gt;
+  &lt;%= f.country_select :country, { iso_codes: true, include_blank: 'Select Country'}, class: 'form-control', 'data-select-currency-based-on-country': '#currency-select', 'data-countries-and-currency-codes': ISO3166::Country.all.inject({}) {|a,c| a[c.alpha2]=c.currency&amp;.code;a }.to_json %&gt;
+&lt;% end %&gt;
+&lt;%= f.select :currency, [['Currency based on country', 0]] + Money::Currency.table.values.map {|currency| [currency[:name] + ' (' + currency[:iso_code] + ')', currency[:iso_code]] }, { disabled: 0, selected: (f.object.currency.present? ? f.object.currency : 0) }, id: 'currency-select' %&gt;
+&lt;script&gt;
+  $('[data-select-currency-based-on-country]').on('change', function() {
+    var $target = $($(this).data('selectCurrencyBasedOnCountry'));
+    var options = $(this).data('countriesAndCurrencyCodes');
+    $target.val(options[$(this).val()]);
+  });
+&lt;/script&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>single line one liner rails app for active record can be found in
+<a href="https://github.com/rails/rails/blob/master/CONTRIBUTING.md">contributibuting</a></li>
+  <li>http client https://docs.ruby-lang.org/en/2.0.0/Net/HTTP.html</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'net/http'
+require 'uri'
+
+def fetch(uri_str, limit = 10)
+  # You should choose better exception.
+  raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+
+  url = URI.parse(uri_str)
+  req = Net::HTTP::Get.new(url.path, { 'User-Agent' =&gt; 'Mozilla/5.0 (etc...)' })
+  response = Net::HTTP.start(url.host, url.port) { |http| http.request(req) }
+  case response
+  when Net::HTTPSuccess     then response
+  when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+  else
+    response.error!
+  end
+end
+
+print fetch('http://www.ruby-lang.org/')
+</code></pre></div></div>
+
+<ul>
+  <li>you can use <code class="highlighter-rouge">URI::regexp</code> to get elements from urls, for example
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'https://www.premesti.se/my-profile?open-moda=true'.match URI.regexp
+=&gt; #&lt;MatchData
+ "https://www.premesti.se/my-profile?open-moda=true"
+ 1:"https"
+ 2:nil
+ 3:nil
+ 4:"www.premesti.se"
+ 5:nil
+ 6:nil
+ 7:"/my-profile"
+ 8:"open-moda=true"
+ 9:nil&gt;
+ # to see positions of specific parts just look at
+ URI.regexp
+</code></pre></div>    </div>
+  </li>
+  <li>validate url with custom validation
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># https://coderwall.com/p/ztig5g/validate-urls-in-rails
+# use in your models like:
+# validates :video_url, url: true, allow_blank: true
+class UrlValidator &lt; ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    record.errors[attribute] &lt;&lt; (options[:message] || "must be a valid URL") unless url_valid?(value)
+  end
+
+  # a URL may be technically well-formed but may
+  # not actually be valid, so this checks for both.
+  def url_valid?(url)
+    url = URI.parse(url) rescue false
+    url.kind_of?(URI::HTTP) || url.kind_of?(URI::HTTPS)
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>use bang methods to raise exception <code class="highlighter-rouge">User.create! email: 'invalid'</code>. If you
+use it inside callbacks than no exception will be raise, but rollback will be
+performed…</li>
+  <li>
+    <p>sometime tests uses precompiled assets from <code class="highlighter-rouge">/public/assets/</code> so make sure to
+clean clear them. Also <code class="highlighter-rouge">/log/test.log</code> became huge if you do not limit it. You
+can limit test log with</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/environments/test.rb
+# limit log file to 50MB, when it reaches that it will start from empty file
+config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 1, 50.megabytes)
+</code></pre></div>    </div>
+  </li>
+  <li>colorize matching string in console
+~~~
+    <h1 id="configinitializerscolorizerb">config/initializers/colorize.rb</h1>
+    <p>class String
+COLOR = 31 # red</p>
+
+    <p>def red
+  “\e[#{COLOR}m#{self}\e[0m”
+end</p>
+
+    <p>def colorize(string, return_nil: true, only_matched_lines: false)
+  last_index = 0
+  res = ‘’
+  while (new_index = self[last_index..-1].index(string))
+    if last_index + new_index - 1 &gt; -1
+      res += self[last_index..last_index + new_index - 1]
+    end
+    res += string.red
+    last_index = last_index + new_index + string.length
+  end
+  res += self[last_index..-1]
+  if only_matched_lines
+    res = res.split(“\n”).select { |l| l.index string }.join(“\n”)
+  end
+  # rubocop:disable Rails/Output
+  puts res
+  # rubocop:enable Rails/Output
+  return_nil ? nil : res
+end
+end</p>
+  </li>
+</ul>
+
+<h2 id="run-tests-with-a-command">run tests with a command</h2>
+<h2 id="rails-test-configinitializerscolorizerb">rails test config/initializers/colorize.rb</h2>
+<h1 id="require-minitestautorun">require ‘minitest/autorun’</h1>
+<h1 id="class-test--minitesttest">class Test &lt; Minitest::Test</h1>
+<h1 id="def-test_one_substring">def test_one_substring</h1>
+<h1 id="s--my-name-is-john">s = ‘My name is John.’</h1>
+<h1 id="assert_equal-my-name-is-e31mjohne0m-scolorizejohn-return_nil-false">assert_equal “My name is \e[31mJohn\e[0m.”, s.colorize(‘John’, return_nil: false)</h1>
+<h1 id="end">end</h1>
+<p>#</p>
+<h1 id="def-test_two_substrings">def test_two_substrings</h1>
+<h1 id="s--john-is-my-name-john">s = ‘John is my name, John.’</h1>
+<h1 id="r--e31mjohne0m-is-my-name-e31mjohne0m">r = “\e[31mJohn\e[0m is my name, \e[31mJohn\e[0m.”</h1>
+<h1 id="assert_equal-r-scolorizejohn-return_nil-false">assert_equal r, s.colorize(‘John’, return_nil: false)</h1>
+<h1 id="end-1">end</h1>
+<p>#</p>
+<h1 id="def-test_no_found">def test_no_found</h1>
+<h1 id="s--my-name-is-john-1">s = ‘My name is John.’</h1>
+<h1 id="assert_equal-my-name-is-john-scolorizemike-return_nil-false">assert_equal “My name is John.”, s.colorize(‘Mike’, return_nil: false)</h1>
+<h1 id="end-2">end</h1>
+<p>#</p>
+<h1 id="def-test_whole">def test_whole</h1>
+<h1 id="s--my-name-is-john-2">s = ‘My name is John.’</h1>
+<h1 id="assert_equal-e31mmy-name-is-johne0m-scolorizes-return_nil-false">assert_equal “\e[31mMy name is John.\e[0m”, s.colorize(s, return_nil: false)</h1>
+<h1 id="end-3">end</h1>
+<p>#</p>
+<h1 id="def-test_return">def test_return</h1>
+<h1 id="s--my-name-is-john-3">s = ‘My name is John.’</h1>
+<h1 id="assert_nil-scolorizejohn">assert_nil s.colorize(‘John’)</h1>
+<h1 id="end-4">end</h1>
+<p>#</p>
+<h1 id="def-test_only_matched_lines">def test_only_matched_lines</h1>
+<h1 id="s--first_linensecond_line-johnnthird_linenjohn-fourth_line">s = “first_line\nsecond_line John\nthird_line\nJohn fourth_line”</h1>
+<h1 id="assert_equal-second_line-johnrednjohnred-fourth_line-scolorizejohn-only_matched_lines-true-return_nil-false">assert_equal “second_line #{‘John’.red}\n#{‘John’.red} fourth_line”, s.colorize(‘John’, only_matched_lines: true, return_nil: false)</h1>
+<h1 id="end-5">end</h1>
+<h1 id="end-6">end</h1>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* if you ever need to write form tag in pure html for rails than you need to add
+  authenticity token
+</code></pre></div></div>
+<form action="&lt;%= my_url %&gt;" method="post">
+    &lt;%= hidden_field_tag :authenticity_token, form_authenticity_token %&gt;
+    <input type="text" name="name" />
+  </form>
+<p>~~~</p>
+
+<ul>
+  <li>
+    <p>gem <code class="highlighter-rouge">will_paginate</code> can use raw sql for selecting and for counting
+ https://www.rubydoc.info/github/mislav/will_paginate/WillPaginate%2FActiveRecord%2FBaseMethods:paginate_by_sql</p>
+
+    <p>if you need rails model without table https://gist.github.com/dalibor/228654
+it’s different for Rails 4 and Rails 5
+https://stackoverflow.com/questions/41494951/how-to-create-activerecord-tableless-model-in-rails-5</p>
+  </li>
+  <li>constants
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/const.rb
+# rubocop:disable Naming/MethodName
+class Const
+def self.COMMON
+  hash_or_error_if_key_does_not_exists(
+    site_name: 'My CRM',
+    domain: 'www.trk.in.rs',
+  )
+end
+
+def self.COLLAPSE_KEYS
+  hash_or_error_if_key_does_not_exists(
+    new_message: 'new_message',
+  )
+end
+
+def self.hash_or_error_if_key_does_not_exists(hash)
+  # https://stackoverflow.com/questions/30528699/why-isnt-an-exception-thrown-when-the-hash-value-doesnt-exist
+  # raise if key does not exists hash[:non_exists] or hash.values_at[:non_exists]
+  hash.default_proc = -&gt;(_h, k) { raise KeyError, "#{k} not found!" }
+  # raise when value not exists hash.key 'non_exists'
+  def hash.key(value)
+    k = super
+    raise KeyError, "#{value} not found!" unless k
+
+    k
+  end
+  hash
+end
+end
+# rubocop:enable Naming/MethodName
+</code></pre></div>    </div>
+  </li>
+  <li>rails routes instead of grep you can search by <code class="highlighter-rouge">rails routes -g user</code> but only
+for rails &gt; 5.2.1</li>
+  <li>
+    <p>contribute to rails guide https://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html#contributing-to-the-rails-documentation
+Clone the form of the https://github.com/rails/rails and update
+<code class="highlighter-rouge">guides/source/*.md</code> files.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd guides
+bundle install
+bundle exec rake guides:generate
+
+</code></pre></div>    </div>
+  </li>
+  <li>Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
+💯% sure.</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

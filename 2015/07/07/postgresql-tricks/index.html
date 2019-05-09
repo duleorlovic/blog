@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Postgresql Tricks</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Postgresql Tricks</h1>
+    <p class="meta">Jul 7, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#introduction"><span class="tocnumber">1</span> <span class="toctext">Introduction</span></a></li><li class="toc_level-1 toc_section-2"><a href="#tutorial-links"><span class="tocnumber">2</span> <span class="toctext">Tutorial links</span></a></li><li class="toc_level-1 toc_section-3"><a href="#time-date"><span class="tocnumber">3</span> <span class="toctext">Time Date</span></a></li><li class="toc_level-1 toc_section-4"><a href="#practical-example-in-ruby-on-rails"><span class="tocnumber">4</span> <span class="toctext">Practical example in Ruby on Rails</span></a><ul><li class="toc_level-2 toc_section-5"><a href="#statistics-graph"><span class="tocnumber">4.1</span> <span class="toctext">Statistics graph</span></a></li></ul></li><li class="toc_level-1 toc_section-6"><a href="#other-gems"><span class="tocnumber">5</span> <span class="toctext">Other gems</span></a></li></ul></td></tr></tbody></table></div><h1 id="introduction">Introduction</h1>
+
+<p>Learning database is funny and easy, but when you want to do something more
+complicated than <code class="highlighter-rouge">SELECT * FROM products</code> than you need to read documentation.</p>
+
+<p>If you want something more specific data from <code class="highlighter-rouge">products</code> table you need to use
+<a href="http://www.postgresql.org/docs/9.4/static/queries-table-expressions.html">7.2. Table
+Expressions</a>
+that is:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">FROM products p INNER JOIN sales s ON p.id = s.product_id</code> where <em>p</em> and <em>s</em>
+are aliases. In following sql you need to use those aliases <code class="highlighter-rouge">p</code> instead
+<code class="highlighter-rouge">products</code></li>
+  <li>
+    <p>You can create column aliases for columns <code class="highlighter-rouge">SELECT *, t.lat AS latitude</code>
+but you can not use in <code class="highlighter-rouge">where</code> clause since where clause is logically before
+select clause (and before alias is created). If you need to use, you need to
+write that statement twice, or use sql wrapper wich will contain only that
+<code class="highlighter-rouge">where</code>, this example is using concat:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this does not work
+SELECT neededfield, CONCAT(firstname, ' ', lastname) as firstlast
+FROM users
+WHERE firstlast = "Bob Michael Jones"
+
+# contact needs to be written twice: in SELECT and WHERE
+SELECT neededfield, CONCAT(firstname, ' ', lastname) as firstlast
+FROM users
+WHERE CONCAT(firstname, ' ', lastname) = "Bob Michael Jones"
+
+# or select wrapped
+SELECT * FROM (
+  SELECT neededfield, CONCAT(firstname, ' ', lastname) as firstlast
+  FROM users) base
+WHERE firstLast = "Bob Michael Jones"
+</code></pre></div>    </div>
+  </li>
+  <li>after processing <em>FROM</em> clause, thie new virtual table is checked against
+search conditions <em>WHERE</em>, for example: <code class="highlighter-rouge">WHERE s.date &gt; CURRENT_DATE -
+INTERVAL '4 weeks'</code> This filtering is done <em>before</em> processing with <em>GROUP BY</em>
+and <em>HAVING</em>. Also you can not use alias in WHERE <code class="highlighter-rouge">SELECT id as as_id FROM
+table WHERE as_id = 1</code>. You should use <code class="highlighter-rouge">SELECT id AS as_id FROM table HAVING
+as_id = 1</code>.</li>
+  <li><code class="highlighter-rouge">GROUP BY product_id, p.name, p.price, p.cost</code> and <code class="highlighter-rouge">HAVING sum(p.price *
+s.units) &gt; 5000;</code>. If you group by primary key column than you can <em>SELECT</em>
+any column, but if you group by non primary than you need some <a href="http://www.postgresql.org/docs/9.4/static/functions-aggregate.html">9.20.
+Aggregate
+Functions</a>
+since those columns can be merged.
+    <ul>
+      <li>you can group by hour with <code class="highlighter-rouge">SELECT date_trunc('hour', created_at),  (which
+  can be count(*)
+FROM users GROUP BY date_trunc('hour', created_at) ORDER BY date_trunc('hour',
+created_at);</code>. You can reference columns by select position <code class="highlighter-rouge">SELECT
+date_trunc('hour', created_at), count(*) FROM users GROUP BY 1 ORDER BY 1;</code>
+Although you can order by expression of columns <code class="highlighter-rouge">ORDER BY col1 + col2</code>, you
+can not use order by with calculated col and expression <code class="highlighter-rouge">ORDER BY sum + 1</code>
+https://www.postgresql.org/docs/8.3/queries-order.html</li>
+    </ul>
+  </li>
+  <li>you can group by several columns and select count &gt; 2 and get only first
+item.id <code class="highlighter-rouge">a=Item.reorder("").select('max("id") as max_id').group([:url, :title,
+:feed_id]).having('count("id") &gt; 1')</code></li>
+</ul>
+
+<p>I found very interesting paragraph in <a href="http://www.postgresql.org/docs/devel/static/tutorial-agg.html">tutorial for aggregate
+functions</a>.</p>
+
+<blockquote>
+  <p>It is important to understand the interaction between aggregates and SQL’s
+ WHERE and HAVING clauses. The fundamental difference between WHERE and HAVING
+ is this: WHERE selects input rows before groups and aggregates are computed
+ (thus, it controls which rows go into the aggregate computation), whereas
+ HAVING selects group rows after groups and aggregates are computed. Thus, the
+ WHERE clause must not contain aggregate functions; it makes no sense to try
+ to use an aggregate to determine which rows will be inputs to the aggregates.
+ On the other hand, the HAVING clause always contains aggregate functions.
+ (Strictly speaking, you are allowed to write a HAVING clause that doesn’t use
+ aggregates, but it’s seldom useful. The same condition could be used more
+ efficiently at the WHERE stage.)</p>
+
+  <p>… This is more efficient than adding the restriction to HAVING, because we
+avoid doing the grouping and aggregate calculations for all rows that fail the
+WHERE check.</p>
+</blockquote>
+
+<p>Next step is to learn something about <a href="http://www.postgresql.org/docs/9.4/static/functions-formatting.html">9.8. Data Type Formatting
+Functions</a>
+which you can use in grouping.</p>
+
+<p>Some tips:</p>
+
+<ul>
+  <li>if you want to avoid <em>Division by zero</em> you can use <code class="highlighter-rouge">CASE count(column_name) =
+0 WHEN 0 THEN 1 ELSE count(column_name) END</code>.  Another way is to use
+<code class="highlighter-rouge">COALESCE(NULLIF(column_name,0), 1)</code> .
+<code class="highlighter-rouge">NULLIF</code> is used to show nil, as division by nil is nil.
+<code class="highlighter-rouge">something/NULLIF(column_name,0)</code> If the value of column_name is 0 - result of
+entire expression will be NULL.
+Defaults for <code class="highlighter-rouge">ORDER BY ASC</code> is <code class="highlighter-rouge">NULLS LAST</code> and for desc <code class="highlighter-rouge">NULL FIRST</code> so you
+maybe want to reverse that.</li>
+  <li><code class="highlighter-rouge">FROM WHERE field IN ('a','b')</code> is the same as <code class="highlighter-rouge">field = 'a' OR field =
+'b'</code></li>
+  <li>you can use IN, ANY, ALL
+<a href="https://www.postgresql.org/docs/current/static/functions-comparisons.html#AEN18509">functions-comparisons</a></li>
+</ul>
+
+<p>Use gem to extent ActiveRecord functionality
+https://github.com/georgekaraszi/ActiveRecordExtended</p>
+
+<h1 id="tutorial-links">Tutorial links</h1>
+
+<p><a href="https://www.toptal.com/postgresql">https://www.toptal.com/postgresql</a>
+Postgresql is better than NoSql because of:</p>
+
+<ul>
+  <li>transactionality at system level</li>
+  <li>aggregation functions</li>
+  <li>joins across different tables</li>
+</ul>
+
+<p>NoSql has advantage of scaling (horizontal, a lot of new fields) and that you
+can store semistructured data (social networks)</p>
+
+<p>For full text search in Postgresql, you can use <code class="highlighter-rouge">@@</code> match operator <code class="highlighter-rouge">SELECT *
+FROM posts WHERE tsvector(title || ‘ ‘ || content) @@
+plainto_tsquery(‘query-string’);</code></p>
+
+<p>High availability is implemented with redudant servers <em>hot standby</em> that copy
+data and accept only read only queries (only master can write data), and <em>warm
+standby</em> servers that only follow the changes made to primary server (does not
+accept queries) and wait to be promoted to primary server in case of master
+failure.</p>
+
+<p><a href="https://www.toptal.com/sql/interview-questions">https://www.toptal.com/sql/interview-questions</a></p>
+
+<ul>
+  <li><code class="highlighter-rouge">UNION</code> (<code class="highlighter-rouge">UNION ALL</code>) merges two structurally compatible tables into single
+table (with duplication)</li>
+  <li><code class="highlighter-rouge">INNER JOIN</code> (<code class="highlighter-rouge">LEFT OUTER</code> <code class="highlighter-rouge">FULL</code> <code class="highlighter-rouge">CROSS</code>) returns rows that match both
+tables (all rows from left table and matched rows from right, either left or
+right ie union, cartesian product each by each row)</li>
+  <li><code class="highlighter-rouge">SELECT count(*) WHERE cid &lt;&gt; '123'</code> will not count when cid is NULL</li>
+  <li><code class="highlighter-rouge">is null</code> is proper way to check if <code class="highlighter-rouge">null = null</code> or <code class="highlighter-rouge">cid = null</code></li>
+  <li>
+    <p><code class="highlighter-rouge">WHERE cid NOT IN (SELECT wcid FROM t WHERE wcid IS NOT null)</code> we need to
+check if null is in table since <code class="highlighter-rouge">NOT IN</code> will return empty set</p>
+  </li>
+  <li>Online exercises <a href="https://pgexercises.com/">https://pgexercises.com/</a></li>
+</ul>
+
+<h1 id="time-date">Time Date</h1>
+
+<ul>
+  <li>there are <a href="http://www.postgresql.org/docs/9.1/static/datatype-datetime.html">4
+types</a>:
+<em>timestamp, date, time</em> and <em>interval</em>. When you define value use single
+quotes: <code class="highlighter-rouge">DATE '2016-05-22'</code>. For intervals you need to set unit <code class="highlighter-rouge">INTERVAL '1
+WEEK'</code></li>
+  <li>for all types there is <code class="highlighter-rouge">CURRENT_DATE, CURRENT_TIME</code></li>
+  <li><a href="http://www.postgresql.org/docs/9.1/static/functions-datetime.html">functions</a>
+allows you to:
+    <ul>
+      <li>create next day <code class="highlighter-rouge">DATE '2001-02-01' + INTERVAL '1 DAY'</code></li>
+      <li>extract weekday <code class="highlighter-rouge">EXTRACT(DOW FROM TIMESTAMP '2016')</code></li>
+      <li>check overlaps <code class="highlighter-rouge">(start1, end1) OVERLAPS (start2, end2)</code></li>
+    </ul>
+  </li>
+  <li>typecast can be done: <code class="highlighter-rouge">INTERVAL '1 WEEK'</code> or <code class="highlighter-rouge">'1 WEEK'::INTERVAL</code>
+    <ul>
+      <li>jsonb is much reliable type cast when since json compares as strings
+<a href="http://stackoverflow.com/questions/32843213/operator-does-not-exist-json-json">link</a></li>
+    </ul>
+  </li>
+  <li>to use columns (like <code class="highlighter-rouge">$1</code> or name <code class="highlighter-rouge">a.b</code>) you can use
+    <ul>
+      <li>string concatenation  <code class="highlighter-rouge">(a.b || ' MINUTES')::INTERVAL</code></li>
+      <li>multiplication <code class="highlighter-rouge">a.b * INTERVAL '1 MINUTES'</code> (much nicer)</li>
+    </ul>
+  </li>
+  <li>
+    <p>you can find records for specific month and year with</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scope :posts_in_month_and_year, -&gt;(month, year) {
+  where('MONTH(posts.created_at) = ? AND YEAR(posts.created_at) = ?', month, year)
+</code></pre></div>    </div>
+  </li>
+  <li>another grouping by day can be <code class="highlighter-rouge">SELECT COUNT(*), to_char(date, 'YYY-MM-DD') as
+'day' FROM orders GROUP BY 'day' ORDER BY 'day'</code></li>
+</ul>
+
+<h1 id="practical-example-in-ruby-on-rails">Practical example in Ruby on Rails</h1>
+
+<p>Complex queries can be written inside <em>database view</em> but that is not easy to
+maintain since you need migration file for each change.  Also <em>database view</em> is
+created in migration, so we don’t have it with <code class="highlighter-rouge">rake db:setup</code>.  You can get it
+with <code class="highlighter-rouge">rake db:migrate:reset</code> but this sometimes doesn’t work if we used
+<em>ActiveRecord</em> in migration files and we later add some validations
+which (of-course) are not satisfied in the past (and this can be solved with
+<code class="highlighter-rouge">class Product&lt;ActiveRecord::Base;end</code> in migration files).</p>
+
+<p>It’s much easier to write long SQL query and use <a href="http://www.postgresql.org/docs/devel/static/hstore.html">F.15.
+hstore</a> functions to
+simplify representations. You need to install hstore extension
+<a href="https://gist.github.com/terryjray/3296171">link</a> for test and develop db:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo psql -d myapp_development -U orlovic
+CREATE EXTENSION hstore;
+#or in one command: 
+sudo su postgres -c "psql myapp_test -c 'CREATE EXTENSION hstore;'"
+</code></pre></div></div>
+
+<p>Sometime you can run <code class="highlighter-rouge">rake db:migrate:reset</code> to rerun all migration and check if <em>db/schema.rb</em> is in sync.</p>
+
+<p>You might also alter user to have superuser privileges:
+<code class="highlighter-rouge">sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"</code></p>
+
+<p>To detect N+1 queries use gem <em>bullet</em>, and to find most expensive queries use heroku postgres analytics.
+To measure production queries, you can download database from heroku to <code class="highlighter-rouge">a.dump</code> and restore to development database</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo su postgres
+pg_restore -d myapp_development --clean --no-acl --no-owner -h localhost a.dump
+</code></pre></div></div>
+
+<p>and run benchmark</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>puts Benchmark.measure { Job.active_per_domain_per_tier(domain,1) }
+</code></pre></div></div>
+
+<p>or you can connect to production database (be carefull).</p>
+
+<h2 id="statistics-graph">Statistics graph</h2>
+
+<p>When you want to show some statistics during some time (time points in sql is <code class="highlighter-rouge">GENERATE_SERIES</code>), for example number of deactivated users:</p>
+
+<p><img src="/assets/deactivated_users.png" alt="Time series of deactivated users" /></p>
+
+<p>What I have learned is that when you use <em>series</em>, never apply <em>WHERE</em> since because it will destroy <em>series</em>.
+Better is to filter in <em>ON</em> statement. Each subsequent joins should be <em>LEFT OUTER JOIN</em> so <em>series</em> survive.</p>
+
+<p>We need <em>COALESCE</em> because on some days we don’t have records, so we put key <code class="highlighter-rouge">none</code> ( number is 0)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># put this in controller
+if params[:from_date].present?
+  @from_date = Time.new( * params[:from_date].split('-')).to_date
+else
+  @from_date = (Time.now - 1.month).to_date
+end
+if params[:to_date].present?
+  @to_date = Time.new( * params[:to_date].split('-')).to_date
+else
+  @to_date = (Time.now - 1.day).to_date
+end
+
+@group_by = params[:group_by] || 'day'
+case @group_by
+when 'day'
+  interval_period = '1 day'
+  interval = 'YY-MM-DD'
+when 'week'
+  interval_period = '1 week'
+  interval = 'YY-WW'
+when 'month'
+  interval_period = '1 month'
+  interval = 'YY-MM'
+end
+
+query = &lt;&lt;-SQL
+SELECT
+  hstore(array_agg(COALESCE(res.role::text,'none')),array_agg(res.number::text) ) AS name_mapping,
+  res.datum as datum
+FROM
+(
+    SELECT 
+      users.role,
+      count(users.id),
+      dt.series
+    FROM (
+      SELECT GENERATE_SERIES( '#{@from_date}'::date, '#{@to_date}'::date, '#{interval_period}')::date
+      AS series
+    ) AS dt
+    LEFT OUTER JOIN users
+    ON TO_CHAR(users.updated_at,'#{interval}') = TO_CHAR(dt.series,'#{interval}') AND
+      users.status = 0
+    GROUP BY dt.series, users.role
+) AS res(role, number, datum)
+GROUP BY res.datum
+ORDER BY res.datum
+SQL
+results = User.find_by_sql(query)
+# results group by created_at and domain { 'scuddle' =&gt; 3, 'indeed' =&gt; 10 } for each date
+@heading = "Deactivated users (group by updated_at)"
+@labels = results.map {|k| k.datum}
+roles = results.map {|k| k.name_mapping.keys}.flatten.uniq.reject {|r| r=='none'}
+# TODO make those data arrays in SQL so we do not need to iterate again here
+@datasets = add_colors roles.map { |r| { label: User.new(role: r).role_to_s, data: results.map { |k| k.name_mapping[r].to_i} } }
+render 'stats_line_graph'
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in view file
+&lt;form&gt;
+  &lt;input type="date" name="from_date" value="&lt;%= @from_date %&gt;"&gt;
+  &lt;input type="date" name="to_date" value="&lt;%= @to_date %&gt;"&gt;
+  &lt;select name="group_by"&gt;
+    &lt;option value="day" &lt;%= 'selected="selected"' if @group_by == 'day' %&gt;&gt;Day&lt;/option&gt;
+    &lt;option value="week" &lt;%= 'selected="selected"' if @group_by == 'week' %&gt;&gt;Week&lt;/option&gt;
+    &lt;option value="month" &lt;%= 'selected="selected"' if @group_by == 'month' %&gt;&gt;Month&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;input type="submit"&gt;
+&lt;/form&gt;
+&lt;h4&gt;&lt;%= @heading %&gt;&lt;/h4&gt;
+
+&lt;% if ! @data.present? &amp;&amp; ! @datasets.present? %&gt;
+  &lt;p&gt;
+    No results
+  &lt;/p&gt;
+&lt;% end %&gt;
+&lt;div id="legend" class="left"&gt;&lt;/div&gt;
+&lt;div class="left m-l-10"&gt;
+  &lt;%= @message %&gt;
+&lt;/div&gt;
+&lt;div class="clearfix"&gt;&lt;/div&gt;
+&lt;canvas id="myChart" width="800" height="400"&gt;&lt;/canvas&gt;
+&lt;div id="chartjs-tooltip"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  &lt;%# http://www.chartjs.org/docs/#line-chart-data-structure%&gt;
+  var data = {
+    labels: &lt;%=raw @labels.to_json %&gt;,
+    &lt;% if @datasets.present? %&gt;
+      &lt;%# for multiple lines %&gt;
+      datasets: &lt;%=raw @datasets.to_json %&gt;,
+    &lt;% else %&gt;
+      &lt;%# for single line %&gt;
+      datasets: [
+        {
+          data: &lt;%=raw @data.to_json %&gt;,
+        }
+      ]
+    &lt;% end %&gt;
+  }
+  &lt;%# https://github.com/nnnick/Chart.js/blob/master/samples/line-customTooltips.html#L53 %&gt;
+  Chart.defaults.global.customTooltips = function(tooltip) {
+
+      var tooltipEl = $('#chartjs-tooltip');
+
+      if (!tooltip) {
+          tooltipEl.css({
+              opacity: 0
+          });
+          return;
+      }
+
+      tooltipEl.removeClass('above below');
+      tooltipEl.addClass(tooltip.yAlign);
+
+      var innerHtml = '';
+      if (tooltip.labels)
+      {
+        for (var i = tooltip.labels.length - 1; i &gt;= 0; i--) {
+          innerHtml += [
+            '&lt;div class="chartjs-tooltip-section"&gt;',
+            '   &lt;span class="chartjs-tooltip-key" style="background-color:' + tooltip.legendColors[i].fill + '"&gt;&lt;/span&gt;',
+            '   &lt;span class="chartjs-tooltip-value"&gt;' + tooltip.labels[i] + ' - ' + myNewChart.datasets[i].label + '&lt;/span&gt;',
+            '&lt;/div&gt;'
+          ].join('');
+        }
+      }
+      else
+      {
+        innerHtml = [
+          '&lt;div class="chartjs-tooltip-section"&gt;',
+          '   &lt;span class="chartjs-tooltip-value"&gt;' + tooltip.text + '&lt;/span&gt;',
+          '&lt;/div&gt;'
+        ].join('');
+      }
+
+      tooltipEl.html(innerHtml);
+
+      tooltipEl.css({
+          opacity: 1,
+          left: tooltip.chart.canvas.offsetLeft + tooltip.x + 'px',
+          top: tooltip.chart.canvas.offsetTop + tooltip.y + 'px',
+          fontFamily: tooltip.fontFamily,
+          fontSize: tooltip.fontSize,
+          fontStyle: tooltip.fontStyle,
+      });
+  };
+
+  var ctx = document.getElementById("myChart").getContext("2d");
+  var myNewChart = new Chart(ctx).Line(data);
+
+  // legend
+  var legendHolder = document.getElementById("legend");
+  legendHolder.innerHTML = myNewChart.generateLegend();
+&lt;/script&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>to find which table has the most rows you can use this
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT schemaname,relname,n_live_tup
+FROM pg_stat_user_tables
+ORDER BY n_live_tup DESC;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="other-gems">Other gems</h1>
+
+<p>I found interesting gems:</p>
+
+<ul>
+  <li><a href="https://github.com/ankane/groupdate">https://github.com/ankane/groupdate</a> for grouping</li>
+  <li>
+    <p><a href="https://github.com/ankane/chartkick">https://github.com/ankane/chartkick</a> simple charts from ruby, support
+chart.js, highcarts, goole charts <a href="https://github.com/ankane/chartkick.js">js
+version</a></p>
+  </li>
+  <li>interesting <a href="https://github.com/mariusandra/insights">no sql not required data analytics tool
+INSIGHTS</a></li>
+  <li>automatic find indexes that are needed for a database
+https://github.com/ankane/dexterhttps://github.com/ankane/dexter</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

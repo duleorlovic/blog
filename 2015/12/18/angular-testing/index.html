@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Angular Testing</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Angular Testing</h1>
+    <p class="meta">Dec 18, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#protractor"><span class="tocnumber">1</span> <span class="toctext">Protractor</span></a></li><li class="toc_level-1 toc_section-2"><a href="#jasmine"><span class="tocnumber">2</span> <span class="toctext">Jasmine</span></a></li></ul></td></tr></tbody></table></div><p><a href="https://www.youtube.com/watch?v=iP0Vl-vU3XM">video</a> TDD helps to write proper
+tests (so tests don’t have bugs). Tests helps to maintain and refactor code.
+Also is easier to understand code if test titles are properly constructed. It’s
+very helpfull is to do test code review in person (pair programming). RTMF
+(readable, trustworthy, maintainable, fast).</p>
+
+<p>One big mistake is to use mocking too much. Difference between mock object and
+stub is that mock is verified, but stub is not. Unit of work can have 3
+outcomes: return value/exception, noticeable state change and 3th party call
+(only here should use mock, that code should be less than 5% of all test code).
+So only when end result should be a call to 3 service, we create mock object.
+Stub is just data flow get/return.</p>
+
+<p>Don’t specify internal implementation, it’s better to create method that will
+return result (different result when state change). Example
+<code class="highlighter-rouge">userMgr.createUser('asd','pas')</code> should not test
+<code class="highlighter-rouge">equal(userMgr._internalUsers[0].name,'asd')</code> but it’s better to test
+<code class="highlighter-rouge">ok(login('asd','pas'))</code> because other methods can use different internal
+implement.</p>
+
+<ul>
+  <li>don’t mix unit and integration tests (integration are more brittle).</li>
+  <li>keep variable declaration and it’s usage close to each other</li>
+  <li>don’t comment out test, remove them</li>
+  <li>small tests. if method has multiple end results, than create test for each end
+result and choose good name</li>
+  <li>unit testing controllers: usually initial values (no business logic) and
+copuling UI actions to services</li>
+  <li>unit testing services: correct business logic</li>
+  <li>unit test directive: inject <code class="highlighter-rouge">$compile</code>, manually call <code class="highlighter-rouge">$digest()</code> for that
+scope.</li>
+  <li>e2e protractor
+<a href="http://angular.github.io/protractor/#/api?view=ElementArrayFinder">ElementArrayFinder</a>
+uses <a href="http://www.protractortest.org/#/locators">locators</a> argument</li>
+</ul>
+
+<h1 id="protractor">Protractor</h1>
+
+<p><a href="https://egghead.io/lessons/angularjs-protractor-interactive">egghead
+protractor</a></p>
+
+<ul>
+  <li>use <a href="https://docs.google.com/presentation/d/1B6manhG0zEXkC-H-tPo2vwU06JhL8w9-XCF9oehXzAQ/edit#slide=id.gf9c971a8_00">page
+objects</a>
+to define elements, by css, repeater,
+<a href="https://github.com/angular/protractor/issues/456">text</a>
+    <ul>
+      <li><code class="highlighter-rouge">this.imgEl = element(by.css('img'));</code></li>
+      <li><code class="highlighter-rouge">this.rowItems = element.all(by.repeater('row in vm.rows'));</code></li>
+      <li><code class="highlighter-rouge">this.elWithText = element(by.xpath("//*[contains(text(),'Log in')]"));</code></li>
+    </ul>
+  </li>
+  <li>action
+    <ul>
+      <li><code class="highlighter-rouge">browser.get('/index.html');</code></li>
+      <li><code class="highlighter-rouge">page.emailInput.sendKeys('asd@asd.asd' + protractor.Key.TAB +
+'asdasd');</code>need to be inside same sandKeys</li>
+      <li><code class="highlighter-rouge">page.loginButton.click();</code></li>
+    </ul>
+  </li>
+  <li>expectations
+    <ul>
+      <li><code class="highlighter-rouge">expect(page.imgEl.getAttribute('src')).toMatch(/image.png$/);</code></li>
+      <li><code class="highlighter-rouge">expect(page.rowItems.count()).toBeGreatedThan(5);</code></li>
+      <li><code class="highlighter-rouge">expect(element(by.binding('person.name')).isPresent()).toBe(true);</code> that is
+``</li>
+      <li><code class="highlighter-rouge">expect(page.someEl.isDisplayed()).toBe(true, "Should be displayed");</code> is
+different from <code class="highlighter-rouge">isPresent()</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p><a href="https://github.com/angular/protractor/blob/master/docs/debugging.md">debug</a></p>
+
+<p>Debugging using <code class="highlighter-rouge">browser.pause()</code> to get WebDriver control flow, than <code class="highlighter-rouge">c</code> to
+move to next webdriver command, <code class="highlighter-rouge">d</code> to next debugger statement, <code class="highlighter-rouge">repl</code> to get
+interactive mode where you can <code class="highlighter-rouge">element(by.css('red')).isEnabled()</code>.  Chrome Dev
+Tools does not work in this regime</p>
+
+<p>The same debug/repl is with <code class="highlighter-rouge">browser.debugger()</code> and call with <code class="highlighter-rouge">protractor
+debug</code></p>
+
+<p>Run single test with <code class="highlighter-rouge">protractor protractor.conf.js --specs
+e2e/login/oauth.spec.js</code></p>
+
+<p>https://docs.angularjs.org/tutorial/step_05#test During test we use angular
+<code class="highlighter-rouge">inject</code> and <code class="highlighter-rouge">module</code>.  When we inject <code class="highlighter-rouge">_flash_</code> , Angular knows that service
+<code class="highlighter-rouge">flash</code> should be injected (_ are ignored_)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># src/app/compoments/mycomponent/myService_spec.coffee
+describe("myService", function() {
+  var httpBackend, scope, ctrl;
+  beforeEach(module('myService'));
+  beforeEach(inject(function($httpBackend, $scope, $controller){
+    httpBackend = $httpBackend;
+    scope = $scope;
+    ctrl = $controller('myService', {$scope: scope});
+  }));
+
+  it("should load phones.json", function(){
+    httpBackend.expectGET('phones.json').respond([{name: 'A1'}]);
+    expect(scope.phones).toBeUndefined();`
+    httpBackend.flush();
+    expect(scope.phones).toEqual([{name: 'A1'}]);
+  });
+});
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">expectGet</code> is expecting request so it fails when there are no requests</li>
+</ul>
+
+<p>Instead of <code class="highlighter-rouge">$httpBackend</code> we could create a mock <code class="highlighter-rouge">apiService</code> <a href="https://www.youtube.com/watch?v=UDB-jm8MWro">video</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># src/app/compoments/mycomponent/myController_spec.coffee
+describe('Controller: MainCtrl', function () {
+  beforeEach(module('diyBrewControllerApp'));
+  var MainCtrl;
+  var scope;
+  var apiService;
+  var status;
+  var q;
+
+  beforeEach(inject(function ($controller, $rootScope, $q) {
+    q = $q;
+    scope = $rootScope.$new();
+    MainCtrl = $controller('MainCtrl', {
+        $scope: scope,
+        ControllerApi: apiService
+    });
+  }));
+  beforeEach(function () {
+    status = { "temperatureCelsius": "22" }
+    apiService = {
+      getSettings: function () {
+        deferred = q.defer();
+        return deferred.promise;
+      },
+      updateSettings: function () {
+        return;
+      }
+    };
+  });
+  it('should request current status during init', function () {
+    spyOn(apiService, 'getStatus').andCallThrough();
+
+    scope.init();
+
+    deferred.resolve(status);
+    scope.$root.$digest();
+
+    expect(apiService.getStatus).toHaveBeenCalled();
+    expect(scope.currentStatus.temperatureCelsius).toBe("22");
+  })
+});
+</code></pre></div></div>
+
+<h1 id="jasmine">Jasmine</h1>
+
+<p><a href="http://jasmine.github.io/1.3/introduction.html">Jasmine</a> have similar syntax to rspec.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">describe</code> <code class="highlighter-rouge">it</code> (prefix with x to disable suite or specifix spec)</li>
+  <li><code class="highlighter-rouge">spyOn(foo, 'setBar')</code> is a spy (test double is defined with <code class="highlighter-rouge">foo={setBar: function(v) {}};</code> that can track calls and arguments with this two matchers <code class="highlighter-rouge">expect(foo.setBar).toHaveBeenCalled();</code> and <code class="highlighter-rouge">expect(foo.setBar).toHaveBeenCalledWith(123)</code></li>
+  <li>Chain spy with <code class="highlighter-rouge">spyOn(foo, 'getBar').andCallThrough();</code> to actually delegate to implementation. Chain spy with <code class="highlighter-rouge">spyOn(foo, 'getBar').andReturn(745);</code> so all calls to <code class="highlighter-rouge">foo.getBar</code> will return 745 (similar to <code class="highlighter-rouge">.andCallFake(function(){});</code>)</li>
+  <li>To create a mock with multiple spies with one command, use <code class="highlighter-rouge">tape = jasmine.createSpyObj('tape', ['play','pause']);</code>.</li>
+</ul>
+
+<p>TODO
+http://artofunittesting.com/</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Ubuntu working environment</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ubuntu working environment</h1>
+    <p class="meta">Sep 13, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#ubuntu-stuff"><span class="tocnumber">1</span> <span class="toctext">Ubuntu stuff</span></a></li><li class="toc_level-1 toc_section-2"><a href="#chrome-chromium"><span class="tocnumber">2</span> <span class="toctext">Chrome chromium</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#chrome-plugins-and-extensions"><span class="tocnumber">2.1</span> <span class="toctext">Chrome plugins and extensions</span></a></li><li class="toc_level-2 toc_section-4"><a href="#chrome-dns-and-hsts-problem-for-localhost-and-dev"><span class="tocnumber">2.2</span> <span class="toctext">Chrome DNS and HSTS problem for .localhost and .dev</span></a></li><li class="toc_level-2 toc_section-5"><a href="#chrome-developer-tools"><span class="tocnumber">2.3</span> <span class="toctext">Chrome Developer tools</span></a></li></ul></li><li class="toc_level-1 toc_section-6"><a href="#firefox"><span class="tocnumber">3</span> <span class="toctext">Firefox</span></a><ul><li class="toc_level-2 toc_section-7"><a href="#firefox-developer-tools-and-navigations"><span class="tocnumber">3.1</span> <span class="toctext">Firefox developer tools and navigations</span></a></li><li class="toc_level-2 toc_section-8"><a href="#firefox-webide"><span class="tocnumber">3.2</span> <span class="toctext">Firefox WebIDE</span></a></li></ul></li><li class="toc_level-1 toc_section-9"><a href="#opera"><span class="tocnumber">4</span> <span class="toctext">Opera</span></a></li><li class="toc_level-1 toc_section-10"><a href="#gimp"><span class="tocnumber">5</span> <span class="toctext">Gimp</span></a></li><li class="toc_level-1 toc_section-11"><a href="#ftp"><span class="tocnumber">6</span> <span class="toctext">FTP</span></a></li><li class="toc_level-1 toc_section-12"><a href="#ngrok"><span class="tocnumber">7</span> <span class="toctext">Ngrok</span></a></li><li class="toc_level-1 toc_section-13"><a href="#tips"><span class="tocnumber">8</span> <span class="toctext">TIPS</span></a></li><li class="toc_level-1 toc_section-14"><a href="#pdf"><span class="tocnumber">9</span> <span class="toctext">PDF</span></a></li><li class="toc_level-1 toc_section-15"><a href="#canon-camera-wifi"><span class="tocnumber">10</span> <span class="toctext">Canon camera wifi</span></a></li><li class="toc_level-1 toc_section-16"><a href="#network"><span class="tocnumber">11</span> <span class="toctext">Network</span></a></li><li class="toc_level-1 toc_section-17"><a href="#remote-access-to-services"><span class="tocnumber">12</span> <span class="toctext">Remote access to services</span></a></li><li class="toc_level-1 toc_section-18"><a href="#obs-studio"><span class="tocnumber">13</span> <span class="toctext">Obs studio</span></a><ul><li class="toc_level-2 toc_section-19"><a href="#stream-remote-screen-recordings"><span class="tocnumber">13.1</span> <span class="toctext">Stream remote screen recordings</span></a></li><li class="toc_level-2 toc_section-20"><a href="#auto-rotate-scenes-based-on-timer"><span class="tocnumber">13.2</span> <span class="toctext">Auto rotate scenes based on timer</span></a></li></ul></li><li class="toc_level-1 toc_section-21"><a href="#open-shot"><span class="tocnumber">14</span> <span class="toctext">Open Shot</span></a></li></ul></td></tr></tbody></table></div><h1 id="ubuntu-stuff">Ubuntu stuff</h1>
+
+<ul>
+  <li>
+    <p>find ubuntu and linux version</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsb_release -a
+cat /proc/version
+uname -a
+</code></pre></div>    </div>
+  </li>
+  <li>taks screenshot: fullsize <code class="highlighter-rouge">Print</code>, currently active window <code class="highlighter-rouge">Alt+Print</code>, area
+<code class="highlighter-rouge">Shift+Print</code> (select window or drag area).
+Use <code class="highlighter-rouge">ctrl</code> instead of alt if you want to copy to clipboard</li>
+  <li><a href="https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding">port
+forwarding</a> socks
+tunel <code class="highlighter-rouge">ssh -C -D 1080 server_url_or_ip</code>, than in firefox</li>
+</ul>
+<p>&lt;about:preferences#advanced&gt; Networktab -&gt; Settings choose “Manual proxy
+configuration” and type SOCKS Host: localhost, and port 1080. Do not write
+anyting in HTTP proxy… For Chrome or another connections you can use system
+wide Ubuntu Settings -&gt; Network -&gt; Network Proxy -&gt; Method: Manual -&gt; Socks Host
+localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc</p>
+<ul>
+  <li>gui ssh forwarding <code class="highlighter-rouge">ssh -X server</code> remote <code class="highlighter-rouge">ssh -R 5900:localhost:5900
+guest@joes-pc</code> local</li>
+  <li><a href="https://github.com/umlaeute/v4l2loopback/wiki/Mplayer">v4l2loopback</a>, after
+<code class="highlighter-rouge">sudo make install</code> and <code class="highlighter-rouge">sudo modprobe v4l2loopback</code> we can stream some video
+file to device <code class="highlighter-rouge">while true; do gst-launch-0.10 filesrc
+location=~/Desktop/buck.ogv ! decodebin ! v4l2sink device=/dev/video1;done</code></li>
+  <li>dim screen adjust brightness <code class="highlighter-rouge">xrandr -q | grep " connected"</code> to find the
+name, for example <em>DFP1</em>, than <code class="highlighter-rouge">xrandr --output DFP1 --brightness 0.5</code>. Here is
+what I use <code class="highlighter-rouge">d 0.8</code> in
+<a href="https://github.com/duleorlovic/config/blob/master/my_bashrc.sh#L32">my_bashrc.sh</a></li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/.bashrc
+function d {
+  if [  -z $1 ]
+  then
+    echo Default is middle value: d 0.5
+  fi
+  xrandr --output DFP1 --brightness ${1:-0.5}
+}
+alias dim=d
+</code></pre></div></div>
+
+<p>there is <a href="https://justgetflux.com/">f.lux</a> software that can automate screen
+brighthness.</p>
+
+<ul>
+  <li>webcam does not work on chrome but works in firefox</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install libv4l-0
+sudo mv /opt/google/talkplugin/GoogleTalkPlugin /opt/google/talkplugin/GoogleTalkPlugin.real 
+cat &gt; /opt/google/talkplugin/GoogleTalkPlugin &lt;&lt;HERE_DOC
+#!/bin/bash
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libv4l/v4l1compat.so /opt/google/talkplugin/GoogleTalkPlugin.real
+HERE_DOC
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Simple scan scanner for HP LasetJet MF1212nf MFP does not work if you add
+printer from gui. Better is to use:</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install hplip # install hp-setup
+hp-setup -i
+# chose net
+# chose to download driver from hp site
+# no need to install fax printer
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>recently I got dns error (I’m using 8.8.8.8). Following
+<a href="http://askubuntu.com/questions/368435/how-do-i-fix-dns-resolving-which-doesnt-work-after-upgrading-to-ubuntu-13-10-s">post</a>
+I comment out <code class="highlighter-rouge"># dns=dnsmasq</code> from /etc/NetworkManager/NetworkManager.conf and
+<code class="highlighter-rouge">sudo restart network-manager</code></p>
+  </li>
+  <li>
+    <p>if <code class="highlighter-rouge">Bus 002 Device 003: ID 0d8c:013c C-Media Electronics, Inc. CM108 Audio
+Controller</code> microphone does not work automatically (but you can see in sound
+settings as <em>CM108 Audio Controller</em> than you need to comment out last line
+<code class="highlighter-rouge">#options snd-usb-audio index=0 </code> in <code class="highlighter-rouge">/etc/modprobe.d/alsa-base.conf</code>.</p>
+  </li>
+</ul>
+
+<h1 id="chrome-chromium">Chrome chromium</h1>
+
+<ul>
+  <li>take screenshot with <code class="highlighter-rouge">ctrl+Shift + p</code> and search screenshot</li>
+  <li><a href="https://code.google.com/p/chromium/issues/detail?id=375957">chrome scrambled</a>
+can be solved with <code class="highlighter-rouge">sudo amdconfig --initial</code></li>
+  <li>chrome flickers on resize
+<a href="http://askubuntu.com/questions/279088/google-chrome-flickering">link</a>
+solution is to disable (uncheck) <strong>Use hardware acceleration when available</strong>
+in System Settings -&gt; Show Advanced -&gt; (at bottom, search for this option) (or
+<code class="highlighter-rouge">--disable-gpu</code> in <code class="highlighter-rouge">/usr/share/applications/chromium-browser.desktop</code>). I try
+to disable only composition <code class="highlighter-rouge">--blacklist-accelerated-compositing</code> but still is
+enabled. Check that features is software only on &lt;chrome://gpu/&gt;.</li>
+  <li>you can open extension by going to &lt;chrome://apps&gt;</li>
+  <li>enable some flags on &lt;chrome://flags&gt;
+    <ul>
+      <li>for example sound icon</li>
+    </ul>
+  </li>
+  <li>dns or other network &lt;chrome://net-internals&gt;</li>
+  <li>T-rex game &lt;chrome://network-error/-106&gt;</li>
+</ul>
+
+<h2 id="chrome-plugins-and-extensions">Chrome plugins and extensions</h2>
+
+<ul>
+  <li><a href="https://github.com/chrispederick/user-agent-switcher/">user agent switcher</a></li>
+  <li>to check which browsers was used by useragent string
+<a href="https://developers.whatismybrowser.com/useragents/parse">parse user agent strings</a></li>
+  <li><a href="https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg">railspanel</a></li>
+</ul>
+
+<h2 id="chrome-dns-and-hsts-problem-for-localhost-and-dev">Chrome DNS and HSTS problem for .localhost and .dev</h2>
+
+<p>Since google owns <code class="highlighter-rouge">.dev</code> domain and it exists in hsts list, in chrome (no
+firefox) request to <code class="highlighter-rouge">my-domain.dev</code> will be always https.
+You can also use <code class="highlighter-rouge">lvh.me</code> since it always resolves to 127.0.0.1.
+But for local development I use <code class="highlighter-rouge">.loc</code> with dnsmasq or <code class="highlighter-rouge">.localhost</code> also with
+dnsmasq.
+Old answer: <strong>I did not choose to use <code class="highlighter-rouge">localhost</code> because I can not remap subdomain of localhost in /etc/hosts and use in google
+chrome (firefox works fine) for some pathetic reason
+<a href="https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost">https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost</a></strong>
+Now localhost works in Chrome but not in Firefox (about:config
+network.dns.disableIPv6 set to false did not work for me).
+When I change <code class="highlighter-rouge">loc</code> to <code class="highlighter-rouge">localhost</code> in <code class="highlighter-rouge">/etc/dnsmasq.d/dev-tld</code> than it works.</p>
+
+<p>For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
+subdomain:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/dnsmasq.d/dev-tld
+local=/loc/
+address=/loc/127.0.0.1
+</code></pre></div></div>
+
+<p>restart with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl restart NetworkManager
+sudo /etc/init.d/dnsmasq restart
+</code></pre></div></div>
+
+<p>Also follow <a href="https://gist.github.com/marek-saji/6808114">instructions</a></p>
+
+<p>DNS server dnsmasq for .dev domains for osx <a href="https://passingcuriosity.com/2013/dnsmasq-dev-osx/">https://passingcuriosity.com/2013/dnsmasq-dev-osx/</a>
+https://gist.github.com/ogrrd/5831371</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install dnsmasq
+# read suggested commands and apply them
+cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
+sudo brew services start dnsmasq
+
+# in /usr/local/etc/dnsmasq.conf
+address=/loc/127.0.0.1
+
+sudo brew services restart dnsmasq
+
+sudo mkdir -p /etc/resolver
+sudo tee /etc/resolver/loc &gt;/dev/null &lt;&lt;EOF
+nameserver 127.0.0.1
+EOF
+</code></pre></div></div>
+
+<p>Test with</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Make sure you haven not broken your DNS.
+ping -c 1 www.google.com
+# Check that .loc names work
+ping -c 1 this.is.a.test.loc
+</code></pre></div></div>
+
+<p>You can check your domain name resolutions with mxtoolbox.com or domain settings
+with command <code class="highlighter-rouge">nslookup</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nslookup asd.loc
+# Server:		127.0.0.1
+# Address:	127.0.0.1#53
+#
+# Name:	asd.loc
+# Address: 127.0.0.1
+</code></pre></div></div>
+
+<p>On linux you can update <code class="highlighter-rouge">/etc/hosts</code> with you custom domain name and use it
+instead of IP address.
+On window it is <code class="highlighter-rouge">c:\Windows\System32\Drivers\etc</code>. Just edit with notepad and
+save. No need to restart (maybe it will be cleared on restart).</p>
+
+<h2 id="chrome-developer-tools">Chrome Developer tools</h2>
+
+<ul>
+  <li>open developer tools on last tab that was used is with <code class="highlighter-rouge">F12</code> or
+<code class="highlighter-rouge">ctrl+shift+i</code>. Switch to next and prev panel with <code class="highlighter-rouge">ctrl+]</code> and <code class="highlighter-rouge">ctrl+[</code>.
+<code class="highlighter-rouge">ctrl+shift+d</code> dock undock. Open drawer with <code class="highlighter-rouge">ESC</code></li>
+  <li>on drawer three dots, you can
+    <ul>
+      <li>to search file in google developer tools you can open console window (not
+console tab with console input, window can be opened on any tab with ESC key
+in dev tools). Than on three dots, open dropdown menu and find <em>Search</em>
+(keyboard shortcut is <code class="highlighter-rouge">ctrl+shift+f</code>). To search current panel use <code class="highlighter-rouge">ctrl+f</code></li>
+    </ul>
+  </li>
+  <li>three dots -&gt; Coverage can give how much of css or js is used on the page</li>
+  <li><a href="https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/resource-loading#filter-requests">network tab filter
+request</a>
+will filter by filename containg the string <code class="highlighter-rouge">posts</code>. But it also supports
+keywords with autosuggestions. Examples: <code class="highlighter-rouge">domain:*.com</code>, <code class="highlighter-rouge">larger-than:1K</code>,</li>
+  <li>to stop on some page that redirects immediatelly, you can go <code class="highlighter-rouge">Sources</code> tab and
+<em>Event Listener Breakpoints</em> and <em>Load -&gt; beforeunload</em> or <em>Script -&gt; Script
+first statement</em>.
+To stop on XHR/Fetch call you can set breakpoint on Sources -&gt; XHR breakpoint</li>
+  <li>to search all files <code class="highlighter-rouge">ctrl+o</code></li>
+  <li>to open <strong>command menu</strong> use <code class="highlighter-rouge">ctrl+shift+p</code>
+    <ul>
+      <li><code class="highlighter-rouge">screenshot</code></li>
+    </ul>
+  </li>
+  <li>to open <strong>Console panel</strong> you can use <code class="highlighter-rouge">ctrl+shift+j</code> (also on a page). You can
+ use <code class="highlighter-rouge">monitor(function)</code>, <code class="highlighter-rouge">monitorEvents($0, "key");</code> <code class="highlighter-rouge">debug(function)</code> or
+<code class="highlighter-rouge">undebug(function)</code>. Usefull when you want to stop on some event listener
+<code class="highlighter-rouge">debug(getEventListeners($0).click[0].listener)</code> (you can do the same using
+Elements, Event Listeners tab, click, and jump to source where you want
+breakpoint). To show some value in log you can add Conditional breakport with
+<code class="highlighter-rouge">console.log(varname);</code> to use current selected element in console use <code class="highlighter-rouge">$0</code>
+(<code class="highlighter-rouge">$1</code> previous selected and so on), for xpath use <code class="highlighter-rouge">$x()</code>. Use <code class="highlighter-rouge">$_</code> for last
+returned value in console.
+<a href="https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference">link</a></li>
+  <li>
+    <p>to open <strong>Elements panel</strong> (if developer tools is not yet opened) is
+<code class="highlighter-rouge">ctrl+shift+c</code>. You can use <code class="highlighter-rouge">h</code> to hide element (<code class="highlighter-rouge">visibility: hidden</code>). Use
+<code class="highlighter-rouge">ctrl+f</code> to find element (<code class="highlighter-rouge">enter</code> to find next). You can use <code class="highlighter-rouge">.class</code> to
+locate by css class.</p>
+  </li>
+  <li><code class="highlighter-rouge">ctrl+Shift + m</code> to toggle mobile responsive view</li>
+  <li><code class="highlighter-rouge">ctrl+o</code> find filename</li>
+  <li><code class="highlighter-rouge">ctrl+shift+</code></li>
+  <li><code class="highlighter-rouge">^shift+c</code> to click and locate element</li>
+  <li><code class="highlighter-rouge">^shift+f</code> to find string in all files</li>
+  <li><code class="highlighter-rouge">^shift+o</code> find functions in the current js file</li>
+  <li><code class="highlighter-rouge">^shift+p</code> chrome shortcuts</li>
+</ul>
+
+<p>Enable experiments with &lt;chrome://flags/#enable-devtools-experiments&gt; and go to
+Experiments menu in Settings (F1 or Ctrl+P+Settings)</p>
+
+<p>To clear autofill suggestions you can use keyboard shortcut. First select
+  suggestion with UP or Down arrows than press Shift + Delete
+  <a href="https://support.google.com/chrome/answer/142893?p=settings_autofill&amp;rd=1">answer</a></p>
+
+<p>In console you can call</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>url="http://numbersapi.com/5/math"
+await fetch(url)
+await r.text()
+</code></pre></div></div>
+
+<p>Audit tab can give you broken best practices and explanations.</p>
+
+<h1 id="firefox">Firefox</h1>
+
+<p>url suggestion does not use port number, so it is advised to disable it on
+<code class="highlighter-rouge">about:config</code> for <code class="highlighter-rouge">browser.urlbar.autoFill</code> to false. That way only history
+links will be provided, so you can navigate to them using tab.</p>
+
+<h2 id="firefox-developer-tools-and-navigations">Firefox developer tools and navigations</h2>
+
+<p>like vim</p>
+<ul>
+  <li><code class="highlighter-rouge">ctrl+[</code> back</li>
+  <li><code class="highlighter-rouge">ctrl+]</code> forward</li>
+  <li><code class="highlighter-rouge">ctrl+f</code> find (<code class="highlighter-rouge">F3</code> and <code class="highlighter-rouge">shift+F3</code> find next and prev)</li>
+  <li><code class="highlighter-rouge">/</code> quick find, <code class="highlighter-rouge">'</code> find only in links</li>
+  <li><code class="highlighter-rouge">ctrl+j</code> focus search bar</li>
+  <li><code class="highlighter-rouge">ctrl+shift+i</code> toggle developer tools (<code class="highlighter-rouge">F12</code>), <code class="highlighter-rouge">ctrl+shift+k</code> console,
+<code class="highlighter-rouge">ctrl+shift+c</code> inspector, <code class="highlighter-rouge">shift+F7</code> style, <code class="highlighter-rouge">ctrl+shift+m</code> mobile responsive,
+<code class="highlighter-rouge">ctrl+shift+j</code> browser console</li>
+  <li><code class="highlighter-rouge">shift+f4</code> scratchpad and run with <code class="highlighter-rouge">ctrl+r</code></li>
+  <li><code class="highlighter-rouge">shift+f2</code> developer toolbar</li>
+  <li><code class="highlighter-rouge">ctrl+i</code> page info (content-type, referring url, size…)</li>
+  <li><code class="highlighter-rouge">f7</code> carret browsing so you can navigate cursor with shift arrow and ctrl+c</li>
+</ul>
+
+<h2 id="firefox-webide">Firefox WebIDE</h2>
+
+<p>You can remotelly debug a page on your phone. Start
+https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging Enable Developer
+mode on Android: Settings -&gt; About Phone -&gt; Build Number -&gt; Tap 10 times and you
+will see parent Setting menu -&gt; Developer Options -&gt; enable USB Debugging.</p>
+
+<p>On desktop Firefox open Settings -&gt; Web Developer -&gt; WebIDE (shift+F8).
+On android Firefox open Settings -&gt; Advanced -&gt; enable Remote Debugging via USB.</p>
+
+<p>Android Firefox needs to confirm Incomming connection: Allow USB debugging
+connection ?.  Also the app needs to be opened (in focus).</p>
+
+<h1 id="opera">Opera</h1>
+
+<p>Download for ubuntu https://www.opera.com/
+Download mobile browser Opera mobile emulator https://www.opera.com/developer/mobile-emulator</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./opera-mobile-emulator
+# error while loading shared libraries: libQtGui.so.4: cannot open shared object file: No such file or directory
+
+# to find in which package this file belongs use
+# apt-file search libQtGui.so
+
+sudo apt install libqtwebkit4
+./opera-mobile-emulator
+# still same error
+</code></pre></div></div>
+
+<h1 id="gimp">Gimp</h1>
+
+<p>Cage transform https://www.youtube.com/watch?v=jL8TepHX0qE does not work in
+latest gimp so use old ubuntu 14 in virtual box.</p>
+
+<h1 id="ftp">FTP</h1>
+
+<p>To enable ftp write you need to uncomment <code class="highlighter-rouge">sudo vi /etc/vsftpd.conf</code>
+<code class="highlighter-rouge">write_enable=YES</code> and restart <code class="highlighter-rouge">sudo service vsftpd restart</code>. You need to create
+folder (owner should be trkftp user).</p>
+
+<h1 id="ngrok">Ngrok</h1>
+
+<p>Also https://localtunnel.github.io/www/</p>
+
+<p>You can create local tunnel with ngrok.</p>
+
+<p>When you signup you can generate authtoken in your <code class="highlighter-rouge">~/.ngrok2/ngrok.yml</code>.</p>
+
+<p>You need to upgrade to use custom subdomains, but free domain is fine if you can
+use some of your dns.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ngrok http 3002
+</code></pre></div></div>
+
+<h1 id="tips">TIPS</h1>
+
+<ul>
+  <li>to change default program open with file type, you can right click,
+properties, set default.</li>
+  <li>read only usb, can’t create file since usb is readonly https://askubuntu.com/questions/781223/physical-block-size-is-2048-bytes-but-linux-says-it-is-512-when-formatting-us</li>
+</ul>
+
+<p>or error: ‘The driver descriptor says the physical block size is 2048 bytes, but
+Linux says it is 512 bytes’</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df -Th
+umount /media/duleusb
+sudo fdisk -l
+#
+udisksctl unmount -b /dev/sdc1
+sudo sgdisk --zap-all /dev/sdc
+sudo sgdisk --new=1:0:0 --typecode=1:ef00 /dev/sdc
+sudo mkfs.vfat -F32 /dev/sdc1
+</code></pre></div></div>
+
+<p>use <code class="highlighter-rouge">disks</code> application to erase and format usb flash drive.
+If it is not mountable than try
+<a href="https://ubuntuforums.org/showthread.php?t=2153643">forum</a> but change number of
+KB 1024, 2048 …</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo dd if=/dev/zero bs=4096 of=/dev/sdc
+sudo apt-get install gparted
+# Device -&gt; Create partition table.
+# format to fat32
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>to backup external usb, you can sync files. With rsync files are not deleted,
+just added, or overwritten if same filename. <code class="highlighter-rouge">cd
+/media/orlovic/bf12a7e5-a5d4-4532-8612-a3984f90b56c/backup</code> and <code class="highlighter-rouge">rsync -r
+/media/dusan/EKSTERNIUSB/ EXTERNIUSB</code></p>
+  </li>
+  <li>
+    <p>suspend recovery <a href="https://wiki.ubuntu.com/DebuggingKernelSuspend">https://wiki.ubuntu.com/DebuggingKernelSuspend</a></p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># enable trace and log
+sudo sh -c "sync &amp;&amp; echo 1 &gt; /sys/power/pm_trace &amp;&amp; pm-suspend"
+
+# enable log in command env
+sudo PM_DEBUG=true pm-suspend
+
+less /var/log/pm-suspend.log
+</code></pre></div></div>
+
+<ul>
+  <li>instead of double click .deb file to install you can use command line <code class="highlighter-rouge">sudo
+dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb</code></li>
+</ul>
+
+<h1 id="pdf">PDF</h1>
+
+<p>Merge several pdf files</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pdftk * cat output ../p.pdf
+</code></pre></div></div>
+
+<h1 id="canon-camera-wifi">Canon camera wifi</h1>
+
+<p><a href="http://www.testcams.com/airnef/">http://www.testcams.com/airnef/</a> is used to download files from Canon camera.</p>
+
+<h1 id="network">Network</h1>
+
+<p><code class="highlighter-rouge">ifconfig</code> is a tool to change network configuration, but changes are not
+persisted unless you save them in <code class="highlighter-rouge">/etc/network/interfaces</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifconfig eth0
+</code></pre></div></div>
+
+<p>To configure default dateway gw you can use <code class="highlighter-rouge">route</code> command</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo route add default gw 10.0.0.1 eth1
+route -n
+</code></pre></div></div>
+
+<p>To configure DNS you can edit <code class="highlighter-rouge">/etc/resolv.conf</code>.
+To purge all configuration you can <code class="highlighter-rouge">ip addr flush eth0</code></p>
+
+<p>To prevent Network manager to use connection as default route, you can edit
+connections -&gt; IPv4 Settings -&gt; Routes -&gt; check “Use this connection only for
+resources on its network”</p>
+
+<p>To remove docker bridge you can run <code class="highlighter-rouge">ip link del docker0</code></p>
+
+<ul>
+  <li>resize mp4 video with avconv</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>avconv -i input.mp4 -s 640x480 -strict -2 output.mp4
+for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
+</code></pre></div></div>
+
+<ul>
+  <li>convert dvd vob to mp4
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for f in *.VOB ; do ffmpeg -i "$f" -vcodec copy -strict experimental -c:a aac "${f%.*.VOB}.mp4"; done
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>default gnome screenshot folder <code class="highlighter-rouge">dconf-editor</code> find
+<code class="highlighter-rouge">org-&gt;gnome-&gt;gnome-screenshot-&gt; auto-save-directory -&gt;
+file:///home/user/Download/</code></p>
+  </li>
+  <li>
+    <p>install Oracle Java instead of OpenJDK http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+sudo update-alternatives --config java
+java -version
+javac -version
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>bluetooth</p>
+
+    <p>https://forums.bunsenlabs.org/viewtopic.php?id=4375</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl status bluetooth.service
+sudo systemctl restart bluetooth.service
+lsusb
+lspci -knn
+
+bluetoothctl
+list
+show
+agen on
+power on
+scan on
+</code></pre></div>    </div>
+
+    <p>My is</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>04:00.0 Network controller [0280]: Qualcomm Atheros AR9462 Wireless Network Adapter [168c:0034] (rev 01)
+  Subsystem: Lite-On Communications Inc AR9462 Wireless Network Adapter [11ad:6621]
+</code></pre></div>    </div>
+
+    <p>https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1394368</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo -i
+echo "options ath9k btcoex_enable=1"  &gt;  /etc/modprobe.d/ath9k.conf
+</code></pre></div>    </div>
+  </li>
+  <li>trim or mute vocals in mp3 files with audacity</li>
+  <li>boot old computers
+    <ul>
+      <li>unetbootin http://unetbootin.github.io/</li>
+      <li>burn cd with mini.iso
+https://help.ubuntu.com/community/Installation/MinimalCD (since full iso is
+850MB &gt; 700 MB CD capacity)</li>
+    </ul>
+  </li>
+  <li>find motherboard proccessor model with <code class="highlighter-rouge">sudo dmidecode | less</code>. To find type
+of memory run <code class="highlighter-rouge">sudo dmidecode --type 17</code> and look for <code class="highlighter-rouge">Type Detail</code> (for
+my server <a href="https://www.dell.com/ky/business/p/poweredge-t110-2/pd">Dell power Edge
+T110</a>  it is <code class="highlighter-rouge">Type
+Detail: Synchronous Unbuffered (Unregistered)</code> and <code class="highlighter-rouge">Part Number</code>
+(M391B5273DH0-CK0) so it does not support registered/buffered memory
+<a href="https://www.dell.com/community/PowerEdge-Hardware-General/PowerEdge-T110-RAM-compatibility/td-p/5816309">link</a></li>
+</ul>
+
+<h1 id="remote-access-to-services">Remote access to services</h1>
+
+<p>To enable mysql service from remote you need to bind it to 0.0.0.0 in
+configuration. To test on which interface is some port listening you can use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo netstat -plutn | grep 3306
+</code></pre></div></div>
+
+<p>You can try with nmap but it does not show for example neo4j 7474 port</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap 127.0.0.1
+nmap 192.168.3.2
+</code></pre></div></div>
+
+<p>To start service on boot use</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service --status-all
+
+# to automatically boot
+sudo update-rc.d neo4j defaults
+# to remove from auto start
+update-rc.d -f neo4j remove
+
+# another way to set up to run at boot [+]
+
+sudo systemctl enable neo4j
+</code></pre></div></div>
+
+<h1 id="obs-studio">Obs studio</h1>
+
+<p>Install https://obsproject.com/</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo add-apt-repository ppa:obsproject/obs-studio
+sudo apt-get update
+sudo apt-get install obs-studio
+</code></pre></div></div>
+
+<h2 id="stream-remote-screen-recordings">Stream remote screen recordings</h2>
+
+<p>You can stream from other computers using VNC (on windows install TinyVNC) and
+on main comp use VNC viewer and stream that Window Capture (Xcomposite).</p>
+
+<p>Stream from web use: https://github.com/bazukas/obs-linuxbrowser</p>
+
+<h2 id="auto-rotate-scenes-based-on-timer">Auto rotate scenes based on timer</h2>
+
+<p>Advances Scene switcher
+https://obsproject.com/forum/resources/advanced-scene-switcher.395/ source
+https://github.com/WarmUpTill/SceneSwitcher</p>
+
+<p>To install download .so and copy</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo cp ~/Downloads/SceneSwitcher/SceneSwitcher/Linux/advanced-scene-switcher.so /usr/lib/obs-plugins/
+</code></pre></div></div>
+
+<p>On linux there could be an error (Help -&gt; Log files -&gt; View current log)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>09:13:53.109: os_dlopen(/usr//lib/obs-plugins/advanced-scene-switcher.so-&gt;/usr//lib/obs-plugins/advanced-scene-switcher.so): /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5: version `Qt_5' not found (required by /usr//lib/obs-plugins/advanced-scene-switcher.so)
+09:13:53.109:
+09:13:53.109: Module '/usr//lib/obs-plugins/advanced-scene-switcher.so' not loaded
+</code></pre></div></div>
+
+<p>You can check which libraries qt is using <code class="highlighter-rouge">ldd $(which qtcreator)</code> (it is in
+/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5: but plugin is not using it).
+I tried to compile plugin from source</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake -DLIBOBS_INCLUDE_DIR=~/Programs/obs-studio/libobs -DLIBOBS_FRONTEND_INCLUDE_DIR=~/Programs/obs-studio/UI/obs-frontend-api/ -DLIBOBS_FRONTEND_API_LIB=/usr/lib/ -DCMAKE_INSTALL_PREFIX=/usr ..
+make
+</code></pre></div></div>
+<p>but I receive error</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Generating ui_advanced-scene-switcher.h
+File '/home/orlovic/Programs/SceneSwitcher/src/headers/advanced-scene-switcher.ui' is not valid
+AUTOUIC: error: process for ui_advanced-scene-switcher.h needed by
+ "/home/orlovic/Programs/SceneSwitcher/src/headers/advanced-scene-switcher.hpp"
+</code></pre></div></div>
+
+<p>So I build from source using Debian-based Build Directions on
+https://obsproject.com/wiki/install-instructions#linux</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install build-essential pkg-config cmake git-core checkinstall
+sudo apt-get install libx11-dev libgl1-mesa-dev libvlc-dev libpulse-dev libxcomposite-dev libxinerama-dev libv4l-dev libudev-dev libfreetype6-dev libfontconfig1-dev qtbase5-dev libqt5x11extras5-dev libqt5svg5-dev libx264-dev libxcb-xinerama0-dev libxcb-shm0-dev libjack-jackd2-dev libcurl4-openssl-dev libluajit-5.1-dev swig python3-dev
+</code></pre></div></div>
+
+<p>Install ffmpeg from source</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install zlib1g-dev yasm
+git clone --depth 1 git://source.ffmpeg.org/ffmpeg.git
+cd ffmpeg
+./configure --enable-shared --prefix=/usr
+make -j4
+sudo checkinstall --pkgname=FFmpeg --fstrans=no --backup=no \
+        --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
+#      dpkg -r ffmpeg
+
+</code></pre></div></div>
+
+<p>To find package which provide a header file</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-file search X11/extensions/scrnsaver.h
+</code></pre></div></div>
+
+<p>So I installed also</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install libxss-dev
+</code></pre></div></div>
+
+<p>Build OBS</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone --recursive https://github.com/obsproject/obs-studio.git
+cd obs-studio
+mkdir build &amp;&amp; cd build
+cmake -DUNIX_STRUCTURE=1 -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j4
+sudo checkinstall --pkgname=obs-studio --fstrans=no --backup=no \
+       --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
+</code></pre></div></div>
+
+<h1 id="open-shot">Open Shot</h1>
+
+<p>https://www.openshot.org/static/files/user-guide/introduction.html#features
+http://www.blender.org
+handbrake</p>
+
+<p>For youtube, video should be 16:9, ie for 1080p: 1920x1080, and for 720p:
+1280x720.
+Use Handbrake to preview for 720px height and use ffmpeg to crop window
+(original_width x 720) starting from position 0 x (top_pixel_handbrake)
+Ffmpeg generates smaller video than handbrake’s output m4v file.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ffmpeg -i dahua.ts -filter:v 'crop=2592:720:0:824' -strict -2 k.mp4
+</code></pre></div></div>
+<p>using handbrake and move the canvas using.</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

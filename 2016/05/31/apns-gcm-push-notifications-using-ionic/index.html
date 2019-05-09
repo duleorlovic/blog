@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Apns Gcm Push Notifications Using Ionic</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Apns Gcm Push Notifications Using Ionic</h1>
+    <p class="meta">May 31, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#apns"><span class="tocnumber">1</span> <span class="toctext">APNS</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#how-to-make-invalid-apn-token"><span class="tocnumber">1.1</span> <span class="toctext">How to make invalid apn token</span></a></li></ul></li><li class="toc_level-1 toc_section-3"><a href="#how-to-generate-push-notification-cert"><span class="tocnumber">2</span> <span class="toctext">How to generate Push Notification cert</span></a></li><li class="toc_level-1 toc_section-4"><a href="#iphone-tips"><span class="tocnumber">3</span> <span class="toctext">iPhone tips</span></a></li><li class="toc_level-1 toc_section-5"><a href="#fcm-firebase-cloud-messaging"><span class="tocnumber">4</span> <span class="toctext">FCM Firebase cloud messaging</span></a></li><li class="toc_level-1 toc_section-6"><a href="#firebase-web"><span class="tocnumber">5</span> <span class="toctext">Firebase web</span></a></li><li class="toc_level-1 toc_section-7"><a href="#how-to-make-invalid-gcm-token"><span class="tocnumber">6</span> <span class="toctext">How to make invalid gcm token</span></a></li><li class="toc_level-1 toc_section-8"><a href="#client"><span class="tocnumber">7</span> <span class="toctext">Client</span></a></li><li class="toc_level-1 toc_section-9"><a href="#phonegap-plugin-push"><span class="tocnumber">8</span> <span class="toctext">Phonegap plugin push</span></a></li><li class="toc_level-1 toc_section-10"><a href="#pushplugin"><span class="tocnumber">9</span> <span class="toctext">PushPlugin</span></a></li><li class="toc_level-1 toc_section-11"><a href="#service-workers"><span class="tocnumber">10</span> <span class="toctext">Service workers</span></a></li></ul></td></tr></tbody></table></div><h1 id="apns">APNS</h1>
+
+<p><a href="https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1">Overview</a>
+explain how it works. Your server acts as <em>provider</em> which stores tokens.
+Firebase call tokens as IID Token (Instance ID Token).</p>
+
+<blockquote>
+  <p>The token itself is opaque and persistent, changing only when a device’s data
+and settings are erased
+Each app instance receives its unique token when it registers with APNs.
+Device tokens change when the user updates the operating system and when a
+device’s data and settings are erased. As a result, apps should always request
+the current device token at launch time.</p>
+</blockquote>
+
+<blockquote>
+  <p>If APNs attempts to deliver a notification and the destination device is
+offline, APNs stores the notification for a limited period of time and
+delivers it when the device becomes available again. This component stores
+only the most recent notification per device and per app. If a device is
+offline, sending a new notification causes the previous notification to be
+discarded. If a device remains offline for a long time, all stored
+notifications are discarded.</p>
+</blockquote>
+
+<p>Maximum size is 4KB. Payload is something like: <code class="highlighter-rouge">{ "aps" : { "alert" : "My
+message", "badge": 5, "sound": "default" }, "my_custom_data": "my custom data"
+}</code></p>
+
+<blockquote>
+  <p>Silent notifications are not meant as a way to keep your app awake in the
+background, nor are they meant for high priority updates. APNs treats silent
+notifications as low priority and may throttle their delivery altogether if
+the total number becomes excessive. The actual limits are dynamic and can
+change based on conditions, but try not to send more than a few notifications
+per hour.</p>
+</blockquote>
+
+<p>Silent notification are configured with <code class="highlighter-rouge">{"aps" : { "content-available" : 1 } }</code>
+and not alert, badge or sound keys.</p>
+
+<p>You can add customer actions using <code class="highlighter-rouge">category</code> in notification, so user responds
+before booting whole app.</p>
+
+<p>Feedback service should be used once a day to get tokens that are not longer
+active
+<a href="https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/BinaryProviderAPI.html#//apple_ref/doc/uid/TP40008194-CH13-SW12">docs</a></p>
+
+<h2 id="how-to-make-invalid-apn-token">How to make invalid apn token</h2>
+
+<p>Feedback service will show tokens that are failed after you last checked. This
+will not show some invalid tokens that you have generated like: <code class="highlighter-rouge">123123</code>. You
+need to delete your app manually. Also the token would not be failed if you just
+delete your app, you need to send message to actually try to use token. After
+that you will find it in feedback service.  When you read feedback service than
+you need to try again to send to that token to find in in feedback service.</p>
+
+<p>It could be that you use mobile app with different cert than on server. Those
+tokens will not be invalidated, just messages will not be delivered.</p>
+
+<p>Running MAC in virtualbox is ok when you buy macOS, There are some youtube video
+<a href="https://www.youtube.com/watch?v=wI3ng69kTD0">video</a> with links to download
+<code class="highlighter-rouge">vmdk</code> file and just use with your virtual box but that is not fair. Than you
+will get message like:</p>
+
+<blockquote>
+  <p>You cannot sign in to iCloud because there was a problem verifying the
+identity of this Mac. Try restarting your Mac and signing in again</p>
+</blockquote>
+
+<h1 id="how-to-generate-push-notification-cert">How to generate Push Notification cert</h1>
+
+<p>How to generate Push Notification cert</p>
+
+<ul>
+  <li>developer.apple.com - account</li>
+  <li>Certificates, Identifiers, … App Ids</li>
+  <li>Push notifications -  DEV for testing, production for app store and test
+flight -&gt; generate</li>
+  <li>Keychain -&gt; Certificate assistant -&gt; generate request for certificate with
+authority</li>
+  <li>Upload that file to push notification screen on generate Dev/Prod SSL client
+form</li>
+  <li>Follow steps to generate cert file</li>
+  <li>Import that file as a login keychain (Note that it has to have keychain linked
+to certificate to be able to export it as a .p12 file)</li>
+  <li>Export certificate as a .p12 file</li>
+  <li>
+    <p>Terminal, navigate to root folder of .p12</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs12 -in yourcert.p12 -out yourcert.pem -nodes -clcerts
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="iphone-tips">iPhone tips</h1>
+
+<ul>
+  <li>to close any app use double click on home button and swipe up</li>
+  <li>sometimes you need to restart Settings app (geard icon) to be able to set up
+variables for specific app</li>
+</ul>
+
+<h1 id="fcm-firebase-cloud-messaging">FCM Firebase cloud messaging</h1>
+
+<p>Upgrade <a href="https://developers.google.com/cloud-messaging/faq">https://developers.google.com/cloud-messaging/faq</a> Note that GCM
+(developers.google.com/cloud-messaging) is deprecated so use FCM instead.
+For server side in ruby you need to register a project on
+<a href="https://console.developers.google.com">https://console.developers.google.com</a> and enable “Firebase Cloud Messaging”.
+Create API key and save as GOOGLE_API_KEY.
+Instead of google console you can create a project in firebase console
+https://console.firebase.google.com/</p>
+
+<p>Best way to start is video https://www.youtube.com/watch?v=BsCBCudx58g
+More info for server https://firebase.google.com/docs/cloud-messaging/server and
+error codes https://firebase.google.com/docs/reference/fcm/rest/v1/FcmError</p>
+
+<p>There are two formats of payloads: notification (with eventual data) and data
+https://firebase.google.com/docs/cloud-messaging/concept-options#top_of_page
+There are fields that needs to be send
+https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#Notification</p>
+<ul>
+  <li>data message, does not contain notification and can trigger onMessageReceived
+when app is both in foreground, background, killed</li>
+  <li>notification message, set the <code class="highlighter-rouge">notification</code> key. It can include optional
+<code class="highlighter-rouge">data</code> payload which can be consumed by client app. For general notificaiton
+you can use title and body, and for android, you can add other fields.
+https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#androidnotification
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>token/topic/condition: "registration_id/weather/foo in topics",
+
+notification: {
+  title: 'Message title',
+  body: 'message body',
+  icon: 'myicon', // this can override default lancher icon from manifest
+  color: '#FFFFFF',
+  sound: 'default', // can be my_sound which is located in /res/raw
+  tag: 'post_123', // replace existing notification with same tag in drawer
+  click_action: 'intent'. // If specified, an activity with a matching intent
+                          // filter is launched when a user clicks on the notification. 
+  body_loc_key: 'my_key', // key used to localize message
+  body_loc_args: [],      // agrs used for localization keys
+  title_loc_key: ''.      // same as body
+  title_loc_args: [],     // same as body
+  channel_id: '',  // Android 8 API 26, notifications are separated by
+  channels https://developer.android.com/guide/topics/ui/notifiers/notifications#ManageChannels
+}
+
+android: {
+  collapse_key: 'new_post' // max 4 different keys, only last from the same
+                              key will be send on resume
+  priority: 'normal', // normal or high (consumes more battery)
+  restricted_package_name: 'com.trk.web',
+  ttl: '600' //time to live
+  data: {
+  }
+  notification: {
+  }
+}
+webpush: {
+}
+apns: {
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>For Rails we use https://github.com/spacialdb/fcm gem which use <a href="https://firebase.google.com/docs/cloud-messaging/http-server-ref">Legacy http
+server
+protocol</a>
+Send message to maximum 1000 tokens <a href="https://github.com/spacialdb/fcm#usage">source</a>
+First argument to <code class="highlighter-rouge">fcm.send</code> is what is actual <code class="highlighter-rouge">registration_ids</code> (if it is a
+single string than it is converted to array) and it is merged to second options
+param. It can contain</p>
+<ul>
+  <li><code class="highlighter-rouge">collapse_key</code> is used to avoid sending too many same messages when the device
+comes back online, max is 4 different keys</li>
+  <li><code class="highlighter-rouge">priority</code> normal or high</li>
+  <li><code class="highlighter-rouge">content_available</code> and <code class="highlighter-rouge">mutable_content</code> iOS specifics</li>
+  <li>
+    <p><code class="highlighter-rouge">time_to_live</code> seconds how long it should be on server if device is offline,
+default is 4 weeks</p>
+  </li>
+  <li><code class="highlighter-rouge">data</code> custom key value that can be used by the app</li>
+  <li>
+    <p><code class="highlighter-rouge">notification</code> object that sets visible parts of the message. not all keys are
+the same for android and iOS, you can see two tables on
+https://firebase.google.com/docs/cloud-messaging/http-server-ref#notification-payload-support</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>notification: {
+  title: 'hello' // title is not visible on iOS phones and tables
+  body: 'Body text'
+  sound: 'default` // file name from /res/raw (android) or Library/Sounds (ios)
+  click_action: // corresponds to category (ios) or activity intent (android)
+                // when app is not in foreground, it will open the app
+  body_loc_key: // for localisation purpose
+  body_loc_args:
+  title_loc_key:
+  title_loc_args:
+
+  (ios only)
+  badge: 'new',  // if 0 than badge is removed
+
+  (android only)
+  android_channel_id: 'channel_id' //
+  icon: 'file_name' // file name is from drawable resource
+  tag: 'post_123', // it replaces notification with a same tag in drawer but
+                    // only for when app is not in foreground
+  color: '#ffffff' // icon color
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>To receive data and notification in android app you can follow https://www.youtube.com/watch?v=we8eGwIED8Y</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/fcm.rb
+MY_FCM = FCM.new Rails.application.secrets.firebase_cloud_messaging_server_key
+
+# app/services/firebase_cloud_messaging.rb
+
+</code></pre></div></div>
+
+<h1 id="firebase-web">Firebase web</h1>
+
+<p>Create project on firebase https://console.firebase.google.com and on Settings
+-&gt; Tab Cloud Messaging -&gt; Web Configuration -&gt; Web Push certificates -&gt; create
+key pair. Copy public key as <code class="highlighter-rouge">GOOGLE_VAPID_KEY</code></p>
+
+<p>Examples can be found on https://github.com/firebase/quickstart-js
+Messaging example you need to update
+<a href="https://github.com/firebase/quickstart-js/blob/master/messaging/index.html#L89">YOUR_PUBLIC_VAPID_KEY_HERE</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install -g firebase-tools
+firebase login
+firebase use --add
+firebase serve -p 8001
+</code></pre></div></div>
+
+<p>You will also need project number, top righ “Project Settings” and go to the
+<a href="https://console.developers.google.com/iam-admin/settings/project?project=cybernetic-tide-90121">settings</a>
+It is not Project ID, but it is just 12 numbers like 123123. Save it as
+GOOGLE_PROJECT_NUMBER</p>
+
+<p>You can install Chrome extension to register a client <a href="https://github.com/GoogleChrome/chrome-app-samples/tree/master/samples/gcm-notifications">google chrome example gcm
+notifications</a></p>
+
+<p><a href="https://chrome.google.com/webstore/detail/pushwoosh-gcm-notificatio/ndeeiaalfemhaahglpildclkgilgnfce/related?hl=en">pushwoosh
+extension</a>
+can register but it can not receive messages.</p>
+
+<p>There is nice explanation how to create notification on your site
+https://developers.google.com/web/fundamentals/push-notifications/</p>
+
+<p>Docs for <a href="https://developers.google.com/cloud-messaging/http#response">response</a></p>
+
+<blockquote>
+  <p>if the value of failure and canonical_ids is 0, it’s not necessary to parse
+the remainder of the response</p>
+</blockquote>
+
+<p>If there are failures than iterate one by one and if message is some of the:
+“Unavailable’, ‘NotRegistered’, ‘InvalidRegistration’ than you can remove it.
+If you notice <code class="highlighter-rouge">registration_id</code> than you should update it token</p>
+
+<h1 id="how-to-make-invalid-gcm-token">How to make invalid gcm token</h1>
+
+<p>You need to clear all your app data.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt;HERE_DOC
+# for notifications Google Cloud Messaging
+gem 'gcm'
+HERE_DOC
+bundle
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # google cloud messaging\
+  google_api_key: &lt;%= ENV["GOOGLE_API_KEY"] %&gt;'
+
+cat &gt;&gt; config/initializers/google-api.rb &lt;&lt;HERE_DOC
+MY_GCM = GCM.new Rails.application.secrets.google_api_key
+HERE_DOC
+
+rails g model NotificationToken token kind:integer notifiable:references{polymorphic} # user:references
+# make sure kind has default 0, since we can not write that in generator
+last_migration
+
+# app/models/concerns/notifiable.rb
+module Notifiable
+  extend ActiveSupport::Concern
+  included do
+    has_many :notification_tokens, as: :notifiable
+  end
+  class_methods do
+    def send_messages(message = "Hi All from myapp", collapse_key = nil, additional_data = nil)
+      tokens = all.map do |user|
+        user.notification_tokens.map(&amp;:token)
+      end.flatten
+      send_to_tokens(tokens, message, collapse_key, additional_data)
+    end
+
+    def send_to_tokens(tokens, message, collapse_key, additional_data)
+      data = { message: message }.merge additional_data
+      data = data.merge collapse_key: collapse_key
+      response = MY_GCM.send(tokens, data: data)
+      ApplicationMailer.internal_notification('push message', tokens: tokens, data: data, response_body: response[:body]).deliver_now if Rails.env.development?
+      logger.info response[:body]
+      response[:body]
+    end
+  end
+
+  def send_message(message = "Hi from myapp", collapse_key = nil, additional_data = nil)
+    tokens = notification_tokens.map(&amp;:token)
+    self.class.send_to_tokens(tokens, message, collapse_key, additional_data)
+  end
+end
+
+# config/routes.rb
++      resources :notification_tokens
+
+# app/controllers/notification_tokens_controller.rb
++ module Api
++   module V1
++     class NotificationTokensController &lt; ApplicationController
++       prepend_before_action :authenticate_current_user
++       def index
++         @notification_tokens = current_user.notification_tokens
++         render json: @notification_tokens
++       end
++ 
++       def create
++         token = notification_token_params[:token]
++         @notification_token = current_user.notification_tokens
++                                           .where(token: token)
++                                           .first_or_initialize
++         if @notification_token.save
++           render json: @notification_token
++         else
++           render json: @notification_token.errors, status: :bad_request
++         end
++       end
++ 
++       private
++ 
++       def notification_token_params
++         params.require(:notification_token)
++               .permit(:token)
++       end
++     end
++   end
++ end
+</code></pre></div></div>
+
+<h1 id="client">Client</h1>
+
+<p>Old plugin <a href="https://github.com/phonegap-build/PushPlugin">PushPlugin</a> has been
+replaced with new
+<a href="https://github.com/phonegap/phonegap-plugin-push">phonegap-plugin-push</a>.
+You can use ngcordova wrappers, but I found it is easier to use directly.</p>
+
+<p>GCM notifications arrives with very small delay on real devices, but on
+emulator it could be 10 seconds.
+Emulator should be build with Google API support (this is important!).</p>
+
+<p>App has 3 states: not loaded (killed, or back button pressed), background and
+foreground. In every state notification will be shown in android status bar.
+Clicking on it will load the app again (if it was killed than it will start).
+Before, when app is foreground than no notification will appear in android
+status bar.
+<a href="https://github.com/phonegap/phonegap-plugin-push/blob/master/docs/API.md#pushnotificationinitoptions">android.forceShow</a>
+is true than callback is called only when user click on notification (for me
+sometimes it does use callback at all, for foreground and backgroun case), if
+false (default) callback is called immediately.</p>
+
+<p>Anyway, when you receive message you can trigger reload for some of your data
+based on collapse_key. If collapse key is set than any new message with the same
+collapse_key will overwrite old one. There is limit of 4 different collapse_key
+at one time.
+Even I do not use collapse key, new message will overwrite old one
+<a href="http://stackoverflow.com/questions/27713624/gcm-non-collapsible-message-always-replaces-the-previous-message">stackoverflow</a></p>
+
+<h1 id="phonegap-plugin-push">Phonegap plugin push</h1>
+
+<p><a href="https://github.com/phonegap/phonegap-plugin-push/blob/master/docs/INSTALLATION.md">Install</a>
+all required packages:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cordova plugin add phonegap-plugin-push --variable SENDER_ID=$GOOGLE_PROJECT_NUMBER
+ionic build
+android update sdk --no-ui --all --filter "extra-android-m2repository"
+</code></pre></div></div>
+
+<h1 id="pushplugin">PushPlugin</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cordova plugin add https://github.com/phonegap-build/PushPlugin.git
+ionic state save
+
+# edit www/index.html to add `script-src * 'unsafe-inline' 'unsafe-eval';` to
+# the Content-Security-Policy meta
+
+# add `GCM_SENDER_ID: '123123'` to the www/js/app/constants.js
+
+# add `messageService.register();` to  $rootScope.$on('auth:login-success in
+# www/js/app.run.js to register new token on user login (validation-success
+# is too much, we need just on login)
+
+cat &gt;&gt; www/js/services/message.service.js &lt;&lt; HERE_DOC
+angular.module('starter')
+.service('messageService', function(notifyService, $http, CONFIG, $cordovaPush, $rootScope, $ionicPlatform) {
+  this.register = function() {
+    $ionicPlatform.ready(function() {
+      var androidConfig = {
+        senderID: CONFIG.GCM_SENDER_ID,
+      }
+      notifyService.log({messageService_register: androidConfig});
+      $cordovaPush.register(androidConfig).then(function(result) {
+        notifyService.log({cordovaPush_register: 'success', result: result});
+        // Success
+      }, function(err) {
+        notifyService.log({cordovaPush_register: 'error'});
+        // Error
+      });
+    });
+  };
+
+  $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
+    notifyService.log({cordovaPush_notificationReceived: notification.event, notification: notification});
+    switch(notification.event) {
+      case 'registered':
+        if (notification.regid.length &gt; 0 ) {
+          saveToken(notification.regid);
+          // alert('registration ID = ' + notification.regid);
+        }
+        break;
+
+      case 'message':
+        notifyService.toast('message = ' + notification.message);
+        switch(notification.collapse_key) {
+         case 'new_order':
+           $rootScope.$broadcast('new_order', notification.payload);
+           break;
+         case 'do_not_collapse':
+           break
+      }
+        break;
+
+      case 'error':
+        alert('GCM error = ' + notification.msg);
+        break;
+
+      default:
+        alert('An unknown GCM event has occurred');
+        break;
+    }
+  });
+
+  // WARNING: dangerous to unregister (results in loss of tokenID)
+ //  $cordovaPush.unregister(options).then(function(result) {
+ //    // Success!
+ //  }, function(err) {
+ //    // Error
+ //  })
+
+  function saveToken(token) {
+    var data = { notification_token: {token: token}};
+    $http.post(CONFIG.API_URL + '/notification_tokens', data).then( function(response) {
+      notifyService.log({messageService_saveToken: 'sucess', response_data: response.data});
+    },
+    function (error) {
+      notifyService.log({messageService_saveToken: 'error', error: error});
+    });
+  };
+});
+HERE_DOC
+
+# add where you want to update data, something like
+# +  $scope.$on('new_order', function(event, args) {
+# +    notifyService.log({orderController_new_order: args});
+# +    getOrders();
+</code></pre></div></div>
+
+<p>This is usefull notification service since <code class="highlighter-rouge">$log.debug object</code> does not work.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// www/js/services/notify.service.js
+angular.module('starter')
+.service('notifyService', function($cordovaToast, $log) {
+  this.toast = function(message) {
+    var text = message;
+    if (typeof message === 'object')
+    {
+      text = JSON.stringify(message);
+    }
+    if (window.plugins &amp;&amp; window.plugins.toast)
+    {
+      $cordovaToast.show(text, 'long', 'center');
+    }
+    else
+    {
+      alert(text);
+    }
+    $log.debug(text);
+  };
+
+  this.alert = function(message) {
+    // alert stays always as opposite to toast which hides automatically
+    var text = message;
+    if (typeof message === 'object')
+    {
+      text = JSON.stringify(message);
+    }
+    alert(text);
+    $log.debug(text);
+  };
+
+  this.log = function(message) {
+    var text = message;
+    if (typeof message === 'object')
+    {
+      text = JSON.stringify(message);
+    }
+    $log.debug(text);
+  }
+});
+</code></pre></div></div>
+
+<h1 id="service-workers">Service workers</h1>
+
+<p>Another cool is service workers <a href="https://developers.google.com/web/fundamentals">https://developers.google.com/web/fundamentals</a></p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>
