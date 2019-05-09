@@ -11,18 +11,19 @@ layout: default
   <article class="post-content">
   {{ content  | toc_generate}}
   </article>
-  <div id="disqus_thread"></div>
-  <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = 'duleorlovicblog';
+
+  {% comment %} <div id="disqus_thread"></div> {% endcomment %}
+  {% comment %} <script type="text/javascript"> {% endcomment %}
+  {% comment %}   /* * * CONFIGURATION VARIABLES * * */ {% endcomment %}
+  {% comment %}   var disqus_shortname = 'duleorlovicblog'; {% endcomment %}
     
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  {% comment %}   /* * * DON'T EDIT BELOW THIS LINE * * */ {% endcomment %}
+  {% comment %}   (function() { {% endcomment %}
+  {% comment %}       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; {% endcomment %}
+  {% comment %}       dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js'; {% endcomment %}
+  {% comment %}       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); {% endcomment %}
+  {% comment %}   })(); {% endcomment %}
+  {% comment %} </script> {% endcomment %}
+  {% comment %} <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript> {% endcomment %}
 
 </div>
