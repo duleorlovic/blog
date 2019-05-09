@@ -113,19 +113,6 @@ with `this.heroService.getHeroes()`.
 If you move service to `@ngModule({providers: [HeroService]})` than every
 component has access to it. Singleton `HeroService` instance is created.
 
-# Promise
-
-~~~
-  getHeroes(): Promise<Hero[]> {
-    return Promise.resolve(HEROES);
-  }
-  getHeroesSlowly(): Promise<Hero[]> {
-    return new Promise(resolve => {
-      setTimeout( () => resolve(this.getHeroes()), 2000);
-    });
-  }
-~~~
-
 # Routing
 
 <https://angular.io/guide/router>

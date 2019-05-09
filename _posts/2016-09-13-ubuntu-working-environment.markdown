@@ -331,6 +331,9 @@ ngrok http 3002
 properties, set default.
 * read only usb, can't create file since usb is readonly https://askubuntu.com/questions/781223/physical-block-size-is-2048-bytes-but-linux-says-it-is-512-when-formatting-us
 
+or error: 'The driver descriptor says the physical block size is 2048 bytes, but
+Linux says it is 512 bytes'
+
 ~~~
 df -Th
 umount /media/duleusb
@@ -610,3 +613,21 @@ make -j4
 sudo checkinstall --pkgname=obs-studio --fstrans=no --backup=no \
        --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
 ```
+
+# Open Shot
+
+
+https://www.openshot.org/static/files/user-guide/introduction.html#features
+http://www.blender.org
+handbrake
+
+For youtube, video should be 16:9, ie for 1080p: 1920x1080, and for 720p:
+1280x720.
+Use Handbrake to preview for 720px height and use ffmpeg to crop window
+(original_width x 720) starting from position 0 x (top_pixel_handbrake)
+Ffmpeg generates smaller video than handbrake's output m4v file.
+
+```
+ffmpeg -i dahua.ts -filter:v 'crop=2592:720:0:824' -strict -2 k.mp4
+```
+using handbrake and move the canvas using.

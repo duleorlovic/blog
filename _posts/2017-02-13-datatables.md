@@ -530,3 +530,8 @@ define view_columns, by default `orderable` and `searchable` are true, and
 ```
 
 
+https://www.youtube.com/watch?v=bn9arlhfaXc&t=302s
+
+https://datatables.net/forums/discussion/32542/datatables-and-webpack
+https://www.datatables.net/download/npm
+https://datatables.net/manual/server-side

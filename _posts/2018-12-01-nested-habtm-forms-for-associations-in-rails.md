@@ -1,5 +1,5 @@
 ---
-layout: published_post
+layout: post
 ---
 
 # HTML Form Input
