@@ -480,3 +480,31 @@ Open new VLC in separate window using
 ~~~
 /Applications/VLC.app/Contents/MacOS/VLC &
 ~~~
+
+# Tips
+
+Re-install node
+
+```
+brew uninstall --ignore-dependencies node icu4c
+brew install node
+brew link --overwrite node
+```
+
+Reinstall postgres and postgis
+
+```
+brew update; brew reinstall postgresql; brew reinstall postgis
+```
+To start postgres
+```
+brew services restart postgresql
+ps auxwww | grep postgres
+psql
+
+# see logs with
+pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+# upgrade datatabases
+rm -rf /usr/local/var/postgres && initdb /usr/local/var/postgres -E utf8
+```
+
