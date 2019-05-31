@@ -24,6 +24,17 @@ configuration" and type SOCKS Host: localhost, and port 1080. Do not write
 anyting in HTTP proxy... For Chrome or another connections you can use system
 wide Ubuntu Settings -> Network -> Network Proxy -> Method: Manual -> Socks Host
 localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
+For `curl` you need to export variable
+```
+export https_proxy=socks5://localhost:1080 http_proxy=socks5://localhost:1080
+```
+For ruby, you can check public ip address with, but I do not know how to use
+proxy settings from env
+```
+require "net/http"
+Net::HTTP.get(URI("https://api.ipify.org"))
+```
+
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
 guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
@@ -614,20 +625,20 @@ sudo checkinstall --pkgname=obs-studio --fstrans=no --backup=no \
        --pkgversion="$(date +%Y%m%d)-git" --deldoc=yes
 ```
 
-# Open Shot
-
-
-https://www.openshot.org/static/files/user-guide/introduction.html#features
-http://www.blender.org
-handbrake
+# Video processing
 
 For youtube, video should be 16:9, ie for 1080p: 1920x1080, and for 720p:
 1280x720.
-Use Handbrake to preview for 720px height and use ffmpeg to crop window
-(original_width x 720) starting from position 0 x (top_pixel_handbrake)
-Ffmpeg generates smaller video than handbrake's output m4v file.
 
-```
-ffmpeg -i dahua.ts -filter:v 'crop=2592:720:0:824' -strict -2 k.mp4
-```
-using handbrake and move the canvas using.
+Here are some tools
+* Open Shot https://www.openshot.org/static/files/user-guide/introduction.html#features but better is KDEenlive
+* http://www.blender.org for creating animations
+* handbrake for video processing. I used for cropping, first to preview for
+  720px height and use ffmpeg to crop window
+  (original_width x 720) starting from position 0 x (top_pixel_handbrake) Ffmpeg
+  generates smaller video than handbrake's output m4v file.
+
+  ```
+  ffmpeg -i dahua.ts -filter:v 'crop=2592:720:0:824' -strict -2 k.mp4
+  ```
+* kdenlive. When sound starts flickering, restart computer helps

@@ -272,11 +272,15 @@ well with `display: flex` elements, better is to use
     <div></div>
     <div></div>
   </div>
-  is the same as
+
+  is similar to
+
   <div class='row'>
     <div class='col-md-6'></div>
     <div class='col-md-6'></div>
   </div>
+
+  but it will be justify-content-start(so no padding around columns )and size is depending on the content (not 50% as in col-6)
   ```
 
 * `dl-horizontal` can be replaces with
@@ -387,7 +391,8 @@ with `layout: :horizontal` (note that it won't work for string `layout:
 hash you can override any option).
 
 If you want all controlls and submit button to be in one line, you can use
-`layout: :inline`.
+`layout: :inline` (note that only symbols works, string does not `layout:
+'inline'`)
 
 you can make checkbox inline with button
 
@@ -486,6 +491,7 @@ module BootstrapForm
     def default_label_col
       'col-sm-3'
     end
+
     def default_control_col
       'col-sm-9'
     end

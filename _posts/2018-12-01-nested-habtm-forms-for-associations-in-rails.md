@@ -30,9 +30,6 @@ Now start with what Rails provides https://api.rubyonrails.org/v5.2.1/classes/Ac
 
 
 
-
-
-
 Similar to nested forms, you can have select tag with multiple options (habtm
 relation) so we can update without ajax (it is created in one request).
 Since in html forms we can only send value or array
@@ -305,14 +302,21 @@ https://alligator.io/html/dialog-element/
 
 ## Fieldset & Legend
 
-Use `<fieldset>` to group several input fields and set caption on it with
+Use `<fieldset>` to group several input fields and set caption on this part with
 `<legend>`.
-When it is disabled, all input fields won't be submitted.
-You can set caption also on firgure
+When it is disabled, all nested input fields can not be used, as they were
+disabled, but I see that they will be submitted so you need to disable manually
+each input field.
+
+Another problem with `f.fields_for :venue` is that if model persists, this will
+add some hidden `venue_attributes[:id] = id`
+https://github.com/rails/rails/blob/fc5dd0b85189811062c85520fd70de8389b55aeb/actionview/lib/action_view/helpers/form_helper.rb#L1928
+
+You can set caption also on figure
 ```
 <figure>
-<img src="/wp-content/uploads/flamingo.jpg" alt="flamingo">
-<figcaption><i>fig. 1</i> A pink flamingo.</figcaption>
+  <img src="/wp-content/uploads/flamingo.jpg" alt="flamingo">
+  <figcaption><i>fig. 1</i> A pink flamingo.</figcaption>
 </figure>
 ```
 
@@ -371,3 +375,20 @@ is using `label` and to avoid placeholders.
   show. Also browsers translators does not work on placeholders since it is
   attribute (not a value or a text object).
 * adjacent elements (google sign in use this)
+
+
+examples
+TODO
+https://www.driftingruby.com/episodes/nested-forms-from-scratch-with-stimulusjs
+
+instead of polymorhic, we could use separate columns `isp_id`, `operator_id`,
+`location_id`. it is hard to search by that colum
+
+
+for specific form inputs to ask, you can use fieldset and disable those which
+are not necessary.
+
+Oneliner form is using button_to with: input label, target url, form class...
+```
+<%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %>
+```

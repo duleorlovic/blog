@@ -330,7 +330,9 @@ is private but we can
 * big multiline strings can be concatenated from lines similar to HERE_DOC. It
 will show `\n` and will insert spaces because text is indented. There is
 `~HERE_DOC` version to strip spaces for all lines based on first line indent.
-Minus in `<<-HERE_DOC` means that it will not strip spaces based on first line.
+Minus in `<<-HERE_DOC` means that it will not strip spaces based on first line,
+so you need to start from 0 column on each line.
+If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
 
   ~~~
   MY_TEMPLATE = <<HTML

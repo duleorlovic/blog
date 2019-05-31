@@ -885,19 +885,22 @@ h2 {
 * you can not have `<a>` tag inside other `<a>` tag, use this validator
   https://validator.w3.org/nu/#textarea
 
-* components and terminology (terms names) on a web page:
-  * accordion is list of blocks that can collapse
-  https://getbootstrap.com/docs/3.3/javascript/#collapse-example-accordion
-  * carousel is big image slider
-  https://getbootstrap.com/docs/3.3/javascript/#carousel
-  * navbar is top header with menu links, in bootstrap_4 it is fluid (spans all
-    width)
-  * flush on some elements
-    https://getbootstrap.com/docs/4.1/components/list-group/#flush means that
-    rounded corners are removed
-  * B4 cards replace our old panels, wells, and thumbnails
-  * masonry type columns is when element are places optimally basedon vertical
-    space (width is fixed, and height is variable)
+components and terminology (terms names) on a web page:
+
+* accordion is list of blocks that can collapse
+https://getbootstrap.com/docs/3.3/javascript/#collapse-example-accordion
+* carousel is big image slider
+https://getbootstrap.com/docs/3.3/javascript/#carousel
+* navbar is top header with menu links, in bootstrap_4 it is fluid (spans all
+  width)
+* flush on some elements
+  https://getbootstrap.com/docs/4.1/components/list-group/#flush means that
+  rounded corners are removed
+* B4 cards replace our old panels, wells, and thumbnails
+* masonry type columns is when element are places optimally basedon vertical
+  space (width is fixed, and height is variable)
+* cloaking is when heading seo keywoards says nice words but content sell
+   drugs
 
 * if you have two data attributes on click, to disable one from another, you can
   disable button, for example

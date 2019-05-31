@@ -657,13 +657,14 @@ Refence each file in packs folder with (restart dev seerver)
 Add npm packages: jquery turbolinks bootstrap
 
 ~~~
-yarn add jquery rails-ujs turbolinks bootstrap popper.js
+yarn add bootstrap jquery popper.js
 ~~~
 
 Configure jquery as plugin
 
 ~~~
 // config/webpack/environment.js
+const { environment } = require('@rails/webpacker')
 const webpack = require('webpack');
 environment.plugins.append('Provide', new webpack.ProvidePlugin({
   $: 'jquery',
@@ -679,7 +680,27 @@ environment.config.external = {
 module.exports = environment
 ~~~
 
+In application pack
+```
+// app/javascript/packs/application.js
+require("@rails/ujs").start()
+require("turbolinks").start()
+require("@rails/activestorage").start()
+require("channels")
 
+import 'bootstrap'
+import '../stylesheets/application'
+import './turbolinks.load'
+```
+and create separate pack for turbolinks:load events
+
+```
+// app/javascripts/packs/turbolinks.load.js
+document.addEventListener('turbolinks:load', () => {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+```
+small note, we could use ES6 syntax
 ~~~
 // app/javascript/packs/application.js
 import Rails from 'rails-ujs';
@@ -697,11 +718,12 @@ global.$ = require('jquery')
 window.$ = window.jQuery = require("jquery")
 ~~~
 
+https://getbootstrap.com/docs/4.0/getting-started/webpack/
 For stylesheets create new module and move files and import in scss. Use tilda
 when referencing node modules.
 
 ~~~
-// app/javascript/packs/stylesheets.scss
+// app/javascript/stylesheets/application.scss
 @import '~bootstrap/scss/bootstrap';
 ~~~
 

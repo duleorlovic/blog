@@ -127,7 +127,7 @@ gem 'fontello_rails_converter'
 
 # select some fonts http://fontello.com/ and download zip to `tmp/fontello.zip`
 bundle exec fontello convert --no-download
-gnome-open http://localhost:3001/fontello-demo.html
+gnome-open http://localhost:300$(get_current_viewport)/fontello-demo.html
 
 # when you want to update you can
 fontello open
@@ -627,12 +627,13 @@ HERE_DOC
 bundle
 
 # Rails 5 puma is default, and config/puma.rb is used, so do not need Procfile
-# but is it advisable to write it and put rakek db:migrate so you do not need to
+# but is it advisable to write it and put rake db:migrate so you do not need to
 # run migration after you deploy. Restart is not needed as it was needed after
 # heroku run rake db:migrate (there are no exception, but update was not
 # actually saved in new columns, so restart was needed)
 cat >> Procfile <<HERE_DOC
 web: bundle exec puma -C config/puma.rb
+worker: bin/delayed_job run --queues=webapp,mailers
 release: rake db:migrate
 HERE_DOC
 

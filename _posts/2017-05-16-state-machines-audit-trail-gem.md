@@ -92,7 +92,7 @@ gnome-open Location_status.png
 
 ~~~
 cat "gem 'state_machine-audit_trail'" >> Gemfile
-rails generate state_machine:audit_trail Post status
+rails generate state_machines:audit_trail Post status
 ~~~
 
 This will generate model and migration which you can update

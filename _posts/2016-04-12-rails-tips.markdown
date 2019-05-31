@@ -152,12 +152,12 @@ So you need to separate `default_values_on_create` and
 ~~~
 # do not use after initialize since it will be run on every load
 > after_initialize :default_values_on_initialize
-before_validation :default_values_on_create, on: :create
-before_validation :default_values_on_update, on: :update
+before_validation :_default_values_on_create, on: :create
+before_validation :_default_values_on_update, on: :update
 
 private
 
-def default_values_on_create
+def _default_values_on_create
   self.logo ||= Rails.application.secrets.default_restaurant_logo
   # do not use self.some_true_value ||= true since that will override if
   # some_true_value = false
@@ -559,7 +559,11 @@ heroku dump is binary format (size is much smaller).
 pg_dump $DATABASE_NAME > $DUMP_FILE
 #
 # or heroku style, replace: mypassword myuser and mydb
-# PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
+PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
+pg_dump -Fc --no-acl --no-owner $DATABASE_NAME > $DUMP_FILE
+scp $DUMP_FILE 192.168.1.3:
+ssh 192.168.1.3
+heroku pg:backups restore --confirm move-index http://trkcam.duckdns.org/b001.dump DATABASE_URL
 ~~~
 
 ## Restore database
@@ -569,6 +573,7 @@ Restore from local textual and binary dump
 ~~~
 export DUMP_FILE=tmp/b001.dump
 export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
+
 chmod a+r $DUMP_FILE
 
 rake db:drop db:create
@@ -2125,6 +2130,11 @@ to put cents and currency column
 
 ```
 
+in model
+```
+  monetize_columns :round_off
+```
+
 # Carrierwave for uploading
 
 ## Store on server
@@ -2467,7 +2477,7 @@ does not exists
 My style in rails models use following order:
 
 1. `include` and `extend` other modules, `devise` or, `serialize :col, Hash`
-1. constants `FIELDS = %i[name]`
+1. `FIELDS = %i[name].freeze` and other constants
 1. `attr_accessor`
 1. `belongs_to :workflow` associations with plugins `acts_as_list scope:
 1  [:workflow_id]`
@@ -3676,3 +3686,19 @@ end
   ```
 * Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
   💯% sure.
+* when bcrypt is updated you need to update secrets credentials with `rails
+  credentials:edit`
+```
+.rvm/gems/ruby-2.5.3/gems/activesupport-6.0.0.rc1/lib/active_support/message_encryptor.rb:206:in `rescue in _decrypt': ActiveSupport::MessageEncryptor::InvalidMessage (ActiveSupport::MessageEncryptor::InvalidMessage)
+```
+
+  you can create development credentials (config/credentials/development.key and
+  config/credentials/development.yml.enc) with
+  ```
+
+  rails credentials:edit -e development
+  ```
+* dhh videos On Writing Software Well
+  https://www.youtube.com/watch?v=wXaC0YvDgIo&list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx
+  ```
+  ```

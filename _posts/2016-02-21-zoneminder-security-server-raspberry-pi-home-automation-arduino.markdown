@@ -378,6 +378,7 @@ ixl6009 https://electronics.stackexchange.com/questions/113253/voltage-drop-and-
 ~~~
 su
 add-apt-repository ppa:iconnor/zoneminder
+add-apt-repository ppa:iconnor/zoneminder-1.32
 apt-get update
 apt-get upgrade
 apt-get dist-upgrade

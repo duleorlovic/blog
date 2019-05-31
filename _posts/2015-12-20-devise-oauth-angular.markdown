@@ -221,17 +221,17 @@ module Devise
   class MyOmniauthCallbacksController < OmniauthCallbacksController
     # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
     # data is in request.env["omniauth.auth"]
-    [:facebook, :google_oauth2, :twitter].each do |provider| # yaho_oauth2
+    %i[facebook google_oauth2].each do |provider| # yaho_oauth2 twitter
       define_method provider do
         # use request.env["omniauth.params"]["my_param"]
-        @user = User.from_omniauth(request.env["omniauth.auth"])
+        @user = User.from_omniauth(request.env['omniauth.auth'])
 
         if @user.persisted?
           sign_in_and_redirect @user, event: :authentication
           # this will throw if @user is not activated
           set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
         else
-          session["devise.facebook_data"] = request.env["omniauth.auth"]
+          session['devise.facebook_data'] = request.env['omniauth.auth']
           redirect_to new_user_registration_url
         end
       end
@@ -239,7 +239,9 @@ module Devise
     def failure
       # this could be: no_authorization_code # when we did not whitelisted domain
       # on facebook app settings
-      redirect_to root_path, alert: "Can't sign in. #{request.env['omniauth.error'].try(:message)} #{request.env['omniauth.error.type']}"
+      alert = t('can_sign_in_reason_name',
+                reason_name: "#{request.env['omniauth.error'].try(:message)} #{request.env['omniauth.error.type']}")
+      redirect_to root_path, alert: alert
     end
   end
 end
@@ -283,10 +285,14 @@ Note this situations:
   than he should not see again forgot password page
 * when user change the password it should stay logged in
   ```
+    unless current_user.valid_password? params[:user][:current_password]
+      current_user.errors.add(:current_password, t('my_devise.current_password_is_not_correct'))
+    end
     current_user.password='asdfasdf'
     current_user.password_confirmation='asdfasdf'
-    current_user.save!
-    bypass_sign_in current_user
+    # current_user.save!
+    current_user.errors.blank? && current_user.save!
+    bypass_sign_in current_user if current_user.errors.blank?
   ```
 
 # Facebook app

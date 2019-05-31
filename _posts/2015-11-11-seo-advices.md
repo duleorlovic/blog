@@ -2,16 +2,22 @@
 layout: post
 ---
 
+Guides
+http://goo.gle/search-guides
+https://www.google.com/webmasters/connect/
+https://webmasters.googleblog.com/
+
 Test your site on
 <https://developers.google.com/speed/pagespeed/insights/>
 <https://search.google.com/test/mobile-friendly>
 <https://search.google.com/search-console/inspect>
 <https://search.google.com/test/rich-results>
 <https://search.google.com/structured-data/testing-tool/u/0/>
-<https://gtmetrix.com/>
 
 Free trial seo report rank <https://www.woorank.com/>
 Also on <https://www.webpagetest.org/>
+<https://gtmetrix.com/>
+Good reports on 
 
 # WEBPAGETEST
 
@@ -246,14 +252,13 @@ Or you can add to https://www.google.rs/search?q=site:`www.my-site.com`
 Some reasons could be
 [post](https://moz.com/ugc/8-reasons-why-your-site-might-not-get-indexed)
 
-  * server can not respond fast enough to all crawler requests, maybe it will
-  help to reoder sitemap
-
-All links in sitemap should return 200 (not redirection 3xx). Also you need to
+* server can not respond fast enough to all crawler requests, maybe it will
+help to reoder sitemap
+* All links in sitemap should return 200 (not redirection 3xx). Also you need to
 check [this answer](https://support.google.com/webmasters/answer/2642366?hl=en)
 for duplicates (this is common for angular since data is fetched after page
 load), canonical url (this is common when you have search queries that return
-same results).
+same results)
 
 If you have more domains on same server than you need to iterate for each
 `default_host` and to call `SitemapGenerator::Sitemap.ping_search_engines`
@@ -324,8 +329,19 @@ After hash `#` usually everythings is ignored so that should not be a router for
 your app. Do not use secret stuff in url like `/session=1234/...?user=john`
 * canonical url is the main key for this content, and can be defined using link
 rel canonical, redirects, sitemaps
+to define what is canonical url for the page you can use
+```
+<link rel='canonical' href='https://example.com/path'/>
+```
 * imporant content that needs to be indexed should be on visible part of the
 page, not on ajax call since crawl will be able to index that
+* always use links with href. Onclick is ok if it uses history js api. Note that
+  crawlers do not clicks, just looks for links. So don't use buttons, span
+  onclick or href to hash link (part of a page)
+* If content change often, crawler will check more often. Popular and fresh.
+* Do not load too much files, crawl budget.
+* Do not duplicate content, same content but different url, use link rel canonical ie canonicalize.
+* Prevent crawling with robots.txt , but link from other site is followed (robots is not read) so for this case use header.
 
 TODO
 https://www.youtube.com/watch?v=Afy7H04X9Us

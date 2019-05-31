@@ -711,6 +711,8 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   ~~~
   To add new data you can push to datasets and labels
   https://www.chartjs.org/docs/latest/developers/updates.html
+
+  To use with rails you can use https://github.com/ankane/chartkick
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
 
@@ -761,6 +763,10 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   * you can also send push notifications from mixpanel
 
 https://www.fullstory.com/
+https://segment.com/ collect customer data
+
+* https://github.com/ankane/ahoy is free version that stores data in our db
+  https://gorails.com/episodes/internal-metrics-with-ahoy-and-blazer
 
 # User support services
 
@@ -935,6 +941,7 @@ Email templates
 * <https://tympanus.net/Development/PerspectivePageViewNavigation/index6.html#>
 * <https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#>
 * <https://tympanus.net/Tutorials/3DShadingWithBoxShadows/>
+* click to copy css effects for buttons and inputs https://cssfx.dev/
 * shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&theme-id=1&slug-hash=RNjRZz&default-tab=result&user=iamryanyu&embed-version=2&pen-title=Modern%20Button%20Collection#js-box
 * checkbox in css https://codepen.io/himalayasingh/pen/EdVzNL
 * rotate and shake on hover https://codepen.io/duleorlovic/pen/jdjYNE

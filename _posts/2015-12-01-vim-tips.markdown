@@ -312,6 +312,7 @@ shorter `:set rnu`. To disable you can `:set norelativenumber`
 In normal mode you can select and indent with `=`
 To indent whole file you can jump to begging and indent to last line `gg=G`.
 In visual mode `gq` will format text to 80 char lines (good for markdown)
+Sort selection with `:sort u`
 
 HTML indent works fine but note when to avoid erb tags. It detects `%>` as
 closed tag except when line starts with `<%`. Do not use comment in the middle

@@ -376,11 +376,9 @@ end
 }
 ~~~
 
-# Stimulus and man in bootstrap 4 modal
+# Stimulus and map in jbox modal
 
-
-~~~
-~~~
+https://github.com/trkin/move-index/blob/master/app/javascript/controllers/google_map_address_controller.js
 
 # Location search field
 
@@ -601,13 +599,13 @@ end
 
 Here are the steps that I usually do for geolocating users:
 
-  * try to get lat/long pair from browser
-  * use free service <http://www.geoplugin.com/webservices/json>
-  * ask user for address and geocode it on client [Google Maps Javascript
-    API](https://developers.google.com/maps/documentation/javascript/geocoding)
-    Geocoding Service
-  * ask user for address and geocode it on server [Google Maps Geocoding
-    API](https://developers.google.com/maps/documentation/geocoding/intro)
+* try to get lat/long pair from browser
+* use free service <http://www.geoplugin.com/webservices/json>
+* ask user for address and geocode it on client [Google Maps Javascript
+  API](https://developers.google.com/maps/documentation/javascript/geocoding)
+  Geocoding Service
+* ask user for address and geocode it on server [Google Maps Geocoding
+  API](https://developers.google.com/maps/documentation/geocoding/intro)
 
 ## Get Brower location
 

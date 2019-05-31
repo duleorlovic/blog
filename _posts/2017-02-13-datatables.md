@@ -9,58 +9,28 @@ title: Datatables
 [datatables.net](https://datatables.net/) install by simply [select packages and
 download](https://datatables.net/download/#bs-3.3.7/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/b-1.2.3/b-html5-1.2.3/b-print-1.2.3)
 but it will be 3M in one file. I think it is better to use yarn
-and install all dependencies that you have selected [bower
-packages](https://datatables.net/download/bower)
+and install all dependencies that you need
 
 ```
 yarn add datatables.net-bs4
 ```
-include them in application.js
+include it (both js and style in one line :)
 ```
-//= require datatables.net/js/jquery.dataTables.js
-//= require datatables.net-bs4/js/dataTables.bootstrap4.js
-```
-and application.sass
-```
-@import 'datatables.net-bs4/css/dataTables.bootstrap4.css'
+# app/javascripts/packs/application.js
+
+import 'datatables.net-bs4'
 ```
 
-Here is old bower example
 ~~~
-bower install --save datatables.net datatables.net-bs \
-  Stuk/jszip pdfmake \
-  datatables.net-buttons datatables.net-buttons-dt datatables.net-buttons-bs \
-  select2 bootstrap-datepicker
-~~~
-
-~~~
-// app/assets/javascript/application.js
-//= require jszip/dist/jszip.js
-//= require pdfmake/build/pdfmake.js
-//= require pdfmake/build/vfs_fonts.js
-//= require datatables.net/js/jquery.dataTables.js
-//= require datatables.net-bs/js/dataTables.bootstrap.js
-//= require datatables.net-buttons/js/dataTables.buttons.js
-//= require datatables.net-buttons/js/buttons.html5.js
-//= require datatables.net-buttons/js/buttons.print.js
-//= require select2/dist/js/select2
-//= require bootstrap-datepicker/dist/js/bootstrap-datepicker
-
-// app/assets/stylesheets/application.scss
-@import "datatables.net-bs/css/dataTables.bootstrap";
-@import "datatables.net-buttons-dt/css/buttons.dataTables";
-@import "datatables.net-buttons-bs/css/buttons.bootstrap";
-@import "select2/dist/css/select2";
-@import "bootstrap-datepicker/dist/css/bootstrap-datepicker3";
-~~~
-
-~~~
-$('#clicks-table').DataTable({
-  dom: 'Bfrtip',
-    buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print'
-    ]
-});
+# app/javascript/turbolinks.load.js
+document.addEventListener('turbolinks:load', () => {
+  $('table').DataTable({
+    dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+  });
+})
 ~~~
 
 You can use
@@ -530,8 +500,5 @@ define view_columns, by default `orderable` and `searchable` are true, and
 ```
 
 
-https://www.youtube.com/watch?v=bn9arlhfaXc&t=302s
-
-https://datatables.net/forums/discussion/32542/datatables-and-webpack
 https://www.datatables.net/download/npm
 https://datatables.net/manual/server-side

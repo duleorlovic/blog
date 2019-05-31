@@ -151,6 +151,11 @@ add 3d effect to it.
   effect if variable is already defined. Note that you can not override
   variable, so in order to change value, you need to have `$my-var: 111` before
   this `!default` line.
+* to use $variable inside `calc()` you need to interpolate
+  ```
+  body
+    height: calc(100% - #{$body_padding})
+  ```
 * you can select `this` using `&`
 
   ~~~

@@ -2,6 +2,36 @@
 layout: post
 ---
 
+* create user in mysql database
+
+  ~~~
+  CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+  ~~~
+
+* grant access to specific db
+  ~~~
+  GRANT ALL PRIVILEGES ON mydb. * TO 'newuser'@'%' IDENTIFIED BY 'mypass';
+  FLUSH PRIVILEGES;
+  ~~~
+
+  when I do not use `IDENTIFIED BY` than I receive `Access denied for user` when
+  I connect from remote comp, even I can connect from localhost with same
+  password.
+  Note that in rails, if you skip defining username and password, it will use
+  current linux user.
+
+* to see all grants (note that single quote `'` is required)
+
+  ```
+  SHOW GRANTS FOR 'newuser';
+  SHOW GRANTS FOR 'newuser'@'localhost';
+  ```
+
+* to remove a grant
+  ```
+  REVOKE ALL PRIVILEGES, GRANT OPTION FROM newuser
+  ```
+
 * change some user password you can do in three ways
 
   ```
@@ -25,34 +55,6 @@ layout: post
 
 * login `mysql -u root -p`
 * select database `USE mysql`, create database `CREATE DATABASE mydb`
-* create user in mysql database
-
-  ~~~
-  CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
-  ~~~
-
-* grant access to specific db
-  ~~~
-  GRANT ALL PRIVILEGES ON mydb. * TO 'newuser'@'%' IDENTIFIED BY 'mypass';
-  FLUSH PRIVILEGES;
-  ~~~
-
-  when I do not use `IDENTIFIED BY` than I receive `Access denied for user` when
-  I connect from remote comp, even I can connect from localhost with same
-  password.
-
-* to see all grants (note that single quote `'` is required)
-
-  ```
-  SHOW GRANTS FOR 'newuser';
-  SHOW GRANTS FOR 'newuser'@'localhost';
-  ```
-
-* to remove a grant
-  ```
-  REVOKE ALL PRIVILEGES, GRANT OPTION FROM newuser
-  ```
-
 * import dump with `mysql -u newuser -p dbname < web001db.sql`
 * to remove column you need first to remove foreign keys and index. If you have
   two or more foreign keys than remove all them by name... find name in mysql if
@@ -113,4 +115,12 @@ layout: post
   myisamchk -r $TABLE_NAME
   myisamchk -r -v -f $TABLE_NAME
   sudo service mysql start
+  ```
+
+* search by regexp
+  ```
+  # when column is string or text
+  relation.where('column LIKE :search', search: "%#{search_value}%")
+  # otherwise use cast
+  relation.where('CAST(column AS CHAR) LIKE :search', search: "%#{search_value}%")
   ```

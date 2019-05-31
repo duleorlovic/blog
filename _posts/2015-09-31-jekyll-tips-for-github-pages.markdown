@@ -66,6 +66,35 @@ serverd under HTTP. To enable HTTPS for custom domains you can try
 [cloudflare](https://www.cloudflare.com/) but recently, all github pages are
 enypted with free <https://letsencrypt.org/> certificate.
 
+# Cloudflare
+
+Adding CNAME on root domain is possible, it is calling CNAME Flattening.
+You can use cloudflare and heroku to catch all subdomains to same herokuapp
+https://devcenter.heroku.com/articles/custom-domains#add-a-wildcard-domain
+https://support.cloudflare.com/hc/en-us/articles/360017421192%20#CloudflareDNSFAQ-DoesCloudflaresupportwildcardDNSentries
+Add `*.myapp.com` (same as it is normal subdomain) to heroku, and use that CNAME
+value on for cloudflare.
+
+Note that only paid plans will use Cloudflare CDN... this subdomains will go
+directly to herokuapp. For example if you add root and www and wildcard
+subdomain you will see that root and www goes to Cloudflare IP addresses.
+```
+dig +noall +answer move-index.org
+move-index.org.		300	IN	A	104.28.14.249
+move-index.org.		300	IN	A	104.28.15.249
+
+dig +noall +answer www.move-index.org
+www.move-index.org.	300	IN	A	104.28.14.249
+www.move-index.org.	300	IN	A	104.28.15.249
+dig +noall +answer asd.move-index.org
+
+asd.move-index.org.	300	IN	CNAME	vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.
+vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.2.175.150
+vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.21.103.149
+```
+
+# Cloudfront
+
 ```
 dig  +nostats +nocomments +nocmd projektor.trk.in.rs
 ;projektor.trk.in.rs.		IN	A

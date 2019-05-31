@@ -23,15 +23,6 @@ messages for specific model and attributes (default ActiveRecord messages taken)
 
 Also you can change format `errors.format: Polje "%{attribute}" %{message}`
 https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
-You can use custom notice:
-You can also see some default en translations for errors.
-To see Rails default datetime formats go to
-https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
-to see current translation you can use
-```
-I18n.translate 'date.formats.default`
-=> "%Y-%m-%d"
-```
 
 And you can change attribute name `activerecord.attributes.user.email: имејл`
 To translate also plurals you can use `User.model_name.human(count: 2)`. For
@@ -171,6 +162,8 @@ require 'i18n/backend/pluralization'
 I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
 ~~~
 
+If you send `count` parameter `t('sent_messages', count: 2)` it will try to pick
+specific item based on number
 ~~~
 # config/locales/sr.yml
 sr:
@@ -346,3 +339,79 @@ end
 
 For google translate look for two scripts, one for vim and one for whole yml.
 https://github.com/duleorlovic/config/tree/master/ruby
+
+# Enums
+
+```
+class User < ApplicationRecord
+  enum status: [:active, :pending, :archived]
+end
+
+class ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
+
+  def self.human_enum_name(enum_name, enum_value)
+    I18n.t("activerecord.attributes.#{model_name.i18n_key}.#{enum_name.to_s.pluralize}.#{enum_value}")
+  end
+end
+
+
+en:
+  activerecord:
+    attributes:
+      user:
+        statuses:
+          active: "Active"
+          pending: "Pending"
+          archived: "Archived"
+
+User.human_enum_name(:status, :pending)
+User.human_enum_name(:status, user.status)
+```
+
+# Tips
+
+* if you want to see which translation is used (if there is parent default
+  value) you can try https://github.com/fphilipe/i18n-debug
+* for big content pages, you can translate using `page.sr.html.erb` instead of
+  yml translations
+* fallbacks, if can not find the key in curreny localy, it can search in
+  fallback locale. In this case you can translate only specific keys
+  ```
+  # config/application.rb
+  config.i18n.fallbacks = { en_GB: [:en] }
+
+  # config/locales/en_GB.yml
+  en_GB:
+    soccer: Footbal
+
+  en:
+    soccer: Soccer
+    words: Words
+
+  # logs from i18n-debug
+  en_GB.show.soccer => 'Footbal'
+  en_GB.show.words => nil
+  en.show.words => 'Words'
+  ```
+
+* To see Rails default datetime formats go to
+  https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
+  to see current translation you can use
+  ```
+  I18n.translate 'date.formats.default`
+  => "%Y-%m-%d"
+  ```
+* to localise timestamps you can use `I18n.l Time.now, format: :formal`
+
+  ```
+  en:
+    time:
+      formats:
+      default: '%H:%M'
+      formal: The time is %H:%M
+
+  ```
+* `helper.number_with_precision`, `distance_of_time_in_words_to_now`,
+  `number_to_currency`, `number_to_human`, `number_to_human_size` are some
+  helpers that uses translations
