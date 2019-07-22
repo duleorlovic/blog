@@ -67,8 +67,8 @@ for Did you mean?  new_user_confirmation_path user_confirmation_path):` occurs
 when you add, for example `confirmable` in model, but gem are already loaded in
 spring, so you need to `spring stop` and restart rails server.
 
-To enable additional fields to be permited attributes for new columns, for
-example `:username`
+To enable additional fields to be permited attributes for new columns, to allow
+new params for user, for example `:username`
 
 ~~~
 class ApplicationController < ActionController::Base
@@ -81,6 +81,11 @@ class ApplicationController < ActionController::Base
   end
 end
 ~~~
+
+To pass some values to devise controller, you can use hidden field
+```
+  <%= f.text_field :username, value: f.object.username || params[:username] %>
+```
 
 Errors like `NoMethodError (undefined method 'users_url' for
 #<DeviseRegistrationsController:0x007ff6068d92b8>):`
@@ -223,7 +228,7 @@ module Devise
     # data is in request.env["omniauth.auth"]
     %i[facebook google_oauth2].each do |provider| # yaho_oauth2 twitter
       define_method provider do
-        # use request.env["omniauth.params"]["my_param"]
+        # to get params use request.env["omniauth.params"]["my_param"]
         @user = User.from_omniauth(request.env['omniauth.auth'])
 
         if @user.persisted?
@@ -340,12 +345,15 @@ Create *OAuth 2.0 client ID* (or edit exists one clicking on its
 name) and set *Authorized redirect URIs* to all urls that will be used (not just
 domain like for facebook, we need whole url path), like redirect_uri
 
-* `http://localhost:3000/users/auth/google_oauth2/callback` this is default
-  `devise_for :users`
-* `http://localhost:9000/omniauth/google_oauth2/callback` and also for https
-* `https://localhost.local/omniauth/google_oauth2/callback` 
-* also fill the *Authorized JavaScript origins* with domains and port like
-`http://localhost.local`.
+* `https://myapp.com/users/auth/google_oauth2/callback`
+* you can add also for http and https
+* you can add localhost
+  `http://localhost:3003/users/auth/google_oauth2/callback` but can not add
+  subdomain of localhost, like `myapp.localhost`
+* *Authorized JavaScript origins* will be automatically filled with domain like
+  `myapp.com`
+
+https://stackoverflow.com/questions/10456174/oauth-how-to-test-with-local-urls
 
 Dont forget to save **Changes needs 5 min to propagate**
 

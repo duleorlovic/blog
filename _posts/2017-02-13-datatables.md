@@ -502,3 +502,6 @@ define view_columns, by default `orderable` and `searchable` are true, and
 
 https://www.datatables.net/download/npm
 https://datatables.net/manual/server-side
+
+# Rails datatables helpers
+

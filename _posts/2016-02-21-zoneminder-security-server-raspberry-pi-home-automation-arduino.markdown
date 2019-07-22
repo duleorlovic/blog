@@ -374,15 +374,15 @@ ixl6009 https://electronics.stackexchange.com/questions/113253/voltage-drop-and-
 # Zoneminder
 
 [Installation](http://zoneminder.readthedocs.io/en/latest/installationguide/ubuntu.html#easy-way-ubuntu-16-04)
+https://wiki.zoneminder.com/Ubuntu_Server_19.04_Zoneminder_1.32.3
 
 ~~~
 su
-add-apt-repository ppa:iconnor/zoneminder
 add-apt-repository ppa:iconnor/zoneminder-1.32
-apt-get update
-apt-get upgrade
-apt-get dist-upgrade
-apt-get install zoneminder
+apt update
+apt upgrade
+apt dist-upgrade
+apt install zoneminder
 
 echo "sql_mode = NO_ENGINE_SUBSTITUTION" >> /etc/mysql/mysql.conf.d/mysqld.cnf
 systemctl restart mysql
@@ -392,14 +392,17 @@ chown root:www-data /etc/zm/zm.conf
 chown -R www-data:www-data /usr/share/zoneminder/
 
 a2enconf zoneminder
+a2enmod php7.2
 a2enmod cgi
 a2enmod rewrite
 
 systemctl enable zoneminder
 systemctl start zoneminder
 
-sed -i /etc/php/7.0/apache2/php.ini -e '/\[Date\]/a \
-date.timezone = Europe/Belgrade'
+awk '$0="date.timezone = "$0' /etc/timezone >> /etc/php/7.2/apache2/php.ini
+# or
+# sed -i /etc/php/7.2/apache2/php.ini -e '/\[Date\]/a \
+# date.timezone = Europe/Belgrade'
 
 systemctl reload apache2
 ~~~
@@ -407,24 +410,8 @@ systemctl reload apache2
 <http://localhost/zm/api/host/getVersion.json> should return version.
 
 ~~~
-{"version":"1.30.2","apiversion":"1.0"}
-~~~
-
-Motion recording works but can not see stream. Error in log
-~~~
-Socket /var/run/zm/zms-153908s.sock does not exist. This file is created by zms, and since it does not exist, either zms did not run, or zms exited early. Please check your zms logs and ensure that CGI is enabled in apache and check that the PATH_ZMS is set correctly. Make sure that ZM is actually recording. If you are trying to view a live stream and the capture process (zmc) is not running then zms will exit. Please go to http://zoneminder.readthedocs.io/en/latest/faq.html#why-can-t-i-see-streamed-images-when-i-can-see-stills-in-the-zone-window-etc for more information.
-~~~
-
-One fix for
-[ubuntu](https://forums.zoneminder.com/viewtopic.php?t=24265)
-~~~
-(Web interface) Options, paths, and update PATH_ZMS from "/cgi-bin/nph-zms" to "/zm/cgi-bin/nph-zms"
-
-That should match in /etc/apache2/conf-available/zoneminder.conf
-#ScriptAlias /zm/cgi-bin "/usr/lib/zoneminder/cgi-bin"
-
-sudo service apache2 restart
-sudo service zoneminder restart
+curl http://localhost/zm/api/host/getVersion.json
+{"version":"1.32.3","apiversion":"1.0"}
 ~~~
 
 To change apache port to 81 you can change:
@@ -435,18 +422,6 @@ To change apache port to 81 you can change:
 
 # /etc/apache2/ports.conf
 Listen 81
-~~~
-
-Error 'Failed to open video device /dev/video0: Permission denied'
-
-~~~
-adduser www-data video
-usermod -a -G video www-data
-
-# chmod is not needed
-# sudo chmod 777 /dev/video*
-
-sudo reboot
 ~~~
 
 To trigger some functions you can run script with
@@ -465,14 +440,64 @@ If you want to prevent automatical start on boot, you can disable using:
 sudo update-rc.d zoneminder remove
 ~~~
 
+To use another disk, you can mount external hard drive using "Disks" and
+"Settings -> Edit mount options" and uncheck Automatic Mount Options but better
+is to follow https://wiki.zoneminder.com/Common_Issues_with_Zoneminder_Installation_on_Ubuntu#Use_Systemd_to_Mount_Internal_Drive_or_NAS
+Basically we mount external drive to /mnt/sdb1 and moount
+/var/cache/zoneminder/events to /mnt/sdb1/zoneminder/events
+
+To start streaming cameras on ubuntu boot startup you can add Startup
+Application a script
+```
+# ~/start_firefox_and_maximize.sh
+firefox -url http://localhost/zm/?view=cycle &
+xdotool search --sync --onlyvisible --class Firefox windowactivate key F11
+```
+
 ## Zoneminder Errors and Logs
 
 Watch logs
 
 ~~~
-tail -f /var/log/syslog
-tail -f /var/log/apache2/*
-tail -f /var/log/mysql/*
+tail -f /var/log/syslog /var/log/apache2/* /var/log/mysql/*
+
+or
+
+multitail /var/log/syslog /var/log/apache2/error.log
+~~~
+
+Motion recording works but can not see stream. Error in log
+~~~
+Socket /var/run/zm/zms-153908s.sock does not exist. This file is created by zms, and since it does not exist, either zms did not run, or zms exited early. Please check your zms logs and ensure that CGI is enabled in apache and check that the PATH_ZMS is set correctly. Make sure that ZM is actually recording. If you are trying to view a live stream and the capture process (zmc) is not running then zms will exit. Please go to http://zoneminder.readthedocs.io/en/latest/faq.html#why-can-t-i-see-streamed-images-when-i-can-see-stills-in-the-zone-window-etc for more information.
+~~~
+
+One old fix for
+[ubuntu](https://forums.zoneminder.com/viewtopic.php?t=24265)
+~~~
+(Web interface) Options, paths, and update PATH_ZMS from "/cgi-bin/nph-zms" to "/zm/cgi-bin/nph-zms"
+
+That should match in /etc/apache2/conf-available/zoneminder.conf
+#ScriptAlias /zm/cgi-bin "/usr/lib/zoneminder/cgi-bin"
+
+sudo service apache2 restart
+sudo service zoneminder restart
+~~~
+
+But for recent zoneminder 1.32.2 `ERR [Socket /var/run/zm/zms-053522s.sock does
+not exist` is caused by zmupdate.pl which did some changes and generate
+`/etc/zm/conf.d/zmcustom.conf`  which override `ZM_PATH_ZMS` so you need to
+commend that line out.
+
+Error 'Failed to open video device /dev/video0: Permission denied'
+
+~~~
+adduser www-data video
+usermod -a -G video www-data
+
+# chmod is not needed
+# sudo chmod 777 /dev/video*
+
+sudo reboot
 ~~~
 
 If you see error:
@@ -507,6 +532,34 @@ truncate table Frames;
 truncate table Events;
 ```
 
+Error for Unable to create libvlc instance due to: (null) is fixed with
+```
+apt-get install libvlc-dev libvlccore-dev vlc
+```
+
+Error for small memory alocation ability
+```
+tail /var/syslog
+ zmc_m2[22910]: INF [Starting Capture]
+ zmc_m2[22910]: ERR [Invalid response status 401: Unauthorized]
+ zmc_m2[22910]: ERR [Unable to get response]
+ zmc_m2[22910]: ERR [Failed to capture image from monitor 2 (0/1)]
+ zmdc[22798]: ERR ['zmc -m 2' exited abnormally, exit status 255]
+ zmwatch[22830]: ERR [Can't get shared memory id '7a6d0002', 2: No such file or directory]
+ zmwatch[22830]: ERR [Can't get shared memory id '7a6d0002', 2: No such file or directory]
+```
+Open the file “/etc/sysctl.conf”, and paste these lines at the bottom of the
+file, then reboot.
+```
+# /etc/sysctl.conf
+
+# Increase the maximum shared memory
+kernel.shmall = 167772160
+kernel.shmmax = 167772160
+```
+
+https://forums.zoneminder.com/viewtopic.php?f=38&t=28234&p=110237&hilit=Got+empty+memory+map+file+size+0#p110237
+Upgrading to master because of `no image since startup`
 
 ## Zones
 
@@ -560,6 +613,11 @@ update Users set Password=PASSWORD("admin") where Username="admin";
 
 # PCI Cards
 
+Determine
+```
+lspci -v
+```
+
 PICO200 https://wiki.zoneminder.com/Pico2000
 PICO2000 is a quad camera input PCI card. The card uses a single Conexant 878A
 chip. In addition, some models have 1 audio input jack; it has not been tested
@@ -575,8 +633,8 @@ Bt878 4chip https://wiki.zoneminder.com/Bt878_4chip_8inputs
 
 ~~~
 dmesg | grep video
-dmesg | grep bttv
 
+dmesg | grep bttv
 [   21.257789] bttv: Bt8xx card found (0)
 [   21.258002] bttv: 0: Bt878 (rev 17) at 0000:01:01.0, irq: 17, latency: 32, mmio: 0xf8601000
 [   21.258045] bttv: 0: using:  *** UNKNOWN/GENERIC ***  [card=0,autodetected]
@@ -585,6 +643,51 @@ dmesg | grep bttv
 [   27.737522] bttv: 0: registered device vbi0
 
 ~~~
+
+Philips saa71xx
+https://wiki.zoneminder.com/Debian_Squeeze
+
+```
+lspci -v
+04:0c.0 Multimedia controller: Philips Semiconductors SAA7130 Video Broadcast Decoder (rev 01)
+	Subsystem: Philips Semiconductors SAA7130-based TV tuner card
+	Flags: bus master, medium devsel, latency 64, IRQ 20
+	Memory at feaffc00 (32-bit, non-prefetchable) [size=1K]
+	Capabilities: [40] Power Management version 1
+	Kernel driver in use: saa7134
+	Kernel modules: saa7134
+[   19.108345] saa7134: saa7130[0]: registered device video0 [v4l2]
+[   19.212484] saa7134: saa7130[1]: registered device video1 [v4l2]
+```
+Permissions for /dev/video0 does not allow other access so change to 666
+```
+ls -ls /dev/video*
+0 crw-rw----+ 1 root video 81,  0 Jun  2 06:11 /dev/video0
+
+cat >> /etc/udev/rules.d/90-zoneminder.rules <<HERE_DOC
+# allow non-privileged users to access the /dev/video* files
+SUBSYSTEM!="video4linux", GOTO="zm_rules_end"
+SUBSYSTEM=="video4linux",       MODE="0666",     GROUP="video"
+LABEL="zm_rules_end"
+HERE_DOC
+
+# restart comp or udev rules
+udevadm control --reload-rules && udevadm trigger
+
+ls -ls /dev/video*
+0 crw-rw-rw-+ 1 root video 81,  0 Jun  2 06:32 /dev/video0
+```
+
+To find which device is connected you can
+
+```
+vlc v4l2:///dev/video0
+```
+
+Do not use Source type `Libvlc` since it will use vlc, but you can use direct
+access to file, so choose `Local`, note that new fields will show up in `Source`
+tab.
+
 
 # China IP cam
 

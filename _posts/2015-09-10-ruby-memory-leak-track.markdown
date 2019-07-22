@@ -293,9 +293,14 @@ I add simple widget on top left corner of the page. Does not work when `render
 json: data` (it has to be html).
 Add to your gemfile
 
-~~~
+```
 # for profiling memory and sql
 gem 'rack-mini-profiler'
+```
+
+Additional gems
+
+~~~
 gem 'flamegraph'
 gem 'stackprof' # ruby 2.1+ only
 gem 'memory_profiler'

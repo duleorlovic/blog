@@ -566,6 +566,7 @@ To find you can use https://www.w3.org/TR/selectors-api/
 
 * `querySelector('#bar, #foo')` for example return first in document order
   `#foo`
+* `querySelector('.class_name')` to get by css class
 * `var lis = querySelectorAll('ul>li')` we can iterate using array notation
   `for(var i = 0; i < lis.lenght; i++) { lis[i] }`. NodeList are static (not
   live) so changes in DOM do not affect content of the lis
@@ -926,3 +927,17 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
 * elements with captions are:
   `<figure><img><figcaption>I'm caption</figcaption></figure>` and 
   `<fieldset><legend>I'm caption of this set</legent><input></fieldset>`
+* add text node
+  ```
+  let el = document.getElementById('el');
+  el.appendChild(document.createTextNode(' Some more text.'));
+  console.log(el.childNodes.length); // 2
+  ```
+  and you can merge them with `el.normalize()`. Or grab all child nodes text
+  with `console.log(el.childNodes[0].wholeText)`
+* insert at specific positionin a dom with `insertAdjacentHTML()`,
+  `insertAdjacentElement()`, and `insertAdjacentText()`. Position could be
+  `beforebegin, afterbegin, beforeend, afterend`.
+* to get height of the element with scrollable area when `overflow: auto`, or
+  total space when `overflow: hidden`, you can use `scrollHeight`. To get actual
+  height use `offsetHeight` (this includes any vertical padding and borders).

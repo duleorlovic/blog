@@ -861,7 +861,7 @@ add list=my_site.com address=my_site.com
 Mangle mark routing
 https://www.youtube.com/watch?v=q13z9_dmmyA
 
-Microtik youtube tutorials
+Mikrotik youtube tutorials
 https://www.youtube.com/user/rodrick4u/playlists
 
 # Tips

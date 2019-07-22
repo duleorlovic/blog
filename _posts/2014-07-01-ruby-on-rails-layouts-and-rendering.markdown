@@ -453,7 +453,10 @@ View `render` method has nothing to do with controller `render` method. `<%= ren
 Each partial has local variable with the same name as partial and you can pass an object into it with :object `<%= render partial: "customer", object: @new_customer %>` or if it is an instance of Customer model shorthand is `<%= render @customer %>` which will use *_customer.html.erb* with local object `customer`. I do not recomend this shorthand. It is more self-explanatory when full parameters are used.
 
 
-It is prefered to use local variables when passing data to partial (instead of *@instance* variables). This is because partials can be used from different controllers, where some @instance variable is not set. For example, `<%= render partial: 'users/customer', { customer: @customer } %>`. Locals of partial should be explained in a comment block:
+It is prefered to use local variables when passing data to partial (instead of *@instance* variables). This is because partials can be used from different controllers, where some @instance variable is not set. For example, `<%= render 'users/customer', customer: @customer %>`.
+Note that is you use `render partial: 'name', locals: { customer: @customer
+}` than you need to use `locals`.
+Locals of partial should be explained in a comment block:
 
     <%# customer partial uses locals
        - customer (required, instance of Customer)

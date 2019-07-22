@@ -249,6 +249,14 @@ so I need to add this line to gradle https://stackoverflow.com/questions/5370656
 maven { url 'https://dl.bintray.com/android/android-tools' }
 ```
 
+For error
+```
+  emulator: ERROR: x86 emulation currently requires hardware acceleration!
+Please ensure KVM is properly installed and usable.
+CPU acceleration status: This user doesn't have permissions to use KVM (/dev/kvm)
+```
+fix is `sudo chown orlovic -R /dev/kvm`
+
 # Tips
 
 * add loader before page is shown https://android.jlelse.eu/loading-splash-screen-for-webview-in-android-studio-ef68ec05720a

@@ -915,6 +915,7 @@ version](https://github.com/iogbole/gentelella_on_rails)
   https://coderthemes.com/hyper_2/light/dashboard-crm.html
   <https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio> 
   <https://blackrockdigital.github.io/startbootstrap-freelancer/>
+  <https://preview.tabler.io/index.html>
 * [four images](http://barbajs.org/demo/grid/index.html)
 * [trophy jekyll](http://thomasvaeth.com/trophy-jekyll/) nice template for jekyll
 
@@ -934,6 +935,7 @@ Email templates
 * <http://daneden.me/animate> animate.css you need to add `class='animated
   fadeIn`. Check how it looks in Mac Safari.
 * <https://alexcambose.ro/motus/#/demos/svg> animate on scroll
+* <http://daybrush.com/scenejs/>
 
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>
@@ -1009,6 +1011,26 @@ see [ci cd post]{{ site.baseurl }} {% post_url 2018-04-10-continuous-delivery-in
 * https://www.nsupdate.info to run on ubuntu just `sudo apt-get install
 ddclient` and provide config params (or update `/etc/ddclient.conf`) and it
 will run every hour
+Example installing ddclient on ubuntu for cloudflare
+https://github.com/mcblum/ddclient-cloudflare-ubuntu
+```
+# /etc/ddclient.conf
+use=web, web=checkip.dyndns.org/, web-skip='IP Address' # found after IP Address
+
+## CloudFlare (www.cloudflare.com)
+##
+protocol=cloudflare,        \
+zone=premesti.se,            \
+ttl=1,                      \
+login=email@trk.in.rs,     \
+password=123123             \
+premesti.se,www.premesti.se
+```
+
+debug with
+```
+ddclient -daemon=0 -debug  -noquiet
+```
 
 Problem with dynamic dns is that their servers (hosted on AWS) sometime fails.
 Currently it shows correct ip

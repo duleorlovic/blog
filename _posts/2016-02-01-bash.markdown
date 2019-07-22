@@ -90,7 +90,7 @@ Here are some *Edit* -> *Keyboard Shortcuts*:
 * alt+1 : switch between tabs
 
 To copy line, you need to select with mouse and use *ctrl+shift+c*
-(*ctrl+shift+v* to pase). Or with `xsel` you can bind to ctrl+l:
+(*ctrl+shift+v* to paste). Or with `xsel` you can bind to ctrl+l:
 
 ~~~
 # .bashrc
@@ -462,6 +462,12 @@ it will be in `tmp/db.dump`
   fi
   ~~~
 
+  ```
+  SIZE=`wmctrl -d | awk '{print $6}'`
+  # http://stackoverflow.com/questions/23663963/split-string-into-multiple-variables-in-bash
+  IFS=',' read vp_width vp_height <<< $SIZE
+  ```
+
   Find other test helpers in `man test`.
   Use conditional `or ||` and `and &&` and `group ()` and negative `!`
 
@@ -622,6 +628,14 @@ You can find substring
   }
   win_width=`expr $(monitor_size) / 36` # 7200 / 36 = 200
   ```
+
+  To use arithmetic expansion (add, multiplication, substraction, plus, minus),
+  you can use backticks and expr
+  http://tldp.org/LDP/abs/html/arithexp.html
+  ```
+  c = `expr $a + 2`
+  ```
+  or double parentheses `c=$(($a + 2))`
 * print variable with `$variable_name` (without brackets). If you need to
   concatenate with other string you can use curly braces
   `${variable_name}other_string`

@@ -305,8 +305,9 @@ https://alligator.io/html/dialog-element/
 Use `<fieldset>` to group several input fields and set caption on this part with
 `<legend>`.
 When it is disabled, all nested input fields can not be used, as they were
-disabled, but I see that they will be submitted so you need to disable manually
-each input field.
+disabled. In Rails 6 there was an bug when using remote: true, all nested input
+fields are submitted so in this case you need to disable manually each input
+field.
 
 Another problem with `f.fields_for :venue` is that if model persists, this will
 add some hidden `venue_attributes[:id] = id`
@@ -388,7 +389,8 @@ instead of polymorhic, we could use separate columns `isp_id`, `operator_id`,
 for specific form inputs to ask, you can use fieldset and disable those which
 are not necessary.
 
-Oneliner form is using button_to with: input label, target url, form class...
+Oneliner form is using button_to with params: label, url, form class
+
 ```
 <%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %>
 ```

@@ -298,7 +298,7 @@ shorter `:set rnu`. To disable you can `:set norelativenumber`
 * `dE` removes to the End of the string
 * `vit` inner or `vat` outer visual select (including html tag) `:h tag-blocks`
   * repeat `at` to select wraped tag
-  * jump to closing (Oposite) html tag with `o`. more on `:help
+  * jump to closing (Oposite) html tag with `o` in visual mode. more on `:help
   visual-operators` `:help v_it`
   * `vap` select paragraph (until next empty line, including that empty line)
   * `dst` delete surround tag with vim surround plugin.
@@ -359,7 +359,7 @@ only solution is to merge two line into one
 
 # Motion in visual mode
 
-* `'<` to the first line (`\`<` char) of last selected visual area. Note that
+* `'<` to the first line of last selected visual area. Note that
 you need to exit current visual area and than jump to first or last line/char
 * `gv` to select previous selected visual area
 
@@ -372,7 +372,27 @@ ragtag plugin in insert mode:
 # Copy paste
 
 * `"+y` copy visual selection to system clipboard, ubuntu should run `sudo
-apt-get install vim-gtk`.
+apt-get install vim-gtk`. or `vim-gnome`. On ubuntu 18 that package is outdated
+so I need to compile from source https://stackoverflow.com/questions/37079424/ubuntu-16-04-lts-cant-enable-xterm-clipboard-in-vim/37079474#37079474
+```
+sudo apt-get build-dep vim
+git clone https://github.com/vim/vim.git vim_source
+cd vim_source/
+./configure \
+    --enable-perlinterp=dynamic \
+    --enable-pythoninterp=dynamic \
+    --enable-rubyinterp=dynamic \
+    --enable-cscope \
+    --enable-gui=auto \
+    --enable-gtk2-check \
+    --enable-gnome-check \
+    --with-features=normal \
+    --with-x \
+    --with-compiledby="DevNull <darkstar@/dev/null>" \
+    --with-python-config-dir=/usr/lib/python2.7/config-$(uname -m)-linux-gnu
+make -j8
+sudo checkinstall
+```
 * select which register to use with (use character not number) for example:
 yank link to register `a` and paste: `"add` `"ap"`. When deleting or changing it
 will override default register, so you need to select some other register, like
@@ -522,6 +542,8 @@ snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
 keyword
 * black screen is caused to silent command
   https://github.com/vim/vim/issues/1253 use `:redraw!`
+
+<silent> is good if you are having mappings launch ex commands.
 
 # Books, videos tutorials
 
@@ -925,6 +947,7 @@ hi ALEWarning m
 
 # Folding
 
+In visual mode you can select and run `:fold` collapse expand
 You can hide copy right sections of other comments.
 
 ~~~

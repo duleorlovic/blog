@@ -655,49 +655,7 @@ string need + or something). To simplify I just put space between first
 * if you need to show **\`** than use backslash or put a space ` so it
 wont be applied`
 
-# Liquid Tags
-
-[Liquid for
-designers](https://github.com/Shopify/liquid/wiki/Liquid-for-Designers) and
-<http://shopify.github.io/liquid/> are all docs you need.
-<http://cheat.markdunkley.com/>
-
-* `{ % assign my_var = [1, 2] %}` assigns some value to variable
-* `{ % capture my_id %} name-{ { item.name | handleize }} { % endcapture %}`
-  captures block text
-* `{ % include some_file id="some_value" %}` include snippet, you can pass
-arguments to include and use it inside like `{ % if include.id %} { % assign
-target_page = page.[include.id] %} { % endif %}`
-* `{ % comment %} my comment { % endcomment %}`
-* `{ % if statement %} { % elsif false %} { % endif %}` where statement can be
-  * comparison `==`, `!=`, `<=`
-  * arrays `contains`
-  * boolean operator `and` `or`
-  * There is no negative, not `!` and there is no parentheses (use nested if)
-* `{ % for item in array %} { % break %} { % continue %} { % endfor %}`
-  * when iterating a hash `item[0]` is key and `item[1]` is value
-  * iterating over ranges `{ % for i in (1..item.quantity) %}` or `{ % for
-  member in ste.data.members %}`
-  * helper variables inside loop `forloop.length`, `forloop.index0`,
-  `forloop.last`
-  * 3 optional arguments `{ % for item in array limit:2 offset:3 reversed %}`
-  * you can use `{ % else %}` to show when array is empty
-* `{ % cycle 'blue', 'white', 'red' %}` will repeat those colors, Usefull when
-iterating for bootstrap row col
-
-  ~~~
-    {% for product in site.data.products %}
-      {% cycle '<div class="row">', '', '' %}
-        <div class="col-sm-4">
-        ...
-        </div>
-      {% cycle '', '', '</div>' %}
-    {% endfor %}
-  ~~~
-
-* `{ % case my_var %} { % when 'dule' or 'mile' %} { % else } { % endcase %}`
-
-Internal jekyll tags
+# Internal jekyll tags
 
 [link](https://jekyllrb.com/docs/templates/#links)
 Note that you do not have to use quotes: `'` or `"`.
@@ -713,46 +671,6 @@ relative_url }}`
 }}{ % link news/index.html %}`. Parameter for `link` should contain extension
 (for example `.md`).
 
-# Types:
-
-* boolean, nil, string, integer, array and hash
-  * integer can be incremented `{ % increment my_int %}` or `{ % decrement
-  my_int %}`
-  * range is defined similar to ruby `{ % for i in (1..my_int) %}`
-  * to use sum operation, for example add two number you can use
-
-  ~~~
-  {% assign number_of_columns = 3 | minus: site.data.footer_links.size %}
-  { % for i in (1..number_of_columns) %}
-  ~~~
-
-* array elements can be accessed only like `my_array[2]`
-* hash elements can be accessed with `my_hash['name']` or `my_hash.name`
-* you can call `my_array.size` or `my_hash.size`
-* all yml files from `_data` folder will be available under
-`site.data.file_name.item`
-
-# Filters
-
-Filters or pipes is used to process data inside `{ { }}`. Filter nam could be
-followed with colon `:` to pass additinal params, for example `{ { page.path |
-split: '/' | first | alert }}`
-
-* [strings](https://help.shopify.com/themes/liquid/filters/string-filters)
-  `append`, `prepend`, `capitalize`, `date`, `escape`, `lstrip`, `replace`,
-  `strip_html`, `truncate`, `url_encode`
-  * `{ { page.date| date: 'B %d, %Y' }}` or `{ { page.date | date_to_string }}`
-  or `{ { page.date | date: '%d-%m-%Y]]`
-* [arrays](https://help.shopify.com/themes/liquid/filters/array-filters)
-`first`, `join`, `last`, `map`, `reverse`, `size`, `slice`, `uniq`
-  * `map` uses string as argument (`" "` are required). Another example is
-  [liquid github](https://shopify.github.io/liquid/filters/map/)
-  * create with `{ % assign my_array = "ants, bugs, bees, bugs, ants" | split:
-  ", " %}`
-
-If you need to assign filter output to variable you can use `{ % capture
-my_var %} { { var | my_filter }} { % endcapture %}` or use it inside 
-assign tag `{ % assign all_categories = site.posts | map: "categories" %}`.
 
 Note that in liquid version 4 you can use `concat` filter but it is not
 supported in jekyll 3.4 (liquid 3.0.6) [concat
@@ -764,26 +682,6 @@ You should point to latest jekyll from github which uses Liquid 4
 # get latest jekyll which uses liquid 4
 gem "jekyll", github: 'jekyll/jekyll'
 ~~~
-
-# Debug
-
-Debug liquid is simply output `{ { my_var | inspect }}`
-
-Somehow if I use `contains_` variable name
-
-~~~
-{ % assign contains_sidebar = true %}
-{ { contains_sidebar }}
-~~~
-
-than I got error like:
-
-~~~
-[:comparison, "contains"] is not a valid expression in "contains_sidebar ==
-false" in /_layouts/page.html`
-~~~
-
-Show I rename variable `{% assign show_sidebar = true %}`
 
 # Adding tag, filter
 

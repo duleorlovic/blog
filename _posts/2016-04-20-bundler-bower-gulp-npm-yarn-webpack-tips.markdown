@@ -50,6 +50,18 @@ To remove all gems from current gemset
 rvm gemset empty
 ~~~
 
+# Creating gems
+
+
+```
+# create initial gem files
+bundle gem datatables_rails_helpers
+# bundle the gem
+gem build rails-datatables-helpers.gemspec
+# release
+gem release
+```
+
 # RVM
 
 Install specific version and patch level `rvm install 2.3.3-p451`

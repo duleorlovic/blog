@@ -261,7 +261,7 @@ Go to Partners -> Apps -> Extensions -> Add an admin link
 
 # Modify online store using ScriptTag
 
-Remote javascript can be loaded on pages of shop's storefront so show owner do
+Remote javascript can be loaded on pages of shop's storefront so shop owner do
 not need to change theme files directly (and to revert changes when uninstalling
 your app).
 
@@ -329,98 +329,6 @@ MULTI VENDOR LOKAL SELLER
 * supplier offering storefronts to distributors/end_stores. not possible with
 one store since price should be different to each distributor.
 
-
-# Theme customizations with ThemeKit
-
-Install with commands from <https://shopify.github.io/themekit/>. Create private
-app for your store and add read/write access to Theme templates and theme
-assets. Save password to `SHOPIFY_PRIVATE_APP_PASSWORD`. Find theme id and save
-to `SHOPIFY_THEME_ID`. We will use it to create config.yml.
-
-~~~
-theme configure --password=$SHOPIFY_PRIVATE_APP_PASSWORD --store=$SHOPIFY_STORE_URL --themeid=$SHOPIFY_THEME_ID
-theme download
-theme upload
-theme open
-theme watch
-~~~
-
-Sections for other pages than home (static sections)  should be uncluded in a
-code, for example on cart page in `templates/cart.liquid` we can insert `{ %
-section 'my-section' %}`.
-
-~~~
-# sections/my-section.liquid
-<div id="my-section">
-  <h1>{{ section.settings.header-id }}</h1>
-  <h3>{{ section.settings.content-id }}</h3>
-</div>
-{ % schema %}
-  {
-    "name" : "My Section",
-    "settings": [
-      {
-        "id": "header-id",
-        "label": "Header text",
-        "type": "text",
-        "default": "Header text here"
-      },
-      {
-        "id": "content-id",
-        "label": "Content text",
-        "type": "richtext",
-        "default": "<p>Add here</p>"
-      }
-    ]
-  }
-{ % endschema %}
-
-{ % stylesheet %}
-{ % endstylesheet %}
-
-{ % javascript %}
-{ % endjavascript %}
-~~~
-
-For home page (dynamic section) we need to define additional property `presets`.
-There is also a `block` type of sections.
-
-~~~
-{ % schema %}
-  {
-    "name" : "My Section",
-    "settings": [
-    ],
-    "presets": [
-      {
-        "name": "Call to action",
-        "category": "Call to action"
-      }
-    ]
-  }
-{ % endschema %}
-~~~
-
-We can have several types:
-<https://help.shopify.com/themes/development/theme-editor/settings-schema#input-setting-types>
-simple: text, richtext, image_picker, radio, select, checkbox, range
-special: product, url, page, collection (it contains 'Edit collection' link) ...
-
-# Adding custom properties
-
-You need to pass `properties[name-of-property]` to the `/card/add`. If the
-`name-of-property` starts with underscore `_` than it wont be shown on checkout.
-You can use
-<https://ui-elements-generator.myshopify.com/pages/line-item-property>
-to generate something like
-
-~~~
-<p class="line-item-property__field">
-  <label>Layout</label><br>
-  <input required class="required" type="radio" name="properties[Layout]" value="left"> <span>left</span><br>
-  <input required class="required" type="radio" name="properties[Layout]" value="right"> <span>right</span><br>
-</p>
-~~~
 
 # Publishing your app
 

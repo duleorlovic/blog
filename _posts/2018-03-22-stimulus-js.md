@@ -126,3 +126,7 @@ export default class extends Controller {
   }
 }
 ~~~
+
+Example of adding Rxjs to stimulus so user on slow connections get latest
+results, do not load if they clicked on the same link and show loader
+https://www.mikewilson.dev/posts/stimulus-and-rxjs-for-a-spa-like-experience/

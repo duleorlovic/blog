@@ -598,9 +598,9 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 # Puma
 
 Puma is now default webserver on rails. But by default it runs in single mode
-WEB_CONCURRENCY=1 so on heroku it will allow RAILS_MAX_THREADS connections if GIL is
-not trigered.
-You can simulate slow connection with `sleep 10`, it does not triggel GIL.
+WEB_CONCURRENCY=1 so on heroku it will allow RAILS_MAX_THREADS connections if
+GIL is not trigered.
+You can simulate slow connection with `sleep 10` (sleep does not trigger GIL).
 
 ~~~
 export RAILS_MAX_THREADS=1
@@ -730,6 +730,22 @@ heroku pg:reset
 heroku pg:push buyers_development postgresql-animate-86842
 ~~~
 
+Using fixtures on heroku is not allowed
+```
+WARNING: Rails was not able to disable referential integrity.
+
+This is most likely caused due to missing permissions.
+Rails needs superuser privileges to disable referential integrity.
+
+    cause: PG::InsufficientPrivilege: ERROR:  permission denied: "RI_ConstraintTrigger_a_16717182" is a system trigger
+
+rails aborted!
+```
+
+so you can load localy and push to production.
+```
+```
+
 If you need to provision new database (upgrade from free to hobby) than you can
 use pg copy
 https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases#upgrading-with-pg-copy
@@ -831,10 +847,10 @@ hequests_in_system = requests per second X average_response_time (115 req/s *
 utilization = requests_in_system / how_many_workers
 for example = 115 req/s X 147ms response / 45 workers = 37%
 
-Use 3 WEB_CONCURRENCY workers and 3-5 RAILS_MAX_THREADS (not more since each thread
-need connection to database, and use some on memory).
+Use 3 WEB_CONCURRENCY workers and 3-5 RAILS_MAX_THREADS (not more since each
+thread need connection to database, and use some on memory).
 https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#workers suggests 2-4 workers
-`sleep` also do not lock GIL (so all threads are working).
+`sleep` also does not lock GIL (so all threads are working).
 > On MRI, there is a Global Interpreter Lock (GIL) that ensures only one thread
 > can be run at any time. IO operations such as database calls, interacting with
 > the file system, or making external http calls will not lock the GIL. Most
@@ -845,6 +861,52 @@ https://devcenter.heroku.com/articles/scaling#autoscaling
 
 Also increase database, redis and memcached connections.
 Heroku postgresql hobby-basic has limit of 20 connections (enought for 3x5=15)
+
+
+Test using siege http://jakeyesbeck.com/2019/06/18/ruby-processes-and-threads/
+```
+# app/controllers/index_controller.rb
+class IndexController < ApplicationController
+  def index
+    interval_sleep
+    render json: { hello: :there }
+  end
+
+  def interval_sleep
+    # 40ms - 200ms
+    sleep(rand(2..10).to_f / 50)
+  end
+end
+```
+
+```
+# bin/siege.sh
+#! /bin/bash
+
+CONCURRENCY=30
+URL='http://localhost:3000/index'
+CONTENT_TYPE='application/json'
+REPS=20
+
+siege -b --content-type $CONTENT_TYPE -c $CONCURRENCY -r $REPS $URL
+
+# flags:
+#   -b - benchmark means no gap between requests
+#   -c - concurrency is number of requests to make at one time
+#   -r - repititions is the number of times to run
+#         the same amount of concurrent requests
+```
+
+`htop` can show memory and proccessor usage (`0.4 0.5 0.6` which means last 1
+min, last 5 and last 10 mins average load).
+
+Puma threads RAILS_MAX_THREADS is important on IO blocking operations like
+GET requests, so greater number of threads means greater throughput, but
+increasing more than 5-10 threads does not have effects.
+
+Puma workers ENV.fetch("WEB_CONCURRENCY") { 2 } is important for CPU intensive
+code but it utilizes 2x db connections and 2x memory since 2x processes is used.
+
 
 # Google app engine
 

@@ -686,6 +686,12 @@ Common Graph stuctures:
 * ignore case is with `(?i)` but for cyrilic we need `(?iu)`, for example `MATCH
   (d:Covek) WHERE d.nameL =~ '(?iu).*DUŠAN.*' RETURN d` https://github.com/neo4j/neo4j/issues/1983
 
+* use `gem 'rack-mini-profiler'` to see actual numbers of queries
+* use kaminari for pagination... use proxy_as instead of changing the scope to
+  associations
+  ```
+  ```
+
 # Errors
 
 Error `defined for a second time. Associations can only be defined once` is when

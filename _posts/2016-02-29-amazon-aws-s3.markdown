@@ -14,7 +14,8 @@ for *Programmatic read and write permissions* with name for example
 **full_access_to_video_uploading_demo** . Keep in mind that underscore _ is not
 equal hyphen - .
 Carrierwave and paperclip need something more than put, get and delete, so I
-added `s3:*` below `"s3:DeleteObject"`.
+added `s3:*`.
+Version string `"Version": "2012-10-17"` should not be changed.
 
 ~~~
 {
@@ -46,6 +47,47 @@ added `s3:*` below `"s3:DeleteObject"`.
 }
 ~~~
 
+On s3 you can leave checked `Block public access` but you have to enable cors if
+you have javascript upload.
+
+CORS
+
+When you upload files using action storage ie [directly on S3](
+{% post_url 2015-12-24-ionic-direct-aws-s3-upload %}) that means that our
+javascript code needs to send data but browser prevents with for example error
+
+~~~
+XMLHttpRequest cannot load
+https://duleorlovic-test-southeast-1.s3.amazonaws.com/. Response to preflight
+request doesn't pass access control check: No 'Access-Control-Allow-Origin'
+header is present on the requested resource. Origin 'http://localhost:9000' is
+therefore not allowed access. The response had HTTP status code 403.
+~~~
+
+We need to go Bucket -> Properties -> Permissions -> Add Cors configuration and
+add `<AllowedMethod>PUT</AllowedMethod>` and `<AllowedHeader>*</AllowedHeader>`
+to the provided example:
+
+~~~
+<CORSConfiguration>
+    <CORSRule>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>PUT</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <MaxAgeSeconds>3000</MaxAgeSeconds>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+~~~
+
+and you can test as soon as you save cors configuration.
+This error also occurs when we mismatch bucket_name or region. To test if bucket
+is working, follow the link from the error.
+
+Note that only one host or all hosts `*` can be defined. You can not allow two
+hosts.
+
 ## Add admin user to the account
 
 You can create IAM user with PowerUserAccess. On
@@ -61,7 +103,13 @@ Select PowerUserAccess
 Create user
 Click on Send email
 Also copy the password and put in email (it will be changed when I login).
-Send me the email...
+Send me the email.
+
+IAM user can sign in on https://duleorlovic.signin.aws.amazon.com
+
+PowerUserAccess can not create new API keys.
+PowerUserAccess can change S3 Permissions Block public access and CORS
+configuration.
 
 # Website hosting
 
@@ -175,42 +223,6 @@ with name `@` (or you `domain.com`) and value `Endpoint`.
   net::ERR_INSECURE_RESPONSE` error.
 
 
-# CORS
-
-Sometime you need to upload files [directly on S3](
-{% post_url 2015-12-24-ionic-direct-aws-s3-upload %}) which means that our
-javascript code needs to send data but browser prevents with this error
-
-~~~
-XMLHttpRequest cannot load
-https://duleorlovic-test-southeast-1.s3.amazonaws.com/. Response to preflight
-request doesn't pass access control check: No 'Access-Control-Allow-Origin'
-header is present on the requested resource. Origin 'http://localhost:9000' is
-therefore not allowed access. The response had HTTP status code 403.
-~~~
-
-We need to go Bucket -> Properties -> Permissions -> Add Cors configuration and
-add `<AllowedMethod>POST</AllowedMethod>` and `<AllowedHeader>*</AllowedHeader>`
-to the provided example:
-
-~~~
-<CORSConfiguration>
-    <CORSRule>
-        <AllowedOrigin>*</AllowedOrigin>
-        <AllowedMethod>GET</AllowedMethod>
-        <AllowedMethod>POST</AllowedMethod>
-        <MaxAgeSeconds>3000</MaxAgeSeconds>
-        <AllowedHeader>*</AllowedHeader>
-    </CORSRule>
-</CORSConfiguration>
-~~~
-
-This error also occurs when we mismatch bucket_name or region. To test if bucket
-is working, follow the link from the error.
-
-Note that only one host or all hosts `*` can be defined. You can not allow two
-hosts.
-
 # Tools
 
 Firefor plugin [S3Fox](https://www.youtube.com/watch?v=L1cqzEYYUB0) firefox
@@ -299,6 +311,31 @@ When uploading PDF in paperclip there is rails validation error because of
 imagemagic `Paperclip::Errors::NotIdentifiedByImageMagickError` fix is to update
 local `sudo vi /etc/ImageMagick-6/policy.xml` and add `read|write`
 https://github.com/thoughtbot/paperclip/issues/2223#issuecomment-428862815
+
+# Active storage
+
+You need to add gems
+```
+gem 'aws-sdk-s3', require: false
+gem 'image_processing', '~> 1.2'
+```
+
+In credentials you need to add
+```
+aws:
+  access_key_id: 123
+  secret_access_key: 123
+````
+and config for storage:
+```
+# config/storage.yml
+amazon:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  region: us-east-1
+  bucket: duleorlovic-test-us-east-1
+```
 
 # Tips
 

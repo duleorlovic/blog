@@ -63,6 +63,11 @@ Defining fixtures:
   No need to use brackets if you have `belongs_to :associated, class_name:
   'Activity'`
 
+* `enum parent_relations: %i[child]` can be set using erb
+  ```
+  child:
+    parent_relation: <%= User.parent_relations[:child]
+  ```
 * `created_at`, `updated_at`, `created_on` and `updated_on` is automatically
   Time.now
 * use ERB for dynamic creation. Note that you should use fixed dates instead of
@@ -133,6 +138,7 @@ Defining fixtures:
 
 ```
 # db/seed.rb
+logger = Logger.new(STDOUT)
 Rake::Task['db:fixtures:load'].invoke
 # https://github.com/rails/rails/blob/master/activerecord/lib/active_record/fixtures.rb
 already_proccessed = []
@@ -145,15 +151,15 @@ Dir.entries("#{Rails.root}/test/fixtures").each do |file_name|
     klass = file_name[0..-5].singularize.camelize
     next if already_proccessed.include? "#{klass}-#{column}"
 
-    puts "klass=#{klass} column=#{column}"
+    logger.info "klass=#{klass} column=#{column}"
     klass.constantize.find_each do |item|
-      item.send "#{column}=", item.send(column).tr('_', ' ')
+      item.send "#{column}=", item.send(column).humanize
       item.save # email can not be saved with spaces
     end
     already_proccessed.append "#{klass}-#{column}"
   end
 end
-puts 'db:seed and db:fixtures:load completed'
+logger.info 'db:seed and db:fixtures:load completed'
 ```
 * to set devise password, you can add encrypted password on specific items
   ```

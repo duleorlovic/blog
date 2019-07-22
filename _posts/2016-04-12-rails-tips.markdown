@@ -151,9 +151,10 @@ So you need to separate `default_values_on_create` and
 
 ~~~
 # do not use after initialize since it will be run on every load
-> after_initialize :default_values_on_initialize
+# after_initialize :default_values_on_initialize
 before_validation :_default_values_on_create, on: :create
 before_validation :_default_values_on_update, on: :update
+before_save :_clear_unchecked_values
 
 private
 
@@ -552,27 +553,31 @@ heroku pg:backups:download # it will download to latest.dump
 
 Save it for example `tmp/b001.dump`.
 
+## Restore database
+
 You can dump LOCAL database with `pg_dump`. Note that this is plain sql, but
 heroku dump is binary format (size is much smaller).
 
 ~~~
-pg_dump $DATABASE_NAME > $DUMP_FILE
-#
-# or heroku style, replace: mypassword myuser and mydb
-PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
+export DUMP_FILE=tmp/b001.dump
+export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
+
+# pg_dump $DATABASE_NAME > $DUMP_FILE
+# we must use heroku style, replace: mypassword myuser and mydb
+# PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
 pg_dump -Fc --no-acl --no-owner $DATABASE_NAME > $DUMP_FILE
 scp $DUMP_FILE 192.168.1.3:
 ssh 192.168.1.3
+sudo cp b001.dump /var/www/html/
+
 heroku pg:backups restore --confirm move-index http://trkcam.duckdns.org/b001.dump DATABASE_URL
+heroku pg:backups
 ~~~
 
-## Restore database
 
 Restore from local textual and binary dump
 
 ~~~
-export DUMP_FILE=tmp/b001.dump
-export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
 
 chmod a+r $DUMP_FILE
 
@@ -750,7 +755,8 @@ Add index `add_index :users, :email_address, unique: true`...
 if you want to add index in different step (not in `t.references :c, index:
 false` because name is too long (error like `Index name 'index_table_column' on
 table 'table' is too long; the limit is 64 characters`) than you can use
-different name NOTE that you need to use exact column name (with `_id`)
+different name in separate add_index command (can not rename in same command).
+NOTE that you need to use exact column name (with `_id`)
 `add_index :users, :company_id, name: 'index company on users'`
 https://github.com/gregnavis/active_record_doctor to help you find columns
 without index
@@ -959,20 +965,20 @@ class AddUserToLeads < ActiveRecord::Migration
 end
 ~~~
 
-For polymorphic associations `owner_id` and `owner_type` you can create in
-migration `rails g model project owner:references{polymorphic}`
+For polymorphic associations `projectable_id` and `projectable_type` you can create in
+migration `rails g model project projectable:references{polymorphic}`
 
 ~~~
 class Organization < ActiveRecord::Base
-  has_many :projects, :as => :owner
+  has_many :projects, :as => :projectable
 end
 
 class User < ActiveRecord::Base
-  has_many :projects, :as => :owner
+  has_many :projects, :as => :projectable
 end
 
 class Project < ActiveRecord::Base
-  belongs_to :owner, :polymorphic => true
+  belongs_to :projectable, :polymorphic => true
 end
 ~~~
 
@@ -1004,15 +1010,15 @@ When you create you can use `references` and `polymorphic: true`
 If you add one by one column than you need to add double index:
 
 ~~~
-t.string :owner_type
-t.integer :owner_id
+t.string :projectable_type
+t.integer :projectable_id
 
 # Bad: This will not improve the lookup speed
-add_index :projects, :owner_id
-add_index :projects, :owner_type
+add_index :projects, :projectable_id
+add_index :projects, :projectable_type
 
 # Good: This will create the proper index
-add_index :projects, [:owner_type, :owner_id]
+add_index :projects, [:projectable_type, :projectable_id]
 ~~~
 
 You can add unique index on some existing columns (to see
@@ -3466,6 +3472,14 @@ unless item.save` you can move important things in front `item.save ||
   gem 'country_select'
   ```
 
+  to use with bootstrap_form
+  ```
+        <%= f.form_group :country_iso_code, label: { text: 'Country' } do %>
+          <%= f.country_select :country_iso_code, { iso_codes: true, include_blank: 'Select Country' }, class: 'form-control' %>
+        <% end %>
+  ```
+  To select currency
+
   ~~~
   <%= f.form_group :country, label: { text: 'Country' } do %>
     <%= f.country_select :country, { iso_codes: true, include_blank: 'Select Country'}, class: 'form-control', 'data-select-currency-based-on-country': '#currency-select', 'data-countries-and-currency-codes': ISO3166::Country.all.inject({}) {|a,c| a[c.alpha2]=c.currency&.code;a }.to_json %>
@@ -3675,6 +3689,7 @@ end
 * rails routes instead of grep you can search by `rails routes -g user` but only
   for rails > 5.2.1
 * contribute to rails guide https://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html#contributing-to-the-rails-documentation
+  There you can find commands how to run tests.
   Clone the form of the https://github.com/rails/rails and update
   `guides/source/*.md` files.
 
@@ -3682,8 +3697,17 @@ end
   cd guides
   bundle install
   bundle exec rake guides:generate
-
   ```
+  Run specific test and include byebug
+  ```
+  cd actionview
+  bundle exec ruby -w -Itest -rbyebug actionview/test/template/form_options_helper_test.rb -n test_select_with_include_blank_false_and_required
+  ```
+  Commit on your fork and some branch_name. In description of pull requests you
+  can include code example
+  ```
+  ```
+
 * Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
   💯% sure.
 * when bcrypt is updated you need to update secrets credentials with `rails
@@ -3701,4 +3725,38 @@ end
 * dhh videos On Writing Software Well
   https://www.youtube.com/watch?v=wXaC0YvDgIo&list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx
   ```
+  ```
+* actiontext is included in Rails 6 but you need to add stylesheets
+  ```
+  # app/assets/stylesheets/application.sass
+  //= require actiontext
+  ```
+
+  and you can use
+  ```
+  # app/models/event.rb
+    has_rich_text :content
+
+  # app/views/events/_form.html.erb
+    f.rich_text_area :content
+
+  ```
+
+* on heroku default timeout is 30s and if requests takes more that that it will
+  timeout and no exception notification will be sent. You can use
+  https://github.com/sharpstone/rack-timeout to raise exception on 30s
+  ```
+  # config/initializers/rack_timeout.rb
+  # Heroku timeout is 30s
+  Rails.application.config.middleware.insert_before Rack::Runtime, Rack::Timeout, service_timeout: 30
+
+  # do not use same log file as Rails
+  Rack::Timeout::Logger.logger = Logger.new('log/timeout.log')
+  Rack::Timeout::Logger.logger.level = Logger::ERROR
+  ```
+
+  ```
+  # Gemfile
+  # raise timeout error before server timeouts
+  gem 'rack-timeout', require: 'rack/timeout/base'
   ```
