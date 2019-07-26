@@ -797,8 +797,8 @@ If you get errors like
 
 ~~~
 Received disconnect from 54.210.7.47 port 22:2: Too many authentication failures
-Connection to production.redirection.xceednet.com closed by remote host.
-Connection to production.redirection.xceednet.com closed.
+Connection to production.redirection.my-domain.com closed by remote host.
+Connection to production.redirection.my-domain.com closed.
 ~~~
 
 it might help to add username `ubuntu@`, like `ssh -i $PEM_FILE
@@ -1013,33 +1013,6 @@ To clear cache you can run on server
 ```
 redis-cli FLUSHALL
 ```
-
-# SSL on nginx using lets encrypt
-
-https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
-
-This super script is so good that you need just one command:
-
-```
-sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr-latin-premesti-se.trk.in.rs -d premesti.se -d www.premesti.se
-```
-
-Check if nginx is listening on port 443 for ssl https
-
-```
-sudo netstat -lptun | grep nginx
-```
-
-to check if it is accepting connections
-
-```
-nmap localhost
-# vi /etc/hosts to add mydomain.com
-curl https://mydomain.com
-```
-
-You can not `curl https://192.168.1.3` or `curl https://localhost` since
-certificate is not valid.
 
 # Sidekiq
 

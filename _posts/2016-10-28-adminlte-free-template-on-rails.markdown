@@ -536,7 +536,7 @@ class ActionView::TemplateRenderer
         # already notified
       else
         Rails.cache.write cache_key, Time.now
-        XceednetMailer.internal_notification(
+        UserMailer.internal_notification(
           "Adminlte Template does not exists for #{template.virtual_path}",
           template
         ).deliver_now

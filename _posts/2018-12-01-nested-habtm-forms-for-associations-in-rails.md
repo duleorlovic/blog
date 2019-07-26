@@ -309,6 +309,8 @@ disabled. In Rails 6 there was an bug when using remote: true, all nested input
 fields are submitted so in this case you need to disable manually each input
 field.
 
+https://github.com/rails/rails/issues/36728
+
 Another problem with `f.fields_for :venue` is that if model persists, this will
 add some hidden `venue_attributes[:id] = id`
 https://github.com/rails/rails/blob/fc5dd0b85189811062c85520fd70de8389b55aeb/actionview/lib/action_view/helpers/form_helper.rb#L1928
@@ -389,7 +391,7 @@ instead of polymorhic, we could use separate columns `isp_id`, `operator_id`,
 for specific form inputs to ask, you can use fieldset and disable those which
 are not necessary.
 
-Oneliner form is using button_to with params: label, url, form class
+Single line oneliner form is using button_to with params: label, url, form class
 
 ```
 <%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %>

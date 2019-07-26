@@ -76,7 +76,7 @@ line.
 Safe mode starts with `<c-x>`, and ends and keep all changes also with `<c-x>`.
 twice `<c-x>` will empty safe mode action list so you can store more.
 `<c-d>` undo all safe mode changes, while `/quit` does not.
-You can rewiev all safe mode changes (while you are in safe mode) with `/system
+You can review all safe mode changes (while you are in safe mode) with `/system
 history print`
 If you want to paste some commands, but autocompletion triggers some errors, you
 can go to Safe mode so autocompletion is triggered only on tab.
@@ -353,14 +353,13 @@ group them...
 HTTPS can not be redirected since it starts in the browser and it creates a
 socket destionation_ip:443/TCP and mikrotik intercepts that and can not provide
 valid certificate for this url, so hotspot can't redirect https to login page.
-Mikrotik can use certificate and redirect all https requests that are not on
-HSTS list.
+For non HSTS site Mikrotik can use self signed certificate for that domain and
+redirect https requests.
 
 https://mikrotik.com/documentation/manual_2.6/IP/Hotspot.html
 You can have two address pools (one for authenticated and one for non auth
 users) and ARP feature could be set to `reply-only` to prevent network access
 using static IP addresses.
-
 
 # Connect to Mikrotik
 
@@ -579,7 +578,7 @@ add name=admin
 # IP -> Hotspot -> Walled Garden IP List -> +
 # Dst. Address = 8.8.8.8
 # IP -> Hotspot -> Walled Garden IP List -> +
-# Dst. Address = xceednet.com (or ip address for older RouterOS)
+# Dst. Address = my-domain.com (or ip address for older RouterOS)
 /ip hotspot walled-garden
 add comment="place hotspot rules here" disabled=yes
 /ip hotspot walled-garden ip
@@ -805,12 +804,12 @@ https://wiki.mikrotik.com/wiki/Manual:Hotspot_HTTPS_example
 Https use secure connection (SSL/TLS handshake) with a server so request to
 https://www.google.com which is redirected at firewall level will not work with
 your server/proxy/router.
-Only think that user can do is to add Exception to install your certificate and
-use transparent web proxy.
-
-Even it is not possible to redirect https without warning, modern browsers
-(firefox 58) will show login button (link to 10.5.50.1/login) for hsts and non
-hsts site, so users can continue with login.
+https://forum.mikrotik.com/viewtopic.php?t=143219
+In corporate networks user can add Exception to install your certificate (that
+covers major domains like google.com facebook.com) and it can redirect (maybe it
+is using transparent web proxy)
+Modern browsers (firefox 58) will show login button (link to 10.5.50.1/login)
+for hsts and non hsts site, so users can continue with login.
 
 > Log in to network
 
@@ -822,6 +821,10 @@ hsts site, so users can continue with login.
 
 ![https redirect non hsts site]({{ site.base_url }}/assets/posts/https%20redirect%20for%20non%20hsts%20site.png)
 ![https redirect hsts site]({{ site.base_url }}/assets/posts/https%20redirect%20for%20hsts%20site.png)
+
+Also modern Android OS will automatically open login page when it is connected
+to wifi (probably it checks if redirection occurs to some well known site) and
+if you do not connect, it will disconnect from wifi network.
 
 Lets encrypt can be used to generate certs.
 https://www.ollegustafsson.com/en/letsencrypt-routeros/

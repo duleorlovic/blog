@@ -1,8 +1,99 @@
 ---
 layout: post
-title:  Free SSL for https on apache or nginx
 tags: https ssl apache nginx
 ---
+
+# SSL using lets encrypt
+
+https://certbot.eff.org/docs/what.html
+> Digital certificate uses a public key and a private key to enable secure
+> communication between a client program (web browser, email client, etc.) and a
+> server over an encrypted SSL (secure socket layer) or TLS (transport layer
+> security) connection.
+
+To install you can check instructions on https://certbot.eff.org or use
+`certbot-auto` command. It is usually like
+```
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+
+sudo apt-get install certbot python-certbot-apache
+```
+
+It will write to `/etc/letsencrypt`, `/var/log/letsencrypt` and
+`/var/lib/letsencrypt`.
+
+To just get certificate you can run `certbot certonly`.
+To select server which you are running add option like `certbot --apache` or
+`certbot --nginx`. It will find your domains from server configuration.
+To obtain certificate using 'stangalone' webserver `certbot --standalone` which
+will bind to port 80, you need to stop current apache server.
+
+https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
+This super script is so good that you need just one command:
+
+```
+sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr-latin-premesti-se.trk.in.rs -d premesti.se -d www.premesti.se
+```
+
+Check if nginx is listening on port 443 for ssl https
+
+```
+sudo netstat -lptun | grep nginx
+```
+
+to check if it is accepting connections
+
+```
+nmap localhost
+# vi /etc/hosts to add mydomain.com
+curl https://mydomain.com
+```
+
+You can not `curl https://192.168.1.3` or `curl https://localhost` since
+certificate is not valid.
+
+To see current obtained certificates
+https://certbot.eff.org/docs/using.html#managing-certificates
+```
+certbot certificates
+```
+
+If you have forced ssl on rails server than to obtain certificate, but if server
+is already running it will redirect to https://new-domain and reject since it is
+not yet configured.
+Also `curl 123.123.123.123` or `curl trk.in.rs` will not give any response since
+it returns http 301 Moved permanently to https, which you can check with `curl
+-I trk.in.rs`, and you can see response on `curl https://123.123.123.123`.
+Also redirection could be on cloudflare so you need to disable Crypto->Always
+use https. Disabling proxy (use only dns = grayed cloud) did not help for root
+domain (only subdomain stopped redirection to https when Crypto-Always use https
+is enabled) so you can leave Proxy On.
+Certbot authenticator is checking subdomain and also root domain, so you need to
+have working dns for root domain.
+
+```
+sudo certbot certonly --nginx -d main.trk.in.rs
+```
+
+It will create 4 files and you can read cert.pem
+```
+sudo ls /etc/letsencrypt/live/main.trk.in.rs
+cert.pem  chain.pem  fullchain.pem  privkey.pem
+
+sudo keytool -printcert -file /etc/letsencrypt/live/main.trk.in.rs/cert.pem | grep trk
+```
+
+https://letsencrypt.org/docs/rate-limits/
+Rate limits for failed attempt is 5 per hostname per hour.
+Limit for renewal (or duplicate) is 5 per week per combination of hostnames in
+certificate.
+Main limit is per registered domain (50 per week). You can include up to 100
+names per certificate, so it is possible that you generate certificates for 5000
+unique subdomains per week.
 
 # Lets encrypt for heroku
 
@@ -54,125 +145,7 @@ Location: https://www.premesti.se/
 ~~~
 
 
-# Old way
-
-Following [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-with-a-free-signed-ssl-certificate-on-a-vps) here are some screenshots from Startssl how I registered [www.kontakt.in.rs](http://www.kontakt.in.rs).
-
-# StartSSL
-
-StartSSL is not working since they issues certs for sites that did not check.
-Here is example only for reference.
-
-Go to the [www.startssl.com](http://www.startssl.com/) and on left menu find: *StartSSL Products* > *StartSSL Free* . Before you can get the keys, you need to authenticate yourself. Go to [Certificate Control Panel](https://www.startssl.com/?app=12). There are links for login using existing keys, but we will use signup.
-
-# Signup and install browser certificate
-
-![Sign up form]({{ site.baseurl }}/assets/post_free_ssl/1_signup_form.jpg)
-
-than you will receive a code in email, and it should be pasted on
-
-![Somplete registration]({{ site.baseurl }}/assets/post_free_ssl/2_complete_registration.jpg)
-
-Wait until they authorize your email account
-
-![Notice for review]({{ site.baseurl }}/assets/post_free_ssl/3_notice_for_review.jpg)
-
-Once your account is approved and you receive email, click on link provided and copy verification code
-
-![Verify approved request]({{ site.baseurl }}/assets/post_free_ssl/4_verify_approved_request.jpg)
- 
-Generate private key
- 
-![Generate private key]({{ site.baseurl }}/assets/post_free_ssl/5_generate_private_key.jpg)
- 
-Install certificate
- 
-![Install certificate]({{ site.baseurl }}/assets/post_free_ssl/6_install_certificate.jpg)
- 
-Congratulations for browser certificate
- 
-![Congratulations for browser certificate]({{ site.baseurl }}/assets/post_free_ssl/7_congratulations_for_browser_certificate.jpg)
-
-
-# Validation wizard for domain
-
-Pick web ssl
-
-![Chose web ssl]({{ site.baseurl }}/assets/post_free_ssl/validation_wizard1_chose_web_ssl.jpg)
-
-Enter domain name
-
-![Enter domain name]({{ site.baseurl }}/assets/post_free_ssl/validation_wizard2_enter_domain_name.jpg)
-
-Choose email
-
-![Choose email]({{ site.baseurl }}/assets/post_free_ssl/validation_wizard3_choose_email.jpg)
-
-Verify email
-
-![Verify email]({{ site.baseurl }}/assets/post_free_ssl/validation_wizard4_verify_email.jpg)
-
-Success
-
-![Success]({{ site.baseurl }}/assets/post_free_ssl/validation_wizard5_success.jpg)
-
-# Certificates wizard
-
-Pick web ssl
-
-![chose web ssl]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard1_chose_web_ssl.jpg)
-
-Enter password
-
-![Enter password]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard2_enter_password.jpg)
-
-Save **ssl.key**
-
-![save ssl.key]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard3_save_ssl_key.jpg)
-
-Pick domain
-
-![Select domain]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard4_select_domain.jpg)
-
-Add subdomain www
-
-![Add subdomain www]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard5_add_subdomain_www.jpg)
-
-Processing
-
-![Processing]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard6_processing.jpg)
-
-Additinal check
-
-![Additional check]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard7_additional_check.jpg)
-
-
-# Final cert files
-
-After you got email that certificate is ready, go to toolbox and download it
-
-![Download certificate]({{ site.baseurl }}/assets/post_free_ssl/cert_wizard7_download_certificate.jpg )
-
-We need two additional files:
-
-* StartCom Root CA (ca.pem)
-* StartSSL's Class 1 Intermediate Server CA (sub.class1.server.ca)
-
-which you can find in Toolbox section.
-
-Since server needs unencrypted version we need to create that (so it won't ask for password)
-
-~~~
-openssl rsa -in ssl.key -out private.key 
-~~~
-
-Copy those four files to server
-
-~~~
-scp {ca.pem,private.key,sub.class1.server.ca.pem,ssl.crt} YOURSERVER:~ 
-~~~
-
-# Local test
+# Manual install and local test
 
 You can test localy in virtual box, we will use ports 8080 and 8081
 
@@ -224,41 +197,3 @@ sudo cp /vagrant/private.key /vagrant/ssl.crt /etc/nginx/ssl
 sudo service nginx restart
 sudo tail -f /var/log/nginx/error.log
 ~~~
-
-Temporary change `www.kontakt.in.rs` to point to localhost `127.0.0.1` and go to
-[http://www.kontakt.in.rs:8080](http://www.kontakt.in.rs:8080) 
-[https://www.kontakt.in.rs:8081](https://www.kontakt.in.rs:8081)
-
-~~~
-echo -e "127.0.0.1\twww.kontakt.in.rs" | sudo tee -a /etc/hosts
-~~~
-
-
-You should see certificate on apache
-
-
-![final apache cert]({{ site.baseurl }}/assets/post_free_ssl/final_apache_cert.jpg)
-
-
-and green lock on ngxin
-
-![final nginx cert]({{ site.baseurl }}/assets/post_free_ssl/final_nginx_cert.jpg)
-
-
-
-Don't forget to remove temporary dns in hosts
-
-~~~
-sudo sed -i '/www.kontakt.in.rs/c #127.0.0.1\twww.kontakt.in.rs' /etc/hosts
-~~~
-
-On ubuntu, you can rename `ssl.crt` to `ssl.crt.p12` (or ssl.crt.key) and double click will show you
-details of certificate.
-
-For heroku you can follow <https://gist.github.com/meskyanichi/3354578>
-
-If in windows 7 can not open www.xda-developers.com because
-of invalid certificate, The certificate cannot be verified up to a trused
-certification authority... This server could not prove that it is
-www.xda-developers.com its secity certificate is not trusted by your computer's
-operating system...

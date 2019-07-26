@@ -144,6 +144,16 @@ Set author localy (config is for local folder only)
     git config user.name my-name
     git commit --amend --reset-author
 
+To change author in all commits (except first, I do not know how to ammend
+first commit) first change author localy
+
+    # find first commit sha
+    git rebase -i `git log --reverse | if read a commit ; then echo $commit ; fi`
+    # replace all pick with e, edit = use commit, but stop for amending
+    # repeat
+    git commit --amend --reset-author --no-edit && git rebase --continue
+    git push -f
+
 Apply patch
 
     git diff > patchfile

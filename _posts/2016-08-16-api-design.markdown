@@ -344,7 +344,7 @@ Configuration
 RspecApiDocumentation.configure do |config|
   config.docs_dir = Rails.root.join('public', 'api')
   config.format = :json
-  config.curl_host = 'admin.xceednet.com'
+  config.curl_host = 'admin.my-domain.com'
   used_headers = ['Content-Type', 'Authentication']
   ignored_headers = ['Cookie', 'Host']
   config.curl_headers_to_filter = ignored_headers

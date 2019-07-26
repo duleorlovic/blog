@@ -364,7 +364,7 @@ Delayed::Worker.class_eval do
       env = {}
       env['exception_notifier.options'] = {
         sections: %w(backtrace delayed_job),
-        email_prefix: "[Xceednet Delayed Job Exception] ",
+        email_prefix: "[my-domain Delayed Job Exception] ",
       }
       env['exception_notifier.exception_data'] = {job: job}
       ExceptionNotifier::Notifier.exception_notification(env, error).deliver

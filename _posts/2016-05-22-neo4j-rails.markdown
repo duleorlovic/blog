@@ -345,6 +345,26 @@ u.users.each_with_rel.to_a
 * usefull for polymophic, for example User knowns companies, places, ... so it
   contains different logic for each relation.
 
+# Migration
+
+You can generate migration to add new constrains. For new fields you can change
+models and start using it. To remove old fields you can also create migration.
+
+```
+rails g neo4j:migration AddUniqEmailToUsers
+rake neo4j:generate_schema_migration[constraint,User,email]
+```
+Constrain is uniq and index. So to add uniq constrain you do not need to add
+index after that (only think is to remove if the index exists)
+```
+class ForceCreateUserEmailConstraint < Neo4j::Migrations::Base
+  def up
+    drop_index :User, :email, force: true
+    add_constraint :User, :email, force: true
+  end
+end
+```
+
 # Schema
 
 <http://neo4j.com/docs/developer-manual/current/cypher/schema/constraints/>

@@ -1480,7 +1480,7 @@ is used for whole Rails application.
 
 # Mustache
 
-[mustache](https://github.com/mustache/mustache) is nice to render user
+[gem mustache](https://github.com/mustache/mustache) is nice to render user
 templates `Hi {{name}}`, where `name` is placeholder which is inside handlebars
 
 Usage is simple as
@@ -1500,7 +1500,7 @@ association, like `delegate User::FIELD_NAMES, to: :user`.
 class TemplateRenderService
   attr_reader :template_body, :data_for_body
 
-  def initialize template_body, data_for_body
+  def initialize(template_body, data_for_body)
     @template_body = template_body
     @data_for_body = data_for_body
   end
@@ -1508,12 +1508,23 @@ class TemplateRenderService
   def render
     m = Mustache.new
     m.raise_on_context_miss = true
-    m.render(template_body, data_for_body)
+    message = m.render(template_body, data_for_body)
+    Result.new message
   rescue Mustache::ContextMiss, Mustache::Parser::SyntaxError => e
-    e.message
+    Error.new e.message
   end
 end
 ~~~
+
+usage
+
+```
+result = TemplateRenderService.new(email_body, name: '', role_name: '')
+return result.message if result.success?
+```
+
+If handlebars contains dots than you need to nest data, like for `{{user.name}}`
+data needs to be `user: { name: 'dusan' }`
 
 # Rake tasks
 
@@ -2535,6 +2546,57 @@ association
 Note that following next `cannot` rule will override a previous `can` rule, so
 it is enough to set `can :manage, :all` and than write what `cannot :destroy,
 Project`
+
+Define abilities
+https://github.com/CanCanCommunity/cancancan/wiki/defining-abilities
+```
+can :read, Article # autorize! :read, Article will return true
+can :crud, Article # authorize! :read/:create/:update/:destroy, Article will return true
+# https://github.com/CanCanCommunity/cancancan/wiki/Action-Aliases
+aliase_action :index, :show, to: :read | :new, to: :create | :edit. to: :update
+can :manage, Article # authorize! :any_action, Article will return true
+can [:update, :destroy], [Post, Comment] # array notation
+```
+Hash of conditions
+```
+# can read only posts that belongs to user
+can :read, Post, user_id: user.id
+```
+Defining with a block is evaluated only when instance is passed (for example not
+in index action when class is used, ie if you call `can? :update, Project` it
+will return true)
+```
+can :update, Project do |project|
+  false
+end
+```
+
+Defining with a block without other arguments can be used for defining
+Abilities and roles in database
+https://github.com/CanCanCommunity/cancancan/wiki/Abilities-in-Database
+```
+can do |action, subject_class, subject|
+end
+```
+
+Example that only admins can change, for example company_id, with
+can_change_user_company_id
+```
+# in models/ability.rb
+can :can_change_user_company_id, User if user.admin?
+
+<!-- users/_form.html.erb -->
+<% if can? :can_change_user_company_id, @user %>
+  <!-- role checkboxes go here -->
+<% end %>
+
+# users_controller.rb
+def update
+  authorize! :can_change_user_company_id, @user if params[:user][:company_id]
+  # ...
+end
+```
+
 
 ## Pundig
 
