@@ -19,8 +19,8 @@ so when nesting column inside column, first column will get blank space on its
 left (unneeded indent from 15px padding from first column and 15px padding from
 nested column) so that the reason why row has -15px margin (to fix eventual
 parent column padding) and you have to wrap row with `.container` class to
-compensate that (padding 15px) otherwise you will get horizontal scrollbar since
-body will be larger than 100% by 30px.
+compensate that (padding 15px) or to add class `px-3`, otherwise you will get
+horizontal scrollbar since body will be larger than 100% by 30px.
 
 Bootstrap Media queries:
 
@@ -257,6 +257,7 @@ well with `display: flex` elements, better is to use
   width 100% is important because you want right element to go right.
   https://getbootstrap.com/docs/4.0/components/list-group/#custom-content
   (also `justify-content-around justify-content-center justify-content-start`).
+
   For cross axis it will be scretched so use `d-flex align-items-center` to
   center verticaly (or horizontaly if it is column based).
   You can also align for particular item `align-self-center`.
@@ -393,6 +394,29 @@ hash you can override any option).
 If you want all controlls and submit button to be in one line, you can use
 `layout: :inline` (note that only symbols works, string does not `layout:
 'inline'`)
+
+Use placeholders instead of labels
+```
+<%= f.text_field :email, label_as_placeholder: true %>
+```
+
+For Select2, you can resolve with to the current value (for ajax you need to
+populate with `prompt: 'Please select'`). I need to populate with label so I add
+this helper
+
+```
+# app/form_builders/my_form_builder.rb
+class MyFormBuilder < BootstrapForm::FormBuilder
+  def select(method, choices = nil, options = {}, html_options = {}, &block)
+    if options.delete :label_as_prompt
+      options[:prompt] = form_group_placeholder(options, method)
+    else
+      options[:prompt] ||= I18n.t('please_select')
+    end
+    super
+  end
+end
+```
 
 you can make checkbox inline with button
 

@@ -62,6 +62,14 @@ gem build rails-datatables-helpers.gemspec
 gem release
 ```
 
+Semantic versioning Major(breaking change).Minor(add stuff).Patch(bugfix) level.
+
+If you gem depend on some gem version `4.3.2` it can not be used for any other
+version. `~> 4.3.2` (pesimistic) it better since it can be used with `4.3.3` but
+not for previous versions `4.3.1`, and not for `4.4.0`. If gem follow semantic
+version it can be ugraded to `4.4`, so `~> 4.3` means that it can be `4.x` but
+at least `4.3`.  You should support broad range of gems `>= 3.2, < 5.0`,
+
 # RVM
 
 Install specific version and patch level `rvm install 2.3.3-p451`

@@ -325,6 +325,8 @@ HERE_DOC
 
 jBuilder is already included in rails and is nice if you already have some
 views.
+https://github.com/rails/jbuilder
+
 
 # API Documentation
 
@@ -345,11 +347,16 @@ RspecApiDocumentation.configure do |config|
   config.docs_dir = Rails.root.join('public', 'api')
   config.format = :json
   config.curl_host = 'admin.my-domain.com'
+
   used_headers = ['Content-Type', 'Authentication']
   ignored_headers = ['Cookie', 'Host']
   config.curl_headers_to_filter = ignored_headers
   config.request_headers_to_include = used_headers
   config.response_headers_to_include = used_headers
+
+  # By default examples and resources are ordered by description. Set to true
+  # keep the source order.
+  config.keep_source_order = true
 end
 ```
 
@@ -360,7 +367,8 @@ Usage:
 * `get`, `post`, `patch`, `delete`
   * you can validate `response_status` and `response_body` which is
   `JSON.parse(response.body)`
-* `parameter` used to define params
+* `parameter` used to define params. You need `let(:param1) { 'my_email' }` in
+  order to show it in example body or curl
 * `example_request` is the same as calling `example` (synonim for `it`) and
 `do_request`
 * `send :name` to get value of `name`
@@ -395,6 +403,45 @@ You can debug with:
 ~~~
 tail -f log/test.log
 ~~~
+
+To change domain which is used in tests you can define full url in `get`,
+`post`... like `get "http://#{API_DOMAN}/posts" do` (note that we need to use
+http prefix so it does not add it after example.org
+`http://example.org/www.api.domain/posts`)
+Using `RspecApiDocumentation.configure do |config|` and
+`config.curl_host = 'my.domain.com'` will change domain only on curl
+example, not in test, so it will be `curl -g
+"my.domain.comwww.api.domain/posts"`. Another way is to use `header
+'Host', API_DOMAIN` so you do not need to use full url.
+https://github.com/zipmark/rspec_api_documentation/issues/304 note that here we
+do not need protocol http, we just need host domain
+
+```
+# spec/acceptance/api/v2/posts_spec.rb
+require 'rspec_api_documentation/dsl'
+
+API_DOMAIN = 'subdomain.my-domain.com'
+
+resource 'Posts' do
+  header 'Accept', 'application/json'
+  header 'Authentication', :auth_token
+
+  # use header
+  header 'Host', API_DOMAIN
+  # or use full http path
+  get "#{API_DOMAN}/posts" do
+  end
+
+  let(:user) { create :user }
+  let(:auth_token) { JwtAuth.encode_user_id user.id }
+  let(:post) { create :post }
+  before do
+    user
+    post
+  end
+end
+```
+
 
 ## Swagger ui grape
 
@@ -465,7 +512,7 @@ Copy `dist` content to your `public/apidocs` and update all paths in
 
 * default sort is alphabetical for path and methods (delete, get, path...). You
 can provide a function for `apisSorter` `operationsSorter` but too complicated.
-Order in server response if not supported.
+Order in server response is not supported.
 
 # Apipie rails
 
@@ -527,16 +574,6 @@ end
 
 * model skill level as string, but consider using array. For example if someone
 wants to cover all skill levels.
-
-# JWT Json web tokens
-
-```
-gem 'jwt'
-
-t = JWT.encode( {a: 1}, 'secret')
-=> "eyJhbGciOiJIUzI1NiJ9.eyJhIjoxfQ.LrlPmSL4FxrzAHJSYbKzsA997COXdYCeFKlt3zt5DIY"
->> JWT.decode t, 'secret' #=> [{"a"=>1}, {"alg"=>"HS256"}]
-```
 
 <https://scotch.io/tutorials/build-a-restful-json-api-with-rails-5-part-two>
 

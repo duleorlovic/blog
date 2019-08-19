@@ -733,12 +733,15 @@ Filter is used like `{ { page | alert }}`
 # Scss
 
 For adding scss support, you need to put your main scss file inside for example
-`css/main.scss` and it needs to have double three lines `---`. From there you
+`assets/main.scss` and it needs to have double three lines `---`. From there you
 can use `@import "file_from_scss";` to load partials from `_sass` folder
 
 ~~~
 ---
-# this is css/main.scss which imports other scss files
+# this is assets/main.sass which imports other sass files
+# NOTE that you can not import css file, it needs to be sass/scss
+# import "file.css" # this will not be imported at compile time, but in browser
+# import "file" # this will search for file.sass and import at compile time
 ---
 
 @import "overrides";
@@ -799,6 +802,9 @@ src="assets/js/cart.js"></script>`
 # Rails
 
 https://www.sitepoint.com/jekyll-rails/
+
+```
+```
 
 # Tips
 

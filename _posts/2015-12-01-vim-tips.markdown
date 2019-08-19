@@ -57,8 +57,10 @@ and jump back with `ctrl+o`
 Instead of `^o` I would write `ctrl-o`.
 
 Some keys:
-* `<c-o>` is ctrl-o, take to normal mode for just one command, so if you want to
-  go up in insert mode `<c-o> k`. Other usefull commands in insert mode:
+* `<c-o>` is ctrl-o, take to normal mode for just ONE command, so if you want to
+  go up in insert mode `<c-o> k`, or to reformat paragraph `<c-o> gqip`
+
+  Other usefull commands in insert mode:
   * `<c-o> <c-t>` `<c-o> <c-d>` indent deindent in insert mode
   * `<c-o> d` delete everything to the right of cursor
   * `<c-u>` delete everything to the left

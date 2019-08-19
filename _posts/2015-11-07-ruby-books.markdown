@@ -807,6 +807,12 @@ merge](https://apidock.com/rails/Hash/reverse_merge)
   bundle exec ruby -rbyebug $(which vagrant) up
   ~~~
 
+  To exit from script you can use
+  ```
+  puts "max=#{max} should be greater than 10" and exit unless max > 10
+
+  ```
+
 * you can use Resolv ruby class, but sometimes you get error `uninitialized
 constant Resolv`. You should reload all services or you can add to Gemfile
 

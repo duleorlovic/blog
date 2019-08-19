@@ -1417,3 +1417,242 @@ https://coderwall.com/p/zxe6dq/devise-redirect-ajax-request-when-session-timed-o
 # Detect if already signed in to social sites
 
 http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/
+
+
+# Warden
+
+Devise uses warden which is rack middleware. Rack application is convection how
+server (puma/unicorn) talk to rails or sinatra, it needs a method `.call(env)`
+env is: rack_version, server_protocol, http_user_agent...
+```
+# config.ru
+class MyRackApp
+  def call(env)
+    status = 200
+    headers = { "Content-Type" => "application/json" }
+    body = ['{ "text": "Hello" }']
+    [status, headers, body]
+  end
+end
+run MyRackApp.new
+```
+
+and run this rackapp with `rackup` command (default server is puma). Note that
+you can also run rails using whit `rackup` command.
+To test how it works:
+
+```
+curl -i localhost:9292
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{ "text": "Hello" }
+```
+
+Middleware is like rack application but it receive rack application instance so
+it can modify `env` hash (add some objects, set cookie header in response etc)
+and stop further execution of middlewares (response with 401 unauthorized).
+```
+class MyRackMiddleware
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    # do something with env
+    @app.call(env)
+  end
+end
+```
+
+Warden does not handle session store, but it depends on `Rack::Session::Cookie`
+middleware that sets `env['rack.session']` and at the end it will generate
+`env['warden']`.
+https://github.com/wardencommunity/warden/wiki
+Strategies will be tried one after another until: one succees, or no strategies
+are found relevant, or strategy fails. Inside it you need to define `.valid?`
+(acts as guard, so do not fail strategy if params does not exists) and
+`.authenticate!` methods, you can use `params`, `env`, `session` object and
+should call `success!`, `fail!`. `halt!`.
+To use strategy, pass it as `env['warden'].authenticate :password` or define
+`manager.default_stategies :password` and call without param. You can use bang
+version to call `failure_app` if user is not authenticated.
+
+Scope is used to enable multiple users to be logged in in the same time, for
+example `env['rack.session'] = { 'warden.user.user.key' => 1,
+'warden.user.customer.key' => 1 }`. You can use by passign as hash argument
+`env['warden'].authenticate :api_token, scope: :customer`, check with
+`env['warden'].authenticated? :customer`, fetch the customer
+`env['warden'].user :customer`, log out `env['warden'].logout :customer`. Or you
+can define default_scope and scope_defaults strategies `config.default_scope =
+:customer` and `config.scope_defaults :customer, strategies: :api_token`.
+
+```
+# Gemfile
+source 'http://rubygems.org'
+gem 'byebug'
+gem 'warden'
+```
+
+```
+# config.ru
+require 'warden'
+
+use Rack::Session::Cookie, secret: 'warden'
+use Warden::Manager do |manager|
+  manager.default_strategies :password
+  manager.failure_app = FailureApp.new
+end
+
+class MyRackApp
+  def call(env)
+    env['warden'].authenticate!
+    user = env['warden'].user
+    status = 200
+    headers = { 'Content-Type' => 'application/json' }
+    body = ["{ \"text\": \"Hello #{user[:email]}\" }"]
+    [status, headers, body]
+  end
+end
+
+USERS = [
+  { id: 1, email: 'my@email.com', password: 'mypassword' },
+  { id: 2, email: 'your@email.com', password: 'yourpassword' },
+].freeze
+
+Warden::Manager.serialize_into_session do |user|
+  user[:id]
+end
+
+Warden::Manager.serialize_from_session do |id|
+  USERS.find { |user| user[:id] == id }
+end
+
+Warden::Strategies.add(:password) do
+  def valid?
+    params['email'] && params['password']
+  end
+
+  def authenticate!
+    user = USERS.find { |u| u[:email] == params['email'] }
+    fail!('Invalid email') and return if user.nil?
+    fail!('Invalid password') and return if user[:password] != params['password']
+    success!(user)
+  end
+end
+
+class FailureApp
+  def call(env)
+    status = 401
+    headers = { 'Content-Type' => 'application/json' }
+    body = ["{ \"error\" : \"Something went wrong. #{env['warden'].message}\" }"]
+
+    [status, headers, body]
+  end
+end
+run MyRackApp.new
+```
+
+You can test
+```
+curl -i 'localhost:9292?email=my@email.com&password=mypassword'
+
+HTTP/1.1 200 OK 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Server: WEBrick/1.4.2 (Ruby/2.5.1/2018-03-29)
+Date: Thu, 01 Aug 2019 10:11:49 GMT
+Connection: Keep-Alive
+Set-Cookie: rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiRWE5YzA3ZjFmYTgyNTg1NTk0YTY5%0AOWMzMmVkNmU3NWM4YjIzOTVkNGFiOTU5MWQxMzdkOGI1MDU2MTIzMDAxNTcG%0AOwBGSSIcd2FyZGVuLnVzZXIuZGVmYXVsdC5rZXkGOwBUaQY%3D%0A--3ad8682341ce7faff8b2140264f03932344cbb7b; path=/; HttpOnly
+
+{ "text": "Hello my@email.com" }
+
+```
+
+# JWT Json web tokens
+
+```
+gem 'jwt'
+
+t = JWT.encode( {a: 1}, 'secret')
+=> "eyJhbGciOiJIUzI1NiJ9.eyJhIjoxfQ.LrlPmSL4FxrzAHJSYbKzsA997COXdYCeFKlt3zt5DIY"
+>> JWT.decode t, 'secret' #=> [{"a"=>1}, {"alg"=>"HS256"}]
+```
+
+Testing application is in `~/rails/temp/rails_5.2.3/` branch `devise_jwt_token`.
+You can add custom devise strategy so both devise http and jwt authentication
+can work
+http://blog.plataformatec.com.br/2019/01/custom-authentication-methods-with-devise/
+api_token_strategy
+
+```
+# app/strategies/jwt_strategy.rb
+class JwtStrategy < Warden::Strategies::Base
+  def valid?
+    # A copy of JwtStrategy has been removed from the module tree but is still active
+    # JwtAuth.token_from_request_headers request.headers
+    # so we need to copy same method here
+    request.headers['Authentication'].to_s.split(' ').last
+  end
+
+  def authenticate!
+    user = User.find_by(id: JwtAuth.decoded_user_id(request.headers))
+    if user
+      success! user
+    else
+      fail! 'Invalid email or password'
+    end
+  end
+end
+
+# app/services/jwt_auth.rb
+class JwtAuth
+  SECRET = Rails.application.secrets.secret_key_base
+
+  def self.encode_user_id(user_id)
+    payload = { user_id: user_id }
+    JWT.encode(payload, SECRET)
+  end
+
+  def self.decoded_user_id(headers)
+    token = token_from_request_headers headers
+    payload = JWT.decode(token, SECRET)[0]
+    payload['user_id']
+  end
+
+  def self.token_from_request_headers(headers)
+    headers['Authentication'].to_s.split(' ').last
+  end
+end
+
+# config/initializers/devise.rb
+  config.warden do |manager|
+    manager.default_strategies(scope: :user).unshift :jwt_strategy
+  end
+
+# config/initializers/warden.rb
+Warden::Strategies.add(:jwt_strategy, JwtStrategy)
+```
+
+When responding to html and json note that `return` can not be used inside
+```
+# app/controllers/application_controller.rb
+  def current_isp
+    @current_isp = Isp.find_by domain: request.domain
+    unless @currend_isp
+      respond_to do |format|
+        format.html do
+          redirect_to error_path, error_message: isp_not_found
+        end
+        format.json do
+          render json: { error_message: Constant.ERROR_MESSAGES[:isp_not_found].title, error_status: :not_found }, status: :not_found
+        end
+        # do not put `return` here since it will stop request before rendering
+      end
+      # use `return` after `respond_to` block
+      return
+    end
+  end
+```

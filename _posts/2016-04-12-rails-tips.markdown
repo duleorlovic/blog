@@ -130,6 +130,13 @@ can split and specify to run on `on: :create` or `on: :update`. To run
 validation on destroy you need hook `before_destroy` where you can `errors.add`
 and `return false` so hook reverts.
 
+DO NOT USE VALIDATION FOR BUSINESS LOGIC (except validation for columns), FOR
+EXAMPLE DO NOT CREATE VALIDATION THAT AT LEAST ONE LOCATION USER SHOULD BE
+ADMIN. This is bad, since you need to follow that validation in all tests (and
+you can not destroy current location user, but you need to create another admin
+location user). BETTER IS TO USE SERVICES IN CONTROLLER ON UPDATE AND DESTROY
+result = UpdateOrDestroyLocationUser.new(current_user, current_location).update params
+
 # Hooks
 
 **NOTE THAT YOU SHOULD NOT USE HOOKS... Better is to just call a method where
@@ -1363,6 +1370,18 @@ $(document).one('page:before-change',function() {
 
 # Seed
 
+I prefer to use fixtures
+
+```
+# db/seeds.rb
+Rails.logger = Logger.new(STDOUT)
+Rake::Task['db:fixtures:load'].invoke
+```
+
+More advance seeding from fixture data is on
+[minitests rails](_posts/2018-01-22-minitests-rails.markdown)
+
+Old way is to use db/seeds.rb.
 If you want indempotent seeds data you should have some identifier (for example
 `id`) for wich you can run `where(id: id).first_or_create! do...end`.
 User should use `first_or_initialize` since we can't create without
@@ -1914,11 +1933,14 @@ module Someable
   extend ActiveSupport::Concern
 
   included do
-    # define validations, callbacks and associations here (before_ has_  macros)
-    # access module variables @@my_module_variable or class variable
+    # define methods validations, callbacks and associations here (before_ has_
+    # macros) access module variables @@my_module_variable or class variable
     # self.class.class_variable_get :@@someable_value
     has_many :something_else, as: :someable
     class_attribute :tag_limit
+    def increase_age(n)
+      self.age + n
+    end
   end
 
   # instance methods are defined here
@@ -3771,7 +3793,7 @@ end
   ```
 
 * Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
-  💯% sure.
+  💯% sure. Here is plain ascii (￣︶￣). 🙌
 * when bcrypt is updated you need to update secrets credentials with `rails
   credentials:edit`
 ```
@@ -3822,3 +3844,14 @@ end
   # raise timeout error before server timeouts
   gem 'rack-timeout', require: 'rack/timeout/base'
   ```
+
+* `A copy of xxx has been removed from the module tree but is still active!`
+  it could be that spring does not load it since it happens in tests also
+  You can see all auto loaded paths
+  ```
+  bin/rails r 'puts ActiveSupport::Dependencies.autoload_paths'
+  ```
+  My solution is to copy all methods to the strategy so it does not use those
+  classes.
+
+* `rake tmp:cache:clear` for rails clear cache

@@ -391,8 +391,10 @@ instead of polymorhic, we could use separate columns `isp_id`, `operator_id`,
 for specific form inputs to ask, you can use fieldset and disable those which
 are not necessary.
 
-Single line oneliner form is using button_to with params: label, url, form class
+Single line oneliner form in one line is using button_to with params: label,
+url, form class
 
 ```
 <%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %>
 ```
+Default is using POST, but you can change and add params

@@ -566,6 +566,7 @@ Usually for oauth (doorkeeper gem).
 If request is not performed (`get` `xhr`) than something is different (current
 user is not initialized, or something).
 `post url, name: 'my name'` is used without `params` key
+To set json request use `get path, format: :json`.
 To set headers you can use third param
 
 ```

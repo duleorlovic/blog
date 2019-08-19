@@ -209,6 +209,11 @@ Big files
     git lfs install
     git lfs track *.mov
 
+Bin folder added to path `PATH=".git/safe/../../bin:$PATH"`, but only for
+project where you run
+
+    mkdir -p .git/safe
+
 Tutorials
 
     git help tutorial-2
@@ -316,4 +321,3 @@ browse -- issues` to open issues. `git browse user/repo` to open user/repo
 * pr             Work with pull requests
 * pull-request   Open a pull request on GitHub
 * release        List or create releases
-

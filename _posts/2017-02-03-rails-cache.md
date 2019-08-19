@@ -78,17 +78,18 @@ Use [gem dalli](https://github.com/petergoldstein/dalli) in your Gemfile
 
 ~~~
 cat >> Gemfile << HERE_DOC
-# for caching
-gem "dalli"
+# https://guides.rubyonrails.org/caching_with_rails.html#activesupport-cache-memcachestore
+# cache store is in mem_cache_store which uses dalli
+gem 'dalli'
 HERE_DOC
 ~~~
 
 ~~~
 cat >> config/initializers/dalli.rb << HERE_DOC
 Rails.application.configure do
-  config.cache_store = :dalli_store # this will use local memcached service
+  config.cache_store = :mem_cache_store # this will use local memcached service
   if secrets.memcachier_servers.present?
-    config.cache_store = :dalli_store,
+    config.cache_store = :mem_cache_store,
                          secrets.memcachier_servers.split(','),
                          {
                            username: secrets.memcachier_username,
@@ -149,9 +150,9 @@ HERE_DOC
 ~~~
 require "rubygems"
 require "dalli"
-CACHE = Dalli::Client.new("127.0.0.1", { :namespace => “my_project”, :expires_in => 3600, :socket_timeout => 3, :compress => true }) # Options are self-explanatory
+CACHE = Dalli::Client.new("127.0.0.1", { :namespace => 'my_project', :expires_in => 3600, :socket_timeout => 3, :compress => true }) # Options are self-explanatory
 CACHE.set("key", "value", 180) # last option is expiry time in seconds
-CACHE.get("key") 2
+CACHE.get("key")
 ~~~
 
 # Manual check if it is working

@@ -83,7 +83,17 @@ HERE_DOC
   # no need to install fax printer
   ~~~
 
-  On ubuntu 18 I used binary installation from https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
+  On ubuntu 16 it works for 3.16.3 version
+  ```
+  HP Linux Imaging and Printing System (ver. 3.16.3)
+  Printer/Fax Setup Utility ver. 9.0
+  Plugin Download and Install Utility ver. 2.1
+  Plugin Installer ver. 3.0
+  ```
+
+  On ubuntu 18 I used binary installation hplip-3.19.6.run from
+  https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
+  but somehow `hp-plugin` does not work, so I used old version
 
 * recently I got dns error (I'm using 8.8.8.8). Following
   [post](http://askubuntu.com/questions/368435/how-do-i-fix-dns-resolving-which-doesnt-work-after-upgrading-to-ubuntu-13-10-s)
@@ -266,6 +276,12 @@ url suggestion does not use port number, so it is advised to disable it on
 `about:config` for `browser.urlbar.autoFill` to false. That way only history
 links will be provided, so you can navigate to them using tab.
 
+
+Search
+https://thoughtbot.com/blog/make-the-most-of-your-browser-s-address-bar
+
+`^ str`, matches history with str, `# str` matches page titles
+
 ## Firefox developer tools and navigations
 
 like vim
@@ -385,6 +401,20 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
 * convert dvd vob to mp4
   ```
   for f in *.VOB ; do ffmpeg -i "$f" -vcodec copy -strict experimental -c:a aac "${f%.*.VOB}.mp4"; done
+  ```
+
+* join videos using ffmpeg
+
+  ```
+  ffmpeg -i concat:"input1.mp4|input2.mp4" -fflags +genpts output.mp4
+
+  # or
+  # ls > textfile
+  # edit file to contain:
+  # file 'input1.mp4'
+  # file 'input2.mp2'
+  # ...
+  ffmpeg -f concat -i textfile -fflags +genpts merged.mp4
   ```
 
 
@@ -591,6 +621,31 @@ Here are some tools
   ffmpeg -i dahua.ts -filter:v 'crop=2592:720:0:824' -strict -2 k.mp4
   ```
 * kdenlive. When sound starts flickering, restart computer helps
+
+# ImageMagic rmagick
+
+https://imagemagick.org/index.php https://github.com/rmagick/rmagick
+Load image
+```
+require 'rmagick'
+i = Magick::Image.read( 'demo.png' ).first
+# to load just header block to find size of image
+i = Magick::Image.ping( 'demo.png' ).first
+```
+To get a size of a image
+```
+i.columns
+i.rows
+```
+To create gif
+```
+anim = ImageList.new("start.gif", "middle.gif", "finish.gif")
+anim.write("animated.gif")
+```
+To resize but keep aspect ratio (ie to scale under constrains)
+```
+image = image.change_geometry("400") {|cols, rows, img| img.resize!(cols, rows)}
+```
 
 # TIPS
 

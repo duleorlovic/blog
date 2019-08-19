@@ -485,7 +485,12 @@ shift](https://datatables.net/extensions/select/examples/styling/bootstrap.html)
 * another nice
 [bootstrap-table](http://issues.wenzhixin.net.cn/bootstrap-table/index.html)
 
-# Ajax datatable rails
+# Rails datatables helpers
+
+https://www.datatables.net/download/npm
+https://datatables.net/manual/server-side
+
+## Ajax datatable rails
 
 For this [gem](https://github.com/jbox-web/ajax-datatables-rails) you need to
 define view_columns, by default `orderable` and `searchable` are true, and
@@ -499,9 +504,26 @@ define view_columns, by default `orderable` and `searchable` are true, and
   end
 ```
 
+Cons is that it is missing server side rendering, which is important because of:
+* rendering performance: ability to cache or prerender a site
+* easier to write tests
+* accessibility and no-script concerns
+* loading a page in its rendered state for SEO
 
-https://www.datatables.net/download/npm
-https://datatables.net/manual/server-side
+## Effective datatables
 
-# Rails datatables helpers
+https://github.com/code-and-effect/effective_datatables testing on
+/home/orlovic/rails/temp/rails_5.2.3 branch effective_datatables
 
+```
+```
+
+Pros: show/hide columns, bulk actions (check boxes are not perserved between
+pages and filters) it is in ajax, and first page is reloaded, autodetect
+columns.
+
+Cons is that I need to learn to much DSL, and it is too magic (for example it
+provides edit/show/delete buttons, for association it searches all it's
+columns). Does not support Search all columns from one input field. Filters are
+not perfomed using GET params but in cookies (so I can not copy url and have
+same results).  No test files, that's wierd.

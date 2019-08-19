@@ -237,6 +237,19 @@ xmodmap -pke > ~/.Xmodmap
 xmodmap ~/.Xmodmap
 ~~~
 
+Instead of reloading whole file, it can reload the diffs
+
+```
+# Store default xmodmap
+xmodmap -pke > ~/.Xmodmap.default
+
+# Backup your custom xmodmap
+mv ~/.Xmodmap ~/.Xmodmap.bak
+
+# Make a diff between default and custom xmodmap, and store the diff as .Xmodmap
+diff ~/.Xmodmap.bak ~/.Xmodmap.default | grep '<' | tr '<' ' ' > ~/.Xmodmap
+```
+
 To find keycodes use `xev` program (exit with mouse or alt+f4).
 `showkeys` is using for linux system.
 You can use also `xkeycaps` but I do not know which keyboard to choose.

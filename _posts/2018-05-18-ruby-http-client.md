@@ -51,6 +51,10 @@ http.use_ssl = true
 http.use_ssl = (uri.scheme == "https")
 # you can also disable verify ssl with
 http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+# or in block mode
+
+res = Net::HTTP.start(url.host, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) {|http| http.request(req) }
 ~~~
 
 You can define timeouts
