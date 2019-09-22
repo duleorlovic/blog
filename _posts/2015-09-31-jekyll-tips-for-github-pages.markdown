@@ -640,6 +640,8 @@ Yet another theme
   like `-- ~~`)
 * for code you can use `{{ '{%' }} highlight javascript  %}`, `{{ '{%' }}
 highlight ruby %}`, `{{ '{%' }} highlight bash %}`
+* use inline html in markdown if you use span level tags `<span>`,`<bold>`...
+  for block level tags `<div>` you need to add blank line.
 
 
 # Liquid in markdown

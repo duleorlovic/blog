@@ -452,6 +452,7 @@ modal](https://datatables.net/extensions/responsive/examples/display-types/boots
 * you can use [fixed
 columns](https://datatables.net/extensions/fixedcolumns/examples/initialisation/left_right_columns.html)
 so they always stays fixed, but all other columns can be scrolled
+* or you can use fixed header https://datatables.net/extensions/fixedheader/
 * user can select which columns to see
 [colvis](https://datatables.net/extensions/fixedcolumns/examples/initialisation/colvis.html)
 note: retired
