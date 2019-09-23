@@ -589,10 +589,11 @@ end
 
 class TestRaiseException < MiniTest::Unit::TestCase
   def test_raise_exception
-    model = MyModel.new
-    raises_exception = Proc.new { raise ArgumentError.new }
-    model.stub :my_method, raises_exception do
-      assert_raises(ArgumentError) { model.my_method }
+    my_instance = MyModel.new
+    raises_exception = Proc.new { raise ArgumentError, 'hi' }
+    my_instance.stub :my_method, raises_exception do
+      e = assert_raises(ArgumentError) { my_instance.my_method }
+      assert_equal 'hi', e.message
     end
   end
 end

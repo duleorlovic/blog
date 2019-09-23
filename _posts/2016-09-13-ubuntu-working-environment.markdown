@@ -702,3 +702,4 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
 * decrease font size in terminal with Ctrl - , increase Ctrl + and reset Ctrl 0
   (find them in manu Preferences -> Shortcuts)
 * https://hluk.github.io/CopyQ/ for showing clipboard content in window
+* open ms office docx files on https://onedrive.live.com/ to see comments

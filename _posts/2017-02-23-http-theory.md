@@ -208,11 +208,12 @@ In 2016 some important extensions are:
 
 # Session
 
-Using Http cookies you can link requests to some state of the server (event http
+Using Http cookies you can link requests to some state of the server (even http
 is state-less protocol).
 
 # CORS
 
+https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 Web browsers enforce strict separation between web sites. Only resources from
 *Same origin* can be accessed. But there are exceptions. Cross origin resource
 sharing [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS)
@@ -270,12 +271,14 @@ When you want to submit form from another domain you get this error
 ~~~
 ActionController::InvalidAuthenticityToken (ActionController::InvalidAuthenticityToken):
 ~~~
-
-To solve that add
+So I solve that by adding
 
 ~~~
   skip_before_action :verify_authenticity_token, only: [:widget, :create, :update]
 ~~~
+
+This is when your controller is protected from CSRF attack (it contains
+protect_from_forgery) .
 
 To see response from submitted form request, you see in javascript console this
 warning and $.ajax success callback is never triggered
@@ -298,23 +301,6 @@ To solve that add
 
 Content security policy
 [CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
-
-# CSRF
-
-If your controller is protected from CSRF attack (it contains
-protect_from_forgery) than use null session instead of exception:
-
-~~~
-sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
-  # protect_from_forgery with: :exception\
-  protect_from_forgery with: :null_session'
-~~~
-
-You can disable CSRF Token authenticity for specific actions
-
-~~~
-skip_before_action :verify_authenticity_token, only: [:my_insecure_post_action]
-~~~
 
 # Authentication
 

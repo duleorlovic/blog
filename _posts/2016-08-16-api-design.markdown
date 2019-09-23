@@ -200,36 +200,43 @@ and rescue from those exceptions and show json message
 ~~~
 # app/controllers/application_controller.rb
   rescue_from JWT::DecodeError do |e|
-    render json: { error: e.message }, status: :bad_request
+    render json: { error_message: e.message, error_status: :bad_request}, status: :bad_request
   end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
-    render json: { error: e.message }, status: :not_found
+    render json: { error_message: e.message, error_status: :not_found }, status: :not_found
   end
 
   rescue_from ActiveRecord::RecordInvalid do |e|
-    render json: { error: e.message }, status: :unprocessable_entity
+    render json: { error_message: e.message, error_status: :unprocessable_entity }, status: :unprocessable_entity
   end
 
   # used with params.permit(:domain).fetch(:domain)
   rescue_from ActionController::ParameterMissing do |e|
-    render json: { error: e.message }, status: :bad_request
+    render json: { error_message: e.message, error_status: :bad_request }, status: :bad_request
   end
 
   rescue_from AuthorizationException do |e|
-    render json: { error: e.message }, status: :unauthorized
+    render json: { error_message: e.message, error_status: :unauthorized }, status: :unauthorized
   end
 ~~~
 
+In tests you can put `byebug` below `rescue_from ActiveRecord::RecordNotFound do |e|` so you can
+
+```
+Rails.application.class.parent.name.underscore # => myapp
+puts exception.backtrace.select {|r| r.match Rails.application.class.parent.name.underscore }
+```
+
 Usually in case of validation error, I put only all error messages in one field
-`error` for example :
+`error_message` for example :
 
 ~~~
 # app/controllers/users_controller.rb
 
   def send_password
     alert = "Failed to send new password"
-    format.json { render json: { error: alert }, status: :unprocessable_entity }
+    format.json { render json: { error_message: alert, error_status: :unprocessable_entity }, status: :unprocessable_entity }
   end
 
   def create
@@ -237,15 +244,15 @@ Usually in case of validation error, I put only all error messages in one field
     if @user.save
       render json: @user, status: :created
     else
-      render json: { error: @user.errors.full_messages.to_sentence },
-             status: :unprocessable_entity
+      render json: { error_message: @user.errors.full_messages.to_sentence },
+             error_status: :unprocessable_entity
     end
   end
 
   def update
     unless @user.update(user_params)
-      render json: { error: @user.errors.full_messages.to_sentence },
-             status: :unprocessable_entity
+      render json: { error_message: @user.errors.full_messages.to_sentence },
+             error_status: :unprocessable_entity
     end
   end
 ~~~
@@ -256,8 +263,8 @@ other errors like: server offline.
 In case of success, I use `message`
 
 ~~~
-  message = "Successfully updated"
-  format.json { render json: { message: message } }
+  notice = "Successfully updated"
+  format.json { render json: { message: notice, data: user.to_json } }
 ~~~
 
 # Generate JSON
@@ -346,6 +353,10 @@ Configuration
 RspecApiDocumentation.configure do |config|
   config.docs_dir = Rails.root.join('public', 'api')
   config.format = :json
+  # for json post or patch requests, request body needs to be encoded to json
+  # so use this condif instead of let(:raw_post) { params.to_json }
+  config.request_body_formatter = Proc.new { |params| params.to_json }
+
   config.curl_host = 'admin.my-domain.com'
 
   used_headers = ['Content-Type', 'Authentication']
@@ -391,10 +402,22 @@ update resources:
   patch '/v1/organizations/:organization_id' do
     let(:organization) { create :organization, name: 'My Organization' }
     let(:organization_id) { organization.id }
-    parameter :id, 'Id of the organization.', required: true
     let(:id) { organization.id }
+    parameter :id, 'Id of the organization.', required: true
   end
 ~~~
+
+
+If you use parameter status than you need to disable dsl
+https://github.com/zipmark/rspec_api_documentation/issues/329
+https://github.com/zipmark/rspec_api_documentation/issues/215
+
+```
+# config/support/rspec_api_documentation.rb
+RspecApiDocumentation.configure do |config|
+  config.disable_dsl_status!
+end
+```
 
 HTTP codes are standard (200 get, 201 created, 204 deleted).
 

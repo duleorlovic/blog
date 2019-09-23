@@ -396,5 +396,6 @@ url, form class
 
 ```
 <%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %>
+<%= link_to "Fair usage policy", expire_subscriber_path(@subscriber, button: 'fair_usage_policy'), method: :patch, class: 'btn btn-primary' %>
 ```
 Default is using POST, but you can change and add params

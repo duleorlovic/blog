@@ -2777,6 +2777,11 @@ VCR.configure do |config|
   # config.allow_http_connections_when_no_cassette = true
   config.ignore_localhost = true
 
+  # https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
+  driver_hosts = Webdrivers::Common.subclasses.map { |driver| URI(driver.base_url).host }
+  mikrotik_host = ['192.168.5.56']
+  config.ignore_hosts *(driver_hosts + mikrotik_host)
+
   # custom matcher ignore message
   config.default_cassette_options = {
     match_requests_on: [ :method,
@@ -2825,6 +2830,11 @@ with same mobile number) than add `allow_playback_repeats: true`
 
 If you are not sure if sms will be sent (it is based on some other
 configuration) than `allow_unused_http_interactions: false`
+
+For `webdriver` you need to ignore
+https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
+```
+```
 
 # Testing Rails.cache
 

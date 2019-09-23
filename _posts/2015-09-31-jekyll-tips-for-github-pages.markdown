@@ -106,7 +106,7 @@ d1ub4fmsp3scvp.cloudfront.net. 47 IN	A	13.32.22.82
 
 If you want redirection from non www to www, than use Forwatd -> Url redirect
 (301 or 302) but uncheck "Synchronize the domain and subdomain www"
-![loopia dns]({{ site.base_url }}/assets/posts/loopia_dns.png "Loopia DNS")
+![loopia dns]({{ site.baseurl }}/assets/posts/loopia_dns.png "Loopia DNS")
 
 # Jekyll on github
 
@@ -382,7 +382,20 @@ end
 
 # Adding Table of Content
 
-If you need automatic Toc than use
+For README you can run command that extract all headers https://github.com/ekalinin/github-markdown-toc that you can copy and paste to README. Alternativelly you can insert
+
+```
+## Table of Contents
+<!--ts-->
+<!--te-->
+```
+
+and run
+```
+gh-md-toc --insert README.md
+```
+
+If you need automatic Toc for a any jekyll page than use
 [dafi jekyll-toc-generator](https://github.com/dafi/jekyll-toc-generator).
 
 I modify to use original id-s (that is hypernated version of header content) in
@@ -634,7 +647,7 @@ Yet another theme
   `[http://projektor.trk.in.rs](http://projektor.trk.in.rs)`
 * internal link to post is with `{{ '{%' }} %}` like
   `[My page]({{ '{% link 2016-03-02-my-page.markdown' }} %})`
-* images `![alt text]({ { site.base_url }}/assets/path_to_image "Title text")`
+* images `![alt text]({ { site.baseurl }}/assets/path_to_image "Title text")`
 * strikethrough (words crossed, deleted, removed text) can be used with
   `<s>Example</s>` or `<del>Example</del>` (with kramdown no shortcut works
   like `-- ~~`)

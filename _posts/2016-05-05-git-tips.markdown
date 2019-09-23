@@ -65,7 +65,7 @@ Find difference of all files and folders with meld diff tool
 
     git difftool master --dir-diff
 
-Find bug using bisect on specific folder or file
+Find bug using bisect on specific folder or file to jump half steps between
 
      git bisect start -- app/controllers/registration_controller.rb
 

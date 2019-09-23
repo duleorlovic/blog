@@ -52,7 +52,7 @@ module can be included (ie all module's instance methods become avaiable as
 instance methods in the class) very similar to inheritance. Module can also be
 extended (ie all module's instance methods become class methods). Also usefull
 is that module extends self `module M; extend self; def m;end;end` so you can
-use `M.m` instead of `M::m`.
+use `M.m` instead of `M::m` for module methods.
 You can see all superclasses and mixin modules with
 [A.ancestors](http://ruby-doc.com/docs/ProgrammingRuby/html/ospace.html).
 Module class object have `new` method, but it's instance (Module instance) does
@@ -693,7 +693,10 @@ end
 words = %w(Jane, aara, multiko)
 upcase_words = words.map {|w| w.upcase}
 upcase_words = words.map {|w| w.send :upcase}
+# short notation
 upcase_words = words.map(&:upcase)
+# can not easilly add argument to map method
+https://stackoverflow.com/questions/23695653/can-you-supply-arguments-to-the-mapmethod-syntax-in-ruby
 ~~~
 
 * there are special methods in ruby
@@ -1113,6 +1116,23 @@ assignment for function parameters)
   f_with_double 1, 2 # => ArgumentError: wrong number of arguments (given 2, expected 1)
   ~~~
 
+  Another usage is when you require some keys
+  ```
+  def f(name:, **options)
+  end
+
+  f(bla: 'asd') # ArgumentError (missing keyword: name)
+  f(name: 'asd', o: 2) # options = { o: 2 }
+  ```
+  Double splat can be used for merging hashes
+  ```
+  h = {
+    **some_hash,
+    b: 1,
+    **some_method_that_returns_hash,
+  }
+  ```
+
   To see parameters of some function you can use
 
   ~~~
@@ -1217,9 +1237,12 @@ to_upper = -> (str) { str.upcase }
 
 * tripple equal `===` is operator that for ranges calls `.includes?`, for regexp
   calls `.match?`, for proc calls `.call`
-* fake objects could be generated from hash with:
-    `Struct.new(:name, :type, :years).new 'Dule', :kayak, 35`
-    `OpenStruct.new name: 'Dule'`
+* fake dummy objects could be generated from hash with:
+  ```
+  d = Struct.new(:name, :type, :years).new 'Dule', :kayak, 35
+  d = OpenStruct.new name: 'Dule'
+  d.name
+  ```
   If you need recursively generated OpenStruct than you can convert to json and
   parse with Open struct class: `h = { a: 1, b: { c: 1 }};
   o=JSON.parse(h.to_json, object_class: OpenStruct); o.b.c # => '1'`. You can
@@ -1288,6 +1311,25 @@ end
   echo "+:to_param+" | rdoc --pipe
   ```
 * yard is newer and it supports links https://www.rubydoc.info/github/rails/rails
+  syntax for yard is simple markdown using
+  [@tags](https://www.rubydoc.info/gems/yard/file/docs/Tags.md#taglist). It supportds rdoc markup.
+    https://devhints.io/rdoc
+  ```
+  # This is a doc
+  #
+  # @example
+  #    code
+  # @param
+  # @return [String] name
+  # @deprecated
+  # @see https://asd.com
+  # :section: Related methods
+  # Those methods are related
+  # def input # :nodoc:
+  # class M # :nodoc: all
+  ```
+
+  To run use: 
 * convert single value and array value to array `Array(1)` and `Array([1])`https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
 * hash with indifferent access (symbol or string) this is Rails ActiveSupport
   `h = HashWithIndifferentAccess.new a: 2` so you can use `h[:a]` or `h['a']`

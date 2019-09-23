@@ -545,7 +545,14 @@ Note `.` after folder name.
   match. But you can use regex so it is not matched `ps aux | grep
   [p]rocess_name`. to show full command for process id you can use `ps -fp
   <pid>`. You can kill one by one using `top` and `k`. To find proccess by port
-  it is using you can `lsof -wni tcp:3000`.
+  it is using you can `lsof -wni tcp:3000` or simpler version to find command
+  that is listening on a port
+
+  ```
+  lsof -i:7047
+  ```
+  so you can kill -9 PID and have that port open.
+
   You can see top 5 proccesses and commands
   ~~~
   ps aux | sort -nrk 3,3 | head -n 5

@@ -485,38 +485,99 @@ shift](https://datatables.net/extensions/select/examples/styling/bootstrap.html)
 * another nice
 [bootstrap-table](http://issues.wenzhixin.net.cn/bootstrap-table/index.html)
 
+* similar tool for react https://github.com/gregnb/mui-datatables and it
+  supports server side also https://github.com/gregnb/mui-datatables/blob/master/examples/serverside-pagination/index.js
+
 # Rails datatables helpers
 
 https://www.datatables.net/download/npm
+since it provides both amd and commonjs there is a error
+```
+Uncaught TypeError: Cannot set property '$' of undefined
+```
+ https://datatables.net/forums/discussion/32542/datatables-and-webpack
+For webpack you need to not invoke after require or disable amd
+```
+# config/webpack/environment.js
+environment.config.set('amd', false)
+```
+
 https://datatables.net/manual/server-side
 
 ## Ajax datatable rails
 
+https://github.com/ajahongir/ajax-datatables-rails-v-0-4-0-how-to/blob/master/app/datatables/city_datatable.rb
+Play around in ~/rails/temp/rails_6.0.0/ branch ajax_datatables_rails.
 For this [gem](https://github.com/jbox-web/ajax-datatables-rails) you need to
 define view_columns, by default `orderable` and `searchable` are true, and
 `cond` is `:like` (`:start_with`, `:end_with`, `:string_in`,... )
 
 ```
+# app/datatables.rb
+class UserDatatable < AjaxDatatablesRails::ActiveRecord
   def view_columns
     @view_columns ||= {
-      name: { source: "User.name", cond: :like }
+      name: { source: "User.name", cond: :like },
+      body: { source: 'Company.body', formatter: ->(o) { o.upcase }},
+      comments: { source: 'Comment.body', cond: custom_filter },
     }
   end
+
+  def get_raw_records
+    User.all
+  end
+
+  def custom_filter
+    ->(column, formated) {
+      r = column.table[column.field].eq(column.search.value.to_i + 1)
+      e = ::Arel::Nodes::SqlLiteral.new(column.field.to_s).matches("#{ column.search.value }%")
+      e
+    }
+  end
+
+  def data
+    records.map do |record|
+      {
+        name: record.name,
+        body: record.body,
+        comments: record.comments.map(&:body).join,
+        DT_RowId: record.id,
+      }
+    end
+  end
+end
 ```
 
-Cons is that it is missing server side rendering, which is important because of:
-* rendering performance: ability to cache or prerender a site
-* easier to write tests
-* accessibility and no-script concerns
-* loading a page in its rendered state for SEO
+Pros: easy to understand and it is using Arel
+
+Cons: missing server side rendering, it only produce JSON. I need search by
+one column or another column (not all enabled columns). Difficult to understand
+how to filter by custom generated columns.
+
+Gem uses following files:
+* config.rb: it `include ActiveSupport::Configurable` and set to `@config`
+* base.rb: it is parent class of `AjaxDatatablesRails::ActiveRecord` so we
+  initialize with `params`, and create `@datatable` instance. It responds to
+  `.as_json` (records_total_count->fetchrecords->UserDatatable#get_raw_records,
+  records_filtered_count->ActiveRecord#filter_records->
+  ActiveRecord#build_conditions_for_datatable, UserDatatable#data-> set
+  @records on retrieve_records(fetch, filter_records, sort_records,
+  paginate_records).
+* datatable/datatable.rb: initialize with `AjaxDatatablesRails::ActiveRecord` as
+  `@datatable`. Use `columns` to create `Datatable::Column` from params
+* datatable/column.rb: provides `casted_column` that creates
+  Arel::Nodes::NamedFunction.new 'CAST', [User[:name].as('VARCHAR')]
+* orm/active_record.rb: build_conditions_for_datatable creates arel criteria for
+  each column and reduce using `:or`, and for each search_for (split by space)
+  and join using `:and`. Areal criteria is in
+  datatable/column/search.rb#search_query either `regex_search` or
+  `casted_column.matches '%'`
 
 ## Effective datatables
 
-https://github.com/code-and-effect/effective_datatables testing on
+https://github.com/code-and-effect/effective_datatables play around on
 /home/orlovic/rails/temp/rails_5.2.3 branch effective_datatables
 
-```
-```
 
 Pros: show/hide columns, bulk actions (check boxes are not perserved between
 pages and filters) it is in ajax, and first page is reloaded, autodetect

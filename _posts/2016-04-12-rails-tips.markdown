@@ -1062,6 +1062,48 @@ If you receive error `undefined method map for "'users' FORCE INDEX
 (my_user_index)":Arel::Nodes::SqlLiteral` than you can try to replace
 `includes/references` with `joins`.
 
+# Arel
+
+https://github.com/rails/arel/tree/7-1-stable
+https://github.com/rails/rails/blob/master/activerecord/lib/arel/predications.rb
+https://www.youtube.com/watch?v=ShPAxNcLm3o&feature=youtu.be
+
+`left_outer_joins` is available in [recent
+rails](https://guides.rubyonrails.org/active_record_querying.html#left-outer-joins)
+
+Online SQL to Areal http://www.scuttle.io/
+
+cheatsheet https://devhints.io/arel
+```
+arel_table = User.arel_table
+arel_table = Arel::Table.new(:users)
+arel_col = arel_table[:email]
+
+# select fields
+arel_table.project arel_col, arel_col.as('custom_name')
+# aggregates
+arel_table.project arel_table[:age].sum
+arel_table.project arel_table[:age].count.as('user_count')
+
+# limit offset
+arel_table.take(3).skip(2)
+
+# order
+arel_table.order(arel_col, arel_col.desc)
+
+# where restrictions
+arel_table.where arel_col.eq 'my@email.com'
+
+arel_col.eq 'string'
+arel_col.gteq Date.today.beginning_of_month
+arel_col.matches "%#{query}%"  # generate ILIKE
+
+# AR use joins(:photos) but Arel use join
+photos = Photo.arel_table
+arel_table.join(photos, Arel::Nodes::OuterJoin).on(arel_col.eq photos[:user_id]).project(photos[:name].as('photo_name'))
+
+
+```
 ## Deadlocks
 
 <https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlock-example.html>
@@ -3855,3 +3897,54 @@ end
   classes.
 
 * `rake tmp:cache:clear` for rails clear cache
+* check gemes dependencies
+  ```
+  gem install bundler-audit
+  bundle audit check --update
+  ```
+* camel case to underscore snake_case is with `'HiBye'.underscore`
+* csrf When you want to submit form from another domain you get this error
+
+  ~~~
+  ActionController::InvalidAuthenticityToken (ActionController::InvalidAuthenticityToken):
+  ~~~
+
+  This is when your controller is protected from CSRF attack (it contains
+  protect_from_forgery) .
+  You can mute it instead of raising exception:
+
+  ~~~
+  sed -i app/controllers/application_controller.rb -e '/protect_from_forgery/c \
+    # protect_from_forgery with: :exception\
+    protect_from_forgery with: :null_session'
+  ~~~
+
+  You can disable CSRF Token authenticity for specific actions
+
+  ~~~
+  skip_before_action :verify_authenticity_token, only: [:my_insecure_post_action]
+  ~~~
+
+
+  Another way to bypass cors check is to override `verified_request?`
+  ```
+  # app/controllers/application_controller.rb
+    def verified_request?
+      super || (session['warden.user.user.key'] && request.format.json?)
+    end
+  ```
+
+  In my feature tests (for example bank payment redirection back with POST than I
+  do not have authenticity error `verified_request?` returns true, but for
+  development `verified_request?` returns false
+* `ActiveSupport::SafeBuffer` is needed when you whant to render html tags on
+  page or email. You need to start with `t='text'.html_safe` and than add to it
+  some other string `t+='<script>`. If you use interpolation `"#{t}"` or string
+  + safejoin `'a' + t`, or translation `I18n.t('name', name: t)`, or when you
+  save and load to database than you need to call `.html_safe` on a result
+  (which is a string).
+  If you have array than you can use
+  https://apidock.com/rails/ActionView/Helpers/OutputSafetyHelper/safe_join
+  ```
+  @name_with_arrows = ActionController::Base.helpers.safe_join(array, " #{Constant::ARROW_CHAR} ")
+  ```

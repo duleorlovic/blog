@@ -29,3 +29,5 @@ class Member < ActiveRecord::Base
   belongs_to :primary_email_address, class_name: "EmailAddress", foreign_key: :email_address_id
 end
 ~~~
+
+https://thoughtbot.com/blog/handling-associations-on-null-objects

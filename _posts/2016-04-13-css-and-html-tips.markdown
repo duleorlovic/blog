@@ -170,7 +170,7 @@ layout: post
 
 ## SASS
 
-Sass is shorter since it uses indent, and do not require semicolon.
+Sass is shorter since it uses indent, and does not require semicolon.
 Atomatic convert scss to sass
 ~~~
 sass-convert -F scss -T sass application_styles.css.scss application_styles.css.sass
@@ -321,16 +321,16 @@ Note that input is before label, which is before target
 ~~~
 # app/assets/stylesheets/common/show_hide.sass
 // toggle active without javascript
-// <input type="checkbox" id="toggle-active" class="toggle-active" />
-// <label for="toggle-active"><%= t('add') %></label>
-// <div class="toggle-active-target hide-not-important">
+// <label for="some-id"><%= t('add') %></label>
+// <input type="checkbox" id="some-id" class="toggle-active" />
+// <div class="toggle-active-adjacent-sibling hide-not-important">
 // </div>
 // https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
 .toggle-active {
   position: absolute;
   clip: rect(0, 0, 0, 0);
 
-  &:checked ~ .toggle-active-target {
+  &:checked ~ .toggle-active-adjacent-sibling {
     display: initial;
   }
 }

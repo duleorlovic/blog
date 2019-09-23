@@ -465,7 +465,8 @@ ignore case, but if you have at leat on uppercased letter than case is important
 * `:%s/old/new/gc`
 * `q:` shows history of commands
 * `q/` shows history of searches
-* `:argdo %s/foo/bar/ge | update`  replace (substitute) in all arg
+* `:argdo %s/foo/bar/ge | update`  replace (substitute) in all arg. replace tabs
+  with two spaces in whole file `:1,$s/\t/  /g`
 * `:set nowrapscan` is usefull when you want to stop search when you hit bottom
   of a file. With `gg` you can jump to begging. `:set wrapscan` when you want to
   back to wrapped search
@@ -688,7 +689,13 @@ a + b; total %>`
 
 * for js I use `jshint` with es6 and disabled semicolons
 * semicolons also disabled in `eslint` (which extends from airbnb-base)
-* for styleles I use `stylelint` and local `.stylelintrc` since version 9.10
+  inline comments
+```
+# disable one line
+}(function( $, window, document, undefined ) { // eslint-disable-line
+```
+
+* for styles I use `stylelint` and local `.stylelintrc` since version 9.10
   does not pick my home configuration
 * Javascript `npm install -g jscs jscs-angular` and create files [.jscs](
 * json `npm install -g jsonlint` [link to issue](https://github.com/jaxbot/syntastic-react/issues/4)

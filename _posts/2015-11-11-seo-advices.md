@@ -92,6 +92,11 @@ widget</a>`
   xml sitemap, link to css files to use https
 * social media
 * optimize css https://csswizardry.com/2018/11/css-and-network-performance/
+* use seserver side rendering, which is important because of: rendering
+  performance: ability to cache or prerender a site, easier to write tests,
+  accessibility and no-script concerns, loading a page in its rendered state for
+  SEO
+
 
 # Rails gzip
 
@@ -296,6 +301,10 @@ Rails it will be like:
   %meta{name: "twitter:url",        content: post_url(@post.id)}
 ~~~
 
+In rails you can use meta tags gem so you can set title in html and meta tag in
+one place. Also set language alternative url
+https://github.com/kpumuk/meta-tags#multi-regional-and-multilingual-urls-rss-and-mobile-links
+
 # Addwords
 
 You can enable `Destination URL Auto-tagging. Automatically tag my ad
@@ -342,6 +351,14 @@ page, not on ajax call since crawl will be able to index that
 * Do not load too much files, crawl budget.
 * Do not duplicate content, same content but different url, use link rel canonical ie canonicalize.
 * Prevent crawling with robots.txt , but link from other site is followed (robots is not read) so for this case use header.
+
+# Off page SEO
+
+* backlinks, find links to your site: https://moz.com/link-explorer
+* guest blogging on some of those blogs https://www.websitehostingrating.com/list-of-200-websites-that-accept-guest-posts/ or find where similar images are used https://images.google.com/ upload and reverse search image
+* social media engagement
+* influencer marketing, ask them to share a link
+* video, podcasts, webinars
 
 TODO
 https://www.youtube.com/watch?v=Afy7H04X9Us

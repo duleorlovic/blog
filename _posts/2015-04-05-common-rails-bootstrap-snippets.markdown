@@ -146,6 +146,28 @@ And use with classes
 <i class="demo-icon icon-mobile"></i>
 ```
 
+Using in node, you need to download `config.json`
+`npm install fontello-cli -g`.
+First you need to download one config.json file, and you can open session page
+
+```
+fontello-cli --config fontello/config.json open
+```
+
+You can download package and extract to `/fontello` or you can download
+`config.json` and copy and install (in this case it will not update demo.html)
+
+```
+cp ~/Downloads/config.json fontello/
+fontello-cli --config fontello/config.json install
+```
+
+To see local previews you can also
+```
+gnome-open fontello/demo.html
+```
+```
+
 Prepare icons https://github.com/fontello/fontello/wiki/How-to-use-custom-images#preparing-images-in-inkscape
 
 

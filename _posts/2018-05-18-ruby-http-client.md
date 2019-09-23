@@ -41,7 +41,7 @@ request = Net::HTTP::Get.new '/'
 response = http.request request
 ~~~
 
-For https you need to enable ssl. If url is https but you do not use ssl than
+For https you need to enable ssl. If uri is https but you do not use ssl than
 you will get following error `EOFError: end of file reached`
 
 ~~~
@@ -54,7 +54,7 @@ http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 # or in block mode
 
-res = Net::HTTP.start(url.host, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) {|http| http.request(req) }
+res = Net::HTTP.start(uri.host, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) {|http| http.request(req) }
 ~~~
 
 You can define timeouts
@@ -70,7 +70,10 @@ http.write_timeout = 10
 On request object you can set headers
 
 ~~~
-header = {'Content-Type': 'application/json'}
+header = {
+  'Content-Type': 'application/json',
+  'Authorization': "Bearer #{key}",
+}
 request = Net::HTTP::Post.new(uri, header)
 # or
 request['Content-Type'] = 'text/json'
@@ -112,9 +115,9 @@ def fetch(uri_str, limit = 10)
   # You should choose better exception.
   raise ArgumentError, 'HTTP redirect too deep' if limit == 0
 
-  url = URI.parse(uri_str)
-  request = Net::HTTP::Get.new(url.path, { 'User-Agent' => 'Mozilla/5.0 (etc...)' })
-  response = Net::HTTP.start(url.host, url.port) { |http| http.request(request) }
+  uri = URI.parse(uri_str)
+  request = Net::HTTP::Get.new(uri.path, { 'User-Agent' => 'Mozilla/5.0 (etc...)' })
+  response = Net::HTTP.start(uri.host, uri.port) { |http| http.request(request) }
   case response
   when Net::HTTPSuccess     then response
   when Net::HTTPRedirection then fetch(response['location'], limit - 1)

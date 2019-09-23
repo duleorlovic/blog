@@ -98,6 +98,7 @@ To show all versions and install specific version you can
 npm info ionic
 npm install ionic@1.4.0
 npm uninstall ionic
+npm uninstall -g ionic
 ~~~
 
 You can install packages localy (recommended) so you can access them
@@ -167,6 +168,17 @@ If you want to install to specific folder instead of `node_modules` than use
 --install.modules-folder "./public/assets"
 --add.modules-folder "./public/assets"
 ~~~
+
+When you are developing, you can use link
+```
+# in package folder
+yarn link
+
+# in usage folder
+# eventual remove from package and node_modules
+yarn remove trk_datatables
+yarn link trk_datatables
+```
 
 Note that there are problems with missing `.bin` folder
 https://github.com/yarnpkg/yarn/issues/3724
@@ -258,7 +270,7 @@ execute it's code.
 Or you can transform AMD modules to CommonJS js modules with `deamdify` (so no
 need for almond to define `define`) and than run `browserify`.
 
-# ES6 Import Export
+# ES6 Ecmascript modules Import Export
 
 ~~~
 # add.js
@@ -300,6 +312,55 @@ not the whole library (deprecate `esperanto`).
 
 Universal module definition so you can import in commonjs or amd or with script
 tag.
+Manualy is
+
+```
+(function( factory ) {
+  "use strict";
+
+  if ( typeof define === 'function' && define.amd ) {
+    // AMD
+    define( ['jquery'], function ( $ ) {
+      return factory( $, window, document );
+    } );
+  }
+  else if ( typeof exports === 'object' ) {
+    // CommonJS
+    module.exports = function (root, $) {
+      if ( ! root ) {
+        // CommonJS environments without a window global must pass a
+        // root. This will give an error otherwise
+        root = window;
+      }
+
+      if ( ! $ ) {
+        $ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+          require('jquery') :
+          require('jquery')( root );
+      }
+
+      return factory( $, root, root.document );
+    };
+  }
+  else {
+    // Browser
+    factory( jQuery, window, document );
+  }
+}
+(function( $, window, document, undefined ) {
+  "use strict";
+
+  function initialise() {
+    alert('hi')
+  }
+
+  return { initialise }
+}})
+```
+
+`use strict` is nice so you get error in javascript console when assigning
+variable that has not been declared.
+
 You can use rollbar or webpack to produce umd that will generate a global
 `myGlobalModule` or plain js https://stackoverflow.com/questions/38638210/how-to-use-umd-in-browser-without-any-additional-dependencies
 
@@ -325,7 +386,7 @@ export default {
 export function sum(list) {
 
 
-// webpack call with myGlobalModule.sum([1,2,3])
+// with webpack call with myGlobalModule.sum([1,2,3])
 export function sum(list) {
 // with webpack with myGlobalModule.default([1,2,3])
 export default function sum(list) {
@@ -625,6 +686,21 @@ module.exports = {
 };
 ~~~
 
+For `umd` you need to disable `amd` parser
+https://webpack.js.org/configuration/module/#ruleparser
+```
+// webpack.config.js
+module.exports = {
+  module: {
+    rules: [
+      {
+        parser: { amd: false },
+      },
+    ]
+  }
+}
+```
+
 # Webpack plugins
 
 ~~~
@@ -747,9 +823,59 @@ when referencing node modules.
 @import '~bootstrap/scss/bootstrap';
 ~~~
 
-For css from gems create package.json
-
+For css from gems create npm package
 https://github.com/rails/webpacker/issues/57#issuecomment-327533578
+
+If package.json contains `style` attribute than with `postcss-import` plugin,
+which is by default enabled in `postcss.config.js`, you can import css with
+`@import 'package-name'`
+```
+// app/javascripts/stylesheet/application.css
+// this file should CSS not scss since @import command is different
+@import 'package-name'
+@import 'package-name/file-path/file.css'
+```
+also import that css file
+```
+// app/javascript/packs/application.js
+import '../stylesheet/application.css'
+```
+
+To import sass file you need sass loader https://github.com/webpack-contrib/sass-loader
+Rails supports it but on clean webpack project you need to:
+
+```
+```
+
+Alternatively, you can import css file from node_modules in javascript.
+```
+// app/javascript/packs/application.js
+import 'package-name/file-path/file.css'
+```
+
+## IIFE Immediatelly invoked function expression
+
+It is used so any variable declared inside is not visible to the outside word.
+Any unary operator `!` or `+` will make expression instead functional definition
+(it is a statement, which is not executed) so we can call that funtion
+```
++function(i) {
+  alert(i)
+}(1);
+```
+When we need return value, instead of unary operator, we can use parenthesis in
+two variations (both are OK).
+```
+// Variation 1
+(function() {
+    alert("I am an IIFE!");
+}());
+
+// Variation 2
+(function() {
+    alert("I am an IIFE, too!");
+})();
+```
 
 todo
 https://youtu.be/fKOq5_2qj54?t=602

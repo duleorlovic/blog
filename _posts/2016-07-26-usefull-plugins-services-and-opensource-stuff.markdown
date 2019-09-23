@@ -675,6 +675,8 @@ and download only that batch of icons.
 * sample placeholder https://placeholder.com/
 * free vector images kajak pictogram https://pixabay.com/en/sport-pictogram-olympia-water-swim-1580667/
 * flags http://flagpedia.net/india
+* create passport photo id card https://www.idphoto4you.com needs flash plugin
+  so open in chrome
 
 # Slides
 
@@ -936,6 +938,7 @@ Email templates
   fadeIn`. Check how it looks in Mac Safari.
 * <https://alexcambose.ro/motus/#/demos/svg> animate on scroll
 * <http://daybrush.com/scenejs/>
+* rain drop https://codepen.io/nealagarwal/pen/xxKWVJY
 
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>

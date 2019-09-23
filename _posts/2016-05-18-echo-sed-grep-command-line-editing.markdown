@@ -171,7 +171,8 @@ Just a few command line options with grep
 * `grep -l asd` output only filenames
 * grep only specific file type is with `grep asd --include \*.yml` or with a
   find command
-  * `find . -name *.yml -exec grep asd {} \;`
+  * `find . -name *.yml -exec grep asd {} \;` (this will show the line, not the
+    filename)
 * rename could be done with simple regex:
   * `rename 's/\.in.html.erb/\.html.erb/' app/views/*/*`
   * `rename 's/\.in.html.erb/\.html.erb/' app/views/*/*/*` for nested folders

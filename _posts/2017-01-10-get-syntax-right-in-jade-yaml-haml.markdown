@@ -133,3 +133,12 @@ other blocks use indent
     });
   ~~~
 
+# Json
+
+Can not add comments, only you can is to add anoter fieeld
+```
+{
+  "_comment": "This is a comment",
+  "name": "My name"
+}
+```

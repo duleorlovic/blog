@@ -102,11 +102,9 @@ gem 'recaptcha'
       verification_failed: reCAPTCHA verification failed, please try again.
 
 # app/form_objects/contact_form.rb
-require 'recaptcha/verify'
-
 class ContactForm
   include ActiveModel::Model
-  include Recaptcha::Verify
+  include Recaptcha::Adapters::ControllerMethods
 
   attr_accessor :email, :text, :g_recaptcha_response, :current_user, :remote_ip
   validates_format_of :email, with: Devise.email_regexp

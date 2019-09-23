@@ -257,7 +257,8 @@ in the key also.
 Note that you should not use same keys on multiple places on the page.
 So if you have to use on same page, use different first string.
 
-You can clear cache in rails console : `Rails.cache.clear`
+You can clear cache in rails console : `Rails.cache.clear`, also `rake
+tmp:cache:clear` for rails clear cache
 
 You can use conditional caching you can use `cache_if`
 

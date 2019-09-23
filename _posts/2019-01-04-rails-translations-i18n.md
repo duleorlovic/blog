@@ -340,6 +340,38 @@ end
 For google translate look for two scripts, one for vim and one for whole yml.
 https://github.com/duleorlovic/config/tree/master/ruby
 
+## Mobility
+
+fallbacks
+```
+club.name fallback: false
+club.name fallback: [:en]
+```
+
+If fallback is not false than longer translate will fallback to short
+automatically (`'sr-latin'` to `:sr`)
+
+Note that passing `locale` options to reader or using locale accessors will
+disable fallbacks
+```
+word.meaning(locale: :de)
+#=> nil
+word.meaning_de
+#=> nil
+Mobility.with_locale(:de) { word.meaning }
+# if in model we have translate :meaning, fallbacks: { de: :ja}
+#=> "(名詞):動きやすさ、可動性"
+```
+
+Global fallback
+```
+# config/initializers/mobility.rb
+  config.default_options[:fallbacks] = { sr: :en, en: :sr }
+```
+Dynamic fallback https://github.com/shioyama/mobility/pull/328
+https://github.com/shioyama/mobility/issues/314
+
+
 # Enums
 
 ```
