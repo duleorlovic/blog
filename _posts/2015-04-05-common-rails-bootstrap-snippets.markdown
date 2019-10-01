@@ -166,7 +166,6 @@ To see local previews you can also
 ```
 gnome-open fontello/demo.html
 ```
-```
 
 Prepare icons https://github.com/fontello/fontello/wiki/How-to-use-custom-images#preparing-images-in-inkscape
 
@@ -288,7 +287,8 @@ guard init livereload
 #   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload\
 # '
 
-When I get error with command RAILS_ENV=production rails assets:precompile
+When I get error with command
+RAILS_ENV=production rails assets:precompile
  No such middleware to insert before: ActionDispatch::Static
 Than solution is to add `gem 'rails_12factor`, group: :production`
 https://github.com/AssetSync/asset_sync/issues/221#issuecomment-75492905

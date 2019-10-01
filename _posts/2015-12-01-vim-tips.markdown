@@ -743,7 +743,9 @@ Do not know https://stackoverflow.com/questions/53918093/why-is-class-demo-butto
 
 # Vimum VimFx
 
-[VimFx](https://addons.mozilla.org/ru/firefox/addon/vimfx/)
+[Vimium-FF](https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/)
+[VimFx](https://addons.mozilla.org/ru/firefox/addon/vimfx/) does not support
+firefox 57+
 [source](https://github.com/akhodakivskiy/VimFx) is vimium for
 firefox. `f` for navigation and clicks, `/` for search (n N), `x` `X` for close
 and reopen tab, `J` `K` switch, `space` `shift+space` page down up.

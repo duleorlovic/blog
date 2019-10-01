@@ -14,7 +14,8 @@ title: Ubuntu working environment
   ~~~
 
 * taks screenshot: fullsize `Print`, currently active window `Alt+Print`, area
-  `Shift+Print` (select window or drag area).
+  `Shift+Print` (select window or drag area). images are automatically saved to
+  ~/Pictures
   Use `ctrl` instead of alt if you want to copy to clipboard
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
@@ -72,7 +73,9 @@ LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libv4l/v4l1compat.so /opt/google/talkplugin
 HERE_DOC
 ~~~
 
-* Simple scan scanner for HP LasetJet MF1212nf MFP does not work if you add
+## Cups
+
+Simple scan scanner for HP LasetJet MF1212nf MFP does not work if you add
   printer from gui. Better is to use:
 
   ~~~
@@ -94,6 +97,15 @@ HERE_DOC
   On ubuntu 18 I used binary installation hplip-3.19.6.run from
   https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
   but somehow `hp-plugin` does not work, so I used old version
+
+
+Enable automatic adding network printers
+```
+sudo systemctl start cups-browsed
+sudo systemctl disable cups-browsed # remove from /etc/cups/cupsd.conf
+sudo systemctl stop cups-browsed
+```
+
 
 * recently I got dns error (I'm using 8.8.8.8). Following
   [post](http://askubuntu.com/questions/368435/how-do-i-fix-dns-resolving-which-doesnt-work-after-upgrading-to-ubuntu-13-10-s)

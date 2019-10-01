@@ -315,6 +315,12 @@ timezone with
 `Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
 why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
 
+When parsing user input you should use `.zone` in methods like
+```
+Time.zone.parse '2010-01-02 09:00:00'
+Date.zone.parse '2010-01-02 09:00:00'
+```
+
 
 # Multiline render js response
 
@@ -668,7 +674,7 @@ heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
   sudo pg_dropcluster 9.3 main
   ~~~
 
-* To disable sql logs in rails logger put this in initializer file
+* To disable mute sql logs in rails logger put this in initializer file
 
   ~~~
   # config/initializers/silent_sql_log.rb
@@ -842,6 +848,10 @@ VERSION=20161114162031` (note that `:up` `:down` only run one migration)
   # or for test database
   rails runner "ActiveRecord::Base.connection.execute('select * from ar_internal_metadata').each {|r|puts r}" -e test
 
+  ```
+* to change column null false to true (to add NOT NULL constraint) you can use
+  ```
+    change_column_null :happenings, :club_id, true
   ```
 
 ## Has_many through
@@ -3826,13 +3836,24 @@ end
   ```
   Run specific test and include byebug
   ```
-  cd actionview
   bundle exec ruby -w -Itest -rbyebug actionview/test/template/form_options_helper_test.rb -n test_select_with_include_blank_false_and_required
   ```
-  Commit on your fork and some branch_name. In description of pull requests you
-  can include code example
+  Commit on your fork and some branch_name. You can rebase to master
   ```
+  cd ~/rails/rails
+  git checkout master
+  # pull from rails repository
+  git pull rails master
+  # push to my repository
+  git push
+  # rebase
+  git checkout my_branch
+  git rebase -i master
+  # select squash so there is only one commit
+  git push origin my_branch
   ```
+  On web there is a button 'Create pull request'.
+  In description of pull requests you should some code example.
 
 * Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
   💯% sure. Here is plain ascii (￣︶￣). 🙌
@@ -3947,4 +3968,58 @@ end
   https://apidock.com/rails/ActionView/Helpers/OutputSafetyHelper/safe_join
   ```
   @name_with_arrows = ActionController::Base.helpers.safe_join(array, " #{Constant::ARROW_CHAR} ")
+  ```
+* `form_with` is used instead of `form_for @model` and `form_tag url`. Here is
+  example
+  ```
+  # nothing special here
+  form_with url: users_path do |f|
+  # all forms are remote: true by default so we need to use `local: true`
+  form_with url: users_path, local: true do |f|
+  # for model use model:
+  form_with model: @user do |f|
+
+  ```
+* custom exception class
+  ```
+  module TrkDatatables
+    class Error < StandardError
+      def message
+        "TrkDatatables: #{super}"
+      end
+    end
+  end
+  ```
+  than if there is some posibility to catch error (for example TypeError for dig
+  method) you can write
+  ```
+    def search_all
+      @params.dig(:search, :value) || ''
+    rescue TypeError => e
+      raise Error, e.message + '. Global search is in a format: { "search": { "value": "ABC" } }'
+    end
+  ```
+
+  You can rescue in controller with
+  ```
+  # app/controllers/application_controller.rb
+  rescue_from TrkDatatables::Error do |exception|
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: exception.message }
+      format.json { render json: { error_message: exception.message, error_status: :bad_request }, status: :bad_request }
+    end
+  end
+  ```
+
+  Params can be different format, so event this code can raise exception
+  ```
+  params.require(:subscriber).permit(:name)
+  ```
+  when params is an array `[]` and `A NoMethodError occurred in ` undefined
+  method `permit` for []:Array.
+  When it is a hash than it's class is `ActionController::Parameters` but when
+  it is array than it is really array of `ActionController::Parameters`.
+  You can simulate with
+  ```
+  curl -X POST -g "localhost:3001/subscribers" -d '{"subscriber":[]}'
   ```

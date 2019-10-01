@@ -7,11 +7,16 @@ title: Rails cache
 and action caching has been extracted to gems. Now we can use fragment caching
 
 By default caching in rails development environment is disabled. To enable you
-need to `touch tmp/caching-dev.txt` AND to comment out `config.cache_store =
-:memory_store` from `config/environments/development.rb` so it use
-`ActiveSupport::Cache::FileStore`. Instead of file you should use
-`dalli+memcached` or `redis`  (you already have redis you use background jobs
-like Sidekiq).
+need to `touch tmp/caching-dev.txt` AND to restart after enabling in config
+```
+# config/environments/development.rb
+  config.cache_store = :memory_store
+
+  config.action_controller.perform_caching = true
+```
+By default it uses `ActiveSupport::Cache::FileStore`. Instead of file you should
+use `dalli+memcached` or `redis`  (you already have redis you use background
+jobs like Sidekiq).
 Another way to start caching is
 
 ~~~
@@ -87,6 +92,8 @@ HERE_DOC
 ~~~
 cat >> config/initializers/dalli.rb << HERE_DOC
 Rails.application.configure do
+  # https://devcenter.heroku.com/articles/building-a-rails-3-application-with-memcache
+  # https://devcenter.heroku.com/articles/memcachier
   config.cache_store = :mem_cache_store # this will use local memcached service
   if secrets.memcachier_servers.present?
     config.cache_store = :mem_cache_store,
@@ -257,13 +264,13 @@ in the key also.
 Note that you should not use same keys on multiple places on the page.
 So if you have to use on same page, use different first string.
 
-You can clear cache in rails console : `Rails.cache.clear`, also `rake
-tmp:cache:clear` for rails clear cache
+You can clear cache in rails console : `Rails.cache.clear`, also
+`rake tmp:cache:clear` for rails clear cache
 
 You can use conditional caching you can use `cache_if`
 
 ~~~
-<% cache_if admin?, product do %>
+<% cache_if params[:cache], product do %>
   <%= render product %>
 <% end %>
 ~~~
@@ -288,7 +295,7 @@ end
 
 # Low level caching
 
-In console or in code you can cache
+In console or in code you can cache put, get
 
 ~~~
 Rails.cache.write 'my_key', 123

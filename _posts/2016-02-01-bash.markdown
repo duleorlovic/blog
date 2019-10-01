@@ -199,6 +199,24 @@ xdotool key $1
 You can send commands to specific window
 https://unix.stackexchange.com/questions/87831/how-to-send-keystrokes-f5-from-terminal-to-a-gui-program
 
+## Xdotool
+
+https://github.com/jordansissel/xdotool
+
+```
+# search for window id
+WID=`xdotool search "Mozilla Firefox" | head -1`
+# activate
+xdotool windowactivate --sync $WID
+# send key
+xdotool key --clearmodifiers ctrl+l
+```
+To send Return with type
+https://askubuntu.com/questions/515185/run-several-xdotool-commands-in-one-line-separated-from-each-other
+```
+xdotool type "$(printf 'date\n\e ')"
+```
+
 ~~~
 # this does not send key
 xdotool search --classname vp_$(get_current_viewport)_class_slash  windowactivate --sync %1 key  a
@@ -222,6 +240,14 @@ xdotool windowactivate --sync 67199662 type "pwd"; xdotool key --delay 50 space 
 
 # complete command for janko-m/vim-test strategy is in vim tips
 ~~~
+
+Freeze delay performance problems
+https://github.com/jordansissel/xdotool/issues/10
+
+debug with
+```
+DEBUG=1 xdotool windowactivate --sync 48464317 type "$(printf "pwd\n\e ")"; xdotool windowactivate $WID
+```
 
 Remapping keyboard keys is with
 [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap).

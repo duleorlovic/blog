@@ -306,7 +306,7 @@ gem 'stackprof' # ruby 2.1+ only
 gem 'memory_profiler'
 ~~~
 
-By default it is enabled, to disable you need to
+By default it is enabled in development mode
 ```
 # config/initializers/rack_profiler.rb
 Rack::MiniProfiler.config.authorization_mode = :whitelist

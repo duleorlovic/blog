@@ -312,7 +312,10 @@ not the whole library (deprecate `esperanto`).
 
 Universal module definition so you can import in commonjs or amd or with script
 tag.
-Manualy is
+You can find templates https://github.com/umdjs/umd/tree/master/templates
+My example for jQuery plugins is to use `module.exports = function(root, $) {
+... factory($, root)}`
+Manualy is:
 
 ```
 (function( factory ) {
@@ -831,7 +834,7 @@ which is by default enabled in `postcss.config.js`, you can import css with
 `@import 'package-name'`
 ```
 // app/javascripts/stylesheet/application.css
-// this file should CSS not scss since @import command is different
+// this file name should have extension CSS not scss since @import command is different
 @import 'package-name'
 @import 'package-name/file-path/file.css'
 ```
@@ -852,6 +855,10 @@ Alternatively, you can import css file from node_modules in javascript.
 // app/javascript/packs/application.js
 import 'package-name/file-path/file.css'
 ```
+
+Webpacker supports babel preset out of box.
+
+To find jquery version you can type `$.fn.jquery`
 
 ## IIFE Immediatelly invoked function expression
 
@@ -885,7 +892,6 @@ https://youtu.be/fKOq5_2qj54?t=602
 Install with `yarn global add parcel-bundler`
 
 # Makefile
-
 
 ```
 make help

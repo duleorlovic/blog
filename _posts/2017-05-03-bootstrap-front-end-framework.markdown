@@ -322,6 +322,9 @@ There are two files that configure and override bootstrap
 // this is used if you want btn inside h1
 .btn.btn__font-size-inherit
   font-size: inherit
+
+.btn.btn__text_wrap
+  white-space: normal
 ```
 
 ## Nabar

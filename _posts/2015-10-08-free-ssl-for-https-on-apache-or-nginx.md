@@ -102,7 +102,8 @@ Is free and Heroku supports it using
 [ACM](https://devcenter.heroku.com/articles/automated-certificate-management)
 but only for paid dynos.
 Use cloudflare.com for free ssl, and we point directly to https herokuapp (no
-need to setup dns on heroku).
+need to setup dns on heroku). For example type=CNAME name=www
+content=move-index.herokuapp.com
 On Crypto tab on Cloud Flare select FULL (not Flexible) SSL.
 You can check the Always use HTTPS (`Redirect all requests with scheme “http” to
 “https”. This applies to all http requests to the zone`) or create Page rules

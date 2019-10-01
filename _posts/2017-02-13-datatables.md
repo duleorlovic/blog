@@ -33,6 +33,12 @@ document.addEventListener('turbolinks:load', () => {
 })
 ~~~
 
+To check which datatable version you are using you can use
+```
+$table.DataTable.version
+$table.DataTable.fnVersionCheck('1.10.12')
+```
+
 You can use
 [jquery-datatables-rails](https://github.com/rweng/jquery-datatables-rails)
 gem. Add gem to Gemfile and run `rails g jquery:datatables:install`.
@@ -72,9 +78,12 @@ There was a forum question to add data manually
 side](https://datatables.net/forums/discussion/16440/best-way-to-do-deferred-loading-client-side)
 Best option is [defer
 loading](https://datatables.net/examples/server_side/defer_loading.html)
+https://datatables.net/reference/option/deferLoading
 Just add option `deferLoading: <%= @users.count %>` than initially data from the
 page will be shown, than on any search, reorder or page, server side request
-will be made. Note that you can not use `data-order` and `data-search` on
+will be made. Use array notation when there was a filter on first serverside
+rendering.
+Note that you can not use `data-order` and `data-search` on
 initial page (error is like `datatables warning requested unknown parameter
 '[ojbect Object]' for row 0 column 7`).
 Note that when deferred loading is enabled, you can not use `stateSave: true`

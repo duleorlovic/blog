@@ -139,7 +139,7 @@ failure.
 * `WHERE cid NOT IN (SELECT wcid FROM t WHERE wcid IS NOT null)` we need to
   check if null is in table since `NOT IN` will return empty set
 
-* Online exercises <https://pgexercises.com/>
+* Online exercises pgexercises. com
 
 # Time Date
 

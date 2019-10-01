@@ -186,4 +186,5 @@ I had an error when using STMP
   555 5.5.2 Syntax error. u25sm6671019wml.4 - gsmtp
   /home/orlovic/.rbenv/versions/2.6.3/lib/ruby/2.6.0/net/smtp.rb:969:in `check_response'
 ~~~
-and the issue was on google's servers and lasts for one and half hours.
+and the issue was because email was not properly formated (it used latin
+letters) for example `orlović@email.com`
