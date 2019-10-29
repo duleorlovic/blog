@@ -113,7 +113,7 @@ rubocop --auto-correct # to autocorrent correct some files (except lineLength)
 ~~~
 # initial scale on mobile devices
 sed -i app/views/layouts/application.html.erb -e '/title/a \
-    <meta name="viewport" content="width=device-width, initial-scale=1">'
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">'
 ~~~
 
 # Font icons
@@ -492,11 +492,6 @@ shared:
   # for all outgoing emails
   mailer_sender: <%= ENV["MAILER_SENDER"] || "My Company <support@example.com>" %>
 
-  # default_url is required for links in email body or in links in controller
-  # when url host is not available (for example rails console)
-  default_url:
-    host: <%= ENV["DEFAULT_URL_HOST"] || (Rails.env.production? ? "premesti.se" : "www.myapp.localhost") %>
-    port: <%= ENV["DEFAULT_URL_PORT"] || (Rails.env.development? ? Rack::Server.new.options[:Port] : nil) %>
 
 # `shared` is automatically included, no need to write
 # shared: &default
@@ -536,7 +531,11 @@ Set default url option, that is domain for `root_url`:
 # require anything, but it works only if you provide -p param to rails s
 
 # config/application.rb
-    link = Rails.application.secrets.default_url.symbolize_keys
+    link = {
+      host: (Rails.env.production? ? 'myapp.herokuapp.com' : 'localhost'),
+      # in test we set up port manually to 3333 in test/a/capybara.rb
+      port: (Rails.env.production? ? nil : Rails.env.development? ? Rack::Server.new.options[:Port] : 3333),
+    }
     # for link urls in emails
     config.action_mailer.default_url_options = link
     # for link urls in rails console
@@ -544,7 +543,7 @@ Set default url option, that is domain for `root_url`:
       Rails.application.routes.default_url_options = link
     end
     # for asset-url or img_tag in emails
-    config.action_mailer.asset_host = "http://#{link[:host]}:#{link[:port]}"
+    config.action_mailer.asset_host = "//#{link[:host]}:#{link[:port]}"
 ~~~
 
 For [devise]({{ site.baseurl }}{% post_url 2015-12-20-devise-oauth-angular %})
@@ -713,12 +712,15 @@ heroku apps:create $MYAPP_NAME
 heroku addons:create heroku-postgresql:hobby-dev # this will set DATABASE_URL
 git push heroku master --set-upstream
 
-heroku run rake db:migrate db:seed
-# heroku run rake db:setup will raise error:
+# heroku run rails db:setup will raise error:
 # PG::ConnectionBad: FATAL:  permission denied for database "postgres"
 # DETAIL:  User does not have CONNECT privilege
-# https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps try
+# https://kb.heroku.com/why-am-i-seeing-user-does-not-have-connect-privilege-error-with-heroku-postgres-on-review-apps
+# so instead of create you just need to run migration and seed
+heroku run rails db:migrate db:seed
+
 # heroku pg:reset --confirm $MYAPP_NAME
+# heroku pg:reset --confirm ${PWD##*/}
 # heroku restart
 #
 # I do not know how to drop db since db:migrate:reset does not work either

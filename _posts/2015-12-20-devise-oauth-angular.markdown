@@ -357,6 +357,8 @@ https://stackoverflow.com/questions/10456174/oauth-how-to-test-with-local-urls
 
 Dont forget to save **Changes needs 5 min to propagate**
 
+For API keys, you need to add website restrictions: myapp.com, localhost:3003
+
 # Twitter app
 
 On <https://apps.twitter.com/> you can create application.

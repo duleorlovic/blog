@@ -207,6 +207,14 @@ it check only what is in db (not in params), so one solution is to add
   end
 ```
 
+Note that callback in nested model, like
+```
+class Answer
+  before_save :check_something_on_answer
+end
+```
+will not be called when answers are updated as `answers_attributes`
+
 # Multiple form submit buttons for different actions
 
 you can use rails builder

@@ -91,6 +91,17 @@ text on click
 # Gems
 
 * https://awesome-ruby.com/
+* recurring events https://github.com/rossta/montrose
+  ```
+  Montrose.daily(total: 10, starts: today, until: ends, between: starts..ends,
+                 month: :january, interval: 2)
+  Montrolse.weekly(on: [:monday, :friday])
+  Montrose.every(:week, until:ends)
+  Montrose.every(2.weeks, on: [:monday, :friday])
+
+  # enumerator
+  r.events.take(10)
+  ```
 
 # Alerts and notifications
 
@@ -431,6 +442,16 @@ used for singleDatePicker, dateTime picker
   * it can contains predefined ranges (Last 7 days)
   * note that is uses `data-daterangepicker` so use with your own
   `data-bootstrap-datarangepicker`
+  It has some problems with module as CommonJS (AMD works fine) since you need
+  to pass jquery
+  https://github.com/dangrossman/daterangepicker/issues/1294
+  ```
+  // let moment = require('moment')
+  // https://github.com/dangrossman/daterangepicker/issues/1294
+  // use from vendor until pull request is accepted
+  // https://github.com/dangrossman/daterangepicker/pull/2026
+  // require('./vendor/daterangepicker')(moment, $)
+  ```
 * [pickdate](http://amsul.ca/pickadate.js/)
 * [jquery ui datepicker](https://jqueryui.com/datepicker/)
   Error on chrome if you use `type=date`
@@ -745,6 +766,7 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   Events like `dragfree` `tapdrag` http://js.cytoscape.org/#collection/events
   http://js.cytoscape.org/#core/events
   You can get position http://js.cytoscape.org/#notation/position
+* draw sketchy hand drawn styled charts https://github.com/jwilber/roughViz
 
 
 # Email services

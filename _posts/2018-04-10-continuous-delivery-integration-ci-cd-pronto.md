@@ -77,5 +77,18 @@ You need to set up target commit (default is master) to which it needs to
 compare current HEAD. It compare only changes that occurs between those two
 (changes on master are ignored).
 
+https://github.com/kulakajak/pronto/commit/69cf86b6ca031c7a62bfa4b24db986d81b95f12c
+trkbot
+
 <https://christoph.luppri.ch/articles/2017/03/05/how-to-automatically-review-your-prs-for-style-violations-with-pronto-and-rubocop>
 to find last pull request id
+
+# Github actions
+
+
+https://boringrails.com/articles/building-a-rails-ci-pipeline-with-github-actions/
+
+
+# Gitlab
+
+https://about.gitlab.com/webcast/mastering-ci-cd/

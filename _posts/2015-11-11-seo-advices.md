@@ -58,9 +58,9 @@ widget</a>`
 * flash and frames are not indexed
 * nice mobile rendering (buttons at least 48px width/height, 32px padding around
   tap targets)
-* add viewport meta tag `<meta name="viewport" content="initial-scale=1.0,
-  width=device-width">` and use CSS media queries to apply different style
-  depending of screen size
+* add viewport meta tag `<meta content="width=device-width, initial-scale=1,
+  maximum-scale=1, user-scalable=no" name="viewport">` and use CSS media queries
+  to apply different style depending of screen size
 * enable gzip compresion, optimize image, use `srcset` for responsive images,
   specify image dimensions
   ```

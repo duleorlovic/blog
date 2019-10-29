@@ -71,7 +71,9 @@ If you see error in logs:
 
 ~~~
 2018-06-18T09:13:29.371621+00:00 app[web.1]: An error occurred when sending a notification using 'email' notifier. Net::SMTPAuthenticationError: 534-5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbu5
-~~~
+
+Username and Password not accepted. Learn more
+```
 
 You need to Allow less secure apps https://support.google.com/accounts/answer/6010255
 

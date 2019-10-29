@@ -50,7 +50,8 @@ allowed inside ()
   data:
     a: 1
   ```
-* String does not need `" "` only if you use some special symbol `|` `:`
+* String does not need `" "` only if you use some special symbol `|` `:`. Note
+  that you should use double quote instead of single quotes.
 * Multiline strings starts with pipe `|` on the line with attribute name, and
 indented.
 * Write dates in format `yyyy-mm-dd` so rails `Date.parse()` recognize it.

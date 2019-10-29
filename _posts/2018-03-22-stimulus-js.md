@@ -40,7 +40,8 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   controller `static targets = [ 'name' ]`. Beside `this.nameTarget` you can
   check if there are more targets like this `this.nameTargets` or if exists at
   all `this.hasNameTarget` (return true or false)
-  to access current element getElementById you can use `this.element`
+* to access current element on which controller is connected you can use
+  `this.element`
 * `data-hello-index='1'` used to pass data to controller which you can get on
   initialize instead of `this.element.getAttribute('data-hello-index'))` you can
   use stimulus shorthand `this.data.get('index')`. Also `this.data.has('index')`

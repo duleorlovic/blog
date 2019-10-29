@@ -792,7 +792,8 @@ class UpdateFuzz < ActiveRecord::Migration
   end
   def change
     add_column :products, :fuzz, :string
-    # this is needed since renamed columns will be ignored on "save"
+    # reset schema infor  is needed since new or renamed columns will be ignored
+    # on "save" or 'update_all'
     # Product.reset_column_information
     # check with Product.columns or Product.column_names
     Product.update_all fuzz: 'fuzzy'
@@ -1985,6 +1986,7 @@ module Someable
   extend ActiveSupport::Concern
 
   included do
+    # this block is executed when module is included in some class
     # define methods validations, callbacks and associations here (before_ has_
     # macros) access module variables @@my_module_variable or class variable
     # self.class.class_variable_get :@@someable_value
@@ -1997,12 +1999,12 @@ module Someable
 
   # instance methods are defined here
 
-  # methods defined here are going to extend the class, not the instance of it
-  # do not use "self." in method definition
-  # you can set "@@my_module_variable" here
-  # better is to set class_variable:  self.ancestors.first.class_variable_set :@@someable_value, 'some value'
-  # also you can include other concerns here
   class_methods do
+    # methods defined here are going to be on the class, not the instance of it
+    # do not use "self." in method definition
+    # you can set "@@my_module_variable" here
+    # better is to set class_variable:  self.ancestors.first.class_variable_set :@@someable_value, 'some value'
+    # also you can include other concerns here
     def tag_limit(value)
       klass = self.ancestors.first
       previous_columns = klass.class_variable_get(:@@monetized_columns) if klass.class_variables.include? :@@monetized_columns
@@ -2219,11 +2221,12 @@ to put cents and currency column
 ```
   add_money :invoices, :round_off, amount: { after: :round_off_applicable }, currency: { after: :round_off_cents }
 
+  t.monetize :invoices, :round_off
 ```
 
 in model
 ```
-  monetize_columns :round_off
+  monetize :round_off
 ```
 
 # Carrierwave for uploading
@@ -2736,6 +2739,81 @@ Make sure that your application is loading Devise and Warden as expected and tha
 If you are seeing this on one of your tests, ensure that your tests are either executing the Rails middleware stack or that your tests are using the `Devise::Test::ControllerHelpers` module to inject the `request.env['warden']` object for you.):
 ~~~
 
+# Generators
+
+Overriding scaffold https://guides.rubyonrails.org/generators.html Rails
+original templates are here
+https://github.com/rails/rails/tree/master/railties/lib/rails/generators/erb/scaffold/templates
+so to override you need to create `lib/templates/erb/scaffold/index.html.erb.tt`
+ ```
+ mkdir -p lib/templates/erb/scaffold
+ vi lib/templates/erb/scaffold/index.html.erb.tt
+ # use <%%= when you need to output <%=
+ spring stop
+ rails g scaffold post title
+ ```
+https://rdoc.info/github/erikhuda/thor/master/Thor/Actions.html
+
+We can manually create generator
+```
+# lib/generators/initializer_generator.rb
+class InitializerGenerator < Rails::Generators::Base
+  def create_initializer_file
+    create_file 'config/initializers/initializer.rb', '# AA'
+  end
+end
+```
+or we can generate generator `rails g generator initializer` which will depend
+on `Rails::Generators::NamedBase` so it expects parameter, like model name.
+
+* `file_name` (post), `singular_name` (post), `plural_name` (posts), `class_name` (Post), `table_name` (posts), `singular_table_name` (post)
+* arguments using
+ https://www.rubydoc.info/github/erikhuda/thor/master/Thor/Base/ClassMethods#class_option-instance_method
+ `class_option :scope, type: :string, default: 'read_products'`
+* `hook_for :test_framework, as: :scaffold` will use scaffold test framework
+* `source_paths [__dir__]` is used so you can use relative path to templates
+* `template 'my.rb', "destination/#{file_name}.rb"`
+
+# Thor
+
+https://github.com/erikhuda/thor/wiki
+
+```
+# cli.rb
+#!/usr/bin/env ruby
+require 'thor'
+class MyCLI < Thor
+  include Thor::Actions
+
+  def self.source_root
+    File.dirname(__FILE__)
+  end
+
+  desc 'cao NAME', 'primer NAME'
+  option :from, required: true
+  option :yell, type: :boolean
+  def cao(name)
+    output = []
+    output << "from: #{options[:from]}" if options[:from]
+    output << "Cao #{name}"
+    output = output.join("\n")
+    if options[:yell]
+      puts output.upcase
+    else
+      puts output
+    end
+  end
+
+  desc 'g', 'generisi a'
+  def g
+    template 'a'
+  end
+end
+
+MyCLI.start(ARGV)
+```
+You can run with `ruby ./cli.rb cao Dule --from Mile --yell`
+
 # Tips
 
 * I got an error `ActionDispatch::Cookies::CookieOverflow
@@ -2857,8 +2935,12 @@ so this filter only works for `customer.radaccts`
 has_many   :radaccts, -> (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
 ~~~
 
-In rails belongs_to foreign_key https://guides.rubyonrails.org/v5.2/association_basics.html#options-for-belongs-to-foreign-key
+In rails `belongs_to .. foreign_key` https://guides.rubyonrails.org/v5.2/association_basics.html#options-for-belongs-to-foreign-key
 is used is you have different name of the column than name_of_association_id
+Sometime you extend model `class ResellerPackage < Package` se we need to
+explicitly define column names.
+`has_many .. inverse_of` is used when you `accepts_nested_attributes_for` and
+you want to access them in `user.reseller_packages`
 
 You can specify conditions in relation
 ```
@@ -3080,6 +3162,7 @@ end
   `gon` is undefined)
 
 * access helpers outside of a view
+  * in rails console you can use `helper.number_to_curerncy 10`
   * if it is standard base helper, than just call it from ActionController,
     ActionView instance or Rails application routes.
 
@@ -3091,7 +3174,10 @@ end
 
   ActionView::Base.new.number_to_human 123123
 
-  Rails.application.routes.url_helpers.jobs_path
+  Rails.application.routes.url_helpers.jobs_url
+  # note that it is different than `jobs_url` in view since in view it uses
+  # request to determine host, so maybe it is better to use
+
 
   ERB::Util.html_escape t('errors.messages.blank') # can&#39;t be blank
   ~~~
@@ -3268,7 +3354,18 @@ but IE10 wont.
 
 * `enum status: [:paused]` should be type integer, or it will return nil. Use
 synonim for new, like unproccessed, draft. You can access values with symbols
-`:draft` and outside of class with `Class.statuses`.
+`:draft` and outside of class with `Class.statuses`. It is better to use string
+column instead of integer since it is more readable in db, and you can change
+the order. In this case define enum as a hash
+  ```
+  enum status: {
+    paused: 'paused',
+  }
+  # or if you are using const
+  enum kind: Constant.SMS_TEMPLATES.transform_keys(&:downcase).transform_values(&:to_s)
+  # or if you are using array of symbols
+  enum status: %i[active admin inactive].each_with_object({}) { |k, o| o[k] = k.to_s }
+  ```
 
 * params usually need to be striped, so you can use this code to get rid of all
   unnecessary spaces (not that we create new object that is returned, params
@@ -3822,6 +3919,33 @@ class Const
 end
 # rubocop:enable Naming/MethodName
 ```
+
+here is also a rspec test
+
+```
+# spec/models/constant_spec.rb
+RSpec.describe Constant do
+  it 'store string values' do
+    expect(Constant.SUBSCRIBER_EVENTS[:EDIT]).to eq 'edit'
+    expect(Constant.SUBSCRIBER_EVENTS.key 'edit').to eq :EDIT
+  end
+
+  it 'raise error if key does not exists' do
+    expect do
+      Constant.SUBSCRIBER_EVENTS[:not_exists]
+    end.to raise_error KeyError
+
+    expect do
+      Constant.SUBSCRIBER_EVENTS.values_at 'not_exists'
+    end.to raise_error KeyError
+
+    expect do
+      Constant.SUBSCRIBER_EVENTS.key 'not_exists'
+    end.to raise_error KeyError
+  end
+end
+```
+
 * rails routes instead of grep you can search by `rails routes -g user` but only
   for rails > 5.2.1
 * contribute to rails guide https://edgeguides.rubyonrails.org/contributing_to_ruby_on_rails.html#contributing-to-the-rails-documentation
@@ -4022,4 +4146,49 @@ end
   You can simulate with
   ```
   curl -X POST -g "localhost:3001/subscribers" -d '{"subscriber":[]}'
+  ```
+* for rails helpers, when you want to use block syntax for your helper than you
+  should use *capture* https://stackoverflow.com/questions/32985379/appending-to-yield-in-content-tag because what is inside block will be rendered two times on the page (capture is not required if *yield* is inside *content_tag*)
+  ```
+  # app/helpers/text_helper.rb
+  module TextHelper
+    def detail_view_one(title, text = nil, label_class: 'col-sm-2 dt__long--min-width', text_class: 'col', &block)
+      <<~HTML
+        <dt class='#{label_class}'>#{title}</dt>
+        <dd class='#{text_class}'>#{block_given? ? capture(&block) : text}</dd>
+        <dt class='w-100'></dt>
+      HTML
+        .html_safe
+    end
+
+    def detail_view_list(item = nil, *fields, label_class: 'col-sm-2 dt__long--min-width', skip_blank: [])
+      content_tag 'dl', class: 'row' do
+        if block_given?
+          yield
+        else
+          detail_view item, *fields, label_class: label_class, skip_blank: skip_blank
+        end
+      end
+    end
+  end
+
+  # app/views/posts/show.html.erb
+        <%= detail_view_list do %>
+          <%= detail_view_one Happening.human_attribute_name(:recurrence) do %>
+            <%= link_to 'A', 'b' %>
+            OK
+          <% end %>
+        <% end %>
+  ```
+
+* activestorage for attaching images
+  ```
+  rails active_storage:install
+
+  ```
+  for google cloud storage you can create and download keyfile.json on IAM ->
+  Service accounts https://console.cloud.google.com/iam-admin/serviceaccounts?folder=true&organizationId=true&project=cybernetic-tide-90121
+
+  ```
+  hotel.image.url
   ```

@@ -1357,6 +1357,23 @@ end
 * to create array of hashes or array of new objects you can not use `[{}]*2` or
   `[User.new]*2` since that will be the same object in both places. You have to
   use `Array.new(2) { User.new }`
+* interate and generate hash can be done using inject and accumulator
+  ```
+  array = [['A', 'a'], ['B', 'b'], ['C', 'c']]
+  hash = array.inject({}) do |memo, (key, value)|
+    memo[key] = value
+    memo
+  hash # => {'A' => 'a', 'B' => 'b', 'C' => 'c'}
+
+  # find the longest word
+  longest = %w{ cat sheep bear }.inject do |memo,word|
+     memo.length > word.length ? memo : word
+  end
+  longest                                         #=> "sheep"
+  ```
+
+  but better is to use `each_with_object({}) { |el, a|` accumulator is last
+  param not the first.
 
 todo
 

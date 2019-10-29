@@ -98,6 +98,35 @@ Simple scan scanner for HP LasetJet MF1212nf MFP does not work if you add
   https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
   but somehow `hp-plugin` does not work, so I used old version
 
+To install hp-plugin I disabled aamor https://bugs.launchpad.net/hplip/+bug/1813768/comments/8
+```
+sudo apt-get install apparmor-utils
+sudo aa-disable /usr/share/hplip/plugin.py
+hp-plugin
+```
+
+To remove package and reinstall printer you can follow
+https://askubuntu.com/questions/1056077/how-to-install-latest-hplip-on-my-ubuntu-to-support-my-hp-printer-and-or-scanner
+```
+sudo apt-get purge hplip hplip-data hplip-doc hplip-gui hpijs-ppds \
+libsane-hpaio printer-driver-hpcups printer-driver-hpijs
+sudo rm -rf /usr/share/hplip/
+sudo apt-get autoremove
+```
+
+To remove hplip
+```
+sh hplip-3.19.8.run --noexec
+cd hplip-3.19.8
+sudo ./uninstall.py
+sudo rm -rf /usr/share/hplip/
+```
+
+On ubuntu 18 I used official
+```
+sudo apt-get install hplip-gui
+```
+
 
 Enable automatic adding network printers
 ```
@@ -494,7 +523,8 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
 # Remote access to services
 
 To enable mysql service from remote you need to bind it to 0.0.0.0 in
-configuration. To test on which interface is some port listening you can use
+configuration. To test on which interface is used port listening you can see
+port use
 
 ```
 sudo netstat -plutn | grep 3306

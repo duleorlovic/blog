@@ -1442,9 +1442,10 @@ only for finders). You can use substring or you can define `exact: true`
 `click_link "Menu"`. Find can be used for click, for example
 `find('.class').click` but I prefer to enable aria labels and use that
 `Capybara.enable_aria_label = true` and `click 'my-aria-label'`
-* `fill_in "email", with: 'asd@asd.asd'` (alternative is find set
-  `find("input[name='cc']").set 'asd@asd.asd'`, or using javascript
-  `page.execute_script "$('#my-id').val('asd@asd.asd')"`
+* `fill_in "email", with: 'asd@asd.asd'` locator is input name, id, test_id,
+  placeholder, label text. Note that it is case sensitive.
+  alternative is find set `find("input[name='cc']").set 'asd@asd.asd'`, or using
+  javascript `page.execute_script "$('#my-id').val('asd@asd.asd')"`
 * to click on select2 I use `find('#original-select-id+span').click` so we find
   first next sibling of original select which was disabled and replaced by
   select2 spans. Also works `find('li', text: select.label).click` but I can not
@@ -2794,6 +2795,17 @@ end
 # https://relishapp.com/vcr/vcr/v/3-0-3/docs/test-frameworks/usage-with-rspec-metadata
 ~~~
 
+Latest rails uses `gem 'webdrivers'` https://github.com/titusfortner/webdrivers
+Since it automatically updates, it will be prevented by VCR
+You can ignore those requests
+https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
+or manually trigger update with
+https://github.com/titusfortner/webdrivers#rake-tasks
+
+```
+RAILS_ENV=test rails webdrivers:chromedriver:update
+```
+
 If you really need external requests you can
 
 ~~~
@@ -2831,10 +2843,6 @@ with same mobile number) than add `allow_playback_repeats: true`
 If you are not sure if sms will be sent (it is based on some other
 configuration) than `allow_unused_http_interactions: false`
 
-For `webdriver` you need to ignore
-https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
-```
-```
 
 # Testing Rails.cache
 

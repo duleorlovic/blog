@@ -77,6 +77,10 @@ header = {
 request = Net::HTTP::Post.new(uri, header)
 # or
 request['Content-Type'] = 'text/json'
+# or
+http = Net::HTTP.new uri.host, uri.port
+http.use_ssl = true
+res = http.post uri.path, content.to_json, 'Content-type' => 'application/json', 'Accept' => 'text/json, application/json'
 ~~~
 
 On response you can read headers

@@ -196,9 +196,9 @@ of input with select and button.
 Color helpers
 Primary colors are [link](https://getbootstrap.com/docs/4.0/utilities/colors/)
 `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `dark`, `light`,
-`white`.  For text there is `muted` and also need background `text-light
-bg-dark` and `text-white bg-dark`. You can set default body background by
-defining variable `$body-bg: #bcdee3` before importing boostrap.
+`white`.  For text there is `muted`. Background `bg-dark text-light`. There is a border corols `border-white`.
+You can set default body background by defining variable `$body-bg: #bcdee3`
+before importing boostrap.
 You can use css `darken` for example for variable
 `$link-hover-color: darken($link-color, 15%) !default;`
 https://github.com/twbs/bootstrap/blob/e7e43edf65306efaf46a16ffc9fe35ef623bffef/scss/_variables.scss#L171
@@ -206,6 +206,8 @@ https://github.com/twbs/bootstrap/blob/e7e43edf65306efaf46a16ffc9fe35ef623bffef/
 * text and links `.text-success`
 * background `.bg-warning`
 * buttons `.btn-primary`
+* borders `.border-primary` (`border border-top-0` to disable, `rounded-pill` to
+  add radius to border)
 
 Other helpers are:
 
@@ -427,6 +429,16 @@ you can make checkbox inline with button
   <%= f.check_box :remember_me, inline: true %>
   <%= f.submit t "sign_in" %>
 ~~~
+
+You can change form-group wrapper class so to make two inputs inline you wrap
+with `form-inline`. If you need more customisation you can override wrapper
+class
+
+```
+<div class='form-inline'>
+  <%= f.text_iput :name, wrapper_class: 'form-group__with_select'
+</div>
+```
 
 You can use form to have horizontal layout, and some input group can be inline,
 so you can group input and select (note that is you have horizontal layout you
@@ -814,3 +826,8 @@ $sidebar-width: 20rem
     &:hover
       color: #ffffff !important
   ```
+* to check if postcss autoprefixer was applied you need to create `<select
+  class='custom-select'></select>` and inspect that element. When there is no
+  autoprefixer than it will contain `appearance: none`, if there is autoprefixed
+  than it will be `-mox-appearance: none` or `-webkit-appearance: none`
+* badge label `<span class="badge badge-primary">Primary</span>`

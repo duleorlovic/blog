@@ -16,3 +16,7 @@ General Data Protection Regulation
   policy page to the site and link in the footer
 * show cookie consent box and show box for consent of processing their personal
   data
+
+# Rails
+
+To write a test so make sure all user data is removed you can try with  https://monolist.co/blog/2019/09/delightful-goodbyes-guaranteeing-deletion/

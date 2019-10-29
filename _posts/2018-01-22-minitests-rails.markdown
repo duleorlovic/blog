@@ -12,7 +12,8 @@ method so it can be used like `test "my method" do`.  In minitests you can not
 have same test descriptions since it will be converted to same
 `test_my_method`.
 
-You can run specific test use `:line` or `-n test_name`.
+You can run specific test use `:line` or `-n test_name`. If test is defined like
+`test "my test"` than you can use regexp `ruby test/file_test.rb -n /my.test/`
 This also works for system test (so you do not need `system` in `rails
 test:system somefile`)
 
@@ -166,7 +167,11 @@ logger.info 'db:seed and db:fixtures:load completed'
   admin_user:
     encrypted_password: <%= User.new.send(:password_digest, 'password') %>
   ```
-
+* if you use `serialize :recurrence` than in fixture you have to wrap with
+  double quotes around and use .to_yaml
+  ```
+  recurrence: "<%= { a: 1 }.to_yaml %>"
+  ```
 * if there are no colomns you can use `user: {}` curly brackets
 * Usage of fixtures
 
@@ -263,7 +268,7 @@ end
 for integration tests
 
 ~~~
-# test/support/assert_flash_message.rb
+# test/a/assert_flash_message.rb
 class ActionDispatch::IntegrationTest
   # assert_flash_message
   def assert_alert_message(text)

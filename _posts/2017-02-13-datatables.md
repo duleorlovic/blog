@@ -505,7 +505,9 @@ since it provides both amd and commonjs there is a error
 ```
 Uncaught TypeError: Cannot set property '$' of undefined
 ```
- https://datatables.net/forums/discussion/32542/datatables-and-webpack
+https://datatables.net/forums/discussion/32542/datatables-and-webpack
+https://datatables.net/forums/discussion/comment/125532/#Comment_125532
+
 For webpack you need to not invoke after require or disable amd
 ```
 # config/webpack/environment.js

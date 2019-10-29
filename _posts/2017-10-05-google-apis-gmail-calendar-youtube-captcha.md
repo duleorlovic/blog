@@ -188,3 +188,37 @@ I had an error when using STMP
 ~~~
 and the issue was because email was not properly formated (it used latin
 letters) for example `orlović@email.com`
+
+# GCS Google Cloud Storage
+
+You need to create `Service account keys` for communication between server and
+google API `keyfile.json`. Private key id and private key are secret properties
+so you need to put them in credentials
+
+```
+# rails credentials:edit
+gcs:
+  private_key_id: 23e0,,,
+  private_key: -----BEGIN PRIVATE KEY-----\nMIIEvgIBADA,,,
+```
+
+Other values can be in code but copy from your json file
+```
+# config/storage.yml
+google:
+  service: GCS
+  project: move-index
+  bucket: move-index
+  credentials:
+    type: service_account
+    project_id: move-index
+    private_key_id: <%= Rails.application.credentials.dig(:gcs, :private_key_id) %>
+    private_key: <%= Rails.application.credentials.dig(:gcs, :private_key) %>
+    client_email: s...@c...iam.gserviceaccount.com,
+    client_id: 123...,
+    auth_uri: https://accounts.google.com/o/oauth2/auth,
+    token_uri: https://oauth2.googleapis.com/token,
+    auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs,
+    client_x509_cert_url: https://www.googleapis.com/robot/v1/metadata/x509/starting-account-y150mz5jlqxf%40....iam.gserviceaccount.com
+
+```

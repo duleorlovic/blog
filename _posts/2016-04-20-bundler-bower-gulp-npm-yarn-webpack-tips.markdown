@@ -68,7 +68,8 @@ If you gem depend on some gem version `4.3.2` it can not be used for any other
 version. `~> 4.3.2` (pesimistic) it better since it can be used with `4.3.3` but
 not for previous versions `4.3.1`, and not for `4.4.0`. If gem follow semantic
 version it can be ugraded to `4.4`, so `~> 4.3` means that it can be `4.x` but
-at least `4.3`.  You should support broad range of gems `>= 3.2, < 5.0`,
+at least `4.3`. You can actually use notation `4.x`.
+You should support broad range of gems `>= 3.2, < 5.0`,
 
 # RVM
 
@@ -179,6 +180,9 @@ yarn link
 yarn remove trk_datatables
 yarn link trk_datatables
 ```
+
+In this case, all package developments will be pulled from
+package_folder/node_modules
 
 Note that there are problems with missing `.bin` folder
 https://github.com/yarnpkg/yarn/issues/3724
@@ -689,7 +693,7 @@ module.exports = {
 };
 ~~~
 
-For `umd` you need to disable `amd` parser
+You can disable `amd` parser
 https://webpack.js.org/configuration/module/#ruleparser
 ```
 // webpack.config.js
@@ -703,28 +707,59 @@ module.exports = {
   }
 }
 ```
+or in webpacker
+
+```
+// config/webpack/environment.js
+environment.config.set('amd', false)
+```
+
+Or specific module with imports-loader
+https://webpack.js.org/guides/shimming/#granular-shimming
+https://webpack.js.org/loaders/imports-loader/
+```
+// config/webpack/environment.js
+const nonAmdLoader = {
+  test: require.resolve('trk_datatables'),
+  use: "imports-loader?define=>false",
+}
+environment.loaders.append('nonAmd', nonAmdLoader)
+```
+or in js
+```
+  require('imports-loader?define=>false,this=>window!datatables.net')(window, $)
+```
+Do not know how to disable amd for dependency of dependency
 
 # Webpack plugins
 
+To chech if multiple versions of jquery package is included you can use
+
 ~~~
 yarn add webpack-bundle-analyzer --dev
+
 // config/webpack/development.js
-const BundleAnalyzerPlugin =
-require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+
+const environment = require('./environment')
+
+// https://www.npmjs.com/package/webpack-bundle-analyzer
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = environment.toWebpackConfig().merge({
   plugins: [
     new BundleAnalyzerPlugin({analyzerMode: 'static'})
   ]
 });
 
-# bin/webpack-dev-server
-# /home/orlovic/rails/myApp/public/packs/report.html
+bin/webpack-dev-server
+gnome-open public/packs/report.html
 ~~~
 
 # Webpacker
 
 From sprockets to webpacker
 <https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79>
+https://gist.github.com/maxivak/2612fa987b9f9ed7cb53a88fcba247b3
 
 ~~~
 # Gemfile
@@ -741,6 +776,19 @@ in `app/javascript` or `app/javascript/src` which you can load (just run)
 Global functions will not pollute global scope, you need to attach to window or
 global object.
 Reload js files automatically with webpacker dev server
+Also you can include view files to trigger reload
+```
+# config/webpack/development.js
+const path = require('path')
+
+environment.config.devServer.watchContentBase = true
+environment.config.devServer.contentBase = [
+  path.join(__dirname, '../../app/views'),
+]
+```
+In vim there is an issue that vim does not always trigger webpack reload (touch
+trigger always) https://github.com/webpack/webpack/issues/781#issuecomment-95523711
+so add `set backupcopy=yes` in `.vimrc`
 
 ~~~
 bin/webpack-dev-server
@@ -787,9 +835,21 @@ require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
 
+// node_modules
 import 'bootstrap'
-import '../stylesheets/application'
-import './turbolinks.load'
+import 'select2' // globally assign select2 fn to $ element
+// it is not the same as: require('select2')
+
+// our stimulus stuff
+// install with bundle exec rails webpacker:install:stimulus
+import 'controllers'
+
+// our js stuff
+import 'turbolinks.load'
+import 'window_functions'
+
+// our stylesheet
+import 'stylesheet/application'
 ```
 and create separate pack for turbolinks:load events
 
@@ -799,7 +859,7 @@ document.addEventListener('turbolinks:load', () => {
   $('[data-toggle="tooltip"]').tooltip()
 })
 ```
-small note, we could use ES6 syntax
+small note, we could use `import` syntax
 ~~~
 // app/javascript/packs/application.js
 import Rails from 'rails-ujs';
@@ -817,15 +877,6 @@ global.$ = require('jquery')
 window.$ = window.jQuery = require("jquery")
 ~~~
 
-https://getbootstrap.com/docs/4.0/getting-started/webpack/
-For stylesheets create new module and move files and import in scss. Use tilda
-when referencing node modules.
-
-~~~
-// app/javascript/stylesheets/application.scss
-@import '~bootstrap/scss/bootstrap';
-~~~
-
 For css from gems create npm package
 https://github.com/rails/webpacker/issues/57#issuecomment-327533578
 
@@ -834,9 +885,9 @@ which is by default enabled in `postcss.config.js`, you can import css with
 `@import 'package-name'`
 ```
 // app/javascripts/stylesheet/application.css
-// this file name should have extension CSS not scss since @import command is different
+/* this file name should have extension CSS not scss since @import command is different */
 @import 'package-name'
-@import 'package-name/file-path/file.css'
+// this is the same as @import 'package-name/file-path/file.css'
 ```
 also import that css file
 ```
@@ -845,9 +896,30 @@ import '../stylesheet/application.css'
 ```
 
 To import sass file you need sass loader https://github.com/webpack-contrib/sass-loader
-Rails supports it but on clean webpack project you need to:
+which is included in webpack
+supports it but on clean webpack project you need to:
 
 ```
+// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(scss|sass|css)$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ]
+      },
+    ],
+  },
+}
 ```
 
 Alternatively, you can import css file from node_modules in javascript.
@@ -856,7 +928,24 @@ Alternatively, you can import css file from node_modules in javascript.
 import 'package-name/file-path/file.css'
 ```
 
-Webpacker supports babel preset out of box.
+Webpacker supports babel preset out of box. In clear webpack you can enable
+bable with
+```
+// webpack.config.js
+const path = require('path')
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js?$/,
+        exclude: /(node_modules)/,
+        use: 'babel-loader',
+      },
+    ],
+  },
+}
+```
 
 To find jquery version you can type `$.fn.jquery`
 
@@ -896,3 +985,26 @@ Install with `yarn global add parcel-bundler`
 ```
 make help
 ```
+
+# TIPS
+
+* node uses two core modules: `module` and `require`.
+* `require('my')` will look for files in `./node_modules/my.js`,
+  `~/node_modules/my.js`, `/node_modules/my.js`... It can be also a folder and
+  index.js file `./node_modules/my/index.js` or other file or folder defined in
+  `main` property of `./node_modules/my/package.json`
+* `require.resolve('my')` will return full path of file
+* `module` is an object with `id`, `exports`, ...
+* `module.exports = function() {}`, or `module.exports = { id: 'my' }`. That
+  will be return value when we `const MY = require('my')`
+* in node we have `fs.readFile` (file system), `setImmediate(function(){})`
+* `const { host, post } = require('./config.json')` can read json. You can see
+  all parsers `require.extensions` and source code with
+  `console.log(require.extensions['.js'].toString())`
+
+* `require` is not the same as `import` in webpack
+* instead of `require('select2')(window, $)` you can use
+  ```
+  import select2 from 'select2'
+  select2(window, $)
+  ```

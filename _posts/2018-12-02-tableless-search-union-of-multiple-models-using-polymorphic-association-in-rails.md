@@ -88,5 +88,50 @@ in the code.
 Similar to but without database query
 https://blog.bigbinary.com/2016/05/30/rails-5-adds-or-support-in-active-record.html
 
+# Postgres full text search
+
 For Postgresql there could be improvements using `pg_search`
 https://github.com/Casecommons/pg_search
+https://www.postgresql.org/docs/current/textsearch.html
+It supports preprocessing and indexing so searching for `satisfy` will result in
+`satisfies` (ilike does not include derived words), automatically add index, and
+results are ranked (so you do not get thousend of results, but 5 most relevant
+for example two words are close to each other *proximity ranking*).
+Preprocessing includes:
+* parsing documents into tokens using *parser* (numbers, words, complex words)
+* converting tokens into lexemes using *dictionaries*. Lexeme is a string but
+  it includes all variant (uppercase, suffix). We exclude stop words (is, a, it)
+  Map synonyms to a single word using *Ispell*, map phrases to a single word
+  using *thesaurus*, map variations of word to canonical form using *Ispell
+  dictionary*, map different variation of a word to a canonical form using
+  *Snowball stemmer rules*.
+
+
+Text search types https://www.postgresql.org/docs/current/datatype-textsearch.html
+```
+SELECT 'The Fast Orlovics'::tsvector; # 'Fast' 'Orlovics' 'The'
+# to perform normalisation you can use to_tsvector
+SELECT to_tsvector('english', 'The Fast Orlovics') # 'fast':2 'orlov':3
+# you can add weight to lexemes A, B, C, D (default) so title words are more
+# relevant than body words
+SELECT 'a:1A fat:2B,4C cat:5D'::tsvector;
+```
+
+Queries
+* `&` and, `|` or, `!` not, `<->` phrase or `<1>` phrase with distance
+```
+SELECT 'the & (orlovic | fast)'::tsquery; # 'the' & ( 'orlovic' | 'fast' )
+# perform normalisation of query strings: ignore the, strip suffix
+SELECT to_tsquery('the & (orlovics | fast)'); # 'orlov' | 'fast'
+```
+
+Peform matching
+```
+SELECT to_tsvector( 'postgraduate' ) @@ to_tsquery( 'postgres:*' ); # t
+```
+In addition to `to_tsquery` there is `plainto_tsquery` and `plainto_tsquery`
+You can also use implicit conversion `text @@ text` which is equivalent to
+`to_tsvector(x) @@ plainto_tsquery(y)`.
+
+todo 12.2.2
+https://www.postgresql.org/docs/current/textsearch-tables.html

@@ -3,6 +3,35 @@ layout: post
 title: Scraping using mechanize or selenium
 ---
 
+# Kimurai
+
+https://github.com/vifreefly/kimuraframework
+
+```
+require 'kimurai'
+
+class SimpleSpider < Kimurai::Base
+  @name = "simple_spider"
+  @engine = :selenium_chrome
+  @start_urls = ["https://example.com/"]
+
+  def parse(response, url:, data: {})
+  end
+end
+
+SimpleSpider.crawl!
+```
+
+Use console
+
+```
+kimurai console --url https://www.tripadvisor.rs/Hotel_Review-g295380-d1383552-Reviews-Prezident_Hotel-Novi_Sad_Vojvodina.html
+response.css('script[type="application/ld+json"]').first
+# in ruby
+url = 'https://www.tripadvisor.rs/Hotel_Review-g295380-d1383552-Reviews-Prezident_Hotel-Novi_Sad_Vojvodina.html'
+response = Nokogiri::HTML(open(url))
+```
+
 # CSV, input & output
 
 Your script probably needs some output, CSV is good enough (it will wrap inside
@@ -268,55 +297,6 @@ user_email = emails.first.strip if emails.first
 ~~~
 
 # Examples
-
-## Store data localy and load in production database
-
-~~~
-all = Candidate.all.to_json
-File.open('all.json','w') { |f| f.write(all) }
-~~~
-
-~~~
-export DATABASE_URL=`heroku config | grep DATABASE_URL | awk '{print $2}'`
-# https://github.com/rails/rails/issues/19256
-spring stop
-rails c
-# here we are using production database so be carefull
-all = []
-File.open('all.json','r') { |f| all = JSON.parse(f.read) }
-all.each { |i| Candidate.create! i }
-~~~
-
-On heroku you will probably get error `ActiveRecord::RecordNotUnique:
-PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint
-"candidates_pkey"`.
-Solution is to reset
-[link](http://stackoverflow.com/questions/28639439/rails-repeated-activerecordrecordnotunique-when-creating-objects-with-postgre) using `heroku run rake reset_sequences`
-
-~~~
-# lib/tasks/reset_sequences.rake
-desc 'Resets Postgres auto-increment ID column sequences to fix duplicate ID errors'
-task :reset_sequences => :environment do
-  Rails.application.eager_load!
-
-  ActiveRecord::Base.descendants.each do |model|
-    unless model.attribute_names.include?('id')
-      Rails.logger.debug "Not resetting #{model}, which lacks an ID column"
-      next
-    end
-
-    begin
-      max_id = model.maximum(:id).to_i + 1
-      result = ActiveRecord::Base.connection.execute(
-        "ALTER SEQUENCE #{model.table_name}_id_seq RESTART #{max_id};"
-      )
-      Rails.logger.info "Reset #{model} sequence to #{max_id}"
-    rescue => e
-      Rails.logger.error "Error resetting #{model} sequence: #{e.class.name}/#{e.message}"
-    end
-  end
-end
-~~~
 
 ## Search images and show target page in case of errors
 
