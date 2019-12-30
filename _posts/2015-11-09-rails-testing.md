@@ -1442,6 +1442,10 @@ only for finders). You can use substring or you can define `exact: true`
 `click_link "Menu"`. Find can be used for click, for example
 `find('.class').click` but I prefer to enable aria labels and use that
 `Capybara.enable_aria_label = true` and `click 'my-aria-label'`
+If there are many buttons, you can use `click_on 'Edit', match: :first`
+To check if element exists you can use `has_css?('.sm', text: 'my', wait: 0)` do
+not wait if it does not exists (for nokogiri it is
+`response.at('.sm:contains("my")')`
 * `fill_in "email", with: 'asd@asd.asd'` locator is input name, id, test_id,
   placeholder, label text. Note that it is case sensitive.
   alternative is find set `find("input[name='cc']").set 'asd@asd.asd'`, or using
@@ -2671,6 +2675,10 @@ use `allow_any_instance_of` and `expect_any_instance_of`:
       allow_any_instance_of(Validator).to receive(:valid?).and_return(false)
       expect { processor.process('foo') }.to raise_error(DataProcessor::Error)
     end
+
+    it 'call disconnect' do
+      expect_any_instance_of(Subscriber).to receive(:delayed_disconnect)
+    end
   end
 ~~~
 
@@ -2754,6 +2762,18 @@ Also the error
 ~~~
 WebMock::NetConnectNotAllowedError: Real HTTP connections are disabled. Unregistered request: POST http://127.0.0.1:9515/session with body '{"desiredCapabilities":{"browserName":"chrome","version":"","platform":"ANY","javascriptEnabled":true,"cssSelectorsEnabled":true,"takesScreenshot":false,"nativeEvents":false,"rotatable":false},"capabilities":{"firstMatch":[{"browserName":"chrome"}]}}' with headers {'Accept'=>'application/json', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Length'=>'250', 'Content-Type'=>'application/json; charset=UTF-8', 'User-Agent'=>'selenium/3.14.1 (ruby linux)'}
 ~~~
+
+Also when I run system tests
+```
+An HTTP request has been made that VCR does not know how to handle:
+  GET http://127.0.0.1:9522/shutdown
+
+  GET http://127.0.0.1:9522/session
+
+  GET https://chromedriver.storage.googleapis.com/LATEST_RELEASE_79.0.3945
+
+There is currently no cassette in use. There are a few ways
+```
 To fix you need to write initializer that call `disable_net_connect!`
 ~~~
 # config/initializers/webmock.rb
@@ -2780,8 +2800,9 @@ VCR.configure do |config|
 
   # https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
   driver_hosts = Webdrivers::Common.subclasses.map { |driver| URI(driver.base_url).host }
-  mikrotik_host = ['192.168.5.56']
-  config.ignore_hosts *(driver_hosts + mikrotik_host)
+  driver_hosts += ['googleapis.com'] # chromedriver webdriver downloads
+  driver_hosts += ['192.168.5.56'] # mikrotik test router
+  config.ignore_hosts(*driver_hosts)
 
   # custom matcher ignore message
   config.default_cassette_options = {
@@ -3028,6 +3049,7 @@ Rspec book <http://www.betterspecs.org/>
 
 * [sandy metz](https://www.youtube.com/watch?v=URSWYvyc42M)
 
+* fake sms client external test with adapter https://thoughtbot.com/blog/faking-external-services-in-tests-with-adapters
 Improve speed of the tests
 
 https://github.com/palkan/test-prof

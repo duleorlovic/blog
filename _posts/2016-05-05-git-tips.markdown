@@ -108,11 +108,34 @@ To see which username (-T) and wich key (-v) is using:
 
 You can see which keys currenlty is used with `ssh-add -L`. You can create new
 session with `ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa_my_company_account; git
-clone git@github.com:company/repo.git'`
+clone git@github.com:company/repo.git'`. But new session will not stop ssh for
+offering other keys. To specificy which key to offer and disable others you can
+```
+ssh -v -i my_key deploy@$PRODUCTION_IP
+```
 
 If you want, you can generate id_rsa_secure with password, so it will asked each
 time you use git command.  Heroku uses keys from `~/.netrc` which is created
 when you type `heroku login` (once is setup, it stays forever)
+
+Note that if you have a lot of keys than all them will be offered and you can
+received error before it asks for password
+```
+debug1: Authentications that can continue: publickey,password
+debug1: Offering public key: RSA SHA256:bXvs6rHfIUJaL2iCeI/7HzEYTXrNEgydI5ufuK7r0mE orlovic@main
+Received disconnect from 167.172.189.128 port 22:2: Too many authentication failures
+Disconnected from 167.172.189.128 port 22
+```
+You can try to `ssh localhost` and than `ssh deploy@$PRODUCTION_IP` in which
+case if will not offer all keys
+```
+debug1: Authentications that can continue: publickey,password
+debug1: Trying private key: /home/orlovic/.ssh/id_dsa
+debug1: Trying private key: /home/orlovic/.ssh/id_ecdsa
+debug1: Trying private key: /home/orlovic/.ssh/id_ed25519
+debug1: Next authentication method: password
+```
+Solution is to remove some public keys or to specify key with `-i ` option
 
 # Git commit
 
@@ -194,6 +217,10 @@ Mark commit with a tag
 To find if given commit hash is incuded on some release (release is a tag)
 
     git tag --contains <commit>
+
+To remove tag
+
+    git tag -d v1.5
 
 Add global gitignore for all projects
 

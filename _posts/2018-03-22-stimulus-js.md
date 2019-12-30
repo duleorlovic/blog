@@ -34,13 +34,14 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   `<input>`, `<select>` and `<textarea>` has `change` as default event.
   `<form>` has `submit` default event.
   If you want to `event.preventDefault()` (for example click on link) than pass
-  parameter `greet(event) {}`
+  parameter `greet(event) {}`. To see who invoke the click you can use
+  `e.currentTarget`
 * `data-target='hello.name'` creates `nameTarget` property in a controller so we
   can use it to access element and set value. We need to declare it also inside
   controller `static targets = [ 'name' ]`. Beside `this.nameTarget` you can
   check if there are more targets like this `this.nameTargets` or if exists at
   all `this.hasNameTarget` (return true or false)
-* to access current element on which controller is connected you can use
+* to access current element on which whole controller is connected you can use
   `this.element`
 * `data-hello-index='1'` used to pass data to controller which you can get on
   initialize instead of `this.element.getAttribute('data-hello-index'))` you can

@@ -3,6 +3,42 @@ layout: post
 tags: ruby-on-rails postgresql
 ---
 
+# Create
+
+```
+sudo -u postgres psql
+create database mydb;
+create user myuser with encrypted password 'mypass';
+grant all privileges on database mydb to myuser;
+```
+
+```
+# allow localhost connection using password (instead of socket with same
+username)
+sudo vi /etc/postgresql/10/main/pg_hba.conf
+# change peer to md5: 
+
+# allow remote connections; find file with: SHOW config_file;
+sudo vi /etc/postgresql/10/main/postgresql.conf
+# add: listen_addresses = '*'
+# test with
+nmap localhost
+# 5432/tcp open  postgresql
+
+# check with netstat
+netstat -an | grep 5432
+# tcp        0      0 0.0.0.0:5432            0.0.0.0:*               LISTEN
+
+# check from other computer
+nmap 192.168.1.3
+# if there is no port 5432 than check firewall on ubuntu or eventual router
+```
+
+test with
+```
+psql -U myuser -d mydb -h 192.168.1.3
+```
+
 # Introduction
 
 Learning database is funny and easy, but when you want to do something more
@@ -196,7 +232,9 @@ sudo su postgres -c "psql myapp_test -c 'CREATE EXTENSION hstore;'"
 Sometime you can run `rake db:migrate:reset` to rerun all migration and check if *db/schema.rb* is in sync.
 
 You might also alter user to have superuser privileges:
-`sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"`
+```
+sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"
+```
 
 To detect N+1 queries use gem *bullet*, and to find most expensive queries use heroku postgres analytics.
 To measure production queries, you can download database from heroku to `a.dump` and restore to development database
@@ -404,3 +442,4 @@ version](https://github.com/ankane/chartkick.js)
 INSIGHTS](https://github.com/mariusandra/insights)
 * automatic find indexes that are needed for a database
   https://github.com/ankane/dexterhttps://github.com/ankane/dexter
+* trigger a psql function to update counter cache https://evilmartians.com/chronicles/pulling-the-trigger-how-to-update-counter-caches-in-you-rails-app-without-active-record-callbacks

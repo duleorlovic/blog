@@ -759,6 +759,13 @@ with `?` and `&`
 
   some sites prevents curl and ruby scripts, if gives forbidden or empty
   response: https://www.theguardian.com
+* to upload some file using curl https://transfer.sh/ for example on heroku you
+  can not ssh to someother place
+  ```
+  curl --upload-file ./a.html https://transfer.sh/a.html
+  # download
+  curl https://transfer.sh/ASDF/a.html -o a.html
+  ```
 
 # SSH
 

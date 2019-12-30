@@ -2,7 +2,137 @@
 layout: post
 ---
 
-# Install
+# Complete provision
+
+https://gorails.com/deploy/ubuntu/18.04
+ubuntu 19 (eoan) does not include passenger yet https://github.com/phusion/passenger/issues/2104
+
+```
+ssh root@$PRODUCTION_IP
+adduser deploy
+# fill and enter
+adduser deploy sudo
+sudo vi /etc/ssh/sshd_config
+# PasswordAuthentication yes
+sudo systemctl restart ssh
+```
+make sure you can access as deploy
+
+```
+ssh deploy@$PRODUCTION_IP
+ssh-copy-id deploy@$PRODUCTION_IP
+ssh-copy-id -i ~/.ssh/specific_key.pub deploy@$PRODUCTION_IP
+ssh deploy@$PRODUCTION_IP
+```
+
+install node and yarn as deploy user
+```
+sudo pwd
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo add-apt-repository ppa:chris-lea/redis-server
+# click Enter
+sudo apt-get update
+sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev dirmngr gnupg apt-transport-https ca-certificates redis-server redis-tools nodejs yarn
+# click Enter
+```
+
+install rbenv and ruby as deploy user
+```
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
+git clone https://github.com/rbenv/rbenv-vars.git ~/.rbenv/plugins/rbenv-vars
+exec $SHELL
+rbenv install 2.6.3
+rbenv global 2.6.3
+ruby -v
+gem install bundler
+bundle -v
+```
+Add env variable for mastey key and database url
+```
+mkdir move_index
+vi move_index/.rbenv-vars
+# add lines
+DATABASE_URL=postgresql://deploy:1234@127.0.0.1/move_index_production
+RAILS_MASTER_KEY=1234
+
+echo 'export RAILS_ENV=production' >> ~/.bashrc
+echo '# this will load master key in env' >> ~/.bashrc
+echo 'export $(cat ~/move_index/.rbenv-vars)' >> ~/.bashrc
+```
+
+passenger and nginx
+```
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger bionic main > /etc/apt/sources.list.d/passenger.list'
+sudo apt-get update
+sudo apt-get install -y nginx-extras libnginx-mod-http-passenger
+sudo vim /etc/nginx/conf.d/mod-http-passenger.conf
+# change the line for passenger_ruby
+# passenger_ruby /home/deploy/.rbenv/shims/ruby;
+
+sudo service nginx start
+```
+configure nginx (replace myapp with your app name, usually github folder name)
+
+```
+sudo vi /etc/nginx/sites-enabled/default
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name _;
+  root /home/deploy/myapp/current/public;
+
+  passenger_enabled on;
+  passenger_app_env production;
+
+  location /cable {
+    passenger_app_group_name myapp_websocket;
+    passenger_force_max_concurrent_requests_per_process 0;
+  }
+
+  # Allow uploads up to 100MB in size
+  client_max_body_size 100m;
+
+  location ~ ^/(assets|packs) {
+    expires max;
+    gzip_static on;
+  }
+}
+
+sudo service nginx reload
+```
+install postgres
+```
+sudo apt-get -y install postgresql postgresql-contrib libpq-dev
+sudo su - postgres
+
+createuser --pwprompt deploy
+# enter PASSWORD
+createdb -O deploy move_index_production
+exit
+# test if you can access with:
+psql -d move_index_production
+# change deploy user as superuser so it can create extensions like pgcrypto uuid
+sudo su postgres -c "psql -d postgres -c 'ALTER USER deploy WITH SUPERUSER;'"
+```
+
+dump postgresql with
+```
+pg_dump move_index_production > m.dump
+scp m.dump IP:
+ssh IP
+psql move_index_production < ~/m.dump
+```
+
+# Install capistrano
 
 Capistrano is not server provisioning tool. You need to manually boot up server
 and install ssh, apache, git... usually all tasks that requires sudo should be
@@ -17,10 +147,19 @@ cat >> Gemfile << HERE_DOC
 # Use Capistrano for deployment
 group :development do
   gem 'capistrano', '~> 3.10', require: false
-  gem 'capistrano-puma', require: false
   gem 'capistrano-rails', '~> 1.3', require: false
-  # capistrano-rvm will load capistrano-bundler
+
+  gem 'capistrano-puma', require: false
   gem 'capistrano-rvm', require: false
+
+  # use those if you do not use puma and rvm
+  gem 'capistrano-passenger', '~> 0.2.0'
+  gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+
+  # cap production rails:c
+  gem 'capistrano-rails-console', require: false
+  # cap production postgres:replicate
+  gem 'capistrano3-postgres', require: false
 end
 HERE_DOC
 
@@ -30,21 +169,51 @@ bundle exec cap install
 cat > Capfile << HERE_DOC
 # Load DSL and set up stages
 require "capistrano/setup"
-require "capistrano/console"
-
-# Include default deployment tasks
 require "capistrano/deploy"
+require 'capistrano/scm/git'
+install_plugin Capistrano::SCM::Git
+
+require 'capistrano/rails'
+require 'capistrano/rails/console'
 
 # Include tasks from other gems included in your Gemfile
-require 'capistrano/rails'
 require "capistrano/bundler"
 require "capistrano/rvm"
 require "capistrano/puma"
+# if you use passenger and rbenv
+require 'capistrano/passenger'
+require 'capistrano/rbenv'
+
+require 'capistrano/rails/console'
+require 'capistrano3/postgres'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
 HERE_DOC
 ~~~
+
+To see all tasks you can run
+```
+cap -T
+cap -T postgres
+```
+
+You need to set credentials master key
+```
+# /home/deploy/myapp/.rbenv-vars
+RAILS_MASTER_KEY=1234
+DATABASE_URL=postgresql://deploy:PASSWORD@127.0.0.1/myapp_production
+```
+
+To deploy you can
+```
+cap production deploy
+```
+
+On digital ocean you can create snapshots and use it to create new droplets
+(new droplet can not be less than current hdd size od snapshot).
+
+For redis and sidekiq look below.
 
 # Configuration variables
 
@@ -75,6 +244,8 @@ lock "3.8.0"
 set :application, "myapp"
 set :repo_url, "orlovic@192.168.2.4:rails/temp/myapp"
 set :deploy_to, "/home/deploy/#{fetch(:application)}"
+
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
 
 # rails
 set :rails_env, 'production'
@@ -441,6 +612,12 @@ vagrant ssh
 sudo apt-get install multitail
 multitail /var/log/nginx/* /home/deploy/myapp/current/log/*
 ~~~
+
+see logs of capistrano on local machine
+
+```
+less log/capistrano.log
+```
 
 # Rubber
 
@@ -938,9 +1115,6 @@ deploy:restart`. For background jobs to pick up new secrets you need to restart
   ```
   but still same problem.
 
-# Complete provision
-https://gorails.com/deploy/ubuntu/18.04
-
 # RBENV
 
 It is better than rvm since for installation it needs just PATH shims.
@@ -1007,24 +1181,69 @@ than you need to enable booting redis server on start
 ```
 systemctl enable redis-server
 ```
-This will create a symlink  /etc/systemd/system/redis.service → /lib/systemd/system/redis-server.service
+This will create a symlink
+```
+/etc/systemd/system/redis.service → /lib/systemd/system/redis-server.service
+```
 
-To clear cache you can run on server
+You can reboot
+```
+sudo reboot
+```
+To test if redis is working and to clear cache you can run on server
 ```
 redis-cli FLUSHALL
 ```
 
 # Sidekiq
 
+You need to run on production
+https://github.com/seuros/capistrano-sidekiq#integration-with-systemd
+```
+sudo loginctl enable-linger $USER
+```
+To create symlink in `~/.config/systemd/user/sidekiq-production.service`
+(which is generated by gem's default using rvm) you can use shims
+https://gist.github.com/Paprikas/11fc850f81b687d9cbb7a8efb5ead208
+```
+# config/deploy.rb
+# https://github.com/seuros/capistrano-sidekiq#integration-with-systemd
+set :bundler_path, '/home/deploy/.rbenv/shims/bundle'
+set :init_system, :systemd
+```
+Than you need to install
 ```
 cap production sidekiq:install
+# output should be
+      01 mkdir -p /home/deploy/.config/systemd/user
+    ✔ 01 deploy@138.68.225.244 0.583s
+      Uploading /home/deploy/.config/systemd/user/sidekiq-production.service 100.0%
+      02 systemctl --user daemon-reload
+    ✔ 02 deploy@138.68.225.244 0.623s
+      03 systemctl --user enable sidekiq-production.service
+      03 Created symlink /home/deploy/.config/systemd/user/default.target.wants/sidekiq-production.service → /home/deploy/.config/systemd/user/sidekiq-pro...
+    ✔ 03 deploy@138.68.225.244 0.619s
 ```
 
-this will create symlink in `~/.config/systemd/user/sidekiq-production.service`
-but it is generated by gem's default using rvm. There is a fix for rbenv
-https://gist.github.com/Paprikas/11fc850f81b687d9cbb7a8efb5ead208
+# Tips
 
-You need to run on production
-```
-loginctl enable-linger orlovic
-```
+* check if you already pushed before update https://victorafanasev.info/tech/capistrano-automatically-check-if-remote-origin-updated-before-deploy
+  ```
+  # lib/capistrano/tasks/deploy_git_uptodate_check.rake
+  # https://victorafanasev.info/tech/capistrano-automatically-check-if-remote-origin-updated-before-deploy
+  namespace :deploy do
+    desc 'Check if origin master synced with local repository before deploy'
+    task :git_uptodate_check do
+      if !`git status --short`.empty?
+        raise 'Please commit your changes first'
+      elsif `git remote`.empty?
+        raise 'Please add remote origin repository to your repo first'
+      elsif !`git rev-list master...origin/master`.empty?
+        raise 'Please push your commits to the remote origin repo first'
+      end
+    end
+  end
+
+  before 'deploy', 'deploy:git_uptodate_check'
+  ```
+

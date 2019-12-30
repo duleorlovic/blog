@@ -142,6 +142,10 @@ version `data-html="true" data-toggle="tooltip" title="<h2>Hi</h2>"`.
 
 If you use ajax than modal content is cached, you can clear that cache on shown
 or hidden event (or in ajax response).
+Note that inline javascript will not be run again, cached content will be
+cleared (and modal will be loaded again) but new javascript will not be run for
+the same url... Actually it does not run <script></script> tags in subsequent
+runs (only on first fetch).
 
 ~~~
 <script>
@@ -437,6 +441,19 @@ class
 ```
 <div class='form-inline'>
   <%= f.text_iput :name, wrapper_class: 'form-group__with_select'
+</div>
+```
+
+You can also use bootstrap row and cols or d-flex
+```
+<%= f.text_field :name %>
+<div class='d-flex flex-row justify-content-between'>
+  <div>
+    <%= f.text_field :address %>
+  </div>
+  <div>
+    <%= f.text_field :city %>
+  </div>
 </div>
 ```
 

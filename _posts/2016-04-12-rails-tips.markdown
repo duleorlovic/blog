@@ -554,107 +554,6 @@ runner](http://guides.rubyonrails.org/command_line.html#rails-runner)
 sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations["production"]["database"]'` -c 'CREATE EXTENSION hstore;'"
 ~~~
 
-## Dump database
-
-Dump database from production for local inspection, you can download from
-heroku manually or using commands:
-
-~~~
-heroku pg:backups:capture # it will create b002.dump
-heroku pg:backups:download # it will download to latest.dump
-~~~
-
-Save it for example `tmp/b001.dump`.
-
-## Restore database
-
-You can dump LOCAL database with `pg_dump`. Note that this is plain sql, but
-heroku dump is binary format (size is much smaller).
-
-~~~
-export DUMP_FILE=tmp/b001.dump
-export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
-
-# pg_dump $DATABASE_NAME > $DUMP_FILE
-# we must use heroku style, replace: mypassword myuser and mydb
-# PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
-pg_dump -Fc --no-acl --no-owner $DATABASE_NAME > $DUMP_FILE
-scp $DUMP_FILE 192.168.1.3:
-ssh 192.168.1.3
-sudo cp b001.dump /var/www/html/
-
-heroku pg:backups restore --confirm move-index http://trkcam.duckdns.org/b001.dump DATABASE_URL
-heroku pg:backups
-~~~
-
-
-Restore from local textual and binary dump
-
-~~~
-
-chmod a+r $DUMP_FILE
-
-rake db:drop db:create
-
-# textual dump
-psql $DATABASE_NAME < $DUMP_FILE
-
-# binary dump
-sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
-~~~
-
-Or you can use [duleorlovic's load_dump
-helper](https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39)
-
-
-To restore on heroku you need to dump with same flags (dump is binary) and push
-the file somewhere on internet, for example AWS S3 and than run in console
-
-~~~
-heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorlovic-test-us-east-1/b001.dump DATABASE_URL
-~~~
-
-## Heroku upgrade database plan
-
-Upgrade heroku *hobby-dev* na *hobby-basic* ($9/month max 10M rows).
-All plans https://elements.heroku.com/addons/heroku-postgresql
-
-~~~
-heroku addons:create heroku-postgresql:hobby-basic
-# Creating heroku-postgresql:hobby-basic on ⬢ myapp... $9/month
-# Database has been created and is available
-#  ! This database is empty. If upgrading, you can transfer
-#  ! data from another database with pg:copy
-# Created postgresql-defined-42601 as HEROKU_POSTGRESQL_CHARCOAL_URL
-# Use heroku addons:docs heroku-postgresql to view documentation
-
-heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
-# ▸    WARNING: Destructive action
-#  ▸    This command will remove all data from CHARCOAL
-#  ▸    Data from DATABASE will then be transferred to CHARCOAL
-#  ▸    To proceed, type myapp or re-run this command with --confirm myapp
-# 
-# > myapp
-# Starting copy of DATABASE to CHARCOAL... done
-# Copying... done
-~~~
-
-Change DATABASE_URL
-
-Upgrading from hobby-basic to standard-0
-
-~~~
-heroku pg:info
-heroku addons:create heroku-postgresql:standard-0
-# save the variable name HEROKU_POSTGRESQL_{some color}_URL
-heroku maintenance:on
-heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_color_URL
-heroku pg:promote HEROKU_POSTGRESQL_color_URL
-heroku maintenance:off
-heroku config:set DATABASE_URL=....url from config
-heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
-~~~
-
 ## Postgres tips
 
 * you should explicitly add timestamps with `t.timestamps`
@@ -760,10 +659,12 @@ heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
 
 * `rails g model user email_address` will generate migration and model. It is
 good to edit `last_migration` and add `null: false` to not null fields
-(particularly for foreign keys) also usefull since in sql `where col != NULL`
-will not return any value (also `where NULL = NULL`), you need to use `where col
-IS NOT NULL` (which is default for active record `.where.not(col: nil)`). So
-better is to use `false` since `where col != false` will return some results.
+(particularly for foreign keys and enums) also usefull since in sql `where col
+!= NULL` will not return any value (also `where NULL = NULL`), you need to use
+`where col IS NOT NULL` (which is default for active record `.where.not(col:
+nil)`). So better is to use `false` since `where col != false` will return some
+results.  Also for string fields `if user.status != 'active'` will be true is
+status is `nil` or `inactive`.
 Add index `add_index :users, :email_address, unique: true`...
 if you want to add index in different step (not in `t.references :c, index:
 false` because name is too long (error like `Index name 'index_table_column' on
@@ -850,9 +751,17 @@ VERSION=20161114162031` (note that `:up` `:down` only run one migration)
   rails runner "ActiveRecord::Base.connection.execute('select * from ar_internal_metadata').each {|r|puts r}" -e test
 
   ```
-* to change column null false to true (to add NOT NULL constraint) you can use
+* to change column null false to true (to add NOT NULL constraint) for example
+  adding new not null column to existing table
   ```
-    change_column_null :happenings, :club_id, true
+    # add column without constrain
+    add_column :families, :kind, :string
+    # populate
+    Family.all.find_each do |family|
+      family.registered!
+    end
+    # add not null constain (if it was null: false now it will be null: true)
+    change_column_null :families, :kind, true
   ```
 
 ## Has_many through
@@ -1073,48 +982,6 @@ If you receive error `undefined method map for "'users' FORCE INDEX
 (my_user_index)":Arel::Nodes::SqlLiteral` than you can try to replace
 `includes/references` with `joins`.
 
-# Arel
-
-https://github.com/rails/arel/tree/7-1-stable
-https://github.com/rails/rails/blob/master/activerecord/lib/arel/predications.rb
-https://www.youtube.com/watch?v=ShPAxNcLm3o&feature=youtu.be
-
-`left_outer_joins` is available in [recent
-rails](https://guides.rubyonrails.org/active_record_querying.html#left-outer-joins)
-
-Online SQL to Areal http://www.scuttle.io/
-
-cheatsheet https://devhints.io/arel
-```
-arel_table = User.arel_table
-arel_table = Arel::Table.new(:users)
-arel_col = arel_table[:email]
-
-# select fields
-arel_table.project arel_col, arel_col.as('custom_name')
-# aggregates
-arel_table.project arel_table[:age].sum
-arel_table.project arel_table[:age].count.as('user_count')
-
-# limit offset
-arel_table.take(3).skip(2)
-
-# order
-arel_table.order(arel_col, arel_col.desc)
-
-# where restrictions
-arel_table.where arel_col.eq 'my@email.com'
-
-arel_col.eq 'string'
-arel_col.gteq Date.today.beginning_of_month
-arel_col.matches "%#{query}%"  # generate ILIKE
-
-# AR use joins(:photos) but Arel use join
-photos = Photo.arel_table
-arel_table.join(photos, Arel::Nodes::OuterJoin).on(arel_col.eq photos[:user_id]).project(photos[:name].as('photo_name'))
-
-
-```
 ## Deadlocks
 
 <https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlock-example.html>
@@ -2555,6 +2422,9 @@ helper classes to show hide content:
 
 https://github.com/yob/pdf-reader
 
+## Docx MS word
+
+https://github.com/urvin-compliance/caracal
 
 # Style guide
 
@@ -2568,11 +2438,11 @@ guide](https://github.com/thoughtbot/guides/tree/master/best-practices)
 * use `ENV.fetch` instead of `ENV[]` so it raises exception when env variable
 does not exists
 
-My style in rails models use following order:
+My style in rails models use following order to best practice
 
-1. `include` and `extend` other modules, `devise` or, `serialize :col, Hash`
+1. `include` and `extend` other modules, `devise`
 1. `FIELDS = %i[name].freeze` and other constants
-1. `attr_accessor`
+1. `attr_accessor` or `serialize :col, Hash`
 1. `belongs_to :workflow` associations with plugins `acts_as_list scope:
 1  [:workflow_id]`
 1.  `has_many :users` associations
@@ -2652,7 +2522,14 @@ Defining with a block without other arguments can be used for defining
 Abilities and roles in database
 https://github.com/CanCanCommunity/cancancan/wiki/Abilities-in-Database
 ```
-can do |action, subject_class, subject|
+rails g model Permission user_id:integer name:string subject_class:string subject_id:integer action:string description:text
+
+# app/models/ability.rb
+class Ability
+  include CanCan::Ability
+  can do |action, subject_class, subject|
+    # action: :read, subject_class: User, subject: 1 or nil
+  end
 end
 ```
 
@@ -2697,47 +2574,6 @@ There is ruby `autoload :Jeep, 'Jeep'` which is usefull since it will not
 `require 'jeep'` if `Jeep` is not used. If we use `Jeep` in a file, than it will
 required.
 
-# Action Cable
-
-https://www.sitepoint.com/create-a-chat-app-with-rails-5-actioncable-and-devise/
-example
-https://github.com/duleorlovic/premesti.se/commit/ad7cefe192cbbb6b97c13860eb6410d1b02cb5fc
-
-Consumer is a client of a web socket connection that can subscribe to one or
-multiple channels. Each ActionCable server may handle multuple connections (it
-is created per browser tab).
-
-~~~
-rails g channel chat
-# app/assets/javascripts/channels/chat.coffee
-# app/channels/chat_channel.rb
-~~~
-
-You can broadcast with
-
-~~~
-ActionCable.server.broadcast("chat:#{chat.id}", data: data)
-ChatChannel.broadcast_to chat, data: data
-~~~
-
-or in javascript
-
-~~~
-App.chat = App.cable.subscriptions.create 'ChatChannel'
-App.chat.send({data: data})
-~~~
-
-You can call server method with `@perform 'away', my_id:
-$('main').data('my-id')`
-
-You can not use devise `current_user` when rendering for actioncable, there will
-be an error
-
-~~~
-ActionView::Template::Error (Devise could not find the `Warden::Proxy` instance on your request environment.
-Make sure that your application is loading Devise and Warden as expected and that the `Warden::Manager` middleware is present in your middleware stack.
-If you are seeing this on one of your tests, ensure that your tests are either executing the Rails middleware stack or that your tests are using the `Devise::Test::ControllerHelpers` module to inject the `request.env['warden']` object for you.):
-~~~
 
 # Generators
 
@@ -2752,6 +2588,59 @@ so to override you need to create `lib/templates/erb/scaffold/index.html.erb.tt`
  spring stop
  rails g scaffold post title
  ```
+
+To overwrite all generators you can search for generator name. Since some
+generators can be from different gems, you should download whole rails repo
+```
+git clone git@github.com:rails/rails.git
+cd rails
+find . -name active_record.rb
+find . -name test_unit.rb
+find . -name scaffold_controller
+find . -name scaffold_generator.rb
+
+# mkdir path (gem_name)/lib/rails/generators/THIS_PATH/templates
+mkdir lib/templates/THIS_PATH -p
+
+# for example
+lib/templates/active_record/model/model.rb.tt
+lib/templates/erb/scaffold/index.html.erb.tt
+lib/templates/erb/scaffold/show.html.erb.tt
+lib/templates/rails/scaffold_controller/controller.rb.tt
+```
+
+If you need to overwrite ruby code (not template) you need to copy whole file
+https://stackoverflow.com/questions/32384713/override-rails-scaffold-generator
+```
+mkdir -p lib/rails/generators/erb/scaffold/
+
+# lib/rails/generators/erb/scaffold/scaffold_generator.rb
+# this is a copy from https://github.com/rails/rails/blob/master/railties/lib/rails/generators/erb/scaffold/scaffold_generator.rb
+```
+
+You can repeat process with
+```
+git clean . -f && rails g scaffold posts name
+```
+
+In templates I can use:
+```
+index_helper # posts
+edit_<%= singular_route_name %>_path # edit_post_path
+attributes # object for 'name', 'id', 'email'
+attribute.field_type # :text_field
+attribute.column_name # :name
+model_resource_name # post
+```
+
+Use minus to remove new line (do not generate empty line) and also start loops
+on beggning of the line (do not generate spaces before the loop)
+```
+<% default_method = attributes_names.include?('name') ? 'name' : attributes_names.first -%>
+<% attributes.each do |attritube| -%>
+<% end -%>
+```
+
 https://rdoc.info/github/erikhuda/thor/master/Thor/Actions.html
 
 We can manually create generator
@@ -3890,7 +3779,7 @@ end
 # config/initializers/const.rb
 # rubocop:disable Naming/MethodName
 class Const
-  def self.COMMON
+  def self.common
     hash_or_error_if_key_does_not_exists(
       site_name: 'My CRM',
       domain: 'www.trk.in.rs',
@@ -3988,20 +3877,25 @@ end
 ```
 
   you can create development credentials (config/credentials/development.key and
-  config/credentials/development.yml.enc) with
+  config/credentials/development.yml.enc) and also for test
   ```
 
   rails credentials:edit -e development
+  rails credentials:edit -e test
+  git add config/credentials/
+  git add config/credentials/test.key -f
+  git add config/credentials/development.key -f
   ```
+  so you can commit that keys and use it tests
 * dhh videos On Writing Software Well
   https://www.youtube.com/watch?v=wXaC0YvDgIo&list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx
   ```
   ```
-* actiontext is included in Rails 6 but you need to add stylesheets
+* actiontext is included in Rails 6 but you need to install
   ```
-  # app/assets/stylesheets/application.sass
-  //= require actiontext
+  rails action_text:install
   ```
+  add stylesheets is not needed in app/assets/stylesheets/application.sass `//= require actiontext`
 
   and you can use
   ```
@@ -4011,6 +3905,8 @@ end
   # app/views/events/_form.html.erb
     f.rich_text_area :content
 
+  # app/views/events/show.html.erb
+    <%= @event.content %>
   ```
 
 * on heroku default timeout is 30s and if requests takes more that that it will
@@ -4184,11 +4080,82 @@ end
 * activestorage for attaching images
   ```
   rails active_storage:install
-
+  # this will creeate active_storage_attachments and active_storage_blobs
   ```
   for google cloud storage you can create and download keyfile.json on IAM ->
   Service accounts https://console.cloud.google.com/iam-admin/serviceaccounts?folder=true&organizationId=true&project=cybernetic-tide-90121
 
   ```
-  hotel.image.url
+  # app/models/user.rb
+  class User < ApplicationRecord
+    has_many_attached :images
+    has_one_attached :image
+  end
   ```
+
+  ```
+  # to store something in temp file
+    tempfile = Tempfile.new
+    tempfile.binmode
+    encoded_image = params[:data_url].split(',')[1]
+    decoded_image = Base64.decode64(encoded_image)
+    tempfile.write decoded_image
+    tempfile.rewind
+    @receipt.signature.attach(io: tempfile.read, filename: 'signature.pdf')
+    tempfile.close
+    tempfile.delete
+
+  @user.image.attach(io: File.open('/path/to/file'), filename: 'file.pdf')
+
+  <%= url_for @user.image %>
+
+  # to destroy attachment
+  @user.image.purge_later
+  ```
+
+  To use with Digital Ocean spaces https://vitobotta.com/2019/11/17/rails-active-storage-permanent-urls-with-no-redirects-digital-ocean-spaces-cloudflare/ with direct publich url to storage files
+
+* routes
+  ```
+  resources :post do
+    resources :comments, shallow: true
+  end
+  ```
+* skip showing password on view
+  ```
+  # app/helpers/text_helper.rb
+  # when editing use value '', and placeholder hidden with stars
+  # <% if f.object.password.present? %>
+  #   <%= f.text_field :password, placeholder: hidden_with_stars(f.object.password), value: '' %>
+  # <% else %>
+  #   <%= f.text_field :password, placeholder: 'Your password' %>
+  # <% end %>
+  #
+  # on controller side restore original password if new is not provided
+  # if @isp.password.present? && !isp_params[:password].present?
+  #   # keep old password
+  #   params[:isp][:password] = @isp.password
+  # end
+  def hidden_with_stars(text)
+    return '' unless text.present?
+    if text.length > 2
+      text.first + '*' * (text.length - 2) + text.last
+    else
+      '*' * text.length
+    end
+  end
+  ```
+* when generating model under admin namespace you need to use foreign_key since
+  model name is without `Admin` but tables are with `admin_`
+  ```
+  # app/models/admin/page.rb
+  class Admin::Page < ApplicationRecord
+    belongs_to :run, foreign_key: :admin_run_id
+  end
+  # also for run
+  class Admin::Run < ApplicationRecord
+    has_many :pages, dependent: :destroy, foreign_key: :admin_run_id
+  end
+  ```
+  and always use `admin_` for variable names, for example `admin_run.pages.each
+  {|admin_page| }`.

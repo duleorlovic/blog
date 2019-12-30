@@ -3,6 +3,8 @@ layout: post
 title: Scraping using mechanize or selenium
 ---
 
+Bot, spider, scraper.
+
 # Kimurai
 
 https://github.com/vifreefly/kimuraframework
@@ -27,10 +29,43 @@ Use console
 ```
 kimurai console --url https://www.tripadvisor.rs/Hotel_Review-g295380-d1383552-Reviews-Prezident_Hotel-Novi_Sad_Vojvodina.html
 response.css('script[type="application/ld+json"]').first
-# in ruby
+# in plains ruby
 url = 'https://www.tripadvisor.rs/Hotel_Review-g295380-d1383552-Reviews-Prezident_Hotel-Novi_Sad_Vojvodina.html'
 response = Nokogiri::HTML(open(url))
+
+# use non headless, actually fire up a browser
+HEADLESS=false kimurai console --engine selenium_chrome --url http://google.com
 ```
+
+To install chromedriver you can use `gem install webdrivers` and symlink
+```
+sudo ln -s /home/orlovic/.webdrivers/chromedriver /usr/local/bin/
+
+# or on production with rvm, check that is it in Gemfile (not in TEST)
+# /home/deploy/.rbenv/versions/2.6.3/lib/ruby/gems/2.6.0/gems/webdrivers-4.1.3/lib/webdrivers/chromedriver.rb is just ruby file
+bundle exec rake webdrivers:chromedriver:update
+sudo ln -s /home/deploy/.webdrivers/chromedriver /usr/local/bin/
+```
+
+Use data to pass data between pages
+
+```
+def parse(response, url:, data: {})
+  response.xpath().each do |product_url|
+    request_to :parse_product, url: product_url[:href], data:
+    data.merge(product_name: product_url[:title])
+  end
+end
+
+def parse_product(response, url:, data: {})
+  puts data[:product_name]
+end
+```
+
+Save screenshot using `browser.save_screenshot`
+Save cookies using `browser.driver.save_cookies`
+Refresh page `browser.refresh` but to update `response` you need to `response =
+browser.current_response`
 
 # CSV, input & output
 
@@ -105,8 +140,6 @@ page = agent.get('trk-inovacije.com')
 page.link_with text: 'Next' # exact match
 page.search('#updates div a:first-child') # css match
 ~~~
-
-Nokogiri cheat sheet https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
 
 For using plain selenium (not capybara) you need to implement waiting for ajax
 results. I used three steps
@@ -254,16 +287,27 @@ Axes can be used to traverse (in addition to simply child `/`)
 * `ancestor::`, `ancestor-or-self::`, `parent::`
 * `attribute::`
 * `namespace::`
-* `following::`, `following-sibling::` after current node
+* `following::`, `following-sibling::` after current node. To select text after
+  certain element you can `//foo/following-sibling::text()[1]`
 * `preceding::`, `preceding-sibling::` before current node except ancestors,
-  attribute and namespace nodes
+  attribute and namespace nodes. for example select li before li with text my
+  `//li[text()='my']/preceding-sibling::li`
 * `self::` current node
 
 You can check in [developer
 tools](http://stackoverflow.com/questions/22571267/how-to-verify-an-xpath-expression-in-chrome-developers-tool-or-firefoxs-firebug)
 with `$x('//*[po-my-button]')` in console, or with *CTRL+f* search in elements
 panel.
-In ruby you can parse some text with nokogiri `data = Nokogiri::HTML(html_page)`
+In ruby you can parse some text with nokogiri
+http://cheat.errtheblog.com/s/nokogiri
+Nokogiri cheat sheet https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
+
+```
+doc = Nokogiri::HTML(html_page)
+node = doc.at('some_xpath')
+node = doc.at_css('h1')
+node
+```
 
 * <http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)>
 * [usefull selectors](http://ejohn.org/blog/xpath-css-selectors)
@@ -278,8 +322,7 @@ In ruby you can parse some text with nokogiri `data = Nokogiri::HTML(html_page)`
   `page.search('//h1/text()').text`
 * get [input by
   label](http://stackoverflow.com/questions/34712495/protractor-select-a-form-element-using-label)
-  `var input = element(by.xpath("//label[. = '" + labelName +
-  "']/following-sibling::input"));`
+  `var input = element(by.xpath("//label[. = '" + labelName + "']/following-sibling::input"));`
 * find all text with @, check if they look like an email and join them [link](http://stackoverflow.com/questions/3655549/xpath-containstext-some-string-doesnt-work-when-used-with-node-with-more)
 
 ~~~

@@ -103,6 +103,18 @@ text on click
   r.events.take(10)
   ```
 
+* rubyzip to create zip files https://github.com/rubyzip/rubyzip
+  ```
+  require 'zip'
+  file_name = '2019-12-24 12:49:14 +0000_Generic-Generic-Name_Switch_Letter.pdf'
+  system "echo 123 > #{file_name}"
+  Zip::File.open('a.zip', Zip::File::CREATE) { |zipfile| zipfile.add file_name, './' + file_name }
+
+  ```
+* ms word documents create from scratch
+  https://github.com/urvin-compliance/caracal or from html
+  https://github.com/karnov/htmltoword
+
 # Alerts and notifications
 
 ## Jbox
@@ -715,6 +727,9 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 [parallel](http://exposedata.com/parallel/) and the best is
 [grafana](http://play.grafana.org/)
 * [d3 for charts](http://plottablejs.org/examples/)
+* [google
+  charts](https://developers.google.com/chart/interactive/docs/gallery/linechart#curving-the-lines)
+  can be curved but can not be area in the same time https://github.com/google/google-visualization-issues/issues/2110
 * [chartjs](http://www.chartjs.org/). Labels and datasets should be inside
   `data` attribute. Labels are for all charts.
 
@@ -771,7 +786,9 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 
 # Email services
 
-* [formspree](http://formspree.io/) sending emails in javascript
+* [formspree](http://formspree.io/) sending emails in javascript, it is
+  opensource so you can host it https://github.com/formspree/formspree written
+  in python
 * <http://www.freecontactform.com/free.php> free contact form
 
 # User tracking services
@@ -992,6 +1009,7 @@ the content
 * red bull <https://www.bullandbeard.com/>
 * project portfolio animated <http://celialopez.fr/>
 * menu rotate on round image <https://codepen.io/JoseRosario/pen/PeERry>
+* menu icon hamburger animation https://codepen.io/aaroniker/pen/abzZbzR?utm_campaign=CSS%20Animation%20Weekly&utm_medium=email&utm_source=Revue%20newsletter
 * menu isometric https://codepen.io/ClementRoche/pen/yEPogx
 * menu in css, select sibling and opacity on all but the one being hovered https://medium.freecodecamp.org/how-to-make-the-impossible-possible-in-css-with-a-little-creativity-bd96bb42b29d
 
@@ -1056,6 +1074,25 @@ debug with
 ```
 ddclient -daemon=0 -debug  -noquiet
 ```
+I got no SUCCESS or FAILED or WARNING response
+```
+root@trk:/home/orlovic# ddclient -daemon=0 -debug  -noquiet
+DEBUG:    proxy  = 
+DEBUG:    url    = checkip.dyndns.org/
+DEBUG:    server = checkip.dyndns.org
+DEBUG:    get_ip: using web, checkip.dyndns.org/ reports 109.93.13.1
+```
+but when I remove cache
+
+```
+rm /var/cache/ddclient/ddclient.cache
+```
+it works
+```
+SUCCESS:  en-premesti-se.trk.in.rs -- Updated Successfully to 109.93.13.9
+```
+
+# Duckdns
 
 Problem with dynamic dns is that their servers (hosted on AWS) sometime fails.
 Currently it shows correct ip
@@ -1094,3 +1131,8 @@ Heroku-like self hosted platform as a service
 https://pawelurbanek.com/rails-heroku-dokku-migration
 <https://github.com/dokku/dokku>
 https://github.com/githubsaturn/captainduckduck
+
+# Status page
+
+* https://github.com/adamcooke/staytus on rails
+* others https://github.com/topics/statuspage?l=ruby

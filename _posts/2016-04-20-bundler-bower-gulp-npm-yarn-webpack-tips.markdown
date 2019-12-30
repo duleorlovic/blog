@@ -13,6 +13,19 @@ all available versions including pre release run `gem list rails -re
 
 To find help some `gem` command you can run `gem help list`
 
+For Gemfile you need to install `gem install bundler`. You can install old
+version `gem install bundler -v 1.9.2` but `bundle install` will use latest,
+unless you use specific `bundle _1.9.2_ install`. Bundle will call gem install.
+To see location you can use `bundle show my_gem` or `gem which my_gem`.
+If you use `bundle package` command https://bundler.io/v2.0/bundle_package.html
+than it will download all gems to `vendor/cache` (and create `./bundle/config`
+file so next time you run `bundle` it will install to vendor/cache).
+
+If you see error The git source https://github.com/activeadmin/activeadmin.git is not yet checked out. Please run `bundle install` before trying to start your application
+You can install gems to local path `bundle _1.17.3_ install --path
+vendor/cache/`
+
+Gems that are using git github source y
 To rebuild Gemfile.lock you can run `bundle update`. You can upgrade specific
 gem `bundle update rails` and only patch version of rails and its dependencies
 will be updated in Gemfile.lock. You should also update gemfile to point to new
@@ -44,11 +57,18 @@ sudo apt-get install graphicsmagick-imagemagick-compat
 PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
 ~~~
 
-To remove all gems from current gemset
+To use gems in ruby scripts you can use `gem 'gemname'` for example
+```
+# my_script.rb
+require 'bundler/inline'
+gemfile do
+  gem 'google-cloud-translate', '~> 1.4.0'
+  gem 'byebug'
+end
+require 'google/cloud/translate'
+require 'byebug'
+```
 
-~~~
-rvm gemset empty
-~~~
 
 # Creating gems
 
@@ -74,7 +94,21 @@ You should support broad range of gems `>= 3.2, < 5.0`,
 # RVM
 
 Install specific version and patch level `rvm install 2.3.3-p451`
+You can specify ruby in Gemfile `ruby '2.6.4'` or in `.ruby-version` and
+`.ruby-gemset` files https://rvm.io/workflow/projects
 To see current ruby `rvm list`
+To remove all gems from current gemset
+
+~~~
+rvm gemset empty
+~~~
+
+If you want to install ruby 2.3 on Ubuntu 18, there is problem with libddbm3 so
+you need to download https://ubuntu.pkgs.org/16.04/ubuntu-main-amd64/libgdbm3_1.8.3-13.1_amd64.deb.html
+Error is /home/orlovic/.rvm/gems/ruby-2.4.5/gems/activesupport-4.2.7.1/lib/active_support/core_ext/numeric/conversions.rb:124:in block (2 levels) in <class:Numeric>': stack level too deep (SystemStackError)
+```
+sudo dpkg -i ~/Downloads/libgdbm3_1.8.3-13.1_amd64.deb 
+```
 
 
 # Bower

@@ -66,6 +66,10 @@ layout: post
   alter table operators drop index fk_rails_7bd209f074;
   alter table operators drop column user_id;
   ~~~
+* drop all local databases
+  ```
+  mysql -uroot -p<password> -e "show databases" | grep -v Database | grep -v mysql| grep -v information_schema| gawk '{print "drop database `" $1 "`;select sleep(0.1);"}' | mysql -uroot -p<password>
+  ```
 * to connect to remote datatabase url using command line cli, for example heroku
   ```
   mysql -u hj9gpgm687w1qwx -pvuxns3sidwrjjf8 -h tviw6wn5xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com -P 3306 u6rhqznmtth3j4g

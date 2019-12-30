@@ -38,22 +38,40 @@ allowed inside ()
   I prefer not to indent attributes even they suggest to [indent
   them](http://jade-lang.com/reference/attributes/)
 
-# Yaml
+# Yaml yml
 
 * comments are single line and starts with `#` number sign
 * list (arrays) are denoted by a leading hyphen `-` for each member per line, or
-  in single line with `[a, b]` square brackets separated with comma space
+  in single line with `[a, b]` square brackets separated with comma space (this
+  short notation is called flow colletions)
 * associative arrays (hash) are written with colon space `key: value`
-  (multiline) or in single line with `{a: 1, b: 2}`
+  (multiline) or in single line with `{a: 1, b: 2}`, so this two are the sam
   ```
   data: { a: 1 }
   data:
     a: 1
   ```
-* String does not need `" "` only if you use some special symbol `|` `:`. Note
-  that you should use double quote instead of single quotes.
-* Multiline strings starts with pipe `|` on the line with attribute name, and
-indented.
+* String does not need `" "` except you start with special symbol `[] {} > | *
+  & ! % # @ ,` (or you use flow collections with those symboles). `: ` colon
+  followed by a space is indicator for mapping. ` #` a space followed by pound
+  sign starts a comment, so you need to quote whole string if it contains that.
+  You can use both signle and double quotes, but double quotes enables to use
+  escapes like `"an escaped \' single quote. \n"`
+* Multiline strings starts with pipe `|` (Literal block scalar) on the line with
+  attribute. `>` Folded block scalar will generate single line string, except
+  there are empty lines which are converted to "\n". Following lines should be
+  indented.
+  ```
+  fold_some_newlines: >
+      a
+      b
+
+      c
+      d
+        e
+      f
+  same_as: "a b\nc d\n  e\nf\n"
+  ```
 * Write dates in format `yyyy-mm-dd` so rails `Date.parse()` recognize it.
 * YML file can use anchor ie alias (`&`) and reference (`*`) so you do not
   repeat the code. When you use reference `*` (as for testing) you can not add
@@ -75,6 +93,21 @@ shared: &shared
 development:
   <<: *shared
 ~~~
+
+In rails you can use $LABEL and $DEFAULTS and custom_name will be ignored
+https://github.com/rails/rails/blob/master/activerecord/lib/active_record/fixtures.rb#L422
+```
+# _fixture is in Rails 6.1
+_fixture:
+  ignore: custom
+custom: &custom
+  description: %LABEL description
+DEFAULTS: &DEFAULTS
+  name: $LABEL name
+  <<: *custom
+my:
+  <<: *DEFAULTS
+```
 
 # Haml
 

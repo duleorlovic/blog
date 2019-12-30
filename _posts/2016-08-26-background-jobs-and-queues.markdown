@@ -14,6 +14,7 @@ just log 'Hi'.
 # app/jobs/my_todo_job.rb
 class MyTodoJob < ApplicationJob
   queue_as :critical
+  discard_on
 
   def perform(*args)
     puts "puts will show in QUEUE=* rake resque:work"
@@ -25,6 +26,7 @@ class MyTodoJob < ApplicationJob
 end
 ~~~
 
+Discard without retries you can use `discard_on` https://edgeapi.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-discard_on
 or if you can to put logic inside job you can use attr_reader
 (https://youtu.be/wXaC0YvDgIo?list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx&t=289)
 
@@ -129,13 +131,6 @@ You can run `bundle exec sidekiq -q default -q mailers` but better is in config:
   - my_site_mailers
 ~~~
 
-You can use console to see all queues
-
-```
-require 'sidekiq/api'
-Sidekig::Queue.all
-```
-
 Concurrency is a number which are used by sidekiq server to create redis
 connections (=concurrency + 5 per one process).
 Sidekiq client defaults to 5 connections per process but this can be limited to
@@ -163,11 +158,22 @@ Dyno count is important, so if you have 4 dynos of one sidekiq and 1 dyno of
 another sidekig queue, that is 5 * (concurrency + 5) connections.
 
 To see how many jobs is in default queue:
+You can use console to see all queues
+
+```
+require 'sidekiq/api'
+Sidekiq::Queue.all
+```
 
 ~~~
 Sidekiq::Queue.new.size # default name is 'default'
 Sidekiq::Queue.new('mailers').size
 Sidekiq::Queue.new('my_app_mailers').size
+
+
+Sidekiq::Queue.new('my_app_mailers').clear
+
+# to find specific jobs you can use scan
 ~~~
 
 To see dashboard add those lines to routes (note that we require current_user to
@@ -598,20 +604,27 @@ so to test sending in minitest
 require 'test_helper'
 
 class ProductTest < ActionDispatch::IntegrationTest
-  include ActiveJob::TestHelper # needed for assert_enqueued_with helper
+  # if you want to actually perform jobs
+  include ActiveJob::TestHelper
+  test 'mail' do
+    perform_enqueued_jobs only: ActionMailer::DeliveryJob do # look abouve for
+  end
 
-  test 'billing job scheduling' do
-    # if you want to test outcome ie how job is performed
-    perform_enqueued_jobs only: ActionMailer::DeliveryJob do
-    # or you can assert how it is called `_with`
-    assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
-    # or assert and perform
+  # https://api.rubyonrails.org/v5.1/classes/ActionMailer/TestHelper.html#method-i-assert_emails
+  # or you can assert that it is enqueued
+  assert_enqueued_jobs 1 do
+  # or you can assert how it is called `_with`
+  assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
+  include ActionMailer::TestHelper
+  test 'mail' do
     assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
       product.charge(account)
     end
   end
 end
 ~~~
+
+another way is to include
 
 To rescue from exception in background sending emails you can reopen DeliveryJob
 anywhere, for example in ApplicationMailer. If you want to `rescue_from` in some

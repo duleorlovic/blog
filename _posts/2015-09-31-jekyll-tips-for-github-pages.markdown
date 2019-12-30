@@ -656,6 +656,47 @@ highlight ruby %}`, `{{ '{%' }} highlight bash %}`
 * use inline html in markdown if you use span level tags `<span>`,`<bold>`...
   for block level tags `<div>` you need to add blank line.
 
+# Kramdown
+
+* inline and block html elements
+  ```
+  <div class='pull-right'>
+    Text right
+  </div>
+  {::options parse_block_html="true" /}
+  <div>
+  Use *markdown* for span elements
+  </div>
+  ```
+
+* definition list dl dt dd
+  ```
+  term inside dt
+  : definition inside dd
+  ```
+* block attributes are set with folloing IAL inline attribute list
+  ```
+  > A blockquote
+  {: title="My title" .class1 #my-id}
+  ```
+* share attributes using ALD atribute list definition
+  ```
+  {:refdef: .my-class}
+  paragraph
+  {: refdef}
+  ```
+* span level elements using IAL inline attribute list
+  ```
+  This is *red*{: style='color: red'}.
+  ```
+* extension using ::, like `::comment`
+  ```
+  My 
+  {::comment}
+  this is ignored completely
+  {:/comment}
+  paragraph
+  ```
 
 # Liquid in markdown
 
@@ -843,6 +884,7 @@ not confuse crawlers. You can add redirection in html
 Google io slides can be found https://github.com/willnorris/io-slides
 After you clone the repository
 
+# Tips
 
 <https://jekyllrb.com/docs/plugins/>
 <https://github.com/planetjekyll/awesome-jekyll>
@@ -850,3 +892,21 @@ After you clone the repository
 
 https://mademistakes.com/articles/using-jekyll-2016/
 
+* date `{{ 'now' | date: "%Y" }}`
+* add bootstrap
+  ```
+  yarn init
+  yarn add bootstrap jquery popper.js
+
+  # _config.yml
+  sass:
+    load_path:
+      - _sass
+      - node_module
+
+  # css/main.sass
+  
+  ```
+
+* jekyll with webpack
+  https://github.com/sandoche/Jekyll-webpack-boilerplate

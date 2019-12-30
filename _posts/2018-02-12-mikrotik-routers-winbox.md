@@ -867,6 +867,10 @@ https://www.youtube.com/watch?v=q13z9_dmmyA
 Mikrotik youtube tutorials
 https://www.youtube.com/user/rodrick4u/playlists
 
+# Ruby Gem
+
+https://github.com/astounding/mtik/
+
 # Tips
 
 * resolve hostname and update record

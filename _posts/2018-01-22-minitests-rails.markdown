@@ -63,6 +63,40 @@ Defining fixtures:
 
   No need to use brackets if you have `belongs_to :associated, class_name:
   'Activity'`
+* for activestorage attachments you need to create fake models and fixtures that
+  is specific ids
+  ```
+  # app/models/active_storage_blob.rb
+  class ActiveStorageBlob < ApplicationRecord
+  end
+
+  # app/models/active_storage_attachment.rb
+  class ActiveStorageAttachment < ApplicationRecord
+  end
+
+  # test/fixtures/active_storage_blobs.yml
+  one:
+    id: 1
+    key: $LABEL
+    filename: $LABEL
+    byte_size: 0
+    checksum: 1234
+    created_at: 2019-12-06
+
+  # test/fixtures/active_storage_attachments.yml
+  DEFAULTS: &DEFAULTS
+    # you can use same fake blob
+    blob_id: 1
+    created_at: 2019-12-06
+
+  family_signed_receipt:
+    <<: *DEFAULTS
+    name: family_signature
+    # record: signed_receipt (Receipt)
+    record_id: 1
+    record_type: Receipt
+
+  ```
 
 * `enum parent_relations: %i[child]` can be set using erb
   ```
@@ -297,7 +331,6 @@ Similar to model test you can create tests for services since there are PORO
 
 ~~~
 # test/services/credit_card_service_test.rb
-
 require 'test_helper'
 
 class CreditCardServiceTest < ActiveSupport::TestCase
@@ -305,6 +338,37 @@ class CreditCardServiceTest < ActiveSupport::TestCase
   end
 end
 ~~~
+
+## VCR
+
+To install use
+```
+# Gemfile
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+end
+
+# test/a/vcr.rb
+VCR.configure do |config|
+  config.cassette_library_dir = 'test/vcr_cassettes'
+  config.hook_into :webmock
+  config.ignore_localhost = true
+end
+
+# test/services/my_service_test.rb
+require 'test_helper'
+
+class MyServiceTest < ActiveSupport::TestCase
+  test 'success' do
+    VCR.use_cassette 'my_service' do
+      result = MyService.new(users(:my)).perform
+      assert result.success?
+    end
+  end
+end
+```
+More info on rails testing page
 
 # Minitest controllers
 

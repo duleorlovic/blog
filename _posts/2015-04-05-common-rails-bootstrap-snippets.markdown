@@ -67,6 +67,8 @@ bin/rails g migration enable_extension_for_uuid
 last_migration
 # add following line to migration
   def change
+    # if you do not have priviledged deploy user than run as root
+    # sudo su - postgres; psql ; CREATE EXTENSION pgcrypto;
     enable_extension 'pgcrypto' unless extension_enabled?('pgcrypto')
   end
 
@@ -120,6 +122,9 @@ sed -i app/views/layouts/application.html.erb -e '/title/a \
 
 Fontello provides a icons which you can include in your project using
 https://github.com/railslove/fontello_rails_converter
+Main file is `config.json`  where each icon is listed. You can import that file
+to http://fontello.com/ and than icons are shared between sessions. There is
+`tmp/fontello_session_id` which is used to open and convert from browser
 ```
 # Gemfile
 # pick icons
@@ -127,7 +132,8 @@ gem 'fontello_rails_converter'
 
 # select some fonts http://fontello.com/ and download zip to `tmp/fontello.zip`
 bundle exec fontello convert --no-download
-gnome-open http://localhost:300$(get_current_viewport)/fontello-demo.html
+# restart rails server and open http://localhost:3000/fontello-demo.html
+gnome-open http://localhost:300`expr $(get_current_viewport) + 1`/fontello-demo.html
 
 # when you want to update you can
 fontello open
@@ -362,7 +368,9 @@ body
 HERE_DOC
 ```
 
-## Twitter bootstrap Gem
+## Twitter bootstrap
+
+You can add bootstrap using `yarn add bootstrap`
 
 ## Adding flash (both from server and client)
 
@@ -742,12 +750,17 @@ heroku stack
 heroku stack:set heroku-16
 ~~~
 
-You can pull from heroku databse https://devcenter.heroku.com/articles/heroku-postgresql#pg-push-and-pg-pull
+You can pull dump from heroku database https://devcenter.heroku.com/articles/heroku-postgresql#pg-push-and-pg-pull
 You need to find the name of heroku database by clicking on Postgresl plugin
 
 ~~~
 rails db:drop
+heroku pg
+# find name adres Add-on:
 heroku pg:pull postgresql-name-on-heroku my_rails_app_development
+# or in one command
+bundle exec rails db:drop && heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
+
 
 # also pushing
 heroku pg:reset
@@ -769,6 +782,106 @@ rails aborted!
 so you can load localy and push to production.
 ```
 ```
+
+## Dump database
+
+Dump database from production for local inspection, you can download from
+heroku manually or using commands:
+
+~~~
+heroku pg:backups:capture # it will create b002.dump
+heroku pg:backups:download # it will download to latest.dump
+~~~
+
+## Restore database
+
+You can dump LOCAL database with `pg_dump`. Note that this is plain sql, but
+heroku dump is binary format (size is much smaller).
+
+~~~
+export DUMP_FILE=tmp/b001.dump
+export DATABASE_NAME=$(rails runner 'puts ActiveRecord::Base.configurations["development"]["database"]')
+
+# pg_dump $DATABASE_NAME > $DUMP_FILE
+# we must use heroku style, replace: mypassword myuser and mydb
+# PGPASSWORD=mypassword pg_dump -Fc --no-acl --no-owner -h localhost -U myuser $DATABASE_NAME > $DUMP_FILE
+pg_dump -Fc --no-acl --no-owner $DATABASE_NAME > $DUMP_FILE
+scp $DUMP_FILE 192.168.1.3:
+ssh 192.168.1.3
+sudo cp b001.dump /var/www/html/
+
+heroku pg:backups restore --confirm move-index http://trkcam.duckdns.org/b001.dump DATABASE_URL
+heroku pg:backups
+~~~
+
+
+Restore from local textual and binary dump
+
+~~~
+
+chmod a+r $DUMP_FILE
+
+rake db:drop db:create
+
+# textual dump
+psql $DATABASE_NAME < $DUMP_FILE
+
+# binary dump
+sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
+~~~
+
+Or you can use [duleorlovic's load_dump
+helper](https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39)
+
+
+To restore on heroku you need to dump with same flags (dump is binary) and push
+the file somewhere on internet, for example AWS S3 and than run in console
+
+~~~
+heroku pg:backups restore --confirm playcityapi https://s3.amazonaws.com/duleorlovic-test-us-east-1/b001.dump DATABASE_URL
+~~~
+
+## Heroku upgrade database plan
+
+Upgrade heroku *hobby-dev* na *hobby-basic* ($9/month max 10M rows).
+All plans https://elements.heroku.com/addons/heroku-postgresql
+
+~~~
+heroku addons:create heroku-postgresql:hobby-basic
+# Creating heroku-postgresql:hobby-basic on ⬢ myapp... $9/month
+# Database has been created and is available
+#  ! This database is empty. If upgrading, you can transfer
+#  ! data from another database with pg:copy
+# Created postgresql-defined-42601 as HEROKU_POSTGRESQL_CHARCOAL_URL
+# Use heroku addons:docs heroku-postgresql to view documentation
+
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
+# ▸    WARNING: Destructive action
+#  ▸    This command will remove all data from CHARCOAL
+#  ▸    Data from DATABASE will then be transferred to CHARCOAL
+#  ▸    To proceed, type myapp or re-run this command with --confirm myapp
+# 
+# > myapp
+# Starting copy of DATABASE to CHARCOAL... done
+# Copying... done
+~~~
+
+Change DATABASE_URL
+
+Upgrading from hobby-basic to standard-0
+
+~~~
+heroku pg:info
+heroku addons:create heroku-postgresql:standard-0
+# save the variable name HEROKU_POSTGRESQL_{some color}_URL
+heroku maintenance:on
+heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_color_URL
+heroku pg:promote HEROKU_POSTGRESQL_color_URL
+heroku maintenance:off
+heroku config:set DATABASE_URL=....url from config
+heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
+~~~
+
 
 If you need to provision new database (upgrade from free to hobby) than you can
 use pg copy

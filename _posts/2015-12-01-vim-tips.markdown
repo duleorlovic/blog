@@ -666,12 +666,9 @@ You need to install this tools:
 * Markdown `gem install mdl`
 * Ruby, Rails `gem install rubocop`. You can automatically fix some errors with
   `rubocop --auto-correct Gemfile`.
-  Configuration is in .rubocop.yml in $HOME or project root. You can disable all
-  ~~~
-  # .rubocop.yml
-  AllCops:
-    DisabledByDefault: true
-  ~~~
+  Configuration is in .rubocop.yml in $HOME or project root.
+  You can can generate TODO config file with `rubocop --auto-gen-config`
+
 
   My preferred configuration is
 https://github.com/duleorlovic/config/blob/master/.rubocop.yml

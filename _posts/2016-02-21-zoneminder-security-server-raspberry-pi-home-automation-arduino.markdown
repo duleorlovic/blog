@@ -320,12 +320,6 @@ https://hacks.mozilla.org/2018/02/making-a-clap-sensing-web-thing/
 Follow [Webpack]({{ site.baseurl }} {% post_url 2016-04-20-bundler-bower-gulp-npm-yarn-webpack-tips %})
 
 
-
-# Home automation
-
-automation
-https://github.com/sjmog/ralyxa
-
 # Disk errors
 
 If you get `Kernel panic - not syncing: VFS: Unable to mount root fs on

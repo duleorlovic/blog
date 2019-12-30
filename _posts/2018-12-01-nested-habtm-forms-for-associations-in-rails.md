@@ -17,10 +17,15 @@ The most important attribute is
 
 There is a lot of input types (like `color` which will popup
 color picker) but here we will focus on:
-* `text` single line text field (line breaks are automatically removed)
-* `checkbox` allowing single value to be selected/deselected
+* `text` single line text field (line breaks are automatically removed). In
+  rails `f.text_field :name, size: 2` or `f.number_field :num, min: 1, max: 9`
+  to use shorter width, `f.time_field :t` will generate `type='time'` but
+  `f.time_select :t` will generate select options instead
+* `checkbox` allowing single value to be selected/deselected. `f.check_box
+  :name` will submit `'0'` in case it is not selected, but `check_box_tag :name`
+  will not.
 * `hidden` it is not displayed, but value is submitted
-* `radio` allowing a single value to be selected out of multiple choices
+* `radio` allowing a single value to be selected out of multiple choices, `f.radio_button :overnight_rate, 1, label: 'Yes', inline: true, checked: f.object.overnight_rate`
 * `submit` ie `<input type='submit'` acts like a button that submits the form.
   You can use `<button>OK</button>` (default is `type='submit'`) instead (button
   that does not submit the form is `<button type='button'>`.
@@ -310,8 +315,8 @@ https://alligator.io/html/dialog-element/
 
 ## Fieldset & Legend
 
-Use `<fieldset>` to group several input fields and set caption on this part with
-`<legend>`.
+Use `<fieldset>` to group several input fields into one section and set caption
+label on this part with `<legend>`.
 When it is disabled, all nested input fields can not be used, as they were
 disabled. In Rails 6 there was an bug when using remote: true, all nested input
 fields are submitted so in this case you need to disable manually each input

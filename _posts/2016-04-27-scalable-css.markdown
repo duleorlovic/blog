@@ -170,6 +170,14 @@ add 3d effect to it.
   }
   ~~~
 
+* for loop in scss
+  ```
+  @for $i from 0 through 5 {
+    .five-minute-markers:nth-of-type(#{$i}) {
+      transform: rotateZ(calc(-30deg * #{$i}));
+    }
+  }
+  ```
 
 <https://responsivedesign.is/develop/getting-started-with-sass>
 

@@ -14,13 +14,16 @@ https://certbot.eff.org/docs/what.html
 To install you can check instructions on https://certbot.eff.org or use
 `certbot-auto` command. It is usually like
 ```
-sudo apt-get update
-sudo apt-get install software-properties-common
+sudo apt update
+sudo apt install software-properties-common
 sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot
-sudo apt-get update
+# click enter
+sudo apt update
 
-sudo apt-get install certbot python-certbot-apache
+sudo apt-get -y install certbot
+sudo apt-get -y install python-certbot-nginx
+sudo apt-get -y install python-certbot-apache
 ```
 
 It will write to `/etc/letsencrypt`, `/var/log/letsencrypt` and
@@ -36,8 +39,23 @@ https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-
 This super script is so good that you need just one command:
 
 ```
-sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr-latin-premesti-se.trk.in.rs -d premesti.se -d www.premesti.se
+sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr-latin-premesti-se.trk.in.rs -d a.trk.in.rs
 ```
+To see current obtained certificates
+https://certbot.eff.org/docs/using.html#managing-certificates
+```
+certbot certificates
+```
+In case server is on local LAN, when you are testing from local LAN than
+accessing public IP address will not go to the server on local LAN... so
+in this case use Tor browser or https://www.ssllabs.com/ssltest/analyze.html?d=a.trk.in.rs&latest
+
+To see how it will renew, look on `sudo less /etc/cron.d/certbot` . But if you
+are using systemd as init system, than look at
+```
+sudo systemctl show certbot.timer
+```
+I created my last certificate on 2019-11-23
 
 Check if nginx is listening on port 443 for ssl https
 
@@ -55,12 +73,6 @@ curl https://mydomain.com
 
 You can not `curl https://192.168.1.3` or `curl https://localhost` since
 certificate is not valid.
-
-To see current obtained certificates
-https://certbot.eff.org/docs/using.html#managing-certificates
-```
-certbot certificates
-```
 
 If you have forced ssl on rails server than to obtain certificate, but if server
 is already running it will redirect to https://new-domain and reject since it is
@@ -95,7 +107,7 @@ Main limit is per registered domain (50 per week). You can include up to 100
 names per certificate, so it is possible that you generate certificates for 5000
 unique subdomains per week.
 
-# Lets encrypt for heroku
+# Cloudflare and Lets encrypt for heroku
 
 https://letsencrypt.org/
 Is free and Heroku supports it using
@@ -145,6 +157,11 @@ HTTP/1.1 301 Moved Permanently
 Location: https://www.premesti.se/
 ~~~
 
+To find domain name registrant you can use
+```
+whois move-index.org
+# Registrar URL:
+```
 
 # Manual install and local test
 

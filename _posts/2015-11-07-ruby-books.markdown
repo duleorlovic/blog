@@ -281,7 +281,8 @@ is private but we can
   C extensions (.so files). Use `CONFIG["site_ruby"]` to list libraries.
 * global variables `$0` filename, `$$` processID, `$:` or `$LOAD_PATH` paths
 (you can add folder to load path with `$:.unshift 'lib'` or `$: << '.'`)
-* `defined? a` is operator that can say if variable is defined.
+* `defined? a` is operator that can say if variable is defined. Also works for
+  Module for example `defined? My::Module`
 * `ruby -e 'p Kernel.private_instance_methods.sort'` prints all usefull script
   commands (require, load, raise)
 * `puts caller` to print callstack
@@ -536,7 +537,8 @@ If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
 * random number `[*1..100].sample`
 * iterate over elements until first match `a.take_while {|i| i < 3}`
 * get a class from value `my_string.constantize`
-* you can call lambda in different ways
+* you can call lambda in different ways (note that you can not call like regular
+  function)
 
   ~~~
   my_lambda = -> { puts "hi" }
@@ -881,6 +883,7 @@ end
 * `Time.parse('2001-01-01 06:06:06 UTC')` should be raplaced with
 `Time.at(999232123).utc)` since we do not need to parse every time
 * instead of `map(&:id)` use `pluck(:id)`
+* to return hash after map you can use to_h `[1,2].map { |x| [x, f(x)] }.to_h`
 * to assign multiple attributes to active record object you can use `Hash.slice`
 (`pluck` is for database query) and `assign_attributes` to self
 
@@ -907,12 +910,14 @@ returns also the hash. Also oposite select is slice `my_hash.slice :my_key` to
 pick `{my_key: 1}` (also returns hash)
 * If you need only values for specific keys use `my_hash.values_at :my_key,
 :my_other_key`. Also given some value you can find key `my_hash.key some_value`
+so use that instead of select {}.keys.first
 * rails has
 [deep_transform_keys](https://apidock.com/rails/v4.0.2/Hash/deep_transform_keys)
 that can transform keys for your select `hash.deep_transform_keys{ |key|
 key.to_s.titleize }`
 * find in array by object property and return array of selected items
-  `array.select {|i| i.user == current_user }`. 
+  `array.select {|i| i.user == current_user }`. To grab only first one you can
+  use `array.detect {|el| }` or alias `array.find {|el|}`.
 * ruby has `Hash#invert` which will replace keys and values.
   Hash#invert `{a: 1, b: 2}.invert # {1: a, 2: b}`
 * you can create hash with `Hash[]`.
@@ -970,12 +975,17 @@ Instert a line `binding.pry` (or `binding.irb` if you want irb)
 pry
 u = User.last
 cd u
+# to jump back you can:
+# cd ..
+# nesting
+# jump-to 1
+
 
 ls # list all methods, constants and variables for this user object
 show-method full_name # or aliases: show-source or $
 find-method xpath Nokogiri
 stat Nokogiri::CSS.xpath_for
-edit full_name # edit the source and reload utomatically
+edit full_name # edit the source and reload automatically
 full_name
 
 play -l 123 # run line 123
@@ -985,8 +995,14 @@ wtf??? # more lines
 cat --ex # show exact line of exception
 
 .git diff # run linux commands, just add prefix .
+shell-mode # $ run commands, use #{} to interpolate ruby
 ~~~
 
+For rails use https://github.com/rweng/pry-rails `gem 'pry-rails'`
+```
+show-routes
+show-models
+```
 todo https://www.youtube.com/watch?v=4hfMUP5iTq8
 
 # Tips
@@ -1350,10 +1366,17 @@ end
 end
   ```
 
+* `string split(' ').join(' ')` can be replaced with `'  a   b'.strip.squeeze`
 * if you need snake case from class name, you can
 `described_class.name.underscore`. Of you need class from controller name
 `users_controller` you can `controller_name.classify.constantize` which returns
-`UsersController`
+`UsersController`. Classify uses camellize and singularize ie inflectors
+https://github.com/duleorlovic/rails/blob/master/activesupport/lib/active_support/inflector/methods.rb#L203
+To check if exists use `['my_table'].inject(Object) { |c, n| c.const_defined? n}
+# => true false` source
+https://github.com/duleorlovic/rails/blob/master/activesupport/lib/active_support/inflector/methods.rb#L289
+not sure why this does not raise error, but `Object.const_defined? 'my_table'`
+railse
 * to create array of hashes or array of new objects you can not use `[{}]*2` or
   `[User.new]*2` since that will be the same object in both places. You have to
   use `Array.new(2) { User.new }`

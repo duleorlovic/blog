@@ -242,6 +242,10 @@ nslookup asd.loc
 #
 # Name:	asd.loc
 # Address: 127.0.0.1
+
+# To display the MX records, use the -query=mx option:
+# you can show any records with
+nslookup -query=any move-index.org
 ~~~
 
 On linux you can update `/etc/hosts` with you custom domain name and use it
@@ -458,7 +462,11 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
   ffmpeg -f concat -i textfile -fflags +genpts merged.mp4
   ```
 
-
+* slideshow using ffmpeg https://trac.ffmpeg.org/wiki/Slideshow
+  ```
+  # hold single image duration
+  ffmpeg -loop 1 -i a00.jpg  -c:v libx264 -t 10 -pix_fmt yuv420p a00.mp4
+  ```
 * default gnome screenshot folder `dconf-editor` find
   `org->gnome->gnome-screenshot-> auto-save-directory ->
   file:///home/user/Download/`
@@ -693,6 +701,10 @@ image = image.change_geometry("400") {|cols, rows, img| img.resize!(cols, rows)}
 
 * to change default program open with file type, you can right click,
 properties, set default.
+another way is to edit `vi ~/.local/share/applications/defaults.list`
+and run `sudo update-mime'
+```
+```
 * read only usb, can't create file since usb is readonly https://askubuntu.com/questions/781223/physical-block-size-is-2048-bytes-but-linux-says-it-is-512-when-formatting-us
 
 or error: 'The driver descriptor says the physical block size is 2048 bytes, but
@@ -745,3 +757,9 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   (find them in manu Preferences -> Shortcuts)
 * https://hluk.github.io/CopyQ/ for showing clipboard content in window
 * open ms office docx files on https://onedrive.live.com/ to see comments
+* to install rpm package use alien
+  ```
+  sudo apt-get install alien
+  sudo alien --to-deb bluejeans-*.rpm
+  sudo dpkg -i bluejeans_*.deb
+  ```

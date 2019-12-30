@@ -10,7 +10,8 @@ https://guides.rubyonrails.org/i18n.html#translations-for-active-record-models
 so you can use
 ```
 User.model_name.human
-# pluralize
+# 'asd'.pluralize # asds so for english that is ok but if you use i18n, than use
+# note that you have to write translations in yml.file if you use human(count)
 User.model_name.human(count: 2)
 # attribute
 User.human_attribute_name(:email)
@@ -447,3 +448,6 @@ User.human_enum_name(:status, user.status)
 * `helper.number_with_precision`, `distance_of_time_in_words_to_now`,
   `number_to_currency`, `number_to_human`, `number_to_human_size` are some
   helpers that uses translations
+* use `_html` suffix when you use tags in translated content. For example
+  `title_html: Hi <b>man</b>` and `<%= t('title_html') %>` will not escape and
+  you do not need to use html_safe or raw

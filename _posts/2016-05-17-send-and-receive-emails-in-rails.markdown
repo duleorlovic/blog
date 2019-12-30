@@ -79,6 +79,20 @@ You need to Allow less secure apps https://support.google.com/accounts/answer/60
 
 Sometimes you can send from your IP but not from Heroku IP address.
 
+For error  Errno::ECONNREFUSED (Connection refused - connect(2) for "localhost" port 25
+the problem occurs when you in initializers (for example
+config/initializers/devise.rb or config/initializers/exception_notification.rb)
+use ApplicationMailer::MAILER_SENDER or some other constain from Rails classes
+Note that this occurs only on production. So use only contstants from
+initializers.
+```
+Rails.configuration.action_mailer.smtp_settings
+Rails.application.config.action_mailer.smtp_settings
+=> {:address=>"smtp.gmail.com", :port=>587, :authentication=>"plain", :enable_starttls_auto=>true, :user_name=>...
+Rails.configuration.action_mailer.delivery_method
+```
+
+
 ## Sendgrid
 
 Sendgrid is simple to start on heroku. Just add new add-on free plan with
@@ -257,6 +271,13 @@ end
 
 You can change template with `mail to: 'my@email.com', template_name:
 'contact_form'`
+
+To send without template you can
+```
+mail to: 'me@email.com' do |format|
+  format.html { render text: 'a' }
+end
+```
 
 Another solution is `gem 'premailer-rails'`
 <https://github.com/fphilipe/premailer-rails> which can also generate text part
@@ -532,6 +553,10 @@ You can disable registering specific email domains using this list
 https://github.com/FGRibreau/mailchecker
 Using this gem https://github.com/rubygarage/truemail you can check if actual
 email account exists on smtp server.
+Format of emails can be validated using https://github.com/afair/email_address
+```
+Email
+```
 
 # Testing emails
 
@@ -563,7 +588,7 @@ module MailerHelpers
   # some usage is like
   # mail = give_me_last_mail_and_clear_mails
   # assert_equal [email], mail.to
-  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.html_part.decoded
+  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.html_part.decoded # mail.body.to_s when it is not multipart (devise) when there is not txt.erb template
   # confirmation_link = mail.html_part.decoded.match(
   #   /(http:.*)">#{t("confirm_email")}/
   # )[1]
