@@ -415,3 +415,7 @@ One alternative solution, which does not rely on selenium
 # Scraper
 
 Find selectors using javascript https://github.com/cantino/selectorgadget
+
+# Trk bot
+
+

@@ -3849,7 +3849,9 @@ end
   ```
   Run specific test and include byebug
   ```
-  bundle exec ruby -w -Itest -rbyebug actionview/test/template/form_options_helper_test.rb -n test_select_with_include_blank_false_and_required
+  bundle exec ruby -w -Iactiverecord/test activerecord/test/cases/enum_test.rb
+  # include byebug
+  bundle exec ruby -w -Iactionview/test -rbyebug actionview/test/template/form_options_helper_test.rb -n test_select_with_include_blank_false_and_required
   ```
   Commit on your fork and some branch_name. You can rebase to master
   ```
@@ -4159,3 +4161,6 @@ end
   ```
   and always use `admin_` for variable names, for example `admin_run.pages.each
   {|admin_page| }`.
+
+* find column type using `User.column_for_attribute('status')` or
+  `User.columns_hash['status']`

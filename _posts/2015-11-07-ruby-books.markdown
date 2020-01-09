@@ -384,6 +384,11 @@ If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
   1 + 1 is #{1+1}
   )
   ~~~
+  You can interpolate later in runtime using hash and percentage `%{}` instead
+  of hash `#{}`
+  ```
+  'this %{value} is interpolated' % { value: 2 }
+  ```
 
   You can also write as single line strings (long line), without new line `\n`
 

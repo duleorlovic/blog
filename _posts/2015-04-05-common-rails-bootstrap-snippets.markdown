@@ -48,6 +48,9 @@ rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ```
 
+You can start from template for devise and i18n
+https://github.com/duleorlovic/devise-views-i18n
+
 For error
 ```
 Webpacker can't find application in /home/orlovic/Downloads/rails_6_beta2_stimulus/public/packs/manifest.json. Possible causes:

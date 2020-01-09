@@ -908,5 +908,32 @@ https://mademistakes.com/articles/using-jekyll-2016/
   
   ```
 
+* debug slow rendering with
+  ```
+  jekyll s --profile --verbose --trace
+  ```
+  To render only last post
+  ```
+  jekyll s --watch --limit_posts 1
+  ```
+  Rebuild only that is changed
+  ```
+  jekyll s --incremental
+  ```
+* permalinks only support date and categories. To use author in permalink you
+  need to use plugin https://gist.github.com/peey/897e8ed33e412fdfe0fcacf002acc150
 * jekyll with webpack
   https://github.com/sandoche/Jekyll-webpack-boilerplate
+  To add boootstrap, run `npm add bootstrap jquery popper.js` and add
+
+  ```
+  // _src/index.js
+  import 'jquery';
+  import 'popper.js';
+  import 'bootstrap';
+
+  // _src/index.scss
+  @import '~bootstrap/scss/bootstrap';
+  ```
+  For links you need to use relative url `<a href="{{ post.url |
+  relative_url}}">{{ post.title }}</a>`

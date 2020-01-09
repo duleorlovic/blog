@@ -1246,4 +1246,17 @@ cap production sidekiq:install
 
   before 'deploy', 'deploy:git_uptodate_check'
   ```
+* on digital ocean 1GB RAM memory you can not compile webpack, and it stop
+  without any error
+  ```
+ DEBUG [5c5758a9] 	Compiling...
 
+ DEBUG [5c5758a9] 	Compilation failed:
+  ```
+  solution is to limit how much memory node can use by setting up env variable
+  https://github.com/rails/webpacker/issues/2033
+  https://github.com/rails/webpacker/issues/2143 (related)
+  ```
+  # /home/deploy/move_index/.rbenv-vars
+  NODE_OPTIONS=--max-old-space-size=460
+  ```

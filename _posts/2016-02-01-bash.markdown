@@ -993,3 +993,9 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   ```
 
   To remove old kernel files you can run `sudo apt-get autoremove`
+
+* rename files to change extension
+  ```
+  sudo apt install rename
+  find _posts/ -name "*.markdown" -print0 | xargs -0 rename 's/.markdown$/.md/'
+  ```

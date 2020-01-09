@@ -387,6 +387,39 @@ attribute with numberical value (svg points).
 
 http://bouncejs.com/
 
+# Victor create svg from ruby
+
+use ruby to create svg https://github.com/DannyBen/victor
+`rect`, `circle`, `polygon`, `path`... you can generate in browser
+https://kuboon.github.io/victor-opal/ note that animation is visible only in
+browser
+```
+require 'victor'
+svg = Victor::SVG.new width: 100, height: 100
+svg.build do
+  css['.animate'] = {
+    animation: 'move 1s',
+    'animation-fill-mode': 'forwards',
+  }
+  css['.animate.left'] = {
+    transform: 'translate(-100px,0)',
+  }
+  css['.animate.right'] = {
+    transform: 'translate(100px,0)',
+  }
+  css['@keyframes move'] = {
+    '100%': { transform: 'translate(0, 0)' }
+  }
+  rect x: 0, y: 0, widht: '100%', height: '100%', fill: '#ddd'
+  g font_size: 40, font_weight: 'bold', font_family: 'arial', fill: 'blue' do
+    text 'TRK', x: 10, y: 40, class: 'animate left'
+    text 'BOT', x: 10, y: 80, class: 'animate right'
+  end
+end
+svg.save 'logo.svg'
+system 'x-www-browser logo.svg'
+```
+
 
 # Examples and Tricks
 
