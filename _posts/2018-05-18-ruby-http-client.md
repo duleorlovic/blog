@@ -120,7 +120,7 @@ def fetch(uri_str, limit = 10)
   raise ArgumentError, 'HTTP redirect too deep' if limit == 0
 
   uri = URI.parse(uri_str)
-  request = Net::HTTP::Get.new(uri.path, { 'User-Agent' => 'Mozilla/5.0 (etc...)' })
+  request = Net::HTTP::Get.new(uri, { 'User-Agent' => 'Mozilla/5.0 (etc...)' })
   response = Net::HTTP.start(uri.host, uri.port) { |http| http.request(request) }
   case response
   when Net::HTTPSuccess     then response
@@ -181,3 +181,8 @@ Accept-Encoding: gzip, deflate, br
 Accept-Language: en-US,en;q=0.9,sr;q=0.8,hr;q=0.7,bs;q=0.6,da;q=0.5,pt;q=0.4,bg;q=0.3
 Cookie: _session_id=...
 ~~~
+
+# Outgoing http logs
+
+https://github.com/trusche/httplog
+

@@ -274,7 +274,7 @@ Rails also defines `assert_difference`, `assert_blank`, `assert_presence`,
 `assert_response`, `assert_redirected_to`, `assert_select`
 
 ~~~
-    assert_difference "User.count", 1 do
+    assert_difference 'User.count', 1 do
     end
 ~~~
 
@@ -389,7 +389,7 @@ title: "Ahoy!" }, response.parsed_body)`.
 * `assert_response :success` (for http codes 200-299), `:redirect` (300-399), `:missing` (404), `:error` (500-599).
 * `assert_select 'h1', user.email` . Note that white spaces and new lines are
   ignored
-* `assert_difference "User.count", 1 do`
+* `assert_difference 'User.count', 1 do`
 * You have access to `@request`, `@controller` and `@response` object, but only
   after you call `get`, `post`. You can set `request.remote_ip` by passing
   headers (note that http referrer is written as http referer (single r)
@@ -518,6 +518,8 @@ changes.
 Before we used feature specs for full application integration testing, but now
 we should use system specs (which also uses capybara and webdriver with chrome).
 
+Use nameing like ROLE_ACTION_test.rb for example *user_shares_card_test.rb*
+
 System tests are not included in default test suite if you run `rails test` (you
 should run `rake test:system`), but if you run specific test than it will be run
 `rails test test/system/my_test.rb`.
@@ -525,6 +527,7 @@ should run `rake test:system`), but if you run specific test than it will be run
 Note that if you use puma with multiple workers than
 `ActionMailer::Base.deliveries.size` could be different in rails process and in
 test process, so use `workers 0` in `config/puma/test.rb`.
+Or insclude ActionMailer::TestHelper and use assert_emails method.
 
 In system test you can't mock OmniAuth.mock_auth so use integration test for
 that.
@@ -546,6 +549,11 @@ gem 'webmock'
 # config/initializers/webmock.rb
 if Rails.env.test?
   require 'webmock'
+  # https://github.com/titusfortner/webdrivers/issues/109
+  driver_urls = Webdrivers::Common.subclasses.map do |driver|
+    Addressable::URI.parse(driver.base_url).host
+  end
+  WebMock.disable_net_connect!(allow_localhost: true, allow: driver_urls)
   WebMock.disable_net_connect!(allow_localhost: true)
 end
 

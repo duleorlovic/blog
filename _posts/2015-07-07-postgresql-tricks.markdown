@@ -39,6 +39,17 @@ test with
 psql -U myuser -d mydb -h 192.168.1.3
 ```
 
+```
+# show all databases
+\l
+# or you can list using SELECT
+SELECT datname FROM pg_database;
+
+# list all tables
+\dt
+
+```
+
 # Introduction
 
 Learning database is funny and easy, but when you want to do something more

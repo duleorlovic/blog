@@ -1422,14 +1422,6 @@ is used for whole Rails application.
 [gem mustache](https://github.com/mustache/mustache) is nice to render user
 templates `Hi {{name}}`, where `name` is placeholder which is inside handlebars
 
-Usage is simple as
-
-~~~
-data_for_body == current_user.contacts.first
-@template_body = TemplateRenderService.new(@template.body, data_for_body).render
-# in view use <%= simple_format @template_body %> to convert \n to <br>
-~~~
-
 It is usefull to delegate fields in contacts model to some belongs_to
 association, like `delegate User::FIELD_NAMES, to: :user`.
 
@@ -1437,18 +1429,18 @@ association, like `delegate User::FIELD_NAMES, to: :user`.
 ~~~
 # app/services/template_render_service.rb
 class TemplateRenderService
-  attr_reader :template_body, :data_for_body
+  attr_reader :template, :data
 
-  def initialize(template_body, data_for_body)
-    @template_body = template_body
-    @data_for_body = data_for_body
+  def initialize(template, data)
+    @template = template
+    @data = data
   end
 
   def render
     m = Mustache.new
     m.raise_on_context_miss = true
-    message = m.render(template_body, data_for_body)
-    Result.new message
+    rendered = m.render(template, data)
+    Result.new 'OK', rendered: rendered
   rescue Mustache::ContextMiss, Mustache::Parser::SyntaxError => e
     Error.new e.message
   end
@@ -1460,6 +1452,8 @@ usage
 ```
 result = TemplateRenderService.new(email_body, name: '', role_name: '')
 return result.message if result.success?
+
+# in view use <%= simple_format result.message %> to convert \n to <br>
 ```
 
 If handlebars contains dots than you need to nest data, like for `{{user.name}}`
@@ -1518,7 +1512,7 @@ namespace :seed do
 end
 
 # db/seed.rb
-Rake::Task["seed:bid_types"].invoke
+Rake::Task['seed:bid_types'].invoke
 
 # call task from another task
 Rake::Task['translate:copy'].invoke Rails.env
@@ -1633,106 +1627,6 @@ Use "Register" or "Sign up" for registrations and "Log in" and "Log out" for
 sessions (since it is easy to differentiate from "sign up").
 
 # 7 patterns
-
-From
-[7-ways-to-decompose-fat-activerecord-models](http://blog.codeclimate.com/blog/2012/10/17/7-ways-to-decompose-fat-activerecord-models/)
-suggestions for code organization I use mostly:
-
-You can check also <http://trailblazer.to/>
-You can organize domain (controller, model and view) into separate folders
-[drawers](https://github.com/NullVoxPopuli/drawers)
-
-If there is a lot of business logic in view, I prefer to put that in controller
-so it is more visible.
-
-
-## Service objects
-
-Always define only one public method: `call`, `perform` or `process`
-
-~~~
-# app/services/match_posts.rb
-def MatchPosts
-  def initialize(posts)
-    @posts = posts
-  end
-
-  def perform
-  end
-end
-~~~
-
-You should return object that can be success and hold some data
-
-```
-# app/models/result.rb
-class Result
-  attr_accessor :message, :data
-
-  # you can return in service like:
-  #   return Result.new 'Next task created', next_task: next_task
-  # and use in controller:
-  #   if result.success? && result.data[:next_task] == task
-  def initialize(message, data = {})
-    @message = message
-    @data = data
-  end
-
-  def success?
-    true
-  end
-end
-
-# app/models/error.rb
-class Error < Result
-  def success?
-    false
-  end
-end
-```
-
-and you can rescue from exceptions:
-
-~~~
-# app/services/my_service.rb
-class MyService
-  # Some custom exception if needed
-  class ProcessException < Exception
-  end
-
-  def initialize(h)
-    @user = h[:user]
-  end
-
-  def process(posts)
-    success_message = do_something posts
-    Result.new success_message
-  rescue ProcessException => e
-    Error.new e.message
-  end
-
-  private
-
-  def do_something(posts)
-    raise ProcessException, "Error: empty posts" unless posts
-    "Done with do_something"
-  end
-end
-~~~
-
-~~~
-# main.rb
-require './my_service.rb'
-
-my_service = MyService.new user: 'me'
-puts my_service.process(1).success? # true
-puts my_service.process(1).message # Done with do_something
-puts my_service.process(false).success? # false
-puts my_service.process(false).message # empty posts
-~~~
-
-Service object is similar to Command pattern which is implemented in gem
-<https://github.com/collectiveidea/interactor>
 
 ## Form Objects
 
@@ -1885,73 +1779,6 @@ end
 
 My implementation of friendly_id gem
 <script src="https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee.js"></script>
-
-## Observable
-
-We an use observable objects to send notifications [implementation in 3
-languages](http://www.diatomenterprises.com/observer-pattern-in-3-languages-ruby-c-and-elixir/)
-It could looks like [action as a
-distance](https://en.wikipedia.org/wiki/Action_at_a_distance_(computer_programming))
-antipattern but if we explicitly add than is it fine.
-
-~~~
-module ObservableImplementation
-  def observers
-    @observers ||= []
-  end
-
-  def notify_observers(*args)
-    observers.each do |observer|
-      observer.update(*args)
-    end
-  end
-
-  def add_observer(object)
-    observers << object
-  end
-end
-
-class Task
-  include ObservableImplementation
-  attr_accessor :counter
-  def initialize
-    self.counter = 0
-  end
-
-  def tick
-    self.counter += 1
-    notify_observers(counter)
-  end
-end
-
-class PutsObserver
-  def initialize(observable)
-    observable.add_observer self
-  end
-
-  def update(counter)
-    puts "Count has increased by #{counter}"
-  end
-end
-
-class DotsObserver
-  def initialize(observable)
-    observable.add_observer self
-  end
-
-  def update(counter)
-    puts "." * counter
-  end
-end
-
-task = Task.new
-task.tick
-DotsObserver.new(task)
-task.tick # ..
-PutsObserver.new(task)
-task.tick # ...
-# Count has increased by 3
-~~~
 
 # Unsubscribe links
 
@@ -2275,7 +2102,7 @@ not need to download file.
 
 # PDF
 
-## Wicked PDF
+## Wicked PDF is using wkhtmltopdf
 
 <https://github.com/mileszs/wicked_pdf>
 
@@ -2376,6 +2203,18 @@ helper classes to show hide content:
   display: none;
 }
 ~~~
+
+Spacing issue on old version of wkhtmltopdf
+https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3147
+
+PDFTK pdf toolkit can be used to merge two pdf https://rubygems.org/gems/pdf-toolkit/versions/1.1.0 `gem 'pdf-toolkit'`
+
+`gem 'pdf-reader'` can be used to read metadata of pdf
+
+https://github.com/boazsegev/combine_pdf can be used to merge pdfs in ruby
+
+PDFTRON is commercial tool with a lot of examples https://www.pdftron.com/documentation/samples/rb/PDFRedactTest
+
 
 ## Prawn
 
@@ -3227,7 +3066,7 @@ but IE10 wont.
   use that priority in associations `has_many :comments, -> { order priority:
   :asc }, dependent: :destroy`
   Position is starting from 1, 2...
-  To perform bulk update, use form to pass ids
+  To perform bulk update for ordering, use form to pass ids
 
   ~~~
   def sort
@@ -3277,12 +3116,17 @@ the order. In this case define enum as a hash
   ~~~
 
   also if you want to replace '\n' new lines in text area (`f.text_area`) with
-  <br> so it looks the same when displaying it (alternativelly you can use `<%=
-  simple_format @contact.text %>`).  Example is with nested associated elements:
+  <br> so it looks the same when displaying it . Example is with nested associated elements:
 
   ~~~
   params[:contact] = params[:contact].each_with_object({}) { |(k,v),o| o[k] = v.each_with_object({}) { |(k1,v1),o1| o1[k1] = (v1.class == String ? v1.gsub(/\n/,'<br>'): v1) } }
   ~~~
+  Alternativelly you can keep `\n` and use `<%= simple_format @contact.text %>`
+  It will replace `\n` with `<br>` and two or more `\n\n` with `<p>`... also you
+  can insert any html tags (if sanitize is true if will convert `<form>` and
+  `<script>` tag into regular text and disable `on=` and `href="javascript`
+  attributes.
+  https://apidock.com/rails/ActionView/Helpers/TextHelper/simple_format
 
   If you want to strip params globaly (for every non get request) you can use:
 
@@ -3847,6 +3691,18 @@ end
   bundle install
   bundle exec rake guides:generate
   ```
+  To run tests for activerecord you can try with
+  ```
+  cd activerecord
+  bundle install
+  bundle exec rake
+  # it runs for 10 minutes
+
+  # if it complains about non existins database
+  sudo su - postgres
+  createdb activerecord_unittest1
+  createdb activerecord_unittest2
+  ```
   Run specific test and include byebug
   ```
   bundle exec ruby -w -Iactiverecord/test activerecord/test/cases/enum_test.rb
@@ -3868,7 +3724,7 @@ end
   git push origin my_branch
   ```
   On web there is a button 'Create pull request'.
-  In description of pull requests you should some code example.
+  In description of pull requests you should write some code example.
 
 * Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
   💯% sure. Here is plain ascii (￣︶￣). 🙌
@@ -3879,16 +3735,20 @@ end
 ```
 
   you can create development credentials (config/credentials/development.key and
-  config/credentials/development.yml.enc) and also for test
+  config/credentials/development.yml.enc) which will be loaded in development
+  environment and take precedence over master credentials (if there is a
+  development.key, can not use ENV for key for environment credentials)
+  you can commit that keys in repository.
   ```
-
   rails credentials:edit -e development
-  rails credentials:edit -e test
-  git add config/credentials/
-  git add config/credentials/test.key -f
+  git add config/credentials/development.yml.env
   git add config/credentials/development.key -f
+
+  # also for test
+  rails credentials:edit -e test
+  git add config/credentials/test.yml.env
+  git add config/credentials/test.key -f
   ```
-  so you can commit that keys and use it tests
 * dhh videos On Writing Software Well
   https://www.youtube.com/watch?v=wXaC0YvDgIo&list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx
   ```
@@ -4080,9 +3940,17 @@ end
   ```
 
 * activestorage for attaching images
+  https://edgeguides.rubyonrails.org/active_storage_overview.html
   ```
+  # this will create active_storage_attachments and active_storage_blobs
   rails active_storage:install
-  # this will creeate active_storage_attachments and active_storage_blobs
+
+  # configure storage methods for aws or do
+  vi config/storage.yml
+
+  # set development or production storage method
+  vi config/environments/development.rb
+  config.active_storage.service = :local
   ```
   for google cloud storage you can create and download keyfile.json on IAM ->
   Service accounts https://console.cloud.google.com/iam-admin/serviceaccounts?folder=true&organizationId=true&project=cybernetic-tide-90121
@@ -4094,7 +3962,27 @@ end
     has_one_attached :image
   end
   ```
+  In form view
+  ```
+  # app/views/users/_form.html.erb
+  <%= f.file_field :image %>
+  ```
+  In view
+  ```
+  <%= url_for @user.image %>
+  ```
+  In controller permit that
+  ```
+  # app/controllers/users_controller.rb
+    def user_params
+      # in case you have has_many_attached
+      # params.require(:user).permit(:name, images: [])
+      # in case you have has_one_attached
+      params.require(:user).permit(:name, :image)
+    end
+  ```
 
+  Attaching existing file
   ```
   # to store something in temp file
     tempfile = Tempfile.new
@@ -4107,11 +3995,31 @@ end
     tempfile.close
     tempfile.delete
 
-  @user.image.attach(io: File.open('/path/to/file'), filename: 'file.pdf')
+  # or if you already have file
+  @user.image.attach(io: File.open('/path/to/file'), filename: File.basename('/path/to/file'))
+  ```
 
-  <%= url_for @user.image %>
+  Downloading
+  ```
+  binary = user.image.download
+  # to save you need to open file
+  file_path = "#{Dir.tmpdir}/#{user.image.filename}"
+  File.open(file_path, 'wb') do |file|
+    file.write(user.image.download)
+  end
 
-  # to destroy attachment
+  # or you can use .open
+  user.image.open do |file|
+    system '/path/to/virus/scanner', file.path
+    # ...
+  end
+  ```
+
+  Deleting
+
+  ```
+  @user.image.purge
+  # to destroy attachment later
   @user.image.purge_later
   ```
 
@@ -4164,3 +4072,20 @@ end
 
 * find column type using `User.column_for_attribute('status')` or
   `User.columns_hash['status']`
+
+* use `chamber` gem https://github.com/thekompanee/chamber/wiki/Basic-Usage for
+  secure keys
+  ```
+  # settings.yml
+  setting:                development_value
+  # The following will become 'secure_setting'
+  _secure_secure_setting: secure_development_value
+  ```
+  than when you run `chamber secure` it will replace all `_secure_` values with
+  long key. To show you can use `chamber show`
+  ```
+  require 'chamber'
+  Chamber.env.setting
+  Chamber.env.secure_setting
+  ```
+

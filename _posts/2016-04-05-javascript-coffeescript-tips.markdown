@@ -409,7 +409,7 @@ browsers](http://kangax.github.io/compat-table/es6/)
 
 # Colors
 
-You can generate random colors in javascript
+You can generate random color palete in javascript
 
 ~~~
   function getRandomColor() {
@@ -427,8 +427,8 @@ You can generate random colors in javascript
 ~~~
 
 If you need same distinct colors based on integer numbers you can create a
-deterministic function. I use ruby since it is easier than javascript
-
+deterministic function.
+Here is example in ruby
 ~~~
   def add_colors(datasets)
     # http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
@@ -439,7 +439,7 @@ deterministic function. I use ruby since it is easier than javascript
       h %= 1
       hsv_to_rgb(h, 0.5, 0.95)
     end.map do |r,g,b|
-      { 
+      {
         full: "rgba(#{r},#{g},#{b},1)",
         transparent: "rgba(#{r},#{g},#{b},0.2)"
       }
@@ -458,7 +458,7 @@ deterministic function. I use ruby since it is easier than javascript
     result
   end
 
-  # HSV values in [0..1[
+  # HSV values in [0..1]
   # returns [r, g, b] values from 0 to 255
   def hsv_to_rgb(h, s, v)
     h_i = (h*6).to_i
@@ -473,7 +473,7 @@ deterministic function. I use ruby since it is easier than javascript
     r, g, b = t, p, v if h_i==4
     r, g, b = v, p, q if h_i==5
     [(r*256).to_i, (g*256).to_i, (b*256).to_i]
-  end  
+  end
 ~~~
 
 # Javascript tips

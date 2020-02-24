@@ -38,6 +38,17 @@ Questions
 
 * <https://gist.github.com/ryansobol/5252653> 15 questions
 
+Gems
+* https://www.ruby-toolbox.com/
+* https://ruby.libhunt.com/
+* https://rubygems.org/
+
+Docs
+
+* https://docs.ruby-lang.org/en/master/index.html
+* mobile responsive version https://rubyapi.org/
+* older https://ruby-doc.org/stdlib-2.5.3/libdoc/observer/rdoc/Observable.html
+
 # Ruby
 
 ## Object and classes
@@ -287,7 +298,9 @@ is private but we can
   commands (require, load, raise)
 * `puts caller` to print callstack
 * `p method(:my_method).source_location` to find method implementation. To print
-  method source you can use `user.method(:name).source.display`
+  method source you can use `user.method(:name).source.display`. For class you
+  need to grab some method for example
+  `m=User.method(:initialize);m.source_location`
 * if `method` is overwritten in some class, we can unbind from kernel and
   rebind to request object
   [link](https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html)
@@ -473,12 +486,28 @@ If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
   puts 'end'
   ~~~
 
-  Also `Process.fork { sleep 1 }`
+  Also
+  ```
+  pid = Process.fork { sleep 1 }
+  # or simply
+  pid = fork { sleep 1 }
+  ```
   https://ruby-doc.org/core-2.1.3/Process.html#method-c-exit
 
   ~~~
   Process.kill("HUP", pid)
   ~~~
+
+  To start multithread app you can use Thread.new and join
+  ```
+  5.times.map do
+    Thread.new do
+      5.times do
+        Net::HTTP.get('example.com', '/index.html')
+      end
+    end
+  end.each(&:join)
+  ```
 
 * to send some data as json you can do it `user.templates.map {|t| t.slice :id,
   :name}.to_json`
@@ -705,6 +734,16 @@ upcase_words = words.map(&:upcase)
 # can not easilly add argument to map method
 https://stackoverflow.com/questions/23695653/can-you-supply-arguments-to-the-mapmethod-syntax-in-ruby
 ~~~
+
+You can create proc callable object using uber
+```
+class MyModel
+  extend Uber::Callable
+  def self.call(options)
+    puts options
+  end
+end
+```
 
 * there are special methods in ruby
   * `method_missing(method, *args)` can be used to catch all missing methods
@@ -954,6 +993,10 @@ HERE_DOC
 * `CGI::escape`
 * `ERB::Util.url_encode`
 
+rails params use double backslash instead of one, for example if user fill in
+`\d+` it will be saved as `\\d+`. To use with regexp you need to interpolate,
+like `"str".scan(/#{my_param}/).first`
+
 # Retry from rescue
 
 ~~~
@@ -1016,14 +1059,25 @@ todo https://www.youtube.com/watch?v=4hfMUP5iTq8
 * [101 ruby code factoids](http://6ftdan.com/allyourdev/2016/01/13/101-ruby-code-factoids/)
 * you can return only from methods, but not from `do end` blocks
 * ruby regex match will return
-[matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) for which you can
-call `captures` to get matched groups. You can use block instead of `if`
+[matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) or `nil` if there is
+no match (so you need to check if not nil). Foc MatchData you can
+call `captures` to get matched groups. You can use block form syntax of `if`
 
   ~~~
   exception.message.match(/for column (.*) at row/) do |match_data|
     detail += " for the field #{match_data.captures.first}"
   end
   ~~~
+
+  If you do not want to use block syntax, you can replace `if` with array syntax
+  and return first matching group
+  ```
+  detail = message[/asd@asd/, 1]
+  ```
+  or you can cast match to string
+  ```
+  email = message.match(/\S+@\S+/).to_s
+  ```
 
   for error `Lint/AmbiguousRegexpLiteral: Ambiguous regexp literal. Parenthesize
   the method arguments if it's surely a regexp literal, or add a whitespace to
@@ -1039,7 +1093,6 @@ call `captures` to get matched groups. You can use block instead of `if`
 
   Regexp.new(t('user_mailer.welcome'))
   ~~~
-
 
 
 * decorators poro presenters
@@ -1350,7 +1403,7 @@ end
   # class M # :nodoc: all
   ```
 
-  To run use: 
+  To run use:
 * convert single value and array value to array `Array(1)` and `Array([1])`https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
 * hash with indifferent access (symbol or string) this is Rails ActiveSupport
   `h = HashWithIndifferentAccess.new a: 2` so you can use `h[:a]` or `h['a']`
@@ -1402,6 +1455,24 @@ railse
 
   but better is to use `each_with_object({}) { |el, a|` accumulator is last
   param not the first.
+
+* for read from a file `file = File.open(file_name)` you can call `file.read`.
+  But you can create String io `io =  StringIO.new 'asd'` and call `io.read`.
+  That is usefull for testing when you read from standard input
+  ```
+  io = StringIO.new 'some content'
+  $stdin = io
+
+  gets # 'some content'
+  ```
+
+* to check if ruby is called from cli
+  ```
+  #!/usr/bin/env ruby
+  if __FILE__==$0
+    puts "ergs=#{ARGV}"
+  end
+  ```
 
 todo
 

@@ -298,7 +298,7 @@ inline with `JEKYLL_ENV=development jekyll serve --watch`
 <!-- index.html -->
 <html>
   <body>
-    {{ '{% if jekyll.envirnoment == "development"' }} %}
+    {{ '{% if jekyll.environment == "development"' }} %}
       Hello admin
     {{ "{% endif " }}%}
   </body>
@@ -438,6 +438,8 @@ Jekyll contains [variables](https://jekyllrb.com/docs/variables/): `site`,
 
 `{ { site }}` is `Jekyll::Drops::SiteDrop` class and contains
 * `site.posts` array of all posts objects `Jekyll::Document collection=post`
+  they are descending order. To access most recent you can use loop `{% for post
+  in site.posts limit: 3 %}` or assign `{% assign post = site.posts.first %}`
 * `site.pages` array of all pages `Jekyll::Page`
 
 
@@ -449,10 +451,14 @@ Jekyll contains [variables](https://jekyllrb.com/docs/variables/): `site`,
 
 + all front matters variables like `page.layout`, `page.title`
 
-if current page is post we have additional properties
+if current page is `post` we have additional properties
 
 * `page.title`
-* `page.excerpt`
+* `page.excerpt` it is first paragraph. if you need to limit you can use `{{
+  post.excerpt | strip_html | truncate: 100 }}`. You can use specific delimiter
+  on a post in frontmatter `excerpt_separator: <!--more-->` or in config (but
+  than default "paragraph" excerpt will not be used, and you need to use
+  separator on every post)
 * `page.date`
 * `page.id`
 * `page.categories`
@@ -647,7 +653,12 @@ Yet another theme
   `[http://projektor.trk.in.rs](http://projektor.trk.in.rs)`
 * internal link to post is with `{{ '{%' }} %}` like
   `[My page]({{ '{% link 2016-03-02-my-page.markdown' }} %})`
-* images `![alt text]({ { site.baseurl }}/assets/path_to_image "Title text")`
+* images `![alt text]({ { site.baseurl }}/assets/path_to_image "Title text")` If
+  you want to use image in `README.md` than you need to store image and use
+  ```
+  ![trk-datatables](test/trk_datatables_with_daterangepicker.png "TRK Datatables")
+  ```
+  This will work on github but not if README is shown on other sites
 * strikethrough (words crossed, deleted, removed text) can be used with
   `<s>Example</s>` or `<del>Example</del>` (with kramdown no shortcut works
   like `-- ~~`)
@@ -922,6 +933,8 @@ https://mademistakes.com/articles/using-jekyll-2016/
   ```
 * permalinks only support date and categories. To use author in permalink you
   need to use plugin https://gist.github.com/peey/897e8ed33e412fdfe0fcacf002acc150
+* seo tags and Open Graph meta name tags are added using https://github.com/jekyll/jekyll-seo-tag
+  
 * jekyll with webpack
   https://github.com/sandoche/Jekyll-webpack-boilerplate
   To add boootstrap, run `npm add bootstrap jquery popper.js` and add
@@ -937,3 +950,8 @@ https://mademistakes.com/articles/using-jekyll-2016/
   ```
   For links you need to use relative url `<a href="{{ post.url |
   relative_url}}">{{ post.title }}</a>`
+
+  I disabled minify_html so it runs faster on development
+  https://github.com/sandoche/Jekyll-webpack-boilerplate/pull/26
+
+  To rebuild you need to stop and start again `npm start`

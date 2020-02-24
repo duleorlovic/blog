@@ -525,6 +525,18 @@ list:
 * <http://wagn.org> wiki with cards with editor
 * <https://beefree.io/>
 * [fireEdit](https://github.com/coltaemanuela/FireEdit)
+* [ckeditor](https://ckeditor.com/docs/index.html) for 4.1 you can add your own
+  style https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_stylesSet.html
+  https://ckeditor.com/docs/ckeditor4/latest/features/styles.html
+  https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-contentsCss
+  rails integration https://github.com/galetahub/ckeditor
+  ```
+  // app/assets/javascripts/cheditor/config.js
+  CKEDITOR.stylesSet.add('default', [
+      // Block-level styles
+    { name: 'Blue Header', element: 'h2', attributes: { 'class': 'blue-marker', style: 'color:blue' } },
+  ]);
+  ```
 * counter how many characters left https://github.com/rikschennink/short-and-sweet
 * quill
 
@@ -813,6 +825,7 @@ https://segment.com/ collect customer data
 
 * intercom <https://demos.intercom.com/>
 * [user deck](https://userdeck.com)
+* [chatwoot](https://www.chatwoot.com/docs/channels/website) opensource
 
 
 # User intro tour
@@ -929,7 +942,7 @@ Also usefull when want to grep only en.yml `grep -i catar config/locales
 
 # Rails
 
-<https://github.com/eliotsykes/real-world-rails> realworldrails
+<https://github.com/eliotsykes/real-world-rails> realworldrails opensource rails
 more are using rspec than test: `cd real-world-rails/apps` and `find . -name
 spec -maxdepth 2 | wc -l # 134` and `find . -name test -maxdepth 2 | wc -l # 52`
 
@@ -941,6 +954,8 @@ opensource market peer-to-peer marketplace
   * when you run localy, you can import new contacts and their posts, for
   example: hq@pod.diaspora.software
 * openstreetmap
+* http status live site https://github.com/brotandgames/ciao
+* chat support intercom https://www.chatwoot.com/docs/channels/website
 
 # Templates
 
@@ -994,6 +1009,7 @@ Email templates
 
 * <https://russellgoldenberg.github.io/scrollama/basic/> scrolling and changing
 the content
+* menu active item changes when you have long text and scroll to sections https://codepen.io/jpdanks/pen/LYVbbwK
 
 # Nice design and ui tools
 
@@ -1124,13 +1140,6 @@ https://alternativeto.net
 
 * twilio gem
 
-# Dokku
-
-Heroku-like self hosted platform as a service
-
-https://pawelurbanek.com/rails-heroku-dokku-migration
-<https://github.com/dokku/dokku>
-https://github.com/githubsaturn/captainduckduck
 
 # Status page
 

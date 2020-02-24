@@ -257,10 +257,11 @@ well with `display: flex` elements, better is to use
   sides or breakpoint not required: `p-0` padding none, `mt-5` margin top,
 
   For inline elements you can use `float-left` (instead of `pull-left`).
-  For block elements `ml-auto` to align to the right (same as
+  For block elements with fixed width `ml-auto` to align to the right (same as
   pull-right in B3), `mx-auto` for horizontal centering (need fixed width).
-  For block elements you can wrap inside `d-flex w-100 justify-content-between`
-  width 100% is important because you want right element to go right.
+  For block elements that are by default 100% width, you can wrap inside `d-flex
+  w-100 justify-content-between` width 100% is important because you want right
+  element to go right.
   https://getbootstrap.com/docs/4.0/components/list-group/#custom-content
   (also `justify-content-around justify-content-center justify-content-start`).
 
@@ -301,6 +302,34 @@ well with `display: flex` elements, better is to use
     <dt class='w-100'></dt>
   </dl>
   ~~~
+
+* to use variable unkown number of columns with multi line you can insert
+  `.w-100` where you want on specific responsive (for example on md you can
+  insert after every 6 columnts) https://getbootstrap.com/docs/4.4/layout/grid/#equal-width-multi-line
+  ```
+  <div class="container">
+    <div class="row">
+      <div class="col">col</div>
+      <div class="col">col</div>
+      <div class="w-100"></div>
+      <div class="col">col</div>
+      <div class="col">col</div>
+    </div>
+  </div>
+  ```
+
+  another way is to use row-cols https://getbootstrap.com/docs/4.4/layout/grid/#row-columns
+
+  ```
+  <div class="container">
+    <div class="row row-cols-2">
+      <div class="col">Column</div>
+      <div class="col">Column</div>
+      <div class="col">Column</div>
+      <div class="col">Column</div>
+    </div>
+  </div>
+  ```
 
 # Rails
 
@@ -440,7 +469,7 @@ class
 
 ```
 <div class='form-inline'>
-  <%= f.text_iput :name, wrapper_class: 'form-group__with_select'
+  <%= f.text_input :name, wrapper_class: 'form-group__with_select'
 </div>
 ```
 

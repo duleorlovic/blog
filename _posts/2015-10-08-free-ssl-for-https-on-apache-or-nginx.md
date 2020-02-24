@@ -44,7 +44,7 @@ sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr
 To see current obtained certificates
 https://certbot.eff.org/docs/using.html#managing-certificates
 ```
-certbot certificates
+sudo certbot certificates
 ```
 In case server is on local LAN, when you are testing from local LAN than
 accessing public IP address will not go to the server on local LAN... so

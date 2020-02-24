@@ -42,13 +42,16 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   check if there are more targets like this `this.nameTargets` or if exists at
   all `this.hasNameTarget` (return true or false)
 * to access current element on which whole controller is connected you can use
-  `this.element`
-* `data-hello-index='1'` used to pass data to controller which you can get on
+  `this.element`. To access element on which action is triggered you can pass
+  the event to the action `hello(greed) {` and use `event.currentTarget`
+* `data-hello-index='1'` used to pass data to CONTROLLER which you can get on
   initialize instead of `this.element.getAttribute('data-hello-index'))` you can
-  use stimulus shorthand `this.data.get('index')`. Also `this.data.has('index')`
-  to check if data existis and `this.data.set('index', 2)` to set data so
-  controller do not need to store any data, just use setter and getter to store
-  data in DOM.
+  use stimulus shorthand `this.data.get('index')`. Only for data on controller.
+  But since controller can be initialized on parent of the action element,
+  better is to use `event.currentTarget.getAttribute('data-hello-index')`
+  Also `this.data.has('index')` to check if data existis and
+  `this.data.set('index', 2)` to set data so controller. Do not need to store
+  any data in js, just use those setter and getter to store data in DOM.
 
 * communicating between controllers is best to use event dispatch https://github.com/stimulusjs/stimulus/issues/200#issuecomment-434731830
   ```

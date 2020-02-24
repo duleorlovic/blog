@@ -81,6 +81,10 @@ To push to heroku without changes, try
     git commit --allow-empty -m "empty commit"
     git push heroku master
 
+To sort authors by number of commits
+
+    git shortlog -e -s -n
+
 Versioning [SEMVER](http://semver.org/)
 
 # Multiple accounts
@@ -156,26 +160,34 @@ If you want to add folder to git structure but ignore all its content (like
     git add tmp/.gitignore -f
 
 
-If you want to skip history and download latest code and change author you can
+If you want to skip history and download latest code
 
     git clone --depth=1 your-repo-url
-    git commit --amend --author "New Author Name <email@address.com>" --no-edit
+
+Clone all repositories from same user or organization, for example twitter
+
+    curl -s https://api.github.com/orgs/twitter/repos?per_page=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
 
 Set author localy (config is for local folder only)
 
     git config user.email myemail@asd.asd
-    git config user.name my-name
+    git config user.name 'Dusan Orlovic'
     git commit --amend --reset-author
 
-To change author in all commits (except first, I do not know how to ammend
-first commit) first change author localy
+To change author in all commits, you can rebase to first commit
 
-    # find first commit sha
+    # find first commit <sha1-of-root>
     git rebase -i `git log --reverse | if read a commit ; then echo $commit ; fi`
-    # replace all pick with e, edit = use commit, but stop for amending
-    # repeat
+    # replace all `pick` with `e`, edit = use commit, but stop for amending
+    # repeat the following command
     git commit --amend --reset-author --no-edit && git rebase --continue
-    git push -f
+
+To change on initial commit you can use `rebase --onto HEAD`
+
+    # git checkout <sha1-of-root>
+    git checkout `git log --reverse | if read a commit ; then echo $commit ; fi`
+    git commit --amend --reset-author --no-edit
+    git rebase --onto HEAD HEAD master
 
 Apply patch
 
@@ -348,3 +360,8 @@ browse -- issues` to open issues. `git browse user/repo` to open user/repo
 * pr             Work with pull requests
 * pull-request   Open a pull request on GitHub
 * release        List or create releases
+
+# Github CLI
+
+https://github.com/cli/cli
+

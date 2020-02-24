@@ -692,6 +692,19 @@ telnet localhost 5554
   geo fix 19 45 # to fix gps location, first is longitude than latitude
 ~~~
 
+To download apk source and grab it from phone you can use
+```
+adb shell pm list packages |grep netatmo
+adb shell pm path com.netatmo.homecoach
+adb pull /data/app/com.netatmo.homecoach-IvieREGOfx3gu0ROd6jygQ==/base.apk
+```
+
+If it is cordova app than you will be able to see the source
+```
+unzip base.apk
+ inflating: assets/www/cordova.js
+```
+
 # DNS for local server
 
 On Android emulator `127.0.0.1` will not point to your machine! Also your

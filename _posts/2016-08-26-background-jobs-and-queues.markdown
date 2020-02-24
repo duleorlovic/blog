@@ -27,7 +27,25 @@ end
 ~~~
 
 Discard without retries you can use `discard_on` https://edgeapi.rubyonrails.org/classes/ActiveJob/Exceptions/ClassMethods.html#method-i-discard_on
-or if you can to put logic inside job you can use attr_reader
+For sidekiq you can disable retry on rails 6.0.1 only if you `include
+Sidekiq::Worker`
+https://stackoverflow.com/questions/28412913/disable-automatic-retry-with-activejob-used-with-sidekiq
+https://github.com/mperham/sidekiq/wiki/Active-Job#customizing-error-handlinghttps://github.com/mperham/sidekiq/wiki/Active-Job#customizing-error-handling
+```
+class CleanupWorker
+  include Sidekiq::Worker
+
+  sidekiq_options retry: 0
+
+  def perform
+    remove_empty_directories
+    delete_old_documents
+    clean_user_data
+  end
+end
+
+```
+if you can to put logic inside job you can use attr_reader
 (https://youtu.be/wXaC0YvDgIo?list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx&t=289)
 
 ~~~
@@ -163,10 +181,12 @@ You can use console to see all queues
 ```
 require 'sidekiq/api'
 Sidekiq::Queue.all
+Sidekiq::Queue.all.map { |q| q.size }
 ```
 
 ~~~
 Sidekiq::Queue.new.size # default name is 'default'
+Sidekiq::Queue.new('my_app_default').size
 Sidekiq::Queue.new('mailers').size
 Sidekiq::Queue.new('my_app_mailers').size
 
@@ -200,7 +220,15 @@ Sidekiq::Testing.inline! do
 end
 ~~~
 
+To run imediatelly you can use
+```
+HardWorker.new.perform
+```
+
 For emails https://github.com/mperham/sidekiq/issues/724
+
+Cancaling sidekiq jos is not possible, you should implement pooling
+https://github.com/mperham/sidekiq/wiki/FAQ#how-do-i-cancel-a-sidekiq-job
 
 # Resque
 
@@ -585,7 +613,7 @@ end
 ~~~
 
 When you want to cancel a delayed job you can find and destroy it... but better
-is to create a job that is immune ie check at the begginning...
+is to create a job that is immune ie check at the begginning or in the loop.
 
 # Test background jobs spec
 

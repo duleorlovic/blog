@@ -250,6 +250,12 @@ Aws.config.update(
 s3 = Aws::S3::Resource.new region: credentials[:aws_region]
 bucket = s3.bucket credentials[:aws_bucket_name]
 bucket.objects(prefix: 'assets').map {|o| o.public_url}
+
+# to download object to a file use response_target
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/s3-example-get-bucket-item.html
+s3 = Aws::S3::Resource.new(region: 'us-west-2')
+obj = s3.bucket('my-bucket').object('my-item')
+obj.get(response_target: './my-code/my-item.txt')
 ~~~
 
 # AWS CLI

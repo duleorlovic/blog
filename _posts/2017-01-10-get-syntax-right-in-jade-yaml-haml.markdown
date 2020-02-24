@@ -43,13 +43,31 @@ allowed inside ()
 * comments are single line and starts with `#` number sign
 * list (arrays) are denoted by a leading hyphen `-` for each member per line, or
   in single line with `[a, b]` square brackets separated with comma space (this
-  short notation is called flow colletions)
+  short notation is called flow collections)
+  ```
+  # flow style
+  array: [ foo bar, baz ]
+  # block style
+  array:
+    - foo bar
+    - baz
+  ```
 * associative arrays (hash) are written with colon space `key: value`
   (multiline) or in single line with `{a: 1, b: 2}`, so this two are the sam
   ```
-  data: { a: 1 }
-  data:
+  # flow style
+  hash: { a: 1 }
+  # block style
+  hash:
     a: 1
+  ```
+
+  Array of object (combination array and hash)
+  ```
+  combination:
+    - a: 1
+      b: 2
+    - [ a: 1, b: 3]
   ```
 * String does not need `" "` except you start with special symbol `[] {} > | *
   & ! % # @ ,` (or you use flow collections with those symboles). `: ` colon
@@ -62,6 +80,10 @@ allowed inside ()
   there are empty lines which are converted to "\n". Following lines should be
   indented.
   ```
+  kayak: |
+    It is nice sport
+    to play around
+
   fold_some_newlines: >
       a
       b
@@ -77,22 +99,21 @@ allowed inside ()
   repeat the code. When you use reference `*` (as for testing) you can not add
   or update keys, but with `<<` you can (as for [production secrets]
   ({{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}))
+  ~~~
+  default: &default
+    key: 123
 
-~~~
-name: Dusan Orlovic
-sport:
-  kayak: |
-    It is nice sport
-    to play around
-~~~
+  development:
+    <<: *default
+  ~~~
+  Merge key can be used to merge multiple maps, and you can override them also
+  ```
+  - # Override
+    << : [ *BIG, *LEFT, *SMALL ]
+    x: 1
+    label: center/big
+  ```
 
-~~~
-shared: &shared
-  key: 123
-
-development:
-  <<: *shared
-~~~
 
 In rails you can use $LABEL and $DEFAULTS and custom_name will be ignored
 https://github.com/rails/rails/blob/master/activerecord/lib/active_record/fixtures.rb#L422

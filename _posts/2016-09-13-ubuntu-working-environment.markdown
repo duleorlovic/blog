@@ -135,6 +135,22 @@ sudo systemctl disable cups-browsed # remove from /etc/cups/cupsd.conf
 sudo systemctl stop cups-browsed
 ```
 
+To use HP color laserjet CP1215 you can use http://foo2hp.rkkda.com/
+```
+wget -O foo2zjs.tar.gz http://foo2zjs.rkkda.com/foo2zjs.tar.gz
+tar zxf foo2zjs.tar.gz
+cd foo2zjs
+make
+./getweb 1215      # Get HP LaserJet CP1215 .ICM files
+sudo make install
+sudo make cups
+```
+Go to <http://localhost:631/admin/> (your username and password) and configure
+Color mode to Color instead of Monochrome. Instructions as screenshots
+http://foo2hp.rkkda.com/cups/
+Note that pdf usually use monochrome colors (unless after Ctrl+P under Advanced
+tab Color Mode is Color) so use Writter to insert image and print document.
+
 
 * recently I got dns error (I'm using 8.8.8.8). Following
   [post](http://askubuntu.com/questions/368435/how-do-i-fix-dns-resolving-which-doesnt-work-after-upgrading-to-ubuntu-13-10-s)
@@ -407,6 +423,17 @@ Merge several pdf files
 pdftk * cat output ../p.pdf
 ~~~
 
+Convert images files to pdf. Some restrictions should be removed
+https://askubuntu.com/questions/1081895/trouble-with-batch-conversion-of-png-to-pdf-using-convert
+```
+sudo mv /etc/ImageMagick-6/policy.xml /etc/ImageMagick-6/policy.xmlout
+```
+
+```
+convert johny* nin.pdf
+```
+
+
 # Canon camera wifi
 
 <http://www.testcams.com/airnef/> is used to download files from Canon camera.
@@ -678,14 +705,24 @@ https://imagemagick.org/index.php https://github.com/rmagick/rmagick
 Load image
 ```
 require 'rmagick'
-i = Magick::Image.read( 'demo.png' ).first
+image = Magick::Image.read( 'demo.png' )
+          .first
+image = Magick::ImageList.new( 'demo.png' )
 # to load just header block to find size of image
-i = Magick::Image.ping( 'demo.png' ).first
+image = Magick::Image.ping( 'demo.png' ).first
+image.display
+# to return to ruby and not block the
+pid = fork { draw.display }
+# you can close from ruby
+fork { sleep 30; Process.kill('SIGKILL', pid) }
+
+# write output to different file
+image.write file_name.split('.').insert(-2, 'proccessed').join('.')
 ```
 To get a size of a image
 ```
-i.columns
-i.rows
+image.columns # width
+image.rows # height
 ```
 To create gif
 ```
@@ -695,6 +732,14 @@ anim.write("animated.gif")
 To resize but keep aspect ratio (ie to scale under constrains)
 ```
 image = image.change_geometry("400") {|cols, rows, img| img.resize!(cols, rows)}
+```
+To write blue transparent box
+```
+draw = Magick::Draw.new
+draw.stroke 'blue'
+draw.fill_opacity 0
+draw.rectangle 5,10, 50,100
+draw.draw image
 ```
 
 # TIPS
@@ -762,4 +807,11 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   sudo apt-get install alien
   sudo alien --to-deb bluejeans-*.rpm
   sudo dpkg -i bluejeans_*.deb
+  ```
+* get image size information from command line
+  ```
+  file image.png
+  MyPNG.png: PNG image, 681 x 345, 8-bit/color RGB, non-interlaced
+  # or
+  identify image.png
   ```

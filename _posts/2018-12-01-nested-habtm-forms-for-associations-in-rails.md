@@ -318,11 +318,9 @@ https://alligator.io/html/dialog-element/
 Use `<fieldset>` to group several input fields into one section and set caption
 label on this part with `<legend>`.
 When it is disabled, all nested input fields can not be used, as they were
-disabled. In Rails 6 there was an bug when using remote: true, all nested input
+disabled. In Rails 6 I submitted a bug when using remote: true, all nested input
 fields are submitted so in this case you need to disable manually each input
-field.
-
-https://github.com/rails/rails/issues/36728
+field. But it is fixed now https://github.com/rails/rails/issues/36728
 
 Another problem with `f.fields_for :venue` is that if model persists, this will
 add some hidden `venue_attributes[:id] = id`

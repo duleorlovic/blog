@@ -21,3 +21,10 @@ https://github.com/damianFC/alexa-rubykit
 Develop auth
 http://tech.taskrabbit.com/blog/2016/12/02/amazon-alexa-rails/
 
+# SNS
+
+https://www.youtube.com/watch?v=PsJsP-7cydk
+
+To allow iam role to publish to topic
+https://docs.aws.amazon.com/sns/latest/dg/sns-access-policy-use-cases.html
+you need to attach policy.

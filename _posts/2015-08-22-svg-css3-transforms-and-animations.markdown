@@ -9,7 +9,7 @@ Before you dive into details, you can try
 [wow](https://github.com/matthieua/WOW) to trigger it on scroll.
 So you can just add classes to your elements, like `hinge`
 
-~~~
+```
 <html>
   <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.css">
@@ -25,15 +25,15 @@ So you can just add classes to your elements, like `hinge`
     </div>
   </body>
 </html>
-~~~
+```
 
 # Transform property
 
-~~~
+```
 div {
   transform: scale(2,3);
 }
-~~~
+```
 
 Note that element still occupy initial size. If you wrap with `<span>` than you
 need to set `display: inline-block` (`width` and `height` can only be applied to
@@ -68,7 +68,7 @@ Some of the timing functions could be: `ease`, `ease-in`, `ease-in-out`,
 `linear`.
 
 
-~~~
+```
 div {
   transition: width 2s ease-out 1s;
   // or
@@ -77,7 +77,7 @@ div {
   transition-timing-function: ease-out;
   transition-delay: 1s;
 }
-~~~
+```
 
 usually we change properties on hover.
 
@@ -85,7 +85,7 @@ usually we change properties on hover.
 
 so you don't need user action to animate...
 
-~~~
+```
 div {
   animation: example 5s linear 2s infinite alternate;
   // or
@@ -104,7 +104,7 @@ div {
   25% { width: 100px; }
   100% { width: 110px; }
 }
-~~~
+```
 
 # Inkscape
 
@@ -124,9 +124,9 @@ If you open existing svg or copy paste some paths, in Inkscape you can Edit ->
 When you export you should optimize online
 <https://jakearchibald.github.io/svgomg/> or inline
 
-~~~
+```
 svgo file_name.svg --pretty --disable=cleanupIDs
-~~~
+```
 
 or download inkscape extension
 <https://github.com/juanfran/svgo-inkscape> and use `Save as "optimized with
@@ -193,7 +193,7 @@ Here is some example of text shadows:
 https://www.w3.org/People/Dean/svg/texteffects/index.html
 https://www.w3schools.com/graphics/svg_feoffset.asp
 * to add blur
-~~~
+```
   <defs>
     <filter id="f1" x="0" y="0">
       <feGaussianBlur stdDeviation="0.1" />
@@ -201,14 +201,14 @@ https://www.w3schools.com/graphics/svg_feoffset.asp
   </defs>
   <text filter="url(#f1)">asd</text>
 </degs>
-~~~
+```
 
 But better is to add another original item after filtered (so filtered is in
 background).
 
 If you want to apply multiple times (so it is bolder) you can use `feMergeNode`
 
-~~~
+```
 <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
   <feGaussianBlur stdDeviation="1" result="glow"/>
   <feMerge>
@@ -220,14 +220,14 @@ If you want to apply multiple times (so it is bolder) you can use `feMergeNode`
 </defs>
 <text style="filter: url(#glow); fill: #0c9" x="5" y="5">Simple Glow</text>
 <text x="5" y="5" style="fill: white">Simple Glow</text>
-~~~
+```
 
 * to show text along the path use
 
-~~~
+```
 <path id="ca" class="abc__color-c" d="M 3 90 Q 3 3, 47 3 "/>
 <text class="abc__title--ca abc__color-multistroke-3"><textPath xlink:href="#ca" startOffset="80%"><%= t 'site_title' %></textPath></text>
-~~~
+```
 
 ![text along path]({{ site.base_url }}/assets/text_along_path.png "Text along
 path")
@@ -236,12 +236,12 @@ path")
   background
   https://mawla.io/team/
 
-  ~~~
+  ```
   .colorize-text-background
     background: radial-gradient($color-a, $color-b 60%, $color-c %20)
     -webkit-background-clip: text
     -webkit-text-fill-color: transparent
-  ~~~
+  ```
 
   You can also animate saturation or sepia using filter
   https://www.cssfilters.co/
@@ -251,16 +251,16 @@ path")
 * jpeg does not support mask (png does but is not optimized for big images), to
 use jpeg and png mask and one svg to combine them
 
-~~~
+```
 <mask id="mars-mask">
   <image width="1" heigh="1" xlink:href="images/mars-mask.png">
 </mask>
 <image width="1" height="1" xlink:href="images/mars.jpg" mask="url(#mars-mask)"/>
-~~~
+```
 
 * fill in text with png mask
 [video](https://www.youtube.com/watch?v=B5ol4ss-mi4&index=9&list=PLWjCJDeWfDdeYtU0NMvYvfqqFA1Jsh3NM)
-~~~
+```
 <style>
   text {
   mask: url(#text-mask);
@@ -272,11 +272,11 @@ use jpeg and png mask and one svg to combine them
   </mask>
 </defs>
 <text x="0" y="0">Mars</text>
-~~~
+```
 
 * fill in text with jpg image
 [video](https://www.youtube.com/watch?v=lSNnVbfvJJ0&index=11&list=PLWjCJDeWfDdeYtU0NMvYvfqqFA1Jsh3NM)
-~~~
+```
 <svg width="1500" height="500">
   <style>
     #kup {
@@ -292,7 +292,7 @@ use jpeg and png mask and one svg to combine them
   </defs>
   <text x="0" y="200" id="kup">Novosadski Kup</text>
 </svg>
-~~~
+```
 
 * default color is black and that means it is transparent. To cover everything
 except text, that fill rectangle and keep text as black (transparent).
@@ -300,7 +300,7 @@ except text, that fill rectangle and keep text as black (transparent).
 * another example of video inside text https://css-tricks.com/responsive-knockout-text-with-looping-video/
 * curved text
 
-~~~
+```
     <svg id="a" width="100%" height="100%" viewBox="0 0 500 500">
       <path id="path12" d="M17.413 103.763a86.935 65.39 0 0 1 33.07-49.74 86.935 65.39 0 0 1 72.012-12.602" fill="transparent" />
       <text width="500">
@@ -309,7 +309,7 @@ except text, that fill rectangle and keep text as black (transparent).
         </textPath>
       </text>
     </svg>
-~~~
+```
 
 # Animate with <animateMotion>
 
@@ -318,9 +318,9 @@ Examples can be seen on https://css-tricks.com/guide-svg-animations-smil/
 
 To move along the path but only on portion of the path, use:
 
-~~~
+```
 <animateMotion calcMode="linear" keyPoints="0;0.5" keyTimes="0;1"/>
-~~~
+```
 
 ## Animate SVG with javascript
 
@@ -429,7 +429,7 @@ system 'x-www-browser logo.svg'
 * animated download button
   <https://scotch.io/tutorials/build-a-download-button-full-of-micro-interactions>
 * indent list items
-  ~~~
+  ```
   ul {
     list-style: none;
   }
@@ -439,7 +439,7 @@ system 'x-www-browser logo.svg'
   li:hover {
     margin-left: 8px;
   }
-  ~~~
+  ```
 
 
 UI animation tips

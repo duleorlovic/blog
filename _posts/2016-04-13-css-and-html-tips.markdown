@@ -319,7 +319,7 @@ https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
 Note that input is before label, which is before target
 
 ~~~
-# app/assets/stylesheets/common/show_hide.sass
+# app/assets/stylesheets/common/display_visibility.sass
 // toggle active without javascript
 // <label for="some-id"><%= t('add') %></label>
 // <input type="checkbox" id="some-id" class="toggle-active" />

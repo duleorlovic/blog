@@ -362,3 +362,4 @@ page, not on ajax call since crawl will be able to index that
 
 TODO
 https://www.youtube.com/watch?v=Afy7H04X9Us
+https://dev.to/jbobbink/what-i-learned-about-seo-from-using-the-10-most-used-js-frameworks-4alk

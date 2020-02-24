@@ -669,6 +669,11 @@ worker: bin/delayed_job run --queues=webapp,mailers
 release: rake db:migrate
 HERE_DOC
 
+# if you use unicorn and sidekiq than Procfile will be
+web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb
+worker: sidekiq
+release: rake db:migrate
+
 # default puma config is fine, but on production should include those lines
 cat >> config/puma.rb <<HERE_DOC
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
@@ -719,7 +724,7 @@ HERE_DOC
 bundle
 git commit -am "Heroku uses 12factor gem"
 
-heroku apps:create $MYAPP_NAME
+heroku apps:create $MYAPP_NAME # heroku create application name, no underscores
 heroku addons:create heroku-postgresql:hobby-dev # this will set DATABASE_URL
 git push heroku master --set-upstream
 
@@ -759,7 +764,7 @@ You need to find the name of heroku database by clicking on Postgresl plugin
 ~~~
 rails db:drop
 heroku pg
-# find name adres Add-on:
+# find name after "Add-on:"
 heroku pg:pull postgresql-name-on-heroku my_rails_app_development
 # or in one command
 bundle exec rails db:drop && heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
@@ -786,6 +791,15 @@ so you can load localy and push to production.
 ```
 ```
 
+Remove clean cache on heroku
+https://help.heroku.com/18PI5RSY/how-do-i-clear-the-build-cache
+I succeed without installing heroku-repo
+```
+heroku plugins:install heroku-repo
+heroku repo:purge_cache -a appname
+git commit --allow-empty -m "Purge cache"
+git push heroku master
+```
 ## Dump database
 
 Dump database from production for local inspection, you can download from

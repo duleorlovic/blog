@@ -417,6 +417,10 @@ To close error window you need to `:lcl`. I use map for quickfix to `:.cc`
 # Exploring
 
 * `:edit .` (short `:e.`) opens (`:vsp`) splits netrw of folder,
+* `cd ~` to change directory to home folder. If you use `gf` in Gemfile.lock
+  (not in Gemfile), it will change directory only for that window (you can check
+  with `:pwd`). To manually change current directory to file path you can use
+  `lcd %:p:h` (% is the name, %:p five full path, %:p:h give its directory)
 
 # Tips
 

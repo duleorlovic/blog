@@ -69,3 +69,8 @@ But since it is not updated I used Manchester http://mchr3k.github.io/arduino-li
 # Solar food dehydrator
 
 https://www.youtube.com/results?search_query=solar+food+dehydrator
+
+# Air quality monitor
+
+https://github.com/carldunham/air-quality-monitor/tree/cd/initial-implementation
+

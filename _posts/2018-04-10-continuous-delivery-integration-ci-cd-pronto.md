@@ -110,7 +110,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:11
+        image: postgres:10.8
         env:
           POSTGRES_USER: rails_6
           POSTGRES_DB: rails_6_test
@@ -136,18 +136,24 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 10.13.0
+    - name: Set up chrome
+    - run: |
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo apt-get update && sudo apt-get install -y xvfb google-chrome-stable
     - name: Install dependecies
       run: |
         sudo apt-get -yqq install libpq-dev
         gem install bundler
         bundle install --jobs 4 --retry 3
         yarn install
+        bundle exec rake webdrivers:chromedriver:update
     - name: Setup test database
       run: |
         bin/rails db:create
         bin/rails db:migrate
     - name: Run tests
-      run: bundle exec rake
+      run: |
+        bundle exec rake
     - name: Heroku staging
       env:
         # generate HEROKU_API_KEY with heroku auth:token
@@ -157,6 +163,10 @@ jobs:
       run: git push https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git origin/master:master
 ```
 
+With `postgres: image: postgres:11` I got an error, so I switch to old 10.8
+```
+##[error]Failed to initialize, postgres service is unhealthy.
+```
 Secrets store
 ```
   env:
@@ -273,7 +283,15 @@ less script.deb.sh
 sudo apt-get install gitlab-ee
 sudo apt-get install --reinstall gitlab-ee
 # sudo EXTERNAL_URL="https://gitlab.example.com" apt-get install gitlab-ee
+```
 
+Removing (uninstalling)
+```
+sudo gitlab-ctl uninstall
+sudo gitlab-ctl cleanse
+sudo gitlab-ctl remove-accounts
+sudo dpkg -P gitlab-ce
+sudo rm -rf /opt/gitlab /var/opt/gitlab /etc/gitlab /var/log/gitlab
 ```
 
 Configure
@@ -408,6 +426,7 @@ Error when chrome is not found
 
   wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
   set -x && apt-get update && apt-get install -y xvfb google-chrome-stable
+
   wget -q -O /usr/bin/xvfb-chrome https://bitbucket.org/atlassian/docker-node-chrome-firefox/raw/ff180e2f16ea8639d4ca4a3abb0017ee23c2836c/scripts/xvfb-chrome
   ln -sf /usr/bin/xvfb-chrome /usr/bin/google-chrome
   chmod 755 /usr/bin/google-chrome
