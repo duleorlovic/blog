@@ -63,7 +63,11 @@ module can be included (ie all module's instance methods become avaiable as
 instance methods in the class) very similar to inheritance. Module can also be
 extended (ie all module's instance methods become class methods). Also usefull
 is that module extends self `module M; extend self; def m;end;end` so you can
-use `M.m` instead of `M::m` for module methods.
+use `M.m` instead of `M::m` for module methods. Also you can use
+https://apidock.com/ruby/Module/module_function so subsequent method definitions
+becomes module functions `M.m` and they will be also available as instance
+methods if you include this module.
+
 You can see all superclasses and mixin modules with
 [A.ancestors](http://ruby-doc.com/docs/ProgrammingRuby/html/ospace.html).
 Module class object have `new` method, but it's instance (Module instance) does
@@ -687,7 +691,7 @@ match
 * also if you use `return` inside proc object, it will stop current method, but
 for lambda it will not.
 
-You can call using `p.call some_param` or `p[some_param]`.
+You can call using `p.call some_param` or `p[some_param]` or `p.(some_param)`
 Block can't live alone, it is used as last param of methods. Every method has
 implicit argument for that block and since we do not have name, we use `yield`
 to call it. Someone prefer to use explicit argument so we know that method
@@ -1471,6 +1475,13 @@ railse
   #!/usr/bin/env ruby
   if __FILE__==$0
     puts "ergs=#{ARGV}"
+  end
+  ```
+
+* to reopen the class you can use class eval like https://github.com/apotonick/gemgem-trbrb/blob/7cc8c7a0de78ba00092957a32d8cd234f102c73f/test/test_helper.rb#L19
+  ```
+  Cell::TestCase.class_eval do
+    include ::Capybara::DSL
   end
   ```
 

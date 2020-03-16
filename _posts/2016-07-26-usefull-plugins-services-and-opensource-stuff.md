@@ -825,7 +825,8 @@ https://segment.com/ collect customer data
 
 * intercom <https://demos.intercom.com/>
 * [user deck](https://userdeck.com)
-* [chatwoot](https://www.chatwoot.com/docs/channels/website) opensource
+* [chatwoot](https://www.chatwoot.com/docs/channels/website) opensource rails
+* https://github.com/chaskiq/chaskiq opensource rails
 
 
 # User intro tour

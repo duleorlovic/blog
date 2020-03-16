@@ -63,39 +63,60 @@ Defining fixtures:
 
   No need to use brackets if you have `belongs_to :associated, class_name:
   'Activity'`
-* for activestorage attachments you need to create fake models and fixtures that
-  is specific ids
+* for activestorage attachments you do not need to create fake models. just
+  create real fixtures
+  https://stackoverflow.com/questions/50453596/activestorage-fixtures-attachments
+  When I skip `key` not null column in fixture than I receive strange errors
+
   ```
-  # app/models/active_storage_blob.rb
-  class ActiveStorageBlob < ApplicationRecord
-  end
+  /home/orlovic/.rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/drb/drb.rb:565:in `dump': no _dump_data is defined for class PG::Connection (TypeError)
+/home/orlovic/.rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/drb/drb.rb:565:in `dump': can't dump hash with default proc (TypeError)
+  # those are just backtrace errors for runners, not important, messages before
+  # this are more important
+/home/orlovic/.rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/drb/drb.rb:1738:in `current_server': DRb::DRbServerNotFound (DRb::DRbServerNotFound)
+/home/orlovic/.rvm/gems/ruby-2.6.3/gems/activesupport-6.0.2.1/lib/active_support/testing/parallelization.rb:98:in `block (3 levels) in start': undefined method `exception=' for #<Minitest::UnexpectedError: Unexpected exception> (NoMethodError)
+  ```
+  Here are fixtures so you have some blobs in db (another way to test is using
+  fixture_file_upload)
+  ```
+  # test/fixtures/active_storage/blobs.yml
+  my_blob:
+    key: or9sbwfely5gby30qdvtoa1cu09a
+    filename: computer_text.png
+    content_type: image/png
+    metadata: '{"identified":true}'
+    byte_size: 56024
+    checksum: wHaMfHXpSThHCX/zvm5fFg==
 
-  # app/models/active_storage_attachment.rb
-  class ActiveStorageAttachment < ApplicationRecord
-  end
-
-  # test/fixtures/active_storage_blobs.yml
-  one:
-    id: 1
-    key: $LABEL
-    filename: $LABEL
-    byte_size: 0
-    checksum: 1234
-    created_at: 2019-12-06
-
-  # test/fixtures/active_storage_attachments.yml
+  # test/fixtures/active_storage/attachments.yml
   DEFAULTS: &DEFAULTS
-    # you can use same fake blob
-    blob_id: 1
+    # you can use same fake blob for all attachments
+    blob_id: <%= ActiveRecord::FixtureSet.identify(:my_blob) %>
     created_at: 2019-12-06
 
-  family_signed_receipt:
+  my_attachment:
     <<: *DEFAULTS
-    name: family_signature
-    # record: signed_receipt (Receipt)
-    record_id: 1
-    record_type: Receipt
+    <%# this has to be the same name as in has_one_attached %>
+    name: file
+    record: my_doc (Doc)
+    <%# record_type: Doc %>
+    <%# record_id: <%= ActiveRecord::FixtureSet.identify(:my_doc) %1> %>
+  ```
+  If you want to have real file for this blobs, you can use before(:all) setup
+  before whole suite, to copy file to appropriate location so seed from fixtures
+  can be used on developing
+  ```
+  # test/test_helper.rb
+    def self.initialize_fixture_blob
+      return if File.exist? "#{Rails.root}/tmp/storage/or/9s/or9sbwfely5gby30qdvtoa1cu09a"
 
+      FileUtils.mkdir_p "#{Rails.root}/tmp/storage/or/9s"
+      FileUtils.cp(
+        "#{Rails.root}/test/fixtures/files/computer_text.png",
+        "#{Rails.root}/tmp/storage/or/9s/or9sbwfely5gby30qdvtoa1cu09a"
+      )
+    end
+    initialize_fixture_blob
   ```
 
 * `enum parent_relations: %i[child]` can be set using erb
@@ -204,8 +225,9 @@ logger.info 'db:seed and db:fixtures:load completed'
 * if you use `serialize :recurrence` than in fixture you have to wrap with
   double quotes around and use .to_yaml
   ```
-  recurrence: "<%= { a: 1 }.to_yaml %>"
+    recurrence: "<%= { a: 1 }.toyaml %>"
   ```
+
 * if there are no colomns you can use `user: {}` curly brackets
 * Usage of fixtures
 
@@ -366,6 +388,48 @@ class MyServiceTest < ActiveSupport::TestCase
       assert result.success?
     end
   end
+
+  # you could also use in setup and teardown
+  # https://github.com/vcr/vcr/wiki/Usage-with-MiniTest
+   before do
+      VCR.insert_cassette name
+    end
+
+    after do
+      VCR.eject_cassette
+    end
+  end
+```
+
+Also works for system test, just I need to retry with delay for long processes
+(you can simulate by inserting `sleep 5` in your service).
+```
+# test/system/docs_test.rb
+require 'application_system_test_case'
+
+class DocsTest < ApplicationSystemTestCase
+  test 'creating a Doc' do
+    VCR.use_cassette 'detect_text_and_phi_computer_text' do
+      visit docs_url
+      click_on t_crud('add_new', Doc)
+
+      fill_in 'Name', with: @doc.name
+      page.attach_file 'doc[file]', "#{Rails.root}/test/fixtures/files/computer_text.png", make_visible: true
+      click_on 'Create Doc'
+
+      retries = 5
+      begin
+        retries -= 1
+        assert_notice 'Doc successfully created'
+      rescue Minitest::Assertion => e
+        puts "retries=#{retries}"
+        raise e if retries.zero?
+
+        sleep 1
+        retry
+      end
+    end
+  end
 end
 ```
 More info on rails testing page
@@ -488,6 +552,12 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 end
 ~~~
 
+File upload from `test/fixtures/files/logo.png`
+https://apidock.com/rails/ActionDispatch/TestProcess/FixtureFile/fixture_file_upload
+```
+post :create, logo: fixture_file_upload('files/logo.png', 'image/png')
+```
+
 ## Minitest routing
 
 It uses `assert_routing`.
@@ -538,7 +608,6 @@ Capybara assertions
 * `assert_text /dule/`
 * `assert_selector 'a', text: 'duke'`
 * `assert_equal admin_path, page.current_url`
-* `page.accept_confirm` to confirm alert dialog box
 
 ## Webmock
 

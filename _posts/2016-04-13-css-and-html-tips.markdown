@@ -941,3 +941,20 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
 * to get height of the element with scrollable area when `overflow: auto`, or
   total space when `overflow: hidden`, you can use `scrollHeight`. To get actual
   height use `offsetHeight` (this includes any vertical padding and borders).
+* customize ordered list type https://www.w3.org/TR/CSS2/generate.html#counters
+  add roman number with brackets https://stackoverflow.com/a/1636635
+  ```
+  ol {
+    counter-reset: list;
+  }
+  ol > li {
+    list-style: none;
+    position: relative;
+  }
+  ol > li:before {
+    counter-increment: list;
+    content: counter(list, lower-alpha) ") ";
+    position: absolute;
+    left: -1.4em;
+  }
+  ```

@@ -120,18 +120,35 @@ curl -I rails.trk.in.rs
 ```
 
 
-Enabling https with letsencrypt need installation of plugin
+Enabling https with certs letsencrypt need installation of plugin
 
 ```
 sudo dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
 # set global config so we do not need to set up for each app
 dokku config:set --global DOKKU_LETSENCRYPT_EMAIL=salji@trk.in.rs
 ```
-than you can enable ssl with
+than you can enable ssl for current app domains with
 ```
 dokku letsencrypt myApp
-# add cronjob for dokku user
-dokku letsencrypt:cron-job --add myApp
+# add cronjob for dokku user, check with: sudo -u dokku crontab -l
+# @daily /var/lib/dokku/plugins/available/letsencrypt/cron-job
+# it calls auto-renew for all certificates on dokku server
+dokku letsencrypt:cron-job --add
+```
+
+To find all commands
+```
+dokku letsencrypt:help
+dokku letsencrypt:ls
+```
+
+Note that wildcard certificate uses DNS-01 challenge instead of HTTP so it is
+not yet supported by dokku https://github.com/dokku/dokku-letsencrypt/issues/189
+so do not use star subdomains, otherwise you will get
+```
+ File "/usr/lib/python2.7/site-packages/acme/client.py", line 713, in poll_authorizations
+    raise errors.TimeoutError()
+TimeoutError
 ```
 
 Logs
@@ -158,8 +175,10 @@ service so we need to create separate service for separate app (backup is for
 one database with the same name as service)
 https://github.com/dokku/dokku-postgres/blob/master/common-functions#L26
 
-railsdatabase
 ```
+# list all postgres services
+dokku postgres:list
+
 # create postgres service with name railsdatabase
 dokku postgres:create railsdatabase
 
@@ -172,15 +191,16 @@ dokku postgres:connect railsdatabase
 
 Automatic backups to amazon s3 https://github.com/dokku/dokku-postgres/blob/355952eb1f215d791c769fd320acb0e138525658/common-functions#L171
 ```
-dokku postgres:backup-auth railsdatabase AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY
-dokku postgres:backup-schedule railsdatabase CRON_SCHEDULE BUCKET_NAME
+dokku postgres:backup-auth railsdatabase $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
 dokku postgres:backup railsdatabase BUCKET_NAME
+
+dokku postgres:backup-schedule railsdatabase $CRON_SCHEDULE $BUCKET_NAME
+# for $CRON_SCHEDULE use https://crontab.guru/ for example `@daily`
 
 # you can manually
 dokku postgres:export railsdatabase > railsdatabase.dump
 ```
 
-Use https://crontab.guru/ for example `@daily`
 
 When you download dump you can extract and import in local database
 ```

@@ -43,6 +43,11 @@ en:
         zero: No dudes
         one: Dude
         other: Dudes
+      customer:
+        one: корисник
+        other: корисници
+        accusative: корисника
+        some_customer_message: Моја порука
   activemodel:
     attributes:
       landing_signup:
@@ -55,12 +60,6 @@ en:
           attributes:
             current_city:
               blank: Не може бити празно ?
-    models:
-      user:
-        one: корисник
-        other: корисници
-        accusative: корисника
-        some_customer_message: Моја порука
 ~~~
 
 Separate translations into different files (for example

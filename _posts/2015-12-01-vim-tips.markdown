@@ -426,6 +426,7 @@ To close error window you need to `:lcl`. I use map for quickfix to `:.cc`
 
 * open file on specific line `vi +10 README`
 * to change case you can select and press `~`
+* remove all non acii charaters `:%s/[^[:print:]]//g` for example `<200b>^F`
 
 ## Netrw
 

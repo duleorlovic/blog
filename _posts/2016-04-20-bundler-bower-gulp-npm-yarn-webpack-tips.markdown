@@ -767,7 +767,7 @@ Do not know how to disable amd for dependency of dependency
 
 # Webpack plugins
 
-To chech if multiple versions of jquery package is included you can use
+To check if multiple versions of jquery package is included you can use
 
 ~~~
 yarn add webpack-bundle-analyzer --dev
@@ -789,7 +789,14 @@ bin/webpack-dev-server
 gnome-open public/packs/report.html
 ~~~
 
+To copy files to build directory https://github.com/webpack-contrib/copy-webpack-plugin
+Also you can use https://www.npmjs.com/package/webpack-shell-plugin
+
+
 # Webpacker
+
+25 things you can do with webpack
+https://rossta.net/blog/reasons-to-switch-to-webpacker.html
 
 From sprockets to webpacker
 <https://medium.com/@coorasse/goodbye-sprockets-welcome-webpacker-3-0-ff877fb8fa79>

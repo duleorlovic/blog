@@ -2204,7 +2204,7 @@ helper classes to show hide content:
 }
 ~~~
 
-Spacing issue on old version of wkhtmltopdf
+Spacing issue on old version of wkhtmltopdf and only Arial font
 https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3147
 
 PDFTK pdf toolkit can be used to merge two pdf https://rubygems.org/gems/pdf-toolkit/versions/1.1.0 `gem 'pdf-toolkit'`
@@ -2391,9 +2391,141 @@ end
 ```
 
 
-## Pundig
+## Pundit
 
 https://github.com/varvet/pundit
+
+Instead of poro
+```
+class PostPolicy
+  attr_reader :user, :post
+
+  def initialize(user, post)
+    @user = user
+    @post = post
+  end
+
+  def update?
+    user.admin? or not post.published?
+  end
+end
+```
+Pundit will assume that:
+* class has the same name as model + suffix `Policy`. To specify Policy class
+  you can use `authorize @post, policy_class: PostPolicy`
+* first argument is a `current_user` (called where it was invoked) and stored in
+  `user`.
+* second argument is object and stored in `record` (if you use generated
+  ApplicationPolicy).
+* define methods like method name plus ?
+
+When using `authorize` you can set first argument as a class `authorize Post` or
+a symbol for headless policy.  Second argument could be action name: `authorize
+@post, :destroy?`
+
+so you can use this:
+```
+# app/policy/post_policy.rb
+class PostPolicy < ApplicationPolicy
+  def update?
+    user.admin? || record.draft?
+  end
+end
+```
+andn in controller `authorize @post` inside `def update` action will instantiate
+policy with `current_user` and call method with `?` at the end, something like
+```
+unless PostPolicy.new(current_user, @post).update?
+  raise Pundit::NotAuthorizedError, "not allowed to update? this #{@post.inspect}"
+end
+```
+
+In view, you can use `if policy(@post).update?` method to check if current_user
+is authorized.
+
+## Headless policies
+
+Headless policies, if you do not have corresponding model.
+```
+# app/policies/dashboard_policy.rb
+class DashboardPolicy < Struct.new(:user, :dashboard)
+  # ...
+end
+```
+and use like
+```
+<% if policy(:dashboard).show? %>
+  <%= link_to 'Dashboard', dashboard_path %>
+<% end %>
+```
+
+## Scopes
+
+To define scope on a model for which current_user have access, punding assumes:
+* class has name `Scope` and is nested under the policy class
+* first argument is user and second argument is a scope
+
+```
+class PostPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if user.admin?
+        scope.all
+      else
+        scope.where(published: true)
+      end
+    end
+  end
+
+  def update?
+    user.admin? or not record.published?
+  end
+end
+```
+and you can use like
+```
+def index
+  # @posts = PostPolicy::Scope.new(current_user, Post).resolve
+  @posts = policy_scope(Post)
+end
+
+def show
+  @post = policy_scope(Post).find(params[:id])
+end
+```
+
+To check if `authorize` is called you can use `verify_authorized` so it raises
+error if `authorize` is not called.
+```
+# app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  include Pundit
+  after_action :verify_authorized
+end
+```
+
+Also you can check if user exists in ApplicationPolicy (so you not need to check
+in other policies).
+
+```
+class ApplicationPolicy
+  def initialize(user, record)
+    raise Pundit::NotAuthorizedError, "must be logged in" unless user
+    @user   = user
+    @record = record
+  end
+
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      raise Pundit::NotAuthorizedError, "must be logged in" unless user
+      @user = user
+      @scope = scope
+    end
+  end
+end
+```
 
 ## Other authorization
 
@@ -4024,6 +4156,7 @@ end
   ```
 
   To use with Digital Ocean spaces https://vitobotta.com/2019/11/17/rails-active-storage-permanent-urls-with-no-redirects-digital-ocean-spaces-cloudflare/ with direct publich url to storage files
+  ActiveStorage::Blob#key column stores filename.
 
 * routes
   ```

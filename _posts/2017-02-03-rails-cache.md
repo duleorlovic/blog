@@ -97,15 +97,15 @@ Rails.application.configure do
   config.cache_store = :mem_cache_store # this will use local memcached service
   if secrets.memcachier_servers.present?
     config.cache_store = :mem_cache_store,
-                         secrets.memcachier_servers.split(','),
-                         {
-                           username: secrets.memcachier_username,
-                           password: secrets.memcachier_password,
-                           failover: true,
-                           socket_timeout: 1.5,
-                           socket_failure_delay: 0.2,
-                           down_retry_delay: 60
-                         }
+      secrets.memcachier_servers.split(','),
+      {
+        username: secrets.memcachier_username,
+        password: secrets.memcachier_password,
+        failover: true,
+        socket_timeout: 1.5,
+        socket_failure_delay: 0.2,
+        down_retry_delay: 60
+      }
   end
 end
 HERE_DOC
@@ -197,7 +197,7 @@ connect using that domain name. So you need to change
 -l 0.0.0.0
 ~~~
 
-You can check in console if properly enabled
+You can test check in console if properly enabled
 
 ~~~
 Rails.cache.class

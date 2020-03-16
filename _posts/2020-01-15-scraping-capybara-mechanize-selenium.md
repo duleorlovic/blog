@@ -68,8 +68,8 @@ selectors.
   javascript `page.execute_script "$('#my-id').val('asd@asd.asd')"`
 * `check 'my checkbox'` (or by id but without # `check 'my_check_id'`), `choose
  'my radio button'`, `select 'My Option or Value', from: 'My Select Box'`, also
- uncheck `uncheck 'my checkbox'`, `unselect`, `attach_file 'Image',
- '/path/to/image.jpg'`
+ uncheck `uncheck 'my checkbox'`, `unselect`
+* `page.attach_file 'doc[file]', "#{Rails.root}/test/fixtures/files/computer_text.png", make_visible: true`
 * If you need to fill_in iframe than you can access it by id or number
 ~~~
   within_frame 0 do
@@ -93,7 +93,7 @@ page.driver.browser.close # this will close tab, not whole window
 page.switch_to_window old_window
 ~~~
 
-* Confirm dialog in
+* Confirm alert dialog box in
   * selenium `page.driver.browser.switch_to.alert.accept  # can also be .dismiss`
   * webkit `page.accept_confirm { click_link "x" } }` so actions is wrapped with
 this `page.accept_confirm`

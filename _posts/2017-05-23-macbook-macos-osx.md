@@ -449,6 +449,23 @@ sudo vi /usr/local/etc/my.cnf
 socket=/var/run/mysqld/mysqld.sock
 ~~~
 
+# Libsassc
+
+On Mac I got error
+~~~
+Caused by:
+LoadError: Could not open library '/Users/dule/.rvm/gems/ruby-2.6.5/gems/sassc-2.2.1/lib/sassc/libsass.bundle': dlopen(/Users/dule/.rvm/gems/ruby-2.6.5/gems/sassc-2.2.1/lib/sassc/libsass.bundle, 5): no suitable image found.  Did find:
+	/Users/dule/.rvm/gems/ruby-2.6.5/gems/sassc-2.2.1/lib/sassc/libsass.bundle: load commands not in a segment
+	/Users/dule/.rvm/gems/ruby-2.6.5/gems/sassc-2.2.1/lib/sassc/libsass.bundle: stat() failed with errno=25
+~~~
+which I solved with
+https://github.com/sass/sassc-ruby/issues/146#issuecomment-534668663
+~~~
+gem uninstall sassc
+gem install sassc -- --disable-march-tune-native
+~~~
+
+
 # Android USB Thethering
 
 Download <http://www.joshuawise.com/horndis> driver (right click open with) to

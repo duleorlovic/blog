@@ -373,3 +373,60 @@ revert changes.
 In test, you can stub other method calls and cover 100% of unit interactor tests
 than write integration or acceptance tests to test wires.
 
+# Decorator
+
+It is used to decorate object, ie catch method missing and send to object in
+initializer on runtime. This is different than subclassing since it happens in
+run-time.
+
+```
+# app/decorators/user_profile_decorator < SimpleDelegator
+class UserProfileDecorator < SimpleDelegator
+  def model
+    __getobj__
+  end
+  def name
+    "#{model.first_name} #{model.last_name}"
+  end
+end
+```
+usage
+```
+user = Struct.new(:first_name, :last_name).new("John", "Doe")
+decorator = UserProfileDecorator.new(user)
+decorator.first_name # => "John"
+decorator.name # => "John Doe"
+```
+
+Gem that supports decorating collections and associations
+https://github.com/drapergem/draper
+
+Another use case if for dependency injection, for example you have two pdf
+generators than create graphs and you want to create another pdf that include
+both graphs.
+https://www.honeybadger.io/blog/decoupling-ruby-delegation-dependency-injection/
+```
+class PrawnWrapper < SimpleDelegator
+  def initialize(document: nil)
+    document ||= Prawn::Document.new(...)
+    super(document)
+  end
+end
+```
+and call others using injection
+```
+class OverviewReport < PrawnWrapper
+  ...
+  def render
+    sales = SaleReport.new(..., document: self)
+    sales.sales_table
+    costs = CostReport.new(..., document: self)
+    costs.costs_pie_chart
+    ...
+  end
+end
+```
+
+# Facade pattern
+
+page 37
