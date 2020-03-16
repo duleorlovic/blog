@@ -438,8 +438,9 @@ Jekyll contains [variables](https://jekyllrb.com/docs/variables/): `site`,
 
 `{ { site }}` is `Jekyll::Drops::SiteDrop` class and contains
 * `site.posts` array of all posts objects `Jekyll::Document collection=post`
-  they are descending order. To access most recent you can use loop `{% for post
-  in site.posts limit: 3 %}` or assign `{% assign post = site.posts.first %}`
+  they are descending order. To access most recent you can use loop `{ % for
+  post in site.posts limit: 3 %}` or assign `{% assign post = site.posts.first
+  %}`
 * `site.pages` array of all pages `Jekyll::Page`
 
 
