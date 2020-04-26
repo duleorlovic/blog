@@ -2261,6 +2261,12 @@ PDFTRON is commercial tool with a lot of examples https://www.pdftron.com/docume
 
 https://github.com/yob/pdf-reader
 
+```
+reader = PDF::Reader.new("somefile.pdf")
+# this will work only for computer generated pdf (not for scanned documents)
+reader.pages.last.text
+```
+
 ## Docx MS word
 
 https://github.com/urvin-compliance/caracal
@@ -2673,6 +2679,68 @@ end
 MyCLI.start(ARGV)
 ```
 You can run with `ruby ./cli.rb cao Dule --from Mile --yell`
+
+# Chamber
+
+You can use `chamber` gem
+https://github.com/thekompanee/chamber/wiki/Basic-Usage for secure keys, after
+adding to Gemfile and `chamber init`
+https://github.com/thekompanee/chamber/wiki/Installation
+
+```
+You can find more information about namespace keys here:
+  * https://github.com/thekompanee/chamber/wiki/Namespaced-Key-Pairs
+--------------------------------------------------------------------------------
+                                Your Encrypted Keys
+You can send your team members any of the file(s) located at:
+  * .chamber.enc
+and not have to worry about sending them via a secure medium, however do
+not send the passphrase along with it.  Give it to your team members in
+person.
+You can learn more about encrypted keys here:
+  * https://github.com/thekompanee/chamber/wiki/Keypair-Encryption#the-encrypted-private-key
+--------------------------------------------------------------------------------
+                                Your Key Passphrases
+The passphrases for your encrypted private key(s) are stored in the
+following locations:
+  * .chamber.enc.pass
+In order for them to decrypt it (for use with Chamber), they can use something
+like the following (swapping out the actual key filenames if necessary):
+
+$ cp .chamber.enc .chamber.pem
+$ ssh-keygen -p -f .chamber.pem
+```
+
+Those files are generated (only `.chamber.pub.pem` is not git ignored)
+```
+.chamber.enc  .chamber.enc.pass  .chamber.pem  .chamber.pub.pem
+```
+
+Inside `config/settings.yml` you can use plain yml, but if you prepend with
+`_secure` that value will be encrypted.
+
+```
+# settings.yml
+_secure_key:                development_value
+```
+
+than when you run `chamber secure` it will replace all `_secure_` values with
+```
+_secure_key:                ASDWQWEASD...
+```
+To show all keys you can use `chamber show`.
+In console
+```
+require 'chamber'
+Chamber.env.key
+```
+
+When deploy, you need to set `export RAILS_ENV=production` and provide
+`.chamber.pem` file.
+
+If the output of `chamber show` is `{}` maybe you need `bin/chamber` so it loads
+that instead gems version.
+
 
 # Tips
 
@@ -3301,6 +3369,9 @@ the order. In this case define enum as a hash
   before_create) always return not false value (you can return `true` or `nil`).
   I noticed that if you raise validation exception in `before_` callbacks than
   exception will be ignored, but `before_` block will return false
+  In Rails 5 return value is not important, and if we want to halt before block
+  we need to call `throw(:abort)`
+  https://blog.bigbinary.com/2016/02/13/rails-5-does-not-halt-callback-chain-when-false-is-returned.html
 * callbacks are defined executed in the order they are defined, or you can use
   `:prepend` option
 * in callbacks should only be some value format correction or other simple task.
@@ -3841,6 +3912,11 @@ end
   # include byebug
   bundle exec ruby -w -Iactionview/test -rbyebug actionview/test/template/form_options_helper_test.rb -n test_select_with_include_blank_false_and_required
   ```
+  To test local changes you can point gem to your folder
+  ```
+  # Gemfile
+  gem 'actionview'
+  ```
   Commit on your fork and some branch_name. You can rebase to master
   ```
   cd ~/rails/rails
@@ -3992,7 +4068,15 @@ end
   form_with url: users_path, local: true do |f|
   # for model use model:
   form_with model: @user do |f|
+  ```
 
+  To determine if it is a POST or a PATCH, form check `@user.persisted?` and in
+  case it is persisted it will add hidden input field (method will remain post)
+  ```
+  <form action="/books/1" accept-charset="UTF-8" method="post">
+    <input type="hidden" name="_method" value="patch">
+    <input type="hidden" name="authenticity_token" value="asd">
+  </form>
   ```
 * custom exception class
   ```
@@ -4205,20 +4289,8 @@ end
 
 * find column type using `User.column_for_attribute('status')` or
   `User.columns_hash['status']`
-
-* use `chamber` gem https://github.com/thekompanee/chamber/wiki/Basic-Usage for
-  secure keys
+* find all association names for model
   ```
-  # settings.yml
-  setting:                development_value
-  # The following will become 'secure_setting'
-  _secure_secure_setting: secure_development_value
+  User.reflect_on_all_associations.map &:name
+  # => [:roles, :user_activities]
   ```
-  than when you run `chamber secure` it will replace all `_secure_` values with
-  long key. To show you can use `chamber show`
-  ```
-  require 'chamber'
-  Chamber.env.setting
-  Chamber.env.secure_setting
-  ```
-

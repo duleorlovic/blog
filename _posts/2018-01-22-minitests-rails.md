@@ -293,16 +293,17 @@ They all accept additional string param that will be error message.
 
 <http://guides.rubyonrails.org/testing.html#rails-specific-assertions>
 Rails also defines `assert_difference`, `assert_blank`, `assert_presence`,
-`assert_response`, `assert_redirected_to`, `assert_select`
-
-~~~
-    assert_difference 'User.count', 1 do
-    end
-~~~
+`assert_response`, `assert_redirected_to`, `assert_select` (assert select for
+custom html text is done with additional argument)
+https://stackoverflow.com/questions/4739261/is-there-a-way-to-use-assert-select-on-some-custom-html-text
+```
+    doc = HTML::Document.new(CGI::unescapeHTML(extracted_text)).root
+    assert_select(doc, tag, content)
+```
 
 You can create your own assertiongs (assert sorted)
 Reopen `module MiniTest::Assertions` when helper is used in all tests. If you
-need only for system tests (assert_selector) or integration test (assert select)
+need only for system tests (assert_selector) or integration test (assert_select)
 than you need to reopen that particular class
 https://github.com/duleorlovic/premesti.se/blob/master/test/support/assert_equal_when_sorted_by_id.rb
 
@@ -555,6 +556,10 @@ end
 File upload from `test/fixtures/files/logo.png`
 https://apidock.com/rails/ActionDispatch/TestProcess/FixtureFile/fixture_file_upload
 ```
+# include if not fixture_file_upload is not available
+
+include ActionDispatch::TestProcess # for fixture_file_upload
+
 post :create, logo: fixture_file_upload('files/logo.png', 'image/png')
 ```
 
@@ -605,9 +610,12 @@ that.
 Capybara assertions
 <http://www.rubydoc.info/gems/capybara/Capybara/Minitest/Assertions>
 
-* `assert_text /dule/`
-* `assert_selector 'a', text: 'duke'`
-* `assert_equal admin_path, page.current_url`
+* `assert_text /dule/` (instead of `assert_match /dule/, page.body`)
+* `assert_selector 'a', text: 'duke'` (you can assert other html attributes with
+  square brackets `assert_selector '#my_id[readonly="readonly"][value="My
+  Name"]'`
+* `assert_equal admin_path, page.current_path` page.url ie page.current_url
+  contains also http:// so better is to use page path
 
 ## Webmock
 

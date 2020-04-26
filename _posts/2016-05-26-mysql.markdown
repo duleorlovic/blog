@@ -8,6 +8,12 @@ layout: post
   CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
   ~~~
 
+  list all users
+  ```
+  mysql -u root -p mysql
+  SELECT User FROM mysql.user;
+  ```
+
 * grant access to specific db
   ~~~
   GRANT ALL PRIVILEGES ON mydb. * TO 'newuser'@'%' IDENTIFIED BY 'mypass';

@@ -13,7 +13,7 @@ project</a>
 
 <img src="{{ site.baseurl }}/assets/matz_and_dule.jpg" style="float: left; padding-right: 20px;">
 
-My Rails contribution in docs <https://github.com/rails/rails/pull/34911> and in
+My Rails contribution to docs <https://github.com/rails/rails/pull/34911> and to
 code
 <https://github.com/rails/rails/pull/35143>,
 <https://github.com/rails/rails/pull/36428>.

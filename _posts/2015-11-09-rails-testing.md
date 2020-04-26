@@ -522,6 +522,9 @@ post :create, logo: fixture_file_upload('/test/data/logo.png', 'image/png')
 xhr :post, :create, params: { id: "3" }
 ~~~
 
+To use `fixture_file_upload` in your test you need to include `include
+ActionDispatch::TestProcess`
+
 In controller test you have access to `@request`, `@controller` and `@response`
 You can validate `response.status` or `expect(response).to
 have_http_status(:success)` matcher.  You can use `:success`, `:redirect`,

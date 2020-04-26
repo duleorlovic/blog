@@ -68,6 +68,17 @@ https://apidock.com/ruby/Module/module_function so subsequent method definitions
 becomes module functions `M.m` and they will be also available as instance
 methods if you include this module.
 
+When you extend `class A; extend B;end` than `A.is_a?(B) == true`. When you
+include `class A; include B; end` than `A.new.is_a?(B) == true`.
+
+`self` in a definition of a class is class object (which is assigned to
+constant `MyClass`) so calling any methods will run in context of that class
+object (for example `instance_methods(false)` will print methods that are
+defined with `def`). When you define a method it becomes instance method of
+current object class (event when you define method inside other method).
+When you reopen the class or module, current class is itself (not the
+`self.class == Class`).
+
 You can see all superclasses and mixin modules with
 [A.ancestors](http://ruby-doc.com/docs/ProgrammingRuby/html/ospace.html).
 Module class object have `new` method, but it's instance (Module instance) does
@@ -131,7 +142,32 @@ Methods:
 * instance-method in class `class C;def m;self;end;end;` self is instance of C
 * instance-method in module `module M;def m;end;end;` self is object extended by
   M or instance of class that mixes in M
-* singleton method on specific object `def obj.m;self;end` self is that obj
+* singleton method on specific object `def obj.m;self;end` or using `class <<`
+  ```
+  class << obj
+    def a_singleton_method
+    end
+  end
+  ```
+  To access singleton class (which holds all singleton methods) you can use
+  `s = obj.singleton_class` or this exotic `class <<` syntax
+  ```
+  s = class << obj
+        self
+      end
+  ```
+  Singleton superclaass is object class `s.superclass == obj.class` so that is
+  why method lookup search singleton, than class, and ancestor classes.
+
+  You can add singleton class method
+  ```
+  class MyClass
+    class << self
+      def a_class_method
+      end
+    end
+  end
+  ```
 * class definition `class C;puts self;def self.class_method;self;end;end` self
   in both class definition (singleton on class object) and class method is class
   object
@@ -143,12 +179,15 @@ Only place where you need self is assignment `self.some_identifier = 1`.
 `load "filename.rb"` includes that resource every time method is executed (like
 copy paste code), but `require` only once and only when needed. `ruby -e 'puts
 $:'` will list all load paths. `load` is usefull to overwrite with new changes
-of a particular file.
+of a particular file. Imported constants will stay, but if you want to remove
+them than you can use `load('filename.rb', true)` to load into anonymous module
+and than destroy the module. Load is not used to import the code, usually only
+to execute the code.
 
-`require` is more suitable for features (no need `.rb`).  It does not know for
-current folder, so you need to use `./` dot that explicitly define path `require
-"./f.rb"` or `$: << "."` or `require_relative "f"`(extension is not needed
-`.rb`)
+`require` is more suitable for importing the code (no need `.rb`).  It does not
+know for current folder, so you need to use `./` dot that explicitly define path
+`require "./f.rb"` or `$: << "."` or `require_relative "f"`(extension is not
+needed `.rb`)
 
 Variables are not objects. They just hold a reference to objects. You can use
 `var.dup` to create another object or you can `var.freeze` to prevent
@@ -163,15 +202,16 @@ only for that particular object after it was created `o={};def o.t;puts
 
 Module can be mixed in in two ways: `include M` and `prepend M`. Methods are
 searched in prepend modules, than in class methods and than in included methods.
-Last defined (first time, multiple includes do not have effect) module is
-searched first, the same as with same_name methods in class definition. You can
-see the order of modules with `C.ancestors` (prepended, class, included,
-prepended of superclass, superclass, included of superclass). `super` calls the
-same method at upper level. Since modules don't have instances they generally
-represent properties of something of some class, and they have adjective names
-(albeit class tend to be nouns). Modules also can be used for namespacing some
-classes. When we see `M::C` we don't know if `C` is constant, module or class,
-but `M` is a class or module since it has nested items.
+Last defined (multiple includes do not have effect, ie it will be ignored if
+already in ancestor lists) module is searched first, the same as with same_name
+methods in class definition. You can see the order of modules with `C.ancestors`
+(prepended, class, included, prepended of superclass, superclass, included of
+superclass). `super` calls the same method at upper level. Since modules don't
+have instances they generally represent properties of something of some class,
+and they have adjective names (albeit class tend to be nouns). Modules also can
+be used for namespacing some classes. When we see `M::C` we don't know if `C` is
+constant, module or class, but `M` is a class or module since it has nested
+items.
 
 Proc are objects that can be called (executed) `p = proc { puts 1 };p.call`
 
@@ -329,10 +369,6 @@ is private but we can
   end
   ~~~
 
-* `{}` and `do end` have [different
-  precedence](https://github.com/bbatsov/rubocop/issues/1520) so when rubocop
-  alerts for `Style/Lambda: Use the `lambda` method for multi-line lambdas` you
-  need parenthesis for example `scope :active, (lambda do ... end)`
 * `! a == b` is not the same as `a != b`
 * you should memoize with `return @current_isp if defined? @current_isp` instead
   of `@current_isp ||= blabla; return @current_isp` since it handles `false`
@@ -345,12 +381,12 @@ is private but we can
   end
   ~~~
 
-* big multiline strings can be concatenated from lines similar to HERE_DOC. It
-will show `\n` and will insert spaces because text is indented. There is
-`~HERE_DOC` version to strip spaces for all lines based on first line indent.
-Minus in `<<-HERE_DOC` means that it will not strip spaces based on first line,
-so you need to start from 0 column on each line.
-If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
+* big multiline strings can be concatenated from lines similar to HERE_DOC
+  heredoc. It will show `\n` and will insert spaces because text is indented.
+  There is `~HERE_DOC` version to strip spaces for all lines based on first line
+  indent. Minus in `<<-HERE_DOC` means that it will not strip spaces based on
+  first line, so you need to start from 0 column on each line.
+  If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
 
   ~~~
   MY_TEMPLATE = <<HTML
@@ -374,7 +410,7 @@ If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
     HTML
   end
 
-  # you can create single line from it
+  # you can create single line from it, in rails use HEREDOC.squish
   sql = <<-SQL.gsub("\n", ' ').squish
     SELECT MIN(u.popularity)
     FROM users u
@@ -575,33 +611,11 @@ If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
 * random number `[*1..100].sample`
 * iterate over elements until first match `a.take_while {|i| i < 3}`
 * get a class from value `my_string.constantize`
-* you can call lambda in different ways (note that you can not call like regular
-  function)
-
-  ~~~
-  my_lambda = -> { puts "hi" }
-
-  my_lambda.call # preferred
-  my_lambda[]
-  my_lambda.()
-  ~~~
-
-* lamda are strict about arguments but procs are not
-
-  ~~~
-  my_lambda = ->(a, b)  { a + b }
-  my_proc   = Proc.new  { |a, b| a + b }
-
-  my_lambda.call(2)
-  # ArgumentError: wrong number of arguments (1 for 2)
-
-  my_proc.call(2)
-  # TypeError: nil can't be coerced into Fixnum
-  ~~~
-
 * you can find method using grep `o.methods.grep /iden/`
 * you can list all instance methods in current class but not in parrent class
-with `o.methods - o.class.superclass.instance_methods`
+with `o.methods - o.class.superclass.instance_methods` or using
+`o.class.instance_methods(false)` (show only methods defined in that class, not
+inherited from Object).
 * in rails it is enough to exclude all default object methods `o.methods -
 Object.methods`
 
@@ -686,12 +700,54 @@ Shorthand notation for creating Procs is `p = lambda {|i| puts i}` but there are
 differences:
 
 * proc object does not check the number of params (you can call `p.call 1,2,3`
-or `p.call` i will be nil). Lambda throws an error if number of params does not
-match
-* also if you use `return` inside proc object, it will stop current method, but
-for lambda it will not.
+or `p.call` args will be nil). Lambda throws an error if number of params does
+not match. lamda are strict about arguments but procs are not
+  ~~~
+  my_lambda = ->(a, b) { a + b }
+  # stabbly lambda operator is the same as
+  my_lambda = lambda {|a, b| a + b }
+  my_proc   = Proc.new  { |a, b| a + b }
 
-You can call using `p.call some_param` or `p[some_param]` or `p.(some_param)`
+  my_lambda.call(2)
+  # ArgumentError: wrong number of arguments (1 for 2)
+
+  my_proc.call(2)
+  # TypeError: nil can't be coerced into Fixnum
+  ~~~
+* also if you use `return` inside proc object, it will stop current scope, but
+for lambda it will not stop, it will just return value (so `return` is not
+usefull). Avoid explicit return since you can call proc in top level scope and
+raise error that it can not be returned.
+```
+def double(callable_object)
+  callable_object.call * 2
+end
+l = lambda { 10 }
+double(l) # => 20
+```
+```
+def another_double
+  p = Proc.new { return 10 }
+  result = p.call
+  return result * 2 # unreachable code!
+end
+another_double # => 10
+```
+
+You can check if proc object is lambda with `p.lambda?`. Lambda are more similar
+to methods (checks arity and simply exit when call return)
+
+You can call lambda in different ways (note that you can not call like regular
+function)
+
+~~~
+p = -> { puts "hi" }
+
+p.call # preferred
+p[]
+p.()
+~~~
+
 Block can't live alone, it is used as last param of methods. Every method has
 implicit argument for that block and since we do not have name, we use `yield`
 to call it. Someone prefer to use explicit argument so we know that method
@@ -699,6 +755,7 @@ expects block.
 
 ~~~
 def f(a, &p)
+  # p.class # => Proc
   # we can use explicit
   p.call a
   # but also we can use
@@ -709,8 +766,9 @@ f(1) { |i| puts i }
 ~~~
 
 Note that proc is not an actual argument and you can not use parenthesis around
-`f(1, lambda {|i| puts i})`. But you can use ampersand `&` in method call to
-convert it to block.
+`f(1, lambda {|i| puts i})`.
+You can use ampersand `&` to convert back to block in method call or
+`Method#to_proc`.
 
 ~~~
 def f(a)
@@ -739,7 +797,10 @@ upcase_words = words.map(&:upcase)
 https://stackoverflow.com/questions/23695653/can-you-supply-arguments-to-the-mapmethod-syntax-in-ruby
 ~~~
 
-You can create proc callable object using uber
+You can create proc callable object using trailblazer uber. We can skip
+extending (since it is empty module) but it is used for check if that class is
+callable (so we can use `klass.call(options)`)
+https://github.com/apotonick/uber/blob/master/lib/uber/options.rb#L60
 ```
 class MyModel
   extend Uber::Callable
@@ -747,6 +808,23 @@ class MyModel
     puts options
   end
 end
+
+MyModel.(a: 1)
+# { :a => 1 }
+MyModel.is_a? Uber::Callable
+```
+Another way is to `include` and use instance method `call`
+```
+class MyModel
+  include Uber::Callable
+  def call(ctx, *args)
+    puts
+  end
+end
+
+MyModel.new.call a: 1
+# { :a => 1 }
+MyModel.new.is_a? Uber::Callable
 ```
 
 * there are special methods in ruby
@@ -1271,11 +1349,11 @@ else
 end
 ~~~
 
-When you need to match object class to not use `object.class` in case statement
+When you need to match object class do not use `object.class` in case statement
 http://batsov.com/articles/2012/10/14/ruby-tip-number-3-matching-on-an-objects-class-in-a-case-expression/
 
 ~~~
-# not case receiver.class
+# case receiver.class # this is wrong
 # better not to use receiver.class == Customer, but receiver.is_a? Customer
 # triple equal is used for that (for a.is_a? b, I can put label b on a)
 # for module it tests for `.is_a?`
@@ -1484,6 +1562,10 @@ railse
     include ::Capybara::DSL
   end
   ```
+* `{}` and `do end` have [different
+  precedence](https://github.com/bbatsov/rubocop/issues/1520) so when rubocop
+  alerts for `Style/Lambda: Use the `lambda` method for multi-line lambdas` you
+  need parenthesis for example `scope :active, (lambda do ... end)`
 
 todo
 

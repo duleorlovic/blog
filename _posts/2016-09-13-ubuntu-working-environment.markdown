@@ -494,6 +494,11 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
   # hold single image duration
   ffmpeg -loop 1 -i a00.jpg  -c:v libx264 -t 10 -pix_fmt yuv420p a00.mp4
   ```
+* rotate video file using ffmpeg
+  ```
+  ffmpeg -i in.mov -vf "transpose=1" out.mov # 90 clockwise
+  ffmpeg -i in.mov -vf "transpose=2" out.mov # 90 counter-clockwise
+  ```
 * default gnome screenshot folder `dconf-editor` find
   `org->gnome->gnome-screenshot-> auto-save-directory ->
   file:///home/user/Download/`
@@ -697,7 +702,8 @@ Here are some tools
   ```
   ffmpeg -i dahua.ts -filter:v 'crop=2592:720:0:824' -strict -2 k.mp4
   ```
-* kdenlive. When sound starts flickering, restart computer helps
+* kdenlive. When sound starts flickering, restart computer helps. Videos can be
+  joined splited merged.
 
 # ImageMagic rmagick
 

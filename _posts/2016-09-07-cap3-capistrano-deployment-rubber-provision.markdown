@@ -164,7 +164,7 @@ end
 HERE_DOC
 
 bundle exec cap install
-# this will generate  Capifile, config/deploy.rb and config/deploy/staging.rb...
+# this will generate  Capfile, config/deploy.rb and config/deploy/staging.rb...
 
 cat > Capfile << HERE_DOC
 # Load DSL and set up stages
@@ -188,6 +188,7 @@ require 'capistrano/rails/console'
 require 'capistrano3/postgres'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
+# and add to deploy.rb like `after "deploy:published", "translation:setup"`
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
 HERE_DOC
 ~~~
@@ -198,6 +199,20 @@ cap -T
 cap -T postgres
 ```
 
+Custom tasks have some additional format to plain rake tasks
+```
+# lib/capistrano/tasks/rake.cap.rb
+desc 'Invoke a rake command on the remote server: cap qa "invoke[db:migrate]"'
+task :invoke, [:command] => 'deploy:set_rails_env' do |task, args|
+  on primary(:app) do
+    within current_path do
+      with :rails_env => fetch(:rails_env) do
+        rake args[:command]
+      end
+    end
+  end
+end
+```
 You need to set credentials master key
 ```
 # /home/deploy/myapp/.rbenv-vars
@@ -1256,7 +1271,7 @@ cap production sidekiq:install
   solution is to limit how much memory node can use by setting up env variable
   https://github.com/rails/webpacker/issues/2033
   https://github.com/rails/webpacker/issues/2143 (related)
-  ```
-  # /home/deploy/move_index/.rbenv-vars
-  NODE_OPTIONS=--max-old-space-size=460
-  ```
+```
+# /home/deploy/move_index/.rbenv-vars
+NODE_OPTIONS=--max-old-space-size=460
+```

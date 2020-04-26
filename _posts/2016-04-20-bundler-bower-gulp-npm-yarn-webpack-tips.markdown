@@ -16,7 +16,9 @@ To find help some `gem` command you can run `gem help list`
 For Gemfile you need to install `gem install bundler`. You can install old
 version `gem install bundler -v 1.9.2` but `bundle install` will use latest,
 unless you use specific `bundle _1.9.2_ install`. Bundle will call gem install.
-To see location you can use `bundle show my_gem` or `gem which my_gem`.
+To see location you can use `bundle show my_gem` or `gem which my_gem`. Also you
+can use `gem unpack my_gem` to copy gem source code to current folder
+`./my_gem`.
 If you use `bundle package` command https://bundler.io/v2.0/bundle_package.html
 than it will download all gems to `vendor/cache` (and create `./bundle/config`
 file so next time you run `bundle` it will install to vendor/cache).
@@ -36,6 +38,8 @@ To specify github source of gem use
 
 ~~~
 gem 'jekyll', github: 'jekyll/jekyll' # branch: 'master'
+
+gem 'actionview', path: '~/rails/rails' # local gem
 ~~~
 
 Issue with rmagic on ubuntu 16
@@ -989,6 +993,8 @@ module.exports = {
 ```
 
 To find jquery version you can type `$.fn.jquery`
+
+Install zurb foundation https://www.reddit.com/r/rails/comments/bhk72q/how_to_require_foundationsites_after_yarn_add/
 
 ## IIFE Immediatelly invoked function expression
 

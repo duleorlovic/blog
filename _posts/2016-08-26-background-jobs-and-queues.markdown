@@ -93,6 +93,13 @@ MyTodoJob.set(wait_until: Date.tomorrow.noon).perform_later args
 MyTodoJob.perform_now args
 ~~~
 
+Sidekiq uses similar syntax https://github.com/mperham/sidekiq/wiki/Scheduled-Jobs
+```
+SidekiqWorker.perform_async 'duke', param
+SidekiqWorker.perform_in 3.hours, 'duke', param
+SidekiqWorker.perform_at 3.hours.from_now, 'duke', param
+```
+
 With ActiveJob you can pass entire ActiveRecord objects because GlobalID will
 deserialize for us. But if you are using directly some jobs (not inherited from
 ActiveJob::Base) than you should pass object_id.

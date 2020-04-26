@@ -157,3 +157,7 @@ https://www.youtube.com/watch?v=28jCDXfZCgE#t=0.417205
 
 * how to think in haskell [Maybe Haskell](https://gumroad.com/l/maybe-haskell)
 * understanding syntax [Learn You a Haskell](http://learnyouahaskell.com/)
+
+# Monads
+
+https://stackoverflow.com/questions/3870088/a-monad-is-just-a-monoid-in-the-category-of-endofunctors-whats-the-problem

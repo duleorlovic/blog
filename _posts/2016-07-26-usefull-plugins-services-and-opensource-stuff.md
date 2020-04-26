@@ -1005,6 +1005,7 @@ Email templates
 * shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&theme-id=1&slug-hash=RNjRZz&default-tab=result&user=iamryanyu&embed-version=2&pen-title=Modern%20Button%20Collection#js-box
 * checkbox in css https://codepen.io/himalayasingh/pen/EdVzNL
 * rotate and shake on hover https://codepen.io/duleorlovic/pen/jdjYNE
+* radio button animation https://codepen.io/milanraring/pen/NWqbvxe
 
 # Scroll
 
@@ -1146,3 +1147,38 @@ https://alternativeto.net
 
 * https://github.com/adamcooke/staytus on rails
 * others https://github.com/topics/statuspage?l=ruby
+* opensource alternative to google drive https://nextcloud.com/
+  Official on ubuntu is for apache
+  https://docs.nextcloud.com/server/latest/admin_manual/installation/example_ubuntu.html
+  for nginx config https://docs.nextcloud.com/server/latest/admin_manual/installation/nginx.html
+```
+sudo su
+wget https://download.nextcloud.com/server/releases/nextcloud-18.0.3.zip
+unzip nextcloud-18.0.3.zip -d /usr/share/nginx
+chown www-data:www-data /usr/share/nginx/nextcloud/ -R
+
+mysql
+create database nextcloud;
+create user nextclouduser@localhost identified by 'your-password';
+grant all privileges on nextcloud.* to nextclouduser@localhost identified by 'your-password';
+flush privileges;
+
+# copy configuration from instructions to /etc/nginx/sites-available/nextcloud
+systemctl reload nginx
+```
+Initial configuration
+```
+sudo vi /usr/share/nginx/nextcloud/config/config.php
+# you can see that data folder inside installation, but we will move up
+  'datadirectory' => '/usr/share/nginx/nextcloud-data',
+```
+
+
+Backup google drive is done with downloading with
+https://github.com/astrada/google-drive-ocamlfuse
+or with https://takeout.google.com/settings/takeout
+
+* pihole on nginx https://docs.pi-hole.net/guides/nginx-configuration/
+```
+vi /etc/pihole/setupVars.conf
+```
