@@ -68,6 +68,8 @@ name and add shortcut uncluding ⌥  key:
 * Mission control -> Move left space I remaped to `^ ⌘ h` (also right space
   `^ ⌘ l`)
 
+![Mac keyboard shortcuts]({{ site.baseurl }}/assets/posts/mac keyboard shortcuts.png)
+
 From [Mac keyboard shortcuts from
 support](https://support.apple.com/en-us/HT201236)
 * `⌘ H` hide front app
@@ -378,7 +380,7 @@ end run
 
 To overwrite existing shortcuts in specific application you need to remap that
 same menu item to something else, for example in chrome cmd + j is jump to
-selection so in  System Preferences -> Keyboard -> Shortcuts -> App Shortcuts
+selection so in System Preferences -> Keyboard -> Shortcuts -> App Shortcuts
 
 ~~~
 all Jump to Selection cmd+ald+j
@@ -395,7 +397,7 @@ https://apple.stackexchange.com/questions/117421/how-do-i-focus-a-specific-windo
 https://stackoverflow.com/questions/10366003/applescript-google-chrome-activate-a-certain-window/34375804#34375804
 http://tom.scogland.com/blog/2013/06/08/mac-raise-window-by-title/
 https://macosxautomation.com/applescript/firsttutorial/index.html chap 3 name
-oroperty
+property
 ~~~
 # open last window
 do shell script "open -a Google\\ Chrome"
