@@ -3,9 +3,9 @@ layout: post
 ---
 
 Guides
-http://goo.gle/search-guides
-https://www.google.com/webmasters/connect/
-https://webmasters.googleblog.com/
+<http://goo.gle/search-guides>
+<https://www.google.com/webmasters/connect/>
+<https://webmasters.googleblog.com/>
 
 Test your site on
 <https://developers.google.com/speed/pagespeed/insights/>

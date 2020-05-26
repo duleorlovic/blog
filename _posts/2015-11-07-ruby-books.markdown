@@ -386,6 +386,8 @@ is private but we can
   There is `~HERE_DOC` version to strip spaces for all lines based on first line
   indent. Minus in `<<-HERE_DOC` means that it will not strip spaces based on
   first line, so you need to start from 0 column on each line.
+  Instead of `<<~` you can use `<<HEREDOC.strip_heredoc`, to create single line
+  in Rails you can use `<<~HEREDOC.squish`
   If you do not want intepolation `#{i}` than use with quotes `<<~'TEXT'`
 
   ~~~

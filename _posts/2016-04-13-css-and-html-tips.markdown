@@ -958,3 +958,6 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
     left: -1.4em;
   }
   ```
+* instead of right click Save as you can add download attribute in anchor tag
+  `<a download href="cat.jpg">Download cat</a>` so instead of opening picture in
+  a new tab, it will download it

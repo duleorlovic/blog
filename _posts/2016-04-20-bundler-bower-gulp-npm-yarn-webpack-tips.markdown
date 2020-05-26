@@ -225,6 +225,18 @@ package_folder/node_modules
 Note that there are problems with missing `.bin` folder
 https://github.com/yarnpkg/yarn/issues/3724
 
+You can use https://classic.yarnpkg.com/en/docs/cli/create/ to install package
+and run bin field
+
+```
+yarn create react-app my-app
+
+# is equivalent to:
+
+yarn global add create-react-app
+create-react-app my-app
+```
+
 # Commonjs
 
 All bundle tools explained in video https://www.youtube.com/watch?v=U4ja6HeBm6s

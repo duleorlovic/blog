@@ -877,6 +877,11 @@ with_city[name: 'Me', city: 'NS')
 You can also transform types with a block.
 
 Use enum similar to Rails enum https://dry-rb.org/gems/dry-types/1.2/enum/
+but this will raise error if not in list `"a" violates constraints
+(included_in?(["text_open", "text_time"], "a") failed)` so it will not coerce.
+```
+    property :kind, type: Types::String.enum(Element.kinds)
+```
 
 Enable maybe extension https://dry-rb.org/gems/dry-types/1.2/extensions/maybe/
 `gem install dry-monads` http://dry-rb.org/gems/dry-monads/ and irb

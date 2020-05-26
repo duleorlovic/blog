@@ -65,6 +65,7 @@ https://docs.docker.com/engine/reference/builder/
   ```
 
 Follow https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+Also https://vitobotta.com/2020/04/06/optimised-docker-builds-rails-apps/
 
 # Rails
 

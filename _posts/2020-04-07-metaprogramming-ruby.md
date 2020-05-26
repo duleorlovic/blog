@@ -417,6 +417,13 @@ methods live. It's superclass is object class.
 ```
 obj = My.new
 def obj.my_singleton_method; end
+
+# similar but it opens new scope definee cref
+class << obj
+  def my_singleton_method
+  end
+end
+
 obj.singleton_class.instance_methods.grep /my_/
 obj.singleton_class.superclass == My
 ```
