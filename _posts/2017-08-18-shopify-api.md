@@ -5,8 +5,22 @@ layout: post
 # Creating new app
 
 <https://help.shopify.com/api/getting-started> On <https://partners.shopify.com>
-create account and development store, for example
+create account and development store like
 <https://duleorlovic-test.myshopify.com/>.
+
+You can use https://shopify.github.io/shopify-app-cli/ shopify cli to create app
+```
+eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
+shopify help
+shopify create rails # install latest rails and add gem 'shopify_app'
+```
+
+Error `/Users/orlovic/.shopify-app-cli/lib/shopify-cli/api.rb:72:in block in
+request': 500 (ShopifyCli::API::APIRequestServerError` when there are multiple
+organizations https://github.com/Shopify/shopify-app-cli/issues/450
+
+To remove/uninstall you can run `rm -rf ~/.shopify-app-cli/`
+
 Also create an App (url could be your local ngrok tunnel). Since shopify from
 september uses only https, you need to use https ngrok url.
 You need to start ngrok and than update in Apps -> App Info -> App
@@ -18,7 +32,7 @@ raised. This is also raised when you use `http` instead `https`.
 Copy credentials from Apps -> App info -> App credentials and store them in
 `SHOPIFY_API_KEY` and `SHOPIFY_SECRET_KEY`.
 
-Note that protocoll should be https (admin store is always redirected to https),
+Note that protocol should be https (admin store is always redirected to https),
 because if we use `http://159abd37.ngrok.io` there will be a warning:
 `Shopify.AppMessenger received message null from unexpected origin
 https://159abd37.ngrok.io ; expecting http://159abd37.ngrok.io or subdomain

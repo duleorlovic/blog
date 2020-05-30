@@ -22,3 +22,10 @@ or have 7-day free trial.
   (sup boards, inflatable jumpers, bike)
 
 ## My app: Move tickets
+
+## my app: Populate with sample data generation
+
+Populate with sample data
+https://community.shopify.com/c/Shopify-Design/Populating-development-store/td-p/46116
+```
+```

@@ -62,11 +62,21 @@ From System Preferences -> Keyboard -> Shortcuts
 You can disable any special key for any app. From System Preferences ->
 Keyboard -> Shortcuts -> App Chortcuts -> +  than select the app and write exact
 name and add shortcut uncluding ⌥  key:
-* I disable Minimize since I do not need it, so add Minimize and random keyboard
-  combination like `⌥ ⌘ M`.
 * for iTerm I do not need Clear Buffer so now it is `⌘ ⌥ M`
 * Mission control -> Move left space I remaped to `^ ⌘ h` (also right space
   `^ ⌘ l`)
+* to disable hide front app, it has to be done for each app, for example, `Hide
+  Terminal` should be remaped to cmd + shift + h
+here is the list of all mappings:
+* All Applications: Minimize `⇧ ⌘ J`
+* Finder: Connect to Server `⇧ ⌘ K`
+* Terminal: Clear to Previous Mark `⇧ ⌘ L`, Jump to Selection `⇧ ⌘ J`, Clear to
+  Start `⇧ ⌘ K`, Hide Terminal `⇧ ⌘ H`
+* Google Chrome: Hide Google Chrome `⇧ ⌘ H`, Jump to Selection `⇧ ⌘ J`, Open
+  Location... `⇧ ⌘ L`
+* Preview: Rotate Left `⇧ ⌘ L`
+* Firefox: Downloads `⇧ ⌘ J`
+
 
 ![Mac keyboard shortcuts]({{ site.baseurl }}/assets/posts/mac keyboard shortcuts.png)
 
@@ -81,7 +91,7 @@ focus that new tab), download and open context menu (ctrl click also works for
 selected text).
 
 `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected area.
-Press space after that to select window. Screen shots will be on desktop.
+Press space after `⌘ shift 4` to select window. Screen shots will be on desktop.
 
 To use apple keyboard on ubuntu I tried to remap Fn key, but that is not
 possible https://askubuntu.com/questions/370944/remap-fn-key-to-insert-key-on-apple-aluminium-keyboard
@@ -89,8 +99,11 @@ possible https://askubuntu.com/questions/370944/remap-fn-key-to-insert-key-on-ap
 
 To show home folder in Finder, go to Finder Preferences -> Sidebar and enable
 home folder in sidebar.
-Inside Finder Go menu you can hold ⌥  key to show `Library` folder. Some app
-data can be
+Inside Finder Go menu you can hold ⌥  key to show `Library` folder. It is by
+default hidden from user. To permanently enable showing it, go to home folder in
+finder app, right click on empty space and choose 'Show View Options' from
+dropdown. Than select 'Show Library Folder'.
+Some app data can be
 `~/Library/Containers/com.mydomain.myaoo/Data/Library/Application%20Support/myapp/`
 When you open the app using ⌘ + space than it is usually from Applications
 folder, but it could be from Downloads. You can check where app is location by
@@ -113,10 +126,10 @@ I found interesting
 
 # Karabiner Elements to change keys
 
-Since I like Alt + ` to switch to next window inside same app. You can try to
-choose English PC in System Preferences->Keyboard->Input Sources. This way keys
-(§ and `)  were replaced,  but also single quote key, so better solution is to
-use karabiner. For Sierra 10.12.5 there is new version
+Since I like Alt + tilda to switch to next window inside same app. You can try
+to choose English PC in System Preferences->Keyboard->Input Sources. This way
+keys (§ and tilda)  were replaced,  but also single quote key, so better
+solution is to use karabiner. For Sierra 10.12.5 there is new version
 <https://github.com/tekezo/Karabiner-Elements>
 
 My `.config/karabiner/karabiner.json` file looks:
@@ -133,6 +146,15 @@ My `.config/karabiner/karabiner.json` file looks:
   ]
 }
 ~~~
+
+Another solution is to use hidutil or ukulele http://software.sil.org/ukelele/
+or https://keyman.com/
+
+Ukulele contains great manual but it is not easy to remember all changes... Save
+it and use finder to copy it to Library -> Keyboard Layouts folder and than add
+that layout in Settings -> Keyboard -> Input Sources, and than check "Show Input
+menu in menu bar" and select that new layout from top right menu bar.
+
 
 # Update packages
 
@@ -390,6 +412,8 @@ iTem Use Transparency cmd+alt+u
 
 scriptEditr Underline cmd+alt+u
 ~~~
+
+![Overwrite app shortcuts]({{ site.baseurl }}/assets/posts/overwrite app shortcuts.png)
 
 To get foremost window
 
