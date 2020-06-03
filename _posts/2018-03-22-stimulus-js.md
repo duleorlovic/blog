@@ -135,3 +135,70 @@ export default class extends Controller {
 Example of adding Rxjs to stimulus so user on slow connections get latest
 results, do not load if they clicked on the same link and show loader
 https://www.mikewilson.dev/posts/stimulus-and-rxjs-for-a-spa-like-experience/
+
+# Reflex
+
+To install run
+```
+bundle add stimulus_reflex
+rails stimulus_reflex:install
+```
+
+Invoke methods using `data-reflex` attributes
+```
+# app/views/books/_form.html.erb
+<%= form.text_field :title, data: { reflex: 'change->ExampleReflex#form', current_count: 1 } %>
+```
+
+Pass parametars using data attributes and access them using `element.dataset`
+note that you should use strings instead of simbols for multiwords, since `data:
+{ current_count: 1 }` will translate underscore to minus
+`element.dataset['current-count']`.
+```
+# app/reflex/counter_reflex.rb
+class CounterReflex < StimulusReflex::Reflex
+  def increment
+    @current_count = element.dataset['current_count']
+  end
+end
+```
+
+To trigger from javascript you need to register and use stimulate. Passign
+arguments in different way, not it is method args instead of `element.dataset`
+as with when we use data attributes.
+
+```
+# app/views/books/_form.html.erb
+  <div data-controller='hello' data-hello-count='<%= @count %>'>
+    count <%= @count %>
+    <div data-target='hello.output'></div>
+    <%= link_to 'Increase', '#', data: { action: 'hello#increment' } %>
+  </div>
+
+# app/javascript/controllers/hello_controller.js
+import { Controller } from "stimulus"
+import StimulusReflex from 'stimulus_reflex'
+
+export default class extends Controller {
+  static targets = [ "output" ]
+
+  connect() {
+    this.outputTarget.textContent = 'Hello, Stimulus!'
+    StimulusReflex.register(this)
+  }
+
+  increment(event) {
+    this.outputTarget.textContent = 'trying to increment'
+    let count = this.data.get('count')
+    this.stimulate('ExampleReflex#increase_from_js', count)
+  }
+}
+
+
+# app/reflex/example_reflex.rb
+class ExampleReflex < ApplicationReflex
+  def increase_from_js(count = 0)
+    @count = count.to_i + 1
+  end
+end
+```
