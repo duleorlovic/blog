@@ -282,6 +282,53 @@ Chrome plugins
 You can follow <http://schema.org/docs/gs.html> to add microdata in your markup
 like: `<div itemscope><h1 itemprop="name">Duke</h1></div>`
 
+Also you can add jsonld section
+```
+<script type="application/ld+json">
+[  {  "@context":"http://schema.org",
+    "logo":"https://mycomp.co.uk/assets/logo-b7b1cda2d08187dc17d1751096e3a88988f6ddae3febf19d7bb4540b434aef92.png",
+    "image":["https://mycomp.co.uk/assets/blogs/honeymoon_one-57c2ec4ae43614d072e715d7bc2ba465e2e9c0c40c596f9af542e20b36612e4a.jpg"],
+    "@type":"Service",
+    "@id":"https://mycomp.co.uk",
+    "description":"mycomp - my way",
+    "name":"mycomp.co.uk",
+    "url":"https://mycomp.co.uk",
+    "sameAs":["https://www.mycomp.co.uk/guide"]
+  },
+  {  
+    "@context":"http://schema.org",
+    "@type":"LocalBusiness",
+    "@id":"https://mycomp.co.uk/",    
+    "logo":"https://mycomp.co.uk/assets/logo-b7b1cda2d08187dc17d1751096e3a88988f6ddae3febf19d7bb4540b434aef92.png",
+    "image":"https://mycomp.co.uk/assets/blogs/honeymoon_one-57c2ec4ae43614d072e715d7bc2ba465e2e9c0c40c596f9af542e20b36612e4a.jpg",
+    "name":"mycomp",
+    "alternateName":"mycomp UK",
+    "geo":{  "@type":"GeoCoordinates",
+        "latitude":  "11.4197157",
+        "longitude":"-1.5141248"
+    },
+    "priceRange":"From &pound;29.95",
+    "telephone":"11223",
+    "url":"https://mycomp.co.uk",
+    "address":{
+        "@type":"PostalAddress",
+        "streetAddress":"My",
+        "addressLocality":"My",
+        "addressRegion":"My",
+        "postalCode":"My",
+        "addressCountry":"United Kingdom"
+    },
+    "branchOf":{"@type":"Organization",
+          "name":"mycomp UK",
+          "sameAs":"https://mycomp.co.uk"
+    }
+  }
+]
+</script>
+```
+
+# Open graph
+
 You can add head tags for facebook [open graph protocol](http://ogp.me/). In
 Rails it will be like:
 

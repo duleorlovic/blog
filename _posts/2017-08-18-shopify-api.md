@@ -12,25 +12,74 @@ You can use https://shopify.github.io/shopify-app-cli/ shopify cli to create app
 ```
 eval "$(curl -sS https://raw.githubusercontent.com/Shopify/shopify-app-cli/master/install.sh)"
 shopify help
-shopify create rails # install latest rails and add gem 'shopify_app'
+shopify logout # remove credentials for organization and shop
+
+shopify create rails
+? App Name
+> testing_multiple_accounts
+? What type of app are you building? (You chose: Public: An app built for a wide merchant audience.)
+### First time it will ask for api key confirmation
+𝒾 Authentication required. Login to the URL below with your Shopify Partners account credentials to continue.
+Please open this URL in your browser:
+https://accounts.shopify.com/oauth/authorize?client_id=fbdb2649-e327-4907--908d24cfd7e3&scope=openid+https%3A%2F%2Fapi.shopify.com%2Fauth%2Fpartners.app.cli.access&redirect_uri=http%3A%2F%2F127.0.0.1%3A3456&state=fe3f5f7289435ba6ca1a856f
+? Select organization (Choose with ↑ ↓ ⏎, filter with 'f')
+> 1. TRK Innovations
+  2. TRK INNOVATIONS
+? Select organization (You chose: TRK Innovations)
+✗ No Development Stores available.                                                                  
+Visit https://partners.shopify.com/830170/stores to create one                                      
+For authentication issues, run shopify logout to clear invalid credentials
+### If you already saved some account
+Organization Kajakas                                                                                
+Using Development Store kulakajak.myshopify.com                                                     
+┏━━ Installing bundler… ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ (0.0s) ━━
+┏━━ Generating new rails app project in testing_multiple_accounts... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃ Using  from /home/orlovic/.railsrc
+┃       create  
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ (18.25s) ━━
+┏━━ Running migrations… ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃ == 20200603053952 CreateShops: migrating ======================================
+┃ -- create_table(:shops)
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ (4.29s) ━━
+✓ writing .env file...
+✓ testing_multiple_accounts was created in your Partner Dashboard https://partners.shopify.com/1577787/apps/3913425
+⭑ Run shopify serve to start a local server
+⭑ Then, visit https://partners.shopify.com/1577787/apps/3913425/test to install testing_multiple_accounts on your Dev Store
+```
+`shopify create` can give an error
+`/Users/orlovic/.shopify-app-cli/lib/shopify-cli/api.rb:72:in block in request':
+500 (ShopifyCli::API::APIRequestServerError` when there are multiple
+organizations https://github.com/Shopify/shopify-app-cli/issues/450
+also it lists disabled organizations https://github.com/Shopify/shopify-app-cli/issues/639
+
+To remove/uninstall you can run `rm -rf ~/.shopify-app-cli/` or `shopify logout`
+This command will install latest rails, add `gem 'shopify_app'`, create `.env`
+file with
+
+```
+# .env
+SHOPIFY_API_KEY=ba...
+SHOPIFY_API_SECRET_KEY=shpss_7b...
+SHOP=kulakajak.myshopify.com
+SCOPES=write_products,write_customers,write_draft_orders
 ```
 
-Error `/Users/orlovic/.shopify-app-cli/lib/shopify-cli/api.rb:72:in block in
-request': 500 (ShopifyCli::API::APIRequestServerError` when there are multiple
-organizations https://github.com/Shopify/shopify-app-cli/issues/450
+I had a problem when I use old env `SHOPIFY_API_SECRET` but new version is
+`SHOPIFY_API_SECRET_KEY` https://github.com/Shopify/shopify_app/issues/1009
 
-To remove/uninstall you can run `rm -rf ~/.shopify-app-cli/`
+Runing `shopify serve` will run `ngrok http 8081` and `rails s -p 8081`.
 
-Also create an App (url could be your local ngrok tunnel). Since shopify from
-september uses only https, you need to use https ngrok url.
-You need to start ngrok and than update in Apps -> App Info -> App
-information App URL as <https://159abd37.ngrok.io/> and Whitelisted redirection
-URL <https://159abd37.ngrok.io/auth/shopify/callback>
-Use ngrok url when installing the app, since if you install from `<localhost>`
-then `Oauth error invalid_request: The redirect_uri is not whitelisted` is
-raised. This is also raised when you use `http` instead `https`.
-Copy credentials from Apps -> App info -> App credentials and store them in
-`SHOPIFY_API_KEY` and `SHOPIFY_SECRET_KEY`.
+Manually running you need to create an App and add ngrok urls. Create on
+https://partners.shopify.com/648793/apps/new . **App -> App Info -> App Url**
+has to be https, and you can you ngrok https url <https://159abd37.ngrok.io/>
+and Whitelisted redirection URL
+<https://159abd37.ngrok.io/auth/shopify/callback> Use ngrok url when installing
+the app, since if you install from <http://localhost> then `Oauth error
+invalid_request: The redirect_uri is not whitelisted` is raised. This is also
+raised when you use `http` instead `https`.  Copy credentials from Apps -> App
+info -> App credentials and store them in `SHOPIFY_API_KEY` and
+`SHOPIFY_SECRET_KEY`.
 
 Note that protocol should be https (admin store is always redirected to https),
 because if we use `http://159abd37.ngrok.io` there will be a warning:
@@ -148,13 +197,13 @@ You can generate keys for specific shop, got to you
 `{shop_url}/admin/apps/private`. Enable what you need since by default not all
 are enabled.
 
-You can use [shopify-cli
+You can install `gem install shopify_api_console` [shopify-cli
 console](https://github.com/Shopify/shopify_api#console) to access resources
 using pry
 
 ~~~
-shopify-cli add duleorlovic-test
-shopify-cli console
+shopify-api add duleorlovic-test
+shopify-api console
 ShopifyAPI::Product.find(:all)
 ~~~
 

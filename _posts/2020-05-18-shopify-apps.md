@@ -25,7 +25,18 @@ or have 7-day free trial.
 
 ## my app: Populate with sample data generation
 
-Populate with sample data
+Populate with sample data using faker gem
 https://community.shopify.com/c/Shopify-Design/Populating-development-store/td-p/46116
 ```
+```
+
+
+Similar to *Simple Sample Data* https://apps.shopify.com/simple-sample-data
+which has permissions to:
+```
+View Shopify account data
+Manage products
+Manage orders
+Manage customers
+View other data
 ```

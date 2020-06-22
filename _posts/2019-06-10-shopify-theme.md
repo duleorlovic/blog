@@ -65,20 +65,22 @@ browser-sync start --proxy https://bootstrap-business-casual-theme.myshopify.com
 # Folder structure
 
 Root index home page is in `templates/index.liquid`, assets goes to `assets`.
-Example routes to template
+Those routes maps templates.liquid. You can use liquid object `routes` to
+generate those routes https://shopify.dev/docs/themes/liquid/reference/objects/routes
 * `/blogs/blog-name/article-id-handle` article.liquid (you can create another
   new template for example `template/article.video.liquid` so on admin you can
   choose one of thow two templates `article` and `article.video`)
 * `/blogs/blog-name` blog.liquid
-* `/cart` cart.liguid
-* `/collections` list-collections.liquid
+* `/cart` cart.liguid `routes.cart_url`, `routes.cart_add_url`,
+  `routes.cart_change_url`, `routes.cart_clear_url`
+* `/collections` list-collections.liquid `routes.collections_url`
 * `/collections/collection-hadle` `/collections/collection-handle/tag`
-  collection.liquid
-* `/` index.liquid
+  collection.liquid `routes.all_products_collection_url`
+* `/` index.liquid `routes.root_url`
 * `/pages/page-handle` page.liquid
 * `/products` list-collections.liquid
 * `/products/product-handle` product.liquid
-* `/search?q=search-term` search.liquid
+* `/search?q=search-term` search.liquid `routes.search_url`
 * `unknown` 404.liquid
 
 Inside template we can include small snipipet `snippets/social-sharing.liquid`
@@ -395,7 +397,8 @@ Global variables on shopify are:
 * `all_products['short'].title`
 * `articles['news/hello']`
 * `blogs.myblog.articles`
-* `cart`
+* `cart` for example `cart.item_count`. You can add input for notes
+  `name="note"`
 * `collections.frontpage.products`
 * `collection` inside collection template you can use `collection`
 * `current_page` if available on paginated content
@@ -411,12 +414,17 @@ Global variables on shopify are:
 * `product` (in `template/product.liquid`)
   https://shopify.dev/docs/themes/liquid/reference/objects/product
   `product.selected_or_first_available_variant` first or based on `?variant`
-  parameter
+  parameter (also boolean `product.has_only_default_variant`)
   `product.options_with_values` returns some json with "name" and "values"
   `[{"name":"Size","position":1,"values":["single","double","triple"]}]`
   `product.variants` returns array of variant objects (number_of_values ** per
-  each option).
-  `product.url` is path (domain is in `shop.url`)
+  each option), each variant has `variant.option1` and `variant.option2` and
+  `variant.option3`.
+  `product.url` is path (domain is in `shop.url`) you can reference product
+  inside collection using `{{ product.url | within: collections.all }}`
+* `cart_item` is line_item of `cart.items`, it contains
+  `item.options_with_values` array of hash for each variant type
+  `[{"name":"Size","value":"double"},{"name":"Color","value":"Red"}]`
 * `recommendations`
 * `settings` global settings object from `config/settings_schema.json`
 * `template` name without .liquid, used like `<body class='{{ template }}'>`
@@ -504,32 +512,37 @@ split: '/' | first | alert }}`
     with a `split`.  Note that you can only create array of string. There is
     `concat` filter that joins two arrays, but you can not create array of
     object, you can create only array of strings.
-  ```
-  # first approach is using append (preferred)
-  {% assign collections_string = "" %}
-  {% for block in section.blocks %}
-    {% assign collections_string = collections_string | append:
-    collections[block.settings.collection].title | append: ";" %}
-  {% endfor %}
-  {% assign collections_arrays = collections_string | remove_last: ";" | split: ";" %}
-
-  # another approach is using capture
-  {% capture collections_string %}
+    ```
+    # first approach is using append (preferred)
+    {% assign collections_string = "" %}
     {% for block in section.blocks %}
-      {{collections[block.settings.collection].title}};
+      {% assign collections_string = collections_string | append:
+      collections[block.settings.collection].title | append: ";" %}
     {% endfor %}
-  {% endcapture %}
-  {% assign collections_arrays = collections_string | remove_last: ";" | split: ";" %}
-  ```
+    {% assign collections_arrays = collections_string | remove_last: ";" | split: ";" %}
+
+    # another approach is using capture
+    {% capture collections_string %}
+      {% for block in section.blocks %}
+        {{collections[block.settings.collection].title}};
+      {% endfor %}
+    {% endcapture %}
+    {% assign collections_arrays = collections_string | remove_last: ";" | split: ";" %}
+    ```
+  * filter array using where condition
+    https://shopify.github.io/liquid/filters/where/
+    ```
+    assign row_of_variants = product.variants | where: "option1", value_of_first_option_with_values
+    ```
 * [url](https://help.shopify.com/en/themes/liquid/filters/url-filters#img_url)
-  like `article | img_url: '400x300' | img_tag: article.title` (if
+  like `article | img_url: '400x300' | img_tag: article.title` (width*height, if
   request "400x300" is smaller than original image's dimension, shopify will
   scale the image for you and serve that scalled image). For product img_url
   will use featured image. If no dimension is specified, it will be small
   100x100 so better is to use specific size (original image will preserve aspect
   ration when it is scalled down, shopify will never scale up image). You can
   also use crop and scale filter.
-* money (convert cents to number and currency)
+* money (convert cents to number and currency) `variant.price | money`
 
 If you need to assign filter output to variable you can use `{ % capture
 my_var %} { { var | my_filter }} { % endcapture %}` or use it inside 
