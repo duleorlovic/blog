@@ -22,6 +22,7 @@ Simple one liner `Net::HTTP.get`
 response_body = Net::HTTP.get uri
 # but I prefer to fetch also the status
 response = Net::HTTP.get_response uri
+response.body # => <html>...
 ~~~
 
 Simple one liner `Net::HTTP.post_form`
@@ -135,8 +136,27 @@ print fetch('http://www.ruby-lang.org/')
 
 # HTTParty
 
-This gem is a little bit simpler than plain Net::HTTP.
+This gem is a little bit simpler than plain Net::HTTP (it is wrapper around
+net/http).
 It does not support multipart requests (needed for uploading a file)
+
+```
+require "HTTParty"
+
+html = HTTParty.get("https://en.wikipedia.org/wiki/Douglas_Adams")
+# => "<!DOCTYPE html>\n" + "<html class=\"client-nojs\" lang=\"en\" dir=\"ltr\">\n" + "<head>\n" + "<meta charset=\"UTF-8\"/>\n" + "<title>Douglas Adams - Wikipedia</title>\n" + ...
+```
+
+# Open URI
+
+In standard ruby library
+
+```
+require 'open-uri'
+
+html = open("https://en.wikipedia.org/wiki/Douglas_Adams")
+##<File:/var/folders/zl/8
+```
 
 # RestClient
 
@@ -186,3 +206,7 @@ Cookie: _session_id=...
 
 https://github.com/trusche/httplog
 
+
+# Nokogiri
+
+For parsing html you can look at post for scraping capybara selenium.

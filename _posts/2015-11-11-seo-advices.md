@@ -348,6 +348,8 @@ Rails it will be like:
   %meta{name: "twitter:url",        content: post_url(@post.id)}
 ~~~
 
+`og:title` usually have same content as `<title>` and `og:description` is the
+same as `<meta name="description">`.
 In rails you can use meta tags gem so you can set title in html and meta tag in
 one place. Also set language alternative url
 https://github.com/kpumuk/meta-tags#multi-regional-and-multilingual-urls-rss-and-mobile-links

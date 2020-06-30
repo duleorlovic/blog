@@ -17,7 +17,7 @@ My Rails contribution to docs <https://github.com/rails/rails/pull/34911> and to
 code
 <https://github.com/rails/rails/pull/35143>,
 <https://github.com/rails/rails/pull/36428>.
-https://github.com/rails/rails/pull/32241
+<https://github.com/rails/rails/pull/32241>
 <br>
 My conference lighting
 talk on Balkan Ruby <https://youtu.be/lpkePkbYeoI?t=882>.

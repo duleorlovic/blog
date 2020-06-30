@@ -4294,3 +4294,8 @@ end
   User.reflect_on_all_associations.map &:name
   # => [:roles, :user_activities]
   ```
+
+* Rails 5 mailers uses with and params
+  ```
+  UserMailer.with(user: @user).welcome_email.deliver_later
+  ```

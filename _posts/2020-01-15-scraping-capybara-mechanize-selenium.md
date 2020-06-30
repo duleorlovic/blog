@@ -3,6 +3,7 @@ layout: post
 ---
 
 Some tools useful in creating bot, spider, scraper.
+https://github.com/lorien/awesome-web-scraping/blob/master/ruby.md
 
 # Capybara
 
