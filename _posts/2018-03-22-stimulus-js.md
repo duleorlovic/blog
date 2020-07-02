@@ -158,13 +158,13 @@ note that you should use strings instead of simbols for multiwords, since `data:
 # app/reflex/counter_reflex.rb
 class CounterReflex < StimulusReflex::Reflex
   def increment
-    @current_count = element.dataset['current_count']
+    @current_count = element.dataset['current-count']
   end
 end
 ```
 
 To trigger from javascript you need to register and use stimulate. Passign
-arguments in different way, not it is method args instead of `element.dataset`
+arguments in different way, now is method args instead of `element.dataset`
 as with when we use data attributes.
 
 ```
@@ -202,3 +202,31 @@ class ExampleReflex < ApplicationReflex
   end
 end
 ```
+
+Inside reflex, you can access session which you can use in controller.
+```
+# app/reflex/example_reflex.rb
+  def increase_from_js(count = 0)
+    @count = count.to_i + 1
+    session[:count] = @count
+  end
+    @count = session[:count]
+  end
+
+# app/controllers/books_controller.rb
+  def index
+    @count = session[:count]
+  end
+```
+
+In controller you should use conditional assignment
+```
+# app/controllers/books_controller.rb
+  def index
+    @book ||= Book.new
+  end
+```
+
+Use generator `rails generate stimulus_reflex user` to generate
+`app/javascript/controllers/user_controller.js` and `app/reflexes/user_reflex.rb
+`.

@@ -75,7 +75,7 @@ here is the list of all mappings:
 * Google Chrome: Hide Google Chrome `⇧ ⌘ H`, Jump to Selection `⇧ ⌘ J`, Open
   Location... `⇧ ⌘ L`
 * Preview: Rotate Left `⇧ ⌘ L`
-* Firefox: Downloads `⇧ ⌘ J`
+* Firefox: Downloads `⇧ ⌘ J`, Hide Firefox  `⇧ ⌘ H`
 
 
 ![Mac keyboard shortcuts]({{ site.baseurl }}/assets/posts/mac keyboard shortcuts.png)
@@ -539,13 +539,22 @@ Reinstall postgres and postgis
 ```
 brew update; brew reinstall postgresql; brew reinstall postgis
 ```
+
 To start postgres
 ```
 brew services restart postgresql
 ps auxwww | grep postgres
 psql
+```
 
-# see logs with
+Create `postgres` user
+```
+createuser -s postgres
+```
+
+see logs with
+
+```
 pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 # upgrade datatabases
 rm -rf /usr/local/var/postgres && initdb /usr/local/var/postgres -E utf8
