@@ -510,6 +510,7 @@ Here is example in ruby
 * if you are using `window.location.replace('http://a.b');` then browser back
   button is not working as espected. Its better to use
   `window.location.assign('new_page');` because the page is stored in history
+  or `window.location.href = 'http://www.google.com'`
 * when user click back button previous page is reshown, and chrome reruns
   the javascript, but mozilla doesn't. if you want in mozilla to run again,
   use cache buster or try with:

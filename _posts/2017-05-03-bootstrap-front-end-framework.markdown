@@ -254,7 +254,9 @@ well with `display: flex` elements, better is to use
   height)
 
   `mx-auto` for `margin: 0px auto`.
-  sides or breakpoint not required: `p-0` padding none, `mt-5` margin top,
+  sides or breakpoint not required: `p-0` padding none, `mt-5` margin top, but
+  you can use `mb-lg-5`. Note that margins are not applicable for `d-inline`
+  elements.
 
   For inline elements you can use `float-left` (instead of `pull-left`).
   For block elements with fixed width `ml-auto` to align to the right (same as
@@ -317,6 +319,9 @@ well with `display: flex` elements, better is to use
     </div>
   </div>
   ```
+
+  Btw there are helpers for max-width `.mw-100`, view port `.vh-100` (`heigh:
+  100vh`).
 
   another way is to use row-cols https://getbootstrap.com/docs/4.4/layout/grid/#row-columns
 

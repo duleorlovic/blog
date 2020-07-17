@@ -961,3 +961,17 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
 * instead of right click Save as you can add download attribute in anchor tag
   `<a download href="cat.jpg">Download cat</a>` so instead of opening picture in
   a new tab, it will download it
+* white line can be added as absolute position with rotate (you can move left
+  or right with `margin-left` positive or negative).
+  ```
+  .slant {
+    position: absolute;
+    transform: rotate(-9deg);
+    background-color: #fff;
+    display: inline-block;
+    width: 676px;
+    height: 170px;
+    top: 300px;
+    margin-left: -10px;
+  }
+  ```

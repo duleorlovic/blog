@@ -2264,8 +2264,10 @@ https://github.com/yob/pdf-reader
 ```
 reader = PDF::Reader.new("somefile.pdf")
 # this will work only for computer generated pdf (not for scanned documents)
-reader.pages.last.text
+reader.pages.first.text
+reader.pages.first.fonts.first
 ```
+For images https://github.com/yob/pdf-reader/blob/master/examples/extract_images.rb
 
 ## Docx MS word
 

@@ -230,3 +230,48 @@ In controller you should use conditional assignment
 Use generator `rails generate stimulus_reflex user` to generate
 `app/javascript/controllers/user_controller.js` and `app/reflexes/user_reflex.rb
 `.
+
+# Nested form
+
+https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect
+```
+// app/javascript/controllers/nested_form_controller.js
+import { Controller } from "stimulus"
+
+export default class extends Controller {
+  static targets = ["add_perk", "template"]
+
+  add_association(event) {
+    event.preventDefault()
+    var content = this.templateTarget.innerHTML.replace(/TEMPLATE_RECORD/g, new Date().valueOf())
+    this.add_perkTarget.insertAdjacentHTML('beforebegin', content)
+  }
+
+  remove_association(event) {
+    event.preventDefault()
+    let perk = event.target.closest(".nested-fields")
+    perk.querySelector("input[name*='_destroy']").value = 1
+    perk.style.display = 'none'
+  }
+}
+```
+
+In view https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect
+```
+# app/views/projects/_form.html.erb
+  <div data-controller="nested-form">
+    <template data-target='nested-form.template'>
+      <%= form.fields_for :perks, Perk.new, child_index: 'TEMPLATE_RECORD' do |perk| %>
+        <%= render 'perk_fields', form: perk %>
+      <% end %>
+    </template>
+
+    <%= form.fields_for :perks do |perk| %>
+      <%= render 'perk_fields', form: perk %>
+    <% end %>
+
+    <div data-target="nested-form.add_perk">
+      <%= link_to "Add Perk", "#", data: { action: "nested-form#add_association" }, class: "btn btn-white" %>
+    </div>
+  </div>
+```

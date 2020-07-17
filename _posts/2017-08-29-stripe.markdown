@@ -16,32 +16,113 @@ stripe_secret_key: sk_test_g...
 Stripe.api_key = Rails.application.credentials.stripe_secret_key
 ~~~
 
-You can use checkout.js https://stripe.com/docs/checkout#integration that will
-generate token which you can use to make a customer
+checkout.js is deprecated and now we use stripe.js You can use as module
+https://github.com/stripe/stripe-js but PCI compliant requires to load from
+`<script src="https://js.stripe.com/v3/"></script>`
 
-~~~
-<%= form_tag charge_path do %>
-  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          data-key="<%= Rails.application.credentials.stripe_publishable_key %>"
-          data-description="A month's subscription"
-          data-amount="500"
-          data-locale="auto"></script>
-<% end %>
-~~~
+There are two kind of intergrations, using redirection or iframe.
 
-Or you can use more flexibile `stripe.js` but note that if you use elements
-create than they will be inside iframe
-https://stripe.com/docs/stripe-js/elements/quickstart
-https://github.com/stripe/react-stripe-elements/issues/167
-https://stripe.com/docs/stripe-js/elements/migrating#elements-demo
+## Checkout redirection
+
+Server generate session and client redirects to checkout page on stripe
+https://stripe.com/docs/payments/checkout/accept-a-payment?lang=ruby
+
+```
+# app/controllers/pages_controller.rb
+
+  def checkout
+    @stripe_session = Stripe::Checkout::Session.create(
+      payment_method_types: ['card'],
+      client_reference_id: 'my_reference',
+      customer_email: 'my@email.com',
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'T-shirt',
+          },
+          unit_amount: params[:amount].presence || 123,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: pages_success_checkout_url + '?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: pages_cancel_url,
+    )
+  end
+
+  def success_checkout
+    @stripe_session = Stripe::Checkout::Session.retrieve(params[:session_id])
+    @stripe_payment_intent = Stripe::PaymentIntent.retrieve(@stripe_session.payment_intent)
+  end
+
+# app/views/pages/checkout.js.erb
+stripe = Stripe('<%= Rails.application.credentials.stripe_publishable_key %>')
+stripe.redirectToCheckout({
+  sessionId: '<%= @stripe_session.id %>'
+}).then(function (result) {
+});
+```
+You need to use session_id to check amount that is received and status of the
+payment. Note that redirection success_url can use placeholder to mark that we
+need session_id `?session_id={CHECKOUT_SESSION_ID}` so we can retrieve Session.
+Use `client_reference_id` to fetch payment from db and update logs with
+status, customer (stripe customer id), amount_received from PaymentIntent.
+Params https://stripe.com/docs/api/checkout/sessions/create
+https://stripe.com/docs/api/payment_intents/object
+Real world will use webhooks.
+
+## Iframe using Elements
+
+https://stripe.com/docs/stripe-js?lang=html
+https://stripe.com/docs/payments/accept-a-payment?lang=ruby#web-create-payment-intent
+https://stripe.com/docs/payments/integration-builder?platform=web&lang=ruby&client=html
+
+```
+  def iframe
+    amount = params[:amount].presence || 123
+    @stripe_payment_intent = Stripe::PaymentIntent.create(amount: amount, currency: 'usd')
+    payment = Payment.create! payment_intent_id: @stripe_payment_intent.id, user_id: 1, amount: amount, status: :initiated
+    # we need to check since payment could be made and redirection fails
+    CheckPaymentIntentJob.set(wait: 1.minute).perform_later payment
+  end
+```
 
 ~~~
 var stripe = Stripe('pk_test_Ib1l2OSfSQv8DieeTjCHsNoU');
-stripe.createToken(card).then(function(result) {
-  result.token
-  result.error
-});
+var elements = stripe.elements()
+var card = elements.create("card")//, { style: style });
+var clientSecret = '<%= @stripe_payment_intent.client_secret %>';
+
+card.mount("#card-element");
+stripe
+  .confirmCardPayment(clientSecret, {
+    payment_method: {
+      card: card
+    }
+  })
+  .then(function(result) {
+    if (result.error) {
+      // Show error to your customer
+      showError(result.error.message);
+    } else {
+      // The payment succeeded!
+      orderComplete(result.paymentIntent.id);
+    }
+  });
 ~~~
+
+When checking PaymentIntent status should be successfull
+https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
+Sample ids
+```
+@stripe_payment_intent.id = "pi_1H3JL1Cmrv971Cndt8fOYDud"
+```
+and this can be used for stripe url
+
+# Example using subscriptions
+
+https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect#
 
 # Stripe ruby mock
 
@@ -73,10 +154,11 @@ https://stripe.com/docs/testing#cards
   * incorrect cvc is just use two digits or `4000000000000127` or
   `4000000000000101`
   * can attach card but attempts to charge fails `4000000000000341`
+  * 3D secure is required `4000000000003220`
+    https://stripe.com/docs/payments/3d-secure#three-ds-cards
 
 Demo app but Rails 4 can be found <https://github.com/andrewculver/koudoku>
 http://koudoku.org/
-
 
 You can test using server https://github.com/stripe/stripe-mock or using mocking
 library https://github.com/rebelidealist/stripe-ruby-mock

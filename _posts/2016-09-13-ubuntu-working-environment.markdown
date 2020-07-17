@@ -343,6 +343,17 @@ https://thoughtbot.com/blog/make-the-most-of-your-browser-s-address-bar
 
 `^ str`, matches history with str, `# str` matches page titles
 
+when strange characters are shown as squares on ubuntu
+https://askubuntu.com/questions/1224125/font-characters-displayed-as-squares-in-ubuntu-18-04
+
+```
+rm -rf ~/.cache/fontconfig
+sudo fc-cache -r -v
+```
+
+and restart computer (restarting firefox is also ok is you kill all firefox
+sessions).
+
 ## Firefox developer tools and navigations
 
 like vim

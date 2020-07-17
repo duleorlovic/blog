@@ -123,9 +123,14 @@ Add those lines
 # background job proccessing
 gem 'sidekiq'
 
+gem 'sidekiq-failures'
+# this will add Failures tab on web ui, but I see them in Dead jobs as well so
+# this is not so important
+
 # config/application.rb
     # background jobs
     config.active_job.queue_adapter = :sidekiq
+    # mysite_default and mysite_mailer instead of default and mailer queue names
     config.active_job.queue_name_prefix = 'mysite'
 ```
 
@@ -204,7 +209,8 @@ Sidekiq::Queue.new('my_app_mailers').clear
 ~~~
 
 To see dashboard add those lines to routes (note that we require current_user to
-be admin
+be admin). On older sidekiq gem 3.5 you need to add in gemfile `gem 'sinatra',
+require: nil`
 
 ~~~
 require 'sidekiq/web'

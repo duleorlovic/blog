@@ -340,13 +340,13 @@ Note that if you run specific line `bin/rspec spec/features/my_spec.rb:10` than
 it will not be excluded. Only if you run all or speficic file `bin/rspec
 spec/features/my_spec.rb`
 
-If you want to run specific task then than add tag `rspec --tag really_slow`. If you
-want to run all and specific tasks than use env variable:
+If you want to run specific task then than add tag `rspec --tag really_slow`. If
+you want to run all and specific tasks than use env variable:
 
 ~~~
 # spec/spec_helper.rb
 RSpec.configure do |config|
-  # If you really want to run then than add tag `bin/rspec --tag really_slow` to run
+  # If you really want to run then add tag `bin/rspec --tag really_slow` to run
   # only that tag, or to run all and some tags use
   # INCLUDING_TAGS=chrome_remote_selenium bin/rspec
   %i(
@@ -624,7 +624,7 @@ specific tests are run, but fail when all test from file are run.
 
 [router
 specs](https://www.relishapp.com/rspec/rspec-rails/v/3-5/docs/routing-specs) is
-not so usefull, so you should write only for some the you do not want to exists
+not so usefull, so you should write only for some that you do not want to exists
 or when you have some extra logic in routing.
 
 Usefull matchers are `route_to` and `be_routable`
@@ -1977,9 +1977,10 @@ allow(thing).to receive(first_name: 'Duke', last_name: 'Orl')
 
 Stubs are used to prepare test data, and mocks are used to expect some calls.
 A **MOCK** is similar to stub, but it sets expectation (`expect` instead
-`allow`) that method will actually **be called** till the end of a example. It
-use `expect().to receive.and_return`. If it is not called, mock object triggers
-test failure. We can also set with **which arguments it should be called**
+`allow`) that method will actually **be called** till the end of a example. Note
+that POST or GET must happen after this expectation.  It use `expect().to
+receive.and_return`. If it is not called, mock object triggers test failure. We
+can also set with **which arguments it should be called**
 <https://relishapp.com/rspec/rspec-mocks/v/3-5/docs/setting-constraints/matching-arguments>
 
 ~~~
@@ -1992,6 +1993,36 @@ expect(CreatesProject).to receive(:new)
   .and_return(service_double)
 post ...
 ~~~
+another example
+
+```
+  it 'execute Charge service' do
+    fake = instance_double( Charge )
+    expect( Charge ).to receive(:new).with({
+      object: @order,
+      token: 'ToKeN',
+      description: instance_of(String),
+    }).and_return(fake)
+    expect( fake ).to receive(:call).and_return(true)
+    post :create, order_id: @order.id, stripeToken: 'ToKeN'
+  end
+
+  context 'when voucher failed to apply' do
+    before do
+      allow( Orders::ApplyVoucher ).to receive(:new).with(@order, 'test').and_return(double('service', call: false))
+      put :apply_voucher, order_id: @order.id, code: 'test'
+    end
+
+    it 'sets failure notification' do
+      expect( flash[:error] ).to eq 'Failed to apply voucher'
+    end
+
+    it 'redirects to new' do
+      expect( response ).to be_redirect
+      expect( response.redirect_url ).to eq new_charge_url(order_id: @order.id)
+    end
+  end
+```
 
 A **SPY** is similar to mock but we set expectation later using `allow().to
 receive` and `expect().to have_received()` (so we follow
