@@ -575,7 +575,7 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
 
 To enable mysql service from remote you need to bind it to 0.0.0.0 in
 configuration. To test on which interface is used port listening you can see
-port use
+port use port in use
 
 ```
 sudo netstat -plutn | grep 3306

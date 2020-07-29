@@ -480,31 +480,54 @@ webpack
 # Webpack
 
 <https://webpack.academy>
-<https://www.what-problem-does-it-solve.com/webpack>
+<https://www.what-problem-does-it-solve.com/webpack/index.html>
 <https://survivejs.com/webpack/>
 
 <https://webpack.js.org/guides/getting-started/>
 /home/orlovic/rails_temp/webpack_guide
 
+Install using yarn
+```
+yarn init -y
+yarn add -D webpack webpack-cli
+```
+or npm
 ~~~
 npm init -y
 npm install webpack webpack-cli --save-dev
 ~~~
 
-Add to `package.json` build command so you can run
+You can run cli
+```
+$(yarn bin)/webpack  --mode=none --entry ./js/index.js  --output-filename=bundle.js
+```
+
+or add to `package.json` build command
 
 ~~~
 // package.json
   "scripts": {
-    "build": "webpack"
+    "build": "webpack --config webpack.config.js --display-error-details"
   }
-
-// run build with
-npm run build
-
-// if webpack is installed globally than you can use directly
-webpack # not recomended to use as global
 ~~~
+
+so you can run with
+```
+npm run build
+# or
+yarn run build
+```
+
+if webpack is installed globally than you can use directly `webpack` but it is
+not recomended to use as global
+
+Create `webpack.config.js` with
+```
+module.exports = {
+  entry: './js/index.js',
+  mode: 'none'
+}
+```
 
 Entry point is module for which webpack start building out dependency graph
 (search for imports, requires, defines) and create bundles.
@@ -512,7 +535,7 @@ Output is where to emit the bundles (default `path` is `./dist`).
 Loader is used to process webpack modules (files that use `import`, `require()`,
 `@import`, `url()`) and use coffescript, typescript, sass processors. It has
 `test` property (which files should be transformed) and `use` which loader.
-Plugins are use to perform wider range of tasks like uglify.
+Plugins are used to perform wider range of tasks like uglify.
 `./dist/` is default output path folder, and you can open `gnome-open
 dist/index.html`.
 
@@ -595,7 +618,7 @@ generated stuff.
 // webpack.config.js
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Output management'
+      template: 'src/index.html'
     })
   ],
 ~~~
@@ -986,7 +1009,7 @@ import 'package-name/file-path/file.css'
 ```
 
 Webpacker supports babel preset out of box. In clear webpack you can enable
-bable with
+babel with
 ```
 // webpack.config.js
 const path = require('path')

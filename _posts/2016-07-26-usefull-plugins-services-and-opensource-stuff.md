@@ -1000,6 +1000,7 @@ Email templates
 
 * <https://tympanus.net/Development/PerspectivePageViewNavigation/index6.html#>
 * <https://tympanus.net/Tutorials/AnimatedBorderMenus/index5.html#>
+* news menu https://tympanus.net/Development/TripleViewLayout/
 * <https://tympanus.net/Tutorials/3DShadingWithBoxShadows/>
 * click to copy css effects for buttons and inputs https://cssfx.dev/
 * shikoba effect on button https://codepen.io/iamryanyu/embed/RNjRZz?height=410&theme-id=1&slug-hash=RNjRZz&default-tab=result&user=iamryanyu&embed-version=2&pen-title=Modern%20Button%20Collection#js-box
@@ -1030,7 +1031,8 @@ the content
 * menu icon hamburger animation https://codepen.io/aaroniker/pen/abzZbzR?utm_campaign=CSS%20Animation%20Weekly&utm_medium=email&utm_source=Revue%20newsletter
 * menu isometric https://codepen.io/ClementRoche/pen/yEPogx
 * menu in css, select sibling and opacity on all but the one being hovered https://medium.freecodecamp.org/how-to-make-the-impossible-possible-in-css-with-a-little-creativity-bd96bb42b29d
-
+* menu slidey navigation https://github.com/duleorlovic/slidey-nav
+  https://codepen.io/EricPorter/pen/YzKrqMp
 
 # Fonts and icons
 
