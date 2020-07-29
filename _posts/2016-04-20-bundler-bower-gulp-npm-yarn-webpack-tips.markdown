@@ -486,6 +486,7 @@ webpack
 <https://webpack.js.org/guides/getting-started/>
 /home/orlovic/rails_temp/webpack_guide
 
+Example using with webpack-dev-server for vue https://github.com/duleorlovic/slidey-nav
 Install using yarn
 ```
 yarn init -y
