@@ -3770,8 +3770,8 @@ class String
   end
 end
 
-## run tests with a command
-## rails test config/initializers/colorize.rb
+# run tests with a command
+# rails test config/initializers/colorize.rb
 # require 'minitest/autorun'
 # class Test < Minitest::Test
 #   def test_one_substring
