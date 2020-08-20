@@ -65,7 +65,7 @@ is defined on it. For importantHuman we used inline fragment.
 # Variables
 
 Query can have dynamic params which are interpolated on server. Variables has
-prefix $ and is followed by type.
+prefix `$` and is followed by type.
 Type can be (`Episode` is type): scalar, enum or input object type.
 If type ends with `!` than variable is required (otherwise optional).
 Variables can have default type.

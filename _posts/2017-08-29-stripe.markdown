@@ -107,7 +107,8 @@ stripe
       showError(result.error.message);
     } else {
       // The payment succeeded!
-      orderComplete(result.paymentIntent.id);
+      // orderComplete(result.paymentIntent.id);
+      form.submit();
     }
   });
 ~~~
@@ -119,6 +120,15 @@ Sample ids
 @stripe_payment_intent.id = "pi_1H3JL1Cmrv971Cndt8fOYDud"
 ```
 and this can be used for stripe url
+
+## Find or create Stripe customer
+
+You can create stripe customer on signup (if email column has uniq index). In
+case when users does not have uniq index on email column (can be created without
+email) than signup flow could create multiple same stripe customers. In this
+case you need to search if there exists stripe customer.
+```
+```
 
 # Example using subscriptions
 

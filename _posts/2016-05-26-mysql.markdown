@@ -134,3 +134,26 @@ layout: post
   # otherwise use cast
   relation.where('CAST(column AS CHAR) LIKE :search', search: "%#{search_value}%")
   ```
+
+* convert time zone. Only once, you need to upload timezone table using
+  `mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql` and than
+  you can use
+  ```
+  SELECT CONVERT_TZ('2004-01-01 12:00:00','UTC','MET') AS time
+  ```
+
+* on github actions there is an error 
+  ```
+  Mysql2::Error: Can't connect to local MySQL server through socket
+  '/var/run/mysqld/mysqld.sock' (2)
+  ```
+
+  solution is to start server, in yml it is
+  ```
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+      - run: |
+          sudo /etc/init.d/mysql start
+  ```

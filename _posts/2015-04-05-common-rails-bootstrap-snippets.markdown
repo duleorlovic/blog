@@ -927,17 +927,28 @@ than other thinks does not work). Imporant is
 If we (by default) cache `/node_modules` it will not build new version to public
 folder.
 
-~~~
+```
 # deploy to heroku
-heroku buildpacks:set https://github.com/heroku/heroku-buildpack-ruby
-heroku buildpacks:add --index 1 https://github.com/heroku/heroku-buildpack-nodejs
+heroku buildpacks:set heroku/ruby # https://github.com/heroku/heroku-buildpack-ruby
+heroku buildpacks:add --index 1 heroku/nodejs # https://github.com/heroku/heroku-buildpack-nodejs
 
 heroku buildpacks # should return  1. nodejs  2. ruby (latest wins :)
-# alternativelly, we can define then in file .buildpacks
-# echo 'https://github.com/heroku/heroku-buildpack-ruby
-# https://github.com/heroku/heroku-buildpack-nodejs ' > .buildpacks
-# heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
-~~~
+```
+Alternativelly, we can define then in file `.buildpacks` and configure multi
+build pack `heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git`
+```
+# .buildpacks
+https://github.com/heroku/heroku-buildpack-ruby
+https://github.com/heroku/heroku-buildpack-nodejs
+```
+
+For nodejs buildpack you can define version in package.json. When deploying
+Ruby, it will use latest nodejs and this `engines` property will be ignored.
+```
+  "engines": {
+    "node": "10.x"
+  }
+```
 
 ~~~
 git rm -rf public

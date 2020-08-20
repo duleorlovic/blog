@@ -25,4 +25,3 @@ talk on Balkan Ruby <https://youtu.be/lpkePkbYeoI?t=882>.
 <video  width="320" height="240" controls>
   <source src='https://github.com/duleorlovic/big_files/blob/master/balkan_ruby_duleorlovic_2018.mp4?raw=true' type="video/mp4">
 </video>
-<img src="{{ site.baseurl }}/assets/quadrathlon serbia duleorlovic.jpg" style="float: left; padding-right: 20px;">

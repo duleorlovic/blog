@@ -558,6 +558,11 @@ Format of emails can be validated using https://github.com/afair/email_address
 Email
 ```
 
+# Prevent spam
+
+https://support.google.com/mail/thread/3973530?hl=en
+
+
 # Testing emails
 
 https://www.engineyard.com/blog/testing-async-emails-rails-42
