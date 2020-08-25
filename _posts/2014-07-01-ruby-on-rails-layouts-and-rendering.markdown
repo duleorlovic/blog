@@ -179,6 +179,8 @@ Remember that it was underscored in erb, use hyphenated in sass
 `background-image: asset-url("logo.png")`. You can not use normal
 `url("logo.png")`. Note that asset path `asset-path` does not work, you need to
 use assets url.
+Note that `app/assets/images/some_folder/some_image.jpg` should be
+`asset-url('some_folder/some_image.jpg')`
 
 Note that for coffeescript you need to add extension `customers.coffee.erb` and
 use this initialization file

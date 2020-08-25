@@ -37,7 +37,7 @@ can accept as 2th param (choices) two variant:
 
   Preselected value can be defined as second param in `options_for_select([],
   selected: f.object.user_id`, or as 4th param in
-  `options_from_collection_for_select(User, :id, :email, selected:
+  `options_from_collection_for_select(User.all, :id, :email, selected:
   f.object.user_id)`. Note that it can be `value` or hash `selected: value`.
 
 as 3th param (options):
@@ -487,6 +487,8 @@ r = ActiveRecord::Base.connection.execute s
 r.each { |l| puts l }
 ```
 
+* to find table name `ApplicationRecord.connection.table_exists? :user_sessions`
+  `db_name=$(rails runner "puts ActiveRecord::Base.configurations['$env']['database']")`
 * for single item, always use `@post.destroy` instead of `@post.delete` because
 it propagates to all `has_many :comments, dependent: :destroy` (also need to
 define this dependent param). If you use delete or use destroy without
@@ -626,6 +628,8 @@ sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations[
   with `belongs_to :author, counter_cache: true` but than you need to have
   `authors.books_count` column. It is easier to have [sql for counter
   cache](https://medium.com/@eric.programmer/the-sql-alternative-to-counter-caches-59e2098b7d7#.cmuuhtayh)
+  same as in console `Author.select(%(authors.*, (SELECT COUNT(books.id) FROM
+  books WHERE author_id = authors.id) AS books_count))`
 
   ~~~
   # app/models/author.rb
@@ -3740,6 +3744,7 @@ print fetch('http://www.ruby-lang.org/')
   ~~~
 
 * colorize matching string in console
+
 ~~~
 # config/initializers/colorize.rb
 class String
@@ -4301,3 +4306,5 @@ end
   ```
   UserMailer.with(user: @user).welcome_email.deliver_later
   ```
+* upgrading from 4.2 to 5.0 https://www.fastruby.io/blog/rails/upgrades/upgrade-rails-from-4-2-to-5-0#config-files
+  * look at differences http://railsdiff.org/4.2.10/5.0.7.2

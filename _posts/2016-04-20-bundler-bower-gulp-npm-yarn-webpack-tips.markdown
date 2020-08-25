@@ -95,6 +95,13 @@ version it can be ugraded to `4.4`, so `~> 4.3` means that it can be `4.x` but
 at least `4.3`. You can actually use notation `4.x`.
 You should support broad range of gems `>= 3.2, < 5.0`,
 
+When you run `bundle update` and get several error messages like: `Bundler could
+not find compatible versions for gem "actionmailer":` than look at last message
+since other could be solved when we solve last one.
+Check that `bundler` is latest, use `~>` instead of `=` version.
+
+
+
 # RVM
 
 Install specific version and patch level `rvm install 2.3.3-p451`

@@ -157,3 +157,7 @@ layout: post
       - run: |
           sudo /etc/init.d/mysql start
   ```
+* show definition
+  ```
+  show columns from users;
+  ```
