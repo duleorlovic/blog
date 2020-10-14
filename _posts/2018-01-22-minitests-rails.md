@@ -292,7 +292,7 @@ They all have oposite `refute_` methods, or `assert_not`
 They all accept additional string param that will be error message.
 
 <http://guides.rubyonrails.org/testing.html#rails-specific-assertions>
-Rails also defines `assert_difference`, `assert_blank`, `assert_presence`,
+Rails also defines `assert_difference`, `assert_empty`, `assert_presence`,
 `assert_response`, `assert_redirected_to`, `assert_select` (assert select for
 custom html text is done with additional argument)
 https://stackoverflow.com/questions/4739261/is-there-a-way-to-use-assert-select-on-some-custom-html-text

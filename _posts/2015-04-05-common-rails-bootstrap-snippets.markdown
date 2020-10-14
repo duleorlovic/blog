@@ -48,6 +48,25 @@ rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ```
 
+Skip generators
+
+~~~
+vi config/environments/development.rb
+  config.i18n.enforce_available_locales = true
+  config.generators do |generate|
+    generate.helper false
+    generate.javascript_engine false
+    generate.request_specs false
+    generate.routing_specs false
+    generate.stylesheets false
+    generate.test_framework :rspec
+    generate.view_specs false
+  end
+  config.action_controller.action_on_unpermitted_parameters = :raise
+
+git add . && git commit -m "Skip generators"
+~~~
+
 You can start from template for devise and i18n
 https://github.com/duleorlovic/devise-views-i18n
 
@@ -573,26 +592,6 @@ rails runner UserMailer.hello.deliver
 For production see
 [send and receive emails in rails]({{ site.baseurl }}{% post_url 2016-05-17-send-and-receive-emails-in-rails %})
 
-# Skip generators
-
-~~~
-sed -i '/Rails::Application/a \
-    config.i18n.enforce_available_locales = true\
-    config.generators do |generate|\
-      generate.helper false\
-      generate.javascript_engine false\
-      generate.request_specs false\
-      generate.routing_specs false\
-      generate.stylesheets false\
-      generate.test_framework :rspec\
-      generate.view_specs false\
-    end\
-    config.action_controller.action_on_unpermitted_parameters = :raise\
-' config/application.rb
-git add . && git commit -m "Skip generators"
-~~~
-
-
 # Authentication
 
 ## Cleareance gem
@@ -775,7 +774,7 @@ heroku pg:reset
 heroku pg:push buyers_development postgresql-animate-86842
 ~~~
 
-Using fixtures on heroku is not allowed
+Using `rake db:fixtures:load` on heroku is not allowed
 ```
 WARNING: Rails was not able to disable referential integrity.
 
@@ -788,7 +787,20 @@ rails aborted!
 ```
 
 so you can load localy and push to production.
+Another way is to run rake task
+https://gist.github.com/pvcarrera/123280c58eca51ccebe3
+(remove `:reset` dependency) like on
+https://github.com/trkin/trk_datatables_demo/blob/master/lib/tasks/sample_data.rake
+
+But there could be error
 ```
+ActiveRecord::InvalidForeignKey: PG::ForeignKeyViolation: ERROR:  insert or update on table "posts" violates foreign key constraint "fk_rails_5b5ddfd518"
+DETAIL:  Key (user_id)=(338193910) is not present in table "users".
+```
+
+so just run again same command
+```
+heroku run rake db:populate_sample_data DISABLE_DATABASE_ENVIRONMENT_CHECK=1
 ```
 
 Remove clean cache on heroku
@@ -800,6 +812,14 @@ heroku repo:purge_cache -a appname
 git commit --allow-empty -m "Purge cache"
 git push heroku master
 ```
+
+Heroku ssl https://devcenter.heroku.com/articles/ssl-endpoint#setting-up-ssl-on-heroku
+```
+heroku certs
+heroku certs:info
+
+```
+
 ## Dump database
 
 Dump database from production for local inspection, you can download from

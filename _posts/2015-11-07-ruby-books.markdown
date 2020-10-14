@@ -420,10 +420,9 @@ is private but we can
       u.created_at <= #{Time.now} AND u.created_at >= #{Time.now - 7.days}
   SQL
 
-  # you can pass as parameter to method
-    Person.joins(<<-SQL).
-      LEFT JOIN people managers
-        ON managers.id = people.manager_id
+  # you can pass as parameter to method, with arguments also
+    Person.where(<<-SQL, my_time).
+      users.created_at > ?
     SQL
     where(managers: { id: Person.find_by!(name: 'Eve') })
   ~~~
@@ -1016,14 +1015,17 @@ end
 (`pluck` is for database query) and `assign_attributes` to self
 
   ~~~
-  user.assign_attributes other_user.slice :email, :phone
+  new_user.assign_attributes user.slice :email, :phone
   ~~~
 
-  On hash there is `values_at` but that is only values. To fetch all attributes
-  use `other_user.attributes` or specific ones `other_user.attributes.values_at
-  'id', 'email'` (if you have array of fields you need to expand
-  `other_user.attributes.values_at *fields`). NOTE that we use string instead of
-  symbols.
+  On hash there is `values_at` to extract and assign
+  ```
+  a, b = hash.values_at :a, :b
+  ```
+  To fetch all attributes use `user.attributes` or specific ones
+  `user.attributes.values_at 'id', 'email'` (if you have array of fields
+  you need to expand `user.attributes.values_at *fields`). NOTE that we
+  use string instead of symbols.
   On Rails 5.2 you can directly use slice on AR model `user.slice :id, :name`
   (before that you can do on `user.attributes.slice :id`)
 
@@ -1057,19 +1059,6 @@ key.to_s.titleize }`
 * to check if string starts with or ends with some substring prefix sufix you
 can use `s.start_with? prefix` or `s.end_with? suffix`
 * get substring based on position `s[3..-4]` or `s[3, s.length - 3]`
-
-# Rubocop
-
-In old project you can generate `.rubocop.yml` file that will ignore all
-offenses, than you can gradually fix one by one.
-
-~~~
-rubocop --auto-gen-config
-# this will generate .rubocop_todo.yml which you can include
-cat >> .rubocop.yml << HERE_DOC
-inherit_from: .rubocop_todo.yml
-HERE_DOC
-~~~
 
 # Url encode
 

@@ -87,12 +87,16 @@ that is:
   WHERE firstLast = "Bob Michael Jones"
   ~~~
 
-* after processing *FROM* clause, thie new virtual table is checked against
+  ORDER or parsing SQL is
+* 'FROM' -> 'WHERE' -> GROUP BY -> HAVING -> SELECT -> ORDER BY so you can not
+  use select aliases in where or group by or having. But `HAVING` can accept
+  aggregate functions (that is HAVING purpose).
+* after processing *FROM* clause, this new virtual table is checked against
   search conditions *WHERE*, for example: `WHERE s.date > CURRENT_DATE -
   INTERVAL '4 weeks'` This filtering is done *before* processing with *GROUP BY*
-  and *HAVING*. Also you can not use alias in WHERE `SELECT id as as_id FROM
-  table WHERE as_id = 1`. You should use `SELECT id AS as_id FROM table HAVING
-  as_id = 1`.
+  and *HAVING*. So you can not use alias in WHERE `SELECT id as as_id FROM table
+  WHERE as_id = 1`. You can only use columns that are available to select
+  `SELECT id AS as_id FROM table HAVING id = 1`.
 * `GROUP BY product_id, p.name, p.price, p.cost` and `HAVING sum(p.price *
   s.units) > 5000;`. If you group by primary key column than you can *SELECT*
   any column, but if you group by non primary than you need some [9.20.

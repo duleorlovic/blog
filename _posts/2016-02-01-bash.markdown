@@ -741,7 +741,7 @@ curl $u/expenses -i # or --include show also the response headers
 renders quickly. Only way to simulate high response time is with `sleep 5`
 * curl url must be inside `''`, for example `curl http://trk.in.rs?a=2&b=3`
 * to get json request use header tag Accept `curl -H "Accept: application/json" 
-http://localhost:3001/` or `curl -H 'Content-Type: application/json'
+http://localhost:3001/` or `curl -H 'Content-Type: application/json'`
 * set authorization header `curl $u/expenses -H 'Authorization: Token token="c576f0136149a2e2d9127b3901015545"'`
 * user agent `curl --user-agent "Mozilla/4.73 [en] (X11; U; Linux 2.2.15 i686)" $u`
 * http basic auth `curl $u -u username:password` or `curl $u -u $ADMIN_USERNAME:$ADMIN_PASSWORD'`. Another format is inside uri `curl http://$username:$password@localhost:3000`

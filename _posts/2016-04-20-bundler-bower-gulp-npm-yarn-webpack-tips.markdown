@@ -13,7 +13,8 @@ all available versions including pre release run `gem list rails -re
 
 To find help some `gem` command you can run `gem help list`
 
-For Gemfile you need to install `gem install bundler`. You can install old
+For Gemfile you need to install `gem install bundler` (use `gem update --system`
+if you are using system ruby). You can install old
 version `gem install bundler -v 1.9.2` but `bundle install` will use latest,
 unless you use specific `bundle _1.9.2_ install`. Bundle will call gem install.
 To see location you can use `bundle show my_gem` or `gem which my_gem`. Also you
@@ -57,8 +58,8 @@ I upgraded to rmagic 2.13.2 and follow this
 
 ~~~
 sudo apt-get install libmagickwand-dev
-sudo apt-get install graphicsmagick-imagemagick-compat
-PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
+# sudo apt-get install graphicsmagick-imagemagick-compat
+# PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
 ~~~
 
 To use gems in ruby scripts you can use `gem 'gemname'` for example
@@ -242,6 +243,15 @@ yarn create react-app my-app
 
 yarn global add create-react-app
 create-react-app my-app
+```
+
+If you have dependencies in your main package.json and also in some of dependend
+packages, than you might end up with two different versions of it. Use
+resolution to install only one version
+```
+  "resolutions": {
+    "jquery": "2.2.3"
+  },
 ```
 
 # Commonjs
@@ -493,7 +503,8 @@ webpack
 <https://webpack.js.org/guides/getting-started/>
 /home/orlovic/rails_temp/webpack_guide
 
-Example using with webpack-dev-server for vue https://github.com/duleorlovic/slidey-nav
+Example using with webpack-dev-server for vue
+https://github.com/duleorlovic/slidey-nav
 Install using yarn
 ```
 yarn init -y
@@ -516,7 +527,7 @@ or add to `package.json` build command
 // package.json
   "scripts": {
     "build": "webpack --config webpack.config.js --display-error-details"
-  }
+  },
 ~~~
 
 so you can run with

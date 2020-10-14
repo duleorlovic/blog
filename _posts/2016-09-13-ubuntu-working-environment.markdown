@@ -5,6 +5,10 @@ title: Ubuntu working environment
 
 # Ubuntu stuff
 
+* upgrading
+  ```
+  do-release-upgrade
+  ```
 * find ubuntu and linux version
 
   ~~~
@@ -28,12 +32,35 @@ localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
 For `curl` you need to export variable
 ```
 export https_proxy=socks5://localhost:1080 http_proxy=socks5://localhost:1080
+curl ifconfig.me
 ```
-For ruby, you can check public ip address with, but I do not know how to use
-proxy settings from env
+For ruby, you can check public ip address with
 ```
 require "net/http"
 Net::HTTP.get(URI("https://api.ipify.org"))
+```
+but ruby does not support proxy using socks. Here are some alternatives: polipo
+http proxy using socks upstream, torsocks wrapper
+https://superuser.com/questions/280129/http-proxy-over-ssh-not-socks
+```
+# /etc/polipo/config
+# proxyAddress = "::1"
+proxyPort = 8118
+socksParentProxy = "localhost:1080"
+socksProxyType = socks5
+```
+restart with
+```
+sudo /etc/init.d/polipo restart
+```
+for curl use
+```
+export https_proxy=localhost:8118 http_proxy=localhost:8118
+```
+but the best option is to change in system settings (it will add new env
+variable) and open new terminals, curl and ruby works fine
+```
+echo "puts Net::HTTP.get(URI('http://ifconfig.me'))" | ruby -rnet/http
 ```
 
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
@@ -179,6 +206,10 @@ settings as *CM108 Audio Controller* than you need to comment out last line
   * for example sound icon
 * dns or other network <chrome://net-internals>
 * T-rex game <chrome://network-error/-106>
+* disable url minimisation, go to
+  chrome://flags/#omnibox-ui-hide-steady-state-url-trivial-subdomains and set
+  Omnibox UI Hide Steady-State URL Path, Query, and Ref On Interaction to
+  Disabled
 
 ## Chrome plugins and extensions
 
@@ -498,6 +529,7 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
   # file 'input2.mp2'
   # ...
   ffmpeg -f concat -i textfile -fflags +genpts merged.mp4
+  ffmpeg -f concat -i mylist.txt -c copy -safe 0 output.mp4
   ```
 
 * slideshow using ffmpeg https://trac.ffmpeg.org/wiki/Slideshow
@@ -509,6 +541,10 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
   ```
   ffmpeg -i in.mov -vf "transpose=1" out.mov # 90 clockwise
   ffmpeg -i in.mov -vf "transpose=2" out.mov # 90 counter-clockwise
+  ```
+* cat video
+  ```
+  ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
   ```
 * default gnome screenshot folder `dconf-editor` find
   `org->gnome->gnome-screenshot-> auto-save-directory ->
@@ -764,7 +800,7 @@ draw.draw image
 * to change default program open with file type, you can right click,
 properties, set default.
 another way is to edit `vi ~/.local/share/applications/defaults.list`
-and run `sudo update-mime'
+and run `sudo update-mime`
 ```
 ```
 * read only usb, can't create file since usb is readonly https://askubuntu.com/questions/781223/physical-block-size-is-2048-bytes-but-linux-says-it-is-512-when-formatting-us
@@ -832,3 +868,17 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   # or
   identify image.png
   ```
+* workspace grid is in one line, to use 2x2 matrix you can use this extension
+  https://github.com/mzur/gnome-shell-wsmatrix
+  Installation is using the side (browser extension and native host connector `$
+  sudo apt-get install chrome-gnome-shell` for me, host connector is not
+  detected in firefox)
+  By default, only primary monitor windows are switching workspace, to swich all
+  windows you should
+  https://askubuntu.com/questions/1059479/dual-monitor-workspaces-in-ubuntu-18-04
+  install *Gnome Tweaks* app or
+  ```
+  gsettings set org.gnome.mutter workspaces-only-on-primary false
+  ```
+
+

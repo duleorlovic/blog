@@ -175,9 +175,11 @@ replace `page.body.gsub "\n", ''`
 
 * test if input has value:
   * `expect(page).to have_xpath("//input[@value='John']")`
-  * `expect(page).to have_selector("input[value='John']")`
+  * `expect(page).to have_selector("input[value='John']")`. To match disabled
+    option you can use `expect(page).to have_selector(:option, 'Name of o',
+    disabled: true)`
   * `expect(page).to have_field('Your name', with: 'John')` this does not match
-  disabled input field. of you want to match disabled use `have_field('Your
+  disabled input field. If you want to match disabled use `have_field('Your
   name', disabled: true, with: 'John')`
 
 

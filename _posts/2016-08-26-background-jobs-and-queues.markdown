@@ -82,7 +82,8 @@ class Person::RemoveInaccessibleRecordsJob < ApplicationJob
 end
 ~~~
 
-Invoke jobs with attributes `wait` and `wait_until`
+Invoke jobs with attributes `wait` and `wait_until`. Note that in tests they
+will be performed immediatelly.
 
 ~~~
 MyTodoJob.perform_later args
@@ -487,6 +488,49 @@ Configuration is in `config/application.rb` to set
 `config.active_job.queue_adapter = :delayed_job`. Note that it is not fully
 compatible with activejob (does not use default mailer queue name, starts
 immediatelly and in background with rake jobs:work)
+In test mode it defaults to running immediatelly but you can configure
+```
+# spec/a/queue_helper.rb
+module QueueHelper
+  # by default runing background job is inline (in realtime) ie
+  # Delayed::Worker.delay_jobs = false
+  # use this method if you want to run in background and delay
+  # or use argument for example: with_delay_jobs_later: true
+  def with_delay_jobs_later
+    initial_delay_jobs = Delayed::Worker.delay_jobs
+    Delayed::Worker.delay_jobs = true
+    yield
+    Delayed::Worker.delay_jobs = initial_delay_jobs
+  end
+
+  # To use ActiveJob matchers set `ActiveJob::Base.queue_adapter = :test`
+  def with_test_queue_adapter
+    initial_queue_adapter = ActiveJob::Base.queue_adapter # ActiveJob::QueueAdapters::DelayedJobAdapter
+    ActiveJob::Base.queue_adapter = :test
+    yield
+    ActiveJob::Base.queue_adapter = initial_queue_adapter
+  end
+
+  def manually_run_jobs
+    job = Delayed::Job.first
+    while job
+      job.invoke_job # this does not remove job if successfully, so you need to do
+      job.destroy # that manually
+      job = Delayed::Job.first
+    end
+  end
+end
+RSpec.configure do |config|
+  config.include(QueueHelper)
+
+  config.around :example, :with_delay_jobs_later do |example|
+    initial_delay_jobs = Delayed::Worker.delay_jobs
+    Delayed::Worker.delay_jobs = true
+    example.run
+    Delayed::Worker.delay_jobs = initial_delay_jobs
+  end
+end
+```
 
 Running is using gem `daemons` (so put it in your Gemfile) and then `rails g
 delayed_job` will generate script file `bin/delayed_job` which you can use
@@ -655,7 +699,7 @@ class ProductTest < ActionDispatch::IntegrationTest
   # or you can assert that it is enqueued
   assert_enqueued_jobs 1 do
   # or you can assert how it is called `_with`
-  assert_enqueued_with job: ActionMailer::DeliveryJob, args: 1 do
+  assert_enqueued_with job: ActionMailer::DeliveryJob, args: [1, 'a'] do
   include ActionMailer::TestHelper
   test 'mail' do
     assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
@@ -668,8 +712,20 @@ end
 another way is to include
 
 To rescue from exception in background sending emails you can reopen DeliveryJob
-anywhere, for example in ApplicationMailer. If you want to `rescue_from` in some
-other non-rails class you can `include ActiveSupport::Rescuable`
+for example in initializer file (I tried on some other place but it does not
+catch up)
+```
+# config/initializers/action_mailer.rb
+ActionMailer::DeliveryJob.rescue_from(StandardError) do |exception|
+  puts '*******************rescue'
+  byebug
+  Rails.logger.error "Original record not found: #{self}"
+  a=3
+end
+
+```
+If you want to `rescue_from` in some other non-rails class you can `include
+ActiveSupport::Rescuable`
 
 If you use Delayed::Job you can write testing in three ways:
 First is when `Delayed::Worker.delay_jobs = true`

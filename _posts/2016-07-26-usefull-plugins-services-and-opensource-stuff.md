@@ -742,6 +742,8 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 * [google
   charts](https://developers.google.com/chart/interactive/docs/gallery/linechart#curving-the-lines)
   can be curved but can not be area in the same time https://github.com/google/google-visualization-issues/issues/2110
+* [highcharts](https://www.highcharts.com/demo) $500
+* [echarts](https://echarts.apache.org/examples/en/index.html) free
 * [chartjs](http://www.chartjs.org/). Labels and datasets should be inside
   `data` attribute. Labels are for all charts.
 
@@ -958,6 +960,14 @@ opensource market peer-to-peer marketplace
 * http status live site https://github.com/brotandgames/ciao
 * chat support intercom https://www.chatwoot.com/docs/channels/website
 
+# Games
+
+* http://slither.io/ bots https://github.com/joetex/SlitherAStar
+  http://dahquan.github.io/rattlesnake/examples/feedme.html
+  https://github.com/j-c-m/Slither.io-bot
+  https://github.com/ErmiyaEskandary/Slither.io-bot#visual-tutorial
+  https://www.youtube.com/watch?v=eicx_UkeVhI
+
 # Templates
 
 * [gentelella](https://github.com/puikinsh/gentelella)
@@ -1096,7 +1106,7 @@ ddclient -daemon=0 -debug  -noquiet
 ```
 I got no SUCCESS or FAILED or WARNING response
 ```
-root@trk:/home/orlovic# ddclient -daemon=0 -debug  -noquiet
+ddclient -daemon=0 -debug  -noquiet
 DEBUG:    proxy  = 
 DEBUG:    url    = checkip.dyndns.org/
 DEBUG:    server = checkip.dyndns.org

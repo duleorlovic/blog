@@ -168,7 +168,7 @@ Recaptcha.configure do |config|
 end
 
 # config/secrets.yml
-  # Google recaptcha
+  # Google recaptcha https://www.google.com/u/0/recaptcha/admin/
   google_recaptcha_site_key: <%= ENV['GOOGLE_RECAPTCHA_SITE_KEY'] %>
   google_recaptcha_secret_key: <%= ENV['GOOGLE_RECAPTCHA_SECRET_KEY'] %>
 ```

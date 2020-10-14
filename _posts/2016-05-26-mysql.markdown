@@ -161,3 +161,26 @@ layout: post
   ```
   show columns from users;
   ```
+* mysql settings could be different on production and localhost, for example
+  ```
+  ActiveRecord::StatementInvalid (Mysql2::Error: Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column 'trk_datatables_demo_development.comments.body' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by):
+  ```
+  to inspect sql more you can run
+  ```
+  SELECT @@session.sql_mode;
++-----------------------------------------------------------------------------------------------------------------------+
+| @@session.sql_mode                                                                                                    |
++-----------------------------------------------------------------------------------------------------------------------+
+| ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION |
++-----------------------------------------------------------------------------------------------------------------------+
+  ```
+  so to update you can run
+  ```
+  SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';
+  ```
+  but this is only until it is restarted. To make it permanent add to
+  ```
+  # /etc/mysql/mysql.conf.d/mysqld.cnf
+  [mysqld]
+  sql-mode = NO_ENGINE_SUBSTITUTION
+  ```

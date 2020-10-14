@@ -33,7 +33,8 @@ can accept as 2th param (choices) two variant:
 * flat collection `[['name', 123],...]`
 * if you need manual tags `<select><option></option></select>` than you can use
 `<%= select tag "statuses[]", options_for_select([[]], selected: 1) %>`
-* nested collection `grouped_options_for_select()`
+* nested collection `grouped_options_for_select()` (also exists
+  `f.grouped_collection_select`)
 
   Preselected value can be defined as second param in `options_for_select([],
   selected: f.object.user_id`, or as 4th param in
@@ -658,6 +659,8 @@ sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations[
   <%= @author.books_count %>
   ~~~
 
+  but remember, using `includes` have a problem with custom name calculated
+  columns, so better is to use left join.
 
 ## Migrations:
 
@@ -730,14 +733,18 @@ manually perform run specific single or all migrations
 ~~~
 # status
 rake db:migrate:status
+
 # all including until this version
 rake db:migrate VERSION=20161114162031`
+
 # only this migration file
 rake db:migrate:up VERSION=20161114162031`
+
 # reverse if it is reversible
 rake db:migrate:down VERSION=20161114162031`
+
 # to remove migration so you can redo
-mysql> DELETE FROM schema_migrations WHERE version = 20161114162031
+mysql> DELETE FROM schema_migrations WHERE version = 20161114162031;
 ~~~
 
 if you want to redo migration (revert and migrate again) you can use `redo` 
@@ -841,7 +848,7 @@ in has_many through association, use option `source: :user`
 
 Note that `t.references` should be used with `foreign_key: true, null: false`
 since foreign_key is not automatically used (`t.references` automatically add
-`index`).
+`index`, so use `index: false` if you going to create composite index).
 Note that `t.belongs_to` by default use `index: false`, so you need to use
 `index: true` (or `add_index` later) (`add_column :users, :token, :string,
 index: true` will not create index, you need to use `add_index` separatelly).
@@ -885,7 +892,7 @@ All foreign keys need to have index.
 You can use `add_reference` (adding column and index) note that second param is
 in singular.
 If you want to add or remove reference in migration `rails g migration
-add_user_to_leads user:references` which will generate
+add_user_to_leads user:references` (note plurar here) which will generate
 
 ~~~
 class AddUserToLeads < ActiveRecord::Migration
@@ -896,8 +903,8 @@ class AddUserToLeads < ActiveRecord::Migration
 end
 ~~~
 
-For polymorphic associations `projectable_id` and `projectable_type` you can create in
-migration `rails g model project projectable:references{polymorphic}`
+For polymorphic associations `projectable_id` and `projectable_type` you can
+create in migration `rails g model project projectable:references{polymorphic}`
 
 ~~~
 class Organization < ActiveRecord::Base
@@ -915,6 +922,7 @@ end
 
 You can eager load polymorphic association https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#module-ActiveRecord::Associations::ClassMethods-label-Eager+loading+of+associations
 but can not use it in where https://stackoverflow.com/questions/16123492/eager-load-polymorphic
+You can use `User.preload(:paymenable)` or define specific associations:
 For using in where you need to define specific associations (note: you need to
 add `optional: true`)
 ```
@@ -963,6 +971,18 @@ class AddUniqContacts < ActiveRecord::Migration
   end
 end
 ~~~
+
+When you have composite index than you do not need to create index for first
+column (ie you can perform fast query on first column or on first and second
+column, but on on second column), but still need index for second column (or add
+index in reverse direction)
+https://github.com/gregnavis/active_record_doctor#removing-extraneous-indexes
+
+You can also create ordered index (for example listing all posts and users
+sorted alphabetically).
+```
+add_index :users_posts, [:user_id, :post_id], order: { user_id: :desc }
+```
 
 Do not add index for tables that has a lot or removing, since perfomance will be
 bad. Also huge tables need huge indexes, so pay attention on size.
@@ -2273,6 +2293,17 @@ reader.pages.first.fonts.first
 ```
 For images https://github.com/yob/pdf-reader/blob/master/examples/extract_images.rb
 
+This is used for test pdf rendering. There is also
+https://github.com/prawnpdf/pdf-inspector but I do not see any advantage of pdf
+inspector (which uses pdf reader).
+
+```
+subscriber_invoice = create :subscriber_invoice, invoice_header_text: 'My Header'
+pdf = SubscriberInvoicePdf.new subscriber_invoice
+reader = PDF::Reader.new(StringIO.new(pdf.render))
+expect(reader.pages.first.text).to include 'My Header'
+```
+
 ## Docx MS word
 
 https://github.com/urvin-compliance/caracal
@@ -2306,6 +2337,39 @@ My style in rails models use following order to best practice
 1. instance methods `def full_name`
 1. validate definitions `def _check_nested_resource`
 1. callbacks definitions `def _default_values_on_create`
+
+# Rubocop
+
+My preferred configuration is
+https://github.com/duleorlovic/config/blob/master/.rubocop.yml
+
+In old project you can generate `.rubocop.yml` file that will ignore all
+offenses, than you can gradually fix one by one.
+
+~~~
+rubocop --auto-gen-config
+# this will generate .rubocop_todo.yml which you can include
+cat >> .rubocop.yml << HERE_DOC
+inherit_from: .rubocop_todo.yml
+HERE_DOC
+~~~
+
+To disable specific folder you can use Exclude
+```
+# config, tasks and test for setup data could be very long
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/**/*'
+    - 'test/**/*'
+    - 'config/**/*'
+```
+
+To auto fix use `--auto-correct` or shorthand `-a`
+```
+rubocop -a
+# to run only specific cop
+rubocop -a --only 'Rails/HttpPositionalArguments'
+```
 
 # Geocoder
 
@@ -2805,8 +2869,8 @@ that instead gems version.
   method which you can use like `logger.debug my_var`
 * if you want to join some fields with `,` but do not know if they all exists,
   you can `[phone1, phone2].keep_if(&:present?).join(', ')`
-* use include for n+1 query (bullet) and joins when you don't need associated
-  models. Both are using INNER JOIN
+* use include for n+1 query (bullet) and joins when you don't need to reference
+  associated models. Both are using INNER JOIN
   * `Comment.all(include: :user, conditions: { users: { admin: true}})` will
     load also the user model
 * [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
@@ -2897,12 +2961,13 @@ you need to explicitly reference them `includes(user:
 * note that you should not use `joins` and `includes` in the same time, for the
 same columns (you can use it for different columns). Joins
 could be replaced with `references`. But I have some problems with `references`
-since it remove my custom selected data, so instead `references` I use
-`joins('LEFT OUTER JOIN sports ON sports.id = users.sport_id')` and `distinct`.
-Distinct is needed to remove duplicated since inner join with has_many relation
-(also habtm) returns multiple results (single is only for belongs_to relation).
-Here is example of how includes/references do not let me use counts as
-calculated columns, but joins let works fine (even .to_sql is similar)
+since it remove my custom selected data like calculated columns, so instead
+`references` I use `joins('LEFT OUTER JOIN sports ON sports.id =
+users.sport_id')` and `distinct`.  Distinct is needed to remove duplicated since
+inner join with has_many relation (also habtm) returns multiple results (single
+is only for belongs_to relation).
+Here is example of how includes/references is similar to left join but includes
+is using all `:projects` columns
 ~~~
 all = Model
   .select(%(
@@ -2911,21 +2976,52 @@ all = Model
   ))
   .includes(:projects)
   .references(:projects)
-all.last.projects_count # does not work
+  .group('users.id')
+all.last.projects_count # 123
+
 all = Model
   .select(%(
     users.id,
     COUNT(projects.id) as projects_count
   ))
-  .joins(%(
-    LEFT JOIN projects ON user_id = users.id
-  ))
-
-  # do not use .joins(:projects) since it will inner join, ie you will get rows
-  # for each user and each project.
-  # It is fine if it is belongs_to relation (only one corresponding project)
+  .left_outer_joins(:posts)
+  .group('users.id')
   all.last.projects_count # here it works
 ~~~
+You need to use `group` and then there is a problem if you want to use
+`all.count` on grouped relation:
+```
+ActiveRecord::StatementInvalid (PG::SyntaxError: ERROR:  syntax error at or near "AS")
+LINE 1: SELECT COUNT(users.*, COUNT(posts.id) AS posts_count) AS cou...
+```
+which is solved using `all_grouped.returns_count_sum.count`
+```
+User.select('users.*, COUNT(posts.id) AS posts_count').left_outer_joins(:posts).group('users.id').returns_count_sum.count
+```
+So instead of COUNT JOIN GROUP you can use subquery (double select wrapped
+select)
+```
+User.select('users.*, (SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) AS posts_count')
+```
+
+When you need to apply filtering WHERE for calculated columns, since in where
+you can not use aliases nor aggregate functions, you can use three approaches:
+* use database view
+* if you are using join and group than you can apply `HAVING` with repeated cond
+```
+User.select('users.*, COUNT(posts.id) AS posts_count').left_outer_joins(:posts).group('users.id').having('COUNT(posts.id) > 1')
+```
+* if you use GROUP_CONCAT `posts.body` (postgres is string_agg) (instead of
+  COUNT) than you can still use WHERE for column `posts.body` (it is existing
+  column, not new custom calculated column) so it works out of the box
+* if you are using subquery than you can repeat it in where condition (note that
+  we are not using aggregate in where condition, we are using subquery)
+```
+User.select('users.*, (SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) AS posts_count').where('(SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) > 1')
+# you can also use subquery in join group relation
+User.select('users.*, COUNT(posts.id) AS posts_count').left_outer_joins(:posts).group('users.id').where('(SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) > 1')
+```
+
 Rails 5 has method
 [left_outer_joins](http://edgeguides.rubyonrails.org/active_record_querying.html#left-outer-joins)
 * when you need to eager load for a single object (show action) than you can
@@ -4128,6 +4224,40 @@ end
   ```
   curl -X POST -g "localhost:3001/subscribers" -d '{"subscriber":[]}'
   ```
+* you can not use `serialize :custom_sign_up_values,
+  ActionController::Parameters` since when using
+  ```
+  def sign_up_params
+    params.require(:subscriber).permit(
+      custom_sign_up_values: current_location.custom_sign_up_labels},
+      )
+    end
+  end
+  ```
+  it will be converted to HashWithIndifferentAccess and error will be raised
+  ```
+    ActiveRecord::SerializationTypeMismatch:
+       can't serialize `custom_sign_up_values`: was supposed to be a ActionController::Parameters, but was a ActiveSupport::HashWithIndifferentAccess. -- {"Room#"=>"room_number", "Passport ID"=>"passport_id"}
+  ```
+  so for existing records you should update https://stackoverflow.com/questions/48773769/existing-data-serialized-as-hash-produces-error-when-upgrading-to-rails-5
+  ```
+  # app/models/model_hack.rb
+  # Call with: ModelHack.where.not(custom_sign_up_values: nil).find_each {|m| m.update_custom_sign_up_values! }
+  class ModelHack < ApplicationRecord
+    self.table_name = 'subscribers'
+    serialize :custom_sign_up_values
+
+    def update_custom_sign_up_values!
+      return unless custom_sign_up_values.present?
+
+      h = custom_sign_up_values
+      return if h.is_a? Hash
+
+      self.custom_sign_up_values = h.to_unsafe_h.to_h
+      save!
+    end
+  end
+  ```
 * for rails helpers, when you want to use block syntax for your helper than you
   should use *capture* https://stackoverflow.com/questions/32985379/appending-to-yield-in-content-tag because what is inside block will be rendered two times on the page (capture is not required if *yield* is inside *content_tag*)
   ```
@@ -4308,3 +4438,13 @@ end
   ```
 * upgrading from 4.2 to 5.0 https://www.fastruby.io/blog/rails/upgrades/upgrade-rails-from-4-2-to-5-0#config-files
   * look at differences http://railsdiff.org/4.2.10/5.0.7.2
+  * change `gem 'rails'. '~> 5.0.0'` and run `bundle update rails` to see which
+    gems should also be upgraded
+* debug find where it is redirected use overwritted redirect_to
+  ```
+  # app/controllers/application_controller.rb
+  def redirect_to(options = {}, response_status = {})
+    ::Rails.logger.error("Redirected by #{caller(1).first rescue "unknown"}")
+    super(options, response_status)
+  end
+  ```

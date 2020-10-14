@@ -441,6 +441,16 @@ Jekyll contains [variables](https://jekyllrb.com/docs/variables/): `site`,
   they are descending order. To access most recent you can use loop `{ % for
   post in site.posts limit: 3 %}` or assign `{% assign post = site.posts.first
   %}`
+  Inside loops you can `break` or `continue`. To filter based on specific
+  property you can use `where`
+  ```
+  {% assign posts=site.posts | where:"lang", page.lang %}
+  {% for post in posts %}
+      <li>
+          <a href="{{ post.url }}">{{ post.title }}</a>
+      </li>
+  {% endfor %}
+  ```
 * `site.pages` array of all pages `Jekyll::Page`
 
 
@@ -740,6 +750,13 @@ relative_url }}`
 (for example `.md`).
 
 
+For string manipulation you can use `replace` filters. For interpolation you
+need to use `capture`
+```
+{% capture extension %}{{ page.lang| append: '.html' }}{% endcapture %}
+/blog{{ page.url | replace: extension, 'sr.html' }}
+```
+
 Note that in liquid version 4 you can use `concat` filter but it is not
 supported in jekyll 3.4 (liquid 3.0.6) [concat
 example](https://help.shopify.com/themes/liquid/filters/array-filters#concat).
@@ -870,9 +887,7 @@ src="assets/js/cart.js"></script>`
 # Rails
 
 https://www.sitepoint.com/jekyll-rails/
-
-```
-```
+Example on https://github.com/trkin/premesti.se/tree/master/blog
 
 # Tips
 
@@ -956,3 +971,23 @@ https://mademistakes.com/articles/using-jekyll-2016/
   https://github.com/sandoche/Jekyll-webpack-boilerplate/pull/26
 
   To rebuild you need to stop and start again `npm start`
+* data is yml and you can access
+  ```
+  # _data/prices.yml
+  kajak_jednosed: 800
+  kajak_dvosed: 1200
+  ```
+  ```
+  {{ site.data.prices.kajak_jednosed }}
+  {{ site.data.prices['kajak_jednosed'] }}
+  ```
+
+  similarly you can translate
+  ```
+  # _data/t.yml
+  title:
+    en: Hi
+    sr: Cao
+
+  {{ site.data.t['title'][page.lang] }}
+  ```

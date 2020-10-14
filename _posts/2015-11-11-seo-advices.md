@@ -333,6 +333,7 @@ You can add head tags for facebook [open graph protocol](http://ogp.me/). In
 Rails it will be like:
 
 ~~~
+
 / haml
 - content_for :head do
   %meta{property: "og:type",        content: "article"}
@@ -346,6 +347,9 @@ Rails it will be like:
   %meta{name: "twitter:title",      content: "MySite | #{@post.title}"}
   %meta{name: "twitter:image",      content: share_image_url(@post)}
   %meta{name: "twitter:url",        content: post_url(@post.id)}
+
+# at least you have to have one meta tag og:image for sharing on viber
+    <meta property="og:image" content="<%= asset_url("logo.jpg") %>" />
 ~~~
 
 `og:title` usually have same content as `<title>` and `og:description` is the

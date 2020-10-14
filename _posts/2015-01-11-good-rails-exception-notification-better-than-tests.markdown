@@ -329,7 +329,9 @@ Delayed::Worker.delay_jobs = !Rails.env.test?
 module CustomFailedJob
   def handle_failed_job(job, error)
     super
-    ExceptionNotifier.notify_exception(error, data: {job: job})
+    return if error.ignore_please && job.attempts < Delayed::Worker.max_attempts
+
+    ExceptionNotifier.notify_exception(error, data: { job: job })
   end
 end
 

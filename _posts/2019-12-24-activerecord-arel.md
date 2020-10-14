@@ -11,7 +11,7 @@ https://www.youtube.com/watch?v=ShPAxNcLm3o&feature=youtu.be
 `left_outer_joins` is available in [recent
 rails](https://guides.rubyonrails.org/active_record_querying.html#left-outer-joins)
 
-Online SQL to Arel http://www.scuttle.io/
+Online SQL to Arel [www.scuttle.io](http://www.scuttle.io) EXCELLENT
 Playground https://jpospisil.com/2014/06/16/the-definitive-guide-to-arel-the-sql-manager-for-ruby.html
 ```
 bundle console
@@ -53,6 +53,15 @@ Arel::Nodes::NamedFunction.new(
   'concat',
   [arel_table[:first_name], SEPARATOR, arel_table[:last_name]]
 )
+```
+
+True relation example is (found using online arel editor http://www.scuttle.io )
+```
+Arel::Nodes::SqlLiteral.new('1').eq(1)
+
+# Arel::Nodes::SqlLiteral.new('true') is also true relation, but can not be
+# first, ie Arel::Nodes::SqlLiteral.new('true').and raises error
+# NoMethodError (undefined method `and' for "true":Arel::Nodes::SqlLiteral):
 ```
 
 To execute you can use

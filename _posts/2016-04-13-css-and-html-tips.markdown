@@ -313,7 +313,7 @@ Instead of scss
 }
 ~~~
 
-To expand block on click use input checkbox
+To expand block on click use input checkbox (non js toggle)
 https://www.sitepoint.com/pure-css-off-screen-navigation-menu/
 
 Note that input is before label, which is before target

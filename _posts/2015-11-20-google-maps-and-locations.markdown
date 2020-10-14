@@ -637,3 +637,163 @@ can use wifi or tower ids to give you latLng.
 
 https://developer.apple.com/videos/play/wwdc2018/212/
 
+# GeoJSON
+
+https://tools.ietf.org/html/rfc7946
+Feature object represents a spatially bounded thing, has `type='Feature'` and
+`geometry` as Geometry object, `properties` member. Geometry object is one of
+the seven geometry types: `Point, MultiPoint, LineString, MultiLineString,
+Polygon, MultiPolygon and GeometryCollection` which contains `coordinates` array
+first is Longitude and second is Latitude (then optionally elevation)
+```
+var geojsonFeature = {
+    "type": "Feature",
+    "properties": {
+        "name": "Coors Field",
+        "amenity": "Baseball Stadium",
+        "popupContent": "This is where the Rockies play!"
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-104.99404, 39.75621]
+    }
+};
+```
+
+To add GeoJSON to leaflet you can use
+```
+  L.geoJSON(stores).addTo(mymap)
+// or add data later
+  var myLayer = L.geoJSON().addTo(mymap)
+  myLayer.addData(stores)
+```
+
+You can style objects with color, wight, opacity
+```
+L.geoJSON(stores, {
+  style: {
+    'color': 'red',
+    'weight': 4,
+    'opacity': 1,
+  }
+}).addTo(mymap)
+
+// or using funcion
+
+L.geoJSON(stores, {
+  style: function(feature) {
+    switch (feauture.properties.myProp) {
+    case 'Red': return { color: 'red' }
+    }
+  }
+)
+```
+
+For points you can use pointToLayer to render circle instead of default marker
+```
+  L.geoJSON(geojsonFeature, {
+    pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, geojsonMarkerOptions);
+    }
+  }).addTo(mymap)
+```
+Use iteration onEachFeature to add popups
+```
+function onEachFeature(feature, layer) {
+  if (feature.properties && feature.properties.popupContent) {
+    layer.bindPopup(feature.properties.popupContent);
+  }
+}
+
+L.geoJSON(geojsonFeature, {
+    onEachFeature: onEachFeature
+}).addTo(map);
+```
+Use `filter` function to skip redenring feature.
+
+# Leaflet
+
+```
+  var mymap = L.map('mapid').setView([45.26, 19.83], 10)
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.1w', {
+    attribution: 'dule',
+    id: 'mapbox/streets-v11', // mapbox/satellite-v9
+    zoomOffset: -1,
+    tileSize: 512,
+  }).addTo(mymap)
+
+// z is zoom level, x, and y are lat long, id is type of tile
+// there is no logic explanation of zoomOffset: -1 and tileSize: 512
+// On https://leafletjs.com/examples/quick-start/ I see
+// Because this API returns 512x512 tiles by default (instead of 256x256), we will also have to explicitly specify this and offset our zoom by a value of -1.
+```
+Marker, polygon and Popups
+```
+  var marker = L.marker([45.26, 19.83]).addTo(mymap)
+  var polygon = L.polygon([
+    [45.20, 19.4],
+    [45.50, 19.9],
+    [45.00, 19.9],
+  ]).addTo(mymap)
+  marker.bindPopup('<b>Hi</b> I am a popup').openPopup()
+  polygon.bindPopup('I amd a polygon')
+
+  var popup = L.popup()
+    .setLatLng([45.3, 19.5])
+    .setContent('I am a standalong popup')
+    .openOn(mymap) // .openOn is same as addTo but will close previously opened popups
+```
+
+Events
+
+Each element has it's own events, but all have `click` with argument which has
+`e.latlng` object.
+https://leafletjs.com/reference-1.7.1.html#map-event
+```
+  var clickPopup = L.popup()
+  function onMapClick(e) {
+    clickPopup
+      .setLatLng(e.latlng)
+      .setContent(`You clicked on ${e.latlng.toString()}`)
+      .openOn(mymap)
+  }
+  mymap.on('click', onMapClick)
+```
+Ask for browser location
+```
+map.locate({setView: true, maxZoom: 16});
+
+function onLocationFound(e) {
+    var radius = e.accuracy;
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(e.latlng, radius).addTo(map);
+}
+map.on('locationfound', onLocationFound);
+
+function onLocationError(e) {
+    alert(e.message);
+}
+map.on('locationerror', onLocationError);
+```
+
+# Mapbox
+
+https://docs.mapbox.com/help/tutorials/building-a-store-locator/#add-structure
+https://docs.mapbox.com/help/tutorials/building-a-store-locator-js/ (legacy)
+https://docs.mapbox.com/help/troubleshooting/transition-from-mapbox-js-to-mapbox-gl-js/
+
+On rails you need to prevent babel for transpiling nodeModules
+```
+# config/webpack/environment.js
+const { environment } = require('@rails/webpacker')
+
+// https://github.com/visgl/react-map-gl/issues/874#issuecomment-524404219
+// Preventing Babel from transpiling NodeModules packages
+environment.loaders.delete('nodeModules');
+
+module.exports = environment
+```

@@ -38,6 +38,13 @@ sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libread
 # click Enter
 ```
 
+Installing latest node can be done with `n` package
+```
+yarn global add n
+yarn global bin
+sudo /home/ubuntu/.yarn/bin/n latest
+```
+
 install rbenv and ruby as deploy user
 ```
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -64,6 +71,20 @@ RAILS_MASTER_KEY=1234
 echo 'export RAILS_ENV=production' >> ~/.bashrc
 echo '# this will load master key in env' >> ~/.bashrc
 echo 'export $(cat ~/move_index/.rbenv-vars)' >> ~/.bashrc
+```
+or add this task to copy master key from shared to config folder. You need to
+create shared file `vi /var/www/my_app/shared/master.key`.
+```
+# config/deploy.rb
+namespace :config do
+   task :symlink do
+      on roles(:app) do
+        execute :ln, "-s #{shared_path}/master.key #{release_path}/config/master.key"
+      end
+   end
+end
+
+after 'deploy:symlink:shared', 'config:symlink'
 ```
 
 passenger and nginx

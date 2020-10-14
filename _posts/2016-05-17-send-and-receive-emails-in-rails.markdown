@@ -69,7 +69,7 @@ email, for example `gmail.com`).
 
 If you see error in logs:
 
-~~~
+```
 2018-06-18T09:13:29.371621+00:00 app[web.1]: An error occurred when sending a notification using 'email' notifier. Net::SMTPAuthenticationError: 534-5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbu5
 
 Username and Password not accepted. Learn more
@@ -79,19 +79,21 @@ You need to Allow less secure apps https://support.google.com/accounts/answer/60
 
 Sometimes you can send from your IP but not from Heroku IP address.
 
+```
 For error  Errno::ECONNREFUSED (Connection refused - connect(2) for "localhost" port 25
+```
 the problem occurs when you in initializers (for example
 config/initializers/devise.rb or config/initializers/exception_notification.rb)
-use ApplicationMailer::MAILER_SENDER or some other constain from Rails classes
-Note that this occurs only on production. So use only contstants from
+use ApplicationMailer::MAILER_SENDER or some other constant from Rails classes
+Note that this occurs only on production. So use only constants from
 initializers.
 ```
-Rails.configuration.action_mailer.smtp_settings
 Rails.application.config.action_mailer.smtp_settings
+# it is the same as
+Rails.configuration.action_mailer.smtp_settings
 => {:address=>"smtp.gmail.com", :port=>587, :authentication=>"plain", :enable_starttls_auto=>true, :user_name=>...
 Rails.configuration.action_mailer.delivery_method
 ```
-
 
 ## Sendgrid
 
@@ -103,6 +105,7 @@ field any domain, but in gmail it shows that message is from: `My Company
 support@example.com via sendgrid.me`.
 
 ~~~
+# do not use Rails.application.config.action_mailer.smtp_settings
 cat > config/initializers/smtp.rb << \HERE_DOC
 ActionMailer::Base.smtp_settings = {
   :user_name => Rails.application.secrets.smtp_username,
