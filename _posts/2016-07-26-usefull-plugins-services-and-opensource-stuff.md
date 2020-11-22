@@ -957,7 +957,8 @@ opensource market peer-to-peer marketplace
   * when you run localy, you can import new contacts and their posts, for
   example: hq@pod.diaspora.software
 * openstreetmap
-* http status live site https://github.com/brotandgames/ciao
+* http status live site check if site is down using simple url ping 
+  https://github.com/brotandgames/ciao
 * chat support intercom https://www.chatwoot.com/docs/channels/website
 
 # Games
@@ -1194,3 +1195,7 @@ or with https://takeout.google.com/settings/takeout
 ```
 vi /etc/pihole/setupVars.conf
 ```
+
+Block porn sites by simply goind to Settings -> Blocklists -> https://raw.githubusercontent.com/chadmayfield/pihole-blocklists/master/lists/pi_blocklist_porn_top1m.list
+
+

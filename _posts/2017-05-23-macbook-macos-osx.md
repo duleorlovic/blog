@@ -475,6 +475,24 @@ sudo vi /usr/local/etc/my.cnf
 socket=/var/run/mysqld/mysqld.sock
 ~~~
 
+To start mysql server you can run `mysql.server start`
+To find locaiton of mysql config files
+
+```
+brew --prefix mysql
+```
+To see error log
+```
+tail -f /usr/local/var/mysql/mac.local.err
+```
+
+Usually enable permissions for `sudo chown _mysql /usr/local/var/mysql/*` but it
+is easier to enable for all
+```
+sudo chmod -R 777 /usr/local/var/mysql/
+sudo chmod 777  /var/run/mysqld/
+```
+
 # Libsassc
 
 On Mac I got error
@@ -532,6 +550,14 @@ Re-install node
 brew uninstall --ignore-dependencies node icu4c
 brew install node
 brew link --overwrite node
+```
+
+Reinstall node-gyp https://github.com/nodejs/node-gyp/issues/1694
+https://github.com/nodejs/node-gyp/issues/809
+```
+rm package-lock.json && rm -rf node_modules && rm -rf ~/.node-gyp
+yarn upgrade
+yarn
 ```
 
 Reinstall postgres and postgis
