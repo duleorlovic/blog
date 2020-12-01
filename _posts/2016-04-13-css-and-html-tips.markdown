@@ -480,7 +480,48 @@ Flexbox
 
 Used in layout in one dimension at a time (either row or column).
 
-CSS Grid https://mozilladevelopers.github.io/playground/css-grid
+# Grid
+
+https://mozilladevelopers.github.io/playground/css-grid
+
+`fr` is unit which represents a fraction of the available space in the grid
+container
+If you want to repeat something multipletimes you can use `repeat()` css
+notation
+```
+.container
+  display: grid
+  width: 800px
+  // grid-template-columns: 1fr 1fr 1fr
+  grid-template-columns: minmax(100px, auto) repeat(2, 1fr)
+  grid-template-rows: repeat(2, 150px)
+  grid-gap: 1rem
+```
+
+`minmax` can accept `auto` as first argument (min, so it represent `min-content`
+so it does not overflow) or second argument (max, it reperesents `max-content`
+which is smallest possible size the cell can be while still fitting around it's
+contents unobtrusively). minmax is usefull only with `fr`, `%` or `auto`.
+
+Position in the grid between lines, starting from 1, 2, ... number of columns +
+1, so you can move any cell to the area
+```
+.item1
+  // grid-row-start: 2
+  // grid-row-end: 3
+  grid-row: 2/3
+```
+
+Another way is to define `grid-template-areas` and assign each element with a
+`grid-area: my-area`
+```
+.container
+  grid-template-areas: "header header header" "sidebar content-1 content-1" "footer footer footer"
+
+.header
+  // grid-column: 1/4
+  grid-area: header
+```
 
 # CSS box alignment
 
@@ -833,6 +874,7 @@ link_to "+123-123", "tel:123123" %>`)
 
   You can style different states of defails (`details[open]` and
   `details:not[open]`) https://codepen.io/jh3y/pen/mLaXRe
+  https://codepen.io/stoumann/pen/ExydEYL
 * text input can have focus on page load with  `<input autofocus>`
   (`f.text_field :name, autofocus: true` in rails)
 

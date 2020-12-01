@@ -404,6 +404,10 @@ page, not on ajax call since crawl will be able to index that
 * Do not load too much files, crawl budget.
 * Do not duplicate content, same content but different url, use link rel canonical ie canonicalize.
 * Prevent crawling with robots.txt , but link from other site is followed (robots is not read) so for this case use header.
+* Non existing urls should use redirection (or add meta tag) to page not found with status 403
+* Bot does not save cookies, so do not rely on persisting data.
+* Also does not accepts geolocation
+* Do not use different parameters to same page
 
 # Off page SEO
 
@@ -412,6 +416,19 @@ page, not on ajax call since crawl will be able to index that
 * social media engagement
 * influencer marketing, ask them to share a link
 * video, podcasts, webinars
+* Kloaking is when heading seo keywoards says nice words but content sell drugs.
+
+* https://www.screamingfrog.co.uk/seo-spider/ Screamingfrog shows how google bot works
+* It is important that there are 301 redirections from www to root, http to https, chain redirections do not transmit seo juice (after 3 redirections stop)
+* All 404 pages should be redirected to live pages
+* When two pages open for the same keywords, so you don't need to use the same tags on multiple pages. Cannibalization can be detected on gsc where all pages for specific keywords are visible. If you google both, then don't touch anything, but when one falls, then optimize it so that you don't drag the first page as well. For example, a blog should not contain the same keywords. When you gets bored, then put 301 on the first page
+* The link builder is done by contacting a thousand blogs, 1% of them will accept to put a link for 100 euros
+* Anchor text ratio, 70% brand tekt
+* Ahrefs can give you a list of link texts so you can analyze the competition to
+  use the same text ratio. buy a site that is popular and put your link link
+* External links can be with rel nofollow and will not take juice from the site.
+  You can link large authoritative sites (wikis) or small sites that are not in
+  the same are business. You should not link a competing site in any way.
 
 TODO
 https://www.youtube.com/watch?v=Afy7H04X9Us

@@ -167,15 +167,15 @@ Capistrano version 3 is used here. Below is section for capistrano version 2.
 cat >> Gemfile << HERE_DOC
 # Use Capistrano for deployment
 group :development do
-  gem 'capistrano', '~> 3.10', require: false
-  gem 'capistrano-rails', '~> 1.3', require: false
+  gem 'capistrano', '~> 3.14', require: false
+  gem 'capistrano-rails', '~> 1.6', require: false
 
   gem 'capistrano-puma', require: false
   gem 'capistrano-rvm', require: false
 
   # use those if you do not use puma and rvm
   gem 'capistrano-passenger', '~> 0.2.0'
-  gem 'capistrano-rbenv', '~> 2.1', '>= 2.1.4'
+  gem 'capistrano-rbenv', '~> 2.2'
 
   # cap production rails:c
   gem 'capistrano-rails-console', require: false
@@ -1160,13 +1160,13 @@ file in directory of the script you are executing, or its parents to the root
 of the filesystem, or `.ruby-version` file in the current working directory or
 its parents to the root of the filesystem.
 https://github.com/rbenv/rbenv
+https://github.com/rbenv/rbenv-installer
 https://github.com/rbenv/ruby-build
 https://github.com/rbenv/rbenv-vars
 
 ```
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-~/.rbenv/bin/rbenv init
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 git clone https://github.com/rbenv/rbenv-vars.git ~/.rbenv/plugins/rbenv-vars
@@ -1176,6 +1176,27 @@ rbenv global 2.6.3
 ```
 
 Add env variables to `/home/orlovic/premesti.se/.rbenv-vars`
+
+To use rbenb variables in capistrano task you can write
+```
+namespace :db do
+  desc 'Load Xceednet users from shared/users.sql'
+  task :load_xceednet_users do
+    on roles(:all) do
+      execute "cd #{current_path} && $HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_xceednet_users.rb"
+
+      # This will raise error Could not locate Gemfile or .bundle/ directory!!!
+      # within current_path do
+      #   execute "$HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_xceednet_users.rb"
+      # end
+    end
+  end
+end
+```
+
+Not so usefull post
+https://piotrmurach.com/articles/working-with-capistrano-environment-variables-and-remote-commands/
+
 
 # Passenger and NGINX
 

@@ -107,7 +107,7 @@ end
 Here is example for one solution that is submitted on site (it can not
 `require byebug`) so it use constant PRODUCTION. Test are in the same file.
 If the task is to read from file and to submit generated file, than use second
-tempalte.
+template.
 
 ~~~
 # 0_short_palindrome.rb

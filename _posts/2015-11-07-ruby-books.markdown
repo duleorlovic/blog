@@ -1062,8 +1062,9 @@ can use `s.start_with? prefix` or `s.end_with? suffix`
 
 # Url encode
 
-* `URI.escape`
-* `CGI::escape`
+* `URI.escape 'a b' # => 'a%20b'`
+* `URI.unescape 'a%20b' # => 'a b'`
+* `CGI::escape 'a b' # => 'a+b'`
 * `ERB::Util.url_encode`
 
 rails params use double backslash instead of one, for example if user fill in

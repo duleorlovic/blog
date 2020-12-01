@@ -886,9 +886,12 @@ Active admin sample error
 # app/admin/dashboard.rb
 ActiveAdmin.register_page 'Dashboard' do
   content do
-    render partial: 'show'
     # <%= link_to 'Sample error', admin_dashboard_sample_error_path %>
     # http://localhost:3000/admin/dashboard/sample_error
+    render partial: 'show'
+    # ul do
+    #   li link_to 'Sample error', admin_dashboard_sample_error_path
+    # end
   end
 
   page_action :sample_error do

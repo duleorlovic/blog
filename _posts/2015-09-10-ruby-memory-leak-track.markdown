@@ -3,7 +3,116 @@ layout: post
 title: Ruby memory leak trackdown
 ---
 
-# Plotting on png
+# Memory a Boot
+
+https://github.com/schneems/derailed_benchmarks
+
+```
+# Gemfile
+gem 'derailed_benchmarks'
+```
+
+Memory used at require time
+
+```
+bundle exec derailed bundle:mem
+TOP: 80.0586 MiB
+  activeadmin_settings_cached: 20.207 MiB
+    activeadmin_settings_cached/engine: 20.207 MiB
+
+# to check on heroku
+heroku run CUT_OFF=3 bundle exec derailed bundle:mem
+```
+
+Dynamically check for memory usage:
+```
+bundle exec derailed exec --help
+  $ derailed exec perf:allocated_objects  # outputs allocated object diff after app is called TEST_COUNT times
+  $ derailed exec perf:app  # runs the performance test against two most recent commits of the current app
+  $ derailed exec perf:gc  # outputs GC::Profiler.report data while app is called TEST_COUNT times
+  $ derailed exec perf:heap  # heap analyzer
+  $ derailed exec perf:ips  # iterations per second
+  $ derailed exec perf:library  # runs the same test against two different branches for statistical comparison
+  $ derailed exec perf:mem  # show memory usage caused by invoking require per gem
+  $ derailed exec perf:mem_over_time  # outputs memory usage over time
+  $ derailed exec perf:objects  # profiles ruby allocation
+  $ derailed exec perf:stackprof  # stackprof
+  $ derailed exec perf:test  # hits the url TEST_COUNT times
+```
+
+For example
+```
+
+# for example
+TEST_COUNT=5000 bundle exec derailed exec perf:mem_over_time
+# if it is increasing than there is a memory leak
+
+# use different path than root '/'
+PATH_TO_HIT=/api/p=123a bundle exec derailed exec perf:mem_over_time
+```
+
+See where objects are created
+```
+$ env ALLOW_FILES=codetriage bundle exec derailed exec perf:objects
+```
+
+# Gem memory profiler
+
+You can run this in heroku console to check difference in memory before and
+after some code
+
+```
+require 'memory_profiler'
+
+MemoryProfiler.start
+
+# run your code
+
+report = MemoryProfiler.stop
+report.pretty_print
+```
+
+# Rack memory profiles
+
+Gem rack-mini-profiler <https://github.com/MiniProfiler/rack-mini-profiler>
+I add simple widget on top left corner of the page when it is server side
+render.  Does not work when `render json: data` (it has to be html).
+Add to your gemfile
+
+```
+# for profiling memory and sql
+gem 'rack-mini-profiler'
+```
+
+Additional gems
+
+~~~
+gem 'flamegraph'
+gem 'stackprof' # ruby 2.1+ only
+gem 'memory_profiler'
+~~~
+
+By default it is enabled in development mode
+```
+# config/initializers/rack_profiler.rb
+Rack::MiniProfiler.config.authorization_mode = :whitelist
+```
+
+To enable for specific users you need to
+
+~~~
+# app/controllers/application_controller.rb
+  before_action :enable_rack_miniprofiler_for_admin
+
+  def enable_rack_miniprofiler_for_admin
+    if current_user && Rails.application.secrets.admin_emails.include?(current_user.email) && params[:profiler] == "true"
+       Rack::MiniProfiler.authorize_request
+    end
+  end
+~~~
+
+
+# System memory
 
 In any ruby code you can use this snippet
 
@@ -11,15 +120,18 @@ In any ruby code you can use this snippet
 # config/initializers/memory_profiler.rb
 # Show current process memory in log. Creat memory.log with
 # tail log/production.log -f | grep -o MEMORY.* --line-buffered | tee log/memory.log
-# you need to remove *rails_12factor* heroku gem to see *log/production.log'
+# if you are using *rails_12factor* gem than log is in STDOUT instead of log/production.log
 # and export RAILS_SERVE_STATIC_FILES=true
 if Rails.application.secrets.memory_profiler
   Thread.new do
     Kernel.loop do
       pid = Process.pid
-      rss = `ps -eo pid,rss | grep #{pid} | awk '{print $2}'`.to_i
-      Rails.logger.info "MEMORY[#{pid}]: time: #{Time.now} rss: #{rss}, live_objects: #{GC.stat[:heap_live_slots]}"
-      sleep 1
+      rss = `ps -eo pid,rss | grep #{pid} | awk '{print $2}'`.to_i # size in KB
+      rss = ActionView::Base.new.number_to_human_size rss * 1.kilobyte
+      objects = GC.stat[:heap_live_slots]
+      objects = ActionView::Base.new.number_to_human objects
+      Rails.logger.info "MEMORY[#{pid}]: time: #{Time.now} rss: #{rss}, live_objects: #{objects}"
+      sleep 2
     end
   end
 end
@@ -46,6 +158,12 @@ You don't need to download database if you can deploy and download memory log.
 On heroku you can use `heroku logs -t | tee log/production.log` or just download
 if you some log service enabled (like Logentries).
 
+Heroku has plugin labs that show memory in logs https://devcenter.heroku.com/articles/log-runtime-metrics
+```
+heroku labs:enable log-runtime-metrics
+source=web.1 dyno=heroku.2808254.d97d0ea7-cf3d-411b-b453-d2943a50b456 sample#load_avg_1m=2.46 sample#load_avg_5m=1.06 sample#load_avg_15m=0.99
+```
+
 You can see which pages are most used by greping only GET requests, `-o`
 is only, `s/` is supstitute, `-v` don't include auth pages.
 
@@ -56,6 +174,8 @@ sed 's/" for$//' |
 grep -v auth |
 tee urls.txt
 ~~~
+
+# Plotting on png
 
 To plot data you need to grep specific format to create *log/memory_profile.log*
 and to run `gnuplot lib/memory_profile.gp`
@@ -220,7 +340,7 @@ gc_stat_for { 1_000_000.times { local = "asdf" } }
 ## GC commands
 
 * `GC.enable` `GC.disable`
-* `GC.start full_mark: true, `immediate_sweep: true`
+* `GC.start full_mark: true`, `immediate_sweep: true`
 
 * `GC.stat[:total_allocated_objects]` 
 * `GC.stat[:total_freed_objects]` number of objects that are GC-ed
@@ -238,6 +358,11 @@ big *name* (~127 chars) and *value* (~542 chars)
 Simulate load
 
 `ab -n 500 -c 5 -C 'asd123=asd123' http://yourapp.com/`
+
+also
+```
+sudo hping3 -c 10000 -d 120 -S -w 64 -p 21 --flood --rand-source scuddle-staging.herokuapp.com
+```
 
 # Tips
 
@@ -268,10 +393,6 @@ Simulate load
 * kill ruby process if it takes more than 200MB since GC will take more than
   100ms to run [video](https://youtu.be/5dgjeCdVEPs?t=2550)
 
-# Links
-
-* memory_profiler gem <https://github.com/SamSaffron/memory_profiler>
-
 # TODO
 
 http://thorstenball.com/blog/2014/03/12/watching-understanding-ruby-2.1-garbage-collector/
@@ -285,44 +406,6 @@ http://thorstenball.com/blog/2014/03/12/watching-understanding-ruby-2.1-garbage-
 ## How rails show fixes in memory
 
 * https://github.com/rails/rails/pull/21523
-
-# Rack memory profiles
-
-Gem rack-mini-profiler <https://github.com/MiniProfiler/rack-mini-profiler>
-I add simple widget on top left corner of the page. Does not work when `render
-json: data` (it has to be html).
-Add to your gemfile
-
-```
-# for profiling memory and sql
-gem 'rack-mini-profiler'
-```
-
-Additional gems
-
-~~~
-gem 'flamegraph'
-gem 'stackprof' # ruby 2.1+ only
-gem 'memory_profiler'
-~~~
-
-By default it is enabled in development mode
-```
-# config/initializers/rack_profiler.rb
-Rack::MiniProfiler.config.authorization_mode = :whitelist
-```
-
-To enable for specific users you need to
-
-~~~
-# app/controllers/application_controller.rb
-  before_action :enable_rack_miniprofiler_for_admin
-  def enable_rack_miniprofiler_for_admin
-    if current_user && Rails.application.secrets.admin_emails.include?(current_user.email) && params[:profiler] == "true"
-       Rack::MiniProfiler.authorize_request
-    end
-  end
-~~~
 
 # Links
 
@@ -345,3 +428,5 @@ videos
 * <https://www.youtube.com/watch?v=yxhrYiqatdA>
 
 https://medium.com/rubyinside/how-we-halved-our-memory-consumption-in-rails-with-jemalloc-86afa4e54aa3
+http://www.be9.io/2015/09/21/memory-leak/
+http://eng.rightscale.com/2015/09/16/how-to-debug-ruby-memory-issues.html?

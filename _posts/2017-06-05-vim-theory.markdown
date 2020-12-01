@@ -9,14 +9,15 @@ title: Vim theory
 
 ## Mappings
 
-maping keys `:noremap <newkeys> <keynames>`
+maping keys syntax `:noremap <newkeys> <keynames>`
 
+* list all mappins `:map`
 * since mappings easilly could be broken, ALWAYS use `nore` non recursive
 variant `noremap`, `nnoremap` ... so it use default meanings of keynames
 * you can map control CTRL key, for example `:map <c-d> dd`
 * do not use comments `"` in mapping
 * `nmap` normal, `vmap` visual, `imap` insert, `omap` operator, `cmap` command,
-  `xmap` (do not know) mode.
+  `xmap` ex command mode.
 Dor example in insert mode `:imap <esc>ddi`
 * remove mappings `:unmap <key>` or `nunmap`
 * you can map two keys, for example `:map -d dd`
@@ -30,13 +31,16 @@ can use both `:nnoremap <buffer> <localleader>d dd`
 
 Abbreviations are similar to mappings but for insert, replace and command mode
 
-`:iabbrev adn and` this will replace `adn<non-keyword-character>` with `and`
+* `:iabbrev adn and` this will replace `adn<non-keyword-character>` with `and`
 Difference between `map` is that map does not count for non-keyword-character
 
-`:iabbrev <buffer> --- &mdash;` will replace `---` with `&mdash` but only for
+* `:iabbrev <buffer> --- &mdash;` will replace `---` with `&mdash` but only for
 current buffer. It is `<buffer>` local abbreviation and is usefull when you want
 something only for specific type, for example `:autocmd FileType javascript
 :iabbrev <buffer> iff if ()<left>` will enable little snippet only for js.
+
+* `cabbrev E e` can be used to replace `E ` with `e ` on command line so when
+  you type `:E<space>` it will end up in `:e<space>`
 
 ## Autocommands
 
@@ -113,11 +117,14 @@ For example change current title header in markdown text with `cih`:
 * print env variables on command line: `:echo $MYVIMRC` or `:echo filetype?`.
  `:echom $PATH` will save output into `:messages` so you can view later
 * to set variable use `:let foo = "bar"` and pring `:echo foo`
+
 * to set option you can use `:set xxx` or `:set xxx=value` or `:let &xxx=value`
   To unset `:set noxxx` or `:set xxx!`. To check if it is set `:set xxx?` or
-  `:echo &xxx`. For boolean options `1` is true and `0` is false. `:let` is more
+  `:echo &xxx`. To set to default value use ampersand `&` like `:set iskeyword&`
+  For boolean options `1` is true and `0` is false. `:let` is more
   powerfull than `:set` since it can use math and other operations.
-  If you have space inside value than you need to escape `set xxx+=my\ value`
+  You can add or remove item from list, you can do with `:set k+=v` or `-=`.
+  If you have space inside value than you need to escape `:set xxx+=my\ value`
 * to set registers run `let @a = "hello"` so you can paste `"ap`. To read
   register run `:echo @a` (`:echo @"` is unnamed yank register, `:echo @\ ` is
   search register ... `:help registers`).
@@ -199,6 +206,50 @@ Variable types can be:
 TODO 
 https://github.com/mhinz/vim-galore
 
+TODO read and merge to the text
+Also `:help usr_41`, or `:help eval.txt` and a
+
+* `:nnoremap _ f_x~` find next `_`, remove and uppercase
+  [link](http://vim.wikia.com/wiki/Converting_variables_to_or_from_camel_case)
+  for moving underscore to CamelCase
+* snippet `nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a` [my
+snippets](https://github.com/duleorlovic/config/tree/master/vim/snippets)
+* `<silent>` is good if you are having mappings launch ex commands.
+* black screen is caused to silent command
+  https://github.com/vim/vim/issues/1253 use `:redraw!`
+
+
+* `nnoremap ,html :asd` first letter `n` means that this applies only in normal
+  mode, `no remap` means do not reinvoke if those commands `,html` are used for
+  something else, `map` means simply when I type `,html` please type `:asd`
+  Other modes are: `cmap` control.
+* `normal!` (with bang) means execute this exactly as I write (`normal` will not
+  ignore mappings that user could have written and destroy your commands)
+* functions can be used to wrap some commands and give it a name.
+  Use `function!` so you can overwrite it without error. Undo will undo whole
+  function at once.
+
+  ~~~
+  function! MyFuction()
+    normal! mmu`m
+  endfunction
+  nnoremap <leader>sp :call MyFuction()<cr>
+  ~~~
+* source current file `nnoremap <leader>sop :source %<cr>` is used to source
+  .vimrc so you do not need to exit and start vim again. You can reload any
+  `.vim` file, for example `:source ~/config/vim/syntastic.vim`
+* conditionals
+
+  ~~~
+  function! MF(level)
+    if a:level == 1
+      normal! yy
+    elseif a:level == 2
+      " ....
+    endif
+  endfunction
+  ~~~
+
 
 # Shell script
 
@@ -240,3 +291,8 @@ In vim there is a [ProgramFilter function](https://github.com/duleorlovic/config
 There is an issue with ending space (at the end of a line) when pasting. Same
 problem is when selecting word and super + p
 
+
+# See above indent
+
+similar but does not work for rspec
+http://vim-taglist.sourceforge.net/installation.html `:TlistToggle`

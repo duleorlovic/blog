@@ -48,7 +48,17 @@ SELECT datname FROM pg_database;
 # list all tables
 \dt
 
+# Show table definition, describe columns
+\d users
+
+# show sequences
+\ds
+
+# find psql version (note there is a version info as out of first line when you
+# enter the console, if server and client are different, both will be shown)
+SELECT version();
 ```
+
 
 # Introduction
 

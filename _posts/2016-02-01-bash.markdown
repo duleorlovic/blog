@@ -916,8 +916,12 @@ if [ "$(uname -s)" = "Darwin" ]; then
 fi
 ~~~
 * screen command
-  * `screen -r` to reattach to window (which you exited with Ctrl+A+D). Ctrl+A+]
-  to go to copy mode.
+  * create new session `Ctrl+A + c` and switch to it using `Ctrl+A + 1`
+  * `Ctrl + A + {command}` for example vertical split `Ctrl+A + |` and move to
+    it `Ctrl+A + <tab>` and create new window `Ctrl+A + c`. Use `Ctrl+A + X` to
+    close the window.
+  * `screen -r` to reattach to window (which you exited with `Ctrl+A+D`)
+  * `Ctrl+A+]` to go to copy mode
 * cheatsheet https://devhints.io/bash
 * `pbcopy` is only on mac
 * to prevent `ctrl-d` to exit terminal bash you can set `IGNOREEOF=3` so shell

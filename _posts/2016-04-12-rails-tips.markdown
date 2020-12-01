@@ -252,6 +252,9 @@ end
 
 Write datetime in specific my_time format
 https://apidock.com/ruby/DateTime/strftime
+```
+Time.zone.now.strftime '%F %T'
+```
 
 You can see default date formats but they are used only when locales are used
 (for example byebug in a view)
@@ -265,7 +268,7 @@ You can see default date formats but they are used only when locales are used
 ```
 
 So I override default to_s (output). For parsing (input) best way is to use
-month name in select date `2/Nov/2001` is it can parse collectly. For inputs
+month name in select date `2/Nov/2001` so it can parse collectly. For inputs
 with two numbers it can not guess the month or date `2/3/2000` so you need to
 use `Date.strptime '2/3/2000' , '%m/%d/%y'` to return 3 Februar.
 
@@ -492,7 +495,10 @@ r.each { |l| puts l }
   `db_name=$(rails runner "puts ActiveRecord::Base.configurations['$env']['database']")`
 * for single item, always use `@post.destroy` instead of `@post.delete` because
 it propagates to all `has_many :comments, dependent: :destroy` (also need to
-define this dependent param). If you use delete or use destroy without
+define this dependent param). `destroy` could be slow if there are a lot of
+dependent items, so in that case you can use `dependent: :delete_all`
+https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
+If you use delete or use destroy without
 `has_many dependent: destroy` than `ActiveRecord::InvalidForeignKey:
 SQLite3::ConstraintException: FOREIGN KEY constraint failed` for sqlite db...
 For mysql and postgres, error will be triggered if there are foreign keys
@@ -2933,6 +2939,7 @@ so this filter only works for `customer.radaccts`
 has_many   :radaccts, -> (customer)  { where('radacct.location_id = ?', customer.location_id) if customer.class == Customer }, primary_key: :username, foreign_key: :username, inverse_of: :customer
 ~~~
 
+You can assign attributes with `user.assign_attributes user_params`.
 In rails `belongs_to .. foreign_key` https://guides.rubyonrails.org/v5.2/association_basics.html#options-for-belongs-to-foreign-key
 is used is you have different name of the column than name_of_association_id
 Sometime you extend model `class ResellerPackage < Package` se we need to
@@ -3201,8 +3208,11 @@ end
   ActionController::Base.helpers.strip_tags request.body # html to text
   ActionController::Base.helpers.link_to 'name', link
   ActionController::Base.helpers.j "can't be blank" # can\'t be blank
+  ActionController::Base.helpers.humanized_money_with_symbol amount
 
-  ActionView::Base.new.number_to_human 123123
+  # no need to use ActionView::Base.new but just for reference
+  # ActionView::Base.new.number_to_human 123123 # 123 Thousand
+  # ActionView::Base.new.number_to_human_size 123123 # 120 KB
 
   Rails.application.routes.url_helpers.jobs_url
   # note that it is different than `jobs_url` in view since in view it uses
@@ -3942,6 +3952,11 @@ class Const
     )
   end
 
+  def self.PORT
+    # Rack::Server.new.options[:Port] should be called only once (otherwise it returns 9292)
+    @port ||= Rack::Server.new.options[:Port]
+  end
+
   def self.hash_or_error_if_key_does_not_exists(hash)
     # https://stackoverflow.com/questions/30528699/why-isnt-an-exception-thrown-when-the-hash-value-doesnt-exist
     # raise if key does not exists hash[:non_exists] or hash.values_at[:non_exists]
@@ -4447,4 +4462,63 @@ end
     ::Rails.logger.error("Redirected by #{caller(1).first rescue "unknown"}")
     super(options, response_status)
   end
+  ```
+* https://github.com/javan/whenever is used to create crontab listing using
+  job type: `runner`, `rake` and `command`. `:task` is replaced with first
+  argument. here are defaults https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/setup.rb
+  ```
+  job_type :command, ":task :output"
+  job_type :rake,    "cd :path && :environment_variable=:environment bundle exec rake :task --silent :output"
+  job_type :runner,  "cd :path && bin/rails runner -e :environment ':task' :output"
+  job_type :script,  "cd :path && :environment_variable=:environment bundle exec script/:task :output"
+  ```
+  for example
+  ```
+  # config/schedule.rb
+  every :reboot do
+  end
+  ```
+
+  Use with capistrano
+  https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+  ```
+  # config/deploy.rb
+  set :whenever_environment, fetch(:stage)
+  set :whenever_variables, (lambda do
+    "'environment=#{fetch :whenever_environment}" \
+    "&rbenv_root=#{fetch :rbenv_path}'"
+  end)
+  ```
+  so using capistrano task `cap production whenever:update_crontab` you update
+  `whenever_variables` with `rbenv_root` so when ssh command is executed
+  ```
+  cap production whenever:update_crontab
+  00:00 whenever:update_crontab
+        01 $HOME/.rbenv/bin/rbenv exec bundle exec whenever --update-crontab xceednet_production --set 'environment=production&rbenv_root=$HOME/.rbenv' --roles=app,db,web 
+  ```
+  we have defined rbenv_root and whenever can use it
+  ```
+  # config/schedule
+  set :output, error: 'cron.error.log', standard: 'cron.log'
+  # https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+  if defined? rbenv_root
+    job_type :delayed_job, %(cd :path :rbenv_root && :environment_variable=:environment :rbenv_root/bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
+  else
+    job_type :delayed_job, %(cd :path && :environment_variable=:environment bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
+  end
+
+  every :reboot do
+    delayed_job 'start'
+  end
+  ```
+
+  You can use interpolation with `#{name}` or `:name` inside `job_type` but for
+  `set` you can only use `#{name}`.
+  ```
+  set :path, '/home/ubuntu/xceednet/current'
+  set :p, "#{path}/log/cron.script.log"
+  # this will not work since colon interpolation does not work for set
+  # set :p, ":path/log/cron.script.log"
+
+  job_type :p, ":path/log/cron.script.log"
   ```

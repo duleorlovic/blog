@@ -559,6 +559,7 @@ Set default url option, that is domain for `root_url`:
 
 # for rails 5 you can use Rack::Server.new.options[:Port] and no need to
 # require anything, but it works only if you provide -p param to rails s
+# and it should be callend only once, like I did in const.rb
 
 # config/application.rb
     link = {
@@ -858,14 +859,32 @@ Restore from local textual and binary dump
 
 chmod a+r $DUMP_FILE
 
-rake db:drop db:create
+rake db:drop db:create db:migrate
 
 # textual dump
 psql $DATABASE_NAME < $DUMP_FILE
 
 # binary dump
+# this works when pg_dump version are different and `heroku pg:pull postgresql-symmetrical my_dev` does not work
 sudo su postgres -c "pg_restore -d $DATABASE_NAME --clean --no-acl --no-owner -h localhost $DUMP_FILE"
 ~~~
+
+Sometimes when I restore using pg_restore I lost incremental id, and I got error
+```
+ActiveRecord::StatementInvalid (PG::NotNullViolation: ERROR:  null value in column "id" violates not-null constraint
+```
+and when I see table definition there is no default nextval values for payments.id
+```
+\d users
+Column          |            Type             | Collation | Nullable | Default
+----------------+-----------------------------+-----------+----------+---------
+ id             | integer                     |           | not null | nextval('payments_id_seq'::regclass)
+
+\d payments
+Column          |            Type             | Collation | Nullable | Default 
+-------------------+--------------------------+-----------+----------+---------
+ id             | integer                     |           | not null | 
+```
 
 Or you can use [duleorlovic's load_dump
 helper](https://github.com/duleorlovic/config/blob/master/bashrc/rails.sh#L39)
@@ -1092,6 +1111,15 @@ increasing more than 5-10 threads does not have effects.
 Puma workers ENV.fetch("WEB_CONCURRENCY") { 2 } is important for CPU intensive
 code but it utilizes 2x db connections and 2x memory since 2x processes is used.
 
+
+Heroku memory inspect R14 Memory quota exceeded
+https://devcenter.heroku.com/articles/log-runtime-metrics#memory-swap
+```
+heroku labs:enable log-runtime-metrics
+heroku restart
+
+2020-11-19T10:21:34.368101+00:00 heroku[web.5]: source=web.5 dyno=heroku.30259387.5e6b3e82-4fd2-40b2-a3da-a22a1b27aa4a sample#memory_total=725.98MB sample#memory_rss=721.84MB sample#memory_cache=4.04MB sample#memory_swap=0.11MB sample#memory_pgpgin=188980pages sample#memory_pgpgout=3156pages sample#memory_quota=1024.00MB
+```
 
 # Google app engine
 

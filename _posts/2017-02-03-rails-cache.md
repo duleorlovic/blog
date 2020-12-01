@@ -71,11 +71,11 @@ heroku addons:create memcachier:dev
 This will create env variables which you can use in secrets
 
 ~~~
-sed -i config/secrets.yml -e '/^test:/i \
-  # caching server\
-  memcachier_servers: <%= ENV["MEMCACHIER_SERVERS"] %>\
-  memcachier_username: <%= ENV["MEMCACHIER_USERNAME"] %>\
-  memcachier_password: <%= ENV["MEMCACHIER_PASSWORD"] %>\
+# sed -i config/secrets.yml -e '/^test:/i
+  # caching server
+  memcachier_servers: <%= ENV["MEMCACHIER_SERVERS"] %>
+  memcachier_username: <%= ENV["MEMCACHIER_USERNAME"] %>
+  memcachier_password: <%= ENV["MEMCACHIER_PASSWORD"] %>
 '
 ~~~
 
@@ -110,6 +110,11 @@ Rails.application.configure do
 end
 HERE_DOC
 ~~~
+
+Test with `heroku run rails c`
+```
+Rails.application.config.cache_store
+```
 
 ## Install memcached using rubber
 

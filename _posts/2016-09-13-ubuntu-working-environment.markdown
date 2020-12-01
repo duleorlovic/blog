@@ -280,7 +280,7 @@ ping -c 1 this.is.a.test.loc
 ~~~
 
 You can check your domain name resolutions with mxtoolbox.com or domain settings
-with command `nslookup`
+with command `nslookup` (dns resolution, dns lookup)
 
 ~~~
 nslookup asd.loc
@@ -882,3 +882,13 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   ```
 
 
+* ~~~
+  /dev/dsa1: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+          (i.e., without -a or -p options)
+  fsck exited with status code 4
+  done.
+  Failure: File system check of the root filesystem failed
+  The root filesystem on /dev/sda1 requires a manual fsck
+  ~~~
+
+  solution is to run `(initramfs) fsck -yf /dev/sda1`

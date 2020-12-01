@@ -12,7 +12,9 @@ https://certbot.eff.org/docs/what.html
 > security) connection.
 
 To install you can check instructions on https://certbot.eff.org or use
-`certbot-auto` command. It is usually like
+`certbot-auto` command.
+(do not use old https://github.com/certbot/certbot/blob/master/letsencrypt-auto
+since it it deprecated https://github.com/jitsi/jitsi-meet/issues/6341
 ```
 sudo apt update
 sudo apt install software-properties-common
@@ -25,8 +27,17 @@ sudo apt-get -y install certbot
 sudo apt-get -y install python-certbot-nginx
 sudo apt-get -y install python-certbot-apache
 ```
+)
 
-It will write to `/etc/letsencrypt`, `/var/log/letsencrypt` and
+Install certboot
+https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx
+```
+sudo apt-get remove certbot
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+
+certboot will write to `/etc/letsencrypt`, `/var/log/letsencrypt` and
 `/var/lib/letsencrypt`.
 
 To just get certificate you can run `certbot certonly`.
@@ -36,15 +47,25 @@ To obtain certificate using 'stangalone' webserver `certbot --standalone` which
 will bind to port 80, you need to stop current apache server.
 
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
-This super script is so good that you need just one command:
+Certbot works in just one command:
 
 ```
 sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr-latin-premesti-se.trk.in.rs -d a.trk.in.rs
 ```
+
+You can also install dns plugin
+https://certbot.eff.org/docs/using.html?highlight=dns#dns-plugins so you can
+obtain wildcard certificate (so it covers all subdomains).
+
+
 To see current obtained certificates
 https://certbot.eff.org/docs/using.html#managing-certificates
 ```
 sudo certbot certificates
+```
+To renew all
+```
+sudo certbot renew
 ```
 In case server is on local LAN, when you are testing from local LAN than
 accessing public IP address will not go to the server on local LAN... so
@@ -73,6 +94,14 @@ curl https://mydomain.com
 
 You can not `curl https://192.168.1.3` or `curl https://localhost` since
 certificate is not valid.
+
+To check dns settings use
+```
+nslookup mydomain.com
+```
+
+To clear dns cache on chrome use
+[chrome://net-internals/#dns](chrome://net-internals/#dns)
 
 If you have forced ssl on rails server than to obtain certificate, but if server
 is already running it will redirect to https://new-domain and reject since it is

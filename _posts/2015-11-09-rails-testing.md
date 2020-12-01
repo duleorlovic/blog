@@ -1898,6 +1898,12 @@ Timecop.freeze(Date.today + 30) do
   assert in one month
 end
 
+# fix all dates
+Timecop.freeze '2020-01-01 08:00:00' do
+  Time.now # will always return same value
+  Time.now # will always return same value
+end
+
 # Recomended is to use block syntax since
 Timecop.freeze(Date.today + 30)
 Time.now # will always return same value

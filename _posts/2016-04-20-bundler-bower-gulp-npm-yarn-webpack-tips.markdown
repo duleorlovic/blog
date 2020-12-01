@@ -200,6 +200,8 @@ yarn # to install dependencies
 yarn run build # to run "scripts" -> "build"
 
 yarn add [package]
+# yarn add install specific version 2.3.4
+yarn add package@2.3.4
 ~~~
 
 You can add `package@version` vesion could be `"^1.0.0"`
@@ -504,21 +506,28 @@ webpack
 /home/orlovic/rails_temp/webpack_guide
 
 Example using with webpack-dev-server for vue
-https://github.com/duleorlovic/slidey-nav
+https://github.com/duleorlovic/slidey-nav or `~/html/slidey-nav`
+
+```
+mkdir myproj
+cd myproj
+git init .
+cat > .gitignore << 'HERE_DOC'
+node_modules
+dist
+.yarn-error.log
+HERE_DOC
+```
+
 Install using yarn
 ```
 yarn init -y
-yarn add -D webpack webpack-cli
+yarn add -D webpack@4.44.0 webpack-cli@3.3.0 webpack-dev-server@3.11.0
 ```
-or npm
-~~~
-npm init -y
-npm install webpack webpack-cli --save-dev
-~~~
 
 You can run cli
 ```
-$(yarn bin)/webpack  --mode=none --entry ./js/index.js  --output-filename=bundle.js
+$(yarn bin)/webpack  --mode=none --entry ./src/index.js  --output-filename=bundle.js
 ```
 
 or add to `package.json` build command
@@ -526,24 +535,40 @@ or add to `package.json` build command
 ~~~
 // package.json
   "scripts": {
-    "build": "webpack --config webpack.config.js --display-error-details"
+    "build": "webpack --config webpack.config.js"
   },
 ~~~
 
 so you can run with
 ```
-npm run build
-# or
 yarn run build
 ```
 
 if webpack is installed globally than you can use directly `webpack` but it is
 not recomended to use as global
+Also version of webpack-cli and webpack-dev-server should be compatible. For
+example webpack-cli 4 and webpack-dev-server 3 has an issue
+```
+webpack-dev-server --open
+internal/modules/cjs/loader.js:638
+    throw err;
+    ^
+```
+so we need to fix than in package.json
+```
+{
+  "devDependencies": {
+    // "webpack": "^4.44.0"
+    "webpack-cli": "3.3.0",
+    "webpack-dev-server": "3.11.0"
+  }
+}
+```
 
 Create `webpack.config.js` with
 ```
 module.exports = {
-  entry: './js/index.js',
+  entry: './src/index.js',
   mode: 'none'
 }
 ```
@@ -572,6 +597,28 @@ Asset Management with loaders (`npm install --save-dev style-loader`)
     background: url('./img.png');
   }
   ~~~
+
+For example for using sass you need `yarn add -D sass sass-loader` and
+```
+// webpack.config.js
+  module: {
+    rules: [
+      {
+        // https://github.com/webpack-contrib/sass-loader
+        test: /\.(sass|css)$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          // https://github.com/webpack-contrib/sass-loader
+          'sass-loader',
+        ]
+      }
+    ]
+  },
+```
 
 * `file-loader` handles files
   ~~~
@@ -635,11 +682,16 @@ generated stuff.
 
 ~~~
 // webpack.config.js
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  // https://github.com/jantimon/html-webpack-plugin
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     })
   ],
+}
 ~~~
 
 You can pass env params on command line and extract common config
