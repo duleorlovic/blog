@@ -155,7 +155,9 @@ require 'minitest/autorun'
 class Test < Minitest::Test
   def test_sample
     s = 'kkkkkkz'
-    assert_equal 12, solution(prepare(s))
+    expected = 12
+    actual = solution(prepare(s))
+    assert_equal expected, actual
   end
 
   def test_long
@@ -233,8 +235,10 @@ class Test < Minitest::Test
 end
 ~~~
 
-If you want to run only one test, than run `ruby 0_short_palindrome.rb --name
-test_sample`
+If you want to run only one specific test, than run
+```
+ruby 0_short_palindrome.rb --name test_sample
+```
 
 If you want to print all local variables, you can use
 

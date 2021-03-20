@@ -496,7 +496,9 @@ r.each { |l| puts l }
 * for single item, always use `@post.destroy` instead of `@post.delete` because
 it propagates to all `has_many :comments, dependent: :destroy` (also need to
 define this dependent param). `destroy` could be slow if there are a lot of
-dependent items, so in that case you can use `dependent: :delete_all`
+dependent items, so in that case you can use `dependent: :delete_all` since it
+runs sql delete statement instead of loading each active record and call destroy
+on it.
 https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
 If you use delete or use destroy without
 `has_many dependent: destroy` than `ActiveRecord::InvalidForeignKey:
@@ -582,12 +584,25 @@ sudo su postgres -c "psql `rails runner 'puts ActiveRecord::Base.configurations[
   sudo pg_dropcluster 9.3 main
   ~~~
 
+* log levels in Rails https://guides.rubyonrails.org/debugging_rails_applications.html#log-levels
+  ```
+  # :debug, :info, :warn, :error, :fatal, :unknown are levels from 0 to 5
+  config.log_level = :warn # 2
+  ```
 * To disable mute sql logs in rails logger put this in initializer file
 
   ~~~
   # config/initializers/silent_sql_log.rb
   ActiveRecord::Base.logger.level = Logger::INFO
   ~~~
+  to enable sql logs in rails console
+  ```
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+  ```
+  To show file location where query is triggered
+  ```
+  ActiveRecord::Base.verbose_query_logs = true
+  ```
 * to disable assets logs use this
 
   ~~~
@@ -751,6 +766,8 @@ rake db:migrate:down VERSION=20161114162031`
 
 # to remove migration so you can redo
 mysql> DELETE FROM schema_migrations WHERE version = 20161114162031;
+# or insert if table is already there
+mysql> insert into schema_migrations (version) values ('20200915080301');
 ~~~
 
 if you want to redo migration (revert and migrate again) you can use `redo` 
@@ -1496,12 +1513,22 @@ rake](http://guides.rubyonrails.org/command_line.html#custom-rake-tasks)
 ~~~
 # lib/tasks/db.rake
 namespace :db do
-  desc 'This task does nothing'
+  desc <<~HERE_DOC
+    This task does nothing
+
+    Example: rake db:nothing
+  HERE_DOC
   task nothing: :environment do
     # environment is needed to load rails
   end
 end
 ~~~
+
+To read multiline description you should use `-D`
+```
+rake -T
+rake -D
+```
 
 Instead of `:env` or `:environment` you can use other tasks on which it depends.
 Also you can receive parameters into `args`
@@ -1513,6 +1540,7 @@ Rails.logger = Logger.new(STDOUT)
 namespace :update_subdomain do
   desc "update subdomains for my-user. default value is 'my_subdomain'"
   task :my_user, [:subdomain] => :environment do |task, args|
+    # args[:subdomain] is holding your argument
     args.with_defaults subdomain: 'my_subdomain'
     user = User.find_by name: 'my-user'
     fail "Can't find user 'my-user'" unless user
@@ -1528,6 +1556,28 @@ rake update_subdomain:my_user
 rake update_subdomain:my_user[]
 rake update_subdomain:my_user[new_subdomain]
 ~~~
+
+Another way of passing the arguments to rake task is using ARGV and exit
+```
+namespace :upload do
+  desc <<~HERE_DOC
+    Upload files
+
+    cap production upload:files README.md
+    cap production ROLES=db upload:files README.md
+  HERE_DOC
+  task :files do
+    on roles(:all) do
+      index = ARGV.index 'upload:files'
+      ARGV[index + 1..-1].each do |file_name|
+        puts "Uploading #{file_name} to #{current_path}/#{file_name}"
+        upload! file_name, "#{current_path}/#{file_name}"
+      end
+      exit # so we do no proccess filename arguments as cap tasks
+    end
+  end
+
+```
 
 Another use of rake is to seed
 
@@ -2314,6 +2364,45 @@ expect(reader.pages.first.text).to include 'My Header'
 
 https://github.com/urvin-compliance/caracal
 
+## Gems
+
+* https://awesome-ruby.com/
+* recurring events https://github.com/rossta/montrose
+  ```
+  Montrose.daily(total: 10, starts: today, until: ends, between: starts..ends,
+                 month: :january, interval: 2)
+  Montrolse.weekly(on: [:monday, :friday])
+  Montrose.every(:week, until:ends)
+  Montrose.every(2.weeks, on: [:monday, :friday])
+
+  # enumerator
+  r.events.take(10)
+  ```
+
+  tickle recurring events https://github.com/yb66/tickle
+
+
+* rubyzip to create zip files https://github.com/rubyzip/rubyzip
+  ```
+  gem 'rubyzip', require: 'zip'
+  ```
+  In script
+  ```
+  require 'zip'
+  file_name = '2019-12-24 12:49:14 +0000_Generic-Generic-Name_Switch_Letter.pdf'
+  system "echo 123 > #{file_name}"
+  Zip::File.open('a.zip', Zip::File::CREATE) { |zipfile| zipfile.add file_name, './' + file_name }
+
+  ```
+  Test like in https://github.com/rubyzip/rubyzip/blob/master/test/file_test.rb
+  ```
+    zf_read = ::Zip::File.new result.data[:zipfile_name]
+    assert_equal 2, zf_read.entries.length
+  ```
+* ms word documents create from scratch
+  https://github.com/urvin-compliance/caracal or from html
+  https://github.com/karnov/htmltoword
+
 # Style guide
 
 [toughtbot style
@@ -2946,6 +3035,19 @@ Sometime you extend model `class ResellerPackage < Package` se we need to
 explicitly define column names.
 `has_many .. inverse_of` is used when you `accepts_nested_attributes_for` and
 you want to access them in `user.reseller_packages`
+Of if you have two relation to the same class
+```
+# Profile
+belongs_to :user
+belongs_to :created_by, class_name: 'User'
+
+# User
+has_one :profile
+
+user = User.first
+user.profile.created_by # it could be User.second, but
+user.profile.created_by.profile # will return profile of the first
+```
 
 You can specify conditions in relation
 ```
@@ -3712,7 +3814,7 @@ on submit button). I do not know how to send value...
 ~~~
 
 * `printf '.'` if you need to print single dot
-* turn of sql debug log messages in console `ActiveRecord::Base.logger = nil`
+* turn off sql debug log messages in console `ActiveRecord::Base.logger = nil`
 * to show full backtrace and lines from gems you can call
   `Rails.backtrace_cleaner.remove_silencers!`
 * put `gem 'irbtools', require: 'irbtools/binding'` in Gemfile so you can load
@@ -4466,6 +4568,9 @@ end
 * https://github.com/javan/whenever is used to create crontab listing using
   job type: `runner`, `rake` and `command`. `:task` is replaced with first
   argument. here are defaults https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/setup.rb
+  https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/job_list.rb#L54
+  You can not use capistrano commands... you can set :whenever_variables and use
+  that.
   ```
   job_type :command, ":task :output"
   job_type :rake,    "cd :path && :environment_variable=:environment bundle exec rake :task --silent :output"
@@ -4494,7 +4599,7 @@ end
   ```
   cap production whenever:update_crontab
   00:00 whenever:update_crontab
-        01 $HOME/.rbenv/bin/rbenv exec bundle exec whenever --update-crontab xceednet_production --set 'environment=production&rbenv_root=$HOME/.rbenv' --roles=app,db,web 
+        01 $HOME/.rbenv/bin/rbenv exec bundle exec whenever --update-crontab myapp_production --set 'environment=production&rbenv_root=$HOME/.rbenv' --roles=app,db,web 
   ```
   we have defined rbenv_root and whenever can use it
   ```
@@ -4515,10 +4620,26 @@ end
   You can use interpolation with `#{name}` or `:name` inside `job_type` but for
   `set` you can only use `#{name}`.
   ```
-  set :path, '/home/ubuntu/xceednet/current'
+  set :path, '/home/ubuntu/myapp/current'
   set :p, "#{path}/log/cron.script.log"
   # this will not work since colon interpolation does not work for set
   # set :p, ":path/log/cron.script.log"
 
   job_type :p, ":path/log/cron.script.log"
+  ```
+* Rack middleware https://medium.com/@shashwat12june/rack-and-rack-middleware-f93513ac92a6
+  You can skip Rails in rack middleware if you return like this example
+  ```
+  class FilterLocalHost
+    def initialize(app)
+      @app = app
+    enddef call(env)
+      req = Rack::Request.new(env)
+      if req.ip == "127.0.0.1" || req.ip == "::1"
+        [403, {}, ["forbidden"]]
+      else
+        @app.call(env)
+      end
+    end
+  end
   ```

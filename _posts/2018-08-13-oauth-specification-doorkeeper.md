@@ -465,6 +465,7 @@ gem 'doorkeeper', '~> 4.2.6'
 HERE_DOC
 rails g doorkeeper:install
 rails g doorkeeper:migration
+last_migration
 # add_foreign_key :oauth_access_grants, :users, column: :resource_owner_id
 # add_foreign_key :oauth_access_tokens, :users, column: :resource_owner_id
 git add . && git commit -am "rails g doorkeeper:install"
@@ -472,30 +473,64 @@ git add . && git commit -am "rails g doorkeeper:install"
 
 Migration will generate three tables:
 
-* oauth_applications - store secret and redirect_uri
+* oauth_applications - store secret and redirect_uri, We can create thee apps:
+  one for Android, one for iOS and one for web React. Remove `null: false` for
+  `:redirect_uri` if you are planning to use grant flows that does not require
+  redirect url. Github apps https://github.com/settings/applications anyone can
+  create app https://github.com/settings/apps/new (and put redirect_uri to
+  redirect to after a user authorizes an an installation, and define all
+  permissions). https://github.com/settings/developers is only for tokens
+  (not sure)
 * oauth_access_grants - tokens for each user and application
 * oauth_access_tokens - token, refresh_token
 
-When you list all generated routes you will notice three:
+Configuration `config/initializers/doorkeeper.rb`
 
-~~~
-rails routes -g oauth
-# /oauth/authorize
-# /oauth/applications - CRUD for applications
-# /oauth/authorized_applications
-# /oauth/token
-# /oauth/token/info
-# /oauth/revoke
-~~~
+```
+# resource_owner_authenticator block is used to get current user or to redirect
+# to login page
+   resource_owner_authenticator do
+     User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
+   end
 
-First you need to set up one oauth application on
-<http://localhost:3004/oauth/applications> to generate `client_id` and
-`client_secret`.
+# If you are using login credentials (email + password) on the
+# API to get OAuth token, than you can remove resource_owner_authenticator and
+# use
+  resource_owner_from_credentials do |_routes|
+    User.authenticate(params[:email], params[:password])
+  end
 
-There are 4 ways to use [oauth grant types](https://aaronparecki.com/oauth-2-simplified):
+# and also need
+  grant_flows %w[password]
+
+  # we can create OAuth application with blank redirect URL
+  allow_blank_redirect_uri true
+
+  # As the OAuth application we create is for our own use (not third part), we
+  # can skip authorization. Usually other OAuth providers asks for something:
+  # Authorize "YourApp" to access your account ?
+  skip_authorization do
+    true
+  end
+
+  # skip controllers since we do not need authorizations, and will create app in
+  # console with
+  # Doorkeeper::Application.create(name: "Android client", redirect_uri: "", scopes: "")
+  # find app: Doorkeeper::Application.find_by(name: 'Android client')
+# config/routes.rb
+Rails.application.routes.draw do
+  use_doorkeeper do
+    skip_controllers :authorizations, :applications, :authorized_applications
+  end
+end
+```
+
+There are 4 ways to use `grant_flows` [oauth grant
+types](https://aaronparecki.com/oauth-2-simplified):
 * authorization_code: web server, browser based and mobile apps
 * imlicit: superceded by authorization code with no secret
-* password
+* password: send user email and password to /oauth/token endpoint and get OAuth
+  token
 * client_credentials
 
 When you get access token, than you can authenticated request using header:
@@ -505,22 +540,56 @@ In doorkeeper by default access_token expires after 2 hours.
 curl -H "Authorization: Bearer RsT5OjbzRn430zqMLgV3Ia" https://api.oauth2server.com/1/me
 ~~~
 
+
+When you list all generated routes you will notice three:
+
+~~~
+rails routes -g oauth
+# /oauth/authorize
+# /oauth/applications - admin CRUD for applications to generate `client_id`
+                        (uid) and client_secret (password)
+# /oauth/authorized_applications
+# /oauth/token - OAuth endpoint
+# /oauth/token/info
+# /oauth/revoke
+~~~
+
+
 [Using scopes](https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes)
 
-Some provider opensource examples:
+Some opensource examples:
+https://rubyyagi.com/rails-api-authentication-devise-doorkeeper/
 <https://github.com/doorkeeper-gem/doorkeeper/wiki/Example-Applications>
 
+My example app https://github.com/duleorlovic/devise_doorkeeper
+
 To test provider you can use [oauth2 client](https://github.com/intridea/oauth2)
-to generate `access_token`
 
 ~~~
 gem install oauth2
 irb -r oauth2
+
 client_id = ''
 client_secret = ''
-redirect_uri = ''
-client = OAuth2::Client.new(client_id, client_secret, site: 'https://localhost:3000')
 
-client.auth_code.authorize_url redirect_uri: redirect_url
+# or for our doorkeeper
+app = Doorkeeper::Application.find_by(name: "Android client")
+client_id = app.uid
+client_secret = app.secret
+
+# password flow
+site = 'http://localhost:3002/oauth/token'
+client = OAuth2::Client.new(client_id, client_secret, site: site)
+token = client.password.get_token('asd@asd.asd','asdasd')
+response = token.get('/api/bookmarks')
+
+# authorization_code with github
+site = 'https://github.com'
+redirect_uri = 'http://localhost:3000/users/auth/github/callback'
+client = OAuth2::Client.new(client_id, client_secret, site: site, authorize_url: '/login/oauth/authorize')
+client.auth_code.authorize_url redirect_uri: redirect_uri
+# => "https://github.com/login/oauth/authorize?client_id=c3691cf56bf8081ffcc7&redirect_uri=http%3A%2F%2Flocalhost%3A3002%2Foauth%2Fcallback&response_type=code" 
+code = '123ASD'
+token = client.auth_code.get_token("#{code}", redirect_uri: redirect_uri)
 ~~~
 

@@ -276,6 +276,14 @@ end
 Note that whole event change is wrapped in transaction, so if state validation
 fails everything will be rolledback.
 
+(short notation might rise expection 'no receiver given')
+```
+# if this line raises exception
+validate(&:check?)
+# than use longer syntax
+validate { |location| location.check? }
+```
+
 If you want to validate specific event `advance_renewal` (event without
 corresponding state) so you can not use `event :advance_renewal; transition all
 => same, if: Proc.new { |m| m.has_advance_package? }` since at the show time if

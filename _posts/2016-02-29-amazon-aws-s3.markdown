@@ -4,6 +4,43 @@ title: Amazon AWS S3
 tags: s3
 ---
 
+# Use tags
+
+Instead of adding inline policy, you can use groups (or roles, which is
+similar) and instead of using specific resource you can add condition by tag
+https://aws.amazon.com/blogs/security/simplify-granting-access-to-your-aws-resources-by-using-tags-on-aws-iam-users-and-roles/
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:Describe*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:RebootInstances",
+                "ec2:StartInstances",
+                "ec2:StopInstances"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "ec2:ResourceTag/Team": "Developers"
+                }
+            }
+        }
+    ]
+}
+```
+
 # Create IAM user and attach inline policy
 
 I usually one user for testing (keys that I export in my basrc), one user for
@@ -257,6 +294,24 @@ s3 = Aws::S3::Resource.new(region: 'us-west-2')
 obj = s3.bucket('my-bucket').object('my-item')
 obj.get(response_target: './my-code/my-item.txt')
 ~~~
+
+
+Push put the file
+```
+s3 = Aws::S3::Resource.new
+path = 'photos/deepak_file/aws_test.txt'
+object = s3.bucket('storagy-teen-dev-us').object(path)
+object.upload_file(./tmp/aws_test.txt)
+# for public objects
+object.public_url
+
+# signed url for private objects
+# this is old v1 api
+# object.url_for(:read, expires: 10.min)
+
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Object.html#presigned_url-instance_method
+object.presigned_url(:get)
+```
 
 # AWS CLI
 

@@ -373,6 +373,8 @@ is private but we can
 * you should memoize with `return @current_isp if defined? @current_isp` instead
   of `@current_isp ||= blabla; return @current_isp` since it handles `false`
   value as well (it will not rerun the check if @current_isp = false)
+  NOTE Do not memoize has_belongs to items since it could change while you are
+  using it...
 * when you iterate over some hashes you can assign variables with `name:`
 
   ~~~
@@ -473,7 +475,14 @@ is private but we can
 
   capture3 will wait for all output, even you use ampersand `sleep 10 &` at the
   end of command. You can use `system 'sleep 10 &'` to get immediatelly back to
-  ruby. Also spawn
+  ruby. To show stream output you can use
+  ```
+  STDOUT.sync = true
+  # or $stdout.sync = true
+  system('some-long-script-with-outputs')
+  ```
+
+  Also spawn
 
   ~~~
   pid = spawn('sleep 3') #=> 45376
@@ -609,6 +618,11 @@ is private but we can
 * get class based on string `klass = Object.const_get "User"`
 * get constant of class `User::MAX`, `User.const_get 'MAX'` or
 `user.class.const_get :MAX`. To check if exists use `const_defined?`
+* to check if class is defined you can use
+  ```
+  if eval("defined?(#{nameofclass}) == 'constant'")
+  end
+  ```
 * random number `[*1..100].sample`
 * iterate over elements until first match `a.take_while {|i| i < 3}`
 * get a class from value `my_string.constantize`
@@ -1211,6 +1225,22 @@ assignment for function parameters)
   rest # => [2, 3]
   a # => [1, 2, 3]
   ~~~
+
+  Expand inside array or hash
+  ```
+  a = [3, 4]
+  b = [1, 2, *a, 5]
+  # => [1, 2, 3, 4, 5]
+  # it works fine for empty array
+  a = []
+  b = [1, 2, *a, 5]
+  # => [1, 2, 5]
+
+  # for hash use double splat
+  a = { a: 1 }
+  b = { b: 2, **a, c: 3}
+  # => { b: 2, a: 1, c: 3 }
+  ```
 
   so you can use destructuring block arguments (params), for example
 

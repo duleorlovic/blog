@@ -7,6 +7,8 @@ RAM in flash.
 
 # Winbox on Wine
 
+There is also a snap package `winbox` but here are instructions for old ubuntu:
+
 <https://wiki.winehq.org/Ubuntu>
 
 ~~~
@@ -64,13 +66,183 @@ https://wiki.mikrotik.com/wiki/Manual:Console#General_Commands
   not default with `/export compact`, or `/export compact file=my_export` to
   save to a file `/dule.rsc` which you can download using ftp. If you are not in
   root, for example you are in `/ip` it will export only changes to `ip`. You
-  can `/import myfilename.rsc` to load configurations. Add `verbose=yes` to see
-  more info. If file name ends with auto `myfilename.auto.rsc` than it will be
-  executed when uploaded using FTP.
+  can `/import myfilename.rsc` to load configurations ie to run script. Add
+  `verbose=yes` to see more info. If file name ends with auto
+  `myfilename.auto.rsc` than it will be executed when uploaded using FTP.
   In rsc file you can indent all commands with `:%s/^\([as]\)/    \1/`
 
+Default configuration script (when you reset with power off and power on while
+holding reset button)
+```
+#| RouterMode:
+#|  * WAN port is protected by firewall and enabled DHCP client
+#|  * Ethernet interfaces (except WAN port ether1) are part of LAN bridge
+#| LAN Configuration:
+#|     IP address 192.168.88.1/24 is set on bridge (LAN port)
+#|     DHCP Server: enabled;
+#| WAN (gateway) Configuration:
+#|     gateway:  ether1 ;
+#|     ip4 firewall:  enabled;
+#|     NAT:   enabled;
+#|     DHCP Client: enabled;
+#|     DNS: enabled;
+
+:log info Starting_defconf_script_;
+#-------------------------------------------------------------------------------
+# Apply configuration.
+# these commands are executed after installation or configuration reset
+#-------------------------------------------------------------------------------
+:if ($action = "apply") do={
+# wait for interfaces
+:local count 0; 
+:while ([/interface ethernet find] = "") do={ 
+:if ($count = 30) do={
+:log warning "DefConf: Unable to find ethernet interfaces";
+/quit;
+}
+:delay 1s; :set count ($count +1); 
+};
+
+ /interface list add name=WAN comment="defconf"
+ /interface list add name=LAN comment="defconf"
+ /interface bridge
+   add name=bridge disabled=no auto-mac=yes protocol-mode=rstp comment=defconf;
+ :local bMACIsSet 0;
+ :foreach k in=[/interface find where !(slave=yes  || name~"ether1" || name~"bridge")] do={
+   :local tmpPortName [/interface get $k name];
+   :log info "port: $tmpPortName"
+   :if ($bMACIsSet = 0) do={
+     :if ([/interface get $k type] = "ether") do={
+       /interface bridge set "bridge" auto-mac=no admin-mac=[/interface ethernet get $tmpPortName mac-address];
+       :set bMACIsSet 1;
+     }
+   }
+   /interface bridge port
+     add bridge=bridge interface=$tmpPortName comment=defconf;
+ }
+   /ip pool add name="default-dhcp" ranges=192.168.88.10-192.168.88.254;
+   /ip dhcp-server
+     add name=defconf address-pool="default-dhcp" interface=bridge lease-time=10m disabled=no;
+   /ip dhcp-server network
+     add address=192.168.88.0/24 gateway=192.168.88.1 comment="defconf";
+  /ip address add address=192.168.88.1/24 interface=bridge comment="defconf";
+   /ip dhcp-client add interface=ether1 disabled=no comment="defconf";
+ /interface list member add list=LAN interface=bridge comment="defconf"
+ /interface list member add list=WAN interface=ether1 comment="defconf"
+ /ip firewall nat add chain=srcnat out-interface-list=WAN ipsec-policy=out,none action=masquerade comment="defconf: masquerade"
+ /ip firewall {
+   filter add chain=input action=accept connection-state=established,related,untracked comment="defconf: accept established,related,untracked"
+   filter add chain=input action=drop connection-state=invalid comment="defconf: drop invalid"
+   filter add chain=input action=accept protocol=icmp comment="defconf: accept ICMP"
+   filter add chain=input action=drop in-interface-list=!LAN comment="defconf: drop all not coming from LAN"
+   filter add chain=forward action=accept ipsec-policy=in,ipsec comment="defconf: accept in ipsec policy"
+   filter add chain=forward action=accept ipsec-policy=out,ipsec comment="defconf: accept out ipsec policy"
+   filter add chain=forward action=fasttrack-connection connection-state=established,related comment="defconf: fasttrack"
+   filter add chain=forward action=accept connection-state=established,related,untracked comment="defconf: accept established,related, untracked"
+   filter add chain=forward action=drop connection-state=invalid comment="defconf: drop invalid"
+   filter add chain=forward action=drop connection-state=new connection-nat-state=!dstnat in-interface-list=WAN comment="defconf:  drop all from WAN not DSTNATed"
+ }
+   /ip neighbor discovery-settings set discover-interface-list=LAN
+   /tool mac-server set allowed-interface-list=LAN
+   /tool mac-server mac-winbox set allowed-interface-list=LAN
+ /ip dns {
+     set allow-remote-requests=yes
+     static add name=router.lan address=192.168.88.1
+ }
+
+}
+#-------------------------------------------------------------------------------
+# Revert configuration.
+# these commands are executed if user requests to remove default configuration
+#-------------------------------------------------------------------------------
+:if ($action = "revert") do={
+/user set admin password=""
+ /system routerboard mode-button set enabled=no
+ /system routerboard mode-button set on-event=""
+ /system script remove [find comment~"defconf"]
+ /ip firewall filter remove [find comment~"defconf"]
+ /ip firewall nat remove [find comment~"defconf"]
+ /interface list member remove [find comment~"defconf"]
+ /interface detect-internet set detect-interface-list=none
+ /interface detect-internet set lan-interface-list=none
+ /interface detect-internet set wan-interface-list=none
+ /interface detect-internet set internet-interface-list=none
+ /interface list remove [find comment~"defconf"]
+ /tool mac-server set allowed-interface-list=all
+ /tool mac-server mac-winbox set allowed-interface-list=all
+ /ip neighbor discovery-settings set discover-interface-list=!dynamic
+   :local o [/ip dhcp-server network find comment="defconf"]
+   :if ([:len $o] != 0) do={ /ip dhcp-server network remove $o }
+   :local o [/ip dhcp-server find name="defconf" !disabled]
+   :if ([:len $o] != 0) do={ /ip dhcp-server remove $o }
+   /ip pool {
+     :local o [find name="default-dhcp" ranges=192.168.88.10-192.168.88.254]
+     :if ([:len $o] != 0) do={ remove $o }
+   }
+   :local o [/ip dhcp-client find comment="defconf"]
+   :if ([:len $o] != 0) do={ /ip dhcp-client remove $o }
+ /ip dns {
+   set allow-remote-requests=no
+   :local o [static find name=router.lan address=192.168.88.1]
+   :if ([:len $o] != 0) do={ static remove $o }
+ }
+ /ip address {
+   :local o [find comment="defconf"]
+   :if ([:len $o] != 0) do={ remove $o }
+ }
+ :foreach iface in=[/interface ethernet find] do={
+   /interface ethernet set $iface name=[get $iface default-name]
+ }
+ /interface bridge port remove [find comment="defconf"]
+ /interface bridge remove [find comment="defconf"]
+}
+:log info Defconf_script_finished;
+```
+this is log
+```
+00:00:16 system,error,critical router rebooted without proper shutdown, probably power outage 
+00:00:16 script,info Starting_defconf_script_ 
+00:00:18 system,info interface list added 
+00:00:18 system,info interface list added 
+00:00:18 system,info device added 
+00:00:18 script,info port: ether2 
+00:00:18 system,info device changed 
+00:00:18 system,info bridge port added 
+00:00:18 script,info port: ether3 
+00:00:18 system,info bridge port added 
+00:00:18 script,info port: ether4 
+00:00:18 system,info bridge port added 
+00:00:18 script,info port: ether5 
+00:00:18 system,info bridge port added 
+00:00:18 system,info pool default-dhcp added 
+00:00:18 system,info dhcp server defconf added 
+00:00:18 system,info dhcp network added 
+00:00:18 system,info address added 
+00:00:19 system,info dhcp client added 
+00:00:19 system,info interface list member added 
+00:00:19 system,info interface list member added 
+00:00:19 system,info nat rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info config changed 
+00:00:20 system,info mac-server interface changed 
+00:00:20 system,info mac winbox setting changed 
+00:00:21 system,info dns changed 
+00:00:21 system,info static dns entry added 
+00:00:21 script,info Defconf_script_finished 
+00:00:39 interface,info ether2 link up (speed 100M, full duplex) 
+```
+
 Keyboard shortcuts similar to linux: `<c-k>` clear to end of line, `<c-b>`
-`<c-f>` back and forward one char, `<c-a>` `<c-e` jump to begging or end of
+`<c-f>` back and forward one char, `<c-a>` `<c-e>` jump to begging or end of
 line.
 
 Safe mode starts with `<c-x>`, and ends and keep all changes also with `<c-x>`.
@@ -266,15 +438,20 @@ Run command in background and remove it
 }
 ~~~
 
-Scripts can be stored and triggered on event or by another
-script. For example I use my helper functions and load them from other scripts.
-To create use winbox (copy and paste) since `$`, `"` and `\ ` must be escaped
-with preceding backslash `\ ` if you want to create using terminal `/system
-script add name=helpers source=...`. Before use you need to run them
+Scripts can be stored and triggered on event or by another script. For example I
+use my helper functions and load them from other scripts.  To create use winbox
+(copy and paste) since `$`, `"` and `\ ` must be escaped with preceding
+backslash `\ ` if you want to create using terminal `/system script add
+name=helpers source='/ip add...'`. Before use you need to run them
 
 ~~~
 /system script run helpers
 ~~~
+
+To run script from flash you can use import
+```
+import flash/my.rsc
+```
 
 To replace mask with 1 you can
 
@@ -386,27 +563,40 @@ lftp -u admin, -e "cd hotspot;put doc/mikrotik/login.html;exit" 192.168.5.1
 ~~~
 
 Also you can SSH
-https://wiki.mikrotik.com/wiki/Use_SSH_to_execute_commands_(DSA_key_login)
+```
+ssh admin@192.168.5.1
+```
 
-~~~
-# using winbox create new user under System -> Users: admin-ssh (password can be blank)
-# https://askubuntu.com/a/885396/40031
-/ip ssh set always-allow-password-login=yes
-~~~
+If you get warnings
+```
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the DSA key sent by the remote host is
+SHA256:fXdszuoJH/Tlb/eyxirRDSKLVWugFmb3WuLmIdtlnd8.
+Please contact your system administrator.
+Add correct host key in /home/orlovic/.ssh/known_hosts to get rid of this message.
+Offending DSA key in /home/orlovic/.ssh/known_hosts:146
+  remove with:
+  ssh-keygen -f "/home/orlovic/.ssh/known_hosts" -R "192.168.5.1"
+DSA host key for 192.168.5.1 has changed and you have requested strict checking.
+Host key verification failed.
+```
 
-From your machine you can:
-
-~~~
-ssh -o HostKeyAlgorithms=+ssh-dss -o KexAlgorithms=diffie-hellman-group14-sha1 -l admin-ssh -i id 192.168.5.1
-
-# or put in ~/.ssh/config
+you can disable them in command
+```
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no admin@$MIKROTIK_IP
+```
+or in settings
+```
+# ~/.ssh/config
 Host 192.168.5.1
-  HostKeyAlgorithms ssh-dss
-  KexAlgorithms diffie-hellman-group1-sha1
-
-# so you can simply
-ssh admin-ssh@192.168.5.1
-~~~
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+```
 
 Reset router with ssh
 
@@ -442,6 +632,25 @@ add name=dhcp-pool-my-comp ranges=192.168.5.10-192.168.5.254
   }
 }
 ~~~
+
+# API
+
+https://wiki.mikrotik.com/wiki/Manual:API
+
+```
+  @connection = MTik::Connection.new(
+    host: @nas.nasname,
+    user: @nas.username,
+    pass: @nas.password,
+    port: @nas.api_port,
+    unencrypted_plaintext: true,
+  )
+  # https://aarongifford.com/computers/mtik/doc/MTik/Connection.html#method-i-get_reply
+  result = @connection.get_reply(
+    '/ip/dns/set',
+    '=servers=8.8.8.8,4.2.2.2'
+  )
+```
 
 # My hotspot testing
 

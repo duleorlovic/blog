@@ -121,10 +121,6 @@ HERE_DOC
 
 Another way is to use API
 
-~~~
-
-~~~
-
 ## Mandrill
 
 Mandrill is better than Sendgrid, since Sendgrid can not automatically convert

@@ -453,7 +453,15 @@ it will be in `tmp/db.dump`
   So when variable contain spaces and you need to pass to a command than wrap
   around with quotes, for example `A="file with space.txt"; ls "$A"`
 * exit from script with `exit 1`
-* functions can accept [default
+* functions
+  ```
+  myFunc() {
+    local first_param=$1
+    echo $first_param
+  }
+  myFunc 'Dule'
+  ```
+  you can also define [default
   parameters](http://www.gnu.org/software/bash/manual/bashref.html#Shell-Parameter-Expansion)
   with `:-` syntax
   ~~~
@@ -492,6 +500,11 @@ it will be in `tmp/db.dump`
     echo string a is not equal to string b
   fi
 
+  # regexp match start with doc/etc
+  if [[ $a =~ ^doc\/etc ]]; then
+    echo string a is not equal to string b
+  fi
+
   # split string and use last item
   number="$(echo "asd 123" | cut -d' ' -f2)"
 
@@ -511,10 +524,16 @@ it will be in `tmp/db.dump`
   Use conditional `or ||` and `and &&` and `group ()` and negative `!`
 
   ~~~
-  if [[ $a -eq $b || ($a -eq 2 && $b > 2) ]] || [[ ! -n $a ]] ; then
+  if [[ $a -eq $b || ($a -eq 2 && $b -gt 2) ]] || [[ ! -n $a ]] ; then
     echo number a is equal to number b
   fi
   ~~~
+
+  Increment count
+  ```
+  count=1
+  count=$((count+1))
+  ```
 
 
   Use regular expression matching (not supported with `[ ]` single quote)
@@ -545,6 +564,15 @@ it will be in `tmp/db.dump`
     will not work since wildcard will be changed to html file in current folder.
   * filter files based on their size: `find . -size -212c` show only small than
     212 bytes
+  * skip Permission denied errors with `find / -name 'r' 2>/dev/null`
+  * find js files but exclude node_modules and bower_compo
+  ```
+  find . -name "*.js" -type f -not -path "*node_modul*" -not -path "*bower_comp*"
+  ```
+  * grep files and show file name
+  ```
+  find . -exec grep -H mdsmm {} \;
+  ```
 * escape single quote `'` in linux scripts with `$'Hello I\'m here'`
 [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
@@ -624,7 +652,7 @@ Note `.` after folder name.
   set +x
   ~~~
 
-# Pipe
+# Pipes
 
 * you can pipe output of some command to file `c >> a.log`, and in other shell
   `tailf a.log` but output will be
@@ -646,6 +674,16 @@ Note `.` after folder name.
 
 * for redirection standard error to standard output ` 2>&1 |` there is shorthand
   `|&` version.
+* you add add a line to a pipe before and after the ouput with
+  https://stackoverflow.com/questions/15029171/add-line-at-top-and-bottom-of-file-before-sending-it-to-pipe
+  ```
+  cat text.txt | sed -e '1 i my first line' | sed -e '$a my last line'
+
+  # or with echo and cat
+
+  cat text.txt | (echo first line; cat -; echo last line) | some-other-command
+
+  ```
 * if you need to redirect all script output to a file use `exec`
   ~~~
   #!/bin/bash
@@ -659,7 +697,7 @@ Note `.` after folder name.
 * `jobs -l` is a list of processes in current bash session (it is `Running` if
 in background with `cmd &`, or `Stopped` if `Ctrl+z` or `Terminated` when we
 kill and until it dissapear). Kill first of them with `kill %1`. If process id
-is saved in pid file than you can kill with `pkill -F tmp/pids/server.pid -9`
+is saved in pid file than you can kill with `sudo pkill -F tmp/pids/server.pid`
 
 # Parameter expansion
 
@@ -686,6 +724,24 @@ You can find substring
   concatenate with other string you can use curly braces
   `${variable_name}other_string`
 * [substring removal](http://wiki.bash-hackers.org/syntax/pe#common_use)
+* get second string: `echo 'first second' | awk '{print $2}'`
+* get string after n characters
+  http://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Shell-Parameter-Expansion
+  ```
+  dusan=dusan
+  echo ${dusan:2} # san
+  echo ${dusan:(-2)} # an
+  ```
+* in bash [3 kinds of variable
+substitution](http://www.linuxjournal.com/article/8919)
+  * pattern matching: deletes match `#` shortest from left, `##` longest from
+  left, `%` shortest from right, `%%` longest from right
+    * `NAME=${MYVAR%:*}`  retain the part before the colon `:`
+    * `NAME=${NAME##*/}`  retain the part after the last slash `/`
+  * substitution `${foo:-bar}`
+* [string manipulation](http://tldp.org/LDP/abs/html/string-manipulation.html)
+* concatenate with just joining the strings `echo 'a'"b"`
+
 
 # Arrays
 
@@ -698,7 +754,7 @@ ${!arr[*]}        # 0 1 All of the indexes in the array
 ${#arr[*]}        # 2 Number of items in the array
 ${#arr[0]}        # 4 Length of item zero
 
-# iterate array in for loog
+# iterate array in for loop
 for var in "${arr[@]}"
 do
   echo "${var}"
@@ -887,16 +943,6 @@ twice
   mv config/database.yml{,.example}
   ~~~
 
-* get second string: `echo 'first second' | awk '{print $2}'`
-* in bash [3 kinds of variable
-substitution](http://www.linuxjournal.com/article/8919)
-  * pattern matching: deletes match `#` shortest from left, `##` longest from
-  left, `%` shortest from right, `%%` longest from right
-    * `NAME=${MYVAR%:*}`  retain the part before the colon `:`
-    * `NAME=${NAME##*/}`  retain the part after the last slash `/`
-  * substitution `${foo:-bar}`
-* [string manipulation](http://tldp.org/LDP/abs/html/string-manipulation.html)
-
 * `wget trk.in.rs --recursive` will download all files from the site.
 * sometimes when using multiprocess puma as rails server, I do not see what I'm
 typing in
@@ -922,6 +968,9 @@ fi
     close the window.
   * `screen -r` to reattach to window (which you exited with `Ctrl+A+D`)
   * `Ctrl+A+]` to go to copy mode
+  * screen will catch ctrl+c so to stop some process you can use ctrl+z to move
+    it to background (move to foreground with `fg`)
+    https://serverfault.com/questions/784645/need-to-send-c-to-cli-using-gnu-screen-over-serial-interface-dev-rfcomm0
 * cheatsheet https://devhints.io/bash
 * `pbcopy` is only on mac
 * to prevent `ctrl-d` to exit terminal bash you can set `IGNOREEOF=3` so shell
@@ -935,6 +984,11 @@ fi
 set -e # Any commands which fail will cause the shell script to exit immediately
 set -x # show command being executed
 ~~~
+
+Rescue from error with `|| true` like
+```
+git clone asd.com || true
+```
 
 You can read user input
 
@@ -1002,4 +1056,21 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   ```
   sudo apt install rename
   find _posts/ -name "*.markdown" -print0 | xargs -0 rename 's/.markdown$/.md/'
+  ```
+* multiline string inside variable
+  ```
+  USAGE=$(cat <<-END
+      This is line one.
+      This is line two.
+      This is line three.
+  END
+  )
+
+  echo -e "$USAGE"
+  ```
+* check if file contains string and run code only if does not include string
+  ```
+  if [[ $(grep -L rbenv ~/.bashrc) ]]; then
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+  fi
   ```

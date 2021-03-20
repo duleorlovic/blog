@@ -68,3 +68,8 @@ If you are seeing this on one of your tests, ensure that your tests are either e
 ~~~
 
 https://gorails.com/episodes/realtime-ssh-logs-with-actioncable
+
+# Hotwire
+
+https://hotwire.dev/
+

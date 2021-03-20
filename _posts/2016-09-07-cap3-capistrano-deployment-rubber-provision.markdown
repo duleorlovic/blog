@@ -283,6 +283,8 @@ set :deploy_to, "/home/deploy/#{fetch(:application)}"
 
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
 
+# deploy with: cap staging deploy BRANCH=branch
+set :branch, ENV['BRANCH'] if ENV['BRANCH']
 # rails
 set :rails_env, 'production'
 ~~~
@@ -303,9 +305,30 @@ is with `cap install`.
 Tasks are usually only for specific roles so you server needs to belongs to that
 role if you want task to be executed. Three main roles
 
-* `:web` role is nginx/apache server
-* `:app` role is for rails app
-* `:db` role is for mysql/postgresql database (requires `primary: true`)
+* `:web` role is nginx/apache server with load balancer
+* `:app` role is for rails app. Capistrano's built-in tasks `deploy:check`,
+  `deploy:published` or `deploy:finished` are all run in this role.
+  https://capistranorb.com/documentation/getting-started/flow/
+  You can attach your tasks after finish publishing the deploy
+  ```
+  # lib/capistrano/tasks/puma.rake
+  namespace :puma do
+    desc 'Restart puma service'
+    task :restart do
+      on roles(:app) do
+        execute 'sudo service puma restart'
+      end
+    end
+
+    after 'deploy:published', 'puma:restart'
+  end
+  ```
+* `:db` role is for mysql/postgresql database (requires `primary: true`) or just
+  running migrations. `capistrano-rails` plugin provides the `deploy:migrate`
+  https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/migrations.rake
+  https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/assets.rake
+  Here we are adding `public/assets/` to *linked_dirs* (which should also
+  include `public/packs`)
 
 You can define in two ways. Properties will be merged.
 
@@ -1180,14 +1203,14 @@ Add env variables to `/home/orlovic/premesti.se/.rbenv-vars`
 To use rbenb variables in capistrano task you can write
 ```
 namespace :db do
-  desc 'Load Xceednet users from shared/users.sql'
-  task :load_xceednet_users do
+  desc 'Load myapp users from shared/users.sql'
+  task :load_myapp_users do
     on roles(:all) do
-      execute "cd #{current_path} && $HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_xceednet_users.rb"
+      execute "cd #{current_path} && $HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_myapp_users.rb"
 
       # This will raise error Could not locate Gemfile or .bundle/ directory!!!
       # within current_path do
-      #   execute "$HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_xceednet_users.rb"
+      #   execute "$HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_myapp_users.rb"
       # end
     end
   end
@@ -1317,3 +1340,52 @@ cap production sidekiq:install
 # /home/deploy/move_index/.rbenv-vars
 NODE_OPTIONS=--max-old-space-size=460
 ```
+* to run on specific host you can use host filtering
+  ```
+  bundle exec cap staging locally:delayed_job:start HOSTS=18.232.175.34
+  bundle exec cap staging locally:delayed_job:start ROLES=worker
+  ```
+
+* upload files
+  ```
+  # lib/capistrano/tasks/upload.rake
+  namespace :upload do
+    desc <<~HERE_DOC
+      Upload files
+
+      cap production upload:files README.md
+    HERE_DOC
+    task :files do
+      on roles(:all) do
+        index = ARGV.index 'upload:files'
+        ARGV[index + 1..-1].each do |file_name|
+          puts "Uploading #{file_name} to #{current_path}/#{file_name}"
+          begin
+            upload! file_name, "#{current_path}/#{file_name}"
+          rescue StandardError => e
+            puts e.message
+            puts 'Try to run cap upload:files_f to create folder first and upload files (slower version)'
+          end
+        end
+        exit # so we do no proccess filename arguments as cap tasks
+      end
+    end
+
+    desc <<~HERE_DOC
+      Create folder and upload files (this is slower than just upload)
+
+      cap production upload:files_f README.md
+    HERE_DOC
+    task :files_f do
+      on roles(:all) do
+        index = ARGV.index 'upload:files_f'
+        ARGV[index + 1..-1].each do |file_name|
+          puts "Create folders #{File.dirname("#{current_path}/#{file_name}")} and upload #{file_name}"
+          execute :mkdir, '-p', File.dirname("#{current_path}/#{file_name}")
+          upload! file_name, "#{current_path}/#{file_name}"
+        end
+        exit # so we do no proccess filename arguments as cap tasks
+      end
+    end
+  end
+  ```

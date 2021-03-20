@@ -38,7 +38,8 @@ bucket = s3.bucket bucket
 bucket.map {|o| o.public_url}
 ```
 
-Also SNS publish https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SNS/Client.html#publish-instance_method
+Also SNS publish
+https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SNS/Client.html#publish-instance_method
 ```
 require 'aws-sdk-sns'
 client = Aws::SNS::Client.new

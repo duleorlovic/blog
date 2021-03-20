@@ -18,8 +18,11 @@ him for a lifetime
 If you do not have `rails` or `git` you need to install
 
 ~~~
-gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+command curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+command curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
+
 \curl -sSL https://get.rvm.io | bash
+# \curl -sSL https://get.rvm.io | bash -s stable --ruby
 rvm install 2.3.0
 gem install bundle
 
@@ -630,8 +633,10 @@ rake db:migrate && git add . && git commit -m "rails g scaffold company name:str
 # Puma
 
 Puma is now default webserver on rails. But by default it runs in single mode
-WEB_CONCURRENCY=1 so on heroku it will allow RAILS_MAX_THREADS connections if
+WEB_CONCURRENCY=0 so on heroku it will allow RAILS_MAX_THREADS connections if
 GIL is not trigered.
+In cluster mode WEB_CONCURRENCY=1 (or more) there is one master process and
+worker processes.
 You can simulate slow connection with `sleep 10` (sleep does not trigger GIL).
 
 ~~~
@@ -651,6 +656,8 @@ curl $u/action_with_sleep_10 &
 
 
 You can follow [heroku article](https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server)
+Also https://www.digitalocean.com/community/tutorials/how-to-deploy-a-rails-app-with-puma-and-nginx-on-ubuntu-14-04
+https://prograils.com/posts/capistrano-deploy-to-ubuntu-with-systemd-nginx-puma-and-rbenv
 
 ~~~
 cat >> Gemfile <<HERE_DOC
@@ -676,6 +683,7 @@ release: rake db:migrate
 
 # default puma config is fine, but on production should include those lines
 cat >> config/puma.rb <<HERE_DOC
+# should match number of CPU cores: grep -c processor /proc/cpuinfo
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
 threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count
@@ -699,6 +707,32 @@ cat >> config/puma/development.rb <<HERE_DOC
 workers 0
 HERE_DOC
 ~~~
+
+Restart system
+```
+sudo systemctl daemon-reload
+sudo systemctl enable puma.service
+sudo systemctl start puma.service
+```
+
+# Phusion passenger
+
+Installation
+https://www.phusionpassenger.com/docs/tutorials/deploy_to_production/installations/oss/aws/ruby/nginx/
+
+In nginx configuration you need to have
+```
+  passenger_enabled on;
+
+```
+
+https://www.phusionpassenger.com/library/dev/ruby/rails_integration.html
+https://www.phusionpassenger.com/library/config/nginx/action_cable_integration/
+
+Gorails says it is faster https://gorails.com/forum/passenger-vs-puma
+
+Can not find pidfile, there is some configuration to start in given pid file
+https://www.phusionpassenger.com/library/config/standalone/reference/#--pid-file-pid_file
 
 # Heroku deploy
 
@@ -767,7 +801,8 @@ heroku pg
 # find name after "Add-on:"
 heroku pg:pull postgresql-name-on-heroku my_rails_app_development
 # or in one command
-bundle exec rails db:drop && heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
+bundle exec rake db:drop
+heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
 
 
 # also pushing

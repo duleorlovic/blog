@@ -30,6 +30,7 @@ sudo apt-get -y install python-certbot-apache
 )
 
 Install certboot
+https://certbot.eff.org/lets-encrypt/snap-nginx
 https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx
 ```
 sudo apt-get remove certbot
@@ -52,11 +53,77 @@ Certbot works in just one command:
 ```
 sudo certbot --nginx  -d premesti-se.trk.in.rs -d en-premesti-se.trk.in.rs -d sr-latin-premesti-se.trk.in.rs -d a.trk.in.rs
 ```
+You can repeat this command since if certs exists it will asks you if you can to
+renew or install
+```
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator nginx, Installer nginx
+Cert not yet due for renewal
+
+You have an existing certificate that has exactly the same domains or certificate name you requested and isn't close to expiry.
+(ref: /etc/letsencrypt/renewal/asd.movebase.link.conf)
+
+What would you like to do?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: Attempt to reinstall this existing certificate
+2: Renew & replace the certificate (may be subject to CA rate limits)
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 1
+Keeping the existing certificate
+Deploying Certificate to VirtualHost /etc/nginx/sites-enabled/nginx_puma
+Redirecting all traffic on port 80 to ssl in /etc/nginx/sites-enabled/nginx_puma
+```
 
 You can also install dns plugin
 https://certbot.eff.org/docs/using.html?highlight=dns#dns-plugins so you can
 obtain wildcard certificate (so it covers all subdomains).
+https://certbot-dns-route53.readthedocs.io/en/stable/
+```
+sudo snap set certbot trust-plugin-with-root=ok
+sudo snap install certbot-dns-route53
+```
 
+You need two policy attached, one is **AWSCertificateManagerFullAccess** and another
+```
+{
+    "Version": "2012-10-17",
+    "Id": "certbot-dns-route53 sample policy",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:ListHostedZones",
+                "route53:ChangeResourceRecordSets",
+                "route53:GetChange"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
+
+To use you need to pass configuration inside sudo
+```
+sudo su
+AWS_CONFIG_FILE=/home/ubuntu/efs/.aws_config_dns_challenge certbot certonly --dns-route53 -d *.movebase.link
+```
+
+Example nginx configuration that certbot add
+```
+    listen 443 ssl; # managed by Certbot
+    # RSA certificate
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem; # managed by Certbot
+
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+
+    # Redirect non-https traffic to https
+    if ($scheme != "https") {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+```
 
 To see current obtained certificates
 https://certbot.eff.org/docs/using.html#managing-certificates
@@ -81,7 +148,7 @@ I created my last certificate on 2019-11-23
 Check if nginx is listening on port 443 for ssl https
 
 ```
-sudo netstat -lptun | grep nginx
+sudo netstat -tupln | grep nginx
 ```
 
 to check if it is accepting connections
@@ -98,10 +165,15 @@ certificate is not valid.
 To check dns settings use
 ```
 nslookup mydomain.com
+host mydomain.com
 ```
 
 To clear dns cache on chrome use
 [chrome://net-internals/#dns](chrome://net-internals/#dns)
+To clear dns cache on ubuntu
+```
+sudo systemd-resolve --flush-caches
+```
 
 If you have forced ssl on rails server than to obtain certificate, but if server
 is already running it will redirect to https://new-domain and reject since it is
@@ -125,6 +197,7 @@ It will create 4 files and you can read cert.pem
 sudo ls /etc/letsencrypt/live/main.trk.in.rs
 cert.pem  chain.pem  fullchain.pem  privkey.pem
 
+sudo openssl x509 -text -noout -in /etc/letsencrypt/live/main.trk.in.rs/cert.pem
 sudo keytool -printcert -file /etc/letsencrypt/live/main.trk.in.rs/cert.pem | grep trk
 ```
 

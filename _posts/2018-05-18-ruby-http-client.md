@@ -97,8 +97,9 @@ Set Form data
 request.set_form_data(user: { name: 'Duke' })
 # or
 request.body = { user: { name: 'Duke' } }.to_json
-# or plain text when request['Content-Type'] = 'application/x-www-form-urlencoded'
-# ie in Postman there is no json curly braces
+# or plain text when request['Content-Type'] =
+# 'application/x-www-form-urlencoded' in Postman there is no json curly braces
+# this is not the same as to_json
 request.body = 'grant_type=client_credentials'
 ~~~
 

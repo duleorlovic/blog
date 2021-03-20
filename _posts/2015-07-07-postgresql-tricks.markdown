@@ -284,8 +284,9 @@ When you want to show some statistics during some time (time points in sql is `G
 
 ![Time series of deactivated users]({{ site.baseurl }}/assets/deactivated_users.png)
 
-What I have learned is that when you use *series*, never apply *WHERE* since because it will destroy *series*.
-Better is to filter in *ON* statement. Each subsequent joins should be *LEFT OUTER JOIN* so *series* survive.
+What I have learned is that when you use *series*, never apply *WHERE* since
+because it will destroy *series*.  Better is to filter in *ON* statement. Each
+subsequent joins should be *LEFT OUTER JOIN* so *series* survive.
 
 We need *COALESCE* because on some days we don't have records, so we put key `none` ( number is 0)
 

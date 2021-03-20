@@ -22,8 +22,9 @@ title: Ubuntu working environment
   ~/Pictures
   Use `ctrl` instead of alt if you want to copy to clipboard
 * [port
-forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding) socks
-tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
+forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding)
+`ssh -L 8080:localhost:80 my.server.com`
+socks tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
 <about:preferences#advanced> Networktab -> Settings choose "Manual proxy
 configuration" and type SOCKS Host: localhost, and port 1080. Do not write
 anyting in HTTP proxy... For Chrome or another connections you can use system
@@ -184,6 +185,10 @@ tab Color Mode is Color) so use Writter to insert image and print document.
   I comment out `# dns=dnsmasq` from /etc/NetworkManager/NetworkManager.conf and
   `sudo restart network-manager`
 
+* test sound using
+  ```
+  speaker-test -t wav -c 6
+  ```
 * if `Bus 002 Device 003: ID 0d8c:013c C-Media Electronics, Inc. CM108 Audio
 Controller` microphone does not work automatically (but you can see in sound
 settings as *CM108 Audio Controller* than you need to comment out last line
@@ -294,6 +299,16 @@ nslookup asd.loc
 # you can show any records with
 nslookup -query=any move-index.org
 ~~~
+
+You can also use dig to find out dns lookup
+```
+dig +short trk.in.rs
+```
+
+Also host command
+```
+host trk.in.rs
+```
 
 On linux you can update `/etc/hosts` with you custom domain name and use it
 instead of IP address.
@@ -614,7 +629,7 @@ configuration. To test on which interface is used port listening you can see
 port use port in use
 
 ```
-sudo netstat -plutn | grep 3306
+sudo netstat -tupln | grep 3306
 ```
 
 You can try with nmap but it does not show for example neo4j 7474 port
@@ -865,6 +880,8 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   ```
   file image.png
   MyPNG.png: PNG image, 681 x 345, 8-bit/color RGB, non-interlaced
+  # get sizes of all images in a folder
+  ls | xargs file
   # or
   identify image.png
   ```

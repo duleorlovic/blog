@@ -672,6 +672,40 @@ end
 When you want to cancel a delayed job you can find and destroy it... but better
 is to create a job that is immune ie check at the begginning or in the loop.
 
+Capistrano
+Use recepies https://github.com/AgileConsultingLLC/capistrano3-delayed-job
+```
+# config/deploy.rb
+# https://github.com/AgileConsultingLLC/capistrano3-delayed-job
+set :delayed_job_roles, [:worker]
+set :delayed_job_pools, {
+  webapp: 1,
+  mailers: 1,
+  '*': 1,
+}
+```
+
+To use same task to start on reboot
+https://stackoverflow.com/questions/34482806/how-to-run-capistrano-task-locally-from-remote-server
+First make sure you can ssh locally on production (`ssh-keygen -t rsa` `ssh
+localhost`, copy PEM file that is used on `config/deploy/staging.rb`)
+```
+# lib/capistrano/tasks/locally.rake
+namespace :locally do
+  namespace :delayed_job do
+    task :start do
+      run_locally { Rake::Task['delayed_job:start'].execute }
+    end
+  end
+end
+
+# config/schedule.rb
+job_type :delayed_job, %(cd :path && :environment_variable=:environment :rbenv_exec bundle exec cap :environment locally:delayed_job:start ROLES=worker)
+every :reboot do
+  delayed_job 'start'
+end
+```
+
 # Test background jobs spec
 
 `ActiveJob::Base.queue_adapter = :test` will change queue adapter for all

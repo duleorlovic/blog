@@ -554,16 +554,24 @@ end
 [requests spec](https://www.relishapp.com/rspec/rspec-rails/docs/request-specs/request-spec)
 are used for full stack testing without stubbing.
 It is faster than system but can not use javascript...
-Usually for oauth (doorkeeper gem).
 If request is not performed (`get` `xhr`) than something is different (current
 user is not initialized, or something).
-`post url, name: 'my name'` is used without `params` key
+`post url, params: { name: 'my name' }` is used with `params` key
 To set json request use `get path, format: :json`.
 To set headers you can use third param
 
 ```
   get login_path, nil, { 'Authentication' => 'MyToken' }
 
+  # in Rails 5 we need to use keyed instead positional arguments
+  get '/', params: {}, headers: { 'HTTP_USER_AGENT': 'Mozilla/5.0 (compatible; Nimbostratus-Bot/v1.3.2; http://cloudsystemnetworks.com) Nimbostratus' }
+
+```
+
+You can access `flash` object
+```
+  post my_path, params: { name: 'd' }
+  expect(flash[:notice]).to match 'd created successfully'
 ```
 
 ~~~
@@ -612,7 +620,7 @@ expect(response.body).to include 'Logout'
 expect(response.body).to include ERB::Util.html_escape "Some text with ' quote"
 expect(response.body.scan(/<tr>/).size).to be 3
 expect(response.body).to match /button.*Publish Package.*\/button/
-# for multiline math response.body text you can use modifier m
+# for multiline match response.body text you can use modifier m
 expect(response.body).to match /dl.*dl/m
 ~~~
 

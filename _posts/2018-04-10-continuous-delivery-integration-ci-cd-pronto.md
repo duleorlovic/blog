@@ -162,6 +162,23 @@ jobs:
       if: github.ref == 'refs/heads/master' && job.status == 'success'
       run: git push https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git origin/master:master
 ```
+Another way to deploy to heroku is using https://github.com/AkhileshNS/heroku-deploy
+Note to use single quote instead of double quoted strings
+```
+  Deploy:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    needs: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Deploy to heroku
+      - uses: akhileshns/heroku-deploy@v3.6.8 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "YOUR APP's NAME" #Must be unique in Heroku
+          heroku_email: "YOUR EMAIL"
+```
 
 With `postgres: image: postgres:11` I got an error, so I switch to old 10.8
 ```
@@ -326,7 +343,7 @@ Errno::EADDRINUSE: Address already in use - bind(2) for 127.0.0.1:8080
 You should kill services that runs on 8080
 
 ```
-sudo netstat -plutn | grep 8080
+sudo netstat -tupln | grep 8080
 ```
 
 Default admin username is `root`

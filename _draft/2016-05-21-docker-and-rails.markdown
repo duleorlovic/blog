@@ -69,7 +69,8 @@ Also https://vitobotta.com/2020/04/06/optimised-docker-builds-rails-apps/
 
 # Rails
 
-For rails we can use this Dockerfile [link](http://blog.codeship.com/running-rails-development-environment-docker/)
+For rails we can use this Dockerfile
+[link](http://blog.codeship.com/running-rails-development-environment-docker/)
 
 ~~~
 # Dockerfile
@@ -157,7 +158,8 @@ postgres:
 
 # Instalation
 
-Follow [installing](https://docs.docker.com/engine/installation/linux/ubuntulinux/)
+Follow
+[installing](https://docs.docker.com/engine/installation/linux/ubuntulinux/)
 
 ~~~
 sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D

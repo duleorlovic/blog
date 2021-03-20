@@ -99,6 +99,11 @@ kill -9 `cat db/neo4j/development/run/neo4j.pid`
 Note that when you are changing the ports, then run `spring stop` to reload new
 env.
 
+Usine neo4j with docker https://hub.docker.com/_/neo4j
+```
+docker pull neo4j
+docker run     --publish=7474:7474 --publish=7687:7687     --volume=$HOME/neo4j/data:/data     neo4j
+```
 Learn from examples in browser, type `:play movies`.
 
 # Cypher commands

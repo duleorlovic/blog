@@ -1139,6 +1139,21 @@ Install with `yarn global add parcel-bundler`
 make help
 ```
 
+```
+# Makefile, first is default target
+blah: blah.o
+	cc blah.o -o blah
+
+blah.o: blah.c
+	cc -c blah.c -o blah.o
+
+blah.c:
+	echo "int main() { return 0; }" > blah.c
+
+clean:
+	rm -f blah.o blah.c blah
+```
+
 # TIPS
 
 * node uses two core modules: `module` and `require`.

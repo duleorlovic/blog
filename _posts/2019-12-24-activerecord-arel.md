@@ -117,3 +117,21 @@ User.where(
     end
   end
   ```
+
+* to fetch all indexes for given table name use
+  ```
+  @connection ||= ActiveRecord::Base.connection
+  @tables ||=
+    if ActiveRecord::VERSION::MAJOR == 5
+      connection.data_sources
+    else
+      connection.tables
+    end
+  @models = ActiveRecord::Base.descendants
+  # reject table_name == 'schema_migrations'
+  @connection.indexes(@model.table_name)
+  ```
+* to find belongs_to associations
+  ```
+  model.reflects_on_all_associations(:belongs_to).
+  ```

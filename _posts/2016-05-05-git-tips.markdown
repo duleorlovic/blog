@@ -17,9 +17,17 @@ Push branch and track
 
     git push bitbucket development:development
 
+Get current branch name
+
+    git symbolic-ref --short HEAD
+
 Getting existing git branches to track remote branches:
 
-    git branch --set-upstream gh-pages-bitbucket bitbucket/gh-pages 
+    git branch --set-upstream gh-pages-bitbucket bitbucket/gh-pages
+
+Show latest branch ordered by updated time
+
+    git branch --sort=-committerdate
 
 # Git log
 
@@ -64,6 +72,10 @@ Find difference of current file with some point
 Find difference of all files and folders with meld diff tool
 
     git difftool master --dir-diff
+
+Find difference on this branch (from common ancestor) use three dots
+
+    git diff master...my_branch
 
 Find bug using bisect on specific folder or file to jump half steps between
 
@@ -291,11 +303,23 @@ fi
 
 * https://github.com/laughedelic/gtm is old unmaintained
 * https://github.com/git-time-metric/gtm
-
+  Install linux brew https://brew.sh/
+  ```
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  ```
+  Than install gtm
   ~~~
   brew tap git-time-metric/gtm
   brew install gtm
   ~~~
+
+  Use in your project
+  ```
+  gtm init
+
+  gtm status
+  gtm report -last-month -format summary
+  ```
 
 ## Glass
 

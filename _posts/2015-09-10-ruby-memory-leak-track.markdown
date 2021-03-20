@@ -130,7 +130,7 @@ if Rails.application.secrets.memory_profiler
       rss = ActionView::Base.new.number_to_human_size rss * 1.kilobyte
       objects = GC.stat[:heap_live_slots]
       objects = ActionView::Base.new.number_to_human objects
-      Rails.logger.info "MEMORY[#{pid}]: time: #{Time.now} rss: #{rss}, live_objects: #{objects}"
+      Rails.logger.info "MEMORY[#{pid}]: time: #{Time.zone.now} rss: #{rss}, live_objects: #{objects}"
       sleep 2
     end
   end
@@ -158,7 +158,8 @@ You don't need to download database if you can deploy and download memory log.
 On heroku you can use `heroku logs -t | tee log/production.log` or just download
 if you some log service enabled (like Logentries).
 
-Heroku has plugin labs that show memory in logs https://devcenter.heroku.com/articles/log-runtime-metrics
+Heroku has plugin labs that show memory in logs
+https://devcenter.heroku.com/articles/log-runtime-metrics
 ```
 heroku labs:enable log-runtime-metrics
 source=web.1 dyno=heroku.2808254.d97d0ea7-cf3d-411b-b453-d2943a50b456 sample#load_avg_1m=2.46 sample#load_avg_5m=1.06 sample#load_avg_15m=0.99
@@ -430,3 +431,5 @@ videos
 https://medium.com/rubyinside/how-we-halved-our-memory-consumption-in-rails-with-jemalloc-86afa4e54aa3
 http://www.be9.io/2015/09/21/memory-leak/
 http://eng.rightscale.com/2015/09/16/how-to-debug-ruby-memory-issues.html?
+
+https://ruby-prof.github.io/

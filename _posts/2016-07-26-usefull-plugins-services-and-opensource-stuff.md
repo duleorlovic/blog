@@ -88,33 +88,6 @@ text on click
 * trigger a function on scroll to an element [waypoints](http://imakewebthings.com/waypoints/)
 * drag and drop elements <https://shopify.github.io/draggable/>
 
-# Gems
-
-* https://awesome-ruby.com/
-* recurring events https://github.com/rossta/montrose
-  ```
-  Montrose.daily(total: 10, starts: today, until: ends, between: starts..ends,
-                 month: :january, interval: 2)
-  Montrolse.weekly(on: [:monday, :friday])
-  Montrose.every(:week, until:ends)
-  Montrose.every(2.weeks, on: [:monday, :friday])
-
-  # enumerator
-  r.events.take(10)
-  ```
-
-* rubyzip to create zip files https://github.com/rubyzip/rubyzip
-  ```
-  require 'zip'
-  file_name = '2019-12-24 12:49:14 +0000_Generic-Generic-Name_Switch_Letter.pdf'
-  system "echo 123 > #{file_name}"
-  Zip::File.open('a.zip', Zip::File::CREATE) { |zipfile| zipfile.add file_name, './' + file_name }
-
-  ```
-* ms word documents create from scratch
-  https://github.com/urvin-compliance/caracal or from html
-  https://github.com/karnov/htmltoword
-
 # Alerts and notifications
 
 ## Jbox
@@ -961,13 +934,52 @@ opensource market peer-to-peer marketplace
   https://github.com/brotandgames/ciao
 * chat support intercom https://www.chatwoot.com/docs/channels/website
 
-# Games
+# Userscripts
+
+https://wiki.greasespot.net/Greasemonkey_Manual:API
+https://www.oreilly.com/library/view/greasemonkey-hacks/0596101651/ch01.html
+
+Greasemonkey Hacks: Tips & Tools for Remixing the Web with Firefox 1st Edition
+By Mark Pilgrim. Google book, some pages are missing
+https://books.google.rs/books?id=KWRE2C_S4YsC&pg=PR19&lpg=PR19&dq=Greasemonkey+hacks
+To create a script click on Tampermonkey firefox extension icon and 'Create
+a new script'
+```
+// ==UserScript==
+// @name         New Userscript
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://wiki.greasespot.net/Metadata_Block
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Your code here...
+    fetch('
+})();
+```
+
+Index of scripts:
+* https://www.userscript.zone/
+* https://openuserjs.org/
+* https://greasyfork.org/en
+
+## Slither io
 
 * http://slither.io/ bots https://github.com/joetex/SlitherAStar
   http://dahquan.github.io/rattlesnake/examples/feedme.html
   https://github.com/j-c-m/Slither.io-bot
   https://github.com/ErmiyaEskandary/Slither.io-bot#visual-tutorial
   https://www.youtube.com/watch?v=eicx_UkeVhI
+  https://greasyfork.org/scripts/21520-mybot-with-100k-to-circle-was-name-slither-io-bot-championship-edition/code/Mybot%20with%20100K%20to%20circle%20(was%20Name%20Slitherio%20Bot%20Championship%20Edition).user.js
+
+
+```
+```
 
 # Templates
 
@@ -986,6 +998,10 @@ version](https://github.com/iogbole/gentelella_on_rails)
   <https://preview.tabler.io/index.html>
 * [four images](http://barbajs.org/demo/grid/index.html)
 * [trophy jekyll](http://thomasvaeth.com/trophy-jekyll/) nice template for jekyll
+
+Free illustrations kits
+* index of various sources https://freeillustrations.xyz/
+* https://undraw.co/illustrations
 
 Email templates
 
@@ -1155,6 +1171,12 @@ https://alternativeto.net
 
 * twilio gem
 
+# Jira
+
+* use smart commit messages. Email of author must match email of user
+  https://confluence.atlassian.com/fisheye/using-smart-commits-960155400.html
+  * `Support small devices APP-123 #comment Added a media query form small dev`
+  * `Message APP-123 #done`
 
 # Status page
 

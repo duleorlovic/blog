@@ -4,12 +4,39 @@ layout: post
 
 # Dokku
 
-<https://github.com/dokku/dokku>
 Heroku-like self hosted platform as a service
+<https://github.com/dokku/dokku>
 
+Install on virtualbox using vagrant
+https://github.com/kevinnguy/dokku-aws-tutorial
+```
+git clone git@github.com:dokku/dokku.git
+cd dokku
+vagrant up
+# this will boot up virtual box maching on 10.0.0.2
+sudo vi /etc/hosts
+# 10.0.0.2 dokku.me
+firefox http://dokku.me/
+
+# stop virtual machine
+vagrant halt
+```
+
+Install on t2.micro 1GB RAM
+```
+ssh -i $PEM_FILE ubuntu@$TEST_IP_ADDRESS
+wget https://raw.githubusercontent.com/dokku/dokku/v0.22.9/bootstrap.sh
+sudo DOKKU_TAG=v0.22.9 bash bootstrap.sh
+```
+Finish setup using browser (copy paste your public key `~/.ssh/id_rsa.pub` and
+select Use virtualhost naming for apps)
+
+> App name must begin with lowercase alphanumeric character, and cannot include uppercase characters, colons, or underscores
 To create app you can
 ```
-dokku apps:create myApp
+dokku apps:create my-app
+# this will create dokku remote url
+git remote add dokku dokku@dokku.trk.in.rs:my-app
 
 # to find help
 dokku apps:help
@@ -51,39 +78,38 @@ Config
 ```
 # add config environment variable: for buildpack based deployes envs are
 # available during build and run time (Dockerfile based are only on run-time)
-dokku config myApp
-# when setting from local than you do not need to define myApp
+dokku config my-app
+# when setting from local than you do not need to define my-app
 dokku config:set RAILS_MASTER_KEY=`cat config/master.key`
-# it is stored in: dokku run myApp cat  /app/.env and it is updated on next
+# it is stored in: dokku run my-app cat  /app/.env and it is updated on next
 # deploy or `ps:rebuild`
 ```
 
 Restart
 ```
-dokku ps:restart rails_6
+dokku ps:restart my-app
 ```
 
 From local machine add remote and push the code
 ```
 # dokku.me should point to your server, without proxy
-git remote add dokku dokku@dokku.me:myApp
+git remote add dokku dokku@dokku.me:my-app
 
 git push dokku master
 # output should be like:
 =====> Application deployed:
-       http://myApp.dokku.trk.in.rs
+       http://my-app.dokku.trk.in.rs
 
-To dokku.trk.in.rs:myApp
+To dokku.trk.in.rs:my-app
  * [new branch]      master -> master
 ```
 
 Run commands from local
 ```
-ssh -t dokku@dokku.trk.in.rs run rails_6 ruby -v
+ssh -t dokku@dokku.trk.in.rs run my-app ruby -v
 # or just using client that is downloaded in ~/.dokku
 # git clone git@github.com:dokku/dokku.git ~/.dokku
 # alias dokku='$HOME/.dokku/contrib/dokku_client.sh'
-
 dokku run ruby -v
 dokku run rails console
 ```
@@ -93,11 +119,11 @@ server, for example `*.a.trk.in.rs` so you can use any subdomain of that
 subdomain. Only think is that you need to add to your app
 
 ```
-dokku domains:add myApp rails.a.trk.in.rs
-dokku domains:set myApp rails.a.trk.in.rs # this will remove all other domains
+dokku domains:add my-app rails.a.trk.in.rs
+dokku domains:set my-app rails.a.trk.in.rs # this will remove all other domains
 
 dokku domains:report
-dokku urls rails_6
+dokku urls my-app
 ```
 
 You can inspect other nginx configuration by inspecting it and you can customize
@@ -105,7 +131,7 @@ http://dokku.viewdocs.io/dokku/configuration/nginx/
 
 ```
 less /etc/nginx/conf.d/dokku.conf # here we include all our apps configurations
-cat /home/dokku/rails_6/nginx.conf
+cat /home/dokku/my-app/nginx.conf
 # upstream rails_6-5000 {
 #   server 172.17.0.3:5000;
 # }
@@ -129,7 +155,7 @@ dokku config:set --global DOKKU_LETSENCRYPT_EMAIL=salji@trk.in.rs
 ```
 than you can enable ssl for current app domains with
 ```
-dokku letsencrypt myApp
+dokku letsencrypt my-app
 # add cronjob for dokku user, check with: sudo -u dokku crontab -l
 # @daily /var/lib/dokku/plugins/available/letsencrypt/cron-job
 # it calls auto-renew for all certificates on dokku server
@@ -155,9 +181,9 @@ Logs
 
 ```
 dokku logs # when running from local machine
-dokku logs myApp -t
-dokku nginx:access-logs myApp -t
-dokku nginx:error-logs myApp -t
+dokku logs my-app -t
+dokku nginx:access-logs my-app -t
+dokku nginx:error-logs my-app -t
 ```
 
 ## Posgres
@@ -166,13 +192,16 @@ Install plugin
 ```
 # add postgres plugin
 sudo dokku plugin:install https://github.com/dokku/dokku-postgres
+# this will clone to /var/lib/dokku/plugins/available/postgres
 ```
 
-Create service that usually contains only one database and name is stored in
-`cat /var/lib/dokku/services/postgres/railsdatabase/DATABASE_NAME`
-https://github.com/dokku/dokku-postgres/blob/master/config#L4 and is the same as
-service so we need to create separate service for separate app (backup is for
-one database with the same name as service)
+Create service railsdatabase and that service usuallly contains only one
+database and name is stored in `cat
+/var/lib/dokku/services/postgres/railsdatabase/DATABASE_NAME`
+https://github.com/dokku/dokku-postgres/blob/master/config#L4 and db name is
+similar to service name (just snake case, underscode instead dash) so we need to
+create separate service for separate app (backup is for one database with the
+same name as service)
 https://github.com/dokku/dokku-postgres/blob/master/common-functions#L26
 
 ```
@@ -183,7 +212,7 @@ dokku postgres:list
 dokku postgres:create railsdatabase
 
 # link with the app ie setting DATABASE_URL
-dokku postgres:link railsdatabase myApp
+dokku postgres:link railsdatabase my-app
 
 # access postgres database
 dokku postgres:connect railsdatabase
@@ -235,7 +264,7 @@ If there are `Dockerfile` than it will be used except there are `BUILDPACK_URL`
 env variable or `.buildpacks` file.
 If previously buildpack was used than we need to add flag to switch to docker
 ```
-dokku config:unset --no-restart myApp DOKKU_PROXY_PORT_MAP
+dokku config:unset --no-restart my-app DOKKU_PROXY_PORT_MAP
 ```
 
 Since env variables are using only during runtime phase, you can use
@@ -265,8 +294,20 @@ You can add triggers for after deploy actions
 ```
 Zero downtime deploys http://dokku.viewdocs.io/dokku/deployment/zero-downtime-deploys/
 
+# Neo4j
+
+https://github.com/jbhannah/dokku-neo4j
+
+```
+dokku plugin:install https://github.com/thetallgrassnet/dokku-neo4j.git neo4j
+```
+on client
+```
+dokku config:set NEO4J_HOST=dokku-neo4j-mygraph NEO4J_TYPE==http NEO4J_PORT=7474
+```
+
 # Similar
+
 * https://github.com/caprover/caprover
 
 https://pawelurbanek.com/rails-heroku-dokku-migration
-https://github.com/githubsaturn/captainduckduck

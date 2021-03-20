@@ -88,6 +88,10 @@ layout: post
   ```
   mysql -u hj9gpgm687w1qwx -pvuxns3sidwrjjf8 -h tviw6wn5xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com -P 3306 u6rhqznmtth3j4g
 
+  # or aws
+  DATABASE_URL=mysql2://dbuser:123456@xn01-db01.hrblhe.ap-southeast-1.rds.amazonaws.com/web001db
+  mysql -u dbuser -p123456 -h xn01-db01.hrblhe.ap-southeast-1.rds.amazonaws.com web001db
+
   ```
 * to enable access to mysql on my own local ubuntu mysql user
   ```
@@ -200,4 +204,17 @@ layout: post
   # /etc/mysql/mysql.conf.d/mysqld.cnf
   [mysqld]
   sql-mode = NO_ENGINE_SUBSTITUTION
+  ```
+* see cpu usage
+  ```
+  select * from INFORMATION_SCHEMA.PROCESSLIST where db = 'web001db' and INFO is not null;
+  ```
+  Find
+  ```
+  SELECT SUBSTRING_INDEX(host, ':', 1) AS host_short,
+       GROUP_CONCAT(DISTINCT user) AS users,
+       COUNT(*) AS threads
+FROM information_schema.processlist
+GROUP BY host_short
+ORDER BY COUNT(*), host_short;
   ```

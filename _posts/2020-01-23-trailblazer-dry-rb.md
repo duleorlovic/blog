@@ -1096,6 +1096,20 @@ https://dry-rb.org/gems/dry-schema/1.5/advanced/custom-types/
 ## Dry validations
 
 https://dry-rb.org/gems/dry-validation/1.5/
+https://www.youtube.com/watch?v=nOUPIa7tWpA&list=PLqvlCCuOUZMQAuM6KJk_sWQnZXG00Su1_&index=5
+Main reason of implementing dry-validations instead activerecord and
+activemodel validations, is that it does not override methods like `:errors` or
+`:attributes` (so you can have this names as colomn names). Validation is
+performed on input data (not on the activerecord model).
+Another reason is that validations are changing (for example adding `validate
+:phone, presence: true)`) and if you forgot to migrate data you end up in bugs
+when old objects are instantiated (in invalid state).
+Another is separation of structural validation and type safety (dr-schema) and
+on another side, domain validation rules. So simple first step validation are
+inside `params`, `schema`, `json` (they have different coercing rules)  block
+but something
+
+
 Validations are expressed using contract object that are defined by schema with
 basic type check and any additional rules that should be applied (it will be
 applied after schema is verified).

@@ -5,23 +5,25 @@ title: Vim
 
 # Internals
 
+[quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
 keynames:
 
-* `<c-d>` is control Ctrl and d, in help it can be written as `CTRL-D`
+* `<ctrl-d>` is control Ctrl and d, in help it can be written as `^d`. In
+  commands you can also write `<c-d>`
 * `<esc>` is escape key (when recording macro it is `€ý`)
 * `<space>` space
 * `<cr>` sometimes it is `<Enter>`
 * `<bs>` backspace
 * `<left>` left arrow
 * `<s-left>` shift left
-* `<c-left>` control left
+* `<ctrl-left>` control left
 * `^I` is when we insert `<tab>`
 * `<nl>` new line. If you use `echom "a\nb"` you will see `a^@b` (`CTRL-v` and
   `CTRL-j`)
 * `<tab>` tab
 
-If you press `c-s` ctrl-s than terminal will freeze all output and looks like
-vim hangs and stop working, but you need to run `c-q` ctrl-q to exit from that.
+If you press `ctrl-s` ^s than terminal will freeze all output and looks like
+vim hangs and stop working, but you need to run `ctrl-q` ^q to exit from that.
 
 special variables
 
@@ -32,6 +34,7 @@ special variables
   returns `iskeyword=@,48-57,_,192-255,-` ie alphabetic ascii, digits 0-9, _ ,
   and some special chars
 * `<nop>` no operation, usefull when you want to disable some keys
+
 
 Run vim without any plugins or settings with
 ```
@@ -83,29 +86,39 @@ Other help commands can be found `:help 0.8`.
 Follow link with `ctrl-]` and jump back with `ctrl-o`
 
 
-Use Ctrl-o to run normal mode command from insert Mode (instead of `^o` I
-write `ctrl-o` or `<c-o>`).
-* `<c-o>` take to normal mode for just ONE command, so if you want to
-  go up while in insert mode `<c-o> k`, or to reformat paragraph `<c-o> gqip`,
-  clear whole line but not new line `<c-o><s-o>` (similiar to `<c-u>`
+Use Ctrl-o to run normal mode command from insert Mode
+* `<ctrl-o>` take to normal mode for just ONE command, so if you want to
+  go up while in insert mode `<ctrl-o> k`, or to reformat paragraph 
+  `<ctrl-o> gqip`, clear whole line but not new line `<ctrl-o><s-o>` (similiar
+  to `<ctrl-u>`
 
 Other usefull commands in insert mode:
-* `<c-t>` `<c-d>` indent deindent in insert mode
-* `<c-o> d` delete everything to the right of cursor
-* `<c-u>` delete everything to the left
-* `<c-w>` delete word to the left of cursor
-* `<c-h>` backspace
-* `<c-j>` return
-* `<c-a>` insert the text you typed last time you were in Insert mode
-* `<c-p>` complete words under the cursor. If there is no word, it look previous
-  word, `<c-p>` again look previous...
+* `<ctrl-t>` `<ctrl-d>` indent deindent in insert mode
+* `<ctrl-o> d` delete everything to the right of cursor
+* `<ctrl-u>` delete everything to the left
+* `<ctrl-w>` delete word to the left of cursor
+* `<ctrl-h>` backspace
+* `<ctrl-j>` return
+* `<ctrl-a>` insert the text you typed last time you were in Insert mode
+* `<ctrl-p>` complete words under the cursor. If there is no word, it look
+  previous word, `<ctrl-p>` again look previous...
+* `<ctrl-r> a` in insert mode will yarn register a (usefull when there are a lot
+  of similar words and completion does not help much)
+* `<ctrl-v> {digit}` insert character with special meaning
+  like for `<esc>` it is `^[`. `<ctrl-v> {key}` insert char with key number like
+  `<ctrl-v> 110` is `n`.
+* `<ctrl-k> Co` insert special digraph char from the list `:digraphs` but
+  instead using key you use two chars
 
-# Operator
+# Operators
 
 * to change case you can select and press `~`
-* `gq` text formatting (`gw` formating without cursos movement)
+* `gq` text formatting (`gw` formating without cursor movement) to 80 char
+  `textwidth` lines and proper code indent. Visually select the range or use
+  motion like `gqap` format a paragraf, `gggqG` whole file.
 * `c` change, `y` yank, `d` delete
-* `<` shift left `>` shift right
+* `<` shift left `>` shift right, `==` indent current line, `gg=G` indent whole
+  file
 
 # Motions and selections
 
@@ -140,8 +153,9 @@ Other usefull commands in insert mode:
   (also in blockwise selection) with `>`.
   In normal mode you can select and indent with `=` To indent whole file you can
   jump to begging and indent to last line `gg=G`.
-* In visual mode `gq` will format text to 80 char lines (good for markdown)
 * Sort selection with `:sort u`
+* `:set scrollbind` in two buffers will make them scroll simultaneously. toggle
+scrolling with `:set scb!`
 
 # Motion in visual mode
 
@@ -170,8 +184,11 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
 * Delete with `<BS>`(or `^h`) and `CTRL-W` delete whole word, `CTRL-U` delete
   all before text. `ctrl-d` is not as in bash, it is completion in vim.
 * tab completion works and you can see all matches with `CTRL-D` (match is
-  when command starts or short name starts with that). `^p` in reverse
-  direction. To get a value use `:set isk<TAB>=<TAB>`
+  when command starts or short name starts with that). So `^d` to show all
+  completion and `<tab>` to iterate over completions , `^p` to iterate in
+  reverse direction (`^n` in forward direction). Note if you are not yet in
+  completion mode `^p` will just show previos command (not previous completion).
+  To get a value use tab two times: `:set isk<TAB>=<TAB>`
 * command line history can be used when you type start of command and `:se<UP>`
   `CTRL-P` will go to previous command no matter what you have types so far
 * Command line window `q:` or `CTRL-F` is used to edit long commands. `<CR>` to
@@ -218,16 +235,27 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
 * `vimdiff a b` will show differences. Inside vim `:e a` and `:vertical
   diffsplit b`. If you are in left window you can use `dp` to copy change to the
   right (diff put), or `do` (diff obtain) to pull from other right window.
-* `:set scrollbind` in two buffers will make them scroll simultaneously. toggle
-scrolling with `:set scb!`
+* read commands from file `change.vim` example
+  ```
+  for file in *.txt; do
+    vim -e -s $file < change.vim
+    lpr -r tempfile
+  done
+  ```
+* read file from stdin `ls | vim -`
 
 # Exploring
 
 * `:edit .` (short `:e.`) opens (`:vsp`) splits netrw of folder,
 * `cd ~` to change directory to home folder for all windows. If you use `gf` in
   Gemfile, it will not change directory (you can check that `:pwd` is showing
-  same folder). To manually change current directory to file path you can use
-  `:lcd %:p:h` (% is the name, %:p file full path, %:p:h give its directory)
+  same folder). To manually change current folder directory to file path you can
+  use `:lcd %:p:h`. `%` is the name, `%:p` file full path, `%:p:h` give its
+  directory, `%<` expands filename without trailing extension
+  ```
+  :help filename-modifiers
+  ```
+
 * beside window local directory `:lcd`, you can set tab local directory so to
   work with other gem you can use `tabe Gemfile`, `gf` and `:tcd %:p:h`
 * `gf` uses `path` (which stores all apsolute paths, run `:set path=<tab>` to
@@ -261,9 +289,16 @@ Preferences -> Shortcuts
 * `ctrl-w f` is the same as `gf` but opens in new vertical split window
 * `:b substring_of_filename` open buffer that matches substring (press tab in
   case of multiple mathces)
+* Status Line `:set statusline=%f\ -\ FileType:\ %y` will change status line
+  * `%f` path to the file
+  * `%F` full path to the file
+  * `%y` filetype of the file
+  * `%L` total lines
 
-Quickfix window can be opened with `:copen`
-
+* set file type in magic comment
+  ```
+  # vi: ft=conf
+  ```
 
 # Movements and Navigation
 
@@ -280,8 +315,9 @@ down
   down (half page, one line). But for one line it is easier to use `Ljjj`
 * `H` `M` `L` jump to the top/middle/bottom of what you see
 * `mA` then `'A` jump there (downcase letter `a` can jump only on current file
-  buffer), `:marks` gives the jump location, two ' `''` is jump back, `'.` jump
-  to last change
+  buffer, use ``a`` backtick to jump to specific column instead of beggining of
+  the line), `:marks` gives the jump location, two ' `''` is jump back, `'.`
+  jump to last change
 * `^o` and `^i` will jump to previos and next location. `^]` to jump to section
 under cursor - hyperlink - ctags
 * `%` jump closing brackets or other matching brace
@@ -293,15 +329,39 @@ under cursor - hyperlink - ctags
 shorter `:set rnu`. To disable you can `:set norelativenumber`
 * show approx position in text `^G`
 * `gf` go to file, follow that link path
+
+# Quickfix and location list
+
+QuiCkfix window is just a preview window. You can open with `:copen` or `:cw`
+(open only if there are errors, close if there are no errors).
+Location list is similar to quickfix but for current window replacing `c` with
+`l` like `:lopen`, `:lmake`. There is **Location** in status bar and is
+independed from quickfix list.
+
+* `:cnext` jump to next error, `:clast` to jump to last (with plugin `:help
+  unimpaired-next` you can use `]q` go next `[q` prev error)
+* `:cc` to show full error message in status bar for this line
+* `:clist` to list all errors
+
+to get quickfix title (usually it is command that generates the list)
+```
+:echo getqflist({'title' : 1})
+```
+
+Error format `efm` is using scanf tags `:help error-file-format`
+* `%f` file name
+* `%l` line number
+* `%t` error type
+* `%m` error message
+* `%r` rest of a single line file message `%O/P/Q`
+
+`:set efm=`
+
+Using unimpaired
 * `[c` `]c` go to prev next change in diffsplit
-* `[l` `]l` ALE errors. To close error window you need to `:lcl`. I use map for
-  quickfix to `:.cc`
+* `[l` `]l` ALE errors. To close error window you need to `:lcl`
 * `]b` buffers
-* `]q` go next `[q` prev Quick fix, Alss next error or warning with `:lnext` or
-  `:lpr` or using `[l` `]l`. More are in `:help unimpaired-next`
 * `]ow` to enable wrap, toggle with `yow`, more `:help unimpaired-toggling`
-
-
 
 # Copy paste
 
@@ -318,9 +378,11 @@ apt-get install vim-gtk`. or `vim-gnome`
 `yy ^wh p ^wl`)
 * to paste with proper indend use [vim-unimpaired](https://github.com/tpope/vim-unimpaired) `]p` , also from plugin `:help unimpaired`
 * insert text from external command is with `:read !date`
-* undo `u` redo `c-r`. If you know the change number you can jump to it using
-  `:undo 2` . Use `g+` and `g-` to jump back and see change number so you can
-  jump to it. See change numbers with `:UndotreeShow`
+* undo `u` redo `ctrl-r`. `:help 32`. If you know the change number you can jump
+  to it using `:undo 2` . Use `g+` (`:later`) and `g-` (`:earlier`) to jump back
+  and see change number so you can jump to it. See change numbers with
+  `:undolist` or use time in `:earlier 10s`. Try plugin `:UndotreeShow`
+  <https://github.com/mbbill/undotree> remaped to F5
 
 # Search and replace
 
@@ -330,7 +392,8 @@ Seach files
 ```
 Instead of `:grep` I use `:Ack` (which uses ag)
 <https://github.com/ggreer/the_silver_searcher>. It will ignore all from
-`.gitignore` so no need to exclude dir. Here are some ack.vim helpers:
+`.gitignore` so no need to exclude dir. Invoke with double search `//`
+Here are some ack.vim helpers:
   * `?` quick summary of keys, `h` open in horizontal split
   * `ag pattern -G show` will search only filenames like `show.html.erb` (`-G`
   is short for `--file-search-regex patter`), `-i` ignore case, `-l` show only
@@ -341,31 +404,72 @@ Instead of `:grep` I use `:Ack` (which uses ag)
 `Ack`. To search specific types use option `-G` and regexp like: `:Ack
 montserrat -G 'css$'`
 For two line search you can use: `:Ack 'destroy\n.*authorize'  app/controllers/`
-For multiline (dot not matter how many lines are in between) `:Ack
+For multiline (does not matter how many lines are in between) `:Ack
 'destroy(\n.*)*flash.now..notice'  app/controllers/`
+
 * `vimgrep my_string **/*.md | copen` search only md files for my_string and
   show results
 
 Search text in a file
 
+* `:help usr_27.txt` and `:help pattern`
 * `/` for searching, to search in oposite direction `?` (`n` and `N` for next
 and previous result). If search string is all lowercased than it will search
-ignore case, but if you have at leat on uppercased letter than case is important
+ignore case (when `:set ignorecase` option is set), but if you have at least on
+uppercased letter than case is important (when you have `:set smartcase`)
+* use `*` search forward (`#` backward) of the word nearest to the cursor
+  (middle fingeers are clicking the `*` and `#`). Use `g*` to match words that
+  include the string (no boundary constrains)
+* offset is used to position cursor on prev line `/default/-1` or character
+  `/default/e+1` (1 char from end of search word) `/default/b+1` (one char from
+  beginning of match)
+* use `:match Error /asd/` to highlight asd in buffer
+* instead of zero or more `.*`, you can use `.\+` to match one or more times
+  (`.\*` means any char and star, `.+` means any char and plus)
+* use very magic regexp (like in other languages) if you start with `\v` for
+  example those two are equivalent searches `:help magic` (very magic does not
+  need to escape + | ( ) { })
+  ```
+  /for .\+ in .\+:
+  /\vfor .+ in .+:
+  ```
+* `:help pattern-overview`
 * search with end of the word `/usan\>` help with `:h /\>`
 * beggining and end of line marks like `/^asd` and `/asd$` works fine (not in
-the middle `/asd^qwe`. For multiline search you can use: `\n` new line, `\_s`
-space,tab or newline, `\_.` any char including new line, `\_^` and `\_$` are
-beggining and end of line. You can use minimum matcher `\{-}` to stop as soon as
-possible (instead of `*` which will stop at last occurrence).
-* another end of word is `\>` so you can search `/usan\>`
-* `/asd\_.\{-}qwe` find asd followed with any character (including new line)
-  and stop at qwe. You can use [S and S!
-  snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
+the middle `/asd^qwe`)
+* For multiline search you can use:
+  * `\n` new line
+  * `\_s` space, tab or newline,
+  * `\_.` any char including new line
+  * `\_^` (`\_$`) match new line or beggining (end) of line
+* instead of `*` which will stop at last occurrence till the end of line, you
+  can use minimum matcher `\{-}` to stop as soon as possible. Use `\{2,4}` to
+  match 2, 3 or 4 times. For example
+  * `/asd\_.\{-}qwe` find asd followed with any character (including new line)
+    and stop at qwe (match as few as possible)
+  * `/asd\(.*\n\)\{2,3}.*qwe` find `qwe` if it is after `asd` in 2 or 3 lines
+  *  You can use [S and S!
+    snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
+* *or* operator is `\|` for example `/one\|two`. If you use inside other match
+  you need to put `\(` and `\)`, for example `t\(wo\|hree\)`. If it is chars
+  than use character ranges for example:
+  * `/[a-z]` or `/[abcdef]` will match any of the chars included in list.
+  * `/[^xyz]` matches char which is not in the list
+  * special characters: `\t` tab `\e` esc,
+* predefined ranges `\d` is `[0-9]` digit, `\D` non digit `[^0-9]`, `\s` white
+  space or tab, `\a`, `\l` and `\u` any, lower and upper case alphabetic
+  character. Note that predefined ranges can not be used inside range, use or
+  operator instead
+* you can use character classes like `\f` (any char than can be a file name,
+  depends on the OS).
+* character classes and ranges can be modified to include new line like `\_a` or
+  even for inverse ranges `/"\_[^"]*"` strings that may split up in several
+  lines
 * `:set nowrapscan` is usefull when you want to stop search when you hit bottom
   of a file. With `gg` you can jump to begging. `:set wrapscan` when you want to
   back to wrapped search
-* clear highlights until nex search `:noh`, to clear completely `set nohlsearch`
-  or toggle `nnoremap <F3> :set hlsearch!<CR>`
+* clear highlights until next search `:noh`, to clear completely `:set
+  nohlsearch`
 
 * `q:` shows history of commands
 * `q/` shows history of searches
@@ -379,9 +483,10 @@ example `:%s+http://+https://+g`
 * `:%s/old/new/ge` e means not to return error if `old` is not found, usefull in
   macros, so it does not stop the macro
 * replace tabs with two spaces in whole file(you can use % also) `:1,$s/\t/  /g`
-  range from current line to the end is `:.,$s/yes/no/`. This is example to
-  replace grey with gray only in current chapter (each chapter starts with
-  Chapter) search backward from current position use `?`
+  range from current line to the end is `:.,$s/yes/no/`.
+  To split the line by space into multiple lines use: `:.,.s/ /\r/g`
+  This is example to replace grey with gray only in current chapter (each
+  chapter starts with Chapter) search backward from current position use `?`
   ```
   :?^Chapter?,/^Chapter/s=grey=gray=g
   ```
@@ -421,11 +526,21 @@ Syntax is `[range]global/{pattern}/{command}` . command can be `s` (substitute),
   :'t+1,.g/^/m 't
   ```
 
-# Completion
+# Insert Completions
 
 * `^n` or `^p` in insert mode to autocomplete strings and get next/previous item
-* `^x^o` to autocomplete using omni completion `:set
-  omnifunc=csscomplete#CompleteCSS`
+* `^x^o` to autocomplete using omni completion (intellisense) inteligent way of
+  completion for example complete only methods that exists on that object
+  `:help compl-omni-filetype`
+  * in html you can auto close last opened tag if after *</* you click `^x^o`
+    (similar with *ragtag* plugin that completes using `<Ctrl-x>/`)
+  * in css `:set omnifunc=csscomplete#CompleteCSS`
+  * in ruby
+    ```
+     let g:rubycomplete_buffer_loading = 1
+     let g:rubycomplete_classes_in_global = 1
+     let g:rubycomplete_rails = 1
+    ```
 * `^x^n` only strings from current file
 * `^x^l` complete whole lines
 * `^x^f` to complete filename (keep `^x^f` when you navigate subfolders)
@@ -433,8 +548,6 @@ Syntax is `[range]global/{pattern}/{command}` . command can be `s` (substitute),
 * `^a` and `^x` to increment and decrement numbers
 [speeddating](https://github.com/tpope/vim-speeddating) if you want to increment
 dates
-* for commands you can use `^d` to show all completion and `<tab>` to iterate
-  over it, `^p` to iterate in reverse direction
 
 # Installing
 
@@ -528,11 +641,11 @@ plugins](https://github.com/duleorlovic/config/blob/master/vim/update_vim_bundle
   comment line, visual select and press `gc`
 
 * ctrlp ctrl+p
-  * to seach already opened buffers, hit `<c-p>` and than `<c-f>`
-  * to open in horizontal sprit use `<c-p>` and `<c-x>`
+  * to seach already opened buffers, hit `<ctrl-p>` and than `<ctrl-f>`
+  * to open in horizontal sprit use `<ctrl-p>` and `<ctrl-x>`
   * to open in current buffer, instead of patching `autoload/ctrlp.vim:1309` to
   use `let md = 'r'` instead of  `let md = argmaps` you can configure
-  different prompt mappings for `<c-o>` to immediatelly replace buffer.
+  different prompt mappings for `<ctrl-o>` to immediatelly replace buffer.
 
   ~~~
   " make ctrl-o immediatelly replace buffer so we don't need to answer OpenMulti prompt
@@ -563,10 +676,13 @@ waiting next input
 
 
 * ragtag plugin in insert mode:
-* `<c-x>/` close last html tag
-* `<c-x>=` append `<%= %>`, use `<c-x>+` to wrap around last line
-* `<c-x>-` append `<% %>`, use `<c-x>_` to wrap around last line
-* `<c-x>@` insert stylesheet or `<c-x>$` javascript tags
+  * `<ctrl-x>/` close last html tag
+  * `<ctrl-x>=` append `<%= %>`, use `<ctrl-x>+` to wrap around last line
+  * `<ctrl-x>-` append `<% %>`, use `<ctrl-x>_` to wrap around last line
+  * `<ctrl-x>@` insert stylesheet or `<ctrl-x>$` javascript tags
+
+* multicursors mode change several strings at the same time
+  https://github.com/mg979/vim-visual-multi
 
 # Running ruby in vim and show in separate window
 
@@ -665,12 +781,6 @@ only solution is to merge two line into one
       <% when User %>
       <% end %>
 ```
-# Theory
-
-[quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
-Read all `:help usr_toc.txt` last is usr_24.txt
-For functions use [vim theory]({{ site.baseurl }} {% post_url 2017-06-05-vim-theory %})
-* <https://www.youtube.com/watch?v=5r6yzFEXajQ>
 
 ## Netrw
 
@@ -708,15 +818,16 @@ You need to generate tags file with `ctags -R .`. You can use default params.
 
 Some vim keys:
 
-~~~
-^] # ctrl - ] : jump to tag under cursos
-^t # jump back in tags stack (stack is when you go into definition with ^])
-^o ^i # similar move back and forward, but all jumps (not just tags)
-^x^] # autocomplete tags
-g] # list all ambiguous tags: same method could be defined in multiple classes
-
-:ts my_met # select tags for this search, also ctrp tags
-~~~
+* `^]` ctrl-] : jump to tag under cursor
+* `^t` jump back in tags stack, stack is when you jump with ^], see all with
+  `:tags`. You can open in split window `<ctrl-w> ]`
+* `^x^]` autocomplete tags
+* `g]` list all ambiguous tags: same method could be defined in multiple classes
+  `:ts my_met` select tags for *my_met*. `:tfirst` `:tnext` to jump next
+* To search for all tags that contains met use `:tag /met` and press <tab>
+  To open a window (preview window) and stays at current position you can use
+  `:ptag met` (close preview window with `:pclose`).
+  ctrp tags
 
 To generate tags for all gems install <https://github.com/tpope/gem-ctags>
 
@@ -727,9 +838,6 @@ gem ctags
 
 Create template to git hook
 <http://tbaggery.com/2011/08/08/effortless-ctags-with-git.html>
-
-~~~
-~~~
 
 Also use CtrlPTag so you can navigate to tag
 
@@ -929,7 +1037,7 @@ Some integrated stuff in vim
 https://github.com/vim-ruby/vim-ruby/blob/master/doc/vim-ruby.txt
 https://github.com/vim-ruby/vim-ruby/wiki/VimRubySupport
 
-# WHEREAMI my plugin to show dedented lines
+# WHEREAMI my plugin to show dedented lines above
 
 When looking at large files in small window (I have 4 vim windows in my single
 terminal window) than I want to see to which block current line belongs.
@@ -965,9 +1073,40 @@ classes and media queries.
 Solution is to use similar row as in https://github.com/chrisbra/csv.vim
 `:Header`
 
+
+similar but does not work for rspec
+http://vim-taglist.sourceforge.net/installation.html `:TlistToggle`
+
+Nice example of opening sidewindow is undotree plugin
+Also similar showing info per each line is vim-fugitive plugin
+
+usage:
+* in rspec you can see all previous describe blocks
+* in db/schema.rb when you search for column_name, you can see in which table
+  this column under cursor belongs to
+
+My solution is using search
+https://github.com/duleorlovic/config/blob/master/bin/whereami.rb
+which I mapped to leader w
+```
+" whereami
+set errorformat+=%f%l%m
+set grepprg=~/config/bin/whereami.rb
+" move to function and use silent
+" three <cr> one for execute, one for grep and one for copen to jump back to line
+nnoremap <leader>w :execute ":grep %:p " . line('.') .  "\|clast\|copen"<cr><cr><cr>
+```
+TODO: try to follow the cursor
+
 # RubocopFix vim plugin rubocop
 
-Fix current rubocop error, by adding `rubocop:disable`
+Fix current rubocop errors and comment uncorrectable
+```
+rubocop --auto-correct --disable-uncorrectable
+```
+but this is applying to whole file
+
+TODO: write vim code that takes only the patch which is on current line
 
 # Graph visualization in markdown
 
@@ -978,11 +1117,6 @@ Fix current rubocop error, by adding `rubocop:disable`
 * if vim does not show properly, blank or empty screen, try `:redraw!`
 <https://github.com/bchretien/vim-profiler>
 * <https://github.com/vim-scripts/Decho>
-
-# Undo
-
-<https://github.com/mbbill/undotree> and remaped to F5 so you can easilly revert
-back to some earlier file.
 
 # Vim test
 
@@ -1092,7 +1226,20 @@ be since vim does not read whole file. You can refresh with `ctrl-l`
 
 # Folding
 
-In visual mode you can select and run `:fold` collapse expand
+In visual mode you can select and run `:fold` to collapse. Also as operator in
+normal mode you can use `zfap` a paragraf. `zo` is to open, `zc` it to close
+again (if fold already created on that line previously), `zr` to reduce (open)
+and `zm` to minimize (close) all folds in buffer. Use `zM` and `zR` to
+recursivelly close and open all nested folds. `zn` disable `zN` brings back the
+folding.
+
+To see all lines that can be folded you can `:set foldcolumnd=2`.
+To automatically open and close folds when you navigate over it use `:set
+foldopen=all` and `:set foldclose=all`
+
+Save all fold positions with `:mkview` and load with `:loadview`
+Automatically create folds based on indent `:set foldmethod=indent`
+
 You can hide copy right sections of other comments.
 
 ~~~
@@ -1128,3 +1275,6 @@ Not using for now
 
 https://handbook.infinum.co/books/rails/Editors/Vim
 https://emily.st/2018/11/13/vim-in-the-future/
+https://onivim.io/
+https://neovim.io/doc/
+https://github.com/neoclide/coc.nvim Visual studio plugins running on vim
