@@ -272,7 +272,7 @@ special:
   `collections[block.settings.collection]`. Note that it could be empty so to
   skip those not selected collections you need to use
   ```
-  {% for block in section.blocks %}
+  { % for block in section.blocks %}
     {% if block.settings.collection == empty %}
       {% continue %}
     {% endif %}

@@ -10,7 +10,7 @@ keynames:
 
 * `<ctrl-d>` is control Ctrl and d, in help it can be written as `^d`. In
   commands you can also write `<c-d>`
-* `<esc>` is escape key (when recording macro it is `€ý`)
+* `<esc>` is escape key (when recording macro it is `^[<80>y`)
 * `<space>` space
 * `<cr>` sometimes it is `<Enter>`
 * `<bs>` backspace
@@ -309,7 +309,7 @@ down
 * `$` end of line, `0` start of line (or `^`), use `_` to select end of line
   before new line character
 * `+` and `-` move line up or down on the first letter
-* `{{` and `}}` move on start or end of paragraph (empty line), single brace is
+* `{ {` and `}}` move on start or end of paragraph (empty line), single brace is
   default but I changed to double
 * `^B`(`^U`, `^Y`) or `^F` (`^D`, `^E`) scroll next up (half page, one line) or
   down (half page, one line). But for one line it is easier to use `Ljjj`

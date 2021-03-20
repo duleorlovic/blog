@@ -166,7 +166,7 @@ Another way to deploy to heroku is using https://github.com/AkhileshNS/heroku-de
 Note to use single quote instead of double quoted strings
 ```
   Deploy:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    if: ${ { github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: Test
     runs-on: ubuntu-latest
 
