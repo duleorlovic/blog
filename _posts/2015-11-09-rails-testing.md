@@ -1831,7 +1831,10 @@ hash attributes `build(:user, name: 'My Name')`
   (code need to be testable without associations)
   * `create(:user)` it is saved. Use this only when need to test find/query db.
   * `attributes_for(:user)` get hash of attributes so you can use in params_for
-  for example: `xhr :post, users_path, user: attributes_for(:user)`
+  for example: `xhr :post, users_path, user: attributes_for(:user)`. Note that
+  it does not include parent object, so you need to merge references like `post
+  users_path, params: { user: attributes_for(:user).merge(company_id: company.id
+  }, xhr: true`
   * `build_stubbed(:user)` object with all AR attributes stubbed out (like
   `save`). It will raise an exception if they are called. Very fast since we do
   not create AR objects. It has rails ID and we can use associations. This is
@@ -2503,6 +2506,15 @@ Rspec book <http://www.betterspecs.org/>
 
 * fake sms client external test with adapter https://thoughtbot.com/blog/faking-external-services-in-tests-with-adapters
 Improve speed of the tests
+* show current test file name
+  ```
+  # spec/rails_helper.rb
+  RSpec.configure do |config|
+    config.before :each do |x|
+      puts "In #{self.class.description} #{x.description} #{x.example.file_path}"
+    end
+  end
+  ```
 
 https://github.com/palkan/test-prof
 

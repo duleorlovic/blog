@@ -135,3 +135,25 @@ User.where(
   ```
   model.reflects_on_all_associations(:belongs_to).
   ```
+
+* if you have composite index on column [a, b, c] than you can use `where a ==
+  1` or `where a == 1 and b == 2` or `where a == 1 and b == 2 and c == 3`. you
+  can not use `where b == 2` alone since it will examine all rows, in aws rds
+  console under database -> Logs & events -> Logs -> search for slowquery.log
+  (with bigger size, created around the time the server was slow) you can see
+  Rows_examinated: 123456 ... Also you can find on left menu Performance
+  Insights -> Database load -> Top SQL -> Rows examined
+* squash migrations, just generate new one and copy content from `db/schema.rb`
+* if you override setters, for example
+  ```
+  class User
+    def name=(name)
+      self.name = "#{company.name} child"
+    end
+  end
+
+  company.users.new(name: 'Hi')
+  # this will raise error since company is is not defined so better is to use
+  company.users.new(name: 'Hi', company: company)
+
+  ```

@@ -461,6 +461,16 @@ title: "Ahoy!" }, response.parsed_body)`.
   ```
   get sign_up_path, params: { user: { email: 'new@email.com' } }, headers: { 'REMOTE_ADDR': '123.123.123.123', HTTP_REFERER: 'http://domain.com' }
   ```
+* to change default host you can use setup block (similar to rspec before) in
+  test helper
+  ```
+  # test/test_helper.rb
+  class ActiveSupport::TestCase
+    def setup
+      host! 'example.com'
+    end
+  end
+  ```
 * `assert_select 'h1', 'Welcome'` is used to test view. View can be tested with
   `assert_match /Welcome/', response.body`.
   There are two forms of *assert_select selector, [equality], [message]* or
@@ -489,8 +499,9 @@ title: "Ahoy!" }, response.parsed_body)`.
   (assert_selector also use this hash param)
 
   ~~~
-  # instead of refute_select, for no div with my_name you can use
-  assert_select 'a[href=?]', link, text: /my_name/, count: 0
+  # instead of refute_select, for no div with my_name you can use count but put
+  # inside hash: text: and count:
+  assert_select 'a[href=?]', text: /my_name/, count: 0
   assert_select 'div', html: 'p', minimum: 2
   ~~~
 
@@ -894,3 +905,8 @@ guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
 
 * test og meta tags for jekyll
 * https://gist.github.com/thbar/10be2ea924b81f78d24ab800461bfee3
+* if you want to run specific test (not all tests in one test file) than you
+  need to use `require 'rails/all` in `config/application.rb` and run by line
+  ```
+  ./bin/rails test test/controllers/registrations_controller_test.rb:27
+  ```

@@ -408,6 +408,21 @@ http://thorstenball.com/blog/2014/03/12/watching-understanding-ruby-2.1-garbage-
 
 * https://github.com/rails/rails/pull/21523
 
+
+# Slow request logger
+
+CLI tool https://github.com/wvanbergen/request-log-analyzer
+```
+request-log-analyzer log/production.log
+```
+
+Unmaitained https://github.com/barttenbrinke/munin-plugins-rails
+https://github.com/moove-it/rack-slow-log
+
+
+Using shopify tools https://shopify.engineering/how-fix-slow-code-ruby
+like https://github.com/Shopify/app_profiler
+
 # Links
 
 * [rblineprof](https://github.com/tmm1/rblineprof)

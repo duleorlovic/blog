@@ -141,7 +141,12 @@ Methods:
 * top-level methods (outside of any definition block) are private to all objects
 * instance-method in class `class C;def m;self;end;end;` self is instance of C
 * instance-method in module `module M;def m;end;end;` self is object extended by
-  M or instance of class that mixes in M
+  M or instance of class that mixes in M. You can add module to object
+  ```
+  object = Object.new
+  object.extend M
+  o.m
+  ```
 * singleton method on specific object `def obj.m;self;end` or using `class <<`
   ```
   class << obj
@@ -1080,8 +1085,29 @@ can use `s.start_with? prefix` or `s.end_with? suffix`
 * `URI.unescape 'a%20b' # => 'a b'`
 * `CGI::escape 'a b' # => 'a+b'`
 * `ERB::Util.url_encode`
+* `WEBrick::HTTPUtils.escape 'a b' # => a%20b`
 
-rails params use double backslash instead of one, for example if user fill in
+For url the best is to use WEBrick::HTTPUtils.escape since it will not convert
+`/` slashes but will convert space `file name` and square brackets `[1]`
+```
+module CommonPdf
+  def escape(link)
+    # space and square brackets needs to be escaped
+    WEBrick::HTTPUtils.escape link
+  end
+end
+
+RSpec.describe CommonPdf do
+  it '#escape' do
+    object = Object.new
+    object.extend CommonPdf
+    sample_link = 'http://my.domain/file name [1].pdf'
+    expect(object.escape(sample_link)).to eq 'http://my.domain/file%20name%20%5B1%5D.pdf'
+  end
+end
+```
+
+Rails params use double backslash instead of one, for example if user fill in
 `\d+` it will be saved as `\\d+`. To use with regexp you need to interpolate,
 like `"str".scan(/#{my_param}/).first`
 
@@ -1294,13 +1320,16 @@ assignment for function parameters)
   f_with_double 1, 2 # => ArgumentError: wrong number of arguments (given 2, expected 1)
   ~~~
 
-  Another usage is when you require some keys
+  Another usage is when you require some keys, and other are optional. Also when
+  using `class` optional value since you can not use variable name `class` so
+  attribute class can be extracted
   ```
   def f(name:, **options)
+    link_to 'h','a', class: options[:class]
   end
 
   f(bla: 'asd') # ArgumentError (missing keyword: name)
-  f(name: 'asd', o: 2) # options = { o: 2 }
+  f(name: 'asd', class: 'a') # options = { class: 2 }
   ```
   Double splat can be used for merging hashes
   ```

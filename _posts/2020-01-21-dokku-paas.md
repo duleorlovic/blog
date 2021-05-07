@@ -28,6 +28,11 @@ ssh -i $PEM_FILE ubuntu@$TEST_IP_ADDRESS
 wget https://raw.githubusercontent.com/dokku/dokku/v0.22.9/bootstrap.sh
 sudo DOKKU_TAG=v0.22.9 bash bootstrap.sh
 ```
+Uninstalling dokku
+```
+sudo apt-get purge -y docker-engine docker docker.io docker-ce docker-ce-cli
+sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce
+```
 Finish setup using browser (copy paste your public key `~/.ssh/id_rsa.pub` and
 select Use virtualhost naming for apps)
 

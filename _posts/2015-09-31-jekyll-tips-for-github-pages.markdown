@@ -474,7 +474,12 @@ if current page is `post` we have additional properties
 * `page.id`
 * `page.categories`
 * `page.tags`
-* `page.next` `page.previous`
+* `page.next` `page.previous` can be used to link to previous post
+  ```
+  {% if page.previous.url %}
+    <a href="{{page.previous.url}}">&laquo;&nbsp;{{page.previous.title}}</a>
+  {% endif %}
+  ```
 
 You can put your posts inside folder, for examle `kayak/canoe/_posts`. This
 means that posts will have `['kayak', 'canoe']` categories. You can add more

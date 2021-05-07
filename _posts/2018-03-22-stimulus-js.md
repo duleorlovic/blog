@@ -35,18 +35,19 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   `<form>` has `submit` default event.
   If you want to `event.preventDefault()` (for example click on link) than pass
   parameter `greet(event) {}`. To see who invoke the click you can use
-  `e.currentTarget`
-* `data-target='hello.name'` creates `nameTarget` property in a controller so we
+  `event.currentTarget`
+* `data-hello-target='name'` creates `nameTarget` property in a controller so we
   can use it to access element and set value. We need to declare it also inside
   controller `static targets = [ 'name' ]`. Beside `this.nameTarget` you can
   check if there are more targets like this `this.nameTargets` or if exists at
   all `this.hasNameTarget` (return true or false)
 * to access current element on which whole controller is connected you can use
   `this.element`. To access element on which action is triggered you can pass
-  the event to the action `hello(greed) {` and use `event.currentTarget`
+  the event to the action `hello(event) { event.currentTarget }`
 * `data-hello-index='1'` used to pass data to CONTROLLER which you can get on
   initialize instead of `this.element.getAttribute('data-hello-index'))` you can
-  use stimulus shorthand `this.data.get('index')`. Only for data on controller.
+  use stimulus shorthand `this.data.get('index')`. Only for data on controller
+  element.
   But since controller can be initialized on parent of the action element,
   better is to use `event.currentTarget.getAttribute('data-hello-index')`
   Also `this.data.has('index')` to check if data existis and

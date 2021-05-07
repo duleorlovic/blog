@@ -142,10 +142,11 @@ excellent tool.
 This gem follows [protocol](http://www.sitemaps.org/protocol.html)
 
 ~~~
-echo "gem 'sitemap_generator'" >> Gemfile
+echo "gem 'sitemap_generator', '~>6.1.2'" >> Gemfile
 bundle
 rake sitemap:install # this will generate config/sitemap.rb
 vi config/sitemap.rb # put some `add path, options`
+
 rake sitemap:refresh:no_ping # to generate sitemap to public folder without ping
 less public/sitemap.xml.gz
 gunzip public/sitemap.xml.gz && chromium-browser public/sitemap.xml
@@ -155,7 +156,7 @@ Use `Post.find_each` instead of `Post.all.each` since we do not want to load all
 posts in memory.
 
 To run every day, you can use [whenever](https://github.com/javan/whenever) to
-call `rake sitemap:refresh -s`
+call `rake sitemap:refresh -s` (`-s` is silent)
 
 ## `SitemapGenerator::Sitemap` options
 
@@ -187,7 +188,7 @@ protocol](http://www.sitemaps.org/protocol.html#xmlTagDefinitions) are:
 
 You can add some existing sitemaps with `add_to_index '/my-old-sitemap.xml.gz'`
 
-## Heroku
+## Sitemap on Heroku
 
 For heroku you need to move it on
 [S3](https://github.com/kjvarga/sitemap_generator/wiki/Generate-Sitemaps-on-read-only-filesystems-like-Heroku#configure-carrierwave).
@@ -279,10 +280,47 @@ Chrome plugins
 
 # Schema.org
 
-You can follow <http://schema.org/docs/gs.html> to add microdata in your markup
-like: `<div itemscope><h1 itemprop="name">Duke</h1></div>`
+RDFa https://rdfa.info/ is extension of HTML to markup thinks on page.
+Tutorials on https://json-ld.org/learn.html
+There is a Facebook open graph protocol https://ogp.me/ or Google Schema org
+<http://schema.org/docs/gs.html> to add microdata in your markup like: `<div
+itemscope><h1 itemprop="name">Duke</h1></div>` or to add ld+json (recommended on
+this page
+https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format
+)
 
-Also you can add jsonld section
+with various models Person, Place, Event https://schema.org/docs/full.html
+or on Google search gallery https://developers.google.com/search/docs/guides/search-gallery
+and test on https://search.google.com/test/rich-results
+
+Main syntax json-ld https://www.youtube.com/watch?v=UmvWk_TQ30A
+* `@context` shows how to interpred keys
+* `@id` universal point on the web
+* `@type` thing/object types: Person, Event ... or data type: String, Date
+
+  ```
+  { @context: {},
+    // Value of type (`Person`) will expand to full URL in that particular context.
+    @type: Person,
+    name: Duke,
+
+    // For data type we use expanded form using @value keyword
+    birthday: {
+      @value: '2000-01-01',
+      @type: 'xsd:date'
+    }
+    // instead of defining type inline in expanded form, we can define in
+    //context (Type coercion) and use simply `birthday: '2000-01-01'`
+    context: {
+      birthday: {
+        @id: 'http://schema.org/birthday',
+        @type: xsd:date
+      }
+    }
+  ```
+* To create a links we can embed object or referencing using url
+* Keyword aliasing when you want to use `obj.id` instead of `obj['@id']`
+
 ```
 <script type="application/ld+json">
 [  {  "@context":"http://schema.org",
@@ -326,6 +364,7 @@ Also you can add jsonld section
 ]
 </script>
 ```
+
 
 # Open graph
 
@@ -402,11 +441,14 @@ page, not on ajax call since crawl will be able to index that
   onclick or href to hash link (part of a page)
 * If content change often, crawler will check more often. Popular and fresh.
 * Do not load too much files, crawl budget.
-* Do not duplicate content, same content but different url, use link rel canonical ie canonicalize.
-* Prevent crawling with robots.txt , but link from other site is followed (robots is not read) so for this case use header.
-* Non existing urls should use redirection (or add meta tag) to page not found with status 403
-* Bot does not save cookies, so do not rely on persisting data.
-* Also does not accepts geolocation
+* Do not duplicate content, same content but different url, use link rel
+  canonical ie canonicalize.
+* Prevent crawling with robots.txt, but link from other site is followed
+  (robots is not read) so for this case use header.
+* Non existing urls should use redirection (or add meta tag) to page not found
+  with status 403
+* Bot does not save cookies, so do not rely on persisting data.  Also does not
+  accepts geolocation
 * Do not use different parameters to same page
 
 # Off page SEO
@@ -418,14 +460,23 @@ page, not on ajax call since crawl will be able to index that
 * video, podcasts, webinars
 * Kloaking is when heading seo keywoards says nice words but content sell drugs.
 
-* https://www.screamingfrog.co.uk/seo-spider/ Screamingfrog shows how google bot works
-* It is important that there are 301 redirections from www to root, http to https, chain redirections do not transmit seo juice (after 3 redirections stop)
+* https://www.screamingfrog.co.uk/seo-spider/ Screamingfrog shows how google bot
+  works
+* It is important that there are 301 redirections from www to root, http to
+  https, chain redirections do not transmit seo juice (after 3 redirections
+  stop)
 * All 404 pages should be redirected to live pages
-* When two pages open for the same keywords, so you don't need to use the same tags on multiple pages. Cannibalization can be detected on gsc where all pages for specific keywords are visible. If you google both, then don't touch anything, but when one falls, then optimize it so that you don't drag the first page as well. For example, a blog should not contain the same keywords. When you gets bored, then put 301 on the first page
-* The link builder is done by contacting a thousand blogs, 1% of them will accept to put a link for 100 euros
-* Anchor text ratio, 70% brand tekt
+* When two pages open for the same keywords, so you don't need to use the same
+  tags on multiple pages. Cannibalization can be detected on gsc where all pages
+  for specific keywords are visible. If you google both, then don't touch
+  anything, but when one falls, then optimize it so that you don't drag the
+  first page as well. For example, a blog should not contain the same keywords.
+  When you gets bored, then put 301 on the first page
+* The link builder is done by contacting a thousand blogs, 1% of them will
+  accept to put a link for 100 euros
+* Anchor text ratio, 70% brand text
 * Ahrefs can give you a list of link texts so you can analyze the competition to
-  use the same text ratio. buy a site that is popular and put your link link
+  use the same text ratio. buy a site that is popular and put your link
 * External links can be with rel nofollow and will not take juice from the site.
   You can link large authoritative sites (wikis) or small sites that are not in
   the same are business. You should not link a competing site in any way.

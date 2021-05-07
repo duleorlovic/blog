@@ -739,24 +739,36 @@ Lens (mm):3.6mm
 Default IP address for Dahua cameras is 192.168.1.108 media port 3777 MAC
 3c:ef:8c:a3:c9:6b, vendor Dahua, username: admin, password: admin. Also have
 RTSP port 554.
+You can change seetings on http://192.168.1.108/ on Ubuntu
+dahua ipc-hdw4631c-a spens 250mA without IR and 270mA with ID diodes.
 
-Zoneminder ONVIF rtsp://admin:admin@192.168.3.5:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
+Zoneminder ONVIF , subtype=0 (mainstream profile is H264 2592x1944 @ 25fps), use
+subtype=1 for smaller screen (704x576)
+rtsp://admin:admin@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
+rtsp://admin:admin@192.168.1.108:554/cam/realmonitor?channel=1&subtype=1&unicast=true&proto=Onvif
 
-# IP Dom
+# Cantonk IP Dom
 
 KIP-200SHT30H (on web page it shows Herospeed)
 <http://www.elementa.rs/proizvod/57087/ip-dom-kamera>
 Objektiv: varifokalni, 2.8-12mm
 Horizontalni ugao vidljivosti: 21° do 81°
-You need to 192.168.1.168 (maybe 192.168.1.9) and change admin/admin password to
-admin dule...10.
-Than on configuration there is basic setup, to set up manual IP address.
+
+Defalut ip http://192.168.1.168 admin/admin.
+You need to use windows to edit configurations, there is basic setup, to set up
+manual IP address.
 Under System there is Time Settings to set TimeZone.
 
 KIP-200SH20H https://www.elementa.rs/proizvod/57086/ip-dom-kamera
 On camera it shows Cantonk. Focus: 3.6mm, 68°
-Default ip is 192.168.1.168 admin/admin.
+Default ip is 192.168.1.168
+Current is only 90mA (this is really low for ip camera), With IR diodes it is
+360mA.
 
+Profiles (resolution is fixed so you need to choose one of these three)
+MainStrean H264 1920x1080 @ 30fps rtsp://admin:admin@192.168.1.168:80/0
+secondStream H264 720x480 @ 30 fps rtsp://admin:admin@192.168.1.168:80/1
+thirdStream H264 352x288 @ 15 fps rtsp://admin:admin@192.168.1.168:80/2
 
 # China IP camera $23
 
@@ -796,14 +808,23 @@ Telekom: admin ztonpk
 
 # Long cable on battery power
 
+For long cable, best advice is to use two switches on both ends and than attach
+wifi to those switches (switch works great for those big cables).
+
 Mikrotik RB 750 use 90mA + 10ma for each port, so ~ 150mA when all cables are
 there. There is no difference while there is a traffic or inactive network.
+
+Planet AP is 260mA.
+
+Both network devices are 400mA.
 
 Cheap china white ip camera spends 260mA if all diodes are on and streaming
 (253mA no streaming). During the day, witout IR diodes, it spends 100mA (87mA
 when there is no streaming).
 Cheap china ip camera without box and ir diodes spends ~140mA.
-Dahua IPC-HDW4631C-A spens 250mA without IR and 270mA with ID diodes.
+Cantonk spend ~90mA
+
+So on second batery you can connect two cameras.
 
 
 # Stream
@@ -827,16 +848,4 @@ based on https://github.com/jimxl/ruby-onvif-client
 To stream screen recordings you can download
 https://www.tightvnc.com/download.php vnc server (default configuration is
 enough). Run Server in Application Mode.
-
-# OBS
-On computer that is connected to projector, run OBS project
-https://obsproject.com/ and add source "Window source".
-You can stream RTSP cameras by selecting "Media source" and unchecking "Local
-file" and insert something like rtsp://admin:dusan10@192.168.3.6:554/user=admin_password=tlJwpbo6_channel=1_stream=1.sdp?real_stream
-Since changing scenes will disconnect and reconnect again, best way to switch
-cameras is to move to top (on mac it is fn + cmd + left).
-To preview cameras you can use right click and "Windowed projector" so you can
-see all three cameras in three windows.
-On each source you should use "Transform" and "Strech to screen". It is good to
-have all cameras with same ratio width and height.
 

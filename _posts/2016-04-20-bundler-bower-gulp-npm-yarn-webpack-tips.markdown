@@ -122,6 +122,19 @@ Error is /home/orlovic/.rvm/gems/ruby-2.4.5/gems/activesupport-4.2.7.1/lib/activ
 sudo dpkg -i ~/Downloads/libgdbm3_1.8.3-13.1_amd64.deb 
 ```
 
+# Nodenv
+
+It is similar to rbenv since it uses shims
+Install using https://github.com/nodenv/nodenv-installer#nodenv-installer
+
+```
+curl -fsSL https://raw.githubusercontent.com/nodenv/nodenv-installer/master/bin/nodenv-installer | bash
+
+nodenv init
+# add to ~/.bash_profile
+# eval "$(nodenv init -)"
+
+```
 
 # Bower
 
@@ -1035,15 +1048,18 @@ If package.json contains `style` attribute than with `postcss-import` plugin,
 which is by default enabled in `postcss.config.js`, you can import css with
 `@import 'package-name'`
 ```
-// app/javascripts/stylesheet/application.css
-/* this file name should have extension CSS not scss since @import command is different */
-@import 'package-name'
-// this is the same as @import 'package-name/file-path/file.css'
+/* this file should have extension CSS not scss since @import command is different */
+/* here we include other packages so postcss-import plugin will load css file
+ * from style attribute from package.json */
+/* @import 'package-name' is the same as @import 'package-name/file-path/file.css' */
+@import 'select2';
 ```
 also import that css file
 ```
 // app/javascript/packs/application.js
-import '../stylesheet/application.css'
+// our stylesheet, one for postcss and one for scss
+import 'stylesheet/post_css'
+import 'stylesheet/application'
 ```
 
 To import sass file you need sass loader https://github.com/webpack-contrib/sass-loader
@@ -1073,12 +1089,6 @@ module.exports = {
 }
 ```
 
-Alternatively, you can import css file from node_modules in javascript.
-```
-// app/javascript/packs/application.js
-import 'package-name/file-path/file.css'
-```
-
 Webpacker supports babel preset out of box. In clear webpack you can enable
 babel with
 ```
@@ -1101,6 +1111,12 @@ module.exports = {
 To find jquery version you can type `$.fn.jquery`
 
 Install zurb foundation https://www.reddit.com/r/rails/comments/bhk72q/how_to_require_foundationsites_after_yarn_add/
+
+Use image in views by adding `media` to the path, for
+`app/javascript/images/logo.jpg` image
+```
+<img src="<%= image_pack_tag 'media/images/logo.jpg' %>" alt="logo" />
+```
 
 ## IIFE Immediatelly invoked function expression
 

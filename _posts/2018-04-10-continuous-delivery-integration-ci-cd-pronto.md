@@ -114,7 +114,7 @@ jobs:
         env:
           POSTGRES_USER: rails_6
           POSTGRES_DB: rails_6_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_PASSWORD: postgres
         ports: ["5432:5432"]
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -128,10 +128,10 @@ jobs:
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Ruby 2.6
-      uses: actions/setup-ruby@v1
+    - name: Set up Ruby 2.6.3
+      uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.6.x
+        ruby-version: 2.6.3
     - name: Set up Node
       uses: actions/setup-node@v1
       with:
@@ -241,6 +241,16 @@ git commit -am'Try
 skip-check: true'
 ```
 
+Use github actions locally on docker using https://github.com/nektos/act
+https://simplabs.com/blog/2021/03/15/trying-your-github-actions-locally/
+```
+# install act
+curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+
+```
+You can configure act https://github.com/nektos/act#configuration using .actrc
+file.
+
 ## Cache
 
 https://help.github.com/en/actions/automating-your-workflow-with-github-actions/caching-dependencies-to-speed-up-workflows
@@ -251,8 +261,8 @@ Cache folder needs to be inside working directory.
 ```
     steps:
       - uses: actions/checkout@v1
-      - name: Set up Ruby 2.6
-        uses: actions/setup-ruby@v1
+      - name: Set up Ruby 2.6.3
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6.x
       - uses: actions/cache@v1

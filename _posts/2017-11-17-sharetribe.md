@@ -6,11 +6,6 @@ layout: post
 
 <https://github.com/sharetribe/sharetribe>
 
-If you have newer versions of `node 7.8` or `npm 4.2` than you should install
-older `nvm install 7.8` and `npm install -g npm@4.2.0`.
-If you dont see forms or other react components, than `rm -rf
-client/node_modules/` and `npm install`
-
 ~~~
 PORT=3001 foreman start -f Procfile.static
 bundle exec rake jobs:work

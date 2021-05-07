@@ -418,6 +418,8 @@ matcher = (params, data) ->
 
 # Calendar date and time picker
 
+* calendar https://dev.to/timnans/rails-calendar-with-tui-and-stimulusjs-3je
+  
 * Best option is [daterangepicker](http://www.daterangepicker.com/) it can be
 used for singleDatePicker, dateTime picker
   * download with `bower install bootstrap-daterangepicker --save` (git should

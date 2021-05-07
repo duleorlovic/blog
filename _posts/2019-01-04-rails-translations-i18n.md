@@ -340,8 +340,6 @@ end
 For google translate look for two scripts, one for vim and one for whole yml.
 https://github.com/duleorlovic/config/tree/master/ruby
 
-## Mobility
-
 fallbacks
 ```
 club.name fallback: false
@@ -371,14 +369,22 @@ Global fallback
 Dynamic fallback https://github.com/shioyama/mobility/pull/328
 https://github.com/shioyama/mobility/issues/314
 
+You can search find_by using `@>` and passing json
+```
+Activity.where("name @> ?",{en: 'Climbing'}.to_json)
+# or using i18n scope
+Activity.i18n.where(name: 'Climing')
+```
 
 # Enums
 
 ```
+# app/models/user.rb
 class User < ApplicationRecord
   enum status: [:active, :pending, :archived]
 end
 
+# app/models/application_record.rb
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
@@ -388,6 +394,7 @@ class ApplicationRecord < ActiveRecord::Base
 end
 
 
+# config/locales/activerecord.en.yml
 en:
   activerecord:
     attributes:
@@ -397,6 +404,7 @@ en:
           pending: "Pending"
           archived: "Archived"
 
+# usage:
 User.human_enum_name(:status, :pending)
 User.human_enum_name(:status, user.status)
 ```
@@ -434,7 +442,12 @@ User.human_enum_name(:status, user.status)
   I18n.translate 'date.formats.default`
   => "%Y-%m-%d"
   ```
-* to localise timestamps you can use `I18n.l Time.now, format: :formal`
+  Use can check formats https://apidock.com/ruby/DateTime/strftime with
+  ```
+  Time.zone.now.strftime '%e %B'
+  ```
+
+* to localise date and timestamps you can use `I18n.l Time.now, format: :formal`
 
   ```
   en:
@@ -450,3 +463,19 @@ User.human_enum_name(:status, user.status)
 * use `_html` suffix when you use tags in translated content. For example
   `title_html: Hi <b>man</b>` and `<%= t('title_html') %>` will not escape and
   you do not need to use html_safe or raw
+* to add route instead of subdomain, use https://stackoverflow.com/a/8237800
+  ```
+  # config/routes.rb
+    devise_for :users, only: :omniauth_callbacks, controllers: {
+      omniauth_callbacks: 'devise/my_omniauth_callbacks',
+    }
+    scope '(:locale)', locale: /#{I18n.available_locales.join("|")}/ do
+      root 'pages#home'
+
+      devise_for :users, skip: :omniauth_callbacks, controllers: {
+        registrations: 'devise/my_registrations',
+      }
+    end
+
+  # config/
+  ```

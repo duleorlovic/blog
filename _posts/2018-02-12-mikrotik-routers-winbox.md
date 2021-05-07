@@ -1090,3 +1090,15 @@ https://github.com/astounding/mtik/
   ~~~
 
 * user scripts https://wiki.mikrotik.com/wiki/Scripts
+* set ports to work as switch is to create a bridge and add port to it for each
+  interface
+  ```
+  /interface bridge
+  add name=bridge
+  /interface bridge port
+  add bridge=bridge interface=ether1
+  add bridge=bridge interface=ether2
+  add bridge=bridge interface=ether3
+  add bridge=bridge interface=ether4
+  add bridge=bridge interface=ether5
+  ```

@@ -297,6 +297,9 @@ To solve that add
   end
 ~~~
 
+todo
+https://ieftimov.com/post/deep-dive-cors-history-how-it-works-best-practices/
+
 # CSP
 
 Content security policy

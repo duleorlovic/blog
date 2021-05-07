@@ -67,8 +67,9 @@ vi move_index/.rbenv-vars
 # add lines
 DATABASE_URL=postgresql://deploy:1234@127.0.0.1/move_index_production
 RAILS_MASTER_KEY=1234
+RAILS_ENV=production
+NODE_OPTIONS=--max-old-space-size=460
 
-echo 'export RAILS_ENV=production' >> ~/.bashrc
 echo '# this will load master key in env' >> ~/.bashrc
 echo 'export $(cat ~/move_index/.rbenv-vars)' >> ~/.bashrc
 ```
@@ -1388,4 +1389,111 @@ NODE_OPTIONS=--max-old-space-size=460
       end
     end
   end
+  ```
+
+* https://github.com/javan/whenever is used to create crontab listing using
+  job type: `runner`, `rake` or `command`. `:task` is replaced with first
+  argument. here are defaults https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/setup.rb
+  https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/job_list.rb#L54
+  You can not use capistrano commands even it looks like capistrano. You can set
+  :whenever_variables and use that.
+  ```
+  job_type :command, ":task :output"
+  job_type :rake,    "cd :path && :environment_variable=:environment bundle exec rake :task --silent :output"
+  job_type :runner,  "cd :path && bin/rails runner -e :environment ':task' :output"
+  job_type :script,  "cd :path && :environment_variable=:environment bundle exec script/:task :output"
+  ```
+  When using rbenv we need to prepend with `rbenv exec` so first we need to pass
+  env variable in `config/deploy.rb`
+  ```
+  # config/deploy.rb
+  # https://github.com/javan/whenever/blob/master/lib/whenever/capistrano/v3/tasks/whenever.rake
+  set :whenever_roles, -> { :worker }
+  # https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+  set :whenever_environment, fetch(:stage)
+  set :whenever_variables, (lambda do
+    "'environment=#{fetch :whenever_environment}" \
+    "&rbenv_root=#{fetch :rbenv_path}'"
+  end)
+  ```
+  and than use it in schedule.rb
+  ```
+  # config/schedule.rb
+  # https://github.com/javan/whenever/issues/75#issuecomment-380747
+  # https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+  set :path, '/home/ubuntu/movebase/current'
+  if @rbenv_root
+    # when calling using capistrano than set correct ruby and env
+    set :rbenv_exec, "#{rbenv_root}/bin/rbenv exec"
+  else
+    set :rbenv_exec, ''
+  end
+
+  # Make sure that log/cron folder exists: mkdir ~/movebase/current/log/cron
+
+  # Example: runner 'MyClass.some_function' (please use only one word, no space,
+  # brackets...)
+  job_type :runner, %(cd :path &&
+     start=`date` &&
+    :rbenv_exec bundle exec rails runner -e :environment :task 2>&1 |
+    (echo $start :task started; cat -; echo `date` :task finished)
+    >> ':path/log/cron/:task.log' 2>&1
+  )
+
+  job_type :rake, %(cd :path &&
+     start=`date` &&
+    :rbenv_exec bundle exec rake :task |
+    (echo $start :task started; cat -; echo `date` :task finished)
+    >> ':path/log/cron/:task.log' 2>&1
+  )
+
+  every :reboot do
+    runner 'MyService.new.perform_and_puts'
+    rake 'sitemap:refresh'
+  end
+  ```
+
+  Use with capistrano
+  https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+  ```
+  # config/deploy.rb
+  set :whenever_environment, fetch(:stage)
+  set :whenever_variables, (lambda do
+    "'environment=#{fetch :whenever_environment}" \
+    "&rbenv_root=#{fetch :rbenv_path}'"
+  end)
+  ```
+  so using capistrano task `cap production whenever:update_crontab` you update
+  `whenever_variables` with `rbenv_root` so when ssh command is executed
+  ```
+  cap production whenever:update_crontab
+  00:00 whenever:update_crontab
+        01 $HOME/.rbenv/bin/rbenv exec bundle exec whenever --update-crontab myapp_production --set 'environment=production&rbenv_root=$HOME/.rbenv' --roles=app,db,web 
+  ```
+  we have defined rbenv_root and whenever can use it
+  ```
+  # config/schedule.rb
+  set :output, error: 'cron.error.log', standard: 'cron.log'
+  # https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+  if defined? rbenv_root
+    job_type :delayed_job, %(cd :path :rbenv_root && :environment_variable=:environment :rbenv_root/bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
+  else
+    job_type :delayed_job, %(cd :path && :environment_variable=:environment bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
+  end
+
+  every :reboot do
+    delayed_job 'start'
+  end
+  ```
+
+  You can use interpolation with `#{name}` or `:name` inside `job_type` but for
+  `set` you can only use `#{name}`. To check crontab syntax simply run
+  `whenever` in development machine.
+  ```
+  set :path, '/home/ubuntu/myapp/current'
+  set :p, "#{path}/log/cron.script.log"
+  # this will not work since colon interpolation does not work for set
+  # set :p, ":path/log/cron.script.log"
+
+  job_type :p, ":path/log/cron.script.log"
   ```

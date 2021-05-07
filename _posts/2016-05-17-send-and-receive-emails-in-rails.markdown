@@ -552,6 +552,16 @@ You can disable registering specific email domains using this list
 https://github.com/FGRibreau/mailchecker
 Using this gem https://github.com/rubygarage/truemail you can check if actual
 email account exists on smtp server.
+Fake emails are detected using: whitelist/blacklist, regex, mx validation, smtp
+validation
+```
+email_address = EmailAddress.new 'asd@asd.asd'
+email_address.valid?
+ => false
+email_address.error
+ => "Domain name not registered"
+```
+
 Format of emails can be validated using https://github.com/afair/email_address
 ```
 Email
@@ -618,3 +628,5 @@ end
 # Click link tracking in emails
 
 https://github.com/ankane/ahoy_email
+
+* 

@@ -117,8 +117,9 @@ Other methods also do not check validation
 http://www.davidverhasselt.com/set-attributes-in-activerecord/
 `update_column`, `@users.update_all`.
 
-Conditional validations can be used with proc new like `if: -> { }` but with
-parameters. Also `if: lambda {|a| }` (difference in required params to block)
+Conditional validations can be used with proc new like `validate :a, if: -> { }`
+but with parameters. Also `if: lambda {|a| }` (difference in required params to
+block)
 
 ~~~
 validates :password, confirmation: true, if: Proc.new { |a|
@@ -233,6 +234,8 @@ from default_scope `belongs_to :location, -> { unscope where: :operator_id }`
 scope](https://singlebrook.com/2015/12/18/how-to-carefully-remove-a-default-scope-in-rails/)
 I usually create additional classes with `self.default_scopes = []` so it does
 not use default scope. Also set table name so I can use sql.
+foreign_key is `"#{model}_id"`, class_name is `"#{model.capitalize}"` and it
+should be used on both sides (belongs_to and has_many)
 
 ~~~
 class UnscopedCustomer < Customer
@@ -765,7 +768,8 @@ rake db:migrate:up VERSION=20161114162031`
 rake db:migrate:down VERSION=20161114162031`
 
 # to remove migration so you can redo
-mysql> DELETE FROM schema_migrations WHERE version = 20161114162031;
+mysql> DELETE FROM schema_migrations WHERE version = 20210316092150;
+20161114162031;
 # or insert if table is already there
 mysql> insert into schema_migrations (version) values ('20200915080301');
 ~~~
@@ -848,8 +852,9 @@ true, null: false` but donor is actually in users table, than you need to change
 foreign key (note that `add_foreign_key` params are in plurals!)
 
 ~~~
-# to_table is in rails5
+# to_table is in rails5 table name, in model use class_name: 'User'
 t.references :donor, foreign_key: { to_table: :users }, null: false
+
 # in rails4 use references keyword also as parameter, not that foreight key
 # constrains need to be added in separate command. note suffix "_id"
 t.references :donor, foreign_key: false, null: false, references: :users
@@ -997,8 +1002,8 @@ end
 
 When you have composite index than you do not need to create index for first
 column (ie you can perform fast query on first column or on first and second
-column, but on on second column), but still need index for second column (or add
-index in reverse direction)
+column, but not on second column), but still need index for second column (or
+add index in reverse direction)
 https://github.com/gregnavis/active_record_doctor#removing-extraneous-indexes
 
 You can also create ordered index (for example listing all posts and users
@@ -2489,218 +2494,6 @@ views.
   where(sport: sport) # conditional on view
 ~~~
 
-# Authorization policy
-
-## Cancan
-
-use cancancan and define all your actions in app/models/ability. If you want to
-use
-[load_resource](https://github.com/ryanb/cancan/wiki/authorizing-controller-actions#load_resource),
-you should separately define: index (with hash), show/edit/update/destroy (with
-block or hash), new/create (with hash). For nested resources just write parent
-association
-
-Note that following next `cannot` rule will override a previous `can` rule, so
-it is enough to set `can :manage, :all` and than write what `cannot :destroy,
-Project`
-
-Define abilities
-https://github.com/CanCanCommunity/cancancan/wiki/defining-abilities
-```
-can :read, Article # autorize! :read, Article will return true
-can :crud, Article # authorize! :read/:create/:update/:destroy, Article will return true
-# https://github.com/CanCanCommunity/cancancan/wiki/Action-Aliases
-aliase_action :index, :show, to: :read | :new, to: :create | :edit. to: :update
-can :manage, Article # authorize! :any_action, Article will return true
-can [:update, :destroy], [Post, Comment] # array notation
-```
-Hash of conditions
-```
-# can read only posts that belongs to user
-can :read, Post, user_id: user.id
-```
-Defining with a block is evaluated only when instance is passed (for example not
-in index action when class is used, ie if you call `can? :update, Project` it
-will return true)
-```
-can :update, Project do |project|
-  false
-end
-```
-
-Defining with a block without other arguments can be used for defining
-Abilities and roles in database
-https://github.com/CanCanCommunity/cancancan/wiki/Abilities-in-Database
-```
-rails g model Permission user_id:integer name:string subject_class:string subject_id:integer action:string description:text
-
-# app/models/ability.rb
-class Ability
-  include CanCan::Ability
-  can do |action, subject_class, subject|
-    # action: :read, subject_class: User, subject: 1 or nil
-  end
-end
-```
-
-Example that only admins can change, for example company_id, with
-can_change_user_company_id
-```
-# in models/ability.rb
-can :can_change_user_company_id, User if user.admin?
-
-<!-- users/_form.html.erb -->
-<% if can? :can_change_user_company_id, @user %>
-  <!-- role checkboxes go here -->
-<% end %>
-
-# users_controller.rb
-def update
-  authorize! :can_change_user_company_id, @user if params[:user][:company_id]
-  # ...
-end
-```
-
-
-## Pundit
-
-https://github.com/varvet/pundit
-
-Instead of poro
-```
-class PostPolicy
-  attr_reader :user, :post
-
-  def initialize(user, post)
-    @user = user
-    @post = post
-  end
-
-  def update?
-    user.admin? or not post.published?
-  end
-end
-```
-Pundit will assume that:
-* class has the same name as model + suffix `Policy`. To specify Policy class
-  you can use `authorize @post, policy_class: PostPolicy`
-* first argument is a `current_user` (called where it was invoked) and stored in
-  `user`.
-* second argument is object and stored in `record` (if you use generated
-  ApplicationPolicy).
-* define methods like method name plus ?
-
-When using `authorize` you can set first argument as a class `authorize Post` or
-a symbol for headless policy.  Second argument could be action name: `authorize
-@post, :destroy?`
-
-so you can use this:
-```
-# app/policy/post_policy.rb
-class PostPolicy < ApplicationPolicy
-  def update?
-    user.admin? || record.draft?
-  end
-end
-```
-andn in controller `authorize @post` inside `def update` action will instantiate
-policy with `current_user` and call method with `?` at the end, something like
-```
-unless PostPolicy.new(current_user, @post).update?
-  raise Pundit::NotAuthorizedError, "not allowed to update? this #{@post.inspect}"
-end
-```
-
-In view, you can use `if policy(@post).update?` method to check if current_user
-is authorized.
-
-## Headless policies
-
-Headless policies, if you do not have corresponding model.
-```
-# app/policies/dashboard_policy.rb
-class DashboardPolicy < Struct.new(:user, :dashboard)
-  # ...
-end
-```
-and use like
-```
-<% if policy(:dashboard).show? %>
-  <%= link_to 'Dashboard', dashboard_path %>
-<% end %>
-```
-
-## Scopes
-
-To define scope on a model for which current_user have access, punding assumes:
-* class has name `Scope` and is nested under the policy class
-* first argument is user and second argument is a scope
-
-```
-class PostPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      if user.admin?
-        scope.all
-      else
-        scope.where(published: true)
-      end
-    end
-  end
-
-  def update?
-    user.admin? or not record.published?
-  end
-end
-```
-and you can use like
-```
-def index
-  # @posts = PostPolicy::Scope.new(current_user, Post).resolve
-  @posts = policy_scope(Post)
-end
-
-def show
-  @post = policy_scope(Post).find(params[:id])
-end
-```
-
-To check if `authorize` is called you can use `verify_authorized` so it raises
-error if `authorize` is not called.
-```
-# app/controllers/application_controller.rb
-class ApplicationController < ActionController::Base
-  include Pundit
-  after_action :verify_authorized
-end
-```
-
-Also you can check if user exists in ApplicationPolicy (so you not need to check
-in other policies).
-
-```
-class ApplicationPolicy
-  def initialize(user, record)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless user
-    @user   = user
-    @record = record
-  end
-
-  class Scope
-    attr_reader :user, :scope
-
-    def initialize(user, scope)
-      raise Pundit::NotAuthorizedError, "must be logged in" unless user
-      @user = user
-      @scope = scope
-    end
-  end
-end
-```
-
-## Other authorization
-
-* https://github.com/palkan/action_policy
 
 # Autoloading
 
@@ -3311,6 +3104,8 @@ end
   ActionController::Base.helpers.link_to 'name', link
   ActionController::Base.helpers.j "can't be blank" # can\'t be blank
   ActionController::Base.helpers.humanized_money_with_symbol amount
+  ActionController::Base.helpers.time_ago_in_words Time.zone.now
+  ActionController::Base.helpers.distance_of_time_in_words 1.day
 
   # no need to use ActionView::Base.new but just for reference
   # ActionView::Base.new.number_to_human 123123 # 123 Thousand
@@ -4156,6 +3951,12 @@ end
 
 * Rails 6 uses Utf8mb4 instead Utf8 so you can store emojis 😀 everywhere, I’m
   💯% sure. Here is plain ascii (￣︶￣). 🙌
+* Rails credentials are available on rails 5.2. You need to export
+RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
+  ```
+  # config/database.yml
+
+  ```
 * when bcrypt is updated you need to update secrets credentials with `rails
   credentials:edit`
 ```
@@ -4177,6 +3978,7 @@ end
   git add config/credentials/test.yml.env
   git add config/credentials/test.key -f
   ```
+  Env RAILS_MASTER_KEY is needed to read credentials.
 * dhh videos On Writing Software Well
   https://www.youtube.com/watch?v=wXaC0YvDgIo&list=PL9wALaIpe0Py6E_oHCgTrD6FvFETwJLlx
   ```
@@ -4565,68 +4367,6 @@ end
     super(options, response_status)
   end
   ```
-* https://github.com/javan/whenever is used to create crontab listing using
-  job type: `runner`, `rake` and `command`. `:task` is replaced with first
-  argument. here are defaults https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/setup.rb
-  https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/job_list.rb#L54
-  You can not use capistrano commands... you can set :whenever_variables and use
-  that.
-  ```
-  job_type :command, ":task :output"
-  job_type :rake,    "cd :path && :environment_variable=:environment bundle exec rake :task --silent :output"
-  job_type :runner,  "cd :path && bin/rails runner -e :environment ':task' :output"
-  job_type :script,  "cd :path && :environment_variable=:environment bundle exec script/:task :output"
-  ```
-  for example
-  ```
-  # config/schedule.rb
-  every :reboot do
-  end
-  ```
-
-  Use with capistrano
-  https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
-  ```
-  # config/deploy.rb
-  set :whenever_environment, fetch(:stage)
-  set :whenever_variables, (lambda do
-    "'environment=#{fetch :whenever_environment}" \
-    "&rbenv_root=#{fetch :rbenv_path}'"
-  end)
-  ```
-  so using capistrano task `cap production whenever:update_crontab` you update
-  `whenever_variables` with `rbenv_root` so when ssh command is executed
-  ```
-  cap production whenever:update_crontab
-  00:00 whenever:update_crontab
-        01 $HOME/.rbenv/bin/rbenv exec bundle exec whenever --update-crontab myapp_production --set 'environment=production&rbenv_root=$HOME/.rbenv' --roles=app,db,web 
-  ```
-  we have defined rbenv_root and whenever can use it
-  ```
-  # config/schedule
-  set :output, error: 'cron.error.log', standard: 'cron.log'
-  # https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
-  if defined? rbenv_root
-    job_type :delayed_job, %(cd :path :rbenv_root && :environment_variable=:environment :rbenv_root/bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
-  else
-    job_type :delayed_job, %(cd :path && :environment_variable=:environment bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
-  end
-
-  every :reboot do
-    delayed_job 'start'
-  end
-  ```
-
-  You can use interpolation with `#{name}` or `:name` inside `job_type` but for
-  `set` you can only use `#{name}`.
-  ```
-  set :path, '/home/ubuntu/myapp/current'
-  set :p, "#{path}/log/cron.script.log"
-  # this will not work since colon interpolation does not work for set
-  # set :p, ":path/log/cron.script.log"
-
-  job_type :p, ":path/log/cron.script.log"
-  ```
 * Rack middleware https://medium.com/@shashwat12june/rack-and-rack-middleware-f93513ac92a6
   You can skip Rails in rack middleware if you return like this example
   ```
@@ -4642,4 +4382,11 @@ end
       end
     end
   end
+  ```
+
+* extract link from text, for example extract url from email
+  ```
+  text = all_emails.last.body.to_s
+  END_CHARS = %{.,'?!:;}
+  links = URI.extract(text, ['http']).collect { |u| END_CHARS.index(u[-1]) ? u.chop : u }
   ```

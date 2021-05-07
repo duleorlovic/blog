@@ -17,7 +17,7 @@ need to `touch tmp/caching-dev.txt` AND to restart after enabling in config
 By default it uses `ActiveSupport::Cache::FileStore`. Instead of file you should
 use `dalli+memcached` or `redis`  (you already have redis you use background
 jobs like Sidekiq).
-Another way to start caching is
+Another way to start caching is using rake cache task so rails cache is enabled
 
 ~~~
 rails dev:cache
@@ -268,6 +268,19 @@ in the key also.
 
 Note that you should not use same keys on multiple places on the page.
 So if you have to use on same page, use different first string.
+
+Note that cache key should include all items that happens to be inside `if`
+statement, for example we show different content for different users
+
+```
+<% cache ['tickets', can?(:view, company), company.tickets.maxium(:updated_at)] do %>
+  <% if can? :view, company %>
+    Hi admin, here is the secret link
+  <% else %>
+    <%= company.tickets.all.size %>
+  <% end %>
+<% end %>
+```
 
 You can clear cache in rails console : `Rails.cache.clear`, also
 `rake tmp:cache:clear` for rails clear cache

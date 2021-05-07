@@ -73,3 +73,62 @@ https://gorails.com/episodes/realtime-ssh-logs-with-actioncable
 
 https://hotwire.dev/
 
+```
+gem 'hotwire-rails'
+# this includes stimulus-rails and turbo-rails gems
+
+rails hotwire:install
+# this will add redis to Gemfile, stimulus to package.json, remove turbolinks
+```
+
+https://turbo.hotwire.dev/handbook/introduction
+
+Turbo frames
+Frames is used to scope navigation of that independent segments, keeping the
+rest of the page inact. Note that links to other pages need to have
+`data-turbo-frame': '_top'` same as with iframes
+Turbo frame tag with block
+  ```
+  # show.html.erb
+  <%= turbo_frame_tag 'room' do %>
+    <p>
+      <strong>Name:</strong>
+      <%= @room.name %>
+    </p>
+
+    <p>
+      <%= link_to 'Edit', edit_room_path(@room) %> |
+      <%= link_to 'Back', rooms_path, 'data-turbo-frame': '_top' %>
+    </p>
+  <% end %>
+
+  # edit.html.erb
+  <%= turbo_frame_tag 'room' do %>
+    <%= render 'form', room: @room %>
+  <% end %>
+  ```
+
+Turbo frame tag inline (lazily load) with `src: template_path` attribute
+```
+<%= turbo_frame_tag 'new_message', src: new_room_message_path(@room), target: '_top' %>
+```
+
+Turbo Stream with 5 actions: append, prepend, replace, update, remove
+
+```
+<turbo-stream action="append" target="messages">
+  <template>
+    <div id="message_1">My new message!</div>
+  </template>
+</turbo-stream>
+
+<turbo-stream action="replace" target="message_1">
+  <template>
+    <div id="message_1">This changes the existing message!</div>
+  </template>
+</turbo-stream>
+```
+
+todo https://www.ombulabs.com/blog/rails/hotwire/hotwire-demo.html
+https://evilmartians.com/chronicles/hotwire-reactive-rails-with-no-javascript
+https://blog.engineyard.com/the-ruby-unbundled-series-why-you-should-check-out-hotwire-now?reddit

@@ -218,6 +218,7 @@ failure.
 * typecast can be done: `INTERVAL '1 WEEK'` or `'1 WEEK'::INTERVAL`
   * jsonb is much reliable type cast when since json compares as strings
     [link](http://stackoverflow.com/questions/32843213/operator-does-not-exist-json-json)
+    you can select json with `SELECT name->'en' from users`
 * to use columns (like `$1` or name `a.b`) you can use
   * string concatenation  `(a.b || ' MINUTES')::INTERVAL`
   * multiplication `a.b * INTERVAL '1 MINUTES'` (much nicer)
@@ -277,6 +278,20 @@ puts Benchmark.measure { Job.active_per_domain_per_tier(domain,1) }
 
 or you can connect to production database (be carefull).
 
+
+Dump database using DATABASE_URL
+```
+# -Fc custom format -Fd directory format
+pg_dump -Fc --dbname=$DATABASE_URL > db.dump
+# -C for create
+pg_restore -C -d db_name db.dump
+
+
+# when using plain format
+pg_dump --dbname=$DATABASE_URL > db.sql
+createdb db_name
+psql -d db_name -f db.dump
+```
 
 ## Statistics graph
 
