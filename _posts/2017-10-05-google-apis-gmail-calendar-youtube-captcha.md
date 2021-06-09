@@ -220,5 +220,63 @@ google:
     token_uri: https://oauth2.googleapis.com/token,
     auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs,
     client_x509_cert_url: https://www.googleapis.com/robot/v1/metadata/x509/starting-account-y150mz5jlqxf%40....iam.gserviceaccount.com
-
 ```
+
+Credentials are explained here
+https://developers.google.com/accounts/docs/application-default-credentials 
+so on development it is enough to export GOOGLE_APPLICATION_CREDENTIALS
+with the key or the json file
+```
+export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"
+```
+or you can pass file path like
+```
+key_file   = "path/to/service-account.json"
+storage = Google::Cloud::Storage.new project: project_id, keyfile: key_file
+```
+
+or in ruby, you can find example for each API
+https://github.com/googleapis/google-cloud-ruby/blob/master/google-cloud-translate/AUTHENTICATION.md
+```
+require "google/cloud/translate"
+
+Google::Cloud::Translate.configure do |config|
+  config.credentials = "path/to/keyfile.json"
+
+  # or content
+  config.credentials = Rails.application.credentials.google_cloud_credentials
+end
+# or for V2
+ENV["TRANSLATE_CREDENTIALS"] = Rails.application.credentials.google_cloud_credentials.to_json
+```
+
+
+# Google Translate API
+
+https://console.cloud.google.com/apis/library/translate.googleapis.com
+https://github.com/googleapis/google-cloud-ruby/tree/master/google-cloud-translate
+https://googleapis.dev/ruby/google-cloud-translate-v3/latest/index.html
+```
+require "google/cloud/translate/v3"
+
+client = ::Google::Cloud::Translate::V3::TranslationService::Client.new
+request = my_create_request
+response = client.translate_text request
+```
+(do not know how to create request 
+https://googleapis.dev/ruby/google-cloud-translate-v3/latest/Google/Cloud/Translate/V3/TranslateTextRequest.html
+```
+Google::Cloud::Translate::V3::TranslateTextRequest.new contents: ['home'], source_language_code: 'en', target_language_code: 'sr'
+```
+)
+
+so I still use v2
+https://googleapis.dev/ruby/google-cloud-translate-v2/latest/index.html
+```
+require "google/cloud/translate/v2"
+
+client = Google::Cloud::Translate::V2.new
+
+translation = client.translate "Hello world!", to: "la"
+```
+

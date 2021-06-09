@@ -54,14 +54,14 @@ class Notify
   # Send notification using string as subject and pass additional argumets (it
   # will be shown as array) or options (shown as hash) for example:
   # Notify.message 'some_problem', customers_url, email: customer.email
-  # Rails 5: Notify.message 'text', user.slice :id, :name
+  # Notify.message 'text', user.slice :id, :name
   def self.message(message, *args)
     data = {}
     # put first args so it is shown at beginning
     data[:args] = args if args.present?
     data.merge! args.extract_options!
     ExceptionNotifier.notify_exception(Exception.new(message), data: data)
-    # return true so we could use: Notify.message 'hi' and return unless continue?
+    # return true so we could use: return Notify.message('hi') unless continue?
     true
   end
 

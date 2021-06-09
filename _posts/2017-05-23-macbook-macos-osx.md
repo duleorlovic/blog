@@ -215,7 +215,7 @@ vim) so for vim use `^b` and `^f` (`^d` and `^u` for half down up)
 
 With `fn F3` (or swipe up with three fingers) you can create new spaces (any
 number of workspaces). You can switch between them with left/right swipe with
-three fingers (you can see more animations on System Preferences -> Trackpad.
+three fingers and you can drag and drop to different workspaces.
 
 Full screen apps open their own space.
 

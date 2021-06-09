@@ -162,6 +162,17 @@ Some tips:
   'b'`
 * you can use IN, ANY, ALL
 [functions-comparisons](https://www.postgresql.org/docs/current/static/functions-comparisons.html#AEN18509)
+* unique index regardless of order (two way combination or columns) can be
+  enforced with expressions to build index
+  https://stackoverflow.com/questions/30036837/postgresql-enforce-unique-two-way-combination-of-columns
+  ```
+    # This index does not cover two direction (oposite case)
+    # add_index :interests, [:from_member_profile_id, :to_member_profile_id], unique: true, name: 'uniq_index_on_interests'
+    # https://stackoverflow.com/a/30037484/287166
+    execute <<-SQL
+      create unique index uniq_index_on_interests on interests(greatest(from_member_profile_id,to_member_profile_id), least(from_member_profile_id,to_member_profile_id));
+    SQL
+  ```
 
 Use gem to extent ActiveRecord functionality
 https://github.com/georgekaraszi/ActiveRecordExtended

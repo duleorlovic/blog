@@ -24,11 +24,12 @@ rails webpacker:install:stimulus
 
 cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
 
-* `data-controller='hello'` controller that is defined in `hello_controller.js`.
-  Each dash corresponds to underscore (or dash) in file name, two dashes
-  corresponds to subfolder `users--list-item` -> `users/list_item_controller.js`
-* `data-action='click->hello#greet'` event name is `click`, controller `hello`
-  method `greet`.
+* `data-controller='hello-word'` controller that is defined in
+  `hello_word_controller.js`.  Each dash corresponds to underscore (or dash) in
+  file name, two dashes corresponds to subfolder `users--list-item` ->
+  `users/list_item_controller.js`
+* `data-action='click->hello-word#greet'` event name is `click`, controller
+  `helloWord` (but that camelcase name is not used anywhere) method `greet`.
   If element is `<a>`, `<button>`, `<input type="submit">` than you do not need
   to write `click->`.
   `<input>`, `<select>` and `<textarea>` has `change` as default event.
@@ -170,10 +171,10 @@ as with when we use data attributes.
 
 ```
 # app/views/books/_form.html.erb
-  <div data-controller='hello' data-hello-count='<%= @count %>'>
+  <div data-controller='hello-word' data-hello-word-count='<%= @count %>'>
     count <%= @count %>
-    <div data-target='hello.output'></div>
-    <%= link_to 'Increase', '#', data: { action: 'hello#increment' } %>
+    <div data-target='hello-word.output'></div>
+    <%= link_to 'Increase', '#', data: { action: 'hello-word#increment' } %>
   </div>
 
 # app/javascript/controllers/hello_controller.js

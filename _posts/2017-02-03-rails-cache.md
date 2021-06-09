@@ -45,7 +45,7 @@ gem 'redis', require: ['redis', 'redis/connection/hiredis']
 config.cache_store = :redis_cache_store
 ~~~
 
-In coonsole you can check keys and values
+In console you can check keys and values
 
 ~~~
 pp Rails.cache.redis.keys
@@ -270,7 +270,10 @@ Note that you should not use same keys on multiple places on the page.
 So if you have to use on same page, use different first string.
 
 Note that cache key should include all items that happens to be inside `if`
-statement, for example we show different content for different users
+statement, for example we show different content for different users. Also if we
+should numbers that depends on current day, for example `Todays registered: <%=
+User.where('created_at > ?', Time.zone.at_begging_of_day)` we should include
+Date in cache keys since it should be updated (event we do not touch any user)
 
 ```
 <% cache ['tickets', can?(:view, company), company.tickets.maxium(:updated_at)] do %>

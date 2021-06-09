@@ -39,6 +39,8 @@ http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html
 
 Rails performs loading fixtures in tree steps: removing old fixture data, load
 fixture data and dump data into a method inside test case `users(:david)`
+Note that when using `smoke: Yes` or `smoke: No` it might be converted to true
+false, so better is to use `smoke: 'Yes'` or `smoke: 'No'`
 
 Defining fixtures:
 * use labels for associated belongs_to and has_many items (separated by comma)
@@ -502,6 +504,19 @@ title: "Ahoy!" }, response.parsed_body)`.
   # instead of refute_select, for no div with my_name you can use count but put
   # inside hash: text: and count:
   assert_select 'a[href=?]', text: /my_name/, count: 0
+  # https://apidock.com/rails/ActionController/Assertions/SelectorAssertions/assert_select
+   # All input fields in the form have a name
+  assert_select "form input" do
+    assert_select "[name=?]", /.+/  # Not empty
+  end
+
+  # https://apidock.com/rails/HTML/Selector
+  # to target all elements data-test="member-profile-1", data-test="member-profile-2"
+  assert_select '[data-test^=member-profile-]', 10
+
+  # not sure how to use substitution, why this does not work
+  assert_select 'data-test[member-profile-?]', /.+/, count: 10
+
   assert_select 'div', html: 'p', minimum: 2
   ~~~
 
@@ -603,6 +618,29 @@ cleaner gem. With system tests, we can use internal mechanism to roll back db
 changes.
 Before we used feature specs for full application integration testing, but now
 we should use system specs (which also uses capybara and webdriver with chrome).
+Add to gemfile
+
+```
+  # system test
+  gem 'capybara' # 3.35.3
+  gem 'selenium-webdriver' # 3.142.7
+```
+and create
+```
+# test/application_system_test_case.rb
+require 'test_helper'
+
+class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  # driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
+  driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+
+  # you can use bye bug, but it will stop rails so you can not navigate to other
+  # pages or make another requests in chrome while testing
+  def pause
+    $stderr.write('Press CTRL+j or ENTER to continue') && $stdin.gets
+  end
+end
+```
 
 Use nameing like ROLE_ACTION_test.rb for example *user_shares_card_test.rb*
 
@@ -898,7 +936,8 @@ guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
 
     def display_image
       system "gnome-open #{image_path} &"
-      "Opening screenshot: gnome-open #{image_path}"
+      system "xdg-open #{image_path} &"
+      "Opening screenshot: xdg-open #{image_path}"
     end
   end
   ~~~

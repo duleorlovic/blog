@@ -77,7 +77,21 @@ end
 
 https://github.com/varvet/pundit
 
-Instead of poro
+Install with gem and include in controller
+```
+# Gemfile
+gem 'pundit'
+
+# app/controllers/application_controller.rb
+class ApplicationController < ActionController::Base
+  include Pundit
+end
+
+# generate default app/policies/application_policy.rb
+rails g pundit:install
+```
+
+Sample ruby poro class
 ```
 class PostPolicy
   attr_reader :user, :post
@@ -93,8 +107,7 @@ class PostPolicy
 end
 ```
 Pundit will assume that:
-* class has the same name as model + suffix `Policy`. To specify Policy class
-  you can use `authorize @post, policy_class: PostPolicy`
+* class has the same name as model + suffix `Policy`
 * first argument is a `current_user` (called where it was invoked) and stored in
   `user`.
 * second argument is object and stored in `record` (if you use generated
@@ -102,19 +115,11 @@ Pundit will assume that:
 * define methods like method name plus ?
 
 When using `authorize` you can set first argument as a class `authorize Post` or
-a symbol for headless policy.  Second argument could be action name: `authorize
-@post, :destroy?`
+a symbol for headless policy. Second argument could be action name: `authorize
+@post, :destroy?`. To specify Policy class you can use `authorize @post,
+policy_class: PostPolicy`
 
-so you can use this:
-```
-# app/policy/post_policy.rb
-class PostPolicy < ApplicationPolicy
-  def update?
-    user.admin? || record.draft?
-  end
-end
-```
-andn in controller `authorize @post` inside `def update` action will instantiate
+In controller `authorize @post` inside `def update` action will instantiate
 policy with `current_user` and call method with `?` at the end, something like
 ```
 unless PostPolicy.new(current_user, @post).update?
@@ -209,6 +214,15 @@ class ApplicationPolicy
 end
 ```
 
+Use alias after method are defined
+```
+class MyPolicy < ApplicationPolicy
+  def create?
+  end
+  alias new? create?
+end
+```
+
 # Action Policy
 
 https://github.com/palkan/action_policy is similar to pundit
@@ -220,12 +234,19 @@ rails generate action_policy:policy post
 ```
 
 Use in controller (policy class is infered from model name, method infers from
-action name and current_user becomes user). bang will raise error if not allowed
+action name and current_user becomes user).
 ```
-  authorize! @post
+  # You can check in before action
+  def _set_post
+    authorize! @post
+  end
+
+  # or with specific method
   authorize! @post, to: :update?
+  # or with specific policy
   authorize! @post, with: CustomPostPolicy
 
+  # bang will raise error if not allowed
   rescue_from ActionPolicy::Unauthorized do |ex|
     # Exception object contains the following information
     ex.policy #=> policy class, e.g. UserPolicy
@@ -268,6 +289,17 @@ class CommentPolicy < ApplicationPolicy
     allow! if user.admin?
 
     user.public?
+  end
+
+  # alias synonims so you do not need to repeat dry, NOTE that is will call if
+  # method exists, so alias is used only when method missing
+  # By default, ActionPolicy::Base adds one alias: alias_rule :new?, to: :create?.
+  alias_rule :edit?, :destroy?, to: :update?
+
+  # default rule is :manage (not matching anything, defaults are index? create?
+  # https://github.com/palkan/action_policy/blob/master/docs/custom_policy.md
+  def manage?
+    true
   end
 end
 ```

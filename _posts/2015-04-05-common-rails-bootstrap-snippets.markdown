@@ -626,6 +626,12 @@ git add . && git commit -m "Adding sign signout path"
 # Company scaffold with skipped unused files
 ~~~
 rails g scaffold company name:string user:references --no-stylesheets --no-fixture --no-test-framework --no-helper --no-assets --no-jbuilder
+# or put in config/environments/development.rb
+  config.generators do |generate|
+    generate.helper false
+    generate.stylesheets false
+  end
+
 sed -i '/companies/a \  root "companies#index"' config/routes.rb
 rake db:migrate && git add . && git commit -m "rails g scaffold company name:string user:references"
 ~~~
@@ -770,6 +776,7 @@ git push heroku master --set-upstream
 heroku run rails db:migrate db:seed
 
 # heroku pg:reset --confirm $MYAPP_NAME
+# heroku pg:reset --confirm `[[ $(git remote get-url heroku) =~ https...git.heroku.com.(.*).git ]] && echo ${BASH_REMATCH[1]}`
 # heroku pg:reset --confirm ${PWD##*/}
 # heroku restart
 #
@@ -806,8 +813,8 @@ heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "
 
 
 # also pushing
-heroku pg:reset
-heroku pg:push buyers_development postgresql-animate-86842
+# heroku pg:reset --confirm `[[ $(git remote get-url heroku) =~ https...git.heroku.com.(.*).git ]] && echo ${BASH_REMATCH[1]}`
+heroku pg:push `bundle exec rails runner "puts ActiveRecord::Base.configurations['development'][:database]"` `heroku pg|grep Add|awk '{print $2}'`
 ~~~
 
 Using `rake db:fixtures:load` on heroku is not allowed

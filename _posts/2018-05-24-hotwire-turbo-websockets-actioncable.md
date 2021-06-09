@@ -78,15 +78,34 @@ gem 'hotwire-rails'
 # this includes stimulus-rails and turbo-rails gems
 
 rails hotwire:install
-# this will add redis to Gemfile, stimulus to package.json, remove turbolinks
+# this will install stimulus and turbo https://github.com/hotwired/hotwire-rails/blob/28d25901c0b0b4492e473478e7e10ca9fc94213e/lib/tasks/hotwire_tasks.rake#L3
+# there are two ways, using asset pipeline and webpacker
+# Removed from Gemfile turbolinks and from packs/application.js
+
+rails turbo:install:asset_pipeline
+# added to app/views/layouts/application.html.erb
+# <%= turbo_inlude_tags %> this is old
+<%= yield :head %>
+<%= javascript_include_tag "turbo", type: "module" %>
+
+rails turbo:install:webpacker
+# Please check if this are added to app/javascript/packs/application.js
+import '@hotwired/turbo-rails'
+# I have a problem with double request it seems that turbo frames does not work
+# (it triggers only once) second click on edit does nothing
+# one way to solve is to add response in controller
+  format.turbo_stream { render turbo_stream: turbo_stream.replace("#{_params_step}-edit", template: "profile/#{_params_step}") }
 ```
+
+GET are HTML and PATH/POST are TURBO_STREAM requests
+You should be able to edit inline twice double.
 
 https://turbo.hotwire.dev/handbook/introduction
 
 Turbo frames
 Frames is used to scope navigation of that independent segments, keeping the
-rest of the page inact. Note that links to other pages need to have
-`data-turbo-frame': '_top'` same as with iframes
+rest of the page inact. Note that links to other pages need to have target
+`data-turbo-frame': '_top'` (similar as with iframes)
 Turbo frame tag with block
   ```
   # show.html.erb
@@ -108,12 +127,41 @@ Turbo frame tag with block
   <% end %>
   ```
 
-Turbo frame tag inline (lazily load) with `src: template_path` attribute
+Turbo frame tag inline (lazily load) with `src: template_path` attribute (not
+sure why we need to set up target: '_top' on frame tag)
 ```
 <%= turbo_frame_tag 'new_message', src: new_room_message_path(@room), target: '_top' %>
 ```
 
-Turbo Stream with 5 actions: append, prepend, replace, update, remove
+To run javascript on when turbo frame is loaded you can listen to events
+https://turbo.hotwire.dev/reference/events
+or you can use stimulus controller connect event.
+For example for modal we automatically open it, and we close on submit
+```
+<%= turbo_frame_tag 'modal' do %>
+  <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-controller='start-modal-on-connect'>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+      <%= button_to 'Ok', interests_path(to_member_profile_id: @interest.to_member_profile.id), class: 'btn btn-primary mb-3', 'data-action': 'start-modal-on-connect#close' %>
+
+// app/javascript/controllers/start_modal_on_connect_controller.js
+import { Controller } from 'stimulus'
+
+export default class extends Controller {
+  connect() {
+    console.log('start-modal-on-connect')
+    $(this.element).modal()
+  }
+
+  close() {
+    console.log('start-modal-on-connect#close')
+    $(this.element).modal('hide')
+  }
+}
+```
+
+Turbo Stream with 5 CRUD actions: append, prepend, replace, update, remove (it
+is limited to DOM changes, for javascript invocation use stimulus)
+
 
 ```
 <turbo-stream action="append" target="messages">
@@ -129,6 +177,124 @@ Turbo Stream with 5 actions: append, prepend, replace, update, remove
 </turbo-stream>
 ```
 
+In in view we use helper `turbo_stream.append 'id', partial: 'edit'` for example
+```
+# app/views/posts/create.turbo_stream.erb
+<%= turbo_stream.append 'messages', @message %>
+```
+In controller
+
+```
+def create
+  respond_to do |format|
+    format.turbo_stream do
+      render turbo_stream: turbo_stream.append 'id', partial: 'edit', locals: { post: @post }
+    end
+  end
+```
+
+Redirect inside turbo_frame_tag
+  https://discuss.hotwire.dev/t/form-redirects-not-working-as-expected/2058/6
+Solution is using stimulus event
+https://github.com/hotwired/turbo/issues/138#issuecomment-802171574
+```
+// app/javascript/controllers/turbo_form_submit_redirect_controller.js
+import { Controller } from "stimulus"
+import * as Turbo from "@hotwired/turbo"
+
+export default class extends Controller {
+  connect() {
+    this.element.addEventListener("turbo:submit-end", (event) => {
+      this.next(event)
+    })
+  }
+
+  next(event) {
+    if (event.detail.success) {
+      Turbo.visit(event.detail.fetchResponse.response.url)
+    }
+  }
+}
+```
+Usage is with
+
+```
+<turbo-frame id='phone' data-controller='turbo-form-submit-redirect'>
+```
+note that it needs to be on first frame in case you have steps that replaces
+several templates
+
+To disable turbo drive on specific element using `data-turbo="false"`
+https://turbo.hotwire.dev/handbook/drive#disabling-turbo-drive-on-specific-links-or-forms
+for example on form
+```
+<%= bootstrap_form_with model: @member_profile, url: profile_update_path, method: :patch, html: { 'data-turbo': false } do |f| %>
+```
+
+# Devise fix
+
+https://gorails.com/episodes/devise-hotwire-turbo
+```
+# app/controllers/turbo_controller.rb
+class TurboController < ApplicationController # rubocop:todo Lint/ConstantDefinitionInBlock
+  class Responder < ActionController::Responder
+    def to_turbo_stream
+      controller.render(options.merge(formats: :html))
+    rescue ActionView::MissingTemplate => e
+      raise e if get?
+
+      if has_errors? && default_action
+        render rendering_options.merge(formats: :html, status: :unprocessable_entity)
+      else
+        redirect_to navigation_location
+      end
+    end
+  end
+
+  self.responder = Responder
+  respond_to :html, :turbo_stream
+end
+
+# config/initializers/devise.rb
+# https://gorails.com/episodes/devise-hotwire-turbo
+Rails.application.reloader.to_prepare do
+  class TurboFailureApp < Devise::FailureApp # rubocop:todo Lint/ConstantDefinitionInBlock
+    def respond
+      if request_format == :turbo_stream
+        redirect
+      else
+        super
+      end
+    end
+
+    def skip_format?
+      %w[html turbo_stream */*].include? request_format.to_s
+    end
+  end
+end
+
+Devise.setup do |config|
+
+  # ==> Controller configuration
+  # Configure the parent class to the devise controllers.
+  config.parent_controller = 'TurboController'
+
+  # ==> Warden configuration
+  config.warden do |manager|
+    manager.failure_app = TurboFailureApp
+  end
+end
+```
+
+# Sample apps
+
+bootstrap modal https://github.com/dparfrey/turbo_modal_bootstrap
+twitter https://github.com/gorails-screencasts/hotwire-twitter-clone
+todoapp https://github.com/johnreitano/foo2
+
+
+https://www.driftingruby.com/episodes/hotwire
+https://www.youtube.com/watch?v=b7dx1Yt3FzU
 todo https://www.ombulabs.com/blog/rails/hotwire/hotwire-demo.html
 https://evilmartians.com/chronicles/hotwire-reactive-rails-with-no-javascript
 https://blog.engineyard.com/the-ruby-unbundled-series-why-you-should-check-out-hotwire-now?reddit

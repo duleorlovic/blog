@@ -95,6 +95,36 @@ Rails.configuration.action_mailer.smtp_settings
 Rails.configuration.action_mailer.delivery_method
 ```
 
+## AWS Workmail
+
+```
+    config.action_mailer.smtp_settings = {
+      address: 'smtp.mail.us-east-1.awsapps.com',
+      port: 465,
+      domain: 'mydomain.com',
+      user_name: Rails.application.credentials.smtp_username,
+      password: Rails.application.credentials.smtp_password,
+      authentication: 'login',
+      enable_starttls_auto: false,
+      tls: true,
+      ssl: true,
+    }
+    config.action_mailer.delivery_method = :smtp
+```
+
+aws ses simple email service
+https://www.sitepoint.com/deliver-the-mail-with-amazon-ses-and-rails/
+
+```
+config.action_mailer.smtp_settings = {
+  :address => "email-smtp.us-east-1.amazonaws.com",
+  :port => 587,
+  :user_name => ENV["SES_SMTP_USERNAME"], #Your SMTP user
+  :password => ENV["SES_SMTP_PASSWORD"], #Your SMTP password
+  :authentication => :login,
+  :enable_starttls_auto => true
+}
+```
 ## Sendgrid
 
 Sendgrid is simple to start on heroku. Just add new add-on free plan with

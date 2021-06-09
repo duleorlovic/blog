@@ -797,6 +797,7 @@ https://segment.com/ collect customer data
 
 * https://github.com/ankane/ahoy is free version that stores data in our db
   https://gorails.com/episodes/internal-metrics-with-ahoy-and-blazer
+  https://blog.engineyard.com/ruby-unbundled-track-how-customers-use-new-features
 
 # User support services
 

@@ -192,9 +192,9 @@ Just a few command line options with grep
 that contains asd or qwe. We need parentheses because alternator
 operator `|` has the lowest precedence of all, so usually you want world
 boundaries like `^([0-9]|[1-9][0-9])$` (0..99, but not 0asd, or asd9
-* contains asd but not qwe is `asd((?!qwe).)*$`. Oposite for containing (does
-  not include) is using negative lookahead `(?!____)` which asserts that this
-  group does not match
+* contains asd but not qwe till the end of line is `asd((?!qwe).)*$`. Oposite
+  for containing (does not include) is using negative lookahead `(?!____)` which
+  asserts that this group does not match
 * contains `asd` and `qwe` but not `zxc` in between `asd((?!qwe).)*zxc`
 * include end of line for multiline search, use matcher `\_.` finds any
 character including end-of-line. Use `\n` for new line character for example

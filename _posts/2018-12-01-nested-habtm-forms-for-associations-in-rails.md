@@ -361,6 +361,11 @@ https://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end
 ```
   <%= f.search_field :s, autofocus: true, onfocus: 'this.selectionStart = this.selectionEnd = this.value.length;' %>
 ```
+or another solution
+https://stackoverflow.com/a/24891345/287166
+```
+<%= form.text_field :mobile, class: 'form-control', placeholder: 'Enter Mobile', value: form.object.mobile || '+1', autofocus: true, onfocus: 'var temp = this.value; this.value = ""; this.value = temp' %>
+```
 
 ## Disabled
 
@@ -390,6 +395,93 @@ is using `label` and to avoid placeholders.
   attribute (not a value or a text object).
 * adjacent elements (google sign in use this)
 
+
+# Select
+
+[form
+select](https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select)
+can accept as 2th param (choices) two variant:
+
+* flat collection `[['name', 123],...]`
+* if you need manual tags `<select><option></option></select>` than you can use
+`<%= select tag "statuses[]", options_for_select([[]], selected: 1) %>`
+* nested collection `grouped_options_for_select()` (also exists
+  `f.grouped_collection_select`)
+
+  Preselected value can be defined as second param in `options_for_select([],
+  selected: f.object.user_id`, or as 4th param in
+  `options_from_collection_for_select(User.all, :id, :email, selected:
+  f.object.user_id)`. Note that it can be `value` or hash `selected: value`.
+
+as 3th param (options):
+
+Sometimes when options do not include value that you want to set and you
+use prompt to be shown, please preform check `{ prompt: 'Select package'
+}.merge( options.present? ? { selected: @customer.some_other_package.id
+} : {} )`. If target selected value is not in options, that first option will be
+used, or prompt is shown when options is empty.
+* `disabled: [values]` to disable some options
+* `label: 'My label'`
+* `prompt: 'Please select'` this is shown only if not already have some value
+* `include_blank: 'Please select'` this is shown always (even already have
+value) I found usefull only with select2 where we use custom placeholder and
+blank option is not selectable `<%= f.select :customer_name_and_username,
+options_from_collection_for_select(current_location.customers, 'id',
+'name_and_username'),  { include_blank: true, label: 'Customer' },
+'data-select2': true, placeholder: 'Search by Customer Name or Username' %>`
+
+as 4th params (html options)
+* `multiple: true` so it is multi_select (instead of dropdown). Multi select
+  will be shown with its own scrollbar (use `size: 5` to limit the size).
+  In controller you need to allow arrays
+
+  ~~~
+  def event_params
+    params.require(:event).permit(
+      :title, skills: []
+    )
+  end
+  ~~~
+
+*  Form array can be set on any input, use square brackets `name='user_ids[]'`.
+  In view you can set array of hidden fields
+  ```
+    <% @isp_push_packages.isp_package_ids.each do |isp_package_id| %>
+      <%= f.hidden_field 'isp_package_ids[]', value: isp_package_id %>
+    <% end %>
+  ```
+  or using select `multiple: true` (it will automatically add `[]` to the name)
+  ```
+  <%= f.select isp_package_ids, options, {}, multiple: true %>
+  ```
+  You can also nest in two dimensions ie it will be a hash with array values
+  `name='user_ids[#{company.id}][]`. In this case you need to permit hash
+  (Rails 5.2) or whitelist in before Rails 5.2
+
+  ```
+  params.require(:post).permit(reseller_location_ids: {}) # Rails 5.2
+  permit(files: params[:post][:files].key # before Rails 5.2
+
+  <%= select_tag 'reseller_location_ids[#{operator.id}]', options, multiple: true %>
+  # do not know how to use f.select since can not have method with a name
+  `name[name]`
+  ```
+  Note that if it is not required and nothing is selected than nothing will be
+  sent, you should use hidden field or default value `{}`
+
+  ```
+  <%= hidden_field_tag 'reseller_location_ids[0][]' %>
+  # or
+  location_ids = (params[:reseller_location_ids] || {})[params[:reseller_operator_id]] || []
+  ```
+
+*  And in model you need to clean empty strings `[""]` when nothing is selected
+  ~~~
+  before_validation :clean_empty_skills
+  def clean_empty_skills
+    self.skills = skills.select &:present?
+  end
+  ~~~
 
 examples
 TODO

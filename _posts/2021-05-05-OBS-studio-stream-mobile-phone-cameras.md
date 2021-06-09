@@ -45,12 +45,26 @@ Stream from web use: https://github.com/bazukas/obs-linuxbrowser
 
 # Scenes
 
+Hold Alt key to crop.
+https://obsproject.com/wiki/Sources-Guide#scenes-and-sources-overview
+
 Since changing scenes will disconnect and reconnect again, best way to switch
 cameras is to move to top (on mac it is fn + cmd + left).
 To preview cameras you can use right click and "Windowed projector" so you can
 see all three cameras in three windows.
 On each source you should use "Transform" and "Strech to screen". It is good to
 have all cameras with same ratio width and height.
+
+In OBS you can go File -> Show Recordings or File -> Remux recordings to create
+mp4 from mkv files.
+
+To start multiple VLC players you can run
+```
+# cameras.sh
+open -n /Applications...../VLC rtsp://...../video &
+open -n /Applications...../VLC rtsp://...../video
+```
+
 ## Auto rotate scenes based on timer
 
 Advances Scene switcher

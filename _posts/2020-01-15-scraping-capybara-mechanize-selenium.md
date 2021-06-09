@@ -1010,7 +1010,8 @@ One alternative solution, which does not rely on selenium
 https://github.com/gokhandemirhan/KimonoAlternatives
 
 * Find selectors using javascript https://github.com/cantino/selectorgadget and
-chrome extension
+chrome extension plugin addon selector gadget (click first on element to become
+yellow, and than click on all yellows to mark them as red to remove)
 * https://webscraper.io/ browser extension https://www.webscraper.io/tutorials
   nice documentation with images
   https://www.webscraper.io/documentation/selectors/link-selector

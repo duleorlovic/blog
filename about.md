@@ -19,6 +19,9 @@ code
 <https://github.com/rails/rails/pull/36428>.
 <https://github.com/rails/rails/pull/32241>
 <br>
+Issues:
+<https://github.com/hotwired/turbo-rails/issues/180>
+<br>
 My conference lighting
 talk on Balkan Ruby <https://youtu.be/lpkePkbYeoI?t=882>.
 

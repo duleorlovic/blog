@@ -169,6 +169,15 @@ If you need to access from command line than install globaly `-g`
 Use `--save` if package is used on production env, and `--save-dev` if it is
 only on development (like linters or testing tools).
 
+To run script from node_modules/some-package/package.json you can run
+https://stackoverflow.com/a/48803884/287166
+```
+npm explore some-package -- npm run subscript
+
+yarn --cwd node_modules/some-package/ run subscript
+
+```
+
 You can use scoped packages https://docs.npmjs.com/misc/scope that will be used
 from subfolder, for example
 
@@ -1012,9 +1021,10 @@ import 'controllers'
 import 'turbolinks.load'
 import 'window_functions'
 
-// our stylesheet
+// our stylesheet, please add <%= stylesheet_pack_tag 'application' %> to layout
 import 'stylesheet/application'
 ```
+
 and create separate pack for turbolinks:load events
 
 ```

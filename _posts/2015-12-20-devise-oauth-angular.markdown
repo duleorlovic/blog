@@ -145,7 +145,7 @@ class PagesController < ApplicationController
     return unless Rails.env.development? || Rails.application.secrets.is_staging
 
     user = User.find params[:id]
-    sign_in :user, user, byepass: true
+    sign_in :user, user, bypass: true
     redirect_to params[:redirect_to] || root_path
   end
 end
@@ -1055,8 +1055,13 @@ Resources
 # app/controllers/confirmations_controller.rb
 class ConfirmationsController < Devise::ConfirmationsController
   def show
-    super
-    sign_in resource if resource.confirmed?
+    super do
+      sign_in resource if resource.confirmed?
+    end
+
+    def after_confirmation_path_for(resource_name, resource)
+      profile_edit_path
+    end
   end
 end
 ~~~

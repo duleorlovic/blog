@@ -26,100 +26,15 @@ prompt: true }, class: 'my-class' %>
 NOTE that in Rails 5.2 we do not need to add presence validations but if you
 want to disable you can do with `belongs_to :job_type, optional: true`
 
-[form
-select](https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/select)
-can accept as 2th param (choices) two variant:
-
-* flat collection `[['name', 123],...]`
-* if you need manual tags `<select><option></option></select>` than you can use
-`<%= select tag "statuses[]", options_for_select([[]], selected: 1) %>`
-* nested collection `grouped_options_for_select()` (also exists
-  `f.grouped_collection_select`)
-
-  Preselected value can be defined as second param in `options_for_select([],
-  selected: f.object.user_id`, or as 4th param in
-  `options_from_collection_for_select(User.all, :id, :email, selected:
-  f.object.user_id)`. Note that it can be `value` or hash `selected: value`.
-
-as 3th param (options):
-
-Sometimes when options do not include value that you want to set and you
-use prompt to be shown, please preform check `{ prompt: 'Select package'
-}.merge( options.present? ? { selected: @customer.some_other_package.id
-} : {} )`. If target selected value is not in options, that first option will be
-used, or prompt is shown when options is empty.
-* `disabled: [values]` to disable some options
-* `label: 'My label'`
-* `prompt: 'Please select'` this is shown only if not already have some value
-* `include_blank: 'Please select'` this is shown always (even already have
-value) I found usefull only with select2 where we use custom placeholder and
-blank option is not selectable `<%= f.select :customer_name_and_username,
-options_from_collection_for_select(current_location.customers, 'id',
-'name_and_username'),  { include_blank: true, label: 'Customer' },
-'data-select2': true, placeholder: 'Search by Customer Name or Username' %>`
-
-as 4th params (html options)
-* `multiple: true` so it is multi_select (instead of dropdown). Multi select
-  will be shown with its own scrollbar (use `size: 5` to limit the size).
-  In controller you need to allow arrays
-
-  ~~~
-  def event_params
-    params.require(:event).permit(
-      :title, skills: []
-    )
-  end
-  ~~~
-
-*  Form array can be set on any input, use square brackets `name='user_ids[]'`.
-  In view you can set array of hidden fields
-  ```
-    <% @isp_push_packages.isp_package_ids.each do |isp_package_id| %>
-      <%= f.hidden_field 'isp_package_ids[]', value: isp_package_id %>
-    <% end %>
-  ```
-  or using select `multiple: true` (it will automatically add `[]` to the name)
-  ```
-  <%= f.select isp_package_ids, options, {}, multiple: true %>
-  ```
-  You can also nest in two dimensions ie it will be a hash with array values
-  `name='user_ids[#{company.id}][]`. In this case you need to permit hash
-  (Rails 5.2) or whitelist in before Rails 5.2
-
-  ```
-  params.require(:post).permit(reseller_location_ids: {}) # Rails 5.2
-  permit(files: params[:post][:files].key # before Rails 5.2
-
-  <%= select_tag 'reseller_location_ids[#{operator.id}]', options, multiple: true %>
-  # do not know how to use f.select since can not have method with a name
-  `name[name]`
-  ```
-  Note that if it is not required and nothing is selected than nothing will be
-  sent, you should use hidden field or default value `{}`
-
-  ```
-  <%= hidden_field_tag 'reseller_location_ids[0][]' %>
-  # or
-  location_ids = (params[:reseller_location_ids] || {})[params[:reseller_operator_id]] || []
-  ```
-
-*  And in model you need to clean empty strings `[""]` when nothing is selected
-  ~~~
-  before_validation :clean_empty_skills
-  def clean_empty_skills
-    self.skills = skills.select &:present?
-  end
-  ~~~
-
 You should avoid saving without validation `save(validate: false)` or
 `update_attribute :name, 'my name'`. It is risky to save without validations.
 Other methods also do not check validation
 http://www.davidverhasselt.com/set-attributes-in-activerecord/
 `update_column`, `@users.update_all`.
 
-Conditional validations can be used with proc new like `validate :a, if: -> { }`
-but with parameters. Also `if: lambda {|a| }` (difference in required params to
-block)
+Conditional validations can be used with proc new like `validate :a, if: ->(o) {
+}` but with parameters. Also `if: lambda {|a| }` (difference in required params
+to block)
 
 ~~~
 validates :password, confirmation: true, if: Proc.new { |a|
@@ -285,10 +200,11 @@ use `Date.strptime '2/3/2000' , '%m/%d/%y'` to return 3 Februar.
 
 Time::DATE_FORMATS[:default] = "%d-%b-%Y %I:%M %p" # this is same as for
 # datepicker format = 'DD-MMM-YYYY h:mm A'
-Time::DATE_FORMATS[:at_time] = lambda { |time| time.strftime("%b %e, %Y @ %l:%M %p") }
+Time::DATE_FORMATS[:at_time] = ->(time) { time.strftime("%b %e, %Y @ %l:%M %p") }
 
-Date::DATE_FORMATS[:myapp_date] = lambda { |date| date.strftime("%b %e, %Y") }
-Date::DATE_FORMATS[:myapp_date_ordinalize] = lambda { |date| date.strftime("#{date.day.ordinalize} %b %Y") }
+Date::DATE_FORMATS[:myapp_date] = ->(date) { date.strftime("%b %e, %Y") }
+# 9th November 1988
+Date::DATE_FORMATS[:myapp_date_ordinalize] = ->(date) { date.strftime("#{date.day.ordinalize} %b %Y") }
 ~~~
 
 `Time.now` and `Date.today` are using system time. If you are using
@@ -471,19 +387,37 @@ rails db
 
   ~~~
     sql = <<~SQL
-    ( ( SELECT id, location_id, package_saleid, customer_id, customer_name, location_package_id, sale_date, -total_amount_cents as total_amount_cents, total_amount_currency, customer_invoice_id, (bytes_uploaded_total + bytes_downloaded_total) as total_data_used
+    ( ( SELECT id, location_id, package_saleid, subscriber_id, subscriber_name, location_package_id, sale_date, -total_amount_cents as total_amount_cents, total_amount_currency, subscriber_invoice_id, (bytes_uploaded_total + bytes_downloaded_total) as total_data_used
         FROM location_package_sales
       ) UNION (
-        SELECT id, location_id, balance_refillid as package_saleid, NULL as customer_id, 'refill' as customer_name, NULL as location_package_id, created_at as sale_date, refill_amount_cents as total_amount_cents, refill_amount_currency as total_amount_currency, NULL as customer_invoice_id, NULL as total_data_used
+        SELECT id, location_id, balance_refillid as package_saleid, NULL as subscriber_id, 'refill' as subscriber_name, NULL as location_package_id, created_at as sale_date, refill_amount_cents as total_amount_cents, refill_amount_currency as total_amount_currency, NULL as subscriber_invoice_id, NULL as total_data_used
         FROM location_balance_refills
       )
     ) AS location_package_sales_or_location_balance_refills
     SQL
     @all_location_package_sales_or_location_balance_refills = LocationPackageSaleOrLocationBalanceRefill
-      .includes(:location, :customer, :customer_invoice, :location_package)
+      .includes(:location, :customer, :subscriber_invoice, :location_package)
       .from([Arel.sql(sql)])
       .where(location_id: current_location)
   ~~~
+
+  and model
+  ```
+  # this model is based on database view location_package_sale_or_location_balance_refills
+  class LocationPackageSaleOrLocationBalanceRefill < ApplicationRecord
+    belongs_to :location
+    belongs_to :subscriber
+    belongs_to :location_package
+    belongs_to :subscriber_invoice
+
+    include Monetable
+    monetize_columns :total_amount, :price_to_location_with_tax
+
+    def refill?
+      subscriber_name == 'refill'
+    end
+  end
+  ```
 
 * execute sql from rails console. When you run sql result is iteratable (array
  of arrays of selected fields).
@@ -824,7 +758,7 @@ singular first model).
 ~~~
 class CreateCampaignsTemplates < ActiveRecord::Migration
   def change
-    create_table :campaigns_templates, id: false do |t|
+    create_table :campaign_templates, id: false do |t|
       t.references :campaign, foreign_key: true, null: false
       t.references :template, foreign_key: true, null: false
 
@@ -852,7 +786,7 @@ true, null: false` but donor is actually in users table, than you need to change
 foreign key (note that `add_foreign_key` params are in plurals!)
 
 ~~~
-# to_table is in rails5 table name, in model use class_name: 'User'
+# to_table is in rails5 table_name, in model use class_name: 'User'
 t.references :donor, foreign_key: { to_table: :users }, null: false
 
 # in rails4 use references keyword also as parameter, not that foreight key
@@ -1707,6 +1641,55 @@ ActionDispatch::Http::URL.url_for host: 'dule.asd.zxc.com', subdomain: 'sub'
 Is Paused`
 * sentences on error messages, flash messages...  should have period at the end:
 `Job has been copied.`
+* titleize should skip `from, and, to, your`, for example `Guide to Honeymooning
+  with a Post Dated Passport`. Here is manual implementation
+  ```
+  def titleize(name)
+    lowercase_words = %w{a an the and but or for nor of from your}
+    name.split.each_with_index.map{|x, index| lowercase_words.include?(x) && index > 0 ? x : x.capitalize }.join(" ")
+  end
+  ```
+  You can include the gem `gem 'titleize'` and than it will override
+  String#titleize
+  For default label `humanize` is used (default translation is used for active_model or activerecord
+  https://github.com/rails/rails/blob/main/activemodel/lib/active_model/translation.rb#L64 )
+  or for form_with without model `t('helpers.label.my_label')` is used
+  https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/tags/label.rb#L24
+  but you can override builder
+  https://en.wikipedia.org/wiki/Builder_pattern
+  ```
+  # config/initializers/label_builder.rb
+module ActionView
+  module Helpers
+    module Tags # :nodoc:
+      class Label < Base # :nodoc:
+        class LabelBuilder # :nodoc:
+          attr_reader :object
+
+          def initialize(template_object, object_name, method_name, object, tag_value)
+            @template_object = template_object
+            @object_name = object_name
+            @method_name = method_name
+            @object = object
+            @tag_value = tag_value
+          end
+
+          def translation
+            content ||= @method_name.titleize
+
+            content
+          end
+
+          def to_s
+            translation
+          end
+        end
+      end
+    end
+  end
+end
+
+  ```
 
 Use "Register" or "Sign up" for registrations and "Log in" and "Log out" for
 sessions (since it is easy to differentiate from "sign up").
@@ -1715,7 +1698,9 @@ sessions (since it is easy to differentiate from "sign up").
 
 ## Form Objects
 
-form objects (query objects) for multiple in multiple out data
+form objects (query objects) for multiple in multiple out data. Even for single
+table, main purpose is to add validation errors to the form. For complex
+building object use service object.
 
 ~~~
 # app/form_objects/landing_signup.rb
@@ -3115,8 +3100,11 @@ end
   # note that it is different than `jobs_url` in view since in view it uses
   # request to determine host, so maybe it is better to use
 
+  ActionController::Base.helpers.asset_path('icon.png')
 
   ERB::Util.html_escape t('errors.messages.blank') # can&#39;t be blank
+
+  "longs string".truncate 20
   ~~~
 
   * if it your custom helper you can call from *ApplicationController*
@@ -3302,6 +3290,15 @@ the order. In this case define enum as a hash
   enum kind: Constant.SMS_TEMPLATES.transform_keys(&:downcase).transform_values(&:to_s)
   # or if you are using array of symbols
   enum status: %i[active admin inactive].each_with_object({}) { |k, o| o[k] = k.to_s }
+  # or simpler using helper convert_to_hash defined on ApplicationRecord
+  enum status: convert_to_hash(%w[active admin inactive])
+
+
+  # app/models/application_record.rb
+  # enum status: convert_to_hash(%w[active admin inactive])
+  def self.convert_to_hash(array)
+    array.each_with_object({}) { |k, o| o[k.to_s] = k.to_s }
+  end
   ```
 
 * params usually need to be striped, so you can use this code to get rid of all
@@ -4211,93 +4208,6 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
         <% end %>
   ```
 
-* activestorage for attaching images
-  https://edgeguides.rubyonrails.org/active_storage_overview.html
-  ```
-  # this will create active_storage_attachments and active_storage_blobs
-  rails active_storage:install
-
-  # configure storage methods for aws or do
-  vi config/storage.yml
-
-  # set development or production storage method
-  vi config/environments/development.rb
-  config.active_storage.service = :local
-  ```
-  for google cloud storage you can create and download keyfile.json on IAM ->
-  Service accounts https://console.cloud.google.com/iam-admin/serviceaccounts?folder=true&organizationId=true&project=cybernetic-tide-90121
-
-  ```
-  # app/models/user.rb
-  class User < ApplicationRecord
-    has_many_attached :images
-    has_one_attached :image
-  end
-  ```
-  In form view
-  ```
-  # app/views/users/_form.html.erb
-  <%= f.file_field :image %>
-  ```
-  In view
-  ```
-  <%= url_for @user.image %>
-  ```
-  In controller permit that
-  ```
-  # app/controllers/users_controller.rb
-    def user_params
-      # in case you have has_many_attached
-      # params.require(:user).permit(:name, images: [])
-      # in case you have has_one_attached
-      params.require(:user).permit(:name, :image)
-    end
-  ```
-
-  Attaching existing file
-  ```
-  # to store something in temp file
-    tempfile = Tempfile.new
-    tempfile.binmode
-    encoded_image = params[:data_url].split(',')[1]
-    decoded_image = Base64.decode64(encoded_image)
-    tempfile.write decoded_image
-    tempfile.rewind
-    @receipt.signature.attach(io: tempfile.read, filename: 'signature.pdf')
-    tempfile.close
-    tempfile.delete
-
-  # or if you already have file
-  @user.image.attach(io: File.open('/path/to/file'), filename: File.basename('/path/to/file'))
-  ```
-
-  Downloading
-  ```
-  binary = user.image.download
-  # to save you need to open file
-  file_path = "#{Dir.tmpdir}/#{user.image.filename}"
-  File.open(file_path, 'wb') do |file|
-    file.write(user.image.download)
-  end
-
-  # or you can use .open
-  user.image.open do |file|
-    system '/path/to/virus/scanner', file.path
-    # ...
-  end
-  ```
-
-  Deleting
-
-  ```
-  @user.image.purge
-  # to destroy attachment later
-  @user.image.purge_later
-  ```
-
-  To use with Digital Ocean spaces https://vitobotta.com/2019/11/17/rails-active-storage-permanent-urls-with-no-redirects-digital-ocean-spaces-cloudflare/ with direct publich url to storage files
-  ActiveStorage::Blob#key column stores filename.
-
 * routes
   ```
   resources :post do
@@ -4389,4 +4299,36 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
   text = all_emails.last.body.to_s
   END_CHARS = %{.,'?!:;}
   links = URI.extract(text, ['http']).collect { |u| END_CHARS.index(u[-1]) ? u.chop : u }
+  ```
+* result model
+  ```
+  # confir/initializers/result.rb
+  class Result
+    attr_accessor :message, :data
+
+    # Example of returning results, for example in service:
+    #   return Result.new 'Next task created', next_task: next_task
+    # and use in controller:
+    #   if result.success? && result.data[:next_task] == task
+    def initialize(message, data = {})
+      @message = message
+      @data = OpenStruct.new data
+    end
+
+    def success?
+      true
+    end
+  end
+
+  class Error < Result
+    def success?
+      false
+    end
+  end
+  ```
+
+* template runner https://guides.rubyonrails.org/rails_application_templates.html
+  ```
+  # on existing app
+  rails app:template LOCATION=~/template.rb
   ```

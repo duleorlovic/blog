@@ -430,3 +430,9 @@ end
 # Facade pattern
 
 page 37
+
+# Tips
+
+* Builder pattern is usefull to provide flexibility for example
+  https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/tags/label.rb#L7
+

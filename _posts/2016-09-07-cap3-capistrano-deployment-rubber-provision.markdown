@@ -523,10 +523,19 @@ server {
     try_files $uri/index.html $uri @app;
     location @app {
         proxy_pass http://app;
+        // this forwards remote ip address to the app
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_redirect off;
         access_log /home/deploy/myapp/current/log/nginx.rails.access.log;
+
+        // I tried to pass scheme http or http to the app but the problem is nlb
+        // does not send header to the app. Elb sends headers
+        // https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/how-elastic-load-balancing-works.html#request-routing
+        // but NLB does not set headers
+        // https://stackoverflow.com/questions/54558742/x-forwarded-proto-not-being-passed-through-aws-alb-sandwich-with-palo-alto-vm-fi
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        // so only solution is to redirect in javascript
     }
 
     error_page 500 502 503 504 /500.html;

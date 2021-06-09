@@ -814,3 +814,10 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   ~~~
 
   solution is to run `(initramfs) fsck -yf /dev/sda1`
+* low resolution of second vga monitor is low 1024x768 . If you  need better
+  resolution of thet Unknown Display you can use
+  ```
+  xrandr --listactivemonitors
+  # find monitor id like VGA-0
+  xrandr --addmode VGA-0 1920x1080
+  ```

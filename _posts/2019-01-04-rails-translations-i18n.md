@@ -21,6 +21,11 @@ To translate active record messages for specific attributes, you can overwrite
 messages for specific model and attributes (default ActiveRecord messages taken)
 <https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23>
 <https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message>
+For submit buttons default title is defined on `submit_default_value` https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/form_helper.rb#L2573
+(I found it using byebug and step) so to use in test
+```
+click_on "#{:update.to_s.humanize} #{User.model_name.human}"
+```
 
 Also you can change format `errors.format: Polje "%{attribute}" %{message}`
 https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4
@@ -33,6 +38,9 @@ For `ApplicationRecord` translate `activerecord`.
 For form objects `include ActiveModel::Model` you should translate
 `activemodel`. There you can use `t('successfully')` instead
 `I18n.t('successfully')` if you `include AbstractController::Translation`
+This will also translate error messages, for example
+`landing_signup.errors.add(:current_city) = 'x'` will result in message like
+`landing_signup.errors.full_messages.to_sentence # 'Који је твој град ? x'`
 
 ~~~
 # config/locales/activerecord_activemodels.en.yml
@@ -278,6 +286,15 @@ Note that some chars looks the same but are not when rendered on html page
  <a href='%{confirmation_url}'>Поново пошаљи упутство за потврду</a>"
 ~~~
 
+To check if word is using cyr you can use (note that it looks the same but are
+not same charcters)
+```
+Cyrillizer.alphabet.keys.include? 'a'
+ => false 
+2.6.3 :026 > Cyrillizer.alphabet.keys.include? 'а'
+ => true 
+```
+
 # Locale
 
 When changing locale `I18n.locale = :sr` in some methods, note that this is
@@ -374,6 +391,12 @@ You can search find_by using `@>` and passing json
 Activity.where("name @> ?",{en: 'Climbing'}.to_json)
 # or using i18n scope
 Activity.i18n.where(name: 'Climing')
+
+# or using specific locale
+Mobility.with_locale(:en) do
+  Mobility.locale # => :en
+  Activity.i18n.find_by(name: 'Climbing')
+end
 ```
 
 # Enums
@@ -448,6 +471,7 @@ User.human_enum_name(:status, user.status)
   ```
 
 * to localise date and timestamps you can use `I18n.l Time.now, format: :formal`
+
 
   ```
   en:

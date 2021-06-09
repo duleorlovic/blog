@@ -882,3 +882,21 @@ $sidebar-width: 20rem
   autoprefixer than it will contain `appearance: none`, if there is autoprefixed
   than it will be `-mox-appearance: none` or `-webkit-appearance: none`
 * badge label `<span class="badge badge-primary">Primary</span>`
+* use with webpacker is simply adding few lines of stylesheets
+  https://github.com/bootstrap-ruby/bootstrap_form/issues/554
+  ```
+  # app/javascript/stylesheets/application.scss:
+  @import "~bootstrap/scss/bootstrap";
+
+  // https://github.com/bootstrap-ruby/bootstrap_form/issues/554
+  .rails-bootstrap-forms-date-select select,
+  .rails-bootstrap-forms-time-select select,
+  .rails-bootstrap-forms-datetime-select select {
+    display: inline-block;
+    width: auto;
+  }
+
+  .rails-bootstrap-forms-error-summary {
+    margin-top: 10px;
+  }
+  ```

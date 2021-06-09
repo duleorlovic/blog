@@ -35,8 +35,35 @@ updated.
 We can use [starter.html](https://adminlte.io/themes/AdminLTE/starter.html) for
 testing, just copy from `vendor/assets/bower_components/admin-lte/starter.html`
 select `<div class="wrapper">` and put on your page. CSS and js will we using
-sprockets and compiled in one big application.css/.js file. Since
-adminlte is using less we will use two wrappers.
+sprockets and compiled in one big application.css/.js file.
+
+When using webpacker you can install with
+```
+yarn add admin-lte jquery
+
+# Heroku will automatically run "build" script so you can add to package.json
+ "scripts": {
+   "build": "yarn --cwd node_modules/admin-lte run install"
+ },
+# but I have some problems linking packages under plugins so I link them
+# directly
+
+# app/javascript/packs/application.js
+import 'stylesheet/application'
+
+# import plugins directly, not 'admin-lte/plugins/select2/js/select2'
+import "select2/dist/js/select2"
+
+
+# app/javascript/stylesheet/application.scss
+@import "~admin-lte/plugins/select2/css/select2";
+
+I think is similar to
+# app/javascript/stylesheet/application.css
+@import 'admin-lte'
+```
+
+Since adminlte is using less we will use two wrappers.
 
 ~~~
 // app/assets/application.css

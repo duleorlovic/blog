@@ -375,15 +375,22 @@ https://github.com/thoughtbot/paperclip/issues/2223#issuecomment-428862815
 
 # Active storage
 
+https://edgeguides.rubyonrails.org/active_storage_overview.html
+```
+rails active_storage:install
+```
+
 You need to add gems
 ```
+# Gemfile
 gem 'aws-sdk-s3', require: false
 gem 'image_processing', '~> 1.2'
 ```
 
 In credentials you need to add
 ```
-aws:
+# rails credentials:edit
+amazon:
   access_key_id: 123
   secret_access_key: 123
 ````
@@ -392,13 +399,84 @@ and config for storage:
 # config/storage.yml
 amazon:
   service: S3
-  access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
-  secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
+  access_key_id: <%= Rails.application.credentials.dig(:amazon, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:amazon, :secret_access_key) %>
   region: us-east-1
-  bucket: duleorlovic-test-us-east-1
+  bucket: your_own_bucket
 ```
 
-# Tips
+For google cloud storage you can create and download keyfile.json on IAM ->
+  Service accounts https://console.cloud.google.com/iam-admin/serviceaccounts?folder=true&organizationId=true&project=cybernetic-tide-90121
 
-* blog https://alestic.com/
+```
+# app/models/user.rb
+class User < ApplicationRecord
+has_many_attached :images
+has_one_attached :image
+end
+```
+In form view
+```
+# app/views/users/_form.html.erb
+<%= f.file_field :image %>
+```
+In view
+```
+<%= url_for @user.image %>
+```
+In controller permit that
+```
+# app/controllers/users_controller.rb
+def user_params
+  # in case you have has_many_attached
+  # params.require(:user).permit(:name, images: [])
+  # in case you have has_one_attached
+  params.require(:user).permit(:name, :image)
+end
+```
 
+Attaching existing file
+```
+# to store something in temp file
+tempfile = Tempfile.new
+tempfile.binmode
+encoded_image = params[:data_url].split(',')[1]
+decoded_image = Base64.decode64(encoded_image)
+tempfile.write decoded_image
+tempfile.rewind
+@receipt.signature.attach(io: tempfile.read, filename: 'signature.pdf')
+tempfile.close
+tempfile.delete
+
+# or if you already have file
+@user.image.attach(io: File.open('/path/to/file'), filename: File.basename('/path/to/file'))
+```
+
+Downloading
+```
+binary = user.image.download
+# to save you need to open file
+file_path = "#{Dir.tmpdir}/#{user.image.filename}"
+File.open(file_path, 'wb') do |file|
+file.write(user.image.download)
+end
+
+# or you can use .open
+user.image.open do |file|
+system '/path/to/virus/scanner', file.path
+# ...
+end
+```
+
+Deleting
+
+```
+@user.image.purge
+# to destroy attachment later
+@user.image.purge_later
+```
+
+To use with Digital Ocean spaces
+https://vitobotta.com/2019/11/17/rails-active-storage-permanent-urls-with-no-redirects-digital-ocean-spaces-cloudflare/
+with direct public url to storage files ActiveStorage::Blob#key column stores
+filename.

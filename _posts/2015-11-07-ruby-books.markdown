@@ -628,7 +628,7 @@ is private but we can
   if eval("defined?(#{nameofclass}) == 'constant'")
   end
   ```
-* random number `[*1..100].sample`
+* random number `[*1000..9999].sample`
 * iterate over elements until first match `a.take_while {|i| i < 3}`
 * get a class from value `my_string.constantize`
 * you can find method using grep `o.methods.grep /iden/`
@@ -1206,6 +1206,9 @@ call `captures` to get matched groups. You can use block form syntax of `if`
 
 
   Regexp.new(t('user_mailer.welcome'))
+
+  # to add multiline modifier to Regexp.new
+  Regexp.new("some reg", Regexp::MULTILINE)
   ~~~
 
 

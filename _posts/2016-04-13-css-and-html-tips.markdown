@@ -875,8 +875,6 @@ link_to "+123-123", "tel:123123" %>`)
   You can style different states of defails (`details[open]` and
   `details:not[open]`) https://codepen.io/jh3y/pen/mLaXRe
   https://codepen.io/stoumann/pen/ExydEYL
-* text input can have focus on page load with  `<input autofocus>`
-  (`f.text_field :name, autofocus: true` in rails)
 
 * prevent auto completing text inputs can be prevented with `<%= text_field_tag
 * :other_reason, nil, autocomplete: 'off' %>` (note is should be 'off' not
@@ -1016,4 +1014,8 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
     top: 300px;
     margin-left: -10px;
   }
+  ```
+* convert nodelist HTMLOptionsCollection to array
+  ```
+  Array.from(select.options)
   ```

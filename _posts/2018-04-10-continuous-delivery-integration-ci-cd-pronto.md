@@ -105,15 +105,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RAILS_ENV: test
+      # those are used to connect from Rails
       PGHOST: localhost
-      PGUSER: rails_6
+      PGDATABASE: rails_db_test
+      PGUSER: rails_db_user
+      PGPASSWORD: postgres
 
     services:
       postgres:
-        image: postgres:10.8
+        image: postgres:11.8
         env:
-          POSTGRES_USER: rails_6
-          POSTGRES_DB: rails_6_test
+          POSTGRES_DB: rails_db_test
+          POSTGRES_USER: rails_db_user
           POSTGRES_PASSWORD: postgres
         ports: ["5432:5432"]
         # needed because the postgres container does not provide a healthcheck
@@ -133,11 +136,11 @@ jobs:
       with:
         ruby-version: 2.6.3
     - name: Set up Node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
-        node-version: 10.13.0
-    - name: Set up chrome
-    - run: |
+        node-version: 14
+    - name: Set up Chrome
+      run: |
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt-get update && sudo apt-get install -y xvfb google-chrome-stable
     - name: Install dependecies
@@ -146,7 +149,8 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
         yarn install
-        bundle exec rake webdrivers:chromedriver:update
+        # not sure if we need this for system tests
+        # bundle exec rake webdrivers:chromedriver:update # gem 'webdrivers'
     - name: Setup test database
       run: |
         bin/rails db:create
@@ -154,6 +158,9 @@ jobs:
     - name: Run tests
       run: |
         bundle exec rake
+        # minitest
+        bundle exec rails test
+        bundle exec rails test:system
     - name: Heroku staging
       env:
         # generate HEROKU_API_KEY with heroku auth:token
