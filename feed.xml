@@ -1,0 +1,1686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>duleorlovic - web developer</title>
+    <description>I am writing here some toughts during my work in Ruby on Rails, Javascript and other</description>
+    <link>http://duleorlovic.github.io/</link>
+    <atom:link href="http://duleorlovic.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sun, 11 Jul 2021 04:11:45 +0200</pubDate>
+    <lastBuildDate>Sun, 11 Jul 2021 04:11:45 +0200</lastBuildDate>
+    <generator>Jekyll v4.1.1</generator>
+    
+      <item>
+        <title>Amazon Aws Sns Ses Workmail</title>
+        <description>&lt;p&gt;https://docs.aws.amazon.com/code-samples/latest/catalog/code-catalog-ruby-example_code-sns.html&lt;/p&gt;
+
+&lt;h1 id=&quot;sms&quot;&gt;SMS&lt;/h1&gt;
+
+&lt;p&gt;https://docs.aws.amazon.com/sns/latest/dg/sns-mobile-phone-number-as-subscriber.html
+https://railsdrop.com/2021/03/04/aws-sns-how-to-send-sms/&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 24 May 2021 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2021/05/24/amazon-aws-sns-ses-workmail/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2021/05/24/amazon-aws-sns-ses-workmail/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Authorization_policy_cancan_pundit_action_policy</title>
+        <description>&lt;h1 id=&quot;cancan&quot;&gt;Cancan&lt;/h1&gt;
+
+&lt;p&gt;use cancancan and define all your actions in app/models/ability. If you want to
+use
+&lt;a href=&quot;https://github.com/ryanb/cancan/wiki/authorizing-controller-actions#load_resource&quot;&gt;load_resource&lt;/a&gt;,
+you should separately define: index (with hash), show/edit/update/destroy (with
+block or hash), new/create (with hash). For nested resources just write parent
+association&lt;/p&gt;
+
+&lt;p&gt;Note that following next &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cannot&lt;/code&gt; rule will override a previous &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;can&lt;/code&gt; rule, so
+it is enough to set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;can :manage, :all&lt;/code&gt; and than write what &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cannot :destroy,
+Project&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Define abilities
+https://github.com/CanCanCommunity/cancancan/wiki/defining-abilities&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;can :read, Article # autorize! :read, Article will return true
+can :crud, Article # authorize! :read/:create/:update/:destroy, Article will return true
+# https://github.com/CanCanCommunity/cancancan/wiki/Action-Aliases
+aliase_action :index, :show, to: :read | :new, to: :create | :edit. to: :update
+can :manage, Article # authorize! :any_action, Article will return true
+can [:update, :destroy], [Post, Comment] # array notation
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Hash of conditions&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# can read only posts that belongs to user
+can :read, Post, user_id: user.id
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Defining with a block is evaluated only when instance is passed (for example not
+in index action when class is used, ie if you call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;can? :update, Project&lt;/code&gt; it
+will return true)&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;can :update, Project do |project|
+  false
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Defining with a block without other arguments can be used for defining
+Abilities and roles in database
+https://github.com/CanCanCommunity/cancancan/wiki/Abilities-in-Database&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rails g model Permission user_id:integer name:string subject_class:string subject_id:integer action:string description:text
+
+# app/models/ability.rb
+class Ability
+  include CanCan::Ability
+  can do |action, subject_class, subject|
+    # action: :read, subject_class: User, subject: 1 or nil
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Example that only admins can change, for example company_id, with
+can_change_user_company_id&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# in models/ability.rb
+can :can_change_user_company_id, User if user.admin?
+
+&amp;lt;!-- users/_form.html.erb --&amp;gt;
+&amp;lt;% if can? :can_change_user_company_id, @user %&amp;gt;
+  &amp;lt;!-- role checkboxes go here --&amp;gt;
+&amp;lt;% end %&amp;gt;
+
+# users_controller.rb
+def update
+  authorize! :can_change_user_company_id, @user if params[:user][:company_id]
+  # ...
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;pundit&quot;&gt;Pundit&lt;/h1&gt;
+
+&lt;p&gt;https://github.com/varvet/pundit&lt;/p&gt;
+
+&lt;p&gt;Install with gem and include in controller&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Gemfile
+gem 'pundit'
+
+# app/controllers/application_controller.rb
+class ApplicationController &amp;lt; ActionController::Base
+  include Pundit
+end
+
+# generate default app/policies/application_policy.rb
+rails g pundit:install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Sample ruby poro class&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class PostPolicy
+  attr_reader :user, :post
+
+  def initialize(user, post)
+    @user = user
+    @post = post
+  end
+
+  def update?
+    user.admin? or not post.published?
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Pundit will assume that:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;class has the same name as model + suffix &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Policy&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;first argument is a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;current_user&lt;/code&gt; (called where it was invoked) and stored in
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;second argument is object and stored in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;record&lt;/code&gt; (if you use generated
+ApplicationPolicy).&lt;/li&gt;
+  &lt;li&gt;define methods like method name plus ?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize&lt;/code&gt; you can set first argument as a class &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize Post&lt;/code&gt; or
+a symbol for headless policy. Second argument could be action name: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize
+@post, :destroy?&lt;/code&gt;. To specify Policy class you can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize @post,
+policy_class: PostPolicy&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;In controller &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize @post&lt;/code&gt; inside &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;def update&lt;/code&gt; action will instantiate
+policy with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;current_user&lt;/code&gt; and call method with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&lt;/code&gt; at the end, something like&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;unless PostPolicy.new(current_user, @post).update?
+  raise Pundit::NotAuthorizedError, &quot;not allowed to update? this #{@post.inspect}&quot;
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In view, you can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;if policy(@post).update?&lt;/code&gt; method to check if current_user
+is authorized.&lt;/p&gt;
+
+&lt;h2 id=&quot;headless-policies&quot;&gt;Headless policies&lt;/h2&gt;
+
+&lt;p&gt;Headless policies, if you do not have corresponding model.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# app/policies/dashboard_policy.rb
+class DashboardPolicy &amp;lt; Struct.new(:user, :dashboard)
+  # ...
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and use like&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;% if policy(:dashboard).show? %&amp;gt;
+  &amp;lt;%= link_to 'Dashboard', dashboard_path %&amp;gt;
+&amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;scopes&quot;&gt;Scopes&lt;/h2&gt;
+
+&lt;p&gt;To define scope on a model for which current_user have access, punding assumes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;class has name &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Scope&lt;/code&gt; and is nested under the policy class&lt;/li&gt;
+  &lt;li&gt;first argument is user and second argument is a scope&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class PostPolicy &amp;lt; ApplicationPolicy
+  class Scope &amp;lt; Scope
+    def resolve
+      if user.admin?
+        scope.all
+      else
+        scope.where(published: true)
+      end
+    end
+  end
+
+  def update?
+    user.admin? or not record.published?
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;and you can use like&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def index
+  # @posts = PostPolicy::Scope.new(current_user, Post).resolve
+  @posts = policy_scope(Post)
+end
+
+def show
+  @post = policy_scope(Post).find(params[:id])
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To check if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize&lt;/code&gt; is called you can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;verify_authorized&lt;/code&gt; so it raises
+error if &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;authorize&lt;/code&gt; is not called.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# app/controllers/application_controller.rb
+class ApplicationController &amp;lt; ActionController::Base
+  include Pundit
+  after_action :verify_authorized
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Also you can check if user exists in ApplicationPolicy (so you not need to check
+in other policies).&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class ApplicationPolicy
+  def initialize(user, record)
+    raise Pundit::NotAuthorizedError, &quot;must be logged in&quot; unless user
+    @user   = user
+    @record = record
+  end
+
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      raise Pundit::NotAuthorizedError, &quot;must be logged in&quot; unless user
+      @user = user
+      @scope = scope
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Use alias after method are defined&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyPolicy &amp;lt; ApplicationPolicy
+  def create?
+  end
+  alias new? create?
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;action-policy&quot;&gt;Action Policy&lt;/h1&gt;
+
+&lt;p&gt;https://github.com/palkan/action_policy is similar to pundit&lt;/p&gt;
+
+&lt;p&gt;Generate application policy&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rails generate action_policy:install
+rails generate action_policy:policy post
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Use in controller (policy class is infered from model name, method infers from
+action name and current_user becomes user).&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  # You can check in before action
+  def _set_post
+    authorize! @post
+  end
+
+  # or with specific method
+  authorize! @post, to: :update?
+  # or with specific policy
+  authorize! @post, with: CustomPostPolicy
+
+  # bang will raise error if not allowed
+  rescue_from ActionPolicy::Unauthorized do |ex|
+    # Exception object contains the following information
+    ex.policy #=&amp;gt; policy class, e.g. UserPolicy
+    ex.rule #=&amp;gt; applied rule, e.g. :show?
+  end
+
+  # make sure we call authorize! during the action, use this after_action
+  verify_authorized
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;or use in view&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;% if allowed_to? :edit?, post %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For non models, services you need to pass any object and policy class&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;% if allowed_to? :index?, Object, with: TranslationsPolicy %&amp;gt;
+  &amp;lt;%= link_to 'Translations', translations_path %&amp;gt;
+&amp;lt;% end %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Define policy using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;record&lt;/code&gt; instance methods. Remember to use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&lt;/code&gt; as
+suffix for method names.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class CommentPolicy &amp;lt; ApplicationPolicy
+  # https://actionpolicy.evilmartians.io/#/authorization_context
+  # If you have some pages without user, you can define that with allow_nil: true
+  # do not define on ApplicationPolicy since you need to check user.nil? in
+  # every method... For view, you can check current_user before policy check
+  authorize :user, allow_nil: true
+
+  # you can call other policies, synonim as `check?`
+  def update?
+    user.admin? || allowed_to?(:update?, record.post)
+  end
+
+  # pass fast or fail fast with `allow` and `deny`
+  def show?
+    allow! if user.admin?
+
+    user.public?
+  end
+
+  # alias synonims so you do not need to repeat dry, NOTE that is will call if
+  # method exists, so alias is used only when method missing
+  # By default, ActionPolicy::Base adds one alias: alias_rule :new?, to: :create?.
+  alias_rule :edit?, :destroy?, to: :update?
+
+  # default rule is :manage (not matching anything, defaults are index? create?
+  # https://github.com/palkan/action_policy/blob/master/docs/custom_policy.md
+  def manage?
+    true
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 26 Apr 2021 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2021/04/26/authorization_policy_cancan_pundit_action_policy/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2021/04/26/authorization_policy_cancan_pundit_action_policy/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Viber Api Bot</title>
+        <description>&lt;h1 id=&quot;viberroo&quot;&gt;Viberroo&lt;/h1&gt;
+
+&lt;p&gt;https://github.com/vikdotdev/viberroo&lt;/p&gt;
+
+&lt;p&gt;Add to Gemfile&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Gemfile
+gem 'viberroo'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Create token on https://partners.viber.com/account/5558103922505666680/info and
+add to rails&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# config/initializers/viberroo.rb
+
+Viberroo.configure do |config|
+  config.auth_token = '&amp;lt;your_viber_bot_api_token&amp;gt;'
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Use rake task to register webhook&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# lib/tasks/viber.rake
+namespace :viber do
+  desc &quot;TODO&quot;
+  task set_webhook: :environment do
+    Viberroo::Bot.new(response: Viberroo::Response.new({})).set_webhook(
+      url: 'https://baa8eb8b4f1f.ngrok.io/viber',
+      event_types: %w[conversation_started subscribed unsubscribed],
+      send_name: true,
+      send_photo: true
+    )
+  end
+
+  task remove_webhook: :environment do
+    Viberroo::Bot.new.remove_webhook
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Use controller to receive events&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    @response = Viberroo::Response.new(params.permit!)
+    @bot = Viberroo::Bot.new(response: @response)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@response.params.event&lt;/code&gt; could be https://github.com/vikdotdev/viberroo/blob/master/lib/viberroo/response.rb#L40
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conversation_started&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;subscribed&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unsubscribed&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;delivered&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;seen&lt;/code&gt;,
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;failed&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;message&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Bot always work as 1-to-1 communication. Use community to create a 1-to-many
+communication.&lt;/p&gt;
+
+&lt;p&gt;Viber example keyboards
+https://developers.viber.com/docs/tools/keyboard-examples/&lt;/p&gt;
+</description>
+        <pubDate>Thu, 01 Apr 2021 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2021/04/01/viber-api-bot/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2021/04/01/viber-api-bot/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Rubocop</title>
+        <description>&lt;h1 id=&quot;rubocop&quot;&gt;Rubocop&lt;/h1&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rubocop my-file.rb
+# safe auto correct
+rubocop -a
+# auto correct all
+rubocop -A
+# auto correct only layout (formatting offenses)
+rubocop -x
+# only specific cops
+rubocop --only Rails/Blank,Naming/FileName
+# add rubocop comments that disable warnings and fix what can be fixes
+rubocop --auto-correct --disable-uncorrectable
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Cache is used by default &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AllCopps: UseCache&lt;/code&gt; is true and stored in
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.cache/rubocop_cache/&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;configuration&quot;&gt;Configuration&lt;/h1&gt;
+
+&lt;p&gt;https://docs.rubocop.org/rubocop/configuration.html
+Default configuration
+https://github.com/rubocop-hq/rubocop/blob/master/config/default.yml&lt;/p&gt;
+
+&lt;p&gt;Configuration can inherit parent configuration and override (hash are merged or
+canceled with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~&lt;/code&gt;, other types are overriden.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# rubocop --auto-gen-config # generate .rubocop_todo.yml
+inherit_from: .rubocop_todo.yml
+
+Rails/HasAndBelongsToMany:
+  Include:
+    - app/models/*.rb
+  Exclude:
+    - app/models/problematic.rb
+
+Layout/LineLength:
+  Enabled: false
+
+# info (still returns zero 0 value), refactor, convention, warning, error and fatal.
+Lint:
+  Severity: error
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;extension&quot;&gt;Extension&lt;/h1&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# .rubocop.yml
+require:
+  - ../my/file.rb
+  - rubocop-extension
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Create using https://github.com/rubocop-hq/rubocop-extension-generator&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rubocop-extension-generator rubocop-dependent
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Instructions
+https://docs.rubocop.org/rubocop/development.html&lt;/p&gt;
+
+&lt;p&gt;Note pattern
+https://github.com/rubocop-hq/rubocop-ast/blob/master/docs/modules/ROOT/pages/node_pattern.adoc&lt;/p&gt;
+
+&lt;p&gt;Example how rubocop-rails check if there is an unique index for that column name
+https://github.com/rubocop-hq/rubocop-rails/blob/master/lib/rubocop/cop/rails/unique_validation_without_index.rb#L61&lt;/p&gt;
+
+&lt;h1 id=&quot;ci&quot;&gt;CI&lt;/h1&gt;
+
+&lt;p&gt;TODO:
+https://nvuillam.github.io/mega-linter/installation/ for github action&lt;/p&gt;
+
+&lt;p&gt;https://docs.rubocop.org/rubocop/automated_code_review.html for example pronto&lt;/p&gt;
+
+&lt;h1 id=&quot;my-defaults&quot;&gt;My defaults&lt;/h1&gt;
+
+&lt;p&gt;Do not use home &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.rubocop.yml&lt;/code&gt; since it can be different for different
+projects (it is by default included if there is no local &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.rubocop.yml&lt;/code&gt;)&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# http://blog.trk.in.rs/2021/02/06/rubocop/
+# ~/.rubocop.yml is used when there is no local .rubocop.yml
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - node_modules/**/*
+    - db/migrate/*
+
+# 'class ActionDispatch::IntegrationTest' in single line, no need two lines
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# it is OK that code explains instead top-level class documentation comment
+Style/Documentation:
+  Enabled: false
+
+# config, tasks and test for setup data could be very long
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/**/*'
+    - 'test/**/*'
+    - 'config/**/*'
+
+# big test big ABC size
+Metrics/AbcSize:
+  Max: 25
+  Exclude:
+    - 'test/**/*'
+
+# line length is not important in db and tests
+Layout/LineLength:
+  Max: 135
+  Exclude:
+    - 'db/**/*'
+    - 'test/**/*'
+    - 'spec/**/*'
+
+# put comma after each line [1,]
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+# put comma after each line {a:1,}
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+# also in arguments
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+# methods in 10 lines are OK but some are bigger
+Metrics/MethodLength:
+  Max: 15
+  Exclude:
+    - 'lib/**/*'
+    - 'test/**/*'
+
+# classes could be huge in tests
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*'
+
+# do not need to write # frozen_string_literal: true
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# Rails:
+#   Enabled: true
+
+# Rails/FilePath:
+#   Enabled: false
+
+# errors.add(:base, 'Failed') and return false # no need to use &amp;amp;&amp;amp;
+Style/AndOr:
+  Enabled: false
+
+# assert_match /regexp/, response.body # no need for parenthesis
+Lint/AmbiguousRegexpLiteral:
+  Enabled: false
+
+# s = %q{Hi} # no need to use `%q` only for strings that contain both single quotes and double quotes
+# Style/UnneededPercentQ:
+# Style/RedudantPercentQ:
+#   Enabled: false
+
+# class Post &amp;lt; ActiveRecord::Base # no need to subclass `ApplicationRecord`
+# Rails/ApplicationRecord:
+#   Enabled: false
+
+# $:.push File.expand_path('lib', __dir__) # no need to use $LOAD_PATH
+Style/SpecialGlobalVars:
+  Enabled: false
+
+# in scripts I like to define methods at the end using BEGIN block
+Style/BeginBlock:
+  Enabled: false
+
+# use refute_ instead of assert_not _ in minitest
+# Rails/RefuteMethods:
+#   Enabled: false
+
+# port: (Rails.env.production? ? nil : Rails.env.development? ? Rack::Server.new.options[:Port] : 3333),
+Style/NestedTernaryOperator:
+  Enabled: false
+
+Style/LambdaCall:
+  Enabled: false
+# method(*%i[a b])
+# Lint/UnneededSplatExpansion:
+# Lint/RedudantSplatExpansion:
+#   Enabled: false
+
+# new pending cops
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
+
+# use two spaces for indent
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# Use attr_accessor in different places, near the related usage
+Style/AccessorGrouping:
+  Enabled: false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Sat, 06 Feb 2021 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2021/02/06/rubocop/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2021/02/06/rubocop/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Amazon Aws Ec2 Auto Scaling And Elastic Load Balancing</title>
+        <description>&lt;h1 id=&quot;vpc&quot;&gt;VPC&lt;/h1&gt;
+
+&lt;p&gt;Video
+components of vpc https://youtu.be/LX5lHYGFcnA?t=2921&lt;/p&gt;
+
+&lt;p&gt;VPC are limited to a region but stretch across Availability Zones AZs
+Subnets can be Private or Public and are limited to a single AZ
+Subnet is associated with route table, so when EC2 instance inside it wants to
+communicate to internet outband, route table should contain IGW along with
+default local entry (private subnet can not communicate with internet)&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10.0.0.0/16  Local
+0.0.0.0/0    IGW (Internet Gateway)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;EC2 instance can use Elastic IP (static public IP address) to be able to get
+inbound internet connections.
+AWS managed Network Address Transation (NAT-GW) gateway enables EC2 instances in
+private subnet to connect to internet outband. So here is route table for
+private subnet (NET-GW is in public subnet so it can connect to internet through
+IGW).&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10.0.0.0/16  Local
+0.0.0.0/0    NAT-GW
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;5 IPs are un-usable reserved .0 (network) .1 (router) .2 .3 .255 (broadcast) http://jodies.de/ipcalc?host=192.168.0.5&amp;amp;mask1=26&amp;amp;mask2=&lt;/p&gt;
+
+&lt;p&gt;VPC Endpoints is used to connect to Amazon S3 using Amazon private networks (not
+going to internet).
+VPC Interface Endpoints is creating elastic interface (with IP address) so you
+can use them to connect to external services using private network.&lt;/p&gt;
+
+&lt;p&gt;Create on https://console.aws.amazon.com/vpc/home?region=us-east-1#vpcs:
+Default aws is 172.31.0.0/16
+Create 10.0.1.0/24 (251 IP addresses)
+Difference between N ACLs nackles and Securuty Groups
+https://youtu.be/LX5lHYGFcnA?t=9070
+Security groups define only Deny&lt;/p&gt;
+
+&lt;h1 id=&quot;ec2&quot;&gt;EC2&lt;/h1&gt;
+
+&lt;p&gt;https://docs.aws.amazon.com/autoscaling/ec2/userguide/GettingStartedTutorial.html&lt;/p&gt;
+
+&lt;p&gt;Mount EBS volume
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html&lt;/p&gt;
+
+&lt;h1 id=&quot;efs&quot;&gt;EFS&lt;/h1&gt;
+
+&lt;p&gt;https://aws.amazon.com/getting-started/tutorials/create-network-file-system/&lt;/p&gt;
+
+&lt;p&gt;Create EFS https://console.aws.amazon.com/efs/home?region=us-east-1#/get-started
+but use some new nfs-security-group (later you can see on Network tab) and allow
+incoming connections for NFS 2049 from your instances.&lt;/p&gt;
+
+&lt;p&gt;Click on &lt;em&gt;Attach&lt;/em&gt; to see command to mount using efs mount helper
+Video https://www.youtube.com/watch?v=4jy2FILK5R8
+Install https://github.com/aws/efs-utils&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get update
+sudo apt-get -y install git binutils
+git clone https://github.com/aws/efs-utils
+cd efs-utils
+./build-deb.sh
+sudo apt-get -y install ./build/amazon-efs-utils*deb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Mount&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo mount -t efs fs-b95a6d4c:/ efs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;When it timeouts that means that nfs-security-group should allow input rule for
+NFS type (port 2049) for source that EC2 belongs.&lt;/p&gt;
+
+&lt;p&gt;Permanently mount automatically on reboot&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# /etc/fstab
+fs-b95a6d4c:/ /home/ubuntu/efs efs defaults,_netdev,tls 0 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;elastic-load-balancer&quot;&gt;Elastic load balancer&lt;/h1&gt;
+
+&lt;p&gt;Classic looks at IP address and port (OSI Layer 4)
+https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ssl-server-cert.html&lt;/p&gt;
+
+&lt;p&gt;ALB Application load balancers looks at url (OSI Layer 7)
+https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html&lt;/p&gt;
+
+&lt;p&gt;https://github.com/lserman/capistrano-elbas&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# list instances
+cap production elbas:ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Static ip address on load balancer
+It can be done on Network Load Balancer
+https://aws.amazon.com/premiumsupport/knowledge-center/elb-attach-elastic-ip-to-public-nlb/
+https://aws.amazon.com/elasticloadbalancing/faqs/
+Q: How does Network Load Balancer compare to what I get with the TCP listener on a Classic Load Balancer?&lt;/p&gt;
+
+&lt;p&gt;A: Network Load Balancer preserves the source IP of the client which in the Classic Load Balancer is not preserved. Customers can use proxy protocol with Classic Load Balancer to get the source IP. Network Load Balancer automatically provides a static IP per Availability Zone to the load balancer and also enables assigning an Elastic IP to the load balancer per Availability Zone. This is not supported with Classic Load Balancer.&lt;/p&gt;
+
+&lt;h1 id=&quot;auto-scaling-groups-asg&quot;&gt;Auto scaling groups ASG&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;https://www.youtube.com/watch?v=-hFAWk6hyZA AWS Autoscaling&lt;/td&gt;
+      &lt;td&gt;Autoscaling and Load Balancing in AWS&lt;/td&gt;
+      &lt;td&gt;AWS Training&lt;/td&gt;
+      &lt;td&gt;Edureka&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;https://www.youtube.com/watch?v=_Hu9WWHfSMk 
+What are AWS Load Balancer, Auto Scaling and Route 53 | AWS Tutorial | Edureka | AWS Rewind - 4&lt;/p&gt;
+
+&lt;p&gt;A launch configuration includes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;AMI (amazon machine image, it is bootable copy of snapshoty: only a copy) +
+instance type (t2.micro)&lt;/li&gt;
+  &lt;li&gt;EC2 user data&lt;/li&gt;
+  &lt;li&gt;EBS volumes&lt;/li&gt;
+  &lt;li&gt;Security groups&lt;/li&gt;
+  &lt;li&gt;SSH Key Pair&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Scaling policies using ClodWatch alarms or using EC2 managed rules: average CPU
+usage, number of requests on the ELB per instance, average network in, or using
+custom metric (number or connected users, using PutMetric API from our app to
+CloudWatch)&lt;/p&gt;
+
+&lt;h1 id=&quot;ssl&quot;&gt;SSL&lt;/h1&gt;
+
+&lt;p&gt;When we use ELB (ALB/NLB) and eable listener (HTTPS/TLS) on port 443 than we
+have to use certificates on load balancer, ie we need to copy paste or use AWS
+Cert Manager ACM to keep certs.&lt;/p&gt;
+
+&lt;p&gt;There is some post
+https://autoize.com/automating-lets-encrypt-https-behind-a-load-balancer/ to use
+passthrough so ssl is terminated on server (lsyncd and restart services when we
+update certs) but that is for Digital Ocean .  also depends on http-01 or dns-01
+challenge (lexicon
+https://id-rsa.pub/post/certbot-auto-dns-validation-with-lexicon/ ) ?  Renewing
+should be on one instance (LB should forward check path to it).&lt;/p&gt;
+
+&lt;p&gt;API to upload to iam https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-update-ssl-cert.html#us-update-lb-SSLcert-cli
+import acm Amazon Certificate Manager https://medium.com/@iamjasonchild/custom-ssl-certificate-with-letsencrypt-acm-route53-powered-by-certbot-e457614df6b8
+import to iam https://gist.github.com/chrisjm/32a782317e377d52cc95fda8777e8dfe
+script to generate and upload cert https://gist.github.com/mikob/a89fd8c5f85e0a00d557&lt;/p&gt;
+
+&lt;p&gt;https://docs.aws.amazon.com/acm/latest/userguide/import-certificate-api-cli.html
+https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-add-or-delete-listeners.html&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo snap install --classic aws-cli
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Import (upload) certificate to ACM we need  AWSCertificateManagerFullAccess
+permissions&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# list certificated
+AWS_CONFIG_FILE=~/efs/.dns_keys aws acm list-certificates
+
+# uploading certificate
+cd /etc/letsencrypt/live/asd.movebase.link
+sudo su
+AWS_CONFIG_FILE=/home/ubuntu/efs/.dns_keys aws acm import-certificate --certificate fileb://cert.pem --certificate-chain fileb://chain.pem --private-key fileb://privkey.pem
+# this commands returns ARN which we have to use to set up ELB certificate
+{
+    &quot;CertificateArn&quot;: &quot;arn:aws:acm:us-east-1:219232999684:certificate/369b84d6-4527-49ed-8fc1-27004561f4da&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Set certificate on ELB (we need AmazonEC2FullAccess)
+https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-update-ssl-cert.html#us-update-lb-SSLcert-cli&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;aws elb set-load-balancer-listener-ssl-certificate --load-balancer-name my-load-balancer --load-balancer-port 443 --ssl-certificate-id arn:aws:acm:region:123456789012:certificate/12345678-1234-1234-1234-123456789012
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;for Network load balancers use elbv2 instead of elb&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AWS_CONFIG_FILE=/home/ubuntu/efs/.dule_keys aws elbv2 add-listener-certificates --listener-arn arn:aws:elasticloadbalancing:us-east-1:219232999684:listener/net/elb-trk/0b0c954a93bd6917/7cdcf7185ab7a1ec --certificates CertificateArn=arn:aws:acm:us-east-1:219232999684:certificate/369b84d6-4527-49ed-8fc1-27004561f4df
+
+# I got error when I try to set IsDefault=true
+An error occurred (ValidationError) when calling the AddListenerCertificates operation: You cannot set the isDefault parameter for a certificate.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Wed, 23 Dec 2020 00:00:00 +0100</pubDate>
+        <link>http://duleorlovic.github.io/2020/12/23/amazon-aws-ec2-auto-scaling-and-elastic-load-balancing/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2020/12/23/amazon-aws-ec2-auto-scaling-and-elastic-load-balancing/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Tailwind</title>
+        <description>&lt;h1 id=&quot;install&quot;&gt;Install&lt;/h1&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yarn add tailwindcss
+npx tailwindcss init --full
+mkdir app/javascript/stylesheet
+mv tailwind.config.js app/javascript/stylesheet/
+
+vi postcss.config.js
+# add line
+   require('tailwindcss')('./app/javascript/stylesheet/tailwind.config.js'),
+
+vi app/javascript/packs/application.js
+# add line
+import 'stylesheet/application'
+
+vi app/javascript/stylesheet/application.scss
+
+@import &quot;tailwindcss/base&quot;;
+@import &quot;tailwindcss/components&quot;;
+@import &quot;tailwindcss/utilities&quot;;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;usage&quot;&gt;Usage&lt;/h1&gt;
+
+&lt;p&gt;https://tailwindcss.com/docs/responsive-design/
+Responsive design uses 4 breakpoints&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@media (min-width: 640px)&lt;/code&gt; small &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sm&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@media (min-width: 768px)&lt;/code&gt; medium &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;md&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@media (min-width: 1024px)&lt;/code&gt; large &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lg&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@media (min-width: 1280px)&lt;/code&gt; extra large &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xl&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use prefix like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;md:&lt;/code&gt; to apply on that screensize. Default is mobile size so do
+not use prefix &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sm:&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;https://tailwindcss.com/docs/pseudo-class-variants
+Use prefix &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hover:&lt;/code&gt; to apply a utility on hover&lt;/p&gt;
+
+&lt;p&gt;https://tailwindcss.com/docs/display/#flex&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 17 Jul 2020 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2020/07/17/tailwind/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2020/07/17/tailwind/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Shopify Apps</title>
+        <description>&lt;h1 id=&quot;services&quot;&gt;Services&lt;/h1&gt;
+
+&lt;p&gt;Here are services that can be sold with shopify with example apps
+https://www.shopify.com/blog/12-things-to-sell-on-shopify-other-than-products#services
+https://www.shopify.com/partners/blog/105305158-8-merchant-driven-ideas-for-your-next-shopify-app&lt;/p&gt;
+
+&lt;h1 id=&quot;apps&quot;&gt;Apps&lt;/h1&gt;
+
+&lt;p&gt;Apps that does not have “Free plan available” can not be installed on test
+stores. “Upgrade your account” will be shown for all apps that charges per month
+or have 7-day free trial.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://apps.shopify.com/bookthatapp (Free plan available) add calendar and
+timeslots to your product/service so user can pick dates and it will be added
+as custom fields. Drawback is that “Buy now” button is visible and than in
+javascript it is replaced with “Add to cart” or “View Booking”. They have nice
+reference sites https://pragmaticinsights.myshopify.com/pages/reference-sites
+(sup boards, inflatable jumpers, bike)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;my-app-move-tickets&quot;&gt;My app: Move tickets&lt;/h2&gt;
+
+&lt;h2 id=&quot;my-app-populate-with-sample-data-generation&quot;&gt;my app: Populate with sample data generation&lt;/h2&gt;
+
+&lt;p&gt;Populate with sample data using faker gem
+https://community.shopify.com/c/Shopify-Design/Populating-development-store/td-p/46116&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Similar to &lt;em&gt;Simple Sample Data&lt;/em&gt; https://apps.shopify.com/simple-sample-data
+which has permissions to:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;View Shopify account data
+Manage products
+Manage orders
+Manage customers
+View other data
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Mon, 18 May 2020 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2020/05/18/shopify-apps/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2020/05/18/shopify-apps/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Roblox Studio</title>
+        <description>&lt;h1 id=&quot;roblox-studio&quot;&gt;Roblox studio&lt;/h1&gt;
+
+&lt;p&gt;Install using https://gitlab.com/brinkervii/grapejuice/-/wikis/Installing-from-source/Debian-10-and-similar&lt;/p&gt;
+
+&lt;p&gt;Keyboard shortcuts https://developer.roblox.com/en-us/resources/studio/Studio-Shortcuts&lt;/p&gt;
+</description>
+        <pubDate>Wed, 06 May 2020 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2020/05/06/roblox-studio/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2020/05/06/roblox-studio/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Obs Studio Stream Mobile Phone Cameras</title>
+        <description>&lt;h1 id=&quot;install&quot;&gt;Install&lt;/h1&gt;
+
+&lt;p&gt;Install https://obsproject.com/&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo add-apt-repository ppa:obsproject/obs-studio
+sudo apt-get update
+sudo apt-get install obs-studio
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h1 id=&quot;stream-from-ip-cameras&quot;&gt;Stream from IP cameras&lt;/h1&gt;
+
+&lt;p&gt;You can stream RTSP cameras by selecting “Media source” and unchecking “Local
+file” and on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;input&lt;/code&gt; put url&lt;/p&gt;
+
+&lt;p&gt;For RTSP you can use media source but it is better in my case to use VLC player and use window source
+Here is example url for two cameras:
+rtsp://admin:admin@192.168.1.108:554/cam/realmonitor?channel=1&amp;amp;subtype=0&amp;amp;unicast=true&amp;amp;proto=Onvif
+rtsp://admin:admin@192.168.1.168:80/0&lt;/p&gt;
+
+&lt;h1 id=&quot;stream-from-mobile-phone&quot;&gt;Stream from mobile Phone&lt;/h1&gt;
+
+&lt;p&gt;IP Webcam Pavel Khlebovich
+https://play.google.com/store/apps/details?id=com.pas.webcam&amp;amp;hl=en&amp;amp;gl=US&lt;/p&gt;
+
+&lt;p&gt;On app:
+To keep working after locking the screen you need to add permission: Service
+control, optional permissions,
+To keep WiFi, you can disable batery optimisation for IP Webcam&lt;/p&gt;
+
+&lt;p&gt;In browser http://192.168.1.100:8080/ (keep this opened to check connection)
+Crop only works when zoom is applied.
+In advance settings set video resolution to be the same for all phones, 1280x720
+(same as obs project -&amp;gt; settings -&amp;gt; video -&amp;gt; base canvas resolution)&lt;/p&gt;
+
+&lt;h2 id=&quot;stream-remote-screen-recordings&quot;&gt;Stream remote screen recordings&lt;/h2&gt;
+
+&lt;p&gt;You can stream from other computers using VNC (on windows install TinyVNC) and
+on main comp use VNC viewer and stream that Window Capture (Xcomposite).&lt;/p&gt;
+
+&lt;p&gt;Stream from web use: https://github.com/bazukas/obs-linuxbrowser&lt;/p&gt;
+
+&lt;h1 id=&quot;scenes&quot;&gt;Scenes&lt;/h1&gt;
+
+&lt;p&gt;Hold Alt key to crop.
+https://obsproject.com/wiki/Sources-Guide#scenes-and-sources-overview&lt;/p&gt;
+
+&lt;p&gt;Since changing scenes will disconnect and reconnect again, best way to switch
+cameras is to move to top (on mac it is fn + cmd + left).
+To preview cameras you can use right click and “Windowed projector” so you can
+see all three cameras in three windows.
+On each source you should use “Transform” and “Strech to screen”. It is good to
+have all cameras with same ratio width and height.&lt;/p&gt;
+
+&lt;p&gt;In OBS you can go File -&amp;gt; Show Recordings or File -&amp;gt; Remux recordings to create
+mp4 from mkv files.&lt;/p&gt;
+
+&lt;p&gt;To start multiple VLC players you can run&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# cameras.sh
+open -n /Applications...../VLC rtsp://...../video &amp;amp;
+open -n /Applications...../VLC rtsp://...../video
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;auto-rotate-scenes-based-on-timer&quot;&gt;Auto rotate scenes based on timer&lt;/h2&gt;
+
+&lt;p&gt;Advances Scene switcher
+https://obsproject.com/forum/resources/advanced-scene-switcher.395/ source
+https://github.com/WarmUpTill/SceneSwitcher&lt;/p&gt;
+
+&lt;p&gt;To install download .so and copy&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo cp ~/Downloads/SceneSwitcher/SceneSwitcher/Linux/advanced-scene-switcher.so /usr/lib/obs-plugins/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;On linux there could be an error (Help -&amp;gt; Log files -&amp;gt; View current log)&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;09:13:53.109: os_dlopen(/usr//lib/obs-plugins/advanced-scene-switcher.so-&amp;gt;/usr//lib/obs-plugins/advanced-scene-switcher.so): /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5: version `Qt_5' not found (required by /usr//lib/obs-plugins/advanced-scene-switcher.so)
+09:13:53.109:
+09:13:53.109: Module '/usr//lib/obs-plugins/advanced-scene-switcher.so' not loaded
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can check which libraries qt is using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ldd $(which qtcreator)&lt;/code&gt; (it is in
+/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5: but plugin is not using it).
+I tried to compile plugin from source&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cmake -DLIBOBS_INCLUDE_DIR=~/Programs/obs-studio/libobs -DLIBOBS_FRONTEND_INCLUDE_DIR=~/Programs/obs-studio/UI/obs-frontend-api/ -DLIBOBS_FRONTEND_API_LIB=/usr/lib/ -DCMAKE_INSTALL_PREFIX=/usr ..
+make
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;but I receive error&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Generating ui_advanced-scene-switcher.h
+File '/home/orlovic/Programs/SceneSwitcher/src/headers/advanced-scene-switcher.ui' is not valid
+AUTOUIC: error: process for ui_advanced-scene-switcher.h needed by
+ &quot;/home/orlovic/Programs/SceneSwitcher/src/headers/advanced-scene-switcher.hpp&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So I build from source using Debian-based Build Directions on
+https://obsproject.com/wiki/install-instructions#linux&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install build-essential pkg-config cmake git-core checkinstall
+sudo apt-get install libx11-dev libgl1-mesa-dev libvlc-dev libpulse-dev libxcomposite-dev libxinerama-dev libv4l-dev libudev-dev libfreetype6-dev libfontconfig1-dev qtbase5-dev libqt5x11extras5-dev libqt5svg5-dev libx264-dev libxcb-xinerama0-dev libxcb-shm0-dev libjack-jackd2-dev libcurl4-openssl-dev libluajit-5.1-dev swig python3-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Install ffmpeg from source&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install zlib1g-dev yasm
+git clone --depth 1 git://source.ffmpeg.org/ffmpeg.git
+cd ffmpeg
+./configure --enable-shared --prefix=/usr
+make -j4
+sudo checkinstall --pkgname=FFmpeg --fstrans=no --backup=no \
+        --pkgversion=&quot;$(date +%Y%m%d)-git&quot; --deldoc=yes
+#      dpkg -r ffmpeg
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To find package which provide a header file&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt-file search X11/extensions/scrnsaver.h
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So I installed also&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo apt-get install libxss-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Build OBS&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone --recursive https://github.com/obsproject/obs-studio.git
+cd obs-studio
+mkdir build &amp;amp;&amp;amp; cd build
+cmake -DUNIX_STRUCTURE=1 -DCMAKE_INSTALL_PREFIX=/usr ..
+make -j4
+sudo checkinstall --pkgname=obs-studio --fstrans=no --backup=no \
+       --pkgversion=&quot;$(date +%Y%m%d)-git&quot; --deldoc=yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Tue, 05 May 2020 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2020/05/05/OBS-studio-stream-mobile-phone-cameras/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2020/05/05/OBS-studio-stream-mobile-phone-cameras/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Metaprogramming Ruby</title>
+        <description>&lt;h1 id=&quot;metaprogramming-ruby-2-paolo-perrotta&quot;&gt;Metaprogramming Ruby 2 Paolo Perrotta&lt;/h1&gt;
+
+&lt;p&gt;Spell is notation of a usefull patterns that you can use.&lt;/p&gt;
+
+&lt;p&gt;Metaprogramming is used to create a wrap around external system, for example
+call &lt;em&gt;any&lt;/em&gt; method which will be dynamically called on the system (no need to
+define methods). You can mimics specific language which is more suitable for
+solving that particular problem.
+Also you can add logging functionality around method that you want to monitor,
+run custom code whenever a client inherits from your class…&lt;/p&gt;
+
+&lt;p&gt;In C++ (not interpreted language) at runtime (after compilation finishes) you
+can not ask for class methods, but in Ruby, you can use &lt;em&gt;introspection&lt;/em&gt; for
+example &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;my_object.class&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Metaprogramming is writting code that manipulates language constructs at
+runtime.&lt;/p&gt;
+
+&lt;p&gt;Instead of calling functional style &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;to_alphanumeric('string')&lt;/code&gt; you can reopen
+String class and use like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;'string'.to_alphanumeric&lt;/code&gt;. This is called
+Monkeypatching.&lt;/p&gt;
+
+&lt;p&gt;Spell Refinement&lt;/p&gt;
+
+&lt;p&gt;You can refine classes inside module so you do not monkeypatch global class&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module StringExtensions
+  refine String do
+    def to_alphanumeric
+      gsub(/[^\w\s]/, '')
+    end
+  end
+end
+
+&quot;a*&quot;.to_alphanumeric # NoMethodError
+using StringExtensions
+&quot;a*&quot;.to_alphanumeric # 'a'
+
+module StringStuff
+  using StringExtensions # this is active only till the end of module
+  &quot;a*&quot;.to_alphanumeric # 'a'
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Even &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;object.instance_variables&lt;/code&gt; live in the object itself, its &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;object.methods&lt;/code&gt;
+is actually using class instance methods &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;object.class.instance_methods&lt;/code&gt;.
+Each class is also an object and as an object, it contains instance methods&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Class.instance_methods(false) # =&amp;gt; [:new, :allocate, :superclass]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.superclass&lt;/code&gt; method to find a chain&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Array.superclass # =&amp;gt; Object
+Object.superclass # =&amp;gt; BasicObject
+BasicObject.superclass # =&amp;gt; nil
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;For &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class.superclass == Module&lt;/code&gt; so &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;module&lt;/code&gt; is almost the same,
+except classes can call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.new&lt;/code&gt; so we use them to instantiate, and we use module
+to include it somewhere (since &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class&lt;/code&gt; is a subclass of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Module&lt;/code&gt; it can be used
+as module, but we keep using only where we instantiate them).
+Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class MyClass&lt;/code&gt; you are actually defining (or reopening) a instance of
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class&lt;/code&gt; and assigning to constant &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MyClass&lt;/code&gt;. Since &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MyClass&lt;/code&gt; is an object and
+class in the same time, we can call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.class&lt;/code&gt; (right -&amp;gt;) and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.superclass&lt;/code&gt; (up ^)
+Note that &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MyClass.class == Class&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MyClass.superclass == Object&lt;/code&gt;.
+Also &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class.superclass == Module&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Module.superclass == Object&lt;/code&gt; so all
+classes are objects and they inherit from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Object&lt;/code&gt; class. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Object.class ==
+Class&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Module.class == Class&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class.class == Class&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Constant differs from variables in that way you can access them in any scope&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;M::C::MyConst
+# `Module` class provides instance method and class method `constants`.
+M.constants # =&amp;gt; [:C]
+Module.constants # =&amp;gt; all global constants
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Method lookup: to find a method, ruby goes in the receiver’s class (class of the
+object on which you call the method) and than climbs the ancestors chain.
+Anchestors chain also include modules that are prepended or included in class.&lt;/p&gt;
+
+&lt;p&gt;Spell KernelMethod&lt;/p&gt;
+
+&lt;p&gt;You can add method to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Kernel&lt;/code&gt; so you can use it in every object, like awesome
+print &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ap 'string'&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Every line of ruby code is executed inside an object, current object or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;self&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In static type checking, whether method exists is checked at compile time. It is
+an advantage, but the price for that is that you have to write a lot of
+boilerplate methods like getters, setters, and delegate methods.&lt;/p&gt;
+
+&lt;p&gt;Spell Dynamic Dispatch&lt;/p&gt;
+
+&lt;p&gt;Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;send&lt;/code&gt; like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;my_object.send :my_method, 123&lt;/code&gt; you can decide which method
+to call at runntime. With &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.send&lt;/code&gt; you can call private methods (use
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.public_send&lt;/code&gt; to prevent calling private methods).&lt;/p&gt;
+
+&lt;p&gt;Spell Dynamic Method&lt;/p&gt;
+
+&lt;p&gt;You can define methods on the fly using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Module#define_method&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass
+  define_method :my_method do |my_arg|
+    my_arg * 3
+  end
+
+  # or use it inside class method
+  def self.define_component(name)
+    define_method(name) do
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you need to define method name for each associated object method, you can
+iterate over &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;associated_object.methods.grep(/^get_(.*)/) {
+MyClass.define_component $1 }&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Spell Ghost Method&lt;/p&gt;
+
+&lt;p&gt;You can override &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Object#method_missing&lt;/code&gt; so you can respond to any method&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass
+  def method_missing(method_name, *args, &amp;amp;blk)
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Dynamic Proxy&lt;/p&gt;
+
+&lt;p&gt;Object that catches Ghost Methods and forwards them to another object is called
+dynamic proxy.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass
+  class ResourceProxy
+    def method_missing(message, *args, &amp;amp;block)
+      subject.send(message, *args, &amp;amp;block)
+    end
+
+    def subject
+      @subject ||= connection.get(path_prefix).body
+    end
+  end
+end
+
+class MyClass
+  module API
+    module Gists
+      class Proxy &amp;lt; ::MyClass::ResourceProxy
+        def star
+          connection.put(&quot;#{path_prefix}/star&quot;).status == 204
+        end
+      end
+    end
+  end
+end
+
+# when you call gist#star it will call put request, but for other
+# like, gist.description it proxy it to subject which will read description
+# attribute from response (using Hashie)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If you call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.respond_to? :dynamic_method&lt;/code&gt; than you will get false, so when
+overriding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;method_missing&lt;/code&gt; we should also override &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;respond_to_missing?&lt;/code&gt;
+Note that you should call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;super&lt;/code&gt; for method names that you do not proccess,
+otherwise you can get stack level too deep because of infinite loop when some
+undefined method is called. Because of this it is prefered to use Dynamic
+Methods instead Ghost Methods.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass
+  def method_missing(name)
+    super if !@data_source.respond_to?(&quot;get_#{name}_info&quot;)
+
+    info = @data_source.send(&quot;get_#{name}_info&quot;, @id)
+    price = @data_source.send(&quot;get_#{name}_price&quot;, @id)
+    result = &quot;#{name.capitalize}: #{info} ($#{price})&quot;
+    return &quot;* #{result}&quot; if price &amp;gt;= 100
+    result
+  end
+
+  def respond_to_missing?(method, include_private = false)
+    @data_source.respond_to?(&quot;get_#{method}_info&quot;) || super
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Skill Blank Slate&lt;/p&gt;
+
+&lt;p&gt;When the name of method could be inherited from Object (like method &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.display&lt;/code&gt;)
+than we can not use it (since it is not method missing), there are two
+solutions: inherit from BasicObject (not implicit Object) or removing methods
+with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#undef_method&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#remove_method&lt;/code&gt; for each &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;instance_methods&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass &amp;lt; BasicObject
+  # no need respond_to_missing since BasicObject.instance_methods are few
+  # =&amp;gt; [:__send__, :!, :==, :!=, :equal?, :__id__, :instance_eval, :instance_exec]
+end
+
+# or undefining all except __methods
+class MyClass
+  def self.hide(name)
+    if name !~ /^(__|instance_eval$)/
+      undef_method name
+    end
+  end
+
+  instance_methods.each { |m| hide(m) }
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;You can also use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.const_missing&lt;/code&gt; as in Rake&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Module
+  def const_missing(const_name)
+    case const_name
+    when :Task
+      Rake.application.const_warning(const_name)
+      Rake::Task
+    when :FileTask
+      Rake.application.const_warning(const_name)
+      Rake::FileTask
+    when :FileCreationTask
+      # ...
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Blocks are defined only when you call a method. Inside method you can call
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yield&lt;/code&gt; to evaluate that block. You can check if block is given with
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;block_given?&lt;/code&gt;. Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yield&lt;/code&gt; without params will call the block using the same
+params as method. Here is example to always call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;resource.dispose&lt;/code&gt; (when
+exception occurs or without exception in block).&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module Kernel
+  def using(resource)
+    begin
+      yield
+    ensure
+      resource.dispose
+    end
+  end
+end
+
+use(r) { |r| r.read }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When you create a block, it captures local bindings at that moment into a
+closure. When you yield, it will use that scope (not the scope of method where
+yield is called).
+Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Kernel#local_variables&lt;/code&gt; to list all current object local variables.&lt;/p&gt;
+
+&lt;p&gt;Spell Scope Gate&lt;/p&gt;
+
+&lt;p&gt;Scope changes when program enters a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;module&lt;/code&gt; definition or enters the
+method &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;def&lt;/code&gt; (method definition is executed when it is called).&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;my_var = &quot;Success&quot;
+class MyClass
+  # We want to print my_var here...
+  def my_method
+    # ..and here
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Flat Scope&lt;/p&gt;
+
+&lt;p&gt;To pass local variable through &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class&lt;/code&gt; gate, you can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class.new block&lt;/code&gt; and
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;define_method name, block&lt;/code&gt; to create nested lexical scopes (flattening the
+scope). You can inherit from existing class using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class.new(MyParrent) do&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;my_var = &quot;Success&quot;
+MyClass = Class.new do
+  &quot;#{my_var} in the class definition&quot;
+
+  define_method :my_method do
+    &quot;#{my_var} in the method&quot;
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Shared Scope&lt;/p&gt;
+
+&lt;p&gt;Control the sharing of variables by using Dynamic Dispatch inside the same flat
+scope.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def define_methods
+  shared = 0
+
+  Module.send :define_method, :counter do
+    shared
+  end
+  Module.send :define_method, :inc do |x|
+    shared += x
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Context Probe&lt;/p&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;object.instance_eval block&lt;/code&gt; to evaluate block with the object as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;self&lt;/code&gt;.
+It’s like a snippet of code that you dip inside an object.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;v = 2
+obj.instance_eval { @v = v}
+obj.instance_eval { @v} # =&amp;gt; 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;There is also &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Module#class_eval&lt;/code&gt; (we are not changing only &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;self&lt;/code&gt; but also
+current_class). It is more flexible than using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class MyClass&lt;/code&gt; because we do not
+open new scope, we keep current bindings like Spell Flat Scope.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a_class.class_eval do
+  # define instance_method
+  def m; 'Hi'; end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Clean Room&lt;/p&gt;
+
+&lt;p&gt;Create an object just to evaluate blocks inside it (in clear env, otherwise
+blocks could clash with current env)&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class CleanRoom
+  def current_temperature
+    # ...
+  end
+end
+clean_room = CleanRoom.new
+clean_room.instance_eval do
+  if current_temperature &amp;lt; 20
+    # TODO: wear jacket
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Deferred Evaluation&lt;/p&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;obj = Proc.new block&lt;/code&gt; to create object that holds a block and later use it
+with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;obj.call 123&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inc = Proc.new {|x| x + 1}
+inc.call 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Class Instance Variable&lt;/p&gt;
+
+&lt;p&gt;Define instance variable in context of class object. Using double &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@@my_var&lt;/code&gt; is
+class variable which can be accessed from subclasses and instance methods.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass
+  @my_class_var = 1
+  def m
+    # we can not access @my_class_var
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Singleton Method&lt;/p&gt;
+
+&lt;p&gt;Define method for one specific object&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;str = 'Hi'
+
+def str.title?
+  self.upcase == self
+end
+# or
+str.define_singleton_method(:title?){ self.upcase == self }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Class Macro&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Module#attr_accessor&lt;/code&gt; class method is called Class macro. They looks like
+keywords, but there are just regular class methods.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class MyClass
+  attr_accessor :my_attribute
+
+  # it will actually do something like
+  def self.attr_accessor(name)
+    define_method &quot;#{name}=&quot; do |value|
+      send &quot;@#{name}=&quot;, value
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It can be used for deprecation warnings&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Book
+  def title
+  end
+
+  def self.deprecate(old_method, new_method)
+    define_method(old_method) do |*args, &amp;amp;block|
+      warn &quot;Warning: #{old_method}() is deprecated. Use #{new_method}().&quot;
+      send(new_method, *args, &amp;amp;block)
+    end
+  end
+
+  deprecate :GetTitle, :title
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Singleton class of the object (metaclass, eigenclass) ie each object can have
+it’s own special hidden class. Special syntax needs to be used &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;class &amp;lt;&amp;lt; object&lt;/code&gt;
+and you can get it with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;object.singleton_class&lt;/code&gt;. It is a place where singleton
+methods live. It’s superclass is object class.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;obj = My.new
+def obj.my_singleton_method; end
+
+# similar but it opens new scope definee cref
+class &amp;lt;&amp;lt; obj
+  def my_singleton_method
+  end
+end
+
+obj.singleton_class.instance_methods.grep /my_/
+obj.singleton_class.superclass == My
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;So method lookup also includes singleton class, let’s call it &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#obj&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;p&gt;We can also add class method using same notation&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class C
+  class &amp;lt;&amp;lt; self
+    def a_class_method
+      'C.a_class_method'
+    end
+  end
+
+  # same as
+  # def self.a_class_method
+  #   'C.a_class_method'
+  # end
+end
+# or third way of defining class methods is outside of class
+# def C.a_class_method
+
+class D &amp;lt; C
+end
+
+D.a_class_method # =&amp;gt; 'C.a_class_method()'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So method lookup for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;D.a_class_method&lt;/code&gt; also looks at singleton class of
+superclass &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#C&lt;/code&gt;.
+Seven rules or ruby object model&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;there is only one kind of object: regular or a module&lt;/li&gt;
+  &lt;li&gt;there is only one kind of module: regular module, class or singleton class&lt;/li&gt;
+  &lt;li&gt;there is only one kind of method and it lives in a module (most often in a
+class)&lt;/li&gt;
+  &lt;li&gt;every object (classes included), has its own ‘real class’, be it a regular
+class or a singleton class&lt;/li&gt;
+  &lt;li&gt;every class, except BasicObject, has exactly one ancestor, either a superclass
+or a module.&lt;/li&gt;
+  &lt;li&gt;superclass of singleton class of an object is the object’s class. The
+superclass of singleton class of a class is the singleton class of the class’s
+superclass&lt;/li&gt;
+  &lt;li&gt;when you call a method, ruby goes right to the receiver’s real class and than
+‘up’ the ancestors chain.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Spell Class Extension&lt;/p&gt;
+
+&lt;p&gt;When you want to include module methods as class methods&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module MyModule
+  def my_method; 'hello'; end
+end
+
+class MyClass
+  class &amp;lt;&amp;lt; self
+    include MyModule
+  end
+end
+
+# short way is using
+class MyClass
+  extend MyModule
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Object Extension&lt;/p&gt;
+
+&lt;p&gt;You can extend objects with methods&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module MyModule
+  def my_method; 'hello'; end
+end
+
+obj = Object.new
+
+class &amp;lt;&amp;lt; obj
+  include MyModule
+end
+
+obj.my_method # =&amp;gt; 'hello'
+
+# another way is to use
+obj.extend MyModule
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Around Alias&lt;/p&gt;
+
+&lt;p&gt;Three steps: alias the method, redefine original method, call old method from
+new method&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module Kernel
+  alias_method :new_method, :original_method
+
+  def original_method(args)
+    # add code here
+    new_method(args)
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;for example&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class String
+  alias_method :real_length, :length
+
+  def length
+    real_length &amp;gt; 5 ? 'long' : 'short'
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Refinement Wrapper&lt;/p&gt;
+
+&lt;p&gt;Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;super&lt;/code&gt; inside refinement will call original method&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module StringRefinement
+  refine String do
+    def length
+      super &amp;gt; 5 ? 'long' : 'short'
+    end
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Prepended Wrapper&lt;/p&gt;
+
+&lt;p&gt;Using prepend (which is searched before class method, or included methods) so
+also you can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;super&lt;/code&gt; to call original method. It is much cleaner than spell
+around alias (which looks like Monkey patching).&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module ExplicitString
+  def length
+    super &amp;gt; 5 ? 'long' : 'short'
+  end
+end
+
+String.class_eval do
+  prepend ExplicitString
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;So you can use this to wrap some library methods so you can catch exceptions
+from it&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module AmazonWrapper
+  def reviews_of(book)
+    result = super
+    result
+  rescue
+    []
+  end
+end
+
+Amazon.class_eval do
+  prepend AmazonWrapper
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell String of Code&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Kernel#eval&lt;/code&gt; can run string of code.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;array = [1]
+el = 2
+eval &quot;array &amp;lt;&amp;lt; el&quot;
+
+# or define methods which also depend on verb
+POSSIBLE_VERBS = ['get', 'put', 'post', 'delete']
+POSSIBLE_VERBS.each do |m|
+  eval &amp;lt;&amp;lt;-end_eval
+    def #{m}(path, *args, &amp;amp;b)
+      r[path].#{m}(*args, &amp;amp;b)
+    end
+  end_eval
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It is used with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;binding&lt;/code&gt; so you can evaluate code in some context (similar to
+closure but it does not contains code just scope). In ruby there is
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TOPLEVEL_BINDING&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Spell Code Processor&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval statements, @bindings, file, line&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval string&lt;/code&gt; you can use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;obj.instance_eval&lt;/code&gt; which can take string or
+block (both can access local variables).&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;array = ['a', 'b', 'c']
+x = 'd'
+array.instance_eval &quot;self[1] = x&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Spell Hook Method&lt;/p&gt;
+
+&lt;p&gt;You can override &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Class#included&lt;/code&gt; to provide a hook into particular event
+(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;inherited&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;included&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;prepended&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;extended&lt;/code&gt;, also &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;method_added&lt;/code&gt;,
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;method_removed&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;method_undefined&lt;/code&gt;)&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class String
+  def self.included(subclass)
+    puts &quot;#{self} was included by #{subclass}&quot;
+  end
+end
+
+class MyString &amp;lt; String; end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This can be used to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include MyModule&lt;/code&gt; which will extend methods so you got
+class macros which you can use. This is also called include and extend trick.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module CheckedAttributes
+  def self.included(base)
+    base.extend ClassMethods
+  end
+
+  module ClassMethods
+    def my_class_macro(name, &amp;amp;block)
+    ...
+
+class MyClass
+  include CheckedAttributes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Instead of overriding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;self.included&lt;/code&gt; you can override &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include&lt;/code&gt; and use super
+but it is not so clear since you have to call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;super&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class C
+  def self.include(*modules)
+    puts &quot;Called: C.include(#{modules})&quot;
+    super
+  end
+
+  include M
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Problem with extending is with chained extensions, since at the momen first
+module &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include SecondLevel&lt;/code&gt; module, it’s &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;def self.included(base)&lt;/code&gt; base will
+point to first level module, not the target class.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 07 Apr 2020 00:00:00 +0200</pubDate>
+        <link>http://duleorlovic.github.io/2020/04/07/metaprogramming-ruby/</link>
+        <guid isPermaLink="true">http://duleorlovic.github.io/2020/04/07/metaprogramming-ruby/</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

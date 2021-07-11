@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Rails Translations I18n</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Rails Translations I18n</h1>
+    <p class="meta">Jan 4, 2019</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#localisation-i18n-translations"><span class="tocnumber">1</span> <span class="toctext">Localisation i18n translations</span></a></li><li class="toc_level-1 toc_section-2"><a href="#locale"><span class="tocnumber">2</span> <span class="toctext">Locale</span></a></li><li class="toc_level-1 toc_section-3"><a href="#translating-user-content"><span class="tocnumber">3</span> <span class="toctext">Translating user content</span></a></li><li class="toc_level-1 toc_section-4"><a href="#enums"><span class="tocnumber">4</span> <span class="toctext">Enums</span></a></li><li class="toc_level-1 toc_section-5"><a href="#tips"><span class="tocnumber">5</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><h1 id="localisation-i18n-translations">Localisation i18n translations</h1>
+
+<p>Tips <a href="https://devhints.io/rails-i18n">https://devhints.io/rails-i18n</a>
+Translate models using <code class="language-plaintext highlighter-rouge">activerecord</code>
+https://guides.rubyonrails.org/i18n.html#translations-for-active-record-models
+so you can use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.model_name.human
+# 'asd'.pluralize # asds so for english that is ok but if you use i18n, than use
+# note that you have to write translations in yml.file if you use human(count)
+User.model_name.human(count: 2)
+# attribute
+User.human_attribute_name(:email)
+</code></pre></div></div>
+
+<p>To translate active record messages for specific attributes, you can overwrite
+messages for specific model and attributes (default ActiveRecord messages taken)
+<a href="https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23">https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locale/en.yml#L23</a>
+<a href="https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message">https://apidock.com/rails/v4.2.7/ActiveModel/Errors/generate_message</a>
+For submit buttons default title is defined on <code class="language-plaintext highlighter-rouge">submit_default_value</code> https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/form_helper.rb#L2573
+(I found it using byebug and step) so to use in test</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>click_on "#{:update.to_s.humanize} #{User.model_name.human}"
+</code></pre></div></div>
+
+<p>Also you can change format <code class="language-plaintext highlighter-rouge">errors.format: Polje "%{attribute}" %{message}</code>
+https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L4</p>
+
+<p>And you can change attribute name <code class="language-plaintext highlighter-rouge">activerecord.attributes.user.email: имејл</code>
+To translate also plurals you can use <code class="language-plaintext highlighter-rouge">User.model_name.human(count: 2)</code>. For
+attributes you can use <code class="language-plaintext highlighter-rouge">User.human_attribute_name("email")</code>
+<a href="http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models">link</a>
+For <code class="language-plaintext highlighter-rouge">ApplicationRecord</code> translate <code class="language-plaintext highlighter-rouge">activerecord</code>.
+For form objects <code class="language-plaintext highlighter-rouge">include ActiveModel::Model</code> you should translate
+<code class="language-plaintext highlighter-rouge">activemodel</code>. There you can use <code class="language-plaintext highlighter-rouge">t('successfully')</code> instead
+<code class="language-plaintext highlighter-rouge">I18n.t('successfully')</code> if you <code class="language-plaintext highlighter-rouge">include AbstractController::Translation</code>
+This will also translate error messages, for example
+<code class="language-plaintext highlighter-rouge">landing_signup.errors.add(:current_city) = 'x'</code> will result in message like
+<code class="language-plaintext highlighter-rouge">landing_signup.errors.full_messages.to_sentence # 'Који је твој град ? x'</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/locales/activerecord_activemodels.en.yml
+en:
+  activerecord:
+    models:
+      user:
+        zero: No dudes
+        one: Dude
+        other: Dudes
+      customer:
+        one: корисник
+        other: корисници
+        accusative: корисника
+        some_customer_message: Моја порука
+  activemodel:
+    attributes:
+      landing_signup:
+        current_city: Који је твој град ?
+    errors:
+      messages:
+        group_not_exists_for_age: Не постоји група (%{age}год) на овој локацији
+      models:
+        landing_signup:
+          attributes:
+            current_city:
+              blank: Не може бити празно ?
+</code></pre></div></div>
+
+<p>Separate translations into different files (for example
+<code class="language-plaintext highlighter-rouge">activerecord_activemodels.sr.yml</code>) include them with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+
+# Whitelist locales available for the application
+I18n.available_locales = [:en, :pt]
+
+# Set default locale to something other than :en
+I18n.default_locale = :pt
+</code></pre></div></div>
+
+<p>To raise error when translation is missing <code class="language-plaintext highlighter-rouge">.translation_missing</code> class</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+config.action_view.raise_on_missing_translations = true
+</code></pre></div></div>
+
+<p>This way you can change default_locale and run system tests and you will get
+exception if some locale is missing.</p>
+
+<p>No need to write quotes in yml unless you have:</p>
+<ul>
+  <li>colon <code class="language-plaintext highlighter-rouge">:</code> , than simply escape it’s meaning and use quotes <code class="language-plaintext highlighter-rouge">name: "name: Ime"</code></li>
+  <li>start with <code class="language-plaintext highlighter-rouge">%{}</code> or <code class="language-plaintext highlighter-rouge">,</code> or <code class="language-plaintext highlighter-rouge">.</code></li>
+  <li>have <code class="language-plaintext highlighter-rouge">answer: Yes</code> or <code class="language-plaintext highlighter-rouge">answer: No</code>, is somehow casts to <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code></li>
+  <li>have double quotes inside <code class="language-plaintext highlighter-rouge">processing: &lt;i class="fa fa-spinner fa-spin
+ datatable-spinner"&gt;&lt;/i&gt;Обрада...</code>. Than you need to switch to single quotes.
+ Note that it does not help to wrap double quotes with single quote, this won’t
+ work: <code class="language-plaintext highlighter-rouge">processing: '&lt;i class="c"&gt;&lt;/i&gt;'</code> since you have double quote inside.</li>
+</ul>
+
+<p>When debugging <code class="language-plaintext highlighter-rouge">SyntaxError: [stdin]:60:33: unexpected identifier</code> you should
+run <code class="language-plaintext highlighter-rouge">rake tmp:clear</code> so all yml end .erb files are compiled again.</p>
+
+<p>If you want to reuse same translation you can use alias, but only inside same
+file, so in case of form object, you can add to activerecord_models.yml</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sr:
+  activerecord:
+    attributes:
+      subscriber: &amp;subscriber_attributes
+        name: Назив
+      project: &amp;project_attributes
+        name: Назив
+  activemodel:
+    attributes:
+      project_task_notification:
+        &lt;&lt;: *project_attributes
+        &lt;&lt;: *subscriber_attributes
+        project_name: Назив
+</code></pre></div></div>
+
+<p>For custom errors can be different for each attribute or same. Can also accept
+param, for example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    errors.add :from_group_age, :group_not_exists_for_age, age: age
+</code></pre></div></div>
+
+<p>https://stackoverflow.com/questions/6166064/i18n-pluralization
+For serbian you can provide pluralization</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/locales/plurals.rb
+# https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
+serbian = {
+  i18n: {
+    plural: {
+      keys: %i[one few many other],
+      rule: lambda { |n|
+        if n % 10 == 1 &amp;&amp; n % 100 != 11
+          :one
+        elsif [2, 3, 4].include?(n % 10) &amp;&amp; ![12, 13, 14].include?(n % 100)
+          :few
+        # elsif (n % 10).zero? || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100)
+        #   :many
+        # there are no other integers, use :many if you need to differentiate
+        # with floats
+        else
+          :other
+        end
+      }
+    }
+  }
+}
+{
+  sr: serbian,
+  'sr-latin': serbian,
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/pluralization.rb
+require 'i18n/backend/pluralization'
+I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
+</code></pre></div></div>
+
+<p>If you send <code class="language-plaintext highlighter-rouge">count</code> parameter <code class="language-plaintext highlighter-rouge">t('sent_messages', count: 2)</code> it will try to pick
+specific item based on number</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/locales/sr.yml
+sr:
+  sent_messages:
+    # 1, 21, 31 ...
+    one: %{count} порука је послата
+    # 2, 3, 4, 22, 23, 24, 32, 33, 34 ...
+    few: %{count} поруке су послате
+    # all other integers: 5, 6, ... 9, 10, 11, 12, 13, 14 ... 20, 25, ...
+    many: %{count} порука је послато
+</code></pre></div></div>
+
+<p>Note that you have to provide <code class="language-plaintext highlighter-rouge">few</code> translation for all words, since it could
+happend that count is 2 and translation is missing.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I18n.t 'sent_messages', count: 15
+# or if you want to translate model
+"#{chat.moves.size} #{Move.model_name.human count: chat.moves.size}"
+</code></pre></div></div>
+
+<p>You can translate to any language with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I18n.t 'sent_messages', locale: :sr
+</code></pre></div></div>
+
+<p>Example for Serbian localizations translations:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/locales/sr.yml
+sr:
+  # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/locale/en.yml#L8
+  errors:
+    format: Поље "%{attribute}" %{message}
+    messages:
+      blank: не сме бити празно
+      invalid: није исправно
+  neo4j:
+    errors:
+      messages:
+        required: мора постојати
+        taken: је већ заузет
+    models:
+      user: корисник
+      location:
+        one: локација
+        other: локације
+    attributes:
+      user:
+        email: Имејл
+        password: Лозинка
+        password_confirmation: Потврда лозинке
+        remember_me: Запамти ме
+</code></pre></div></div>
+
+<p>When you use <code class="language-plaintext highlighter-rouge">.capitalize</code>, <code class="language-plaintext highlighter-rouge">.titleize</code> or <code class="language-plaintext highlighter-rouge">.upcase</code> than you need first to call
+<code class="language-plaintext highlighter-rouge">.mb_chars</code>. For example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'ž'.upcase
+=&gt; "ž"
+
+'ž'.mb_chars.upcase.to_s
+ =&gt; "Ž"
+</code></pre></div></div>
+<p>Some common words translations can be found
+<a href="https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml">https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml</a></p>
+
+<p>To translate with accusative you need to joins strings or use param in
+translation</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module TranslateHelper
+  # there are two ways of calling this helper:
+  # t_crud 'are_you_sure_to_remove_item', item: @move
+  # t_crud 'edit', User
+  def t_crud(action, model_class)
+    if model_class.class == Hash
+      t(action, item: t("neo4j.models.#{model_class[:item].name.downcase}.accusative"))
+    else
+      "#{t(action)} #{t("neo4j.models.#{model_class.name.downcase}.accusative")}"
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Translate latin to cyrilic with <a href="https://github.com/dalibor/cyrillizer">https://github.com/dalibor/cyrillizer</a> You need
+to set language in config</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# translate cyrillic
+gem 'cyrillizer'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/cyrillizer.rb
+Cyrillizer.language = :serbian
+</code></pre></div></div>
+
+<p>In console</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'my string'.to_cyr
+ =&gt; "мy стринг"
+</code></pre></div></div>
+
+<p>Note that some chars looks the same but are not when rendered on html page</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # for example first line is not correct link a href
+ &lt;a href='%{confirmation_url}'&gt;Поново пошаљи упутство за потврду&lt;/а&gt;"
+ &lt;a href='%{confirmation_url}'&gt;Поново пошаљи упутство за потврду&lt;/a&gt;"
+</code></pre></div></div>
+
+<p>To check if word is using cyr you can use (note that it looks the same but are
+not same charcters)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cyrillizer.alphabet.keys.include? 'a'
+ =&gt; false 
+2.6.3 :026 &gt; Cyrillizer.alphabet.keys.include? 'а'
+ =&gt; true 
+</code></pre></div></div>
+
+<h1 id="locale">Locale</h1>
+
+<p>When changing locale <code class="language-plaintext highlighter-rouge">I18n.locale = :sr</code> in some methods, note that this is
+global variable in thread, so when you have 5 puma threads than on GET requests
+(simply refresh couple of times) you will get different locales.
+Here is my Rails controbution to guide about it https://github.com/rails/rails/pull/34911
+One way is to use <code class="language-plaintext highlighter-rouge">I18n.with_locale</code> for example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class UserMailer &lt; ActionMailer::Base
+  default from: 'noreply@translation.io'
+
+  def invitation(user)
+    I18n.with_locale(user.locale) do
+      mail subject: t('invitation'), to: user.email
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>For controller, you need to use around filters</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  around_action :set_locale_from_session
+
+  def set_locale_from_session
+    if session[:locale].present?
+      I18n.with_locale session[:locale].to_sym do
+        yield
+      end
+    else
+      yield
+    end
+  end
+</code></pre></div></div>
+
+<h1 id="translating-user-content">Translating user content</h1>
+
+<p>https://github.com/shioyama/mobility#quickstart</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# translation
+gem 'mobility', '~&gt; 0.8.6'
+
+# this will generate config/initializers/mobility.rb
+rails g mobility:install
+
+# app/models/activity.rb
+class Activity &lt; ApplicationRecord
+  extend Mobility
+  translates :name
+end
+
+# in migration add default value
+  create_table :activities, id: :uuid do |t|
+    t.json :name, default: {}
+</code></pre></div></div>
+
+<p>For google translate look for two scripts, one for vim and one for whole yml.
+https://github.com/duleorlovic/config/tree/master/ruby</p>
+
+<p>fallbacks</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>club.name fallback: false
+club.name fallback: [:en]
+</code></pre></div></div>
+
+<p>If fallback is not false than longer translate will fallback to short
+automatically (<code class="language-plaintext highlighter-rouge">'sr-latin'</code> to <code class="language-plaintext highlighter-rouge">:sr</code>)</p>
+
+<p>Note that passing <code class="language-plaintext highlighter-rouge">locale</code> options to reader or using locale accessors will
+disable fallbacks</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>word.meaning(locale: :de)
+#=&gt; nil
+word.meaning_de
+#=&gt; nil
+Mobility.with_locale(:de) { word.meaning }
+# if in model we have translate :meaning, fallbacks: { de: :ja}
+#=&gt; "(名詞):動きやすさ、可動性"
+</code></pre></div></div>
+
+<p>Global fallback</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/mobility.rb
+  config.default_options[:fallbacks] = { sr: :en, en: :sr }
+</code></pre></div></div>
+<p>Dynamic fallback https://github.com/shioyama/mobility/pull/328
+https://github.com/shioyama/mobility/issues/314</p>
+
+<p>You can search find_by using <code class="language-plaintext highlighter-rouge">@&gt;</code> and passing json</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Activity.where("name @&gt; ?",{en: 'Climbing'}.to_json)
+# or using i18n scope
+Activity.i18n.where(name: 'Climing')
+
+# or using specific locale
+Mobility.with_locale(:en) do
+  Mobility.locale # =&gt; :en
+  Activity.i18n.find_by(name: 'Climbing')
+end
+</code></pre></div></div>
+
+<h1 id="enums">Enums</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+class User &lt; ApplicationRecord
+  enum status: [:active, :pending, :archived]
+end
+
+# app/models/application_record.rb
+class ApplicationRecord &lt; ActiveRecord::Base
+  self.abstract_class = true
+
+  def self.human_enum_name(enum_name, enum_value)
+    I18n.t("activerecord.attributes.#{model_name.i18n_key}.#{enum_name.to_s.pluralize}.#{enum_value}")
+  end
+end
+
+
+# config/locales/activerecord.en.yml
+en:
+  activerecord:
+    attributes:
+      user:
+        statuses:
+          active: "Active"
+          pending: "Pending"
+          archived: "Archived"
+
+# usage:
+User.human_enum_name(:status, :pending)
+User.human_enum_name(:status, user.status)
+</code></pre></div></div>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>if you want to see which translation is used (if there is parent default
+value) you can try https://github.com/fphilipe/i18n-debug</li>
+  <li>for big content pages, you can translate using <code class="language-plaintext highlighter-rouge">page.sr.html.erb</code> instead of
+yml translations</li>
+  <li>fallbacks, if can not find the key in curreny localy, it can search in
+fallback locale. In this case you can translate only specific keys
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+config.i18n.fallbacks = { en_GB: [:en] }
+
+# config/locales/en_GB.yml
+en_GB:
+  soccer: Footbal
+
+en:
+  soccer: Soccer
+  words: Words
+
+# logs from i18n-debug
+en_GB.show.soccer =&gt; 'Footbal'
+en_GB.show.words =&gt; nil
+en.show.words =&gt; 'Words'
+</code></pre></div>    </div>
+  </li>
+  <li>To see Rails default datetime formats go to
+https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
+to see current translation you can use
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I18n.translate 'date.formats.default`
+=&gt; "%Y-%m-%d"
+</code></pre></div>    </div>
+    <p>Use can check formats https://apidock.com/ruby/DateTime/strftime with</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Time.zone.now.strftime '%e %B'
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to localise date and timestamps you can use <code class="language-plaintext highlighter-rouge">I18n.l Time.now, format: :formal</code></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>en:
+  time:
+    formats:
+    default: '%H:%M'
+    formal: The time is %H:%M
+
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">helper.number_with_precision</code>, <code class="language-plaintext highlighter-rouge">distance_of_time_in_words_to_now</code>,
+<code class="language-plaintext highlighter-rouge">number_to_currency</code>, <code class="language-plaintext highlighter-rouge">number_to_human</code>, <code class="language-plaintext highlighter-rouge">number_to_human_size</code> are some
+helpers that uses translations</li>
+  <li>use <code class="language-plaintext highlighter-rouge">_html</code> suffix when you use tags in translated content. For example
+<code class="language-plaintext highlighter-rouge">title_html: Hi &lt;b&gt;man&lt;/b&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;%= t('title_html') %&gt;</code> will not escape and
+you do not need to use html_safe or raw</li>
+  <li>to add route instead of subdomain, use https://stackoverflow.com/a/8237800
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/routes.rb
+  devise_for :users, only: :omniauth_callbacks, controllers: {
+    omniauth_callbacks: 'devise/my_omniauth_callbacks',
+  }
+  scope '(:locale)', locale: /#{I18n.available_locales.join("|")}/ do
+    root 'pages#home'
+
+    devise_for :users, skip: :omniauth_callbacks, controllers: {
+      registrations: 'devise/my_registrations',
+    }
+  end
+
+# config/
+</code></pre></div>    </div>
+  </li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>
