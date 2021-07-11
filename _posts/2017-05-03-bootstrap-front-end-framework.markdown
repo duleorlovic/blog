@@ -566,6 +566,21 @@ class (`:inline` or `:horizontal`) we need to use same helper
 (`bootstrap_form_for ... builder: MyFormBuilder` instead of `form_for ...
 builder: MyFormBuilder`). I noticed huge chrome memory problems (memory chrome
 is increasing when there is no `form-horizontal` class).
+To override some form elements you need to override bootstrap_form_for helper
+```
+# app/helpers/form_helper.rb
+module FormHelper
+  include BootstrapForm::Helper
+  def bootstrap_form_for(object, options = {}, &block)
+    options.reverse_merge! builder: MyFormBuilder
+    super(object, options, &block)
+  end
+  def bootstrap_form_with(options = {}, &block)
+    options.reverse_merge! builder: MyFormBuilder
+    super(options, &block)
+  end
+end
+```
 
 Oneliner form is using button_to with: input label, target url, form class...
 ```

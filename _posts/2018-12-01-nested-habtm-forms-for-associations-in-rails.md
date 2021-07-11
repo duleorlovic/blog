@@ -454,6 +454,14 @@ as 4th params (html options)
   ```
   <%= f.select isp_package_ids, options, {}, multiple: true %>
   ```
+  Note that you can replace dropdown select input with checkboxes, for example
+  ```
+  <% ApplicationRecord.split_and_convert_to_hash(LANGUAGES).values.each do |language| %>
+    <%= f.check_box 'languages_spoken_at_home', { multiple: true, label: language}, language, nil %>
+  <% end %>
+  ```
+
+
   You can also nest in two dimensions ie it will be a hash with array values
   `name='user_ids[#{company.id}][]`. In this case you need to permit hash
   (Rails 5.2) or whitelist in before Rails 5.2
@@ -502,3 +510,7 @@ url, form class
 <%= link_to "Fair usage policy", expire_subscriber_path(@subscriber, button: 'fair_usage_policy'), method: :patch, class: 'btn btn-primary' %>
 ```
 Default is using POST, but you can change and add params
+
+* in rails `<%= form_with ..., class: 'my-class'` you can use class attribute
+  directly, but other attributes are not passed, so you need to use html like
+  `<%= form_with ..., html: { class: 'my-class' } %>`

@@ -107,6 +107,8 @@ Basic authentication header
 
 ~~~
 request.basic_auth username, password
+# or
+request['Authorization'] = "Basic #{Base64.strict_encode64("#{consumer_key}:#{consumer_secret}")}"
 ~~~
 
 # Snippets

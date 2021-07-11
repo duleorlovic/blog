@@ -1125,7 +1125,11 @@ Install zurb foundation https://www.reddit.com/r/rails/comments/bhk72q/how_to_re
 Use image in views by adding `media` to the path, for
 `app/javascript/images/logo.jpg` image
 ```
-<img src="<%= image_pack_tag 'media/images/logo.jpg' %>" alt="logo" />
+<%= image_pack_path('media/images/avatar_male.png') %>
+
+# or if you need just a path
+<img src="<%= asset_pack_tag 'media/images/logo.jpg' %>" />
+ActionController::Base.helpers.asset_pack_path('media/images/avatar_male.png')
 ```
 
 ## IIFE Immediatelly invoked function expression

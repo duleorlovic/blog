@@ -100,6 +100,14 @@ function checkIfInView($element, options){
 }
 ~~~
 
+# Scroll to bottom
+
+http://jsfiddle.net/5ucD3/13/
+```
+$('#textdiv').append('<p>asd</p>,,,,')
+$('#textdiv').animate({scrollTop: $('#textdiv').prop("scrollHeight")}, 500);
+```
+
 # Always on page, floating elements
 
 There is nice plugin [stickyjs](http://stickyjs.com/) but for simple scroll you

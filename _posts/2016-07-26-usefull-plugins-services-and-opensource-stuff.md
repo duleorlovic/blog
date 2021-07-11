@@ -3,6 +3,11 @@ layout: post
 title: Usefull plugins, services and opensource stuff
 ---
 
+Find other software
+
+https://www.libhunt.com/r/awesome-selfhosted
+https://github.com/awesome-selfhosted/awesome-selfhosted#ticketing
+
 # Misc
 
 * [fastclick](https://github.com/ftlabs/fastclick)
@@ -697,6 +702,7 @@ and download only that batch of icons.
 * flags http://flagpedia.net/india
 * create passport photo id card https://www.idphoto4you.com needs flash plugin
   so open in chrome
+* free animations https://lottiefiles.com/49964-running-on-treadmill
 
 # Slides
 

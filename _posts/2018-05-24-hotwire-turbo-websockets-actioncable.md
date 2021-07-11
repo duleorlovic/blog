@@ -91,18 +91,26 @@ rails turbo:install:asset_pipeline
 rails turbo:install:webpacker
 # Please check if this are added to app/javascript/packs/application.js
 import '@hotwired/turbo-rails'
+# There is an issue when we import turbo in javascript, double click
 # I have a problem with double request it seems that turbo frames does not work
 # (it triggers only once) second click on edit does nothing
 # one way to solve is to add response in controller
   format.turbo_stream { render turbo_stream: turbo_stream.replace("#{_params_step}-edit", template: "profile/#{_params_step}") }
 ```
+https://github.com/hotwired/turbo-rails/issues/180
 
-GET are HTML and PATH/POST are TURBO_STREAM requests
-You should be able to edit inline twice double.
+GET are HTML and PATH/POST are TURBO_STREAM requests for ALL forms on the page.
+You should be able to edit inline twice double (at this stage, without importing
+turbo in js... if you import than add turbo_stream.replace response)
+There is an error `Error: Form responses must redirect to another location` if
+we submit a form without `turbo_stream_tag`
+https://github.com/hotwired/turbo-rails/issues/12#issuecomment-749857225
+
 
 https://turbo.hotwire.dev/handbook/introduction
 
-Turbo frames
+## Turbo frames
+
 Frames is used to scope navigation of that independent segments, keeping the
 rest of the page inact. Note that links to other pages need to have target
 `data-turbo-frame': '_top'` (similar as with iframes)
@@ -127,21 +135,34 @@ Turbo frame tag with block
   <% end %>
   ```
 
-Turbo frame tag inline (lazily load) with `src: template_path` attribute (not
-sure why we need to set up target: '_top' on frame tag)
+Turbo frame tag inline (laizy lazily load) with `src: template_path` attribute
+Use `target: '_top'` and `redirect_to @room` on server, to reload the page
+Note that usually target attribute on turbo_frame_tag in response to server does
+not have an effect, always define on tag that is first rendered.
 ```
 <%= turbo_frame_tag 'new_message', src: new_room_message_path(@room), target: '_top' %>
 ```
+You can also add class to turbo_frame, but be aware that you need to use on
+initial frame `<%= turbo_frame_tag 'new_message', class: 'my-class' do %>`
 
 To run javascript on when turbo frame is loaded you can listen to events
 https://turbo.hotwire.dev/reference/events
 or you can use stimulus controller connect event.
-For example for modal we automatically open it, and we close on submit
+For example reset input when turbo finishes
+```
+  // <%= form_with ..., html: { 'data-controller': 'forms', 'data-action': 'turbo:submit-end->forms#reset' } do |f| %>
+  reset() {
+    console.log('forms#reset')
+    this.element.reset()
+  }
+```
+
+Another example is to automatically open modal, and close on submit
 ```
 <%= turbo_frame_tag 'modal' do %>
   <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-controller='start-modal-on-connect'>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
-      <%= button_to 'Ok', interests_path(to_member_profile_id: @interest.to_member_profile.id), class: 'btn btn-primary mb-3', 'data-action': 'start-modal-on-connect#close' %>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+    <%= button_to 'Ok', interests_path(to_member_profile_id: @interest.to_member_profile.id), class: 'btn btn-primary mb-3', 'data-action': 'start-modal-on-connect#close' %>
 
 // app/javascript/controllers/start_modal_on_connect_controller.js
 import { Controller } from 'stimulus'
@@ -158,9 +179,35 @@ export default class extends Controller {
   }
 }
 ```
+Usually when modal is rendered from server, I use target value to `target
+"modal-123"` and inside modal I use `target: "express_interest_buttons-123"`
+```
+# app/views/interets/index.html.erb
+            <%= turbo_frame_tag "modal-#{member_profile.id}", target: "express_interest_buttons-#{member_profile.id}" %>
+            <%= render 'interests/express_interest_buttons', member_profile: member_profile %>
+              which is:
+              <%# turbo_frame_tag "express_interest_buttons-#{member_profile.id}", target: "modal-#{member_profile.id}" do %>
+                <%= link_to new_cancel_interest_path(interest), class: "btn btn-primary interest-shown interestbtn" do %>
 
-Turbo Stream with 5 CRUD actions: append, prepend, replace, update, remove (it
-is limited to DOM changes, for javascript invocation use stimulus)
+# app/controllers/interests_controller.rb
+  def new_cancel
+    authorize @interest
+  end
+
+  def cancel
+    authorize @interest
+    @interest.cancelled!
+    render partial: 'express_interest_buttons', locals: { member_profile: @interest.to_member_profile }
+  end
+
+# app/views/interes/new_cancel.html.erb
+<%= turbo_frame_tag "modal-#{@interest.to_member_profile.id}", target: "express_interest_buttons-#{@interest.to_member_profile.id}" do %>
+  <%= button_to 'Ok', cancel_interest_path(@interest), class: 'btn btn-primary mb-3', 'data-action': 'start-modal-on-connect#close', method: :patch %>
+```
+
+Turbo Stream with 5 CRUD actions: append, prepend, replace, update, remove to
+target element with #id. It is limited to DOM changes, for javascript invocation
+use stimulus.
 
 
 ```
@@ -177,12 +224,13 @@ is limited to DOM changes, for javascript invocation use stimulus)
 </turbo-stream>
 ```
 
-In in view we use helper `turbo_stream.append 'id', partial: 'edit'` for example
+In in response we use helper `turbo_stream.append 'id', partial: 'edit'` for
+example
 ```
 # app/views/posts/create.turbo_stream.erb
 <%= turbo_stream.append 'messages', @message %>
 ```
-In controller
+or in controller
 
 ```
 def create
@@ -191,6 +239,54 @@ def create
       render turbo_stream: turbo_stream.append 'id', partial: 'edit', locals: { post: @post }
     end
   end
+```
+
+Use tag to create websocket connection with channel dom_id @room
+```
+<%= turbo_stream_from @room %>
+```
+If you do not see cable connection that try to `rm -rf public/packs`.
+and in model instead of `after_create_commit -> { broadcast_append_to room }`
+you can use async job to broad cast all changes using partial
+`app/messages/_message.html.erb` to `message.room` stream channel.
+```
+class Message < ApplicationRecord
+  belongs_to :room
+  broadcasts_to :room
+end
+```
+
+Note that you do not have access to request when we broadcast over websocket so
+to differentiate between current_user you need to use data attributes or meta
+tag with `current_user.id` and add class in js if matches `author.id`
+https://discuss.hotwire.dev/t/how-to-pass-current-user-id-to-a-controller/287/4
+https://discuss.hotwire.dev/t/building-a-real-time-chat-system-having-trouble-with-chat-bubble-styling/2534/6
+```
+
+// app/views/layouts/application.html.erb
+    <meta content="Free Matrimonial website for Indian Community in US & Canada" name="description" />
+
+// app/javascript/controllers/message_chat_controller.js
+import { Controller } from 'stimulus'
+
+export default class extends Controller {
+  // <li class="send-msg" data-controller='single-message' data-single-message-member-profile-id='<%= message.member_profile.id %>' hidden>
+  connect() {
+    console.log('message-chat#connect')
+    if (this.currentMemberProfileId == this.memberProfileId)
+      this.element.classList.add('message--righted')
+
+    this.element.hidden = false
+  }
+
+  get currentMemberProfileId() {
+    return document.querySelector("[name=current-member-profile-id]").content
+  }
+
+  get memberProfileId() {
+    return this.data.get('memberProfileId')
+  }
+}
 ```
 
 Redirect inside turbo_frame_tag
@@ -230,6 +326,29 @@ for example on form
 ```
 <%= bootstrap_form_with model: @member_profile, url: profile_update_path, method: :patch, html: { 'data-turbo': false } do |f| %>
 ```
+
+Error when adding stimulus controller that use importing in js like
+`import * as Turbo from "@hotwired/turbo"`
+```
+Uncaught DOMException: Failed to execute 'define' on 'CustomElementRegistry': the name "turbo-frame" has already been used with this registry
+```
+and I see that `cable` connection is not created when this error is present.
+Solution is to import in main pack anywhere (below or above `import
+"controllers"`). Error will remain, but at least `cable` connection is created
+```
+app/javascript/packs/application.js
+// without this line, cable websocket connection will fail if you use turbo in
+// stimulus controllers: import * as Turbo from "@hotwired/turbo"
+import '@hotwired/turbo-rails'
+```
+
+Note that when you include turbo in js than default html response has double
+request problem (search above for `double`)
+
+WS websocket tab in Network tab is showing `Websocket` connection when you are
+running `bin/webpack-dev-server` server which is sending updates using that
+connnection.
+
 
 # Devise fix
 

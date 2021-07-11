@@ -101,10 +101,11 @@ header is present on the requested resource. Origin 'http://localhost:9000' is
 therefore not allowed access. The response had HTTP status code 403.
 ~~~
 
-We need to go Bucket -> Properties -> Permissions -> Add Cors configuration and
+We need to go Bucket -> Properties -> Permissions -> (at the bottom)
+Cross-origin resource sharing (CORS)
 add `<AllowedMethod>PUT</AllowedMethod>` and `<AllowedHeader>*</AllowedHeader>`
 to the provided example:
-
+XML format is not used any more
 ~~~
 <CORSConfiguration>
     <CORSRule>
@@ -117,6 +118,28 @@ to the provided example:
     </CORSRule>
 </CORSConfiguration>
 ~~~
+so use JSON
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html
+```
+[
+    {
+        "AllowedHeaders": ["*"],
+        "AllowedMethods": [
+            "GET",
+            "PUT",
+            "POST"
+        ],
+        "AllowedOrigins": [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            "http://localhost:3003",
+            "http://localhost:3004"
+        ],
+        "ExposeHeaders": []
+    }
+]
+```
 
 and you can test as soon as you save cors configuration.
 This error also occurs when we mismatch bucket_name or region. To test if bucket
@@ -378,6 +401,10 @@ https://github.com/thoughtbot/paperclip/issues/2223#issuecomment-428862815
 https://edgeguides.rubyonrails.org/active_storage_overview.html
 ```
 rails active_storage:install
+# Copied migration 20210623091736_create_active_storage_tables.active_storage.rb from active_storage
+#     create_table :active_storage_blobs do |t|
+#     create_table :active_storage_attachments do |t|
+#     create_table :active_storage_variant_records do |t|
 ```
 
 You need to add gems

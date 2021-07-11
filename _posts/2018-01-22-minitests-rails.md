@@ -498,7 +498,9 @@ title: "Ahoy!" }, response.parsed_body)`.
   ~~~
 
   To perform more than one quality tests in one assert you can use hash
-  (assert_selector also use this hash param)
+  (assert_selector also use this hash param, like presence items
+  `assert_selector '[data-test^=member-profile-]', count:
+  Const.limits[:per_page]`)
 
   ~~~
   # instead of refute_select, for no div with my_name you can use count but put
@@ -519,6 +521,14 @@ title: "Ahoy!" }, response.parsed_body)`.
 
   assert_select 'div', html: 'p', minimum: 2
   ~~~
+
+  Error like
+  ```
+Nokogiri::CSS::SyntaxError: unexpected '$' after '[:equal, "id-1"]'
+    (eval):3:in `_racc_do_parse_c'
+    (eval):3:in `do_parse'
+  ```
+  occurs when you forget closing brackets `assert_selector '[data-test=id-1'`
 
   To check html in emails use assert_select_email
 

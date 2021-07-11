@@ -606,6 +606,7 @@ Here are the steps that I usually do for geolocating users:
   Geocoding Service
 * ask user for address and geocode it on server [Google Maps Geocoding
   API](https://developers.google.com/maps/documentation/geocoding/intro)
+  https://console.cloud.google.com/marketplace/product/google/geocoding-backend.googleapis.com?q=search&referrer=search&authuser=1&project=gofordesi&supportedpurview=project
 
 ## Get Brower location
 

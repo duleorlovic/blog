@@ -821,3 +821,27 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   # find monitor id like VGA-0
   xrandr --addmode VGA-0 1920x1080
   ```
+* to free up disk space from ubuntu you can remove /var/log/journal
+  ```
+  journalctl --disk-usage
+  sudo vi /etc/systemd/journald.conf
+  journalctl --vacuum-size=50M
+  ```
+  and snapd https://www.linuxuprising.com/2019/04/how-to-remove-old-snap-versions-to-free.html
+  ```
+  sudo snap set system refresh.retain=2
+
+  # ~/Programs/remove-old-snaps.sh
+  #!/bin/bash
+  # Removes old revisions of snaps
+  # CLOSE ALL SNAPS BEFORE RUNNING THIS
+  set -eu
+
+  LANG=en_US.UTF-8 snap list --all | awk '/disabled/{print $1, $3}' |
+      while read snapname revision; do
+          snap remove "$snapname" --revision="$revision"
+      done
+
+  chmod +x ~/Programs/remove-old-snaps.sh
+  sudo ~/Programs/remove-old-snaps.sh
+  ```

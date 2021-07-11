@@ -11,6 +11,13 @@ create database mydb;
 create user myuser with encrypted password 'mypass';
 grant all privileges on database mydb to myuser;
 ```
+to allow local user to createdb and seed fixtures you need to
+```
+ALTER USER orlovic WITH SUPERUSER;
+
+# in one command
+sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"
+```
 
 ```
 # allow localhost connection using password (instead of socket with same
@@ -268,11 +275,6 @@ sudo su postgres -c "psql myapp_test -c 'CREATE EXTENSION hstore;'"
 
 Sometime you can run `rake db:migrate:reset` to rerun all migration and check if *db/schema.rb* is in sync.
 
-You might also alter user to have superuser privileges:
-```
-sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"
-```
-
 To detect N+1 queries use gem *bullet*, and to find most expensive queries use heroku postgres analytics.
 To measure production queries, you can download database from heroku to `a.dump` and restore to development database
 
@@ -495,3 +497,25 @@ INSIGHTS](https://github.com/mariusandra/insights)
 * automatic find indexes that are needed for a database
   https://github.com/ankane/dexterhttps://github.com/ankane/dexter
 * trigger a psql function to update counter cache https://evilmartians.com/chronicles/pulling-the-trigger-how-to-update-counter-caches-in-you-rails-app-without-active-record-callbacks
+
+* adding uuid
+
+```
+# config/initializers/generators.rb
+# https://pawelurbanek.com/uuid-order-rails
+Rails.application.config.generators do |g|
+  g.orm :active_record, primary_key_type: :uuid
+end
+
+
+# db/migrate/2020....add_pgcrypto_uuid_extension.rb
+class AddPgcryptoUuidExtension < ActiveRecord::Migration[6.1]
+  def change
+    enable_extension 'pgcrypto'
+  end
+end
+
+# create_table :users, id: :uuid
+# t.belongs_to ... type: :uuid
+# t.references ... type: :uuid
+```

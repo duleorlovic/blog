@@ -77,6 +77,12 @@ Redirecting all traffic on port 80 to ssl in /etc/nginx/sites-enabled/nginx_puma
 You can also install dns plugin
 https://certbot.eff.org/docs/using.html?highlight=dns#dns-plugins so you can
 obtain wildcard certificate (so it covers all subdomains).
+
+Note that you can not combine two authenticators https://community.letsencrypt.org/t/use-multiple-authenticators-possible/76946/4
+nor two dns plugins...
+But ELB and NLB supports multiple certificates so you can upload two certs...
+https://aws.amazon.com/about-aws/whats-new/2019/09/elastic-load-balancing-network-load-balancers-now-supports-multiple-tls-certificates-using-server-name-indication/
+
 https://certbot-dns-route53.readthedocs.io/en/stable/
 ```
 sudo snap set certbot trust-plugin-with-root=ok
@@ -138,8 +144,23 @@ In case server is on local LAN, when you are testing from local LAN than
 accessing public IP address will not go to the server on local LAN... so
 in this case use Tor browser or https://www.ssllabs.com/ssltest/analyze.html?d=a.trk.in.rs&latest
 
-To see how it will renew, look on `sudo less /etc/cron.d/certbot` . But if you
-are using systemd as init system, than look at
+To see how it will renew, look on `sudo less /etc/cron.d/certbot`.
+```
+# /etc/cron.d/certbot: crontab entries for the certbot package
+#
+# Upstream recommends attempting renewal twice a day
+#
+# Eventually, this will be an opportunity to validate certificates
+# haven't been revoked, etc.  Renewal will only occur if expiration
+# is within 30 days.
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+0 */12 * * * root AWS_CONFIG_FILE=/home/ubuntu/movebase/.elbas_keys certbot -q renew
+```
+See logs `less /var/log/syslog` or `vi /var/log/letsencrypt/letsencrypt.log`
+
+But if you are using systemd as init system, than look at
 ```
 sudo systemctl show certbot.timer
 ```
@@ -192,7 +213,7 @@ have working dns for root domain.
 sudo certbot certonly --nginx -d main.trk.in.rs
 ```
 
-It will create 4 files and you can read cert.pem
+It will create 4 files and you can read show open describe inspect cert.pem
 ```
 sudo ls /etc/letsencrypt/live/main.trk.in.rs
 cert.pem  chain.pem  fullchain.pem  privkey.pem

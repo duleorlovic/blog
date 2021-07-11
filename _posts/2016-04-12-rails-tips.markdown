@@ -3617,9 +3617,6 @@ scripts in rails console: `vi 'tmp/my_script.rb'` and later you can use just
 <https://gist.github.com/kidlab/72fff6e239b0af1dd3e5> for something that need
 test or we just want to showcase in one file onepage rails
 * use `.blank?` instead of `.empty?` since it will work for `nil` and `""`
-* rails has `attribute_was` to get original value of some field. That previous
-value can be read in any hook, for example `after_validation` you can read for
-`operator_id && operator_id_was`.
 * reject empty associated params `params.require(:visit).permit(:post_id).reject
 { |_, v| v.blank? }`
 * debug network request <https://github.com/aderyabin/sniffer>
@@ -4331,4 +4328,13 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
   ```
   # on existing app
   rails app:template LOCATION=~/template.rb
+  ```
+* before Rails 5 we used `attribute_was` to get original value of some field.
+That previous value can be read in any hook, for example `after_validation` you
+can read for `operator_id && operator_id_was`.
+  but in Rails 6 we use `.previous_changegs` which list all columns that was
+  changed
+  ```
+  @member_profile.previous_changes
+  {"zip"=>["07068", "07065"], "updated_at"=>[Tue, 22 Jun 2021 08:41:40.987696000 UTC +00:00, Tue, 22 Jun 2021 08:41:41.454602000 UTC +00:00]}
   ```

@@ -29,7 +29,9 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   file name, two dashes corresponds to subfolder `users--list-item` ->
   `users/list_item_controller.js`
 * `data-action='click->hello-word#greet'` event name is `click`, controller
-  `helloWord` (but that camelcase name is not used anywhere) method `greet`.
+  `hello-word` dashed case (note that camelcase name helloWord or snake case
+  hello_word is not used anywhere, only example is when you define method in
+  cammes case `sayHello()`).
   If element is `<a>`, `<button>`, `<input type="submit">` than you do not need
   to write `click->`.
   `<input>`, `<select>` and `<textarea>` has `change` as default event.
@@ -42,18 +44,26 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   controller `static targets = [ 'name' ]`. Beside `this.nameTarget` you can
   check if there are more targets like this `this.nameTargets` or if exists at
   all `this.hasNameTarget` (return true or false)
+  You can use any term, for example `static values = { authorId: String }` and
+  `this.authorIdValue`
 * to access current element on which whole controller is connected you can use
   `this.element`. To access element on which action is triggered you can pass
   the event to the action `hello(event) { event.currentTarget }`
 * `data-hello-index='1'` used to pass data to CONTROLLER which you can get on
   initialize instead of `this.element.getAttribute('data-hello-index'))` you can
   use stimulus shorthand `this.data.get('index')`. Only for data on controller
-  element.
+  element. To access data on some input (not controller) you can attach target
+  and use `this.nameTarget.getAttribute('data-hello-index')`.
   But since controller can be initialized on parent of the action element,
   better is to use `event.currentTarget.getAttribute('data-hello-index')`
   Also `this.data.has('index')` to check if data existis and
   `this.data.set('index', 2)` to set data so controller. Do not need to store
   any data in js, just use those setter and getter to store data in DOM.
+  For complex json objects you can use `.to_json` and jQuery `.data()`
+  ```
+  <%= f.select :company, {}, 'data-my-controller-target': 'second', 'data-my-controller-groups': MyModel::MY_HASH.to_json %>
+  let groups = $('[data-my-controller-target=second]').data('myControllerGroups')
+  ```
 
 * communicating between controllers is best to use event dispatch https://github.com/stimulusjs/stimulus/issues/200#issuecomment-434731830
   ```
@@ -276,4 +286,27 @@ In view https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect
       <%= link_to "Add Perk", "#", data: { action: "nested-form#add_association" }, class: "btn btn-white" %>
     </div>
   </div>
+```
+
+* text area auto expand with stimulus plugin
+
+```
+yarn add stimulus-textarea-autogrow
+
+// app/javascript/controllers/index.js
+import TextareaAutogrow from "stimulus-textarea-autogrow"
+application.register("textarea-autogrow", TextareaAutogrow)
+
+
+// app/views/contancts/index.html.erb
+<%= f.text_area :text, required: true, 'data-controller': 'textarea-autogrow' %>
+
+# or better is to override form builder (look at bootstrap how to create custom
+# form builder
+class MyFormBuilder < BootstrapForm::FormBuilder
+  def text_area(name, options = {})
+    options.reverse_merge! 'data-controller': 'textarea-autogrow'
+    super
+  end
+end
 ```
