@@ -316,7 +316,8 @@ What I have learned is that when you use *series*, never apply *WHERE* since
 because it will destroy *series*.  Better is to filter in *ON* statement. Each
 subsequent joins should be *LEFT OUTER JOIN* so *series* survive.
 
-We need *COALESCE* because on some days we don't have records, so we put key `none` ( number is 0)
+We need *COALESCE* because on some days we don't have records, so we put key
+`none` ( number is 0)
 
 ~~~
 # put this in controller
@@ -519,3 +520,16 @@ end
 # t.belongs_to ... type: :uuid
 # t.references ... type: :uuid
 ```
+
+* select last associated nested record, query two tables but show only last from
+  second table using a `DISTINCT ON` and `ORDER BY`
+  ```
+  DISTINCT ON (parent_col) *
+  FROM parent_table
+  JOIN nested_table
+  ON parent_table.id = nested_table.parent_table_id
+  ORDER BY parent_table.id, nested_table.created_at DESC
+  ```
+  https://stackoverflow.com/questions/1703495/postgresql-select-from-2-tables-but-only-the-latest-element-from-table-2
+
+* use test data `(VALUES (1, 'Duke'),(2, 'Mike')) users (id, name)`

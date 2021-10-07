@@ -996,3 +996,6 @@ https://mademistakes.com/articles/using-jekyll-2016/
 
   {{ site.data.t['title'][page.lang] }}
   ```
+
+* code samples https://github.com/bwillis/jekyll-github-sample
+  https://bwillis.github.io/2014/05/28/include-github-repo-code-in-jekyll/

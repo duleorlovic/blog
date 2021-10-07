@@ -107,6 +107,85 @@ There are some modules which you can use
          :omniauthable
 ~~~
 
+# Sign in using username or phone
+
+https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
+
+Enable login with phone or email
+
+```
+# app/controllers/application_controller.rb
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  # https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit :sign_in, keys: %i[login password]
+  end
+
+# app/models/user.rb
+  attr_writer :login
+
+  # https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
+  def login
+    @login || mobile || email
+  end
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login) # rubocop:todo Lint/AssignmentInCondition
+      where(conditions.to_h).where(['lower(mobile) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions.key?(:mobile) || conditions.key?(:email)
+      where(conditions.to_h).first
+    end
+  end
+
+# config/initializers/devise.rb
+  config.authentication_keys = [:login]
+
+# app/views/devise/sessions/new.html.erb
+  <%= f.text_field :login, autofocus: true, autocomplete: "email", placeholder: 'Enter Mobile No. / Email ID', skip_label: true %>
+```
+
+For enabling forgot password with mobile or email you need to add
+`User.find_first_by_auth_conditions` method
+https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#allow-users-to-recover-their-password-or-confirm-their-account-using-their-username
+```
+# app/models/user.rb
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login) # rubocop:todo Lint/AssignmentInCondition
+      where(conditions.to_h).where(['lower(mobile) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions.key?(:mobile) || conditions.key?(:email)
+      where(conditions.to_h).first
+    end
+  end
+
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login) # rubocop:todo Lint/AssignmentInCondition
+      where(conditions).where(['lower(mobile) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions[:mobile].nil?
+      where(conditions).first
+    else
+      where(mobile: conditions[:mobile]).first
+    end
+  end
+
+# config/initializers/devise.rb
+  config.reset_password_keys = %i[login]
+
+# app/views/devise/passwords/new.html.erb
+    <%= f.text_field :login, autofocus: true, autocomplete: "email", placeholder: 'Enter Mobile No. / Email ID', skip_label: true %>
+```
+
+Hotwire issue
+```
+Rails/Devise: Nil location provided. Can't build URI. on Password reset
+```
+you need to disable hotwire with `data-turbo='false'`
+
 # Sign in on development
 
 Put links to be able to sign in by GET request on staging and local
@@ -1174,7 +1253,7 @@ class ApplicationController < ActionController::Base
   # SessionsController and it wont be used in RegistrationController (for example
   # user already signed in and needs to be redirected)
   def after_sign_in_path_for(resource)
-    # we need save stored location in variable since it is not indenpotent
+    # we need save stored location in variable since it is not idempotent
     # if we call twice stored_location_for(:user) than second will be nil
     # so do not use stored_location_for in views or anywhere else... you can use
     # session[:user_return_to] if you really need
@@ -1578,88 +1657,3 @@ Set-Cookie: rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiRWE5YzA3ZjFmYTgyNTg1NTk
 
 ```
 
-# JWT Json web tokens
-
-```
-gem 'jwt'
-
-t = JWT.encode( {a: 1}, 'secret')
-=> "eyJhbGciOiJIUzI1NiJ9.eyJhIjoxfQ.LrlPmSL4FxrzAHJSYbKzsA997COXdYCeFKlt3zt5DIY"
->> JWT.decode t, 'secret' #=> [{"a"=>1}, {"alg"=>"HS256"}]
-```
-
-Testing application is in `~/rails/temp/rails_5.2.3/` branch `devise_jwt_token`.
-You can add custom devise strategy so both devise http and jwt authentication
-can work
-http://blog.plataformatec.com.br/2019/01/custom-authentication-methods-with-devise/
-api_token_strategy
-
-```
-# app/strategies/jwt_strategy.rb
-class JwtStrategy < Warden::Strategies::Base
-  def valid?
-    # A copy of JwtStrategy has been removed from the module tree but is still active
-    # JwtAuth.token_from_request_headers request.headers
-    # so we need to copy same method here
-    request.headers['Authentication'].to_s.split(' ').last
-  end
-
-  def authenticate!
-    user = User.find_by(id: JwtAuth.decoded_user_id(request.headers))
-    if user
-      success! user
-    else
-      fail! 'Invalid email or password'
-    end
-  end
-end
-
-# app/services/jwt_auth.rb
-class JwtAuth
-  SECRET = Rails.application.secrets.secret_key_base
-
-  def self.encode_user_id(user_id)
-    payload = { user_id: user_id }
-    JWT.encode(payload, SECRET)
-  end
-
-  def self.decoded_user_id(headers)
-    token = token_from_request_headers headers
-    payload = JWT.decode(token, SECRET)[0]
-    payload['user_id']
-  end
-
-  def self.token_from_request_headers(headers)
-    headers['Authentication'].to_s.split(' ').last
-  end
-end
-
-# config/initializers/devise.rb
-  config.warden do |manager|
-    manager.default_strategies(scope: :user).unshift :jwt_strategy
-  end
-
-# config/initializers/warden.rb
-Warden::Strategies.add(:jwt_strategy, JwtStrategy)
-```
-
-When responding to html and json note that `return` can not be used inside
-```
-# app/controllers/application_controller.rb
-  def current_isp
-    @current_isp = Isp.find_by domain: request.domain
-    unless @currend_isp
-      respond_to do |format|
-        format.html do
-          redirect_to error_path, error_message: isp_not_found
-        end
-        format.json do
-          render json: { error_message: Constant.ERROR_MESSAGES[:isp_not_found].title, error_status: :not_found }, status: :not_found
-        end
-        # do not put `return` here since it will stop request before rendering
-      end
-      # use `return` after `respond_to` block
-      return
-    end
-  end
-```

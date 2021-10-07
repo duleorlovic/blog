@@ -451,6 +451,14 @@ In view
 ```
 <%= url_for @user.image %>
 ```
+To check if attached file extension is image
+```
+user.image.blob.content_type # => 'image/png'
+user.image.blob.image?
+user.image.image?
+# file name
+user.image.filename
+```
 In controller permit that
 ```
 # app/controllers/users_controller.rb

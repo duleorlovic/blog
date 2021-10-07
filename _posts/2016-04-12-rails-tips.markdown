@@ -192,6 +192,8 @@ use `Date.strptime '2/3/2000' , '%m/%d/%y'` to return 3 Februar.
 
 ~~~
 # config/initializers/date_time_formats.rb
+# https://api.rubyonrails.org/v6.1.4/classes/DateTime.html#method-i-to_formatted_s
+# https://apidock.com/ruby/DateTime/strftime
 # all 3 classes
 # puts user.updated_at.to_s :myapp_time
 # puts Time.now.to_s :myapp_time
@@ -208,11 +210,26 @@ Date::DATE_FORMATS[:myapp_date_ordinalize] = ->(date) { date.strftime("#{date.da
 ~~~
 
 `Time.now` and `Date.today` are using system time. If you are using
-`browser-timezone-rails` than timezone will be set for each request. But if you
+`browser-timezone-rails` than timezone will be set for each request.
+In Rails 6 you do not need a gem, just include one js file and use around action
+https://github.com/kbaum/browser-timezone-rails/issues/45#issuecomment-915124466
+
+But if you
 need something from rails console, you need to set timezone manually.
 `Time.zone = 'Belgrade'` (list all in `rake time:zones:all`). It is good to
 always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
 (`1.day.from_now`)
+Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
+tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
+rails s returns default time zone `Time.zone # CEST Europe`.
+`Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
+why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
+
+When parsing user input you should use `.zone` in methods like
+```
+Time.zone.parse '2010-01-02 09:00:00'
+Date.zone.parse '2010-01-02 09:00:00'
+```
 
 * prefer using `Time.current` over `Time.now`, and `Date.current` over
 `Date.today`
@@ -229,20 +246,6 @@ always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
   [Time.zone.today.prev_month.at_beginning_of_month,
   Time.zone.today.prev_month.at_end_of_month],`
 * to get month date use `d.day`
-
-Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
-tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
-rails s returns default time zone `Time.zone # CEST Europe`. You can use users
-timezone with
-[browser-timezone-rails](https://github.com/kbaum/browser-timezone-rails).
-`Time.zone.now.utc_offset` will return offset to UTC in seconds. I do not know
-why `Time.zone.utc_offset` returns different results (3600 instead of 7200).
-
-When parsing user input you should use `.zone` in methods like
-```
-Time.zone.parse '2010-01-02 09:00:00'
-Date.zone.parse '2010-01-02 09:00:00'
-```
 
 
 # Multiline render js response
@@ -712,7 +715,8 @@ if you want to redo migration (revert and migrate again) you can use `redo`
 To drop database in console you can `ActiveRecord::Migration.drop_table(:users)`
 * you can use `rake db:migrate:redo STEP=2` to redo last two migrations, or you
 can run all migrations to certain point with `rake db:migrate
-VERSION=20161114162031` (note that `:up` `:down` only run one migration)
+VERSION=20161114162031` (note that `db:migrate:up` `:down` only run one
+migration)
 * `rake db:migrate` will also invoke `db:schema:dump` task
   [link](http://edgeguides.rubyonrails.org/active_record_migrations.html#running-migrations)
 * to check current metaga data, for example schema enviroment you can run
@@ -732,7 +736,10 @@ VERSION=20161114162031` (note that `:up` `:down` only run one migration)
     Family.all.find_each do |family|
       family.registered!
     end
-    # add not null constain (if it was null: false now it will be null: true)
+    # add not null constain, third param is wherer the value can be NULL
+    # add a contrain
+    change_column_null :families, :kind, false
+    # drop a contrain (allows to be null)
     change_column_null :families, :kind, true
   ```
 
@@ -1650,12 +1657,14 @@ Is Paused`
   end
   ```
   You can include the gem `gem 'titleize'` and than it will override
-  String#titleize
-  For default label `humanize` is used (default translation is used for active_model or activerecord
-  https://github.com/rails/rails/blob/main/activemodel/lib/active_model/translation.rb#L64 )
-  or for form_with without model `t('helpers.label.my_label')` is used
+  String#titleize but we need to override how default label is generated with
+  `humanize`
   https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/tags/label.rb#L24
-  but you can override builder
+  `t('helpers.label.my_label')` is used as default value
+  humanize is also used for `.human_attribute_name`
+  https://github.com/rails/rails/blob/main/activemodel/lib/active_model/translation.rb#L64
+
+  For forms we can override builder
   https://en.wikipedia.org/wiki/Builder_pattern
   ```
   # config/initializers/label_builder.rb
@@ -1675,7 +1684,12 @@ module ActionView
           end
 
           def translation
+            # This is called only when we have not provided label attribute
+            # Override defaults https://github.com/rails/rails/blob/main/actionview/lib/action_view/helpers/tags/label.rb#24
             content ||= @method_name.titleize
+
+            # Add * for fields with presence validations
+            content += ' *' if @object.class.validators_on(@method_name).any? { |v| v.kind == :presence }
 
             content
           end
@@ -2407,7 +2421,7 @@ does not exists
 
 My style in rails models use following order to best practice
 
-1. `include` and `extend` other modules, `devise`
+1. `include` and `extend` other modules, `devise`, `has_paper_trail`
 1. `FIELDS = %i[name].freeze` and other constants
 1. `attr_accessor` or `serialize :col, Hash`
 1. `belongs_to :workflow` associations with plugins `acts_as_list scope:
@@ -3096,6 +3110,7 @@ end
   # ActionView::Base.new.number_to_human 123123 # 123 Thousand
   # ActionView::Base.new.number_to_human_size 123123 # 120 KB
 
+  # route helper url helper
   Rails.application.routes.url_helpers.jobs_url
   # note that it is different than `jobs_url` in view since in view it uses
   # request to determine host, so maybe it is better to use
@@ -4332,9 +4347,50 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
 * before Rails 5 we used `attribute_was` to get original value of some field.
 That previous value can be read in any hook, for example `after_validation` you
 can read for `operator_id && operator_id_was`.
-  but in Rails 6 we use `.previous_changegs` which list all columns that was
-  changed
+  but in Rails 6 we use `.previous_changes` which list all columns that was
+  changed https://api.rubyonrails.org/classes/ActiveModel/Dirty.html or
+  https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Dirty.html
+  to list what is goinog to be changed `.changes_to_save`
   ```
   @member_profile.previous_changes
   {"zip"=>["07068", "07065"], "updated_at"=>[Tue, 22 Jun 2021 08:41:40.987696000 UTC +00:00, Tue, 22 Jun 2021 08:41:41.454602000 UTC +00:00]}
   ```
+* add delay in response
+  ```
+  # before_action :_sleep_some_time
+
+  def _sleep_some_time
+    sleep 2
+  end
+  ```
+* to add message without column use `errors.add :base, 'msg'` so it will show
+  something like `errors.full_messages # 'msg'` (no mention of the column)
+* for string columns we should have validation for length since there are errors
+  like `ActiveRecord::ValueTooLong (PG::StringDataRightTruncation: ERROR:  value
+  too long for type character varying(100)` so
+* error is raise when using a string for unsafe funtions so just wrap `Arel.sql`
+  https://api.rubyonrails.org/v5.2/classes/ActiveRecord/UnknownAttributeReference.html
+  ```
+  .order(Arel.sql('COALESCE(last_message_created_at, created_at) desc'))
+  ```
+* you can use images from `app/javascript/images/name_of_image.jpg` after you
+  import to pack
+  ```
+  require.context('../images', true)
+  ```
+  and you can use in rails like
+  ```
+  <%= image_pack_tag 'media/images/name_of_image.jpg' %>
+  <img src="<%= asset_pack_path 'media/images/name_of_image.jpg' %>" width="100%" height="100%" alt=" demo instructions"></img>
+  ```
+* common errors in rails
+  * use `enum status: %i[initialized]` and add a check in controller
+    ```
+    if @payment.initialized?
+    ```
+    and later add another state that is similar to initialized but you forgot to
+    update all places where we need to check status
+    ```
+    enum status: %i[initialized draft]
+    if @payment.initialized? || @payment.draft?
+    ```

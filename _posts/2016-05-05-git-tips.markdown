@@ -206,6 +206,11 @@ Apply patch
     git diff > patchfile
     patch -p1 < patchfile
 
+Pick only changes from certain files instead of cherry pick
+
+    git show ffbd16fa313825e52b79ed9348b2a8ab963ec87a -- app/javascript/ | git apply -
+
+
 Count files in staging
 
     git diff --cached --numstat | wc -l
@@ -265,6 +270,34 @@ project where you run
 
     mkdir -p .git/safe
 
+Submodule is used when you have other git repository within your project. Add
+submodule with `git submodule add git@github.com:duleorlovic/myapp.git`
+When someone clone your project, it needs to do two steps,
+initialize configuration file and fetch all data. Instead of those two commands
+you can pass option when someone is cloning your project `--recurse-submodules`
+or if it already cloned, it can use `git submodule update --init --recursive`
+(this is done every time you need to sync latest commited changes of submodules
+when pulling superproject updates)
+
+    git submodule init
+    git submodule update
+
+to fetch upstream changes of submodules, you can navigate to each submodule
+folder and run `get fetch` and `git merge`, or you can do from main repo using
+
+    git submodule update --remote
+
+to see differences in submodules you can use `git diff --submodule` (or you can
+set option `git config --global diff.submodule log` so you do not need to pass
+`--submodule` attribute every time). Similar for status, you can se `git config
+status.submodulesummary 1` so `git status` will show changes that are done for
+submodules.
+To work inside submodules you need to checkout branch (initially `git submodule
+update` is leaving the subrepository in *detached HEAD* state). After you commit
+you need to push to submodule repo or you can do from superrepository with
+
+    git push --recurse-submodules=check
+
 Tutorials
 
     git help tutorial-2
@@ -319,6 +352,13 @@ fi
 
   gtm status
   gtm report -last-month -format summary
+  ```
+* approximate based on git commit times
+  https://github.com/kimmobrunfeldt/git-hours
+  ```
+  git-hours
+  # yesterday  or 2021-01-01 yesterday
+  git-hours --since lastweek
   ```
 
 ## Glass

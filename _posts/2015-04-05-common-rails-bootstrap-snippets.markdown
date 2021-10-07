@@ -57,13 +57,13 @@ Skip generators
 vi config/environments/development.rb
   config.i18n.enforce_available_locales = true
   config.generators do |generate|
+    generate.jbuilder false
     generate.helper false
     generate.javascript_engine false
     generate.request_specs false
     generate.routing_specs false
-    generate.stylesheets false
-    generate.test_framework :rspec
     generate.view_specs false
+    generate.stylesheets false
   end
   config.action_controller.action_on_unpermitted_parameters = :raise
 
@@ -392,10 +392,6 @@ body
   font-family: 'Roboto', sans-serif
 HERE_DOC
 ```
-
-## Twitter bootstrap
-
-You can add bootstrap using `yarn add bootstrap`
 
 ## Adding flash (both from server and client)
 
@@ -745,6 +741,17 @@ https://www.phusionpassenger.com/library/config/standalone/reference/#--pid-file
 If you need to run separate command for background jobs, you need to write
 `Procfile`.
 
+Heroku use ubuntu 16 or Ubuntu 18, you can change
+
+~~~
+heroku apps:info
+heroku stack
+heroku stack:set heroku-16
+~~~
+
+You can pull dump from heroku database https://devcenter.heroku.com/articles/heroku-postgresql#pg-push-and-pg-pull
+you need to find the name of heroku database by clicking on Postgresl plugin
+
 ~~~
 export MYAPP_NAME=my-app # only dash, not underscore
 # # postgresql on production
@@ -788,21 +795,6 @@ heroku run rails db:migrate db:seed
 # heroku plugins:install heroku-repo
 # heroku repo:purge_cache
 
-heroku open
-~~~
-
-Heroku use ubuntu 16 or Ubuntu 18, you can change
-
-~~~
-heroku apps:info
-heroku stack
-heroku stack:set heroku-16
-~~~
-
-You can pull dump from heroku database https://devcenter.heroku.com/articles/heroku-postgresql#pg-push-and-pg-pull
-You need to find the name of heroku database by clicking on Postgresl plugin
-
-~~~
 rails db:drop
 heroku pg
 # find name after "Add-on:"
@@ -810,7 +802,6 @@ heroku pg:pull postgresql-name-on-heroku my_rails_app_development
 # or in one command
 bundle exec rake db:drop
 heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
-
 
 # also pushing
 # heroku pg:reset --confirm `[[ $(git remote get-url heroku) =~ https...git.heroku.com.(.*).git ]] && echo ${BASH_REMATCH[1]}`

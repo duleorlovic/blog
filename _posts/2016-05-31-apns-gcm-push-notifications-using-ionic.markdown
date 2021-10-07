@@ -2,6 +2,21 @@
 layout: post
 ---
 
+# RPush
+
+https://github.com/rpush/rpush
+
+You can test sending notification from firebase
+https://console.firebase.google.com/u/1/project/movebase/notification
+or using curl as in this example
+https://github.com/firebase/quickstart-js/tree/master/messaging#curl
+
+Register with npm package inside webpacker
+https://firebase.google.com/docs/web/setup#add-sdks-initialize
+
+
+# Old docs
+
 # APNS
 
 [Overview](https://developer.apple.com/library/content/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/APNSOverview.html#//apple_ref/doc/uid/TP40008194-CH8-SW1)
@@ -514,4 +529,5 @@ angular.module('starter')
 
 # Service workers
 
-Another cool is service workers <https://developers.google.com/web/fundamentals>
+Another cool thing is service workers
+<https://developers.google.com/web/fundamentals>

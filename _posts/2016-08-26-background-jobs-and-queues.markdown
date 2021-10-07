@@ -99,6 +99,9 @@ Sidekiq uses similar syntax https://github.com/mperham/sidekiq/wiki/Scheduled-Jo
 SidekiqWorker.perform_async 'duke', param
 SidekiqWorker.perform_in 3.hours, 'duke', param
 SidekiqWorker.perform_at 3.hours.from_now, 'duke', param
+
+# for perform_now use
+SidekiqWorker.new.perform 'duke'
 ```
 
 With ActiveJob you can pass entire ActiveRecord objects because GlobalID will
@@ -160,6 +163,7 @@ You can run `bundle exec sidekiq -q default -q mailers` but better is in config:
 
   - my_site_default
   - my_site_mailers
+:logfile: ./log/sidekiq.log
 ~~~
 
 Concurrency is a number which are used by sidekiq server to create redis
@@ -243,6 +247,16 @@ For emails https://github.com/mperham/sidekiq/issues/724
 
 Cancaling sidekiq jos is not possible, you should implement pooling
 https://github.com/mperham/sidekiq/wiki/FAQ#how-do-i-cancel-a-sidekiq-job
+
+Capistrano can use sidekiq with a gem
+https://github.com/seuros/capistrano-sidekiq but it is not monitored so better
+is to use systemd
+https://github.com/mperham/sidekiq/wiki/Deployment#running-your-own-process
+
+```
+# to see logs
+journalctl -u sidekiq
+```
 
 # Resque
 
@@ -553,7 +567,7 @@ The Rails way is:
 * `QUEUES=webapp,jobs rake jobs:work` to set specific queue (by default it runs
 all)
 
-Note that email letter opener does not work when you run with `rake jobs:work`,
+Note that emails letter opener does not work when you run with `rake jobs:work`,
 but works when `bin/delayed_job run` (Launchy works in both cases, this
 difference is only for mailer).
 
@@ -726,7 +740,7 @@ class ProductTest < ActionDispatch::IntegrationTest
   # if you want to actually perform jobs
   include ActiveJob::TestHelper
   test 'mail' do
-    perform_enqueued_jobs only: ActionMailer::DeliveryJob do # look abouve for
+    perform_enqueued_jobs only: ActionMailer::DeliveryJob do # look above for
   end
 
   # https://api.rubyonrails.org/v5.1/classes/ActionMailer/TestHelper.html#method-i-assert_emails
@@ -789,5 +803,5 @@ ie invoked immediatelly.
 # TIPS
 
 * Always check if job is eligible to run , world changes, it could be already
-run bu some error.
+run by some error.
 * Test if job is added and if it added only once.

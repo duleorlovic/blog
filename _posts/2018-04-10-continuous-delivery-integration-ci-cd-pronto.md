@@ -223,7 +223,7 @@ https://github.com/marketplace/actions/webfactory-ssh-agent
 * generate specific keys for the project, make sure you can access with deploy
   user using this key
 ```
-# generate new key pair
+# generate new key pair on remove server
 ssh-keygen -t rsa -b 4096 -m pem -f my_app_ci
 # copy my_app_ci.pub to .ssh/authorized_keys on $PRODUCTION_IP, this will
 # success since ssh will offer your other keys ~/.ssh/id_rsa
@@ -253,10 +253,13 @@ https://simplabs.com/blog/2021/03/15/trying-your-github-actions-locally/
 ```
 # install act
 curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
-
 ```
 You can configure act https://github.com/nektos/act#configuration using .actrc
 file.
+For example if you want to use another base image
+```
+act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-latest
+```
 
 ## Cache
 

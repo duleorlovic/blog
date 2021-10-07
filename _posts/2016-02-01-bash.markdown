@@ -453,6 +453,11 @@ it will be in `tmp/db.dump`
   So when variable contain spaces and you need to pass to a command than wrap
   around with quotes, for example `A="file with space.txt"; ls "$A"`
 * exit from script with `exit 1`
+* to chech if files are same or different
+  https://stackoverflow.com/questions/12900538/fastest-way-to-tell-if-two-files-have-the-same-contents-in-unix-linux
+  ```
+  cmp --silent file1 file2 && echo '### SUCCESS: Files Are Identical! ###' || echo '### WARNING: Files Are Different! ###'
+  ```
 * functions
   ```
   myFunc() {
@@ -581,12 +586,19 @@ it will be in `tmp/db.dump`
 [link](http://stackoverflow.com/questions/8254120/how-to-escape-a-single-quote-in-single-quote-string-in-bash)
 * add task to crontab with linux command `# (crontab -l 2>/dev/null; echo
 "@reboot /home/orlovic/my.sh") | crontab -`
-* output goes to the mail but I prefer to redirect to some file. Also define
-  shell since it will use sh (on which sleep does not work).
+* crontab output goes to the mail but I prefer to redirect to some file. Also
+  define shell since it will use sh (on which sleep does not work).
   ~~~
   SHELL=/bin/bash
   * * * * * /path/to/my/script.sh >> /home/orlovic/Downloads/cron.log 2>&1
   ~~~
+  sometimes you need to call snap commands so add PATH as well
+  ```
+  # crontab
+  SHELL=/bin/sh
+  PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/snap/bin
+  @reboot certbot -q renew
+  ```
 
   cron format `Minute Hour Day_of_the_Month Month_of_the_Year Day_of_the_Week`
   and also `Year` as 6th field. For more information see the manual pages of
@@ -966,11 +978,11 @@ if [ "$(uname -s)" = "Darwin" ]; then
 fi
 ~~~
 * screen command
+  * exit detach with `Ctrl+A + d` and reattach with `screen -r`
   * create new session `Ctrl+A + c` and switch to it using `Ctrl+A + 1`
   * `Ctrl + A + {command}` for example vertical split `Ctrl+A + |` and move to
     it `Ctrl+A + <tab>` and create new window `Ctrl+A + c`. Use `Ctrl+A + X` to
     close the window.
-  * `screen -r` to reattach to window (which you exited with `Ctrl+A+D`)
   * `Ctrl+A+]` to go to copy mode
   * screen will catch ctrl+c so to stop some process you can use ctrl+z to move
     it to background (move to foreground with `fg`)

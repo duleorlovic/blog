@@ -58,8 +58,11 @@ I upgraded to rmagic 2.13.2 and follow this
 
 ~~~
 sudo apt-get install libmagickwand-dev
+sudo apt-get install libmagick++-dev
+# this does not help much
 # sudo apt-get install graphicsmagick-imagemagick-compat
 # PATH="/usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16:$PATH" gem install rmagick -v '2.13.2'
+PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig" gem install rmagick
 ~~~
 
 To use gems in ruby scripts you can use `gem 'gemname'` for example
@@ -197,9 +200,6 @@ Note that if you remove some files from package folder (for example
 `node_modules/iCheck/skins` than `npm install` will not see
 that is was removed. You need to `rm -rf folder` so than `npm install` will
 get fresh copy of the package.
-
-Example adding jquery 3, bootstrap 4, fontawesome 4 on rails you can find on {{ site.baseurl }} {% post_url 2014-07-01-ruby-on-rails-layouts-and-rendering %})
-
 
 # Npmjs publish package
 
@@ -965,19 +965,24 @@ so add `set backupcopy=yes` in `.vimrc`
 
 ~~~
 bin/webpack-dev-server
+# issue with webpack
+# ActionController::RoutingError (No route matches [GET] "/packs/js/application-8e9284513a1fd7d0456f.js"):
+# is needed when you do not have proper node version installed when you are
+# running rails s command
 ~~~
 
-Refence each file in packs folder with (restart dev seerver)
+Refence each file in packs folder with (restart dev server)
 
 ~~~
 <%# app/views/layouts/application.html.erb %>
-  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
 ~~~
 
 Add npm packages: jquery turbolinks bootstrap
 
 ~~~
 yarn add bootstrap jquery popper.js
+# for bootstrap 5 you need @popperjs/core
 ~~~
 
 Configure jquery as plugin

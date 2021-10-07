@@ -4,6 +4,13 @@ layout: post
 tags: ionic aws s3 angular
 ---
 
+# Latest
+
+https://web-crunch.com/posts/rails-drag-drop-active-storage-stimulus-dropzone
+
+
+# Older
+
 In rails you can upload using [carrierwave for uploading]({{ site.baseurl }}
 {% post_url 2015-04-05-common-rails-bootstrap-snippets %}
 #carrierwave-for-uploading) which works also for direct uploading to AWS.

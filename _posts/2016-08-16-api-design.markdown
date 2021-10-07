@@ -106,10 +106,6 @@ Curl commands:
 
 [curl commands]({{ site.baseurl }} {% post_url 2016-02-01-bash %}#curl)
 
-# Current user or me
-
-Instead of `/users/123/settings` you can create `/me/settings` endpoint.
-
 # POST vs PUT
 
 When an user has one image (image is part of the user) than it is fine to do
@@ -465,6 +461,70 @@ resource 'Posts' do
 end
 ```
 
+# JWT Json web tokens
+
+```
+gem 'jwt'
+
+t = JWT.encode( {a: 1}, 'secret')
+=> "eyJhbGciOiJIUzI1NiJ9.eyJhIjoxfQ.LrlPmSL4FxrzAHJSYbKzsA997COXdYCeFKlt3zt5DIY"
+>> JWT.decode t, 'secret' #=> [{"a"=>1}, {"alg"=>"HS256"}]
+```
+
+Testing application is in `~/rails/temp/rails_5.2.3/` branch `devise_jwt_token`.
+You can add custom devise strategy so both devise http and jwt authentication
+can work
+http://blog.plataformatec.com.br/2019/01/custom-authentication-methods-with-devise/
+api_token_strategy
+
+```
+# app/strategies/jwt_strategy.rb
+class JwtStrategy < Warden::Strategies::Base
+  def valid?
+    # A copy of JwtStrategy has been removed from the module tree but is still active
+    # JwtAuth.token_from_request_headers request.headers
+    # so we need to copy same method here
+    request.headers['Authentication'].to_s.split(' ').last
+  end
+
+  def authenticate!
+    user = User.find_by(id: JwtAuth.decoded_user_id(request.headers))
+    if user
+      success! user
+    else
+      fail! 'Invalid email or password'
+    end
+  end
+end
+
+# app/services/jwt_auth.rb
+class JwtAuth
+  SECRET = Rails.application.secrets.secret_key_base
+
+  def self.encode_user_id(user_id)
+    payload = { user_id: user_id }
+    JWT.encode(payload, SECRET)
+  end
+
+  def self.decoded_user_id(headers)
+    token = token_from_request_headers headers
+    payload = JWT.decode(token, SECRET)[0]
+    payload['user_id']
+  end
+
+  def self.token_from_request_headers(headers)
+    headers['Authentication'].to_s.split(' ').last
+  end
+end
+
+# config/initializers/devise.rb
+  config.warden do |manager|
+    manager.default_strategies(scope: :user).unshift :jwt_strategy
+  end
+
+# config/initializers/warden.rb
+Warden::Strategies.add(:jwt_strategy, JwtStrategy)
+```
 
 ## Swagger ui grape
 
@@ -536,6 +596,11 @@ Copy `dist` content to your `public/apidocs` and update all paths in
 * default sort is alphabetical for path and methods (delete, get, path...). You
 can provide a function for `apisSorter` `operationsSorter` but too complicated.
 Order in server response is not supported.
+
+## Appman swagger
+
+TODO: https://www.loom.com/share/c922b8074b9443e899f388f1a19d095c
+https://rubygems.org/gems/appmap_swagger
 
 # Apipie rails
 

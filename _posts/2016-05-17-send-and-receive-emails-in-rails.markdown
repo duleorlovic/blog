@@ -312,6 +312,10 @@ Another solution is `gem 'premailer-rails'`
 <https://github.com/fphilipe/premailer-rails> which can also generate text part
 so you do not need to maintain it. Just add the gem and you are good to go.
 
+Gmail Android App will also parse media queries and apply that to inline styles
+(it will override inline styles).
+Gmail in the browser will parse styles (but not media queries) and apply to the
+elements when presenting to the user.
 
 To preview emails use generated preview files in
 `test/mailers/previews/my_mailer_preview.rb` or create new file:
@@ -401,6 +405,17 @@ end
 %>
 <h1><%= t "user_mailer.landing_signup.title", name: @user.email %></h1>
 ~~~
+
+To change layout for devise mailer you can use
+https://github.com/heartcombo/devise/wiki/How-To:-Create-custom-layouts#application--devise-config
+```
+  Devise::Mailer.layout "email"
+```
+or better is to change parent email
+```
+# config/initializers/devise.rb
+  config.parent_mailer = 'ApplicationMailer'
+```
 
 # Receiving emails
 
@@ -659,4 +674,6 @@ end
 
 https://github.com/ankane/ahoy_email
 
-* 
+# US Phones
+
+You can use any number like `+1555,,,,` or `+1202555....` https://fakenumber.org/

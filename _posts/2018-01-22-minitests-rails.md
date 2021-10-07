@@ -121,6 +121,23 @@ Defining fixtures:
     initialize_fixture_blob
   ```
 
+  To use in request use `blob.signed_id`
+  ```
+  test 'upload one picture' do
+    user = users(:user)
+    attachment = user.member_profile.member_picture.active_storage_attachment
+    sign_in user
+
+    blob = attachment.blob.signed_id
+    assert_difference 'ActiveStorage::Blob.count', 0 do
+      assert_difference 'MemberPicture.count', 1 do
+        patch profile_update_path, params: { member_profile: { id: user.member_profile, member_pictures_attributes: { '0' => { active_storage_attachment: blob } } } }
+        assert_response :redirect
+      end
+    end
+  end
+  ```
+
 * `enum parent_relations: %i[child]` can be set using erb
   ```
   child:
@@ -223,6 +240,9 @@ logger.info 'db:seed and db:fixtures:load completed'
   ```
   admin_user:
     encrypted_password: <%= User.new.send(:password_digest, 'password') %>
+
+  # without device it is with gem bcrypt
+    password_digest: <%= BCrypt::Password.create('password') %>
   ```
 * if you use `serialize :recurrence` than in fixture you have to wrap with
   double quotes around and use .to_yaml
@@ -266,6 +286,7 @@ class TaskTest < ActiveSupport::TestCase
 
   def test_that_is_skipped
     skip "later"
+    # similar to xtest xit
   end
 
   test 'valid fixture' do
@@ -445,6 +466,7 @@ Deprecated, use minitest integration tests
 
 For integration we use `ActionDispatch::IntegrationTest` which gives methods:
 * `get '/'`, `post path, params: {}` (params is required in rails_post_5),
+ To set format use `patch path, params: { format: :turbo_stream }`
 * also `put`, `patch`, `head`, `delete`
 * for ajax use `post path, xhr: true`
 * add `as: :json` as third param for json requests so you can use something like
@@ -485,6 +507,7 @@ title: "Ahoy!" }, response.parsed_body)`.
   assert_select 'a[href=?]', tasks_path
   assert_select 'input[value=?]', username   # substitute username
   assert_select 'input[value*=?]', username   # match when containing username
+  assert_select '[data-test=unread-count]', '123'
 
   # use custom pseudo class `:match(attribute_name, attribute_value)`
   assert_select "ol>li:match('id', ?)", /item-\d+/       # exists li id='item-1'
@@ -958,4 +981,14 @@ guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
   need to use `require 'rails/all` in `config/application.rb` and run by line
   ```
   ./bin/rails test test/controllers/registrations_controller_test.rb:27
+  ```
+* to set cookies you can simply use
+  ```
+  class ApplicationControllerTest < ActionDispatch::IntegrationTest
+    test '#use_time_zone' do
+      user = users(:user)
+      cookies['browser.timezone'] = 'UTC'
+      get root_path
+    end
+  end
   ```

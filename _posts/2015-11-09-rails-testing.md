@@ -557,7 +557,8 @@ It is faster than system but can not use javascript...
 If request is not performed (`get` `xhr`) than something is different (current
 user is not initialized, or something).
 `post url, params: { name: 'my name' }` is used with `params` key
-To set json request use `get path, format: :json`.
+To set json request use `get path, format: :json`. New format is `patch path,
+params: { format: :turbo_stream }`
 To set headers you can use third param
 
 ```
@@ -743,7 +744,7 @@ There is `draper` gem
 ## RSpec Mailer specs
 
 In controller we check if send mail is actually triggered and maybe just one
-line of content `email.html_part.body.to_s` matches title
+line of content `email.body.to_s` matches title
 
 ~~~
 # spec/controllers/tasks_controller_spec.rb
@@ -766,7 +767,7 @@ RSpec.describe TasksController, type: :controller do
       patch :update, id: task.id, task: { size: 3, completed: true }
       expect(ActionMailer::Base.deliveries.size).to eq(1)
       email = ActionMailer::Base.deliveries.first
-      expect(email.html_part.body.to_s).to match("Yo!")
+      expect(email.body.to_s).to match("Yo!")
     end
   end
 end
@@ -1439,8 +1440,8 @@ module MailerHelpers
   # some usage is like:
   # mail = give_me_last_mail_and_clear_mails
   # assert_equal [email], mail.to
-  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.html_part.decoded
-  # confirmation_link = mail.html_part.decoded.match(
+  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.body.decoded
+  # confirmation_link = mail.body.decoded.match(
   #   /(http:.*)">#{t("confirm_email")}/
   # )[1]
   # visit confirmation_link
@@ -1587,6 +1588,9 @@ Cons:
   user:
     email: "test@example.com"
     encrypted_password: <%= User.new.send(:password_digest, 'password') %>
+
+  # without device it is with gem bcrypt
+    password_digest: <%= BCrypt::Password.create('password') %>
   ~~~
 
   In factory bot you can use model methods.

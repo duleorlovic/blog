@@ -31,14 +31,15 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
 * `data-action='click->hello-word#greet'` event name is `click`, controller
   `hello-word` dashed case (note that camelcase name helloWord or snake case
   hello_word is not used anywhere, only example is when you define method in
-  cammes case `sayHello()`).
+  cammel case `sayHello()`).
   If element is `<a>`, `<button>`, `<input type="submit">` than you do not need
   to write `click->`.
   `<input>`, `<select>` and `<textarea>` has `change` as default event.
   `<form>` has `submit` default event.
   If you want to `event.preventDefault()` (for example click on link) than pass
   parameter `greet(event) {}`. To see who invoke the click you can use
-  `event.currentTarget`
+  `event.currentTarget`. To use multiple events use space between actions
+  `'data-action'='click->hello-word#greet change->hello-word#greet'`
 * `data-hello-target='name'` creates `nameTarget` property in a controller so we
   can use it to access element and set value. We need to declare it also inside
   controller `static targets = [ 'name' ]`. Beside `this.nameTarget` you can
@@ -59,7 +60,8 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   Also `this.data.has('index')` to check if data existis and
   `this.data.set('index', 2)` to set data so controller. Do not need to store
   any data in js, just use those setter and getter to store data in DOM.
-  For complex json objects you can use `.to_json` and jQuery `.data()`
+  For complex json objects you can use `.to_json` and
+  `JSON.parse(data.get('groups'))` or jQuery `.data()`
   ```
   <%= f.select :company, {}, 'data-my-controller-target': 'second', 'data-my-controller-groups': MyModel::MY_HASH.to_json %>
   let groups = $('[data-my-controller-target=second]').data('myControllerGroups')
@@ -310,3 +312,24 @@ class MyFormBuilder < BootstrapForm::FormBuilder
   end
 end
 ```
+
+* stimulus-use can be loaded in two was
+  ```
+  # extending
+  import { IntersectionController } from 'stimulus-use'
+  export default class extends IntersectionController {
+    appear(entry) {
+    }
+  }
+
+  # composing
+  import { useIntersection } from 'stimulus-use'
+  export default class extends Controller {
+    connect() {
+      useIntersetion(this)
+    }
+
+    appear(entry) {
+    }
+  }
+  ```

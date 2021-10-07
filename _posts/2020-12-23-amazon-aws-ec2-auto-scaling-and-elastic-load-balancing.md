@@ -153,7 +153,7 @@ Import (upload) certificate to ACM we need  AWSCertificateManagerFullAccess
 permissions
 
 ```
-# list certificated
+# list certificates
 AWS_CONFIG_FILE=~/efs/.dns_keys aws acm list-certificates
 
 # uploading certificate

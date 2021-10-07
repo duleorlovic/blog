@@ -637,15 +637,6 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
   use global search (Ctrl+Shift+F in chrome) for `contextmenu` and put
   breakpoint and comment that line, save and continue F8.
 
-* `fetch` makes js requests. If you need to pass header for cookie session than
-  use param https://github.com/github/fetch#sending-cookies
-
-  ~~~
-  fetch('/users', {
-    credentials: 'same-origin'
-  })
-  ~~~
-
 * jquery.each should not return `false` since it will break the loop, for in
   coffeescript you should add `true`
   ```

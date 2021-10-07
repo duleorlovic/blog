@@ -7,6 +7,10 @@ layout: post
 https://gorails.com/deploy/ubuntu/18.04
 ubuntu 19 (eoan) does not include passenger yet https://github.com/phusion/passenger/issues/2104
 
+On EC2 you already have non root user `ubuntu` so you can skip following steps
+if `ssh -i $PEM_FILE ubuntu@$PRODUCTION_IP` works
+
+To create non root user try:
 ```
 ssh root@$PRODUCTION_IP
 adduser deploy
@@ -25,10 +29,10 @@ ssh-copy-id -i ~/.ssh/specific_key.pub deploy@$PRODUCTION_IP
 ssh deploy@$PRODUCTION_IP
 ```
 
-install node and yarn as deploy user
+Install node and yarn as deploy user
 ```
-sudo pwd
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+# sudo pwd
+# curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo add-apt-repository ppa:chris-lea/redis-server
@@ -65,7 +69,7 @@ Add env variable for mastey key and database url
 mkdir move_index
 vi move_index/.rbenv-vars
 # add lines
-DATABASE_URL=postgresql://deploy:1234@127.0.0.1/move_index_production
+DATABASE_URL=postgres://deploy:1234@127.0.0.1/move_index_production
 RAILS_MASTER_KEY=1234
 RAILS_ENV=production
 NODE_OPTIONS=--max-old-space-size=460
@@ -190,8 +194,8 @@ bundle exec cap install
 
 cat > Capfile << HERE_DOC
 # Load DSL and set up stages
-require "capistrano/setup"
-require "capistrano/deploy"
+require 'capistrano/setup'
+require 'capistrano/deploy'
 require 'capistrano/scm/git'
 install_plugin Capistrano::SCM::Git
 
@@ -199,9 +203,9 @@ require 'capistrano/rails'
 require 'capistrano/rails/console'
 
 # Include tasks from other gems included in your Gemfile
-require "capistrano/bundler"
-require "capistrano/rvm"
-require "capistrano/puma"
+require 'capistrano/bundler'
+require 'capistrano/rvm'
+require 'capistrano/puma'
 # if you use passenger and rbenv
 require 'capistrano/passenger'
 require 'capistrano/rbenv'
@@ -211,7 +215,7 @@ require 'capistrano3/postgres'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 # and add to deploy.rb like `after "deploy:published", "translation:setup"`
-Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
+Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 HERE_DOC
 ~~~
 
@@ -240,6 +244,33 @@ You need to set credentials master key
 # /home/deploy/myapp/.rbenv-vars
 RAILS_MASTER_KEY=1234
 DATABASE_URL=postgresql://deploy:PASSWORD@127.0.0.1/myapp_production
+```
+
+Configure server
+```
+# config/deploy.rb
+lock '~> 3.16.0'
+
+set :application, 'myapp'
+set :repo_url, 'git@github.com:duleorlovic/myapp.git'
+
+# Default branch is :master
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, :main
+
+# Default deploy_to directory is /var/www/my_app_name
+# set :deploy_to, "/var/www/my_app_name"
+set :deploy_to, "/home/ubuntu/#{fetch(:application)}"
+```
+
+```
+# config/deploy/production.rb
+server 'production-app.xceednet.com',
+       user: 'ubuntu',
+       roles: %w[app db web],
+       ssh_options: {
+         keys: '~/.ec2/singapore-webapp01-keypair.pem'
+       }
 ```
 
 To deploy you can
@@ -891,6 +922,20 @@ cd /mnt/myapp-production/current
 bundle exec rake db:setup
 ~~~
 
+For errors like
+```
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+```
+solution is
+```
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+```
+
 ## Rubber Vagrant rubber provision
 
 It works only for old version of vagrant 1.7.4 (just remove and install that
@@ -1285,6 +1330,29 @@ To test if redis is working and to clear cache you can run on server
 redis-cli FLUSHALL
 ```
 
+Instead of disabling protected mode we will bind on private network interface
+
+```
+# list all interface
+ip a
+# find private ip address like ens5 172.30.5.211
+sudo vi /etc/redis/redis.conf
+# add that ip address to bind command
+bind 127.0.0.1 ::1 172.30.5.211
+# and change the policy
+maxmemory-policy allkeys-lfu
+
+# test that we can not access from outside aws using public ip
+redis-cli -h 3.81.27.218 ping
+# but we can access from application server using internal network
+redis-cli -h 172.30.5.211 ping
+
+# to connect to the same database you need to use SELECT in redis-cli
+# for example when redis url is: redis://172.30.5.211:6379/1
+redis-cli -h 172.30.5.211
+select 1
+```
+
 # Sidekiq
 
 You need to run on production
@@ -1505,4 +1573,59 @@ NODE_OPTIONS=--max-old-space-size=460
   # set :p, ":path/log/cron.script.log"
 
   job_type :p, ":path/log/cron.script.log"
+  ```
+
+* lets encrypt ssl cert
+  ```
+  # config/etc/letsencrypt/live/myapp.com/renew_and_upload_certificate.sh
+  #!/bin/bash
+  set -e # Any commands which fail will cause the shell script to exit immediately
+  set -x # show command being executed
+
+  # Run this script as root user.
+  # You can run multiple times
+
+  date
+  cd /etc/letsencrypt/live/myapp.com
+
+  # STEP 1: Generate certificate
+  AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys certbot certonly -q --dns-route53 -d *.myapp.com
+  # without -q quiet output should be like
+  # - Congratulations! Your certificate and chain have been saved at:
+  #   /etc/letsencrypt/live/myapp.com/fullchain.pem
+
+  # exit if cert has not been changed
+  cmp --silent cert.pem.uploaded cert.pem && exit 1
+  cp cert.pem cert.pem.uploaded
+
+  # STEP 2: Upload to ACM and get $CERTIFICATE Arn
+  AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws acm import-certificate --certificate fileb://cert.pem --certificate-chain fileb://chain.pem --private-key fileb://privkey.pem > step1.json
+  export CERTIFICATE=`cat step1.json | jq -r '.CertificateArn'`
+  # like CERTIFICATE=arn:aws:acm:us-east-1:664559194543:certificate/16e41ded-6cad-4e6e-b161-018d38d1a378
+
+
+  # STEP 3: Find load balancer ARN and set
+  # AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws elbv2 describe-load-balancers
+  export LOAD_BALANCER=arn:aws:elasticloadbalancing:us-east-1:664559194543:loadbalancer/app/alb-gfd-app/3d181aae37d3b54d
+
+  # STEP 4: Find listener ARN
+  # AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws elbv2 describe-listeners --load-balancer $LOAD_BALANCER
+  export LISTENER=arn:aws:elasticloadbalancing:us-east-1:664559194543:listener/app/alb-gfd-app/3d181aae37d3b54d/827991f6232bcd5c
+
+  # STEP 5: Set new certificate for listener
+  AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws elbv2 add-listener-certificates --listener-arn $LISTENER --certificates CertificateArn=$CERTIFICATE
+  ```
+  and create a crontab task
+  ```
+  cap production ssh-worker
+
+  sudo ln -s /home/ubuntu/gofordesi/current/config/etc/letsencrypt/live/gofordesi.com/renew_and_upload_certificate.sh /etc/letsencrypt/live/gofordesi.com/
+  sudo su
+  crontab -e
+  # add task
+
+  SHELL=/bin/sh
+  PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/snap/bin
+
+  0 0 * * * perl -e 'sleep int(rand(43200))' && /etc/letsencrypt/live/gofordesi.com/renew_and_upload_certificate.sh >> /home/ubuntu/gofordesi/current/log/renew_and_upload_certificate.log 2>&1
   ```

@@ -726,6 +726,8 @@ not match. lamda are strict about arguments but procs are not
   my_lambda = ->(a, b) { a + b }
   # stabbly lambda operator is the same as
   my_lambda = lambda {|a, b| a + b }
+  call_with_multiline_lambda(lambda do
+  end)
   my_proc   = Proc.new  { |a, b| a + b }
 
   my_lambda.call(2)

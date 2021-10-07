@@ -222,7 +222,7 @@ will not be called when answers are updated as `answers_attributes`
 
 # Multiple form submit buttons for different actions
 
-you can use rails builder
+you can use rails builder to show two buttons
 
   ~~~
   <%= f.submit "Some label" %>

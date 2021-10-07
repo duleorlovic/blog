@@ -302,3 +302,60 @@ Package.")unless advance_renewal_package.present?; end`.
   bundle exec rails g paper_trail:install --with-changes
   bundle exec rake db:migrate
   ~~~
+  in model
+  ```
+  has_paper_trail
+  ```
+
+  You can set custom event
+  ```
+  a.paper_trail_event = 'update title'
+  a.update title: 'new'
+  a.versions.last.event # 'update title'
+  ```
+  To see changes
+  ```
+  m.versions.last.changeset
+  # { changed_column => [before, after], updated_at => DateTime }
+  # {"full_name"=>["member_profile", "first change"], "updated_at"=>[Tue, 27 Jul 2021 06:27:31.493388000 UTC +00:00, Tue, 27 Jul 2021 06:28:07.407190000 UTC +00:00]}
+
+  # to see all changes
+  puts PaperTrail::Version.all.map(&:changeset).join"\n"
+  ```
+
+  In test use helper https://github.com/paper-trail-gem/paper_trail#7-testing
+  ```
+  # in config/environments/test.rb
+  config.after_initialize do
+    PaperTrail.enabled = false
+  end
+
+  # in test/test_helper.rb
+  def with_versioning
+    was_enabled = PaperTrail.enabled?
+    was_enabled_for_request = PaperTrail.request.enabled?
+    PaperTrail.enabled = true
+    PaperTrail.request.enabled = true
+    begin
+      yield
+    ensure
+      PaperTrail.enabled = was_enabled
+      PaperTrail.request.enabled = was_enabled_for_request
+    end
+  end
+
+  test 'something that needs versioning' do
+    with_versioning do
+      # your test
+    end
+  end
+  ```
+
+  When using uuid you need to change type for item_id
+  https://github.com/paper-trail-gem/paper_trail/issues/363#issuecomment-249080184
+  ```
+  def change
+    create_table :versions do |t|
+      t.string   :item_type, null: false
+      t.uuid     :item_id,   null: false
+  ```

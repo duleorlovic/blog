@@ -65,6 +65,7 @@ which is similar to `click_link` but for union of `:link` and `:button`
 selectors.
 * `fill_in "email", with: 'asd@asd.asd'` locator is input name, id, test_id,
   placeholder, label text. Note that it is case sensitive.
+invalid zipcode 07068 for country CA
   alternative is find set `find("input[name='cc']").set 'asd@asd.asd'`, or using
   javascript `page.execute_script "$('#my-id').val('asd@asd.asd')"`
 * `check 'my checkbox'` (or by id but without # `check 'my_check_id'`), `choose
@@ -292,6 +293,21 @@ I see only two problem: first is ajax loaded form in modal and you click on
 button to submit it immediatelly, but modal uses `fade` and is not visible yet.
 Solution is to remove `fade` class.
 <https://github.com/teamcapybara/capybara/issues/1890>
+
+To remove fade transition and transform in test so you do not need to sleep and
+wait for animation, put this in your layout
+```
+# app/views/layouts/application.html.erb
+    <% if Rails.env.test? %>
+      <style>
+        .fade, .modal-dialog {
+          background: blue;
+          transform: none!important;
+          transition: none!important;
+        }
+      </style>
+    <% end %>
+```
 
 Second is when respone is redirection `window.location.assign('/users/1')`
 (usually just to reload a page). Capybara does not wait for this

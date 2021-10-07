@@ -77,8 +77,8 @@ allowed inside ()
   escapes like `"an escaped \' single quote. \n"`
 * Multiline strings starts with pipe `|` (Literal block scalar) on the line with
   attribute. `>` Folded block scalar will generate single line string, except
-  there are empty lines which are converted to "\n". Following lines should be
-  indented.
+  there are empty lines (ie double new line characters) which are converted to
+  "\n". Following lines should be indented.
   ```
   kayak: |
     It is nice sport

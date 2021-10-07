@@ -420,6 +420,10 @@ matcher = (params, data) ->
     )
 ```
 
+Install with stimulus
+```
+```
+
 
 # Calendar date and time picker
 
@@ -810,6 +814,7 @@ https://segment.com/ collect customer data
 * intercom <https://demos.intercom.com/>
 * [user deck](https://userdeck.com)
 * [chatwoot](https://www.chatwoot.com/docs/channels/website) opensource rails
+  customer support
 * https://github.com/chaskiq/chaskiq opensource rails
 
 
@@ -1130,7 +1135,7 @@ debug with
 ```
 ddclient -daemon=0 -debug  -noquiet
 ```
-I got no SUCCESS or FAILED or WARNING response
+I got no SUCCESS or FAILED (just DEBUG and WARNING) response
 ```
 ddclient -daemon=0 -debug  -noquiet
 DEBUG:    proxy  = 

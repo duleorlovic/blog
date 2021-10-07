@@ -52,8 +52,11 @@ widget</a>`
 * 25-70% should be only text (not html markup tags)
 * add [XML sitemap](#sitemap) (with correct protocol http/s, subdomain,
   trailing slash) if more than 100 than only most popular
-* use 301 redirect from root to www domain (or vice versa) do not split value to
-  two different domains (also from IP address)
+* use 301 redirect from root domain (apex) to www domain (or vice versa) do not
+  split value to two different domains (also from IP address)
+  (you can not redirect in nginx or rails since apex domain do not event point
+  to your server, you need to change on dns level, for example route53
+  https://stackoverflow.com/a/28978783/287166 )
 * replace undrescore _ with dash (hyphens) - in urls
 * flash and frames are not indexed
 * nice mobile rendering (buttons at least 48px width/height, 32px padding around

@@ -6,3 +6,5 @@ gem 'guard-livereload' # reload
 gem 'byebug'
 
 gem 'nokogiri'
+
+gem "webrick", "~> 1.7"
