@@ -260,6 +260,20 @@ For example if you want to use another base image
 ```
 act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-latest
 ```
+Use artifact to debug logs and screenshots
+
+```
+# .github/workflows/testyml
+        bundle exec rails test:system || echo continue
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        # https://github.com/actions/upload-artifact#upload-using-multiple-paths-and-exclusions
+        path: |
+          tmp/screenshots/*
+          log/*
+```
 
 ## Cache
 

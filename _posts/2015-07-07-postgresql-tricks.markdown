@@ -533,3 +533,13 @@ end
   https://stackoverflow.com/questions/1703495/postgresql-select-from-2-tables-but-only-the-latest-element-from-table-2
 
 * use test data `(VALUES (1, 'Duke'),(2, 'Mike')) users (id, name)`
+  ```
+  # change column type
+  ALTER TABLE table_name ALTER COLUMN column_name TYPE new_type;
+  # delete column
+  ALTER TABLE table_name DROP COLUMN column_name;
+  ```
+  delete all rows
+  ```
+  DELETE FROM table_name;
+  ```

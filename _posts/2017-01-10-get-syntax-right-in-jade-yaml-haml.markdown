@@ -66,7 +66,7 @@ allowed inside ()
   ```
   combination:
     - a: 1
-      b: 2
+      b: 2  # this is { a: 1. b: 2 }
     - [ a: 1, b: 3]
   ```
 * String does not need `" "` except you start with special symbol `[] {} > | *

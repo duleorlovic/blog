@@ -359,7 +359,7 @@ Error format `efm` is using scanf tags `:help error-file-format`
 
 Using unimpaired
 * `[c` `]c` go to prev next change in diffsplit
-* `[l` `]l` ALE errors. To close error window you need to `:lcl`
+* `[l` `]l` ALE rubobop errors. To close error window you need to `:lcl`
 * `]b` buffers
 * `]ow` to enable wrap, toggle with `yow`, more `:help unimpaired-toggling`
 

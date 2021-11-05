@@ -17,6 +17,14 @@ git add .
 git commit -m "Initial jekyll new myblog"
 ```
 
+Add usefull gems
+```
+cat >> Gemfile << 'HERE_DOC'
+gem 'jekyll-seo-tag'
+gem 'jekyll-sitemap'
+HERE_DOR
+```
+
 Live reload is now built in (no need for `guard-livereload`). You just need to
 run with option `jekyll serve --livereload`
 
@@ -999,3 +1007,11 @@ https://mademistakes.com/articles/using-jekyll-2016/
 
 * code samples https://github.com/bwillis/jekyll-github-sample
   https://bwillis.github.io/2014/05/28/include-github-repo-code-in-jekyll/
+* for error for ruby 3
+  ```
+  /home/orlovic/.rvm/gems/ruby-3.0.2/gems/jekyll-4.2.1/lib/jekyll/commands/serve/servlet.rb:3:in `require': cannot load such file -- webrick (LoadError)
+  ```
+  you just need to add gem
+  ```
+  bundle add webrick
+  ```

@@ -94,6 +94,9 @@ https://github.com/lserman/capistrano-elbas
 # list instances
 cap production elbas:ssh
 ```
+It could be that new instances are started from old image and that is preventing
+capistrano to deploy code to all instances. You can go to auto scaling group and
+set maximum capacity 1 and than deploy.
 
 Static ip address on load balancer
 It can be done on Network Load Balancer

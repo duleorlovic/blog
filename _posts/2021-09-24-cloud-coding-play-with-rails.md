@@ -40,6 +40,10 @@ sudo usermod  -aG docker orlovic
 
 # run rancher container
 # https://rancher.com/docs/rancher/v2.5/en/installation/other-installation-methods/single-node-docker/
+
+sudo docker run --privileged -d --restart=unless-stopped -p 80:80 -p 443:443 rancher/rancher
+
+# wait some time and that access ip of the virtual machine like https://192.168.0.25/
 ```
 
 TODO: Make examples for

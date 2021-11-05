@@ -53,6 +53,12 @@ Git checkout previous branch
 
     git checkout -
 
+Git fetch pull all brancher and fast forward merge. Put this in your
+`.git/config` or `~/.gitconfig` file, and run `git pull-all`
+
+    [alias]
+        pull-all = !"for b in $(git for-each-ref refs/heads --format='%(refname)') ; do git checkout ${b#refs/heads/} ; git pull --ff-only ; done"
+
 When you want to undo some commands
 
     git reflog
@@ -206,9 +212,10 @@ Apply patch
     git diff > patchfile
     patch -p1 < patchfile
 
-Pick only changes from certain files instead of cherry pick
+Pick only changes from certain files instead of cherry pick, exclude with
+`:^my-filder` or `:^my-file`
 
-    git show ffbd16fa313825e52b79ed9348b2a8ab963ec87a -- app/javascript/ | git apply -
+    git show ffbd16fa313825e52b79ed9348b2a8ab963ec87a -- app/ :^spec | git apply -
 
 
 Count files in staging
@@ -331,62 +338,6 @@ then
   fi
 fi
 ~~~
-
-# Time tracking
-
-* https://github.com/laughedelic/gtm is old unmaintained
-* https://github.com/git-time-metric/gtm
-  Install linux brew https://brew.sh/
-  ```
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  ```
-  Than install gtm
-  ~~~
-  brew tap git-time-metric/gtm
-  brew install gtm
-  ~~~
-
-  Use in your project
-  ```
-  gtm init
-
-  gtm status
-  gtm report -last-month -format summary
-  ```
-* approximate based on git commit times
-  https://github.com/kimmobrunfeldt/git-hours
-  ```
-  git-hours
-  # yesterday  or 2021-01-01 yesterday
-  git-hours --since lastweek
-  ```
-
-## Glass
-
-https://github.com/timeglass/glass
-
-Download and create links in your `/usr/local/bin` and run `sudo glass install`
-<https://github.com/timeglass/glass/blob/master/docs/manual_installation.md>
-
-~~~
-glass init
-glass status
-git commit -am "Work"
-git log -n 1 --show-notes=time-spent
-~~~
-
-To disable adding commit message use space (not empty)
-
-~~~
-cat >> /var/lib/timeglass/timeglass.json << HERE_DOC
-{
-  "mbu": "1m",
-  "commit_message": " ",
-  "auto_push": false
-}
-HERE_DOC
-~~~
-
 
 # Github
 

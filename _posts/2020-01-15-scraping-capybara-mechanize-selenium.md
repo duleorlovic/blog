@@ -614,6 +614,40 @@ virtual frame buffer
 xvfb-run java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver -jar /usr/local/bin/selenium-server-standalone.jar
 ~~~
 
+To save console logs you can use
+```
+# test/a/capybara.rb
+# This is used only when you want to save javascript console logs
+
+# Usage in your system test
+# class SignUpWizzardTest < ApplicationSystemTestCase
+#   test 'sign up' do
+#    Capybara.current_driver = :headless_chrome_with_logging
+#    visit root_path
+#    save_console_logs
+
+# https://stackoverflow.com/questions/46278514/capture-browser-console-logs-with-capybara/46292517
+# https://stackoverflow.com/questions/58418214/enable-view-console-log-messages-in-headless-chrome
+Capybara.register_driver :headless_chrome_with_logging do |app|
+  caps = Selenium::WebDriver::Remote::Capabilities.chrome 'goog:loggingPrefs': {
+    browser: 'ALL'
+  }
+
+  opts = Selenium::WebDriver::Chrome::Options.new
+  chrome_args = %w[--headless --no-sandbox]
+  chrome_args.each { |a| opts.add_argument a }
+
+  Capybara::Selenium::Driver.new app, browser: :chrome, options: opts, desired_capabilities: caps
+end
+
+class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  def save_console_logs
+    console_log = page.driver.browser.manage.logs.get(:browser).map(&:to_s).join("\n")
+    File.write Rails.root.join('log', 'capybara_console.log'), console_log, mode: 'w'
+  end
+end
+```
+
 # Kimurai
 
 https://github.com/vifreefly/kimuraframework
@@ -671,7 +705,7 @@ def parse_product(response, url:, data: {})
 end
 ```
 
-Save screenshot using `browser.save_screenshot`
+Save screenshot using `page.driver.browser.save_screenshot 'my-shot.png'`
 Save cookies using `browser.driver.save_cookies`
 Refresh page `browser.refresh` but to update `response` you need to `response =
 browser.current_response`

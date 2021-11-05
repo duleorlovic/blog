@@ -1176,7 +1176,7 @@ todo https://www.youtube.com/watch?v=4hfMUP5iTq8
 * you can return only from methods, but not from `do end` blocks
 * ruby regex match will return
 [matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) or `nil` if there is
-no match (so you need to check if not nil). Foc MatchData you can
+no match (so you need to check if not nil). For MatchData you can
 call `captures` to get matched groups. You can use block form syntax of `if`
 
   ~~~
@@ -1193,6 +1193,10 @@ call `captures` to get matched groups. You can use block form syntax of `if`
   or you can cast match to string
   ```
   email = message.match(/\S+@\S+/).to_s
+  ```
+  You can enable multiline match with m
+  ```
+  email = message.match /\S+@\S+/m
   ```
 
   for error `Lint/AmbiguousRegexpLiteral: Ambiguous regexp literal. Parenthesize

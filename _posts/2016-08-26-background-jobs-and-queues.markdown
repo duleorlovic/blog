@@ -225,6 +225,19 @@ Rails.application.routes.draw do
   end
 ~~~
 
+Job can be executed immediatelly (no sidekiq) or delayed. It is in `Enqueued`
+phase so it will be picked up as soon as there is a place in the queue to work
+on it and than it becomes `Busy`.
+Jobs can be executed at some some in the future `Scheduled` when it is
+transformed to `Enqueued`.
+When job is finished we just increase counter `Processed`.
+When error is raised than `Failed` counter is increased and job is added to
+`Retries` (similar as `Scheduled` but sidekiq is responsible for populating
+this).
+`Dead` are used for jobs that failed but not retried, for example retries
+exhausted (in this case both counters `Processed` and `Failed` are increased).
+
+
 Testing sidekiq https://github.com/mperham/sidekiq/wiki/Testing
 
 You can use block
@@ -753,6 +766,11 @@ class ProductTest < ActionDispatch::IntegrationTest
     assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
       product.charge(account)
     end
+  end
+
+
+  # to test that no jobs are enqueued
+  assert_no_enqueued_jobs do
   end
 end
 ~~~

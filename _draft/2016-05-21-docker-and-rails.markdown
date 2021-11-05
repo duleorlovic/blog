@@ -234,6 +234,8 @@ docker-compose ps
 
 For rails we can use this Dockerfile
 [link](http://blog.codeship.com/running-rails-development-environment-docker/)
+Also checkout my app:
+orlovic@main:~/rails/tmp/docker_rails$ 
 
 ~~~
 # Dockerfile
@@ -335,9 +337,35 @@ default: &default
 https://hub.docker.com/_/drupal
 https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/docker-library/docs/f81077b92e4522999836b8c5d098a103f568a431/drupal/stack.yml
 
-TODO:
-orlovic@main:~/rails/tmp/docker_rails$ 
-https://training.play-with-docker.com/microservice-orchestration/
+Here is a source of PWD 
+https://github.com/play-with-docker/play-with-docker
+and you can run locally with a `docker-compose up`
+
+Here is example of tutorial and output panel
+https://github.com/play-with-docker/play-with-docker.github.io
+which is server under
+https://training.play-with-docker.com
+It just uses https://github.com/play-with-docker/sdk like
+```
+<html>
+  <head>
+    <title>PWD SDK</title>
+  </head>
+  <body>
+    <div id="myTerm" style="width: 500px; height: 500px;"></div>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/pwd-sdk@0.0.12/dist/styles.css"
+    />
+    <script src="https://unpkg.com/pwd-sdk@0.0.12/dist/pwd.min.js"></script>
+    <script>
+      pwd = new PWD();
+      pwd.newSession([{ selector: "#myTerm" }], { baseUrl: 'http://localhost'});
+    </script>
+  </body>
+</html>
+```
+
 
 # Swarm
 
@@ -386,7 +414,6 @@ file daemon.json and restart the computer
 
 ```
 
-Online https://labs.play-with-docker.com/
 
 # Running on windows
 

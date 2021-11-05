@@ -9,9 +9,9 @@ tags: rails emails
 There is nice table of [main
 providers](http://socialcompare.com/en/comparison/transactional-emailing-providers-mailjet-sendgrid-critsend)
 
-## Testing SMTP
+## Check SMTP
 
-If you need to test smtp use <https://debugmail.io/> free service, just use port
+If you need to check smtp use <https://debugmail.io/> free service, just use port
 9025 instead 25 since ISP is blocking 25.
 For command line you can use `swaks` like `swaks --to duleorlovic@gmail.com
 --server $SERVER --port $PORT --auth-user $AUTH_USER --auth-password
@@ -236,7 +236,7 @@ difference is only for mailer).
 
 # Interceptor
 
-When you need to test production emails localy, than you can set up interceptor
+When you need to check production emails localy, than you can set up interceptor
 so you receive all emails (and not real customer emails).
 
 ~~~
@@ -311,6 +311,14 @@ end
 Another solution is `gem 'premailer-rails'`
 <https://github.com/fphilipe/premailer-rails> which can also generate text part
 so you do not need to maintain it. Just add the gem and you are good to go.
+I notice that in test I need to replace
+```
+mail = ActionMailer::Base.deliveries.last
+# instead of using: mail.body use
+mail.body.encoded
+# or
+mail.to_s
+```
 
 Gmail Android App will also parse media queries and apply that to inline styles
 (it will override inline styles).

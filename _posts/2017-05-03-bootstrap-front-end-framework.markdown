@@ -436,7 +436,12 @@ hash you can override any option).
 
 If you want all controlls and submit button to be in one line, you can use
 `layout: :inline` (note that only symbols works, string does not `layout:
-'inline'`)
+'inline'`). For text_field maximum size use
+```
+<%= bootstrap_form_for @form, layout: :inline do |f|
+  <%= f.text_field :name, size: 2 %>
+<% end %>
+```
 
 Use placeholders instead of labels
 ```

@@ -1664,7 +1664,7 @@ Is Paused`
   humanize is also used for `.human_attribute_name`
   https://github.com/rails/rails/blob/main/activemodel/lib/active_model/translation.rb#L64
 
-  For forms we can override builder
+  For forms we can override builder so required fields add star on labels
   https://en.wikipedia.org/wiki/Builder_pattern
   ```
   # config/initializers/label_builder.rb
@@ -4138,6 +4138,21 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
       format.json { render json: { error_message: exception.message, error_status: :bad_request }, status: :bad_request }
     end
   end
+  ```
+
+  When we need to permit hash or hash of hashes you simply permit `{}`
+  ```
+  # [jv_percentages][operator_percentages][123] = 1
+  # [jv_percentages][operator_location_percentages][123][456] = 1
+  def jv_percentages_params
+    params.require(:jv_percentages).permit(
+      operator_percentages: {},
+      operator_location_percentages: {},
+    )
+  end
+
+  jv_percentages_params # => { operator_percentages: { '123': '1' },
+  operator_location_percentages: { '123': { '456': '1' } } }
   ```
 
   Params can be different format, so event this code can raise exception

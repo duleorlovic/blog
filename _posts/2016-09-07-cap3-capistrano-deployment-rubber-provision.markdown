@@ -296,7 +296,8 @@ Inside that folder there are:
   * `current` symlink to some release `/var/www/my_app/releases/20170101010101`
   * `releases/` contains timestamped subfolder
   * `repo/` hold git repository
-  * `revisions.log` timestaped log for all deploy or rollback actions
+  * `revisions.log` timestaped log for all deploy or rollback actions. You can
+    rollback with `cap production deploy:rollback`
   * `shared/` contains `linked_files` and `linked_dirs` that persists across
   releases (db configuration, user storage)
 * `:scm` by default is `:git`
@@ -337,7 +338,15 @@ is with `cap install`.
 Tasks are usually only for specific roles so you server needs to belongs to that
 role if you want task to be executed. Three main roles
 
-* `:web` role is nginx/apache server with load balancer
+* `:web` role is nginx/apache server. When I look at
+  https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/assets.rake#L136
+  I see that `assets_roles` is by defailt `[:web]` so there we execute tasks
+  like `deploy:asset`. Probably you need to include also `:worker` role
+  ```
+  # config/deploy.rb
+    # we need assets on worker since we send emails that uses images (like logo)
+    set :assets_roles, %i[web worker]
+  ```
 * `:app` role is for rails app. Capistrano's built-in tasks `deploy:check`,
   `deploy:published` or `deploy:finished` are all run in this role.
   https://capistranorb.com/documentation/getting-started/flow/
@@ -358,7 +367,6 @@ role if you want task to be executed. Three main roles
 * `:db` role is for mysql/postgresql database (requires `primary: true`) or just
   running migrations. `capistrano-rails` plugin provides the `deploy:migrate`
   https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/migrations.rake
-  https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/assets.rake
   Here we are adding `public/assets/` to *linked_dirs* (which should also
   include `public/packs`)
 

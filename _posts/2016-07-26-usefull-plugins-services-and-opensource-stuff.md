@@ -1235,3 +1235,65 @@ vi /etc/pihole/setupVars.conf
 Block porn sites by simply goind to Settings -> Blocklists -> https://raw.githubusercontent.com/chadmayfield/pihole-blocklists/master/lists/pi_blocklist_porn_top1m.list
 
 
+# Time tracking
+
+* harvest
+  It contains a cli https://github.com/zenhob/hcl
+  ```
+  gem man hcl
+  ```
+  Issue with status so you need to update
+  ```
+  gem open hcl
+  lib/hcl/commands.rb
+  # change http:// to https://
+  ```
+* https://github.com/laughedelic/gtm is old unmaintained
+* https://github.com/git-time-metric/gtm
+  Install linux brew https://brew.sh/
+  ```
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  ```
+  Than install gtm
+  ~~~
+  brew tap git-time-metric/gtm
+  brew install gtm
+  ~~~
+
+  Use in your project
+  ```
+  gtm init
+
+  gtm status
+  gtm report -last-month -format summary
+  ```
+* approximate based on git commit times
+  https://github.com/kimmobrunfeldt/git-hours
+  ```
+  git-hours
+  # yesterday  or 2021-01-01 yesterday
+  git-hours --since lastweek
+  ```
+*  Glass https://github.com/timeglass/glass
+
+  Download and create links in your `/usr/local/bin` and run `sudo glass install`
+  <https://github.com/timeglass/glass/blob/master/docs/manual_installation.md>
+
+  ~~~
+  glass init
+  glass status
+  git commit -am "Work"
+  git log -n 1 --show-notes=time-spent
+  ~~~
+
+  To disable adding commit message use space (not empty)
+
+  ~~~
+  cat >> /var/lib/timeglass/timeglass.json << HERE_DOC
+  {
+    "mbu": "1m",
+    "commit_message": " ",
+    "auto_push": false
+  }
+  HERE_DOC
+  ~~~

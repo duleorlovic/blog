@@ -64,6 +64,10 @@ variable) and open new terminals, curl and ruby works fine
 echo "puts Net::HTTP.get(URI('http://ifconfig.me'))" | ruby -rnet/http
 ```
 
+* to find my public ip address you can use
+```
+dig +short myip.opendns.com @resolver1.opendns.com
+```
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
 guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
@@ -821,6 +825,10 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   # find monitor id like VGA-0
   xrandr --addmode VGA-0 1920x1080
   ```
+  to turn of monitors every night https://askubuntu.com/a/116806/40031
+  ```
+  sleep 1 && xset -display :0.0 dpms force off
+  ```
 * to check disk usage you can run to see folder size
   ```
   sudo du /* -s
@@ -828,27 +836,28 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   # to sort
   du -sm * | sort -nr
   ```
-  to free up disk space from ubuntu you can remove /var/log/journal
+  to free up disk space from ubuntu clear clean you can remove /var/log/journal
   ```
   journalctl --disk-usage
   sudo vi /etc/systemd/journald.conf
   sudo journalctl --vacuum-size=50M
   ```
   and snapd https://www.linuxuprising.com/2019/04/how-to-remove-old-snap-versions-to-free.html
-  ```
-  sudo snap set system refresh.retain=2
+```
+sudo snap set system refresh.retain=2
 
-  # ~/Programs/remove-old-snaps.sh
-  #!/bin/bash
-  # Removes old revisions of snaps
-  # CLOSE ALL SNAPS BEFORE RUNNING THIS
-  set -eu
+cat > remove-old-snaps.sh << 'HERE_DOC'
+#!/bin/bash
+# Removes old revisions of snaps
+# CLOSE ALL SNAPS BEFORE RUNNING THIS
+set -eu
 
-  LANG=en_US.UTF-8 snap list --all | awk '/disabled/{print $1, $3}' |
-      while read snapname revision; do
-          snap remove "$snapname" --revision="$revision"
-      done
+LANG=en_US.UTF-8 snap list --all | awk '/disabled/{print $1, $3}' |
+    while read snapname revision; do
+        snap remove "$snapname" --revision="$revision"
+    done
+HERE_DOC
 
-  chmod +x ~/Programs/remove-old-snaps.sh
-  sudo ~/Programs/remove-old-snaps.sh
-  ```
+chmod +x ~/remove-old-snaps.sh
+sudo ~/remove-old-snaps.sh
+```

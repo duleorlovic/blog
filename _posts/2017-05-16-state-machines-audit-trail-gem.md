@@ -359,3 +359,10 @@ Package.")unless advance_renewal_package.present?; end`.
       t.string   :item_type, null: false
       t.uuid     :item_id,   null: false
   ```
+  Sometimes new versions is not save, I do not know why I got `o.versions # =>
+  []` or there exists versions that I have not created.
+  ```
+  PaperTrail::Version.all.map &:item_type
+  PaperTrail::Version.all.map &:item_id
+  PaperTrail::Version.all.map &:item
+  ```

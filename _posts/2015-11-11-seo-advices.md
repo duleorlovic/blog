@@ -151,7 +151,7 @@ rake sitemap:install # this will generate config/sitemap.rb
 vi config/sitemap.rb # put some `add path, options`
 
 rake sitemap:refresh:no_ping # to generate sitemap to public folder without ping
-less public/sitemap.xml.gz
+iess public/sitemap.xml.gz
 gunzip public/sitemap.xml.gz && chromium-browser public/sitemap.xml
 ~~~
 

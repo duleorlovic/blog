@@ -69,7 +69,7 @@ asset paths are searched. If you want to add some path
 
 ~~~
 # config/initializers/assets.rb
-Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'adminlte', 'images')
+Rails.application.config.assets.paths << R"#{ails.root.join('app', 'assets', 'adminlte', 'images')
 ~~~
 
 All files  should be referenced to assets pipeline by `//= require posts` or
