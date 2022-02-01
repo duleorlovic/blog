@@ -213,12 +213,15 @@ have working dns for root domain.
 sudo certbot certonly --nginx -d main.trk.in.rs
 ```
 
-It will create 4 files and you can read show open describe inspect cert.pem
+It will create 4 files and you can read certificate show open describe inspect
+cert.pem
 ```
 sudo ls /etc/letsencrypt/live/main.trk.in.rs
 cert.pem  chain.pem  fullchain.pem  privkey.pem
 
 sudo openssl x509 -text -noout -in /etc/letsencrypt/live/main.trk.in.rs/cert.pem
+# read expiry date
+openssl x509 -enddate -noout -in file.pem
 sudo keytool -printcert -file /etc/letsencrypt/live/main.trk.in.rs/cert.pem | grep trk
 ```
 

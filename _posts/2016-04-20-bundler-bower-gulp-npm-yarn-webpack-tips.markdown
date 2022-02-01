@@ -224,6 +224,9 @@ yarn run build # to run "scripts" -> "build"
 yarn add [package]
 # yarn add install specific version 2.3.4
 yarn add package@2.3.4
+# https://classic.yarnpkg.com/en/docs/cli/add#toc-adding-dependencies
+# yarn add specific version from github (do not usee git@, better is https://)
+yarn add "https://github.com/duleorlovic/stimulus-textarea-autogrow.git"
 ~~~
 
 You can add `package@version` vesion could be `"^1.0.0"`

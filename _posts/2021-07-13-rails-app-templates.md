@@ -11,7 +11,7 @@ Rails templates used for new applications
 rails new blog -m http://example.com/template.rb
 
 # for existing apps
-rails app:template LOCATION=~/template.rb
+rails app:template LOCATION=./template.rb
 ```
 
 Basic api example
@@ -19,7 +19,7 @@ Basic api example
 ```
 # template.rb
 
-# rails commands
+# you can use run instead rails generator and commands
 generate(:scaffold, "person name:string")
 generate(:migration, 'add_company_to_users company:references')
 
@@ -41,10 +41,10 @@ end
 environment 'config.action_mailer.default_url_options = {host: "http://yourwebsite.example.com"}', env: 'production'
 
 # file, add force: true to overwrite existing content
-file 'app/components/foo.rb', <<-CODE
+file 'app/components/foo.rb', <<~RUBY
   class Foo
   end
-CODE
+~RUBY
 
 # run any command like backtick
 run "rm README.rdoc"
@@ -57,17 +57,17 @@ run 'echo import \"bootstrap\" >> app/javascript/packs/application.js'
 
 # gsub file
 # https://github.com/rails/thor/blob/master/lib/thor/actions/file_manipulation.rb#L265
-gsub_file 'app/views/layouts/application.html.erb', /.*yield.*/, <<CODE
+gsub_file 'app/views/layouts/application.html.erb', /.*yield.*/, <<-ERB
     <div class='container'>
       <%= yield %>
     </div>
-CODE
+ERB
 
-# insert into layout template file
+# insert into layout template file using after: "Base\n", or before: "  end"
 # https://github.com/rails/thor/blob/master/lib/thor/actions/inject_into_file.rb
-insert_into_file 'app/views/layouts/application.html.erb', <<CODE, before: '  </head>'
+insert_into_file 'app/views/layouts/application.html.erb', <<-ERB, before: '  </head>'
     <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
-CODE
+ERB
 ```
 
 Example of templates

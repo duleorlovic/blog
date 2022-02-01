@@ -64,10 +64,33 @@ variable) and open new terminals, curl and ruby works fine
 echo "puts Net::HTTP.get(URI('http://ifconfig.me'))" | ruby -rnet/http
 ```
 
-* to find my public ip address you can use
+* to find my public ip address you can use what is my ip address
+and other tools from https://github.com/chubin/awesome-console-services
 ```
+# inline public ip address
+curl l2.io/ip
+
+# new line
+curl eth0.me
 dig +short myip.opendns.com @resolver1.opendns.com
+
+# geolocation of ip address
+curl ip-api.com
+curl ip-api.com/8.8.8.8
+
+# vicevi
+curl https://icanhazdadjoke.com
+
+# show a zoomable world map
+telnet mapscii.me
+
+# UNIX/Linux commands cheat sheets using curl (chubin/cheat.sh)
+curl cheat.sh
+
+# test upload download speed
+curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
 ```
+ssh igrice https://github.com/chubin/awesome-console-services#entertainment-and-games
 * gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
 guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
@@ -314,6 +337,11 @@ Also host command
 host trk.in.rs
 ```
 
+You can see redirection url with
+```
+curl -I mydomain.com
+```
+
 On linux you can update `/etc/hosts` with you custom domain name and use it
 instead of IP address.
 On window it is `c:\Windows\System32\Drivers\etc`. Just edit with notepad and
@@ -478,7 +506,7 @@ ngrok http 3002
 
 # PDF
 
-Merge several pdf files
+Merge pdf files
 
 ~~~
 pdftk * cat output ../p.pdf
@@ -630,7 +658,7 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
 
 To enable mysql service from remote you need to bind it to 0.0.0.0 in
 configuration. To test on which interface is used port listening you can see
-port use port in use
+port use port in used port
 
 ```
 sudo netstat -tupln | grep 3306
@@ -829,7 +857,7 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   ```
   sleep 1 && xset -display :0.0 dpms force off
   ```
-* to check disk usage you can run to see folder size
+* to check disk usage you can run to see folder size and disk size
   ```
   sudo du /* -s
 
@@ -845,8 +873,9 @@ dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
   and snapd https://www.linuxuprising.com/2019/04/how-to-remove-old-snap-versions-to-free.html
 ```
 sudo snap set system refresh.retain=2
+sudo rm -rf /var/lib/snapd/cache/*
 
-cat > remove-old-snaps.sh << 'HERE_DOC'
+cat > ~/remove-old-snaps.sh << 'HERE_DOC'
 #!/bin/bash
 # Removes old revisions of snaps
 # CLOSE ALL SNAPS BEFORE RUNNING THIS

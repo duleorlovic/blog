@@ -64,7 +64,10 @@ widget</a>`
 * add viewport meta tag `<meta content="width=device-width, initial-scale=1,
   maximum-scale=1, user-scalable=no" name="viewport">` and use CSS media queries
   to apply different style depending of screen size
-* enable gzip compresion, optimize image, use `srcset` for responsive images,
+* enable gzip compresion, optimize image size
+  https://web.dev/serve-images-with-correct-dimensions/
+
+* use `srcset` for responsive images,
   specify image dimensions
   ```
   <img src="https://example.com/images/image.png" srcset="https://example.com/images/image-1024.png 1024w, https://example.com/images/image-512.png 512w" sizes="100vw">
@@ -128,9 +131,13 @@ Bad crawlers will read the site anyway.
 # See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
 #
 # To ban all spiders from the entire site uncomment the next two lines:
-# User-agent: *
-# Disallow: /
-# Sitemap: http://www.example.com/sitemap.xml.gz
+User-agent: *
+
+Disallow: /users/password/new
+Disallow: /users/sign_in
+Disallow: /users/confirmation/new
+
+Sitemap: http://www.example.com/sitemap.xml.gz
 ~~~
 
 You can use meta tags to disable some well known robots. Add `<meta
@@ -151,7 +158,7 @@ rake sitemap:install # this will generate config/sitemap.rb
 vi config/sitemap.rb # put some `add path, options`
 
 rake sitemap:refresh:no_ping # to generate sitemap to public folder without ping
-iess public/sitemap.xml.gz
+less public/sitemap.xml.gz
 gunzip public/sitemap.xml.gz && chromium-browser public/sitemap.xml
 ~~~
 
@@ -322,6 +329,22 @@ Main syntax json-ld https://www.youtube.com/watch?v=UmvWk_TQ30A
     }
   ```
 * To create a links we can embed object or referencing using url
+* FAQ example https://saijogeorge.com/json-ld-schema-generator/faq/
+  ```
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is it Free to Register on MyApp?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Registration on MyApphe is free"
+        }
+      },
+  ```
 * Keyword aliasing when you want to use `obj.id` instead of `obj['@id']`
 
 ```

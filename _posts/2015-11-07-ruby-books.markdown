@@ -929,6 +929,12 @@ merge](https://apidock.com/rails/Hash/reverse_merge)
   hash = {
     a: 1,
     b: (2 if condition),
+    b: (condition? ? 2 : 3),
+    c: if another_condition
+         3
+       else
+         4
+       end,
   }.reject { |k, v| v.nil? }
   # or in Ruby 2.4
   }.compact
@@ -1461,8 +1467,9 @@ to_upper = -> (str) { str.upcase }
   ```
   If you need recursively generated OpenStruct than you can convert to json and
   parse with Open struct class: `h = { a: 1, b: { c: 1 }};
-  o=JSON.parse(h.to_json, object_class: OpenStruct); o.b.c # => '1'`. You can
-  use rails `h = ActionController::Parameters.new` so you can `h.merge! b:1`
+  o=JSON.parse(h.to_json, object_class: OpenStruct);`. So now you can use nested
+  attributes  `o.b.c # => '1'`. Another way is to use rails `h =
+  ActionController::Parameters.new a: { b: { c: 1 }}` so you can `h.merge! b:1`
 * raise error when hash key does not exists (instead of returning `nil`).
   `default_proc` will be executed if key does not exists
 
@@ -1596,7 +1603,8 @@ railse
   ```
 
   but better is to use `each_with_object({}) { |el, a|` accumulator is last
-  param not the first.
+  param not the first. You can summarize using `.inject` or `.each_with_object`
+  or synonim is `.reduce`
 
 * for read from a file `file = File.open(file_name)` you can call `file.read`.
   But you can create String io `io =  StringIO.new 'asd'` and call `io.read`.

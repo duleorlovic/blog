@@ -474,7 +474,11 @@ For integration we use `ActionDispatch::IntegrationTest` which gives methods:
 title: "Ahoy!" }, response.parsed_body)`.
 
 * `follow_redirect!`
-* `assert_redirected_to post_url(Post.last)`
+* `assert_redirected_to post_url(Post.last)`,or you can match only part of url
+  using `@response` object
+   ```
+   assert_match /https:\/\/www.myapp.com\/path/, @response.redirect_url
+   ```
 * `assert_response :success` (for http codes 200-299), `:redirect` (300-399), `:missing` (404), `:error` (500-599).
 * `assert_select 'h1', user.email` . Note that white spaces and new lines are
   ignored
@@ -496,7 +500,8 @@ title: "Ahoy!" }, response.parsed_body)`.
   end
   ```
 * `assert_select 'h1', 'Welcome'` is used to test view. View can be tested with
-  `assert_match /Welcome/', response.body`.
+  `assert_match /Welcome/', response.body`, for multi line you can use `/m`
+  `assert_match /first line.*second line/m, response.body`
   There are two forms of *assert_select selector, [equality], [message]* or
   using Nokogiri::XML::Node as element *assert_select element, selector,
   [equality]*.
@@ -528,7 +533,7 @@ title: "Ahoy!" }, response.parsed_body)`.
   ~~~
   # instead of refute_select, for no div with my_name you can use count but put
   # inside hash: text: and count:
-  assert_select 'a[href=?]', text: /my_name/, count: 0
+  assert_select 'a[href=?]', 'http://link.com', text: /my_name/, count: 0
   # https://apidock.com/rails/ActionController/Assertions/SelectorAssertions/assert_select
    # All input fields in the form have a name
   assert_select "form input" do
@@ -686,13 +691,20 @@ Note that if you use puma with multiple workers than
 test process, so use `workers 0` in `config/puma/test.rb`.
 Or insclude ActionMailer::TestHelper and use assert_emails method.
 
+To limit number of bowsers (default is number of cores) use
+```
+PARALLEL_WORKERS=1 rails test:system
+```
+
 In system test you can't mock OmniAuth.mock_auth so use integration test for
 that.
 
 Capybara assertions
 <http://www.rubydoc.info/gems/capybara/Capybara/Minitest/Assertions>
 
-* `assert_text /dule/` (instead of `assert_match /dule/, page.body`)
+* `assert_text /dule/` or `assert_text Regexp.new('dule', Regexp::MULTILINE)`
+  (instead of `assert_match /dule/, page.body` or in rspec `expect(page).to
+  include 'dule'`
 * `assert_selector 'a', text: 'duke'` (you can assert other html attributes with
   square brackets `assert_selector '#my_id[readonly="readonly"][value="My
   Name"]'`
@@ -992,3 +1004,8 @@ guard :minitest, spring: 'bin/rails test', failed_mode: :focus do
     end
   end
   ```
+* Using rails native helpers
+http://edgeapi.rubyonrails.org/classes/ActiveSupport/Testing/TimeHelpers.html
+Use `ActiveSupport::Testing::TimeHelpers#travel` (usefull when you want time to
+pass) and `travel_to` `travel_back` (time does not move for the duration of the
+test).

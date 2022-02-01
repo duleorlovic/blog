@@ -65,14 +65,15 @@ which is similar to `click_link` but for union of `:link` and `:button`
 selectors.
 * `fill_in "email", with: 'asd@asd.asd'` locator is input name, id, test_id,
   placeholder, label text. Note that it is case sensitive.
-invalid zipcode 07068 for country CA
   alternative is find set `find("input[name='cc']").set 'asd@asd.asd'`, or using
   javascript `page.execute_script "$('#my-id').val('asd@asd.asd')"`
 * `check 'my checkbox'` (or by id but without # `check 'my_check_id'`), `choose
  'my radio button'`, `select 'My Option or Value', from: 'My Select Box'`, also
  uncheck `uncheck 'my checkbox'`, `unselect`
-* `page.attach_file 'doc[file]', "#{Rails.root}/test/fixtures/files/computer_text.png", make_visible: true`
+* `page.attach_file 'doc[file]', "#{Rails.root}/test/fixtures/files/computer_text.png", make_visible: true` to upload image to file field
+https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Actions:attach_file
 * If you need to fill_in iframe than you can access it by id or number
+  using `@response` object
 ~~~
   within_frame 0 do
   end
@@ -1080,3 +1081,6 @@ http://scrapinghub.com/
 https://www.scrapehero.com/
 http://datahut.co/
 http://scrapy.org/
+
+comercial
+https://agenty.com/

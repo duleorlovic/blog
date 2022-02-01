@@ -251,7 +251,9 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
   Gemfile, it will not change directory (you can check that `:pwd` is showing
   same folder). To manually change current folder directory to file path you can
   use `:lcd %:p:h`. `%` is the name, `%:p` file full path, `%:p:h` give its
-  directory, `%<` expands filename without trailing extension
+  directory.
+  Or you can type `cd` when cursor is on the line where is the path:
+  `%<` expands filename without trailing extension
   ```
   :help filename-modifiers
   ```

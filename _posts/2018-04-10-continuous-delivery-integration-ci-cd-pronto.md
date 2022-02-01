@@ -397,8 +397,7 @@ sudo gitlab-runner list
 ```
 
 TODO shell executor https://www.youtube.com/watch?v=sACdT3Rv89E
-You can use Kubernetes clusters
-https://gitlab.com/help/user/project/clusters/index
+You can use any cluster https://gitlab.com/help/user/project/clusters/index
 
 To run a job localy you can use
 https://docs.gitlab.com/runner/commands/README.html#gitlab-runner-exec

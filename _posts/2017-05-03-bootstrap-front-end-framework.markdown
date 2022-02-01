@@ -21,6 +21,7 @@ nested column) so that the reason why row has -15px margin (to fix eventual
 parent column padding) and you have to wrap row with `.container` class to
 compensate that (padding 15px) or to add class `px-3`, otherwise you will get
 horizontal scrollbar since body will be larger than 100% by 30px.
+Also for `.container-fluid`
 
 Bootstrap Media queries:
 
@@ -583,6 +584,11 @@ module FormHelper
   def bootstrap_form_with(options = {}, &block)
     options.reverse_merge! builder: MyFormBuilder
     super(options, &block)
+  end
+  def options_for_select(container, attr = {})
+    # do not show Const.not_specified option
+    container = container.reject { |k, _| k.to_s.match Const.not_specified } unless attr[:show_not_specified]
+    super container, attr
   end
 end
 ```

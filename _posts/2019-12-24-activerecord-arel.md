@@ -159,3 +159,10 @@ User.where(
   company.users.new(name: 'Hi', company: company)
 
   ```
+
+* use OR statement like
+  ```
+    Book.where(category: "Programming").or(Book.where(category: "Ruby"))
+
+    member_profile.member_pictures.where(status: 'pending').or(member_profile.member_pictures.where(status: 'approved'))
+  ```

@@ -5,8 +5,7 @@ layout: post
 
 # Arduino
 
-You can download old Arduino (ver 1.8) to Programs, or you can use from Ubuntu
-(ver 2.1).
+To install I download tar.gz and run `./install.sh`
 
 ## Arduino Makefile
 
@@ -64,6 +63,44 @@ you can find examples of it: File -> Examples -> VirtualWire -> transmitter
 Pin 12 is for sending, Pin 11 for receiving.
 
 But since it is not updated I used Manchester http://mchr3k.github.io/arduino-libs-manchester/
+
+# GRBL drive step motor using g codes
+
+To install grbl download and extract https://github.com/gnea/grbl/releases and
+inside Arduino Sketch -> Include library -> Add zip library navigate to grbl
+folder.
+This will create `~/Arduino/libraries/grbl`
+Then upload firmware example: Open File -> Examples -> grbl -> grblUpload
+
+
+## UGS
+
+To install UGS universal g code sender, go to 
+https://winder.github.io/ugs_website/download/ and download to programs and link
+to bin
+```
+ln -s /home/orlovic/Programs/ugsplatform-linux/bin/ugsplatform ~/Programs/bin/
+ugsplatform
+```
+https://www.youtube.com/watch?v=cWKO8j_tv7A&t=195s
+Set Machine -> Firmware settings -> $20 $21 $22 to 0 Soft hard limits and homing
+cycle
+In console
+
+```
+$$
+$20=0
+```
+
+
+a4988 Driver https://mehatron.rs/arduino-a4988-drajver-step-motora-sa-hladnjakom
+arduino modul v3 for a4988 drivers
+https://mehatron.rs/arduino-drajver-cnc-shield-v3-za-a4988
+https://www.youtube.com/watch?v=TMK_fLgpESQ
+
+200 steps x 16 resolution = 3200 steps for one round (360 degres)
+steps per milimeter is 83
+400 steps for Z axis, ie 1mm is 45 degres.
 
 
 # Solar food dehydrator

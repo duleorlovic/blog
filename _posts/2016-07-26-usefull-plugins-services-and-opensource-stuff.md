@@ -698,9 +698,11 @@ and download only that batch of icons.
 
 # Images
 
-* free high resolution <https://unsplash.com/>
-* free online sample images https://unsplash.it/images
+* free images photos high resolution <https://unsplash.com/> and free online
+  sample images https://unsplash.it/images
 * free stock photos <https://burst.shopify.com>
+* free photo https://barnimages.com/
+* free https://picjumbo.com/
 * sample placeholder https://placeholder.com/
 * free vector images kajak pictogram https://pixabay.com/en/sport-pictogram-olympia-water-swim-1580667/
 * flags http://flagpedia.net/india
@@ -750,6 +752,10 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   https://www.chartjs.org/docs/latest/developers/updates.html
 
   To use with rails you can use https://github.com/ankane/chartkick
+  Problem is I do not know how to
+  * show sum instead of count https://github.com/ankane/groupdate/issues/75
+  * show only if nested association exists, `joins` will multiply with the
+    number of associated rows.
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
 
@@ -814,7 +820,7 @@ https://segment.com/ collect customer data
 * intercom <https://demos.intercom.com/>
 * [user deck](https://userdeck.com)
 * [chatwoot](https://www.chatwoot.com/docs/channels/website) opensource rails
-  customer support
+  customer support engagement
 * https://github.com/chaskiq/chaskiq opensource rails
 
 
@@ -1048,12 +1054,30 @@ Email templates
 * checkbox in css https://codepen.io/himalayasingh/pen/EdVzNL
 * rotate and shake on hover https://codepen.io/duleorlovic/pen/jdjYNE
 * radio button animation https://codepen.io/milanraring/pen/NWqbvxe
+* link underline animate https://codepen.io/aardrian/details/qBPgYzW
 
 # Scroll
 
 * <https://russellgoldenberg.github.io/scrollama/basic/> scrolling and changing
 the content
-* menu active item changes when you have long text and scroll to sections https://codepen.io/jpdanks/pen/LYVbbwK
+* menu active item changes when you have long text and scroll to sections
+  https://codepen.io/jpdanks/pen/LYVbbwK
+* scroll whole page, not stuck at the middle of the slide, it is using
+  ```
+  html {
+    scroll-snap-type: y mandatory;
+  }
+
+  section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ```
+  https://codepen.io/argyleink/pen/yLovWjz
 
 # Nice design and ui tools
 
@@ -1074,6 +1098,8 @@ the content
 * menu in css, select sibling and opacity on all but the one being hovered https://medium.freecodecamp.org/how-to-make-the-impossible-possible-in-css-with-a-little-creativity-bd96bb42b29d
 * menu slidey navigation https://github.com/duleorlovic/slidey-nav
   https://codepen.io/EricPorter/pen/YzKrqMp
+* carousel slider
+  https://codepen.io/Akimzzy/full/JjGKMoX
 
 # Fonts and icons
 
@@ -1297,3 +1323,7 @@ Block porn sites by simply goind to Settings -> Blocklists -> https://raw.github
   }
   HERE_DOC
   ~~~
+
+https://github.com/veggiemonk/awesome-docker#paas
+* paas like dokku captainduckduck caprover https://github.com/caprover/caprover
+

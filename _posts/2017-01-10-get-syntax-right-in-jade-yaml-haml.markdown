@@ -52,6 +52,26 @@ allowed inside ()
     - foo bar
     - baz
   ```
+  There is no need to add space before hyphens but I think it is better
+  ```
+  require 'yaml'
+
+  YAML.load(%q{--- 
+  1:
+  - 1
+  - 2
+  - 3
+  })
+  # => {1=>[1, 2, 3]}
+
+  YAML.load(%q{--- 
+  1:
+    - 1
+    - 2
+    - 3
+  })
+  # => {1=>[1, 2, 3]}
+  ```
 * associative arrays (hash) are written with colon space `key: value`
   (multiline) or in single line with `{a: 1, b: 2}`, so this two are the sam
   ```
@@ -187,6 +207,7 @@ other blocks use indent
       alert("hi");
     });
   ~~~
+* yml new sections is using three dashes `---`
 
 # Json
 

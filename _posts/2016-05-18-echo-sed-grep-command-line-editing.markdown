@@ -200,7 +200,8 @@ boundaries like `^([0-9]|[1-9][0-9])$` (0..99, but not 0asd, or asd9
 character including end-of-line. Use `\n` for new line character for example
 `asd(.|\n)*<div>`. `\{-}` stopping at first occurence early short (`*` is too
 greedy, eager and would stop at last occurence). If you want ruby regex ignore
-new line you can use modifier `m`, like match all dl `s.match /dl.*dl/m`
+new line you can use modifier `m` (multiline multi line search), like match all
+dl `s.match /dl.*dl/m`
 * to stop at first match use non greedy match, just add `?` after `?` or `*`
   or `+`, like
   `registration_email.html_part.decoded.match(/(http:.*?confirmation.*?)"/)[1]`
@@ -250,3 +251,21 @@ example in ruby is
 
 * split by one char: `echo "1:3" | awk '{split($0,a,":");print a[1] a[2]}' # 13`
 * split by multiple char: `echo "1:3x5" | awk -F':|x' '{print $1 $2 $3}' # 135`
+
+# jq
+
+https://stedolan.github.io/jq/tutorial/
+or better is to
+```
+man jq
+```
+example commands
+```
+cat title.json | jq '.'
+```
+* first `[0]`, all `[]`
+* get all commit.message `.[] | { message: .commit.message }'`
+* put all inside array `[.[]]` also works for nested .parents
+```
+curl 'https://api.github.com/repos/stedolan/jq/commits?per_page=5' | jq '[.[] | {message: .commit.message, name: .commit.committer.name, parents: [.parents[].html_url]}]'
+```

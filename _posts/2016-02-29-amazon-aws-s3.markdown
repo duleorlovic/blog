@@ -336,13 +336,6 @@ object.public_url
 object.presigned_url(:get)
 ```
 
-# AWS CLI
-
-https://aws.amazon.com/cli/
-
-If you export keys, cli will use that
-https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
-
 # Elastic Beanstalk
 
 https://aws.amazon.com/cli/

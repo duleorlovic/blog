@@ -313,7 +313,7 @@ class MyFormBuilder < BootstrapForm::FormBuilder
 end
 ```
 
-* stimulus-use can be loaded in two was
+* stimulus-use tools can be loaded in two was
   ```
   # extending
   import { IntersectionController } from 'stimulus-use'
@@ -333,3 +333,15 @@ end
     }
   }
   ```
+* simulus-components tools scroll to
+  ```
+  yarn add stimulus-scroll-to
+
+  # in app/javascript/controllers/index.js
+  import { Application } from "stimulus"
+  import ScrollTo from "stimulus-scroll-to"
+
+  const application = Application.start()
+  application.register("scroll-to", ScrollTo)
+  ```
+  https://stimulus-components.netlify.app/docs/stimulus-scroll-to/

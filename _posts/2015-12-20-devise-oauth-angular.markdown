@@ -345,6 +345,8 @@ end
       uid: auth.uid,
     )
     user.skip_confirmation! # this will just add confirmed_at = Time.now
+    # if you change email than you need to run
+    user.skip_reconfirmation!
     # user.name = auth.info.name # assuming the user model has a name
     # user.image = auth.info.image # assuming the user model has an image
     user

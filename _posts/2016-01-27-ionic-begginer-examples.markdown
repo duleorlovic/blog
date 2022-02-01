@@ -20,7 +20,7 @@ echo 'export PATH="$PATH:$HOME/orlovic/Android/Sdk/tools"' >> ~/.bashrc
 # or
 sudo ln -s /home/orlovic/Android/Sdk/tools/android /usr/bin/
 
-android avd
+android list avd
 emulator @n4 &
 ~~~
 

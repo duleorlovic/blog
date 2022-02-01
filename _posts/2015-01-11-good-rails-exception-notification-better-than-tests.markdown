@@ -54,6 +54,7 @@ class Notify
   # Send notification using string as subject and pass additional argumets (it
   # will be shown as array) or options (shown as hash) for example:
   # Notify.message 'some_problem', customers_url, email: customer.email
+  # Notify.message "OTP", registration_url: Rails.application.routes.url_helpers.superadmin_registration_url(@registration)
   # Notify.message 'text', user.slice :id, :name
   def self.message(message, *args)
     data = {}

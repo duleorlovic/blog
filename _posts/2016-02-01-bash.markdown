@@ -448,10 +448,26 @@ it will be in `tmp/db.dump`
 
 * nice tutorial [Bash Begginers
   Guide](http://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) and [example config scrips](https://github.com/duleorlovic/config)
-* input first param `$1`. `$@` is all params. Use `"$@"` is you pass to another
-  script and you want to preserve quoted strings https://stackoverflow.com/questions/4824590/propagate-all-arguments-in-a-bash-shell-script
+* input first param `$1`. `$@` is all params. Default value with `:-` for
+  example `local port="${1:-8000}"`
+  Use `"$@"` if you pass to another script and you want to preserve quoted
+  strings
+  https://stackoverflow.com/questions/4824590/propagate-all-arguments-in-a-bash-shell-script
   So when variable contain spaces and you need to pass to a command than wrap
-  around with quotes, for example `A="file with space.txt"; ls "$A"`
+  around with quotes, for example `A="file with space.txt"; ls "$A"` There is
+  also a `$*` which is very similar to `$@` but when used by quote `"$*"` it is
+  joined by IFS character `"$1c$2c$3c…c${N}"` so here is function
+  https://dev.to/meleu/how-to-join-array-elements-in-a-bash-script-303a
+  ```
+  joinByChar() {
+    local IFS="$1"
+    shift
+    echo "$*"
+  }
+
+  $ joinByChar , Moe Larry Curly
+  Moe,Larry,Curly
+  ```
 * exit from script with `exit 1`
 * to chech if files are same or different
   https://stackoverflow.com/questions/12900538/fastest-way-to-tell-if-two-files-have-the-same-contents-in-unix-linux
@@ -491,7 +507,7 @@ it will be in `tmp/db.dump`
   If you use double brackets you do not need quotes around variable name.
 
   ~~~
-  # check if $a is present (not null)
+  # check if $a is present (not null) empty
   if [[ -n $a ]]
 
   # if conditional to check if string is substring
@@ -650,7 +666,8 @@ Note `.` after folder name.
   -en "\n\n\n" | command` . Or you can install
   [yes](https://en.wikipedia.org/wiki/Yes_%28Unix%29) command which outputs
   `y\n` in a infinite loop `yes | command`
-* last folder in path `basename $(pwd)`
+* get folder from path `echo $(dirname "${f}")` file `basename "asd/a.t"` or
+  last folder (after last /) from current folder `basename $(pwd)`
 * to check if file does not exists you can use
 
   ~~~
@@ -778,6 +795,18 @@ done
 
 # iterate over sequence
 for i in {1..5}; do echo $i; done
+
+# iterate over list of lines from some command
+for file in `git diff $SHA --name-only`
+do
+  echo $file
+done
+# or
+files=$(git diff $SHA --name-only)
+IFS=$'\n'
+for file in $files
+do
+end
 ~~~
 
 # Curl
@@ -807,7 +836,7 @@ curl $u/expenses -i # or --include show also the response headers
 * test the speed on ssh on remote server:
   * download: `curl -o /dev/null http://speedtest.qsc.de/1GB.qsc`
   * upload: generate large file `fallocate -l 1G gentoo_root.img` and use scp to
-  test upload link
+  test upload link. create big file
 * limit the speed to simulate slow connections `curl $u limit-rate 100` or using
 <https://github.com/bcoe/crapify>. But this is only for downloading, server
 renders quickly. Only way to simulate high response time is with `sleep 5`

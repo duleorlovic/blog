@@ -58,6 +58,8 @@ scripts)
 
 # Scroll into view of element
 
+For stimulus version check https://stimulus-components.netlify.app/docs/stimulus-scroll-to/
+
 Sometimes you need to scroll the page to show some notification on top, or to
 display element from the bottom of the page. We can use
 [scrollIntoView](https://developer.mozilla.org/en/docs/Web/API/Element/scrollIntoView)
@@ -644,3 +646,8 @@ you can add `$('p').after("some text")` or `$('p').before('some text')`
       this.checked = false
       true
   ```
+* upgrade jquery with `require('jquery-migrate')` so we can read all warnings in
+  console
+  * replace `$(document).on('ready', function(){})` with `$(function(){})`
+  * replace `$(el).focus())` with `$(el).trigger('focus')` or
+    `$(el).blur(function(){})` with `$(el).on('blur', function(){})`

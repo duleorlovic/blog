@@ -8,7 +8,7 @@ layout: post
 gem 'stripe'
 
 rails credentials:edit
-# add two keys
+# add two keys from test env https://dashboard.stripe.com/test/apikeys
 stripe_publishable_key: pk_test_I...
 stripe_secret_key: sk_test_g...
 
@@ -32,7 +32,6 @@ https://stripe.com/docs/payments/checkout/accept-a-payment?lang=ruby
 
   def checkout
     @stripe_session = Stripe::Checkout::Session.create(
-      payment_method_types: ['card'],
       client_reference_id: 'my_reference',
       customer_email: 'my@email.com',
       line_items: [{
@@ -176,7 +175,3 @@ library https://github.com/rebelidealist/stripe-ruby-mock
 ~~~
 
 ~~~
-
-# Sample task
-
->  The Stripe integration is deeply tied into the application and is not simply a case of setting up Checkout. Our client is using Elements, the application has multiple subscription levels, and the users will need the option of changing their subscription level, changing credit cards, accessing custom invoices, etc. Invoice items will need to show custom data due to specialized industry needs. Custom invoices may need to be developed depending on the implementation of Stripe.

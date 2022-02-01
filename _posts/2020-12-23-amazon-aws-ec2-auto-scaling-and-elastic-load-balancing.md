@@ -7,39 +7,84 @@ layout: post
 Video
 components of vpc https://youtu.be/LX5lHYGFcnA?t=2921
 
-VPC are limited to a region but stretch across Availability Zones AZs
-Subnets can be Private or Public and are limited to a single AZ
+VPC is a place where we deploy or instances and databases in. It uses 10.0.x.x
+addressing space (for example main-public-1 is 10.0.1.0/24)
+VPC are limited to a region (eu-west-1) but stretch across all Availability
+Zones AZs (eu-west-1a, eu-west-1b and eu-west-1c). In each AZ we define subnet.
+Subnets can be Private or Public and are limited to a single AZ.
+
+We can use different addressing for subnets (IP CIDR Range) /8 /16 /24 /32 bits
+* 10.0.0.0/8 (one big vpc from 10.0.0.0 to 10.255.255.255). Better is to use
+  multiple vpc with 64K addresses 10.1.x.x, for example 10.0.0.0/16 for one VPC
+  (10.0.5.1, 10.0.100.3) and 10.1.0.0/16 for another VPC (10.1.5.1, 10.1.100.3).
+  10.0.0.0/24 is too small (only 256 ip addresses 10.0.0.x)
+* 172.16.0.0/12 (from 172.16.0.0 to 172.31.255.255) this was default before
+* 192.168.0.0/16 (from 192.168.0.0 to 192.168.255.255)
+
+5 IPs are un-usable reserved .0 (network) .1 (gateway) .2 (dns) .3 (future) .255
+(broadcast) http://jodies.de/ipcalc?host=192.168.0.5&mask1=26&mask2=
+You can see inside instance in 10.0.1.0/24 subnet that local IPs are not using
+gateway (but are connected directly) but other IPs like 8.8.8.8 is goding to
+gateway on `.1` address.
+```
+route -n
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         10.0.1.1        0.0.0.0         UG    0      0        0 eth0
+10.0.1.0        0.0.0.0         255.255.255.0   U     0      0        0 eth0
+```
+
+Subnets define sub-networks that must be ip range of VPC, for example is VPC
+is 10.3.0.0/16 than subnets can be /17 .../24... for example 10.3.1.0/24
+(10.5.0.0/24 is not part of the VPC network 10.3.0.0/16)
+
+Internet gateway is device in VPC.
 Subnet is associated with route table, so when EC2 instance inside it wants to
 communicate to internet outband, route table should contain IGW along with
-default local entry (private subnet can not communicate with internet)
+default local entry (private subnet are not associated to route table which has
+entry with IGW).
+0.0.0.0/0 means any IP address.
 ```
+# route table
 10.0.0.0/16  Local
 0.0.0.0/0    IGW (Internet Gateway)
 ```
 EC2 instance can use Elastic IP (static public IP address) to be able to get
-inbound internet connections.
+inbound internet connections. Elastic is assigned to Elastic Network Interface
+ENI (ENI is attached to EC2 instance).
 AWS managed Network Address Transation (NAT-GW) gateway enables EC2 instances in
 private subnet to connect to internet outband. So here is route table for
-private subnet (NET-GW is in public subnet so it can connect to internet through
-IGW).
+private subnet to point to NAT-GW which is in public subnet so it can connect to
+internet through IGW.
+NAT-GW allows only outband connections and replay to this connections, prevent
+the internet from initiating a connection to instances in private subnet. Allows
+updates. For IPv6 use Egress only internet gateway
 ```
+# route table
 10.0.0.0/16  Local
 0.0.0.0/0    NAT-GW
 ```
 
-5 IPs are un-usable reserved .0 (network) .1 (router) .2 .3 .255 (broadcast) http://jodies.de/ipcalc?host=192.168.0.5&mask1=26&mask2=
-
 VPC Endpoints is used to connect to Amazon S3 using Amazon private networks (not
-going to internet).
-VPC Interface Endpoints is creating elastic interface (with IP address) so you
-can use them to connect to external services using private network.
+going to internet using IGW but using private network through VPCE).
+VPC Interface Endpoints is creating elastic network interface (ENI with IP
+address) so you can use them to connect to external services using your own vpc
+private network.
 
-Create on https://console.aws.amazon.com/vpc/home?region=us-east-1#vpcs:
-Default aws is 172.31.0.0/16
-Create 10.0.1.0/24 (251 IP addresses)
-Difference between N ACLs nackles and Securuty Groups
+Difference between Network ACL (NACLs nackles) and Securuty Groups
 https://youtu.be/LX5lHYGFcnA?t=9070
-Security groups define only Deny
+Security groups are on instance level, define only Allow rules, statefull
+(return traffic is automatically allowed), all rules decide, applies only if
+someone is atttached to to instance
+NACL operates on subnet level, both allow and deny rules, stateless: return
+traffic must be explicitly allowed, rules in number order decide and if applied
+than other rules are not considered, applies to all subnet instances: good as
+backup layer of defence if someone forgot to use security group.
+
+Virtual VPN-IPSec
+https://youtu.be/LX5lHYGFcnA?t=9498
+Using Virtual gateway VGW
+Direct Connect DX
+VPC can be peered with other VPC.
 
 # EC2
 
@@ -47,6 +92,9 @@ https://docs.aws.amazon.com/autoscaling/ec2/userguide/GettingStartedTutorial.htm
 
 Mount EBS volume
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+
+extend increase disk size
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html
 
 # EFS
 
@@ -102,9 +150,15 @@ Static ip address on load balancer
 It can be done on Network Load Balancer
 https://aws.amazon.com/premiumsupport/knowledge-center/elb-attach-elastic-ip-to-public-nlb/
 https://aws.amazon.com/elasticloadbalancing/faqs/
-Q: How does Network Load Balancer compare to what I get with the TCP listener on a Classic Load Balancer?
+Q: How does Network Load Balancer compare to what I get with the TCP listener on
+a Classic Load Balancer?
 
-A: Network Load Balancer preserves the source IP of the client which in the Classic Load Balancer is not preserved. Customers can use proxy protocol with Classic Load Balancer to get the source IP. Network Load Balancer automatically provides a static IP per Availability Zone to the load balancer and also enables assigning an Elastic IP to the load balancer per Availability Zone. This is not supported with Classic Load Balancer.
+A: Network Load Balancer preserves the source IP of the client which in the
+Classic Load Balancer is not preserved. Customers can use proxy protocol with
+Classic Load Balancer to get the source IP. Network Load Balancer automatically
+provides a static IP per Availability Zone to the load balancer and also enables
+assigning an Elastic IP to the load balancer per Availability Zone. This is not
+supported with Classic Load Balancer.
 
 
 # Auto scaling groups ASG

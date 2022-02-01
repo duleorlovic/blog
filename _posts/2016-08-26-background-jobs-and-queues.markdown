@@ -210,7 +210,14 @@ Sidekiq::Queue.new('my_app_mailers').size
 
 Sidekiq::Queue.new('my_app_mailers').clear
 
-# to find specific jobs you can use scan
+# to find specific jobs you can use scan or map.compact
+queue = Sidekiq::Queue.new("default")
+# https://github.com/mperham/sidekiq/wiki/API
+jobs = queue.map do |job|
+  if job.klass == '[JOB_CLASS]'
+    {job_id: job.jid, job_klass: job.klass, arguments: job.args}
+  end
+end.compact
 ~~~
 
 To see dashboard add those lines to routes (note that we require current_user to
@@ -735,6 +742,23 @@ end
 
 # Test background jobs spec
 
+You can three methods:
+* `assert_enqueued_with`
+* `perform_enqueued_jobs`
+* `assert_performed_jobs 1` make sure that only one is performed
+
+and you can test job directly by calling perform.now
+```
+# test/jobs/update_person_job_test.rb
+class UpdatePersonJobTest < ActiveJob::TestCase
+  test 'update score' do
+    person = people(:one)
+    UpdatePersonJob.perform_now(person, 3)
+    assert_eqal 3, person.reload.score
+  end
+end
+```
+
 `ActiveJob::Base.queue_adapter = :test` will change queue adapter for all
 following test.
 You can see differences between queue adapters
@@ -753,7 +777,9 @@ class ProductTest < ActionDispatch::IntegrationTest
   # if you want to actually perform jobs
   include ActiveJob::TestHelper
   test 'mail' do
-    perform_enqueued_jobs only: ActionMailer::DeliveryJob do # look above for
+    perform_enqueued_jobs only: ActionMailer::DeliveryJob do
+      ...
+    end
   end
 
   # https://api.rubyonrails.org/v5.1/classes/ActionMailer/TestHelper.html#method-i-assert_emails
@@ -761,11 +787,17 @@ class ProductTest < ActionDispatch::IntegrationTest
   assert_enqueued_jobs 1 do
   # or you can assert how it is called `_with`
   assert_enqueued_with job: ActionMailer::DeliveryJob, args: [1, 'a'] do
+
   include ActionMailer::TestHelper
   test 'mail' do
     assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
       product.charge(account)
     end
+  end
+
+  # for email you can assert
+  assert_difference 'ActionMailer::Base.deliveries.size', 1 do
+    MyJob.perform_now
   end
 
 

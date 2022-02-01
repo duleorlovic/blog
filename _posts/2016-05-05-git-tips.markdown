@@ -13,6 +13,10 @@ checkout remote branch and track it
 
     git checkout -t origin/branch
 
+Remove remote branch
+
+    git push origin --delete gh-pages
+
 Push branch and track
 
     git push bitbucket development:development
@@ -82,6 +86,14 @@ Find difference of all files and folders with meld diff tool
 Find difference on this branch (from common ancestor) use three dots
 
     git diff master...my_branch
+
+Show only file names
+
+    git diff 134 --name-only
+
+show only sha or short sha
+
+    git rev-parse --short HEAD
 
 Find bug using bisect on specific folder or file to jump half steps between
 
@@ -316,8 +328,8 @@ do not commit secret keys instead of `DO_NOT_COMMIT` tag. You can
 `git commit --no-verify` to ignore hooks.
 
 ~~~
-#!/bin/sh
 # .git/hooks/pre-commit
+#!/bin/sh
 # Redirect output to stderr.
 exec 1>&2
 # enable user input
@@ -338,6 +350,8 @@ then
   fi
 fi
 ~~~
+
+You can use `.pre-commit-config.yaml` file
 
 # Github
 

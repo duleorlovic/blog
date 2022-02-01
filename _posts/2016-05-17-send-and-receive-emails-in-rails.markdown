@@ -11,8 +11,8 @@ providers](http://socialcompare.com/en/comparison/transactional-emailing-provide
 
 ## Check SMTP
 
-If you need to check smtp use <https://debugmail.io/> free service, just use port
-9025 instead 25 since ISP is blocking 25.
+If you need to check smtp use <https://debugmail.io/> free service, just use
+port 9025 instead 25 since ISP is blocking 25.
 For command line you can use `swaks` like `swaks --to duleorlovic@gmail.com
 --server $SERVER --port $PORT --auth-user $AUTH_USER --auth-password
 $AUTH_PASSWORD --auth-plaintext --auth-hide-password`
@@ -76,6 +76,13 @@ Username and Password not accepted. Learn more
 ```
 
 You need to Allow less secure apps https://support.google.com/accounts/answer/6010255
+
+gmail send email as sometimes stops since google disable allow less secure app.
+port 587 and Secured connection using TLS (this is default recommended) but
+enable https://myaccount.google.com/u/7/lesssecureapps? or you will get error
+```
+Authentication failed. Please check your username/password and Less Secure Apps access for
+```
 
 Sometimes you can send from your IP but not from Heroku IP address.
 
@@ -320,6 +327,12 @@ mail.body.encoded
 mail.to_s
 ```
 
+https://github.com/fphilipe/premailer-rails#how-it-works
+You can use external styles (from public or from cdn) and it will be converted
+to inline. Can not use font awesome since it requires custom font which is not
+supported in gmail
+https://stackoverflow.com/questions/40030954/how-to-use-custom-font-in-email-template
+
 Gmail Android App will also parse media queries and apply that to inline styles
 (it will override inline styles).
 Gmail in the browser will parse styles (but not media queries) and apply to the
@@ -349,6 +362,19 @@ If you are using catch all route than add those lines
   get '/rails/mailers/*path' => "rails/mailers#preview"
   # https://stackoverflow.com/a/6047561/287166
   match '*a', to: 'home#routing_error', via: [:get, :post]
+```
+
+Add authentication
+```
+# config/initializers/mailer_preview.rb
+# https://stackoverflow.com/questions/60934362/rails-6-actionmailer-previews-and-http-basic-authentication
+# https://stackoverflow.com/a/39399116/287166
+class ::Rails::MailersController
+  before_filter :_authenticate_admin!
+  def _authenticate_admin!
+    redirect_to root_path, alert: 'Only admin' unless current_admin_user.present?
+  end
+end
 ```
 
 Another gem to preview emails <https://github.com/markets/maily>
@@ -571,6 +597,46 @@ class DeviseMailer < Devise::Mailer
   end
 ~~~
 
+# Save emails in database
+
+
+```
+# app/mailers/application_mailer.rb
+class ApplicationMailer < ActionMailer::Base
+  default from: Rails.application.credentials.mailer_sender
+  layout 'mailer'
+
+  after_action :save_email
+
+  def save_email
+    return if @user.blank?
+
+    # here we have access to `mail` object
+    @user.member_profile.emails.create(
+      to: @user.email,
+      subject: mail.subject,
+      body: mail.body,
+    )
+  end
+end
+```
+Test
+```
+# test/mailers/application_mailer_test.rb
+require 'test_helper'
+
+class ApplicationMailerTest < ActionMailer::TestCase
+  test '#save_email' do
+    user = users(:user)
+    assert_difference 'Email.count', 1 do
+      AdminMailer.add_photos(user).deliver_now
+    end
+    email = Email.last
+    assert_equal 'Add your photo to improve responses', email.subject
+  end
+end
+```
+
 # Interesting
 
 You can include small giff that looks like screencast. Image should be less than
@@ -641,7 +707,7 @@ module MailerHelpers
   # and for background deliver_later you need to assert perform or enqueue
   # inherit from ActiveJob::TestCase
   # or include ActiveJob::TestHelper
-  # assert_performed_jobs 1, only: ActionMailer::DeliveryJob do
+  # assert_performed_jobs 1, only: ActionMailer::MailDeliveryJob do
   def all_mails
     ActionMailer::Base.deliveries
   end
@@ -685,3 +751,6 @@ https://github.com/ankane/ahoy_email
 # US Phones
 
 You can use any number like `+1555,,,,` or `+1202555....` https://fakenumber.org/
+
+* gmail shows download button for images, but you can prevent that by wrapping
+  the image with link, or use style: `img + div { display:none; }`

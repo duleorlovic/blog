@@ -129,6 +129,17 @@ end
 
 In view, you can use `if policy(@post).update?` method to check if current_user
 is authorized.
+You can rescue from not authorized requests
+https://github.com/varvet/pundit#rescuing-a-denied-authorization-in-rails
+```
+def new
+  authorize @user
+  rescue Pundit::NotAuthorizedError => e
+    flash.now[:alert] = e.message
+    render :error
+  end
+end
+```
 
 ## Headless policies
 

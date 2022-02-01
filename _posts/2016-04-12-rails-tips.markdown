@@ -3353,16 +3353,19 @@ the order. In this case define enum as a hash
 
   ~~~
   before_action :strip_params
+
   def strip_params
     return if request.get?
+
     params
       .values
-      .select {|v| [ActionController::Parameters, ActiveSupport::HashWithIndifferentAccess].include? v.class }
+      .select { |v| [ActionController::Parameters, ActiveSupport::HashWithIndifferentAccess].include? v.class }
       .each do |item_parameters|
-        item_parameters.each do |k,v|
-          next unless v.class == String
-          item_parameters[k] = v.split.join(' ')
-        end
+      item_parameters.each do |k, v|
+        next unless v.is_a? String
+
+        item_parameters[k] = v.split.join(' ')
+      end
     end
   end
   ~~~
