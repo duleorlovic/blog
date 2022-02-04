@@ -120,7 +120,7 @@ variable "myvar" {
 }
 
 # array
-variable "mylist" {{
+variable "mylist" {
   description = "A list of zones"
   type = list(string)
   default = [ "abc", "qwe" ]
