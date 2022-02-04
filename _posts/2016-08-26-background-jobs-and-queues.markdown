@@ -206,11 +206,12 @@ Sidekiq::Queue.new.size # default name is 'default'
 Sidekiq::Queue.new('my_app_default').size
 Sidekiq::Queue.new('mailers').size
 Sidekiq::Queue.new('my_app_mailers').size
-
-
 Sidekiq::Queue.new('my_app_mailers').clear
 
-# to find specific jobs you can use scan or map.compact
+# now I use Set https://gist.github.com/wbotelhos/fb865fba2b4f3518c8e533c7487d5354
+Sidekiq::ScheduledSet.new.clear
+
+# to find specific existing jobs you can use scan or map.compact
 queue = Sidekiq::Queue.new("default")
 # https://github.com/mperham/sidekiq/wiki/API
 jobs = queue.map do |job|
@@ -219,6 +220,15 @@ jobs = queue.map do |job|
   end
 end.compact
 ~~~
+but better way to avoid duplicated sidekiq jobs is using flags
+https://blog.appsignal.com/2021/05/12/three-ways-to-avoid-duplicate-sidekiq-jobs.html
+```
+if user.automated_flags['my_job'].blank?
+  MyJob.perform_later user.id
+  user.automated_flags['my_job'] = 'started'
+  user.save!
+end
+```
 
 To see dashboard add those lines to routes (note that we require current_user to
 be admin). On older sidekiq gem 3.5 you need to add in gemfile `gem 'sinatra',

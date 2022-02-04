@@ -59,6 +59,11 @@ layout: post
   UPDATE user SET authentication_string=PASSWORD('asdasd') WHERE User='root'; FLUSH PRIVILEGES; exit;
   ~~~
 
+  if you know current root password, you can update root password using
+  ```
+  mysql_secure_installation
+  ```
+
 * login `mysql -u root -p`
 * select database `USE mysql`, create database `CREATE DATABASE mydb`
 * import dump with `mysql -u newuser -p dbname < web001db.sql`

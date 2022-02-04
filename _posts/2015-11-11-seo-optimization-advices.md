@@ -64,7 +64,7 @@ widget</a>`
 * add viewport meta tag `<meta content="width=device-width, initial-scale=1,
   maximum-scale=1, user-scalable=no" name="viewport">` and use CSS media queries
   to apply different style depending of screen size
-* enable gzip compresion, optimize image size
+* enable gzip compresion, optimize image size using Lighthouse
   https://web.dev/serve-images-with-correct-dimensions/
 
 * use `srcset` for responsive images,

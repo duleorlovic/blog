@@ -616,6 +616,7 @@ xvfb-run java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver -jar /usr/lo
 ~~~
 
 To save console logs you can use
+TODO I still have not succeed to see console logs
 ```
 # test/a/capybara.rb
 # This is used only when you want to save javascript console logs
