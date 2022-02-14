@@ -3,6 +3,9 @@ layout: post
 title: MacBook MacOS OSX
 ---
 
+Macbook Aur M1 2020
+specification https://support.apple.com/kb/SP825?viewlocale=en_US&locale=en_US
+
 # Shortcuts
 
 Option (ALT) key is ⌥
@@ -12,27 +15,28 @@ Return key is ↵
 Control (CTRL) key is ^
 
 Since on mac keyboard `fn` key is at left edge, I use it as `ctrl` . Remap with
-System preferences -> Keyboard -> Modifier Keys -> Function key as Ctrl
-Also tilda and backtick are not on top left corner, so I used different Keyboard
+System preferences -> Keyboard -> Modifier Keys -> Globe key -> ^Control
+
+If tilda and backtick are not on top left corner, you can use different Keyboard
 -> Input sources -> English British so at least `backtick` is on top left key.
 
-Another solution to remap keys is to use `hidutil`
+To remap keys on keyboard you can use `hidutil`
 https://developer.apple.com/library/content/technotes/tn2450/_index.html
-You can find key codes in a table.
-Install **Key Codes** app
-https://itunes.apple.com/us/app/key-codes/id414568915?mt=12 to find key codes.
+You can find key codes in a table on that link.
 Than use OR with 0x700000000.
 
-To switch switch keys `0xa` (§) and `0x32` (backtick tilde) use `0x700000004`
-and `0x700000032`.  For `a` and `b` use `0x700000004` and `0x700000005`
+https://itunes.apple.com/us/app/key-codes/id414568915?mt=12
+I tried **Key Codes** app but I do not know how to get hex code that is the same as in the table.
+
+To switch switch keys `1` and `2` use `0x70000001e` and `0x70000001f`
 
 ~~~
 hidutil property --set '{"UserKeyMapping":
   [
-    {"HIDKeyboardModifierMappingSrc":0x7000000a,
-    "HIDKeyboardModifierMappingDst":0x700000032},
-    {"HIDKeyboardModifierMappingSrc":0x700000032,
-    "HIDKeyboardModifierMappingDst":0x70000000a}
+    {"HIDKeyboardModifierMappingSrc":0x70000001e,
+    "HIDKeyboardModifierMappingDst":0x70000001f},
+    {"HIDKeyboardModifierMappingSrc":0x70000001f,
+    "HIDKeyboardModifierMappingDst":0x70000001e}
   ]
 }'
 ~~~
@@ -45,41 +49,31 @@ hidutil property --get 'UserKeyMapping'
 hidutil property --set '{"UserKeyMapping":[]}'
 ~~~
 
-From terminal toolbar:
-* `⌘ N` new window
-* `⌘ T` new tab
+To start inserting emoji use: Control + Command + Space
+
+Edit Terminal background on Preferences -> Profiles and choose `Pro` profile for black background.
+
+In any window, or shell, you can:
+* `⌘ n` new window
+* `⌘ t` new tab, `⌘ w` close tab
 
 From System Preferences -> Keyboard -> Shortcuts
-* -> Spotlight
+* Spotlight
   * `⌘ space` spotlight search
-  * `⌥  ⌘ space` finder : inside finder you can open files with `⌘ o` (enter
-    just renames the file)
-* -> Mission control
+  * `⌥  ⌘ space` finder search, inside finder you can open files with double click or `⌘ o` (enter just renames the file)
+* Mission control
   * `^ up` mission control
   * `^ down` application windows in all workspaces, use arrow to focus, use tab
     to select another application and view it's windows
+* Screenshot
+  * `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected
+    area. Press space after `⌘ shift 4` to select window. Screen shots will be
+    on desktop.
 
-You can disable any special key for any app. From System Preferences ->
-Keyboard -> Shortcuts -> App Chortcuts -> +  than select the app and write exact
-name and add shortcut uncluding ⌥  key:
-* for iTerm I do not need Clear Buffer so now it is `⌘ ⌥ M`
-* Mission control -> Move left space I remaped to `^ ⌘ h` (also right space
-  `^ ⌘ l`)
-* to disable hide front app, it has to be done for each app, for example, `Hide
-  Terminal` should be remaped to cmd + shift + h
-here is the list of all mappings:
-* All Applications: Minimize `⇧ ⌘ J`
-* Finder: Connect to Server `⇧ ⌘ K`
-* Terminal: Clear to Previous Mark `⇧ ⌘ L`, Jump to Selection `⇧ ⌘ J`, Clear to
-  Start `⇧ ⌘ K`, Hide Terminal `⇧ ⌘ H`
-* Google Chrome: Hide Google Chrome `⇧ ⌘ H`, Jump to Selection `⇧ ⌘ J`, Open
-  Location... `⇧ ⌘ L`
-* Preview: Rotate Left `⇧ ⌘ L`
-* Firefox: Downloads `⇧ ⌘ J`, Hide Firefox  `⇧ ⌘ H`
-
-
-![Mac keyboard shortcuts]({{ site.baseurl }}/assets/posts/mac keyboard shortcuts.png)
-
+With `fn F3` (or swipe up with three fingers) you can create new spaces (any
+number of workspaces) desktops. You can switch between them with left/right
+swipe with three fingers and you can drag and drop to different workspaces.
+Full screen apps open their own space.
 From [Mac keyboard shortcuts from
 support](https://support.apple.com/en-us/HT201236)
 * `⌘ H` hide front app
@@ -90,12 +84,21 @@ Click on link by holding ⌘ or ⌥ or ctrl will open new tab (with shift it wil
 focus that new tab), download and open context menu (ctrl click also works for
 selected text).
 
-`⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected area.
-Press space after `⌘ shift 4` to select window. Screen shots will be on desktop.
-
 To use apple keyboard on ubuntu I tried to remap Fn key, but that is not
 possible https://askubuntu.com/questions/370944/remap-fn-key-to-insert-key-on-apple-aluminium-keyboard
 
+To connect two monitors on one port you need adapter that supports mst dual external displays https://www.reddit.com/r/UsbCHardware/comments/jmaa2t/anyway_to_use_two_monitors_on_a_laptop_with_one/
+For M1 is it not enough to use two ports with two adapters. you need to use usb
+A to hdmi adapter that is DisplayLink compatible:
+https://www.youtube.com/watch?v=y_WHjdiqCMc
+driver https://www.synaptics.com/products/displaylink-graphics/downloads/macos
+list
+https://www.synaptics.com/products/displaylink-graphics/displaylink-products-list?field_displaylink_category_value=usb_adapters
+long description
+https://www.macworld.co.uk/how-to/how-connect-two-or-more-external-displays-apple-silicon-m1-mac-3799794/
+
+Another solution using magiclink cable
+https://www.youtube.com/watch?v=GPWuABthnkE
 
 To show home folder in Finder, go to Finder Preferences -> Sidebar and enable
 home folder in sidebar.
@@ -116,6 +119,8 @@ I added to `.bash_profile`:
 To enable ssh server you need to go "System Preferences -> Sharing -> enable
 Remote login"
 
+To rename hostname go to System preferences -> Sharing
+
 Position windows using [spectacle](https://github.com/eczarny/spectacle)
 [video](https://www.youtube.com/watch?v=k1lmd2T5Z2A).
 Comparison of all
@@ -126,30 +131,35 @@ I found interesting
 
 # Karabiner Elements to change keys
 
-Since I like Alt + tilda to switch to next window inside same app. You can try
-to choose English PC in System Preferences->Keyboard->Input Sources. This way
-keys (§ and tilda)  were replaced,  but also single quote key, so better
-solution is to use karabiner. For Sierra 10.12.5 there is new version
-<https://github.com/tekezo/Karabiner-Elements>
+Former name for this app was KeyRemap4MacBook.
+https://github.com/pqrs-org/Karabiner-Elements
 
-My `.config/karabiner/karabiner.json` file looks:
+Install instructions https://karabiner-elements.pqrs.org/docs/getting-started/installation/
+after allowing karabiner_oberver you need to manually add also the
+karabiner_grabber by selecting Machintos HD -> /Library/Application
+Support/org.pqrs/Karabiner-Elements/bin/karabiner_grabber
+https://github.com/pqrs-org/Karabiner-Elements/issues/1867#issuecomment-498484832
 
+To map colon to semicolon you need to add entry for `semicolon` and than edit
+`.config/karabiner/karabiner.json` file to add `"modifiers": ["shift"]`
+https://apple.stackexchange.com/questions/277735/can-i-use-karabiner-element-or-any-other-apps-workarounds-to-swap-colon-and-semi?newreg=a5d4ace495cb4e1e8581ddaf6b287ce0
 ~~~
-{
-  "profiles": [
-    {
-      "simple_modifications": {
-        "caps_lock": "left_control",
-        "non_us_backslash": "grave_accent_and_tilde"
-      }
-    }
-  ]
-}
+            "simple_modifications": [
+                {
+                    "from": {
+                        "key_code": "semicolon"
+                    },
+                    "to": [
+                        {
+                            "key_code": "semicolon",
+                            "modifiers": ["shift"]
+                        }
+                    ]
+                }
+            ],
 ~~~
 
-Another solution is to use hidutil or ukulele http://software.sil.org/ukelele/
-or https://keyman.com/
-
+Another solution is ukulele http://software.sil.org/ukelelelll
 Ukulele contains great manual but it is not easy to remember all changes... Save
 it and use finder to copy it to Library -> Keyboard Layouts folder and than add
 that layout in Settings -> Keyboard -> Input Sources, and than check "Show Input
@@ -211,23 +221,21 @@ vim) so for vim use `^b` and `^f` (`^d` and `^u` for half down up)
 * new disks like sd card will be mounted under `/Volumes` instead of `/media` or
   `/mnt`
 
-# Work spaces
-
-With `fn F3` (or swipe up with three fingers) you can create new spaces (any
-number of workspaces). You can switch between them with left/right swipe with
-three fingers and you can drag and drop to different workspaces.
-
-Full screen apps open their own space.
 
 # AppleScript
 
 You can run and edit scripts in `Script Editor`. Open `Dictionary` in File->Open
 Dictionary or drag application icon to Script Editor application icon.
 
+https://www.youtube.com/watch?v=EAZlFptgEPQ
 
 ~~~
 # comments
 -- this is comment
+# this is also comment
+{* multi 
+line
+comment *}
 
 # continuation character Option l
 dialog "This is long line" ¬
@@ -249,6 +257,14 @@ true, false
 set myName to "John"
 copy 33 to myAge
 ~~~
+
+Send keys
+```
+" you can use app Key codes to find a code
+key code 36
+keystroke "ASD"
+delay 1
+```
 
 Statements can include all above. Simple statement is single line, multiline is
 compound statements
@@ -324,8 +340,10 @@ if button returned of theResponse is equal to "Cancel" then
  error number -128
 end if
 set key to text returned of theResponse
-
 ~~~
+
+Sample programs
+https://en.wikibooks.org/wiki/AppleScript_Programming/Sample_Programs
 
 Command is series of words that request an action. Command is directed to a
 target.
@@ -360,6 +378,14 @@ getPositionOfItemInList("Maddie", theList)
 
 String manipulation https://developer.apple.com/library/content/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/ManipulateText.html
 
+Split string
+```
+set AppleScript's text item delimiters to "-"
+set theTextItems to every text item of windowNameId
+set AppleScript's text item delimiters to ""
+set windowId to item 2 of the theTextItems
+```
+
 You can run scripts inside bash with `osascript -e 'display dialog "Hi"'` or for
 shell scripts (you need to `chmod +x filename.txt`
 
@@ -368,7 +394,7 @@ shell scripts (you need to `chmod +x filename.txt`
 display dialog "Hi"
 ~~~
 
-You can also call another scpt file
+You can also call scpt file
 
 ~~~
 osascript ~/myscript.scpt
@@ -380,6 +406,7 @@ TODO: https://developer.apple.com/library/content/documentation/AppleScript/Conc
 
 iTerm supports hotkeys https://www.iterm2.com/documentation-hotkey.html
 but it is not generic. I rather write window id and hotkey combination in user
+store using a `b` or `b h` commands
 
 ~~~
 do shell script "defaults write com.myname.myapp foo bar"
@@ -388,6 +415,9 @@ set myValue to do shell script "defaults read com.myname.myapp foo"
 
 To assign keyboard shortcuts you need to create a service in Automator and
 create shortcut in System Preferences -> Keyboard -> Shortcuts -> Services
+That is available in all apps, you can find them on main menu using app name on
+top left position -> Services. If there is already some shortcut than you need
+to remap it to another key, I use same with a shift.
 
 Create service for each key, for example activateWindowL
 (`/home/orlovic/Library/Services/activateWindowL.workflow`).
@@ -400,18 +430,31 @@ on run {input, parameters}
 end run
 ~~~
 
-To overwrite existing shortcuts in specific application you need to remap that
-same menu item to something else, for example in chrome cmd + j is jump to
-selection so in System Preferences -> Keyboard -> Shortcuts -> App Shortcuts
+Or you can copy all
+```
 
-~~~
-all Jump to Selection cmd+ald+j
+```
+You can disable any special key for any app so we can use it for our navigation.
+From System Preferences -> Keyboard -> Shortcuts -> App Chortcuts -> +  than
+select the app and write exact name and add shortcut uncluding ⌥  key:
+* for iTerm I do not need Clear Buffer so now it is `⌘ ⌥ M`
+* Mission control -> Move left space I remaped to `^ ⌘ h` (also right space
+  `^ ⌘ l`)
+* to disable hide front app, it has to be done for each app, for example, `Hide
+  Terminal` should be remaped to cmd + shift + h
+here is the list of all mappings:
+* All Applications: Minimise `⇧ ⌘ J`
+* Finder: Connect to Server `⇧ ⌘ K`
+* Terminal: Clear to Previous Mark `⇧ ⌘ L`, Jump to Selection `⇧ ⌘ J`, Clear to
+  Start `⇧ ⌘ K`, Hide Terminal `⇧ ⌘ H`
+* Google Chrome: Hide Google Chrome `⇧ ⌘ H`, Jump to Selection `⇧ ⌘ J`, Open
+  Location... `⇧ ⌘ L`
+* Preview: Rotate Left `⇧ ⌘ L`
+* Firefox: Downloads `⇧ ⌘ J`, Hide Firefox  `⇧ ⌘ H`
 
-iTerm Clear Buffer cmd+alt+k
-iTem Use Transparency cmd+alt+u
 
-scriptEditr Underline cmd+alt+u
-~~~
+![Mac keyboard shortcuts]({{ site.baseurl }}/assets/posts/mac keyboard shortcuts.png)
+
 
 ![Overwrite app shortcuts]({{ site.baseurl }}/assets/posts/overwrite app shortcuts.png)
 

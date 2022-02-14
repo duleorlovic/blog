@@ -1280,3 +1280,8 @@ https://emily.st/2018/11/13/vim-in-the-future/
 https://onivim.io/
 https://neovim.io/doc/
 https://github.com/neoclide/coc.nvim Visual studio plugins running on vim
+```
+# you need to install coc using yarn
+cd ~/.vim/bundle/coc.nvim/
+yarn
+```
