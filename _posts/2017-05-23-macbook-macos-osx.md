@@ -51,7 +51,28 @@ hidutil property --set '{"UserKeyMapping":[]}'
 
 To start inserting emoji use: Control + Command + Space
 
-Edit Terminal background on Preferences -> Profiles and choose `Pro` profile for black background.
+Edit Terminal background I tried to be as it is on ubuntu
+Chose Pro profile on Terminal -> Preferences -> Profiles
+https://medium.com/@json_singh/ubuntu-like-terminal-in-mac-bash-9afe37b09aa
+```
+brew install bash
+
+sudo vi /etc/shells
+# add
+/opt/homebrew/bin/bash
+
+# and now changing the shell will succeed
+chsh -s /opt/homebrew/bin/bash
+```
+Also change font to Monospace Regular style (you can see it on ubuntu terminall
+Preferences -> Default -> Text).
+You can also use Ubuntu Mono Regular https://design.ubuntu.com/font/.
+Copy ttf file to Libraries (in finder use menu item Go -> Library).
+
+Also in terminal profiles Pro select: When the shell exists: "Close if the shell
+exited cleanly".
+
+Very usefull is to install completions for commands
 
 In any window, or shell, you can:
 * `⌘ n` new window
