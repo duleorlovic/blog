@@ -420,6 +420,48 @@ svg.save 'logo.svg'
 system 'x-www-browser logo.svg'
 ```
 
+Source of the `logo.svg`
+```
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="100" height="100" 
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<style type="text/css">
+<![CDATA[
+  .animate {
+    animation: move 1s;
+    animation-fill-mode: forwards;
+  }
+  .animate.left {
+    transform: translate(-100px,0);
+  }
+  .animate.right {
+    transform: translate(100px,0);
+  }
+  @keyframes move {
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+]]>
+</style>
+
+<rect x="0" y="0" widht="100%" height="100%" fill="#ddd"/>
+<g font-size="40" font-weight="bold" font-family="arial" fill="blue">
+<text x="10" y="40" class="animate left">
+API
+</text>
+<text x="10" y="80" class="animate right">
+BOT
+</text>
+</g>
+
+</svg>
+```
+
 
 # Examples and Tricks
 

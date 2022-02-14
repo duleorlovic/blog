@@ -3277,6 +3277,8 @@ but IE10 wont.
   ~~~
   use that priority in associations `has_many :comments, -> { order priority:
   :asc }, dependent: :destroy`
+  Note that this association with order will prevent
+  accepts_nested_attributes_for to work properly (error is post must exists)
   Position is starting from 1, 2...
   To perform bulk update for ordering, use form to pass ids
 

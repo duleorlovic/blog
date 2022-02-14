@@ -102,6 +102,12 @@ https://www.youtube.com/watch?v=TMK_fLgpESQ
 steps per milimeter is 83
 400 steps for Z axis, ie 1mm is 45 degres.
 
+# CNC foam cutter
+
+https://howtomechatronics.com/projects/arduino-cnc-foam-cutting-machine/
+To prepare image you can use https://www.youtube.com/watch?v=ie5SqPaIaBw :
+* gimp : clear background and use right click -> Colors -> Levels and move to
+  right input level
 
 # Solar food dehydrator
 

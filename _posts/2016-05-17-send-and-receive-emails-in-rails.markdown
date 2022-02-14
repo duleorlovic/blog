@@ -105,6 +105,7 @@ Rails.configuration.action_mailer.delivery_method
 ## AWS Workmail
 
 ```
+# config/application.rb
     config.action_mailer.smtp_settings = {
       address: 'smtp.mail.us-east-1.awsapps.com',
       port: 465,

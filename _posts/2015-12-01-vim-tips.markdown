@@ -47,6 +47,12 @@ vim --noplugin
 vim -u NONE
 ```
 
+Reload vimrc. Note that old config is not automatically reseted (you need to
+exit vim and start again)
+```
+:source $MYVMRC<cr>
+```
+
 # My Vimrc
 
 Good starting poing for **.vimrc** is  <http://vim.wikia.com/wiki/Example_vimrc>
@@ -1284,4 +1290,11 @@ https://github.com/neoclide/coc.nvim Visual studio plugins running on vim
 # you need to install coc using yarn
 cd ~/.vim/bundle/coc.nvim/
 yarn
+```
+and you can install plugins
+```
+:CocInfo
+:CocInstall coc-yaml
+:CocConfig
+# to edit `~/.vim/coc-settings.json`
 ```

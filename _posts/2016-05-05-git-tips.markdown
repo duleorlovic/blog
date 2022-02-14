@@ -91,6 +91,14 @@ Show only file names
 
     git diff 134 --name-only
 
+show only files that are added or modified
+
+    git diff 123 --diff-filter=AM
+
+show only files that are NOT added and NOT modified
+
+    git diff 123 --diff-filter=am
+
 show only sha or short sha
 
     git rev-parse --short HEAD

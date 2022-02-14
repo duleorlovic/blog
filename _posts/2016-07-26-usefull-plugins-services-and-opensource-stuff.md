@@ -1055,6 +1055,8 @@ Email templates
 * rotate and shake on hover https://codepen.io/duleorlovic/pen/jdjYNE
 * radio button animation https://codepen.io/milanraring/pen/NWqbvxe
 * link underline animate https://codepen.io/aardrian/details/qBPgYzW
+* create your own logo cvg animation in
+  _posts/2015-08-22-svg-css3-transforms-and-animations.markdown
 
 # Scroll
 
