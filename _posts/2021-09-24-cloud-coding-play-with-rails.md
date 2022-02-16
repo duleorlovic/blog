@@ -120,6 +120,7 @@ Paid PRO membership can play with the code online using codeserver and preview
 using play with docker (or similar).
 Everything should be open and visible, registration only when necessary.
 
+Add tags so we can group them: rails7, without_node-importmaps
 Search projects by Topics
 
 TODO: Make examples for
