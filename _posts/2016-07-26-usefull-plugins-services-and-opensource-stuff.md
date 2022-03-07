@@ -1041,6 +1041,7 @@ Email templates
 * <https://alexcambose.ro/motus/#/demos/svg> animate on scroll
 * <http://daybrush.com/scenejs/>
 * rain drop https://codepen.io/nealagarwal/pen/xxKWVJY
+* https://oimo.io/works css animations
 
 * detect element visibility and start animating when it is visible
 <https://xtianmiller.github.io/emergence.js/>

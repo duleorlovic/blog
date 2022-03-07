@@ -295,6 +295,19 @@ extension Int: ExampleProtocol {
 print(7.simpleDescription)
 // Prints "The number 7"
 ```
+Extension is also used to write seed sample data
+```
+struct Card {
+  var title: String
+}
+extension Card {
+  static let sampleData: [Card] =
+  [
+    Card(title: "First"),
+    Card(title: "Second"),
+  ]
+}
+```
 
 Error Handling is using any type that adopts `Error` protocol
 Use `throw` to raise an error and `throws` to mark a function that can throw an
@@ -397,7 +410,7 @@ mkdir ~/.vim/pack/bundle/start -p
 cp vim ~/.vim/pack/bundle/start/swift -r
 ```
 
-Install from https://www.swift.org/download/
+Install swift on Ubuntu from https://www.swift.org/download/
 extract to Programs and add Path
 ```
 echo "PATH=~/Programs/swift-5.5.3-RELEASE-ubuntu20.04/usr/bin:$PATH" >> ~/.bashrc
@@ -411,3 +424,111 @@ echo print("Hello, world") >> Sources/main.swift
 swift build
 # .build/debug/Hello
 ```
+
+# iOS in XCode
+
+https://developer.apple.com/tutorials/app-dev-training
+
+* right_click -> Refactor -> Rename
+* cmd + click -> Embed in VStack
+* cmd + right_click -> Find
+* navigate Show next tab, show previous tab with cmd+shift+{} (with default
+  key bindings cmd+{}) I need shift because of karabiner so I remaped Show
+  next/previous tab to cmd+[] so now it works cmd+{} (also use other key
+  kombination for conflicts like Shift left/right and Align left/right edges)
+* enable vim in Editor -> Vim Mode . You can visually select and cmd+c to copy
+  to clipboard and paste in another program (yank paste works only inside xcode)
+Add to project  .gitignore
+```
+# .gitignore
+*.xcodeproj/
+```
+
+When there is an error
+```
+Select a scheme that builds a target which contains the current file, or add this file to a target that is built by the current scheme.
+```
+than you should close Xcode and remove clean the build folder
+```
+rm -rf ~/Library/Developer/Xcode/DerivedData/*
+```
+
+Elements:
+* view
+```
+import SwiftUI
+
+struct CardView: View {
+    let card: Card
+    var body: some View {
+    }
+}
+struct CardView_Previews: PreviewProvider {
+    static var card = Card.sampleData[0]
+    static var previews: some View {
+        CardView(card: card)
+            .background(card.theme.mainColor)
+            .previewLayout(.fixed(width: 400, height: 60))
+    }
+}
+```
+* stacks
+```
+VStack {
+  Text("a")
+  Spacer()
+  HStack {
+    Label("Info")
+    Spacer()
+    Label("More Info")
+  }
+}
+.padding()
+.foregroundColor(scrum.theme.accentColor)
+```
+* List https://developer.apple.com/documentation/swiftui/list
+```
+```
+* Label pick icons on https://developer.apple.com/sf-symbols/
+```
+Label("300", systemImage: "hourglass.bottomhalf.fill")
+
+# to share styles use extension of LabelStyle and override makeBody
+struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.title
+            configuration.icon
+        }
+    }
+}
+
+extension LabelStyle where Self == TrailingIconLabelStyle {
+    static var trailingIcon: Self { Self() }
+}
+# use like this
+
+```
+* accesibility
+```
+Image(systemName: "person")
+.accessibilityLabel("Person")
+```
+
+# Errors
+
+For
+```
+
+Showing Recent Messages
+Signing for "Scrumdinger" requires a development team. Select a development team in the Signing & Capabilities editor.
+```
+You need to select Team by navigating to project (left icon on left window) and
+find second tab on right window *Signing & Capabilities* and choose the team
+(for example Personal Team) and choose unique *Bundle Indentifier* and you
+should see: Signging Ceritficate Apple Development email (ASD123)
+
+# Tips
+
+Open emulator by navigating to in menu bar Xcode -> Open Developer Tool ->
+Simulator

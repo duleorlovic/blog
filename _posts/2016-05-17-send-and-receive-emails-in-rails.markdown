@@ -75,6 +75,7 @@ If you see error in logs:
 Username and Password not accepted. Learn more
 ```
 
+**Note that google does not allow less secure app any more** https://support.google.com/accounts/answer/6010255
 You need to Allow less secure apps https://support.google.com/accounts/answer/6010255
 
 gmail send email as sometimes stops since google disable allow less secure app.

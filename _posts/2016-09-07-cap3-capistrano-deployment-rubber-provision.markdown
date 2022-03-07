@@ -940,8 +940,9 @@ and the repository exists.
 ```
 solution is
 ```
-eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
+# sometimes you need to start agent
+# eval "$(ssh-agent -s)"
 ```
 
 ## Rubber Vagrant rubber provision
@@ -1627,7 +1628,7 @@ NODE_OPTIONS=--max-old-space-size=460
   ```
   cap production ssh-worker
 
-  sudo ln -s /home/ubuntu/gofordesi/current/config/etc/letsencrypt/live/gofordesi.com/renew_and_upload_certificate.sh /etc/letsencrypt/live/gofordesi.com/
+  sudo ln -s /home/ubuntu/myapp/current/config/etc/letsencrypt/live/myapp.com/renew_and_upload_certificate.sh /etc/letsencrypt/live/myapp.com/
   sudo su
   crontab -e
   # add task
@@ -1635,5 +1636,67 @@ NODE_OPTIONS=--max-old-space-size=460
   SHELL=/bin/sh
   PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/snap/bin
 
-  0 0 * * * perl -e 'sleep int(rand(43200))' && /etc/letsencrypt/live/gofordesi.com/renew_and_upload_certificate.sh >> /home/ubuntu/gofordesi/current/log/renew_and_upload_certificate.log 2>&1
+  0 0 * * * perl -e 'sleep int(rand(43200))' && /etc/letsencrypt/live/myapp.com/renew_and_upload_certificate.sh >> /home/ubuntu/myapp/current/log/renew_and_upload_certificate.log 2>&1
   ```
+
+# ERRORS
+
+If you have an error
+```
+Net::SSH::AuthenticationFailed: Authentication failed for user ubuntu@ec2...
+```
+than it is probably your PEM file in different location, so to fix this you can
+copy to `~/config/keys/pems/gfd-keypair.pem` or export in PEM_FILE
+```
+export PEM_FILE=~/gfd-keypair.pem
+```
+* error like
+```
+cap aborted!
+Aws::Errors::MissingCredentialsError: unable to sign request without credentials set
+```
+is because you have not set up credentials, env or default location
+```
+# ~/.aws/credentials
+[default]
+aws_access_key_id = AKIA...
+aws_secret_access_key = 545...
+```
+If you have an error
+```
+Aws::Errors::MissingRegionError: No region was provided. Configure the `:region` option or export the region name to ENV['AWS_REGION']
+```
+than it is probably you can not read development credentials so you need a
+`config/credentials/development.key` and check if this works
+```
+rails credentials:edit -e development
+```
+You should also get a `config/master.key` to be able to edit production secrets.
+
+* error like
+```
+cap aborted!
+NoMethodError: undefined method `instances' for nil:NilClass
+Did you mean?  instance_values
+```
+is solved by adding credentials, in my case I store in `rails credentials:edit`
+so you need both `config/master.key` and `config/credentials.yml.enc`
+* error like
+```
+00:01 git:check
+      01 git ls-remote git@github.com:duleorlovic/myapp.git HEAD
+      01 git@github.com: Permission denied (publickey).
+      01 fatal: Could not read from remote repository.
+      01
+      01 Please make sure you have the correct access rights
+      01 and the repository exists.
+      01 git@github.com: Permission denied (publickey).
+      01 fatal: Could not read from remote repository.
+      01
+      01 Please make sure you have the correct access rights
+```
+can be solved with
+```
+eval `ssh-agent`
+ssh-add ~/.ssh/id_rsa
+```

@@ -17,62 +17,9 @@ Control (CTRL) key is ^
 Since on mac keyboard `fn` key is at left edge, I use it as `ctrl` . Remap with
 System preferences -> Keyboard -> Modifier Keys -> Globe key -> ^Control
 
-If tilda and backtick are not on top left corner, you can use different Keyboard
--> Input sources -> English British so at least `backtick` is on top left key.
-
-To remap keys on keyboard you can use `hidutil`
-https://developer.apple.com/library/content/technotes/tn2450/_index.html
-You can find key codes in a table on that link.
-Than use OR with 0x700000000.
-
-https://itunes.apple.com/us/app/key-codes/id414568915?mt=12
-I tried **Key Codes** app but I do not know how to get hex code that is the same as in the table.
-
-To switch switch keys `1` and `2` use `0x70000001e` and `0x70000001f`
-
-~~~
-hidutil property --set '{"UserKeyMapping":
-  [
-    {"HIDKeyboardModifierMappingSrc":0x70000001e,
-    "HIDKeyboardModifierMappingDst":0x70000001f},
-    {"HIDKeyboardModifierMappingSrc":0x70000001f,
-    "HIDKeyboardModifierMappingDst":0x70000001e}
-  ]
-}'
-~~~
-
-
-~~~
-# to see what is already mapped
-hidutil property --get 'UserKeyMapping'
-# clear mappings
-hidutil property --set '{"UserKeyMapping":[]}'
-~~~
-
 To start inserting emoji use: Control + Command + Space
 
-Edit Terminal background I tried to be as it is on ubuntu
-Chose Pro profile on Terminal -> Preferences -> Profiles
-https://medium.com/@json_singh/ubuntu-like-terminal-in-mac-bash-9afe37b09aa
-```
-brew install bash
-
-sudo vi /etc/shells
-# add
-/opt/homebrew/bin/bash
-
-# and now changing the shell will succeed
-chsh -s /opt/homebrew/bin/bash
-```
-Also change font to Monospace Regular style (you can see it on ubuntu terminall
-Preferences -> Default -> Text).
-You can also use Ubuntu Mono Regular https://design.ubuntu.com/font/.
-Copy ttf file to Libraries (in finder use menu item Go -> Library).
-
-Also in terminal profiles Pro select: When the shell exists: "Close if the shell
-exited cleanly".
-
-Very usefull is to install completions for commands
+https://support.apple.com/en-gb/HT201236
 
 In any window, or shell, you can:
 * `⌘ n` new window
@@ -90,6 +37,10 @@ From System Preferences -> Keyboard -> Shortcuts
   * `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected
     area. Press space after `⌘ shift 4` to select window. Screen shots will be
     on desktop.
+
+https://support.apple.com/en-gb/guide/terminal/trmlshtcts/mac
+Typing Command-Full Stop (.) Dot Period is equivalent to entering Control-C on
+the command line.
 
 With `fn F3` (or swipe up with three fingers) you can create new spaces (any
 number of workspaces) desktops. You can switch between them with left/right
@@ -161,31 +112,171 @@ karabiner_grabber by selecting Machintos HD -> /Library/Application
 Support/org.pqrs/Karabiner-Elements/bin/karabiner_grabber
 https://github.com/pqrs-org/Karabiner-Elements/issues/1867#issuecomment-498484832
 
-To map colon to semicolon you need to add entry for `semicolon` and than edit
-`.config/karabiner/karabiner.json` file to add `"modifiers": ["shift"]`
-https://apple.stackexchange.com/questions/277735/can-i-use-karabiner-element-or-any-other-apps-workarounds-to-swap-colon-and-semi?newreg=a5d4ace495cb4e1e8581ddaf6b287ce0
+I use following scripts for complex modifications
+https://github.com/pqrs-org/KE-complex_modifications
+You can find this site in Karabiner -> Complex rules -> Add rule -> Import more
+rules from the internet
+* semicolon and colon https://superuser.com/a/1705236/877698
+* curly braces and square brackets https://apple.stackexchange.com/a/437073/449651
+https://ke-complex-modifications.pqrs.org/#exchange_square_brackets_and_curly_brackets
+* Remap section sign (§) from British Keyboard to US's backtick + plus minus (±)
+  to tilde (~) grave_accent_and_tilde
+https://ke-complex-modifications.pqrs.org/#section_sign_to_backtick
+* Exchange single and double quote
+https://ke-complex-modifications.pqrs.org/#exchange_single_and_double_quote
+* Exchange numbers and symbols (1234567890 and !@#$%^&*())
+  https://ke-complex-modifications.pqrs.org/#exchange_numbers_and_symbols
+* Left ctrl + hjkl to arrow keys Vim
+https://ke-complex-modifications.pqrs.org/#ctrl_plus_hjkl_to_arrow_keys
+but I change to caps_lock:
+
+
+Changes are visible immediatelly, but I do not use links, I copy from config
 ~~~
-            "simple_modifications": [
-                {
-                    "from": {
-                        "key_code": "semicolon"
+cp ~/.config/karabiner/karabiner.json ~/config/.config/karabiner/karabiner.json
+cp ~/config/.config/karabiner/karabiner.json ~/.config/karabiner/karabiner.json
+~~~
+
+I added my config to enable bash alt + b/f back forward one word. I need to
+enable in Termial -> Preferences -> Profiles -> Keyboard -> Use Option as Meta
+key
+Also remaped cmd+. to cmd+\ since default keyboard shortcut is Break but not in
+menu bar, so now I remap to cmd+\ and use another automator to
+activateWindowDotByBackslash and bind to cmd+\
+https://stackoverflow.com/questions/71347942/change-command-dot-break-keyboard-shortcut-in-terminal-mac-which-is-not-in/71347943#71347943
+```
+                "rules": [
+                    {
+                        "description": "Change left_command+b/f to alt+b/f and left_control [/] to page up/down",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "backslash",
+                                        "modifiers": [
+                                            "left_command"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "b",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "b",
+                                        "modifiers": [
+                                            "option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.apple\\.Terminal$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "f",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_command"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f",
+                                        "modifiers": [
+                                            "option"
+                                        ]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "page_down"
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "close_bracket",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "fn"
+                                        ],
+                                        "optional": [
+                                            "any"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "page_up"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     },
-                    "to": [
-                        {
-                            "key_code": "semicolon",
-                            "modifiers": ["shift"]
-                        }
-                    ]
-                }
-            ],
-~~~
-
-Another solution is ukulele http://software.sil.org/ukelelelll
-Ukulele contains great manual but it is not easy to remember all changes... Save
-it and use finder to copy it to Library -> Keyboard Layouts folder and than add
-that layout in Settings -> Keyboard -> Input Sources, and than check "Show Input
-menu in menu bar" and select that new layout from top right menu bar.
-
+```
 
 # Update packages
 
@@ -199,6 +290,27 @@ brew info coreutils
 
 brew install bash-completion
 ~~~
+
+Edit Terminal background I tried to be as it is on ubuntu
+Chose Pro profile on Terminal -> Preferences -> Profiles
+https://medium.com/@json_singh/ubuntu-like-terminal-in-mac-bash-9afe37b09aa
+```
+brew install bash
+
+sudo vi /etc/shells
+# add
+/opt/homebrew/bin/bash
+
+# and now changing the shell will succeed
+chsh -s /opt/homebrew/bin/bash
+```
+Also change font to Monospace Regular style (you can see it on ubuntu terminall
+Preferences -> Default -> Text) and size 14.
+You can also use Ubuntu Mono Regular https://design.ubuntu.com/font/.
+Copy ttf file to Libraries (in finder use menu item Go -> Library).
+
+Also in terminal profiles Pro select: When the shell exists: "Close if the shell
+exited cleanly".
 
 Install [meld for mac](https://yousseb.github.io/meld/)
 
@@ -284,6 +396,8 @@ Send keys
 " you can use app Key codes to find a code
 key code 36
 keystroke "ASD"
+# you can use keystroke to send shortcuts
+https://eastmanreference.com/complete-list-of-applescript-key-codes
 delay 1
 ```
 
@@ -453,7 +567,9 @@ end run
 
 Or you can copy all
 ```
-
+cp -r Library/Services/* ~/Library/Services/
+# copy back the changes so we can save them in repo
+cp -r ~/Library/Services/* Library/Services/
 ```
 You can disable any special key for any app so we can use it for our navigation.
 From System Preferences -> Keyboard -> Shortcuts -> App Chortcuts -> +  than
@@ -462,7 +578,8 @@ select the app and write exact name and add shortcut uncluding ⌥  key:
 * Mission control -> Move left space I remaped to `^ ⌘ h` (also right space
   `^ ⌘ l`)
 * to disable hide front app, it has to be done for each app, for example, `Hide
-  Terminal` should be remaped to cmd + shift + h
+  Terminal` should be remaped to cmd + shift + h . You can find this menu item
+  in first menu dropdown.
 here is the list of all mappings:
 * All Applications: Minimise `⇧ ⌘ J`
 * Finder: Connect to Server `⇧ ⌘ K`
@@ -476,6 +593,9 @@ here is the list of all mappings:
 
 ![Mac keyboard shortcuts]({{ site.baseurl }}/assets/posts/mac keyboard shortcuts.png)
 
+My custom keyboard shortcuts
+* Mission Controller -> Move left a space fn + cmd + h and Move right a space fn
+  + cmd + l
 
 ![Overwrite app shortcuts]({{ site.baseurl }}/assets/posts/overwrite app shortcuts.png)
 
@@ -531,20 +651,26 @@ sudo mkdir -p /var/run/mysqld
 sudo ln -s /tmp/mysql.sock /var/run/mysqld/mysqld.sock
 ~~~
 
+To start mysql server you can run `mysql.server start`
+To find location of mysql config files
+
+```
+brew --prefix mysql
+ls  -la $(brew --prefix mysql)
+find /opt/homebrew/Cellar/mysql/8.0.28_1 -name "*.cnf"
+vi /opt/homebrew/Cellar/mysql/8.0.28_1/.bottle/etc/my.cnf
+```
 To permanently change socket file location you can update
 
 ~~~
-sudo vi /usr/local/etc/my.cnf
+# find all places where mysql is searching for my.cnf
+mysql --help|grep cnf
+
+sudo vi ~/.my.cnf
 [client]
 socket=/var/run/mysqld/mysqld.sock
 ~~~
 
-To start mysql server you can run `mysql.server start`
-To find locaiton of mysql config files
-
-```
-brew --prefix mysql
-```
 To see error log
 ```
 tail -f /usr/local/var/mysql/mac.local.err
@@ -557,9 +683,9 @@ sudo chmod -R 777 /usr/local/var/mysql/
 sudo chmod 777  /var/run/mysqld/
 ```
 
-# Libsassc
+# Errors
 
-On Mac I got error
+On Mac I got error for libsassc
 ~~~
 Caused by:
 LoadError: Could not open library '/Users/dule/.rvm/gems/ruby-2.6.5/gems/sassc-2.2.1/lib/sassc/libsass.bundle': dlopen(/Users/dule/.rvm/gems/ruby-2.6.5/gems/sassc-2.2.1/lib/sassc/libsass.bundle, 5): no suitable image found.  Did find:
@@ -573,6 +699,79 @@ gem uninstall sassc
 gem install sassc -- --disable-march-tune-native
 ~~~
 
+When I was installing ruby 2.6.6 I got an error
+```
+install ruby closure.c:264:14: error: implicit declaration of function 'ffi_prep_closure' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+```
+so I solved with steps for rvm
+https://github.com/ffi/ffi/issues/869#issuecomment-810890178
+```
+brew info libffi
+export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
+rvm install "ruby-2.6.6"
+```
+
+For error
+```
+Could not find MIME type database in the following locations:
+```
+I use
+https://stackoverflow.com/questions/69248078/mimemagic-install-error-could-not-find-mime-type-database-in-the-following-loc
+```
+brew install shared-mime-info
+```
+
+For error libv8 therubyracer
+```
+../src/utils.h:33:10: fatal error: 'climits' file not found
+
+```
+I used https://github.com/rubyjs/libv8/issues/312#issuecomment-807104369
+to install old x86 version of v8
+(they also suggest to upgrade to ruby 2.7.1
+https://github.com/rubyjs/libv8/issues/312#issuecomment-1023055391 )
+We can also replace therubyracer with mini_racer
+https://github.com/rubyjs/libv8/issues/282#issuecomment-778845927 and
+https://github.com/rubyjs/libv8/issues/309
+```
+brew install v8
+gem install libv8 -v '3.16.14.19' -- --with-system-v8
+```
+
+for error
+```
+checking for -lmysqlclient... no
+-----
+mysql client is missing. You may need to 'brew install mysql' or 'port install
+mysql', and try again.
+```
+I solved with
+```
+brew install mysql
+We've installed your MySQL database without a root password. To secure it run:
+    mysql_secure_installation
+
+MySQL is configured to only allow connections from localhost by default
+
+To connect run:
+    mysql -uroot
+
+To restart mysql after an upgrade:
+  brew services restart mysql
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/mysql/bin/mysqld_safe --datadir=/opt/homebrew/var/mysql
+```
+
+For error
+```
+ld: library not found for zstd
+```
+I solved https://stackoverflow.com/a/69722047/287166
+```
+bundle config --local build.mysql2 "--with-opt-dir="$(brew --prefix zstd)""
+```
 
 # Android USB Thethering
 
@@ -648,5 +847,51 @@ see logs with
 pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 # upgrade datatabases
 rm -rf /usr/local/var/postgres && initdb /usr/local/var/postgres -E utf8
+```
+
+# Docker
+
+Download docker desktop 4.5.0
+https://docs.docker.com/desktop/mac/release-notes/
+
+`docker-compose build` can raise an error
+```
+macos FileNotFoundError: [Errno 2] No such file or directory  During handling of the above exception, another exception occurred:
+```
+solution is to start `Docker Desktop` (and you can quit it)
+
+If `curl` inside `Dockerfile` raise error
+```
+segmentation fault
+```
+solution is for M1 to define `platform: linux/amd64`
+https://github.com/docker-library/php/issues/1176#issuecomment-901896821
+```
+# Dockerfile
+version: '3.9'
+services:
+  web:
+    platform: linux/amd64
+    build: .
+```
+
+Starting rails can raise
+```
+web_1  | /usr/local/bundle/gems/rb-inotify-0.10.1/lib/rb-inotify/notifier.rb:69:in `initialize': Function not implemented - Failed to initialize inotify (Errno::ENOSYS)
+web_1  | 	from /usr/local/bundle/gems/listen-3.7.0/lib/listen/adapter/linux.rb:29:in `new'
+```
+solution is to disable inotify file watcher
+https://github.com/evilmartians/terraforming-rails/issues/34#issuecomment-872021786
+```
+# config/environments/development.rb
+# config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+```
+or update bin `docker-compose run web rake app:update:bin`
+https://stackoverflow.com/questions/69773109/how-to-fix-function-not-implemented-failed-to-initialize-inotify-errnoenos
+
+
+* to open emulator from terminal you can try
+```
+open -a Simulator.app
 ```
 

@@ -4414,3 +4414,21 @@ can read for `operator_id && operator_id_was`.
     enum status: %i[initialized draft]
     if @payment.initialized? || @payment.draft?
     ```
+* InvalidAuthenticityToken https://stackoverflow.com/a/60394170/287166
+ and rails https://github.com/rails/rails/issues/21948
+ I reproduce by opening two tabs and on second log in and log out, session is
+ invalid so when I log in on first tab, I got an error.
+ Two solutions:
+ * extend session store to cookie
+ * refresh if no token.
+ ```
+  # find the name in Storage in developer tools
+  # config/initializers/session_store.rb
+  Rails.application.config.session_store :cookie_store, key: '_myapp_session', expire_after: 2.weeks
+  ```
+  but that will keep user log in after closing the browser (like Remember me
+  button).
+
+  Second solution is to add no-store no-cache
+  https://github.com/rails/rails/issues/21948#issuecomment-205371135
+  ```

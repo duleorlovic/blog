@@ -229,3 +229,9 @@ A Koala::Facebook::ClientError occurred in #:
 
 This means that server is on facebook banned list. `heroku restart` can help.
 
+
+# Pixel
+
+integration https://www.facebook.com/business/help/952192354843755?id=1205376682832142
+connect data sources https://www.facebook.com/events_manager2/pixel_creation?global_scope_id=741619459&act=65411415
+

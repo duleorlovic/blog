@@ -126,3 +126,6 @@ Search projects by Topics
 TODO: Make examples for
 https://thoughtbot.com/blog/hotwire-typeahead-searching
 nice ui ux like https://journey.cloud/ https://clockify.me/tracker
+
+Use FingleFile to download preview in one file
+https://github.com/gildas-lormeau/SingleFile/tree/master/cli

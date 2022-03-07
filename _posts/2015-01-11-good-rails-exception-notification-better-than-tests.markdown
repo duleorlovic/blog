@@ -59,7 +59,7 @@ Simple
 ```
 # config/initializers/exception_notification.rb
   config.add_notifier :email, {
-    email_prefix: '[GoForDesi UI] ',
+    email_prefix: '[myapp UI] ',
     sender_address: Rails.application.credentials.mailer_sender,
     exception_recipients: Rails.application.credentials.exception_recipients
   }

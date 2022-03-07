@@ -75,7 +75,7 @@ include `class A; include B; end` than `A.new.is_a?(B) == true`.
 constant `MyClass`) so calling any methods will run in context of that class
 object (for example `instance_methods(false)` will print methods that are
 defined with `def`). When you define a method it becomes instance method of
-current object class (event when you define method inside other method).
+current object class (even when you define method inside other method).
 When you reopen the class or module, current class is itself (not the
 `self.class == Class`).
 
@@ -1387,6 +1387,8 @@ a[1]<=>b[1]}` or using `sort_by` with method `o.sort_by &:published_at`
 h = { "a" => 20, "b" => 30, "c" => 10  }
 h.sort                       #=> [["a", 20], ["b", 30], ["c", 10]]
 h.sort {|a,b| a[1]<=>b[1]}   #=> [["c", 10], ["a", 20], ["b", 30]]
+# example of group count
+MemberPicture.group(:member_profile_id).count.sort {|a,b| a[1]<=>b[1]}
 ~~~
 
 in rails you can get from ActiveRecord some objects by array of ids and if you
