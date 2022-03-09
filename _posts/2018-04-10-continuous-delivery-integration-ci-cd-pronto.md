@@ -254,12 +254,40 @@ https://simplabs.com/blog/2021/03/15/trying-your-github-actions-locally/
 # install act
 curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 ```
-You can configure act https://github.com/nektos/act#configuration using .actrc
-file.
+You can configure act https://github.com/nektos/act#configuration using
+`~/.actrc` or local `.actrc` file.
 For example if you want to use another base image
 ```
 act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:full-latest
 ```
+
+For permission denied errors or bundle install
+```
+[Test/build] ⭐  Run Install dependecies
+[Test/build]   🐳  docker exec cmd=[bash --noprofile --norc -e -o pipefail /home/orlovic/rails/gofordesi-webapp/workflow/4] user=
+| Fetching bundler-2.3.8.gem
+| Successfully installed bundler-2.3.8
+| 1 gem installed
+| There was an error while trying to write to
+| `/home/orlovic/rails/gofordesi-webapp/.bundle/config`. It is likely that you
+| need to grant write permissions for that path.
+[Test/build]   ❌  Failure - Install dependecies
+Error: exit with `FAILURE`: 23
+```
+
+solution is to add step before bundle install
+```
+sudo chown -R $(whoami):$(whoami) .
+```
+
+Using `services` is not yet supported in act
+https://github.com/nektos/act/issues/173 so you need to run services locally
+like postgres redis.
+
+There is an error when I use credentials, it seems that for test env no
+credentials are loaded even I commited test key (github ci works fine).
+
+
 Use artifact to debug logs and screenshots
 
 ```

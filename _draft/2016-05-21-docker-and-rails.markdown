@@ -11,7 +11,7 @@ https://docs.docker.com/get-started/
 ```
 docker run hello-world
 # if you have exposed ports you need to
-docker run -p 3000:3000 my-image
+docker run -p 80:3000 my-image
 ```
 # Commands
 
@@ -35,6 +35,7 @@ container
   To format output you can use format `-f` option
 * `docker container exec -it container-name ls` run additional command in
   existing specific container (docker ps will not show additional container)
+  to attach when using byebug `docker attach <name_or_image_id>`
 * `docker container start -ai ubuntu` start stopped container and open a shell
 * `docker container ls --all` list all containers (spawned by the image), if it
   still running than no need `--all`. List processes `docker top container-name`
@@ -67,10 +68,10 @@ http://hub.docker.com/ Alpine means it is light
 * `docker history nginx:latest` show layers how image was built
 
 Network
-* `docker network ls` type: bridge (attached to my card), host (skips virtual
+* `docker network ls` type: bridge (connected to my card), host (skips virtual
   networks) and null. Inside same network containers can communicate without
   need to open ports.
-* `docker network inspect bridge` you can see containers attached
+* `docker network inspect bridge` you can see containers connected
   To see ip address of container
   `docker container inspect --format '{{ .NetworkSettings.IPAddress }}'
   <container-id>`
@@ -416,7 +417,7 @@ docker-machine create worker2
 docker-machine ls
 ```
 note that they are not automatically started when you reboot the machine so you
-need to run `docker-machine start manager` but once manager is starter it will
+need to run `docker-machine start manager` but once manager is started it will
 try to start its services on all workers. You can test that by manually shut
 down and start worker machine.
 Docker Desktop Enterprise includes `docker cluster` which can create nodes on
@@ -708,10 +709,53 @@ https://github.com/docker/labs/tree/master/developer-tools/ruby
 
 <https://blog.codeship.com/effectively-testing-dockerized-ruby-applications/>
 
+# Dockhero
+
+Run Docker on Heroku
+https://devcenter.heroku.com/articles/dockhero
+https://dockhero.io/
+https://docs.dockhero.io/chapter1.html
+
+```
+# this will also provission ec2 intance
+heroku addons:create dockhero
+# once provisioned you will have DOCKHERO_HOST
+heroku config
+DOCKHERO_HOST:             dockhero-silhouetted-33029.dockhero.io
+
+# read docs https://devcenter.heroku.com/articles/dockhero
+heroku addons:docs dockhero
+# show status https://dockhero.herokuapp.com/dashboard/setup
+heroku addons:open dockhero
+```
+
+To access provisioned machine you need plugin
+```
+# this will install dh: commands
+heroku plugins:install dockhero
+
+# list of commands https://github.com/dockhero/dockhero-cli
+heroku dh:docker ps
+heroku dh:compose start
+
+dh:env      #  downloads TSL certificates and prints out the environment variables to work with Dockhero
+dh:sh       #  run local shell with environment configured for Dockhero
+dh:ssh      #  interactive shell in the Docker machine (e.g. to reboot it)
+dh:open     #  opens your Dockhero stack web UI in the browser (https://)
+dh:wait     #  waits for the provisioning to finish
+dh:generate #  installs the pre-defined stack - try "helloworld" as an example
+```
+
+Generate sample stackfile `dockhero-compose.yml`
+```
+heroku dh:generate helloworld
+git push heroku
+heroku dh:compose up -d
+```
+
 # Tips
 
 * `docker-compose up` will not generate TTY session but `docker-compose run`
   will do. Add option `--service-ports` to map container ports if you use them.
 * `chown orlovic -R .` after initial build, since owner is set to root
 * tips https://nickjanetakis.com/blog/best-practices-around-production-ready-web-apps-with-docker-compose
-
