@@ -36,7 +36,7 @@ From System Preferences -> Keyboard -> Shortcuts
 * Screenshot
   * `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected
     area. Press space after `⌘ shift 4` to select window. Screen shots will be
-    on desktop.
+    on desktop but I changed to Downloads using `cmd shift 5` (record video).
 
 https://support.apple.com/en-gb/guide/terminal/trmlshtcts/mac
 Typing Command-Full Stop (.) Dot Period is equivalent to entering Control-C on
@@ -128,8 +128,10 @@ https://ke-complex-modifications.pqrs.org/#exchange_single_and_double_quote
   https://ke-complex-modifications.pqrs.org/#exchange_numbers_and_symbols
 * Left ctrl + hjkl to arrow keys Vim
 https://ke-complex-modifications.pqrs.org/#ctrl_plus_hjkl_to_arrow_keys
-but I change to caps_lock:
+but I change to caps_lock
 
+* Caps Lock Vim Movements (rev 2)
+https://ke-complex-modifications.pqrs.org/#capslock_vim_movements
 
 Changes are visible immediatelly, but I do not use links, I copy from config
 ~~~
@@ -323,8 +325,8 @@ unlink /Applications/Meld.app/Contents/Frameworks/libz.1.dylib
 Install java JRE from jre-9.0.4_osx-x64_bin.dmg (not tar.gz)
 http://www.oracle.com/technetwork/java/javase/downloads/index.html
 Double click will install.
-You can check if installed using https://java.com/en/download/installed.jsp on
-safari.
+You can check if installed using https://java.com/en/download/installed.jsp in
+browser.
 
 Install vim
 
@@ -571,6 +573,9 @@ cp -r Library/Services/* ~/Library/Services/
 # copy back the changes so we can save them in repo
 cp -r ~/Library/Services/* Library/Services/
 ```
+For Input Sources I changed keyboard shortcut key `ctrl+space` *Select the
+previous input source* to `shift+ctrl+space` (so I do not accidentally hold ctrl
+and space) and change kayboard language.
 You can disable any special key for any app so we can use it for our navigation.
 From System Preferences -> Keyboard -> Shortcuts -> App Chortcuts -> +  than
 select the app and write exact name and add shortcut uncluding ⌥  key:
@@ -773,6 +778,53 @@ I solved https://stackoverflow.com/a/69722047/287166
 bundle config --local build.mysql2 "--with-opt-dir="$(brew --prefix zstd)""
 ```
 
+For error
+```
+ERROR:  Error installing jekyll:
+	ERROR: Failed to build gem native extension.
+
+    current directory: /Users/dule/.rvm/gems/ruby-3.0.2/gems/eventmachine-1.2.7/ext
+compiling binder.cpp
+In file included from binder.cpp:20:
+./project.h:119:10: fatal error: 'openssl/ssl.h' file not found
+#include <openssl/ssl.h>
+
+```
+I solved with
+```
+# uninstall old version global and bundle
+bundle remove eventmachine
+gem uninstall -aIx eventmachine 
+
+# reinstall ruby with openssl prefix
+rvm reinstall 3.0.3 --with-openssl-dir=`brew --prefix openssl`
+
+# configure
+# this will raise error for C extension
+# bundle config build.eventmachine --with-cppflags=-I$(brew --prefix openssl)/include
+bundle config build.eventmachine --with-openssl-dir=$(brew --prefix openssl@1.1)
+bundle install
+# or just a gem
+gem install eventmachine -- --with-cppflags=-I$(brew --prefix openssl)/include
+# or set the system
+brew link --force openssl
+```
+Similar error when installing ruby 3.0.0
+```
+rvm install 3 ossl_pkey_rsa.c:950:5: error: use of undeclared identifier 'RSA_SSLV23_PADDING'
+```
+I tried https://github.com/postmodern/ruby-install/issues/409
+```
+rvm reinstall "ruby-3.0.0" --with-openssl-dir=`brew --prefix openssl@1.1` --disable-binary # ok
+```
+but still the same error.
+
+For error
+```
+Unable to load the EventMachine C extension; To use the pure-ruby reactor, require 'em/pure_ruby'
+```
+I have no solutions.
+
 # Android USB Thethering
 
 Download <http://www.joshuawise.com/horndis> driver (right click open with) to
@@ -890,8 +942,14 @@ or update bin `docker-compose run web rake app:update:bin`
 https://stackoverflow.com/questions/69773109/how-to-fix-function-not-implemented-failed-to-initialize-inotify-errnoenos
 
 
-* to open emulator from terminal you can try
+* to open iphone emulator from terminal you can try (note it does not contain
+  app store)
 ```
 open -a Simulator.app
 ```
-
+* open android emulator
+```
+/Volumes/eksterni/AndroidSDK/emulator/emulator -list-avds
+/Volumes/eksterni/AndroidSDK/emulator/emulator @Pixel_3a_API_32_arm64-v8a
+```
+* safari show link on hover at the bottom footer, Go to View => Show Status Bar

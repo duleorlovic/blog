@@ -33,19 +33,29 @@ container
     not neet to remove exited containers
 * `docker container inspect name-of-image` to see how we started the container
   To format output you can use format `-f` option
+* to debug echo run see commands in build I see sleep. Note only 6 lines of
+  output I can see
+  ```
+  RUN ls && sleep 10
+  ```
 * `docker container exec -it container-name ls` run additional command in
-  existing specific container (docker ps will not show additional container)
-  to attach when using byebug `docker attach <name_or_image_id>`
+  existing specific container (docker ps will not show additional container) for
+  example rake task or rails console
+  ```
+  docker exec -it my-web-1 /docker-entrypoint-web.sh bundle exec rails c
+  ```
+  To use byebug debugger you need to attach to proccess `docker attach
+  <name_or_image_id>` and byebug will stop there.
 * `docker container start -ai ubuntu` start stopped container and open a shell
 * `docker container ls --all` list all containers (spawned by the image), if it
   still running than no need `--all`. List processes `docker top container-name`
 * `docker ps` To see all running containers. Container is a running instance of
   an image. Also `docker container stats`
 * `docker container logs my_nginx` or follow `docker container logs -f postgres`
-* `docker container stop 323232`, stop all `docker kill $(docker ps -a)`, remove
+* `docker container stop 323232`, stop all `docker kill $(docker ps -q)`, remove
   stopped container `docker rm my_nginx` (force `docker container rm -f
   my_nginx`. Remove stopped containers, not used networks and image images
-  `docker system prune -a`. See system usage with `docker system df`
+  `docker system prune -a`. See system usage with `docker system df`.
 
 Image build
 Image is app binaries and dependencies and metadata (docker inspect) about the
@@ -96,6 +106,10 @@ Network
   Name:	duke
   Address: 172.18.0.5
   ```
+* to see host port from docker you can use internal IP address or special DNS
+  name `host.docker.internal` (on linux you need to enable on docker cli with
+  `--add-host=host.docker.internal:host-gateway` or `extra_hosts: -
+  "host.docker.internal:host-gateway"` on docker-compose
 
 
 Dockerfile stanzas (commands)
@@ -106,6 +120,7 @@ intermediate images, but do not increase the size of the build)
 * `FROM ruby:2.7.0` set parent image
 * `COPY local-file /docker/target/folder` copy from local to container. Any
   change to the files will cause rebuilt of this layer
+  When copy more than one file the destination must end with a /
 * `WORKDIR /app` change root to the folder
 * `RUN bundle install` run commands is creating new layer so it is good to use
   `&&` to join all bash commands so it create a single layer, huge RUN command
@@ -242,13 +257,19 @@ services: # this is actual container
 
     environment: # -e in docker
       DB_PASSWORD: password
+    env_file:
+      - .env
     volumes: # -v in docker, use . instead of $(pwd) Used to perseve data
       - ./data:/var/www/html
       - dule-mysql:/var/lib/mysql
     ports: # -v in docker
+      # use quotes https://github.com/docker/compose/issues/3109#issuecomment-645858273
       - '80:4000'
     depends_on: # start also this service mysql-primary before self
       - mysql-primary
+    # on reboot it will restart unless we stop. For restart: always we need to
+    # disable with: docker update --restart=no $(docker ps -a -q)
+    restart: unless-stopped
   #{servicename2}:
 
 # when using friendly name for volumes
@@ -261,6 +282,9 @@ network:
 To start containers use
 ```
 docker-compose up
+
+# Instead of remove you can build rebuild without cache 
+docker-compose up --always-recreate-deps
 
 # this will remove containers and networks
 docker-compose down
@@ -275,9 +299,19 @@ docker-compose logs -t
 # see running containers similar to docker ps
 docker-compose ps
 
-# to run proccesses on containers
+# to run proccesses on new containers
 docker-compose run <name-of-service> <command>
 docker-compose run rails bundle exec rake db:setup
+#`docker-compose up will not generate TTY session but docker-compose run will do
+# Add option `--service-ports` to map container ports if you use them.
+
+# exec is used to run on existing containers (run is running on new containers)
+# usefull for one time actions
+docker-compose exec rails rails db:create
+docker-compose exec rails rails c
+
+# for byebug you need to attach to existing using docker command
+docker attach myapp-rails-1
 ```
 
 To see config that is generated from multiple config
@@ -315,13 +349,14 @@ RUN apt-get update -qq && apt-get install -y nodejs postgresql-client yarn
 # commands.
 WORKDIR /myapp
 
+# Install latest bundler
+RUN gem install bundler
+
 # Copy the Gemfile as well as the Gemfile.lock and install
 # the RubyGems. This is a separate step so the layers with gems
 # will be cached unless changes to one of those two files
 # are made.
 COPY Gemfile Gemfile.lock ./
-# Install latest bundler
-RUN gem install bundler
 RUN bundle install
 
 # Copy the main application. Not needed when using volumes
@@ -341,6 +376,22 @@ EXPOSE 3000
 # Configure the main process to run when running the image
 CMD ["rails", "server", "-b", "0.0.0.0"]
 ~~~
+For error nokogiri version for specific platform not found
+https://github.com/rubygems/rubygems/issues/4269
+```
+/usr/local/lib/ruby/3.0.0/bundler/spec_set.rb:41:in `block in for': Unable to find a spec satisfying nokogiri (~> 1.8) in the set. Perhaps the lockfile is corrupted? Found nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin) that did not match the current platform. (Bundler::GemNotFound)
+```
+I just removed `PLATFORMS` block from Gemfile.lock (and make sure it is not
+generated) or add all platforms
+```
+bundle lock --add-platform  x86_64-linux
+
+# Gemfile.lock
+PLATFORMS
+  x86_64-linux
+  aarch64-linux
+  arm64-darwin-21
+```
 
 Ignore all files that are not needed for the app, image should be smaller as
 possible
@@ -375,10 +426,11 @@ services:
     # Instead of building the Docker image every time we change something in app
     # we can run bundle and yarn in boot command, note that current folder will
     # overwrite WORKDIR /myapp folder (also node_modules)
-    command: command: bash -c "bundle install && yarn install --check-files && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "bundle install && yarn install --check-files && bundle exec rails s -p 3000 -b '0.0.0.0'"
     build: .
     volumes:
       - .:/myapp
+      - /myapp/node_modules # ignore platform specific node_modules
     ports:
       - '80:3000'
     depends_on:
@@ -736,26 +788,71 @@ heroku plugins:install dockhero
 
 # list of commands https://github.com/dockhero/dockhero-cli
 heroku dh:docker ps
+heroku dh:compose up
 heroku dh:compose start
+heroku dh:compose build
 
 dh:env      #  downloads TSL certificates and prints out the environment variables to work with Dockhero
 dh:sh       #  run local shell with environment configured for Dockhero
 dh:ssh      #  interactive shell in the Docker machine (e.g. to reboot it)
-dh:open     #  opens your Dockhero stack web UI in the browser (https://)
 dh:wait     #  waits for the provisioning to finish
-dh:generate #  installs the pre-defined stack - try "helloworld" as an example
 ```
 
 Generate sample stackfile `dockhero-compose.yml`
 ```
+# installs the pre-defined stack locally
 heroku dh:generate helloworld
-git push heroku
+
+# this reads local dockhero-compose.yml
 heroku dh:compose up -d
+
+# opens your Dockhero stack web UI in the browser (https://)
+heroku dh:open
+```
+
+See the logs and status on
+```
+# status
+heroku addons:open dockhero
+
+# Dockhero logs are streamed into Heroku app's logs:
+heroku logs -p dockhero --tail
+
+# or from docker directly
+heroku dh:compose logs --follow
+```
+
+There is a problem on ubuntu
+https://github.com/dockhero/dockhero-cli/issues/34
+
+# aws ecs
+
+https://aws.amazon.com/blogs/containers/deploy-applications-on-amazon-ecs-using-docker-compose/
+```
+docker context create ecs myecscontext
+docker context use myecscontext
+docker context ls
+
+# start containers
+docker compose up
+docker compose -f docker-compose.ecs.yml up
+
+# view exposed port and url like
+# http://docke-loadb-rjft57gmmqri-853572988.us-east-1.elb.amazonaws.com
+docker compose ps
+
+# remove infrastructure
+docker compose down
+```
+
+Build and push to ECR
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+```
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 219232999684.dkr.ecr.us-east-1.amazonaws.com
+docker push 219232999684.dkr.ecr.us-east-1.amazonaws.com/selenium-ssh:strong-password 
 ```
 
 # Tips
 
-* `docker-compose up` will not generate TTY session but `docker-compose run`
-  will do. Add option `--service-ports` to map container ports if you use them.
 * `chown orlovic -R .` after initial build, since owner is set to root
 * tips https://nickjanetakis.com/blog/best-practices-around-production-ready-web-apps-with-docker-compose

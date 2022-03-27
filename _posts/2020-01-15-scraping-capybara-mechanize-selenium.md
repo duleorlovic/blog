@@ -458,6 +458,7 @@ chromedriver to `.rvm/gems/ruby-2.3.3/bin/chromedriver`.
 
 Make sure you have version of firefox and chrome that matches drivers.
 
+
 Same DSL to drive browser (selenium-webdriver, chrome-driver or capybara-webkit)
 or headless drivers (`:rack_test` or phantomjs). `Capybara.current_driver` could
 be `:rack_test` (when no `js: true`) or `:headless_chrome` or `':chrome`.
@@ -579,6 +580,20 @@ my ver 50 also works.
 
 # Remote Selenium
 
+The easiest way is to use docker
+https://github.com/SeleniumHQ/docker-selenium
+https://hub.docker.com/r/selenium/standalone-chrome-debug
+
+But when I use novnc it fails, but VNC Viewer works
+```
+Failed when connecting: Failed to connect to server ( (code: 1006))
+```
+It could be that REMOTE_HOST is not reachable from container. REMOTE_HOST can
+be either `selenium` (docker container) or domain name or ip address of host on
+which 5900 port is open (it should be reachable from this container). It does
+not work for redirection or rDNS records like dockhero-curly-75104.dockhero.io
+(you can check with nmap dockhero-curly-75104.dockhero.io).
+
 You can control remote selenium server. Download
 [selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run
 selenium server.  For error `Unsupported major.minor
@@ -586,13 +601,23 @@ version 52.0` you need to update java: 51 -> java7, 52 -> java8, 53 -> java9.
 
 ~~~
 java -jar selenium-server-standalone.jar
+# or
+java -jar selenium-server-4.1.2.jar standalone
 ~~~
+on initial session `driver = Selenium::WebDriver.for :chrome` there should be a
+log
+```
+[LocalDistributor.newSession] - Session request received by the distributor: 
+ [Capabilities {}]
+19:34:48.755 INFO [ProtocolHandshake.createSession] - Detected dialect: W3C
+19:34:48.783 INFO [LocalDistributor.newSession] - Session created by the distributor. Id: 2802E1FC-BAF0-492B-A435-60091646AA71, Caps: Capabilities {acceptInsecureCerts: false, browserName: Safari, browserVersion: 15.3, platformName: macOS, safari:automaticInspection: false, safari:automaticProfiling: false, safari:diagnose: false, safari:platformBuildVersion: 21D62, safari:platformVersion: 12.2.1, safari:useSimulator: false, setWindowRect: true, strictFileInteractability: false, webkit:WebRTC: {DisableICECandidateFiltering: false, DisableInsecureMediaCapture: false}}
+```
 
-To test in `rails c` try
-
+I can create :chrome, :safari and :firefox in `rails c`
+https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings#remote
 ~~~
 # chrome
-driver = Selenium::WebDriver.for :remote, desired_capabilities: :chrome, url: "http://192.168.5.56:4444/wd/hub"
+driver = Selenium::WebDriver.for :remote, capabilities: :chrome, url: "http://localhost:4444/wd/hub"
 # same as
 # driver = Selenium::WebDriver.for :chrome, url: "http://192.168.5.56:4444/wd/hub"
 driver.navigate.to 'http://google.com' #=> nil

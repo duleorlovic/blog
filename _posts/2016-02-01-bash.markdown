@@ -632,12 +632,15 @@ Note `.` after folder name.
   [p]rocess_name`. to show full command for process id you can use `ps -fp
   <pid>`. You can kill one by one using `top` and `k`. To find proccess by port
   it is using you can `lsof -wni tcp:3000` or simpler version to find command
-  that is listening on a port
+  that is listening on a port ports list
 
   ```
   lsof -i:7047
   ```
   so you can kill -9 PID and have that port open.
+  ```
+  kill -9 $(lsof -ti:3000)
+  ```
 
   You can see top 5 proccesses and commands
   ~~~
@@ -1007,8 +1010,10 @@ if [ "$(uname -s)" = "Darwin" ]; then
 fi
 ~~~
 * screen command
+  * list all session `screen -list` start new named session `screen -S dule`
+  * create new window `Ctrl+A + c` and switch to it using `Ctrl+A + 1`
+  * list all windows `Ctrl+ "` you can switch to it by jk and enter
   * exit detach with `Ctrl+A + d` and reattach with `screen -r`
-  * create new session `Ctrl+A + c` and switch to it using `Ctrl+A + 1`
   * `Ctrl + A + {command}` for example vertical split `Ctrl+A + |` and move to
     it `Ctrl+A + <tab>` and create new window `Ctrl+A + c`. Use `Ctrl+A + X` to
     close the window.
@@ -1118,4 +1123,9 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   if [[ $(grep -L rbenv ~/.bashrc) ]]; then
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
   fi
+  ```
+* `telnet host port` is usefull to check if it is open port, escape character is
+  ctrl + ]
+  ```
+  telnet selenium 4444
   ```

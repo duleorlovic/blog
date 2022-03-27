@@ -61,10 +61,13 @@ Simple
   config.add_notifier :email, {
     email_prefix: '[myapp UI] ',
     sender_address: Rails.application.credentials.mailer_sender,
-    exception_recipients: Rails.application.credentials.exception_recipients
+    exception_recipients: Rails.application.credentials.exception_recipients,
+    delivery_method: :smtp,
   }
+  config.error_grouping = true
 ```
 
+Extended
 ```
 cat > config/initializers/exception_notification.rb << HERE_DOC
 require 'exception_notification/rails'
@@ -180,7 +183,8 @@ if (receivers = Rails.application.secrets.exception_recipients).present?
     config.add_notifier :email,
                         email_prefix: '[MyApp] ',
                         sender_address: Rails.application.secrets.mailer_sender,
-                        exception_recipients: receivers.split(',')
+                        exception_recipients: receivers.split(','),
+                        delivery_method: :smtp
   end
 end
 HERE_DOC

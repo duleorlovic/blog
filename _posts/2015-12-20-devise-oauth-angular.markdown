@@ -1351,8 +1351,8 @@ production env.
 module Admin
   class AdminController < ApplicationController
     http_basic_authenticate_with(
-      name: Rails.application.secrets.admin_username,
-      password: Rails.application.secrets.admin_password
+      name: Rails.application.credentials.admin_username,
+      password: Rails.application.credentials.admin_password
     )
   end
 end

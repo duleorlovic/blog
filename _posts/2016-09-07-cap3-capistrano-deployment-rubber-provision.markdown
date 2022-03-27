@@ -1427,6 +1427,7 @@ cap production sidekiq:install
 # /home/deploy/move_index/.rbenv-vars
 NODE_OPTIONS=--max-old-space-size=460
 ```
+not sure how to limit max memory for ruby bundler
 * to run on specific host you can use host filtering
   ```
   bundle exec cap staging locally:delayed_job:start HOSTS=18.232.175.34

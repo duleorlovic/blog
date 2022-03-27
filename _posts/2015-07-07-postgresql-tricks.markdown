@@ -26,6 +26,7 @@ sudo vi /etc/postgresql/10/main/pg_hba.conf
 # change peer to md5: 
 
 # allow remote connections; find file with: SHOW config_file;
+# on macOD find config folder with ps aux|grep postgres
 sudo vi /etc/postgresql/10/main/postgresql.conf
 # add: listen_addresses = '*'
 # test with

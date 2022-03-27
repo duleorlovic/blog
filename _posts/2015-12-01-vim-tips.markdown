@@ -154,6 +154,15 @@ Other usefull commands in insert mode:
   and edit the line and yank back to the same register `"qyil`. To add new
   commands to register use uppercase, for example adding search to `q` register
   `qQ/word<enter>q` (this appending also works for yanking)
+  To cancel recording the macro you can copy existing (before you exit
+  recording, existing is still available) to new register and than back to
+  original https://superuser.com/questions/666377/how-to-cancel-recording-a-macro-in-vim#comment1558163_666428
+  ```
+  # recording qa but I wanted to execute @a
+  :let @t=@a
+  q
+  :let @a=@t
+  ```
 * paste commands in insert mode with `^Rq`
 * `^T` indent `^D` dedent in insert mode. Shift can be also done in visual mode
   (also in blockwise selection) with `>`.

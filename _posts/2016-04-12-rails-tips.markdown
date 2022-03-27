@@ -432,7 +432,7 @@ r.each { |l| puts l }
 ```
 
 * to find table name `ApplicationRecord.connection.table_exists? :user_sessions`
-  `db_name=$(rails runner "puts ActiveRecord::Base.configurations['$env']['database']")`
+* `rails runner "puts ActiveRecord::Base.configurations['development']")`
 * for single item, always use `@post.destroy` instead of `@post.delete` because
 it propagates to all `has_many :comments, dependent: :destroy` (also need to
 define this dependent param). `destroy` could be slow if there are a lot of
@@ -1397,7 +1397,11 @@ seeds.rb).
 ~~~
 begin
 # code
-# never rescue from Exception, but use Standard error
+# never rescue from Exception, but use Standard error (this is default, when we
+# rescue e) raise "Oh" is RuntimeError, which is descendant of StandardError
+# if you can, be specific about errors for example Net::HTTPBadResponse
+# for StandardError (like calling a method on nil value) let them to propagate
+# do not: begin nil.asd rescue 1 end
 rescue StandardError => e
   puts e.backtrace.reverse
   puts e.class, e.message

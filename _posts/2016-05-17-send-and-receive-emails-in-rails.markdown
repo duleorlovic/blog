@@ -67,6 +67,10 @@ If there is error `with EOFError: end of file reached` than you need to change
 `domain` field (should not be `localhost`, but the domain part of the sender
 email, for example `gmail.com`).
 
+The best way is to enable 2 step verification and create App Password https://support.google.com/accounts/answer/185833
+App password can be used instead of password and does not require enable less
+secure apps.
+
 If you see error in logs:
 
 ```
@@ -101,6 +105,7 @@ Rails.application.config.action_mailer.smtp_settings
 Rails.configuration.action_mailer.smtp_settings
 => {:address=>"smtp.gmail.com", :port=>587, :authentication=>"plain", :enable_starttls_auto=>true, :user_name=>...
 Rails.configuration.action_mailer.delivery_method
+=> :smtp
 ```
 
 ## AWS Workmail
@@ -220,12 +225,15 @@ You can also use smtp with SPARK_POST but it is two times slower
     config.action_mailer.smtp_settings = {
       address: 'smtp.sparkpostmail.com',
       port: 587,
+
       enable_starttls_auto: true,
       user_name: 'SMTP_Injection',
       password: Rails.application.secrets.sparkpost_api_key,
     }
     config.action_mailer.delivery_method = :smtp # sparkpost
 
+# check local configuration
+rails runner "puts Rails.application.config.action_mailer.smtp_settings"
 time rails runner 'UserMailer.signup.deliver_now!' # ~5sec with smtp
 time rails runner 'UserMailer.signup.deliver_now!' # ~2.5sec with sparkpost
 ~~~
@@ -756,3 +764,4 @@ You can use any number like `+1555,,,,` or `+1202555....` https://fakenumber.org
 
 * gmail shows download button for images, but you can prevent that by wrapping
   the image with link, or use style: `img + div { display:none; }`
+* get local configuration development ActiveRecord
