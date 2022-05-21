@@ -1016,7 +1016,7 @@ Or the best approach is to store all login state redirections in run
   javascript](https://gist.github.com/thegitfather/9c9f1a927cd57df14a59c268f118ce86)
   `console.log` inside page will be the same as in ionic app. If you need to
   post to external url which did not enable cors, you can not use `$http.post`
-  but plain form submittion. Since I like to keep working in browser and
+  but plain form submission. Since I like to keep working in browser and
   emulator, I moved submit button outsite of form and than ng-click will submit
   the form or load inappbrowser and pass the data.
   Closing inappbrowser could be navigating to `mobile/close` for which I set

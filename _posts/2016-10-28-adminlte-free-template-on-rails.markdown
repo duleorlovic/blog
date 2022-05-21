@@ -687,7 +687,7 @@ redirect).
 To add new template while keeping existing you can use different layout base on
 locale. You can set new layout with option `?layout=true`
 So if you add param `?layout=true` it will render `index.in.html.erb` variant
-using new layout and put that in session (so all form submittions also use new
+using new layout and put that in session (so all form submissions also use new
 layout). You can disable new_layout with `?layout=false`. If you have locale
 files (probably `devise.en.yml`) than you need to copy to `:in`
 

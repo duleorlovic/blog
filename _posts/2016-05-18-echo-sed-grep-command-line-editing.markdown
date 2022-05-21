@@ -36,17 +36,17 @@ Remember that no char (even space) could be after last `\ `.
 
 ~~~
 # double quotes need \n, can close quote in new line, need double \\ at begging
-sed -i config/routes.rb -e "/^end$/i \\
+sed -i "" -e "/^end$/i \\
   # root page\n\
   root 'pages#home'\
-"
+" config/routes.rb
 
-# single quotes, no need for \n
-# I do not like this because I need to use double quotes in ruby or ugly escape
-sed -i config/routes.rb -e '/^end$/i \
+# single quotes, no need for \n, also no need for \ on first and last line
+# if you need ' than you can use '"'"' (this converts to ')
+sed -i "" -e '/^end$/i \
   # root page\
-  root '"'"'pages#home'"'"'\
-  root "pages#home"'
+  root "pages#home"
+' config/routes.rb
 ~~~
 
 Most common usage is to add before some line, for example line begins with

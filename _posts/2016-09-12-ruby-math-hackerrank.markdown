@@ -69,6 +69,11 @@ Codility Solutions
 
   or in single line `File.write '/path/to/file', 'My Text', mode: 'a'`
 
+  To read one liner
+  ```
+  file_content = File.read("/path/to/file")
+  ```
+
 * division is integer division, so that `1/2 == 0` in ruby. You need to convert
   to float `x = x.to_f`
 * iterate range `(1..10).each` or `1.upto(10).each`

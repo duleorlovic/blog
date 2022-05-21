@@ -4,37 +4,6 @@ title: From simple Devise to Oauth on Angular
 tags: angular devise oauth
 ---
 
-# Devise
-
-Basic example application with [Devise](https://github.com/plataformatec/devise)
-default signup/login views.
-
-```
-cat >> Gemfile <<HERE_DOC
-
-# user authentication
-gem 'devise'
-HERE_DOC
-bundle
-rails generate devise:install
-git add . && git commit -m "rails g devise:install"
-rails g devise User
-last_migration
-# add:
-# t.string :name, null: false, default: ''
-# t.string :locale, null: false, default: ''
-# t.boolean :superadmin, null: false, default: false
-# uncomment Trackable and Confirmable and add_index
-rake db:migrate
-git add . && git commit -m "rails g devise user"
-```
-
-Copy views
-```
-rails g devise:views
-git add . && git commit -m "rails g devise:views"
-```
-
 Override default devise views with my views with locales, follow instructions on
 https://github.com/duleorlovic/devise-views-i18n
 
@@ -185,55 +154,6 @@ Hotwire issue
 Rails/Devise: Nil location provided. Can't build URI. on Password reset
 ```
 you need to disable hotwire with `data-turbo='false'`
-
-# Sign in on development
-
-Put links to be able to sign in by GET request on staging and local
-
-```
-# app/views/devise/sessions/new.html.erb
-<% if Rails.env.development? || Rails.application.secrets.is_staging %>
-  <small>
-    Only on development or staging
-    <dl>
-      <dt>admin</dt>
-      <dd>
-        <% User.joins(:club_users).where(club_users: { admin: true }).order(:created_at).limit(5).each do |user| %>
-          <%= link_to user.email, sign_in_development_path(user) %>
-        <% end %>
-      </dd>
-      <dt>non admin</dt>
-      <dd>
-        <% User.joins(:club_users).where(club_users: { admin: false }).order(:created_at).limit(10).each do |user| %>
-          <%= link_to user.email, sign_in_development_path(user) %>
-        <% end %>
-      </dd>
-    </dl>
-  </small>
-<% end %>
-```
-
-```
-# app/controllers/pages_controller.rb
-class PagesController < ApplicationController
-  def home
-    @recent_activities = Result.joins(check_points: [:discipline])
-  end
-
-  def sign_in_development
-    return unless Rails.env.development? || Rails.application.secrets.is_staging
-
-    user = User.find params[:id]
-    sign_in :user, user, bypass: true
-    redirect_to params[:redirect_to] || root_path
-  end
-end
-```
-
-```
-# config/routes.rb
-  get 'sign-in-development/:id', to: 'pages#sign_in_development', as: :sign_in_development
-```
 
 # Devise and Omniauth
 

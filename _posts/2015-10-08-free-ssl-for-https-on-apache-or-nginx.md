@@ -156,6 +156,7 @@ To see how it will renew, look on `sudo less /etc/cron.d/certbot`.
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
+# using -q --quiet will silence all output except errors
 0 */12 * * * root AWS_CONFIG_FILE=/home/ubuntu/movebase/.elbas_keys certbot -q renew
 ```
 See logs `less /var/log/syslog` or `vi /var/log/letsencrypt/letsencrypt.log`

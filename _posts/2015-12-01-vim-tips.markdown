@@ -328,8 +328,9 @@ down
 * `+` and `-` move line up or down on the first letter
 * `{ {` and `}}` move on start or end of paragraph (empty line), single brace is
   default but I changed to double
-* `^B`(`^U`, `^Y`) or `^F` (`^D`, `^E`) scroll next up (half page, one line) or
-  down (half page, one line). But for one line it is easier to use `Ljjj`
+* `^B`(`^U`, `^Y`) or `^F` (`^D`, `^E`) scroll next page up (half page, one
+  line) or down (half page, one line). But for one line it is easier to use
+  `Ljjj`
 * `H` `M` `L` jump to the top/middle/bottom of what you see
 * `mA` then `'A` jump there (downcase letter `a` can jump only on current file
   buffer, use ``a`` backtick to jump to specific column instead of beggining of

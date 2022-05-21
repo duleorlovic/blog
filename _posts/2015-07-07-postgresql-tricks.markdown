@@ -170,6 +170,8 @@ Some tips:
   'b'`
 * you can use IN, ANY, ALL
 [functions-comparisons](https://www.postgresql.org/docs/current/static/functions-comparisons.html#AEN18509)
+* substring match `WHERE col LIKE '%substr%'` or in rails `.where("mobile LIKE
+  ?", '%substr%')`
 * unique index regardless of order (two way combination or columns) can be
   enforced with expressions to build index
   https://stackoverflow.com/questions/30036837/postgresql-enforce-unique-two-way-combination-of-columns
@@ -305,6 +307,12 @@ pg_restore -C -d db_name db.dump
 pg_dump --dbname=$DATABASE_URL > db.sql
 createdb db_name
 psql -d db_name -f db.dump
+```
+
+access database_url postgres://username:password@host/db_name
+```
+psql -U username -d db_name -h host
+# type password
 ```
 
 ## Statistics graph
@@ -488,11 +496,6 @@ render 'stats_line_graph'
 # Other gems
 
 I found interesting gems:
-
-* <https://github.com/ankane/groupdate> for grouping
-* <https://github.com/ankane/chartkick> simple charts from ruby, support
-chart.js, highcarts, goole charts [js
-version](https://github.com/ankane/chartkick.js)
 
 * interesting [no sql not required data analytics tool
 INSIGHTS](https://github.com/mariusandra/insights)

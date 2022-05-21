@@ -281,6 +281,14 @@ git push heroku master --set-upstream
 
 More info on [heroku deploy]({{ site.baseurl }} {% post_url 2015-04-05-common-rails-bootstrap-snippets %}#heroku-deploy)
 
+To deploy from subfolder (for example server server is in subdirectory
+`/server`)
+https://elements.heroku.com/buildpacks/timanovsky/subdir-heroku-buildpack
+```
+heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack
+heroku buildpacks:add  https://github.com/heroku/heroku-buildpack-ruby
+heroku config:set PROJECT_PATH=server
+```
 
 ## Boostrap
 

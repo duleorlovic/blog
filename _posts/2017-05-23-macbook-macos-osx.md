@@ -132,6 +132,8 @@ but I change to caps_lock
 
 * Caps Lock Vim Movements (rev 2)
 https://ke-complex-modifications.pqrs.org/#capslock_vim_movements
+* custom rule similar to single and double quote, I created for pipe and
+  backslash. I just duplicated existing rule
 
 Changes are visible immediatelly, but I do not use links, I copy from config
 ~~~
@@ -569,9 +571,9 @@ end run
 
 Or you can copy all
 ```
-cp -r Library/Services/* ~/Library/Services/
+cp -r ~/config/bashrc/mac_scripts/Library/Services/* ~/Library/Services/
 # copy back the changes so we can save them in repo
-cp -r ~/Library/Services/* Library/Services/
+cp -r ~/Library/Services/* ~/config/bashrc/mac_scripts/Library/Services/
 ```
 For Input Sources I changed keyboard shortcut key `ctrl+space` *Select the
 previous input source* to `shift+ctrl+space` (so I do not accidentally hold ctrl
@@ -789,7 +791,10 @@ In file included from binder.cpp:20:
 ./project.h:119:10: fatal error: 'openssl/ssl.h' file not found
 #include <openssl/ssl.h>
 
+# or
+ruby 3.1.0 error: incomplete definition of type 'struct TS_verify_ctx'
 ```
+
 I solved with
 ```
 # uninstall old version global and bundle
@@ -818,6 +823,31 @@ I tried https://github.com/postmodern/ruby-install/issues/409
 rvm reinstall "ruby-3.0.0" --with-openssl-dir=`brew --prefix openssl@1.1` --disable-binary # ok
 ```
 but still the same error.
+
+Puma 5.6.4 has problems with ssl
+https://github.com/puma/puma/issues/2839#issuecomment-1086147152
+```
+LoadError: dlopen(/Users/dule/.rvm/gems/ruby-3.0.2/gems/puma-5.6.4/lib/puma/puma_http11.bundle, 0x0009): symbol not found in flat namespace '_SSL_get1_peer_certificate' - /Users/dule/.rvm/gems/ruby-3.0.2/gems/puma-5.6.4/lib/puma/puma_http11.bundle
+```
+which I solved with
+```
+gem uninstall puma
+DISABLE_SSL=1 bundle
+
+# or for new apps
+DISABLE_SSL=1 rails new
+```
+
+For event machine
+https://github.com/eventmachine/eventmachine/issues/960
+```
+/Users/dule/.rvm/gems/ruby-3.0.2/gems/bootsnap-1.11.1/lib/bootsnap/load_path_cache/core_ext/kernel_require.rb:30:in `require': dlopen(/Users/dule/.rvm/gems/ruby-3.0.2/gems/eventmachine-1.2.7/lib/rubyeventmachine.bundle, 0x0009): symbol not found in flat namespace '_SSL_get1_peer_certificate' - /Users/dule/.rvm/gems/ruby-3.0.2/gems/eventmachine-1.2.7/lib/rubyeventmachine.bundle (LoadError)
+```
+I solved with
+```
+# Gemfile
+gem 'eventmachine', github: "eventmachine/eventmachine", branch: 'master'
+```
 
 For error
 ```
@@ -947,9 +977,22 @@ https://stackoverflow.com/questions/69773109/how-to-fix-function-not-implemented
 ```
 open -a Simulator.app
 ```
-* open android emulator
+* open android emulator android studio
 ```
 /Volumes/eksterni/AndroidSDK/emulator/emulator -list-avds
-/Volumes/eksterni/AndroidSDK/emulator/emulator @Pixel_3a_API_32_arm64-v8a
+/Volumes/eksterni/AndroidSDK/emulator/emulator @Pixel_3a_API_Tiramisu
+/Volumes/eksterni/AndroidSDK/platform-tools/adb kill-server
 ```
-* safari show link on hover at the bottom footer, Go to View => Show Status Bar
+
+Toggle software keyboard inside simulator with I/O -> Keyboard -> Toggle
+software keyboard cmd + K
+You can not send SMS to simulatork
+https://help.apple.com/simulator/mac/current/#/devb0244142d
+
+watch network requests
+https://mdapp.medium.com/the-android-emulator-and-charles-proxy-a-love-story-595c23484e02
+
+* safari show link on hover link preview at the bottom footer, Go to View =>
+  Show Status Bar
+* to take camera picture photo you can open *Photo Booth* app
+* iphone icons https://developer.apple.com/sf-symbols/ https://github.com/cyanzhong/sf-symbols-online

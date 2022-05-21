@@ -12,6 +12,8 @@ https://docs.docker.com/get-started/
 docker run hello-world
 # if you have exposed ports you need to
 docker run -p 80:3000 my-image
+# if you want to remove after
+docker run -it --rm -p 3000:3000 static:latest
 ```
 # Commands
 
@@ -824,33 +826,6 @@ heroku dh:compose logs --follow
 
 There is a problem on ubuntu
 https://github.com/dockhero/dockhero-cli/issues/34
-
-# aws ecs
-
-https://aws.amazon.com/blogs/containers/deploy-applications-on-amazon-ecs-using-docker-compose/
-```
-docker context create ecs myecscontext
-docker context use myecscontext
-docker context ls
-
-# start containers
-docker compose up
-docker compose -f docker-compose.ecs.yml up
-
-# view exposed port and url like
-# http://docke-loadb-rjft57gmmqri-853572988.us-east-1.elb.amazonaws.com
-docker compose ps
-
-# remove infrastructure
-docker compose down
-```
-
-Build and push to ECR
-https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
-```
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 219232999684.dkr.ecr.us-east-1.amazonaws.com
-docker push 219232999684.dkr.ecr.us-east-1.amazonaws.com/selenium-ssh:strong-password 
-```
 
 # Tips
 

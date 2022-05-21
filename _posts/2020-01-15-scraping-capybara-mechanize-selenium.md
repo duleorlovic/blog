@@ -160,6 +160,26 @@ text: 'duke')` .
 `have_no_selector` for opposite. It is not same `expect(page).not_to have_text`
 and `expect(page).to have_no_text` since in later case it will wait until it
 tries to fulfill expectation.
+To use wait mechanism for other assertions you can try with 
+https://nts.strzibny.name/avoid-sleep-rails-system-tests
+```
+
+# test/application_system_test_case.rb
+
+  # In tests:
+  # wait_until(time: 2.5) do
+  #    page.page_path == current_path
+  #  end
+  def wait_until(time: Capybara.default_max_wait_time)
+    Timeout.timeout(time) do
+      until value = yield
+        sleep(0.1)
+      end
+      value
+    end
+  end
+
+```
 With all you can use `text: '...'` and `count: 2` which is number of occurences.
 Instead of `page.body.include? text` (this will compare html tags) use
 `page.has_text? text` (this will compare only text).
@@ -1110,3 +1130,4 @@ http://scrapy.org/
 
 comercial
 https://agenty.com/
+https://app.scrapingbee.com

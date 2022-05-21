@@ -72,6 +72,8 @@ vi move_index/.rbenv-vars
 DATABASE_URL=postgres://deploy:1234@127.0.0.1/move_index_production
 RAILS_MASTER_KEY=1234
 RAILS_ENV=production
+# check current value of max-old-space-size
+# $HOME/.rbenv/bin/rbenv exec bundle exec node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
 NODE_OPTIONS=--max-old-space-size=460
 
 echo '# this will load master key in env' >> ~/.bashrc
@@ -224,6 +226,10 @@ To see all tasks you can run
 cap -T
 cap -T postgres
 ```
+To see description rake task
+```
+cap -D my-task
+```
 
 Custom tasks have some additional format to plain rake tasks
 ```
@@ -316,7 +322,8 @@ set :deploy_to, "/home/deploy/#{fetch(:application)}"
 
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
 
-# deploy with: cap staging deploy BRANCH=branch
+# deploy with: cap staging deploy BRANCH=branch, it does not support
+# underscores like: my_branch_name
 set :branch, ENV['BRANCH'] if ENV['BRANCH']
 # rails
 set :rails_env, 'production'
@@ -1353,6 +1360,7 @@ maxmemory-policy allkeys-lfu
 
 # test that we can not access from outside aws using public ip
 redis-cli -h 3.81.27.218 ping
+# pong
 # but we can access from application server using internal network
 redis-cli -h 172.30.5.211 ping
 
@@ -1423,10 +1431,46 @@ cap production sidekiq:install
   solution is to limit how much memory node can use by setting up env variable
   https://github.com/rails/webpacker/issues/2033
   https://github.com/rails/webpacker/issues/2143 (related)
+
+  but if it is too low you can get this error
+  ```
+  FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+  ```
+  and you need to increase the memory to at least 1000MB
 ```
 # /home/deploy/move_index/.rbenv-vars
-NODE_OPTIONS=--max-old-space-size=460
+# check current value of max-old-space-size, not that without bundle it will
+# show original value
+# $HOME/.rbenv/bin/rbenv exec bundle exec node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' # => 1024
+node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' # => 994
+NODE_OPTIONS=--max-old-space-size=1000
 ```
+To check what memory limit is used you can write a task that is run every time
+before assets:precompile
+```
+# lib/tasks/before_assets_precompile.rake
+task :before_assets_precompile do
+  # run a command which starts your packaging
+  system("env | grep NODE_OPTIONS")
+  system("node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' # => 994")
+end
+
+# every time you execute 'rake assets:precompile'
+# run 'before_assets_precompile' first
+Rake::Task['assets:precompile'].enhance ['before_assets_precompile']
+```
+so you can see in output
+```
+00:25 deploy:assets:precompile
+      01 $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile
+      01 ** Invoke assets:precompile (first_time)
+      01 NODE_OPTIONS=--max-old-space-size=1000
+      01 1048
+      01 ** Invoke yarn:install (first_time)
+      01 ** Execute yarn:install
+```
+
+
 not sure how to limit max memory for ruby bundler
 * to run on specific host you can use host filtering
   ```
@@ -1698,6 +1742,13 @@ so you need both `config/master.key` and `config/credentials.yml.enc`
 ```
 can be solved with
 ```
-eval `ssh-agent`
 ssh-add ~/.ssh/id_rsa
 ```
+
+* for error
+```
+Missing template layouts/application with
+or
+Manifest webpack
+```
+please make sure that instance contains all roles `roles: %w[app web db]`

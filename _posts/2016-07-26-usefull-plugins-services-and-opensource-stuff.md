@@ -10,6 +10,9 @@ https://github.com/awesome-selfhosted/awesome-selfhosted#ticketing
 
 # Misc
 
+* https://cantunsee.space/ practice tests design details css question answer
+  pick better solution left or right
+* tailwind questions https://twwordle.hyperui.dev/?
 * [fastclick](https://github.com/ftlabs/fastclick)
 * [zeroclipboard](https://github.com/zeroclipboard/zeroclipboard) to copy some
 text on click
@@ -751,11 +754,6 @@ gallery](https://github.com/mbostock/d3/wiki/Gallery) and
   To add new data you can push to datasets and labels
   https://www.chartjs.org/docs/latest/developers/updates.html
 
-  To use with rails you can use https://github.com/ankane/chartkick
-  Problem is I do not know how to
-  * show sum instead of count https://github.com/ankane/groupdate/issues/75
-  * show only if nested association exists, `joins` will multiply with the
-    number of associated rows.
 * arrows and grouping
   <http://marvl.infotech.monash.edu/webcola/examples/smallgroups.html>
 
@@ -1103,6 +1101,7 @@ the content
   https://codepen.io/EricPorter/pen/YzKrqMp
 * carousel slider
   https://codepen.io/Akimzzy/full/JjGKMoX
+* carousel alternative with expanding flex cards https://codepen.io/z-/pen/OBPJKK?utm_campaign=CSS%20Animation%20Weekly&utm_medium=email&utm_source=Revue%20newsletter
 
 # Fonts and icons
 
@@ -1330,3 +1329,11 @@ Block porn sites by simply goind to Settings -> Blocklists -> https://raw.github
 https://github.com/veggiemonk/awesome-docker#paas
 * paas like dokku captainduckduck caprover https://github.com/caprover/caprover
 
+* tor browser can use proxy in any country, on mac edit
+```
+vi "/System/Volumes/Data/Users/dule/Library/Application Support/TorBrowser-Data/Tor/torrc"
+# and add folowwing lines
+EntryNodes {us} StrictNodes 1
+ExitNodes {us} StrictNodes 1
+# and restart tor browser
+```

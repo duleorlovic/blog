@@ -317,6 +317,14 @@ https://alligator.io/html/dialog-element/
 
 Use `<fieldset>` to group several input fields into one section and set caption
 label on this part with `<legend>`.
+```
+<fieldset>
+  <legend>
+    My section
+  </legend>
+  My content
+</fieldset>
+```
 When it is disabled, all nested input fields can not be used, as they were
 disabled. In Rails 6 I submitted a bug when using remote: true, all nested input
 fields are submitted so in this case you need to disable manually each input
@@ -352,6 +360,21 @@ or disabled because off
 Firefox has soft refresh which persist input values and disabled attribute on
 refresh the page https://stackoverflow.com/questions/5985839/bug-with-firefox-disabled-attribute-of-input-not-resetting-when-refreshing
 This can be disabled by hard refresh or autocomplete `off`
+
+But it is advisable to enable autocomplete so user get suggestions on phone
+https://developer.apple.com/documentation/security/password_autofill/enabling_password_autofill_on_an_html_input_element
+```
+<input id="user-text-field" type="email" autocomplete="username"/>
+<input id="password-text-field" type="password" autocomplete="current-password"/>
+
+<%= f.text_field :login, autofocus: true, autocomplete: "email", placeholder: 'Enter Mobile No. / Email ID', skip_label: true, autocapitalize: "off" %>
+<%= form.label :mobile, 'What is your Mobile?', class: 'labeltext', autocomplete: "tel" %>
+<%= form.text_field :otp_attempt, class: 'form-control', placeholder: 'Enter OTP', autofocus: true, required: true, autocomplete: "one-time-code" %>
+<%= form.select :year, options_for_select(year_options, selected: form.object.year), {}, class: 'form-control', id: :year, autocomplete: "bday-year" %>
+<%= form.text_field :zip, class: 'form-control', placeholder: 'Enter Your Zipcode', autofocus: true, required: true, autocomplete: "postal-code" %>
+<%= form.password_field :password, class: 'form-control', placeholder: "Enter Password (min #{User.password_length.min} chars)", autocomplete: "new-password" %>
+<%= form.password_field :password_confirmation, class: 'form-control', placeholder: 'Confirm Password', autocomplete: "new-password" %>
+```
 
 ## Autofocus
 

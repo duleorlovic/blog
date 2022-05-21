@@ -782,6 +782,7 @@ git push heroku master --set-upstream
 # so instead of create you just need to run migration and seed
 heroku run rails db:migrate db:seed
 
+# heroku pg:info
 # heroku pg:reset --confirm $MYAPP_NAME
 # heroku pg:reset --confirm `[[ $(git remote get-url heroku) =~ https...git.heroku.com.(.*).git ]] && echo ${BASH_REMATCH[1]}`
 # heroku pg:reset --confirm ${PWD##*/}
@@ -802,6 +803,8 @@ heroku pg:pull postgresql-name-on-heroku my_rails_app_development
 # or in one command
 bundle exec rake db:drop
 heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
+# or
+heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development'][:database]"`
 
 # also pushing
 # heroku pg:reset --confirm `[[ $(git remote get-url heroku) =~ https...git.heroku.com.(.*).git ]] && echo ${BASH_REMATCH[1]}`
@@ -845,6 +848,11 @@ heroku plugins:install heroku-repo
 heroku repo:purge_cache -a appname
 git commit --allow-empty -m "Purge cache"
 git push heroku master
+```
+
+Remove remote branch on heroku ie clear reset repository
+```
+heroku repo:reset
 ```
 
 Heroku ssl https://devcenter.heroku.com/articles/ssl-endpoint#setting-up-ssl-on-heroku
@@ -955,8 +963,6 @@ heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_CHARCOAL_URL
 # Copying... done
 ~~~
 
-Change DATABASE_URL
-
 Upgrading from hobby-basic to standard-0
 
 ~~~
@@ -967,10 +973,17 @@ heroku maintenance:on
 heroku pg:copy DATABASE_URL HEROKU_POSTGRESQL_color_URL
 heroku pg:promote HEROKU_POSTGRESQL_color_URL
 heroku maintenance:off
-heroku config:set DATABASE_URL=....url from config
+# this is not neccessary since it is updated
+# heroku config:set DATABASE_URL=....url from config
 heroku addons:destroy HEROKU_POSTGRESQL_color_old_URL
 ~~~
 
+heroku config plugin
+https://github.com/xavdid/heroku-config
+```
+heroku config:pull -f .env.production 
+heroku config:push --file=.env.production 
+```
 
 If you need to provision new database (upgrade from free to hobby) than you can
 use pg copy

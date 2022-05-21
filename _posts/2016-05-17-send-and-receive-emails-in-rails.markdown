@@ -69,7 +69,9 @@ email, for example `gmail.com`).
 
 The best way is to enable 2 step verification and create App Password https://support.google.com/accounts/answer/185833
 App password can be used instead of password and does not require enable less
-secure apps.
+secure apps 3th party apps.
+You can enable multiple two step verification with one single mobile phone
+number.
 
 If you see error in logs:
 

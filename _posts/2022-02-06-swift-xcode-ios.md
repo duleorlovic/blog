@@ -532,3 +532,6 @@ should see: Signging Ceritficate Apple Development email (ASD123)
 
 Open emulator by navigating to in menu bar Xcode -> Open Developer Tool ->
 Simulator
+
+* icons https://developer.apple.com/sf-symbols/ or online
+  https://github.com/cyanzhong/sf-symbols-online

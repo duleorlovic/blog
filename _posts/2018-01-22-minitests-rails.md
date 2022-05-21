@@ -86,7 +86,9 @@ Defining fixtures:
     key: or9sbwfely5gby30qdvtoa1cu09a
     filename: computer_text.png
     content_type: image/png
+    # jsonb
     metadata: '{"identified":true}'
+    metadata: <%= { "identified" => true }.to_json %>
     byte_size: 56024
     checksum: wHaMfHXpSThHCX/zvm5fFg==
 
@@ -331,36 +333,26 @@ than you need to reopen that particular class
 https://github.com/duleorlovic/premesti.se/blob/master/test/support/assert_equal_when_sorted_by_id.rb
 
 ~~~
-# test/application_system_test_case.rb
-require 'test_helper'
-
-class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  def assert_alert_message(text)
-    assert_selector 'div#alert-debug', text: text, visible: false
-  end
-
-  def assert_notice_message(text)
-    assert_selector 'div#notice-debug', text: text, visible: false
-  end
-end
-~~~
-
-for integration tests
-
-~~~
 # test/a/assert_flash_message.rb
+# https://github.com/duleorlovic/minitest_rails/blob/main/test/a/assert_flash_message.rb
 class ActionDispatch::IntegrationTest
   # assert_flash_message
   def assert_alert_message(text)
-    assert_select 'div#alert-debug', text
+    assert_select '[data-test=alert]', text
   end
 
   def assert_notice_message(text)
-    assert_select 'div#notice-debug', text
+    assert_select '[data-test=notice]', text
+  end
+end
+
+class ActionDispatch::SystemTestCase
+  def assert_alert_message(text)
+    assert_selector '[data-test=alert]', text: text
   end
 
-  def assert_select_field_error(text)
-    assert_select 'div.invalid-feedback', text
+  def assert_notice_message(text)
+    assert_selector '[data-test=notice]', text: text
   end
 end
 ~~~
@@ -545,7 +537,7 @@ title: "Ahoy!" }, response.parsed_body)`.
   assert_select '[data-test^=member-profile-]', 10
 
   # not sure how to use substitution, why this does not work
-  assert_select 'data-test[member-profile-?]', /.+/, count: 10
+  assert_select '[data-test=member-profile-?]', /.+/, count: 10
 
   assert_select 'div', html: 'p', minimum: 2
   ~~~

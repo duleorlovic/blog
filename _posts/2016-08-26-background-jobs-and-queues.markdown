@@ -206,6 +206,9 @@ Sidekiq::Queue.new.size # default name is 'default'
 Sidekiq::Queue.new('my_app_default').size
 Sidekiq::Queue.new('mailers').size
 Sidekiq::Queue.new('my_app_mailers').size
+Sidekiq::Workers.new.size # number of busy workers
+
+
 Sidekiq::Queue.new('my_app_mailers').clear
 
 # now I use Set https://gist.github.com/wbotelhos/fb865fba2b4f3518c8e533c7487d5354
@@ -239,6 +242,17 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
+  end
+
+# for http basic auth
+# https://www.aloucaslabs.com/miniposts/how-to-add-basic-http-authentication-to-sidekiq-ui-mounted-on-a-rails-application
+  scope :monitoring do
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+      ActiveSupport::SecurityUtils.secure_compare(::Digest::SHA256.hexdigest(username), ::Digest::SHA256.hexdigest(ENV["SIDEKIQ_AUTH_USERNAME"])) &
+        ActiveSupport::SecurityUtils.secure_compare(::Digest::SHA256.hexdigest(password), ::Digest::SHA256.hexdigest(ENV["SIDEKIQ_AUTH_PASSWORD"]))
+    end if Rails.env.production?
+
+    mount Sidekiq::Web, at: '/sidekiq'
   end
 ~~~
 
@@ -282,10 +296,121 @@ Capistrano can use sidekiq with a gem
 https://github.com/seuros/capistrano-sidekiq but it is not monitored so better
 is to use systemd
 https://github.com/mperham/sidekiq/wiki/Deployment#running-your-own-process
+```
+# etc/systemd/system/sidekiq.service
+#
+# This file tells systemd how to run Sidekiq as a 24/7 long-running daemon.
+#
+# Customize this file based on your bundler location, app directory, etc.
+#
+# If you are going to run this as a user service (or you are going to use capistrano-sidekiq)
+# Customize and copy this to ~/.config/systemd/user
+# Then run:
+#   - systemctl --user enable sidekiq
+#   - systemctl --user {start,stop,restart} sidekiq
+#
+# If you are going to run this as a system service
+# Customize and copy this into /usr/lib/systemd/system (CentOS) or /lib/systemd/system (Ubuntu).
+# Then run:
+#   - systemctl enable sidekiq
+#   - systemctl {start,stop,restart} sidekiq
+#
+# This file corresponds to a single Sidekiq process.  Add multiple copies
+# to run multiple processes (sidekiq-1, sidekiq-2, etc).
+#
+# Use `journalctl -u sidekiq -rn 100` to view the last 100 lines of log output.
+#
+[Unit]
+Description=sidekiq
+# start us only once the network and logging subsystems are available,
+# consider adding redis-server.service if Redis is local and systemd-managed.
+After=syslog.target network.target
+
+# See these pages for lots of options:
+#
+#   https://www.freedesktop.org/software/systemd/man/systemd.service.html
+#   https://www.freedesktop.org/software/systemd/man/systemd.exec.html
+#
+# THOSE PAGES ARE CRITICAL FOR ANY LINUX DEVOPS WORK; read them multiple
+# times! systemd is a critical tool for all developers to know and understand.
+#
+[Service]
+#
+#      !!!!  !!!!  !!!!
+#
+# As of v6.0.6, Sidekiq automatically supports systemd's `Type=notify` and watchdog service
+# monitoring. If you are using an earlier version of Sidekiq, change this to `Type=simple`
+# and remove the `WatchdogSec` line.
+#
+#      !!!!  !!!!  !!!!
+#
+Type=notify
+# If your Sidekiq process locks up, systemd's watchdog will restart it within seconds.
+WatchdogSec=10
+
+WorkingDirectory=/opt/myapp/current
+# If you use rbenv:
+# ExecStart=/bin/bash -lc 'exec /home/deploy/.rbenv/shims/bundle exec sidekiq -e production'
+# If you use the system's ruby:
+# ExecStart=/usr/local/bin/bundle exec sidekiq -e production
+# If you use rvm in production without gemset and your ruby version is 2.6.5
+# ExecStart=/home/deploy/.rvm/gems/ruby-2.6.5/wrappers/bundle exec sidekiq -e production
+# If you use rvm in production with gemset and your ruby version is 2.6.5
+# ExecStart=/home/deploy/.rvm/gems/ruby-2.6.5@gemset-name/wrappers/bundle exec sidekiq -e production
+# If you use rvm in production with gemset and ruby version/gemset is specified in .ruby-version,
+# .ruby-gemsetor or .rvmrc file in the working directory
+ExecStart=/home/deploy/.rvm/bin/rvm in /opt/myapp/current do bundle exec sidekiq -e production
+
+# Use `systemctl kill -s TSTP sidekiq` to quiet the Sidekiq process
+
+# Uncomment this if you are going to use this as a system service
+# if using as a user service then leave commented out, or you will get an error trying to start the service
+# !!! Change this to your deploy user account if you are using this as a system service !!!
+# User=deploy
+# Group=deploy
+# UMask=0002
+
+# Greatly reduce Ruby memory fragmentation and heap usage
+# https://www.mikeperham.com/2018/04/25/taming-rails-memory-bloat/
+Environment=MALLOC_ARENA_MAX=2
+
+# if we crash, restart
+RestartSec=1
+Restart=always
+
+# output goes to /var/log/syslog (Ubuntu) or /var/log/messages (CentOS)
+StandardOutput=syslog
+StandardError=syslog
+
+# This will default to "bundler" if we don't specify it
+SyslogIdentifier=sidekiq
+
+[Install]
+WantedBy=multi-user.target
+```
 
 ```
 # to see logs
 journalctl -u sidekiq
+```
+
+When sending emails `user = User.create!;
+MyMailer.send_email(user).deliver_later` than it could be that transaction for
+`user` is not completed and sidekiq try to find `user` but
+```
+ Error while trying to deserialize arguments: Couldn't find User
+ ActiveJob::DeserializationError: Error while trying to deserialize arguments
+```
+https://stackoverflow.com/questions/28561508/activejob-fails-deserializing-an-object
+https://gitlab.com/gitlab-org/gitlab-foss/-/merge_requests/3647
+https://github.com/mperham/sidekiq/wiki/Problems-and-Troubleshooting#cannot-find-modelname-with-id12345
+I tried to solve using after_commit
+```
+after_commit: -> { MyMailer.send_email(self).deliver_later }
+```
+
+# In test you can manually run after_commit block
+user.run_collbacks :commit
 ```
 
 # Resque
@@ -676,8 +801,11 @@ has sam validation errors) than whole block is rolledback and even ActiveJob or
 DelayedJobs is rolledback and hence will not be executed in background.
 
 Mailer `queue` is by default `mailers`. For other jobs `queue` is `nil`.
-In Rails 5 you can rename to `config.action_mailer.deliver_later_queue_name =
-'default_mailer_queue'`.
+From Rails 5 you can rename defaul queue with config
+```
+# config/application.rb
+config.action_mailer.deliver_later_queue_name = 'default_mailer_queue'
+```
 
 
 Another way to run background jobs is with `Delayed::Job.enqueue CleanJob.new,
@@ -753,7 +881,7 @@ end
 # Test background jobs spec
 
 You can three methods:
-* `assert_enqueued_with`
+* `assert_enqueued_with job: MyJob, args: [user]`
 * `perform_enqueued_jobs`
 * `assert_performed_jobs 1` make sure that only one is performed
 

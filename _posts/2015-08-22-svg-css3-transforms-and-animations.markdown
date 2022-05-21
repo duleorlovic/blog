@@ -113,6 +113,9 @@ Usefull shortcuts:
 * select two elements and `CTRL + +` union, `CTRL + -` difference (top image is
 substracted from bottom image)
 * to see the SVG code use Edit -> XML Editor
+* zoom canvas https://inkscape.org/doc/keys.html#idm452 zoom in with middle
+  click, zoom out shift+middle click, zoom specific area ctrk+middle click drag,
+  quick zoom with `q` zoom to selection `3` page `5`
 * inkspace fish <https://www.youtube.com/watch?v=l3BHcregNUs&t=300s>
 * sozi <http://sozi.baierouge.fr/pages/10-about.html>
 

@@ -345,3 +345,14 @@ end
   application.register("scroll-to", ScrollTo)
   ```
   https://stimulus-components.netlify.app/docs/stimulus-scroll-to/
+
+* manually trigger change event for elements you need to use custom event for
+  example `my-change-event`
+  https://github.com/hotwired/stimulus/issues/101
+  ```
+    var event = new CustomEvent('my-change-event', { bubbles: true });
+    ev.target.dispatchEvent(event);
+    
+
+    <%= form.text_field :start_end_date, "data-action": "my-change-event->forms#submit_on_change" %>
+  ```

@@ -269,8 +269,8 @@ subdomain:
 
 ~~~
 # /etc/dnsmasq.d/dev-tld
-local=/loc/
-address=/loc/127.0.0.1
+local=/localhost/
+address=/localhost/127.0.0.1
 ~~~
 
 restart with
@@ -284,20 +284,22 @@ Also follow [instructions](https://gist.github.com/marek-saji/6808114)
 
 DNS server dnsmasq for .dev domains for osx <https://passingcuriosity.com/2013/dnsmasq-dev-osx/>
 https://gist.github.com/ogrrd/5831371
+https://kharysharpe.medium.com/automatic-local-domains-setting-up-dnsmasq-for-macos-high-sierra-using-homebrew-caf767157e43
 
 ~~~
 brew install dnsmasq
 # read suggested commands and apply them
-cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
+# cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
 sudo brew services start dnsmasq
 
 # in /usr/local/etc/dnsmasq.conf
-address=/loc/127.0.0.1
+# or /opt/homebrew/etc/dnsmasq.conf 
+address=/localhost/127.0.0.1
 
 sudo brew services restart dnsmasq
 
 sudo mkdir -p /etc/resolver
-sudo tee /etc/resolver/loc >/dev/null <<EOF
+sudo tee /etc/resolver/localhost >/dev/null <<EOF
 nameserver 127.0.0.1
 EOF
 ~~~
@@ -305,21 +307,29 @@ EOF
 Test with
 
 ~~~
+scutil --dns
+# resolver #8
+#   domain   : localhost
+#   nameserver[0] : 127.0.0.1
+
 # Make sure you haven not broken your DNS.
 ping -c 1 www.google.com
-# Check that .loc names work
-ping -c 1 this.is.a.test.loc
+# Check that .localhost names work
+ping -c 1 this.is.a.test.localhost
 ~~~
+
+Clear chrome dns cache on chrome://net-internals/#dns
+and clear cookies.
 
 You can check your domain name resolutions with mxtoolbox.com or domain settings
 with command `nslookup` (dns resolution, dns lookup)
 
 ~~~
-nslookup asd.loc
+nslookup asd.localhost
 # Server:		127.0.0.1
 # Address:	127.0.0.1#53
 #
-# Name:	asd.loc
+# Name:	asd.localhost
 # Address: 127.0.0.1
 
 # To display the MX records, use the -query=mx option:

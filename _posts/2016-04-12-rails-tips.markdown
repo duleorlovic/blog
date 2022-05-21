@@ -1724,6 +1724,10 @@ building object use service object.
 # app/form_objects/landing_signup.rb
 class LandingSignup
   include ActiveModel::Model
+
+  # for before_validation :my_prepare_date
+  #   include ActiveModel::Validations::Callbacks
+
   FIELDS = %i[ current_city current_location current_group prefered_group email].freeze
   attr_accessor(*FIELDS)
 
@@ -1774,6 +1778,12 @@ end
 To define url for ActiveModel you need to overwrite some instance vars
 https://stackoverflow.com/questions/3736759/ruby-on-rails-singular-resource-and-form-for
 so better is to define url param `form_for @form, url: users_path`
+
+## Query objects
+
+For complex query so we can unit test them
+https://thoughtbot.com/blog/a-case-for-query-objects-in-rails#a-better-query-object
+
 
 ## Decorators
 
@@ -1867,84 +1877,6 @@ end
 
 My implementation of friendly_id gem
 <script src="https://gist.github.com/duleorlovic/724b8ab1eb44d7f847ee.js"></script>
-
-# Unsubscribe links
-
-You can use
-https://api.rubyonrails.org/v5.2.2.1/classes/ActiveSupport/MessageVerifier.html
-to encode strings or id
-```
-  @unsubscribe = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
-```
-
-Old example
-
-~~~
-# app/views/layouts/_email_footer.html.erb
-<p>
-  <%= link_to "Unsubscribe", link_for_unsubscribe(user, controller.mapping_to_unsubscribe_group(controller.action_name)) %> from this type of email.
-</p>
-<p>
-  <%= link_to "Manage", settings_user_url(user) %> which emails you receive.
-</p>
-
-# app/controllers/application_mail.rb
-  def mapping_to_unsubscribe_group method_name
-    group = ApplicationHelper::UNSUBSCRIBE_MAPPING_METHOD_TO_GROUP[method_name.to_s]
-    if group.nil?
-      puts "!!!!! No group found for method_name=#{method_name.to_s}"
-      ExceptionNotifier.notify_exception(Exception.new("just to notify that there is no group for method_name #{method_name}") )
-    end
-    group
-  end
-
-# app/helpers/application_helper.rb
-  UNSUBSCRIBE_MAPPING_METHOD_TO_GROUP = {
-    "first_application_instructions" => "tips_and_help_emails_jobseeker",
-    "application_in_review_instructions" => "tips_and_help_emails_jobseeker",
-    "new_candidate_email" => "new_candidate_or_applicant",
-    }
-  def link_for_unsubscribe user, unsubscribe_group
-    referral_token_and_unsubscribe_group = user.referral_token + unsubscribe_group.to_s
-    unsubscribe_url key: Base64.encode64(referral_token_and_unsubscribe_group)
-  end
-
-# config/routes.rb
-  get 'unsubscribe', to: 'welcome#unsubscribe'
-
-# app/controllers/welome_controller.rb
-  # GET /unsubscribe
-  def unsubscribe
-    referral_token_and_unsubscribe_group = Base64.decode64 params[:key] 
-    referral_token = referral_token_and_unsubscribe_group[0..User::REFERRAL_TOKEN_LENGTH-1]
-    @unsubscribe_group = referral_token_and_unsubscribe_group[User::REFERRAL_TOKEN_LENGTH..-1]
-    if current_user
-      if current_user.referral_token == referral_token
-        @user = current_user
-        @user.unsubscribe[ @unsubscribe_group] = "true"
-        @user.save!
-      else
-        redirect_to root_path, alert: "This key is for different user, please log out"
-      end
-    else
-      if @user = User.find_by( referral_token: referral_token)
-        # we found the user
-        @user.unsubscribe[ @unsubscribe_group] = "true"
-        @user.save!
-      else
-        flash[:alert] = "Can't find user by this key. You need to signin in order to unsubscribe"
-        redirect_to new_user_session_path and return
-      end
-    end
-  end
-
-# db/migrate/_add_unsubscribe_to_user.rb
-class AddUnsubscribeToUser < ActiveRecord::Migration
-  def change
-    add_column :users, :unsubscribe, :hstore, default: {}
-  end
-end
-~~~
 
 # Run rails in production mode
 
@@ -3109,6 +3041,9 @@ end
   ActionController::Base.helpers.humanized_money_with_symbol amount
   ActionController::Base.helpers.time_ago_in_words Time.zone.now
   ActionController::Base.helpers.distance_of_time_in_words 1.day
+  ActionController::Base.helpers.distance_of_time_in_words i.completed_at -
+  i.started_at, include_seconds: true
+  ActionController::Base.helpers.number_with_delimiter 1234
 
   # no need to use ActionView::Base.new but just for reference
   # ActionView::Base.new.number_to_human 123123 # 123 Thousand
@@ -4121,7 +4056,7 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
 * custom exception class
   ```
   module TrkDatatables
-    class Error < StandardError
+    class TrkError < StandardError
       def message
         "TrkDatatables: #{super}"
       end
@@ -4134,14 +4069,14 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
     def search_all
       @params.dig(:search, :value) || ''
     rescue TypeError => e
-      raise Error, e.message + '. Global search is in a format: { "search": { "value": "ABC" } }'
+      raise TrkError, e.message + '. Global search is in a format: { "search": { "value": "ABC" } }'
     end
   ```
 
   You can rescue in controller with
   ```
   # app/controllers/application_controller.rb
-  rescue_from TrkDatatables::Error do |exception|
+  rescue_from TrkDatatables::TrkError do |exception|
     respond_to do |format|
       format.html { redirect_to root_path, alert: exception.message }
       format.json { render json: { error_message: exception.message, error_status: :bad_request }, status: :bad_request }
@@ -4436,3 +4371,20 @@ can read for `operator_id && operator_id_was`.
   Second solution is to add no-store no-cache
   https://github.com/rails/rails/issues/21948#issuecomment-205371135
   ```
+* dotenv nice gem to load env to ruby. If you want to load to shell you can
+  https://gist.github.com/mihow/9c7f559807069a03e302605691f85572?permalink_comment_id=3923897#gistcomment-3923897
+  set -o allexport; source .env; set +o allexport
+  ```
+* fake phone us mobile +12025550123
+* show page inside iframe
+  ```
+  <iframe width='100%' height="500px" srcdoc="
+    <%= @run.response.gsub '"', "'" %>
+    "></iframe>
+  ```
+  on w3school we can see the page
+  https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_iframe
+  so we can try similar locally using caddy ssl server
+
+* show json pretty_print with `JSON.pretty_generate hash`
+* change database with `rails db:system:change --to=postgresql`

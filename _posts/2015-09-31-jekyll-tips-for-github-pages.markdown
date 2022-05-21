@@ -678,13 +678,17 @@ Yet another theme
 * url can be written like `<http://projektor.trk.in.rs>` (`http://` at the
   beggining is mandatory) instead of writting it twice
   `[http://projektor.trk.in.rs](http://projektor.trk.in.rs)`
-* internal link to post is with `{{ '{%' }} %}` like
-  `[My page]({{ '{% link 2016-03-02-my-page.markdown' }} %})`
+* internal link to post is with `{{ '{% link' }} %}` or `post_url`
+  ```
+  [My page]({ % link _posts/2016-03-02-my-page.md %})
+  [My page]({ % post_url 2016-03-02-my-page %})
+  ```
 * images `![alt text]({ { site.baseurl }}/assets/path_to_image "Title text")` If
   you want to use image in `README.md` than you need to store image and use
   ```
   ![trk-datatables](test/trk_datatables_with_daterangepicker.png "TRK Datatables")
   ```
+
   This will work on github but not if README is shown on other sites
 * strikethrough (words crossed, deleted, removed text) can be used with
   `<s>Example</s>` or `<del>Example</del>` (with kramdown no shortcut works

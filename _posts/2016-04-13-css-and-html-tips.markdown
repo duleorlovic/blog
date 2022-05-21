@@ -966,7 +966,7 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
   Do not set only the width since than height is 0 untill the image is loaded.
 * elements with captions are:
   `<figure><img><figcaption>I'm caption</figcaption></figure>` and 
-  `<fieldset><legend>I'm caption of this set</legent><input></fieldset>`
+  `<fieldset><legend>I'm caption of this set</legend><input></fieldset>`
 * add text node
   ```
   let el = document.getElementById('el');

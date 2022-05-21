@@ -1062,6 +1062,11 @@ example `User.find_by(email: 'a@b.c')&.tap { |u| }`
 * In ruby 2.3 there is also `Array#dig` and `Hash#dig` so instead of
   `params[:a].try(:[], :b)` you can `params.dig(:a, :b)`. when you need to take
   value and not sure if provided (usually in some json response)
+  if you want to find specific object you can use `select{} || {}`
+  ```
+  (array_or_hash.dig("users", "accounts")&.select{|account| account["type"] ==
+  "facebook"} || {}).dig(0, "link")
+  ```
 * rails has hash except `my_hash.except :my_key` to ignore only my_key value and
 returns also the hash. Also oposite select is slice `my_hash.slice :my_key` to
 pick `{my_key: 1}` (also returns hash)
@@ -1092,6 +1097,7 @@ can use `s.start_with? prefix` or `s.end_with? suffix`
 * `URI.escape 'a b' # => 'a%20b'`
 * `URI.unescape 'a%20b' # => 'a b'`
 * `CGI::escape 'a b' # => 'a+b'`
+* `CGI.unescapeHTML 'a+b'`
 * `ERB::Util.url_encode`
 * `WEBrick::HTTPUtils.escape 'a b' # => a%20b`
 
@@ -1182,8 +1188,14 @@ todo https://www.youtube.com/watch?v=4hfMUP5iTq8
 * you can return only from methods, but not from `do end` blocks
 * ruby regex match will return
 [matchData](https://ruby-doc.org/core-2.2.0/MatchData.html) or `nil` if there is
-no match (so you need to check if not nil). For MatchData you can
-call `captures` to get matched groups. You can use block form syntax of `if`
+no match (so you need to check if not nil).
+https://ruby-doc.org/core-3.1.2/Regexp.html#class-Regexp-label-Named+captures
+```
+/(\w)(\w)/.match("ab").captures # => ["a", "b"]
+```
+
+For MatchData you can call `captures` to get matched groups. You can use block
+form syntax of `if`
 
   ~~~
   exception.message.match(/for column (.*) at row/) do |match_data|
@@ -1637,6 +1649,8 @@ railse
   alerts for `Style/Lambda: Use the `lambda` method for multi-line lambdas` you
   need parenthesis for example `scope :active, (lambda do ... end)`
 
+* `.map` two arguments is not easy
+*
 todo
 
 http://norswap.com/ruby-dark-corners/
