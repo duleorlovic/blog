@@ -855,6 +855,15 @@ Unable to load the EventMachine C extension; To use the pure-ruby reactor, requi
 ```
 I have no solutions.
 
+For error
+```
+-bash: fork: retry: Resource temporarily unavailable
+```
+you have reached maximum number of proccesses
+```
+ulimit -u
+```
+
 # Android USB Thethering
 
 Download <http://www.joshuawise.com/horndis> driver (right click open with) to

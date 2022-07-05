@@ -1,1 +1,0 @@
-/Users/dule/web-tips/sidekiq_theory/README.md

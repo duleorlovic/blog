@@ -538,3 +538,10 @@ Default is using POST, but you can change and add params
 * in rails `<%= form_with ..., class: 'my-class'` you can use class attribute
   directly, but other attributes are not passed, so you need to use html like
   `<%= form_with ..., html: { class: 'my-class' } %>`
+* optional permit params that allows empty
+```
+  def _my_form_params
+    params[:my_from] = {name: ""} unless params.keys.include? "my_from"
+    params.require(:my_from).permit(:name)
+  end
+```

@@ -672,6 +672,8 @@ port use port in used port
 
 ```
 sudo netstat -tupln | grep 3306
+
+lsof -wni tcp:3000
 ```
 
 You can try with nmap but it does not show for example neo4j 7474 port

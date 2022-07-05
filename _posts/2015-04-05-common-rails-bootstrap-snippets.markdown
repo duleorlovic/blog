@@ -802,9 +802,9 @@ heroku pg
 heroku pg:pull postgresql-name-on-heroku my_rails_app_development
 # or in one command
 bundle exec rake db:drop
-heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
-# or
-heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development'][:database]"`
+rails db:drop && heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development']['database']"`
+# or dump in one command
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 rails db:drop && heroku pg:pull `heroku pg|grep Add|awk '{print $2}'` `bundle exec rails runner "puts ActiveRecord::Base.configurations['development'][:database]"`
 
 # also pushing
 # heroku pg:reset --confirm `[[ $(git remote get-url heroku) =~ https...git.heroku.com.(.*).git ]] && echo ${BASH_REMATCH[1]}`

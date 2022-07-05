@@ -776,10 +776,10 @@ to call it. Someone prefer to use explicit argument so we know that method
 expects block.
 
 ~~~
-def f(a, &p)
-  # p.class # => Proc
+def f(a, &block)
+  # block.class # => Proc
   # we can use explicit
-  p.call a
+  block.call a
   # but also we can use
   yield a
 end
@@ -1241,6 +1241,10 @@ form syntax of `if`
 example code [slides](http://nithinbekal.com/slides/decorator-pattern/#/)
 [video railsconf](https://www.youtube.com/watch?v=bHpVdOzrvkE)
 * you can count non nil values in array with `[nil, 1, 2].compact # => [1,2]`
+  for empty string or space only string you can use presence and map
+  ```
+  [nil, "", " ", 1].map(&:presence).compact # => [1]
+  ```
 * you can call methods with dot but also with double colon `"a".size` or
 `"a"::size`. You can put spaces or new lines anywhere `a   .   size`.
 * if you see error `method_missing': undefined method this` than you need to
@@ -1620,6 +1624,15 @@ railse
   param not the first. You can summarize using `.inject` or `.each_with_object`
   or synonim is `.reduce`
 
+* write file save to file in single line
+  ```
+  File.write '/path/to/file', 'My Text', mode: 'a'
+  ```
+
+  To read one liner
+  ```
+  file_content = File.read("/path/to/file")
+  ```
 * for read from a file `file = File.open(file_name)` you can call `file.read`.
   But you can create String io `io =  StringIO.new 'asd'` and call `io.read`.
   That is usefull for testing when you read from standard input

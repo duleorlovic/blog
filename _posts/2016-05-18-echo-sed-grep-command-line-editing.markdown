@@ -16,7 +16,7 @@ should not be backtick  \`\` since it will be evaluated as shell command.
 ~~~
 cat > my.txt << 'HERE_DOC'
 here can be ' " \ / anything
-HERE_DOR
+HERE_DOC
 ~~~
 
 # Sed

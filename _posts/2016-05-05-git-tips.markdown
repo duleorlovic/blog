@@ -13,7 +13,7 @@ checkout remote branch and track it
 
     git checkout -t origin/branch
 
-Remove remote branch
+Remove remote branch delete remote
 
     git push origin --delete gh-pages
 
@@ -304,22 +304,39 @@ project where you run
 
 Submodule is used when you have other git repository within your project. Add
 submodule with `git submodule add git@github.com:duleorlovic/myapp.git`
-When someone clone your project, it needs to do two steps,
-initialize configuration file and fetch all data. Instead of those two commands
-you can pass option when someone is cloning your project `--recurse-submodules`
-or if it already cloned, it can use `git submodule update --init --recursive`
-(this is done every time you need to sync latest commited changes of submodules
-when pulling superproject updates)
+When someone clone your project, it needs to do two steps: init and fetch.
+Initialize configuration file with `git submodule init` it actually creates
+```
+# .git/config
+[submodule "myapp"]
+	active = true
+	url = git@github.com:duleorlovic/myapp.git
+```
+To fetch use `git submodule update` to get actuall SHA that was commited.
+To do both init and submodule update you can use option while cloning parent
+(recursive mean to fetch submdules of submodules - nested submodules if exists)
+```
+git clone --recurse-submodules git@github.com/duleorlovic/web-tips.git
+```
+or if it already cloned, it can pull latest parent changes and update
+```
+git pull
+git submodule update --init --recursive
 
-    git submodule init
-    git submodule update
+# or you can do in one step
+git pull --recurse-submodules
+```
+This is needed every time you need to sync latest commited changes on parent.
 
-to fetch upstream changes of submodules, you can navigate to each submodule
-folder and run `get fetch` and `git merge`, or you can do from main repo using
-
-    git submodule update --remote
-
-to see differences in submodules you can use `git diff --submodule` (or you can
+On other side, to fetch upstream changes of submodules, you can navigate to each
+submodule folder and checkout branch `git chechout main`, `get fetch` and `git
+merge`, or you can do from main repo using
+```
+git submodule update --remote
+git submodule update --remote myapp # update only this submodule
+git submodule update --remote --rebase myapp # stay on branch, not detached
+```
+To see differences in submodules you can use `git diff --submodule` (or you can
 set option `git config --global diff.submodule log` so you do not need to pass
 `--submodule` attribute every time). Similar for status, you can se `git config
 status.submodulesummary 1` so `git status` will show changes that are done for
@@ -328,7 +345,17 @@ To work inside submodules you need to checkout branch (initially `git submodule
 update` is leaving the subrepository in *detached HEAD* state). After you commit
 you need to push to submodule repo or you can do from superrepository with
 
-    git push --recurse-submodules=check
+```
+git push --recurse-submodules=check
+git push --recurse-submodules=on-demand
+```
+
+When some submodule become private, you can remove that
+
+```
+git rm apps/shoppe
+```
+
 
 Tutorials
 

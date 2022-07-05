@@ -1,5 +1,6 @@
 ---
 layout: post
+tags: asd
 ---
 
 # Validations
@@ -2857,6 +2858,11 @@ User.select('users.*, COUNT(posts.id) AS posts_count').left_outer_joins(:posts).
 User.select('users.*, (SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) AS posts_count').where('(SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) > 1')
 # you can also use subquery in join group relation
 User.select('users.*, COUNT(posts.id) AS posts_count').left_outer_joins(:posts).group('users.id').where('(SELECT COUNT(*) FROM posts WHERE users.id = posts.user_id) > 1')
+```
+
+To select all that does not have nested objects
+```
+leagues.left_outer_joins(:matches).where.not("matches.id": nil).group("leagues.id")
 ```
 
 Rails 5 has method

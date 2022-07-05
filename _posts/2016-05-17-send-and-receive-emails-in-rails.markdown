@@ -760,9 +760,6 @@ end
 
 https://github.com/ankane/ahoy_email
 
-# US Phones
-
-You can use any number like `+1555,,,,` or `+1202555....` https://fakenumber.org/
 
 * gmail shows download button for images, but you can prevent that by wrapping
   the image with link, or use style: `img + div { display:none; }`

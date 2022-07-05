@@ -322,7 +322,7 @@ Package.")unless advance_renewal_package.present?; end`.
   # to see all changes
   puts PaperTrail::Version.all.map(&:changeset).join"\n"
 
-  # to see all changes for particular object
+  # to see all changes for particular object in console
   o.versions.map {|v| v.changeset.each {|k,v| puts "#{k}: #{v.first.nil? ? 'nil' : v.first} -> #{v.second.nil? ? 'nil' : v.second}" } } && nil
 
   ```

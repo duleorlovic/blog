@@ -357,7 +357,8 @@ Location list is similar to quickfix but for current window replacing `c` with
 independed from quickfix list.
 
 * `:cnext` jump to next error, `:clast` to jump to last (with plugin `:help
-  unimpaired-next` you can use `]q` go next `[q` prev error)
+  unimpaired-next` you can use `]q` go next `[q` prev error). For ALE rubocop
+  use list `]l`
 * `:cc` to show full error message in status bar for this line
 * `:clist` to list all errors
 

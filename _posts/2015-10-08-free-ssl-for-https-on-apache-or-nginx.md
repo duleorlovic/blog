@@ -219,11 +219,12 @@ cert.pem
 ```
 sudo ls /etc/letsencrypt/live/main.trk.in.rs
 cert.pem  chain.pem  fullchain.pem  privkey.pem
+cd /etc/letsencrypt/live/main.trk.in.rs
 
-sudo openssl x509 -text -noout -in /etc/letsencrypt/live/main.trk.in.rs/cert.pem
+sudo openssl x509 -text -noout -in cert.pem
 # read expiry date
-openssl x509 -enddate -noout -in file.pem
-sudo keytool -printcert -file /etc/letsencrypt/live/main.trk.in.rs/cert.pem | grep trk
+openssl x509 -enddate -noout -in cert.pem
+sudo keytool -printcert -file cert.pem | grep trk
 ```
 
 https://letsencrypt.org/docs/rate-limits/

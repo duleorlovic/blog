@@ -209,19 +209,6 @@ Sidekiq::Queue.new('my_app_mailers').size
 Sidekiq::Workers.new.size # number of busy workers
 
 
-Sidekiq::Queue.new('my_app_mailers').clear
-
-# now I use Set https://gist.github.com/wbotelhos/fb865fba2b4f3518c8e533c7487d5354
-Sidekiq::ScheduledSet.new.clear
-
-# to find specific existing jobs you can use scan or map.compact
-queue = Sidekiq::Queue.new("default")
-# https://github.com/mperham/sidekiq/wiki/API
-jobs = queue.map do |job|
-  if job.klass == '[JOB_CLASS]'
-    {job_id: job.jid, job_klass: job.klass, arguments: job.args}
-  end
-end.compact
 ~~~
 but better way to avoid duplicated sidekiq jobs is using flags
 https://blog.appsignal.com/2021/05/12/three-ways-to-avoid-duplicate-sidekiq-jobs.html
@@ -877,75 +864,6 @@ every :reboot do
   delayed_job 'start'
 end
 ```
-
-# Test background jobs spec
-
-You can three methods:
-* `assert_enqueued_with job: MyJob, args: [user]`
-* `perform_enqueued_jobs`
-* `assert_performed_jobs 1` make sure that only one is performed
-
-and you can test job directly by calling perform.now
-```
-# test/jobs/update_person_job_test.rb
-class UpdatePersonJobTest < ActiveJob::TestCase
-  test 'update score' do
-    person = people(:one)
-    UpdatePersonJob.perform_now(person, 3)
-    assert_eqal 3, person.reload.score
-  end
-end
-```
-
-`ActiveJob::Base.queue_adapter = :test` will change queue adapter for all
-following test.
-You can see differences between queue adapters
-<http://api.rubyonrails.org/v5.1.4/classes/ActiveJob/QueueAdapters.html>
-There is test helpers like `assert_performed_with` http://api.rubyonrails.org/classes/ActiveJob/TestHelper.html#method-i-assert_performed_with
-example of use is
-<https://github.com/eliotsykes/rspec-rails-examples/blob/master/spec/jobs/headline_scraper_job_spec.rb>
-To send email in background Rails use mailers
-[ActionMailer::DeliveryJob](https://blog.bigbinary.com/2018/01/15/rails-5-2-allows-mailers-to-use-custom-active-job-class.html)
-so to test sending in minitest
-
-~~~
-require 'test_helper'
-
-class ProductTest < ActionDispatch::IntegrationTest
-  # if you want to actually perform jobs
-  include ActiveJob::TestHelper
-  test 'mail' do
-    perform_enqueued_jobs only: ActionMailer::DeliveryJob do
-      ...
-    end
-  end
-
-  # https://api.rubyonrails.org/v5.1/classes/ActionMailer/TestHelper.html#method-i-assert_emails
-  # or you can assert that it is enqueued
-  assert_enqueued_jobs 1 do
-  # or you can assert how it is called `_with`
-  assert_enqueued_with job: ActionMailer::DeliveryJob, args: [1, 'a'] do
-
-  include ActionMailer::TestHelper
-  test 'mail' do
-    assert_performed_jobs 2, only: ActionMailer::DeliveryJob do
-      product.charge(account)
-    end
-  end
-
-  # for email you can assert
-  assert_difference 'ActionMailer::Base.deliveries.size', 1 do
-    MyJob.perform_now
-  end
-
-
-  # to test that no jobs are enqueued
-  assert_no_enqueued_jobs do
-  end
-end
-~~~
-
-another way is to include
 
 To rescue from exception in background sending emails you can reopen DeliveryJob
 for example in initializer file (I tried on some other place but it does not
