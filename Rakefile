@@ -30,7 +30,7 @@ namespace :blog do
     })).process
 
     # Get the origin to which we are going to push the site.
-    origin = `git config --get remote.origin.url`
+    origin = `git config --get remote.github.url`
 
     # Make a temporary directory for the build before production release.
     # This will be torn down once the task is complete.
@@ -48,8 +48,9 @@ namespace :blog do
       # Add the origin remote for the parent repo to the tmp folder.
       system "git remote add origin #{origin}"
 
+      puts "Pushing to #{origin}"
       # Push the files to the gh-pages branch, forcing an overwrite.
-      system "git push --force origin master:refs/heads/gh-pages"
+      system "ssh-add ~/.ssh/id_rsa && git push --force origin main:refs/heads/gh-pages"
     end
 
     # Done.

@@ -30,6 +30,7 @@ configuration" and type SOCKS Host: localhost, and port 1080. Do not write
 anyting in HTTP proxy... For Chrome or another connections you can use system
 wide Ubuntu Settings -> Network -> Network Proxy -> Method: Manual -> Socks Host
 localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
+than I can access cameras http://192.168.1.3:81/zm
 For `curl` you need to export variable
 ```
 export https_proxy=socks5://localhost:1080 http_proxy=socks5://localhost:1080

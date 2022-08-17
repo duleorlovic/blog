@@ -37,6 +37,8 @@ From System Preferences -> Keyboard -> Shortcuts
   * `⌘ shift 3` and `⌘ shift 4` to create screenshots for entire and selected
     area. Press space after `⌘ shift 4` to select window. Screen shots will be
     on desktop but I changed to Downloads using `cmd shift 5` (record video).
+    iphone screenshot use power button and home buttom (or volume up if home
+    button does not exists)
 
 https://support.apple.com/en-gb/guide/terminal/trmlshtcts/mac
 Typing Command-Full Stop (.) Dot Period is equivalent to entering Control-C on

@@ -737,7 +737,7 @@ migration)
     Family.all.find_each do |family|
       family.registered!
     end
-    # add not null constain, third param is wherer the value can be NULL
+    # add not null constain, third param is whether the value can be NULL
     # add a contrain
     change_column_null :families, :kind, false
     # drop a contrain (allows to be null)

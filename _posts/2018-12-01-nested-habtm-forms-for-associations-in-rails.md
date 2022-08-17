@@ -545,3 +545,5 @@ Default is using POST, but you can change and add params
     params.require(:my_from).permit(:name)
   end
 ```
+
+todo https://web.dev/learn/forms/
