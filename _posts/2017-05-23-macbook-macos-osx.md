@@ -17,6 +17,9 @@ Control (CTRL) key is ^
 Since on mac keyboard `fn` key is at left edge, I use it as `ctrl` . Remap with
 System preferences -> Keyboard -> Modifier Keys -> Globe key -> ^Control
 
+Xkill on macOS is Force Quit Applications which can be started with ⌘ ⌥ Esc
+
+
 To start inserting emoji use: Control + Command + Space
 
 https://support.apple.com/en-gb/HT201236
@@ -644,9 +647,6 @@ end tell
 ~~~
 brew unlink imagemagick
 brew install imagemagick@6 && brew link imagemagick@6 --force
-
-gem install puma -v 2.11.3 -- --with-cppflags=-I/usr/local/opt/openssl/include --with-ldflags=-L/usr/local/opt/openssl/lib
-
 brew install qt
 ~~~
 
@@ -708,19 +708,6 @@ gem uninstall sassc
 gem install sassc -- --disable-march-tune-native
 ~~~
 
-When I was installing ruby 2.6.6 I got an error
-```
-install ruby closure.c:264:14: error: implicit declaration of function 'ffi_prep_closure' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-```
-so I solved with steps for rvm
-https://github.com/ffi/ffi/issues/869#issuecomment-810890178
-```
-brew info libffi
-export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig"
-rvm install "ruby-2.6.6"
-```
 
 For error
 ```
@@ -797,14 +784,36 @@ In file included from binder.cpp:20:
 ruby 3.1.0 error: incomplete definition of type 'struct TS_verify_ctx'
 ```
 
+RVM NEEDS PKD_CONFIG_PATH set to old openssl using
+```
+PKG_CONFIG_PATH="$(brew --prefix openssl@1.1)/lib/pkgconfig" rvm reinstall 2.6.8 --with-out-ext=fiddle
+```
+
+when you also need to install ffi than join path with colon `:`
+ffi error
+```
+install ruby closure.c:264:14: error: implicit declaration of function 'ffi_prep_closure' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+```
+so I solved with steps for rvm
+https://github.com/ffi/ffi/issues/869#issuecomment-810890178
+https://github.com/ffi/ffi/issues/869#issuecomment-1233000037
+```
+export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig:$(brew --prefix openssl@1.1)/lib/pkgconfig"
+export RUBY_CFLAGS=-DUSE_FFI_CLOSURE_ALLOC
+rvm reinstall 2.6.8
+```
+
+No need for --with-openssl-dir since it does not help
+```
+--with-openssl-dir=`brew --prefix openssl@1.1`
+```
 I solved with
 ```
 # uninstall old version global and bundle
 bundle remove eventmachine
 gem uninstall -aIx eventmachine 
-
-# reinstall ruby with openssl prefix
-rvm reinstall 3.0.3 --with-openssl-dir=`brew --prefix openssl`
 
 # configure
 # this will raise error for C extension
@@ -820,11 +829,6 @@ Similar error when installing ruby 3.0.0
 ```
 rvm install 3 ossl_pkey_rsa.c:950:5: error: use of undeclared identifier 'RSA_SSLV23_PADDING'
 ```
-I tried https://github.com/postmodern/ruby-install/issues/409
-```
-rvm reinstall "ruby-3.0.0" --with-openssl-dir=`brew --prefix openssl@1.1` --disable-binary # ok
-```
-but still the same error.
 
 Puma 5.6.4 has problems with ssl
 https://github.com/puma/puma/issues/2839#issuecomment-1086147152
@@ -839,6 +843,12 @@ DISABLE_SSL=1 bundle
 # or for new apps
 DISABLE_SSL=1 rails new
 ```
+Also you can compile with flags
+
+```
+gem install puma -v 2.11.3 -- --with-cppflags=-I/usr/local/opt/openssl/include --with-ldflags=-L/usr/local/opt/openssl/lib
+```
+
 
 For event machine
 https://github.com/eventmachine/eventmachine/issues/960
@@ -947,11 +957,40 @@ rm -rf /usr/local/var/postgres && initdb /usr/local/var/postgres -E utf8
 Download docker desktop 4.5.0
 https://docs.docker.com/desktop/mac/release-notes/
 
+reinstall with https://github.com/docker/for-mac/issues/6145#issuecomment-1076397390
+https://github.com/docker/for-mac/issues/6324#issuecomment-1143953963
+https://stackoverflow.com/questions/44346109/how-to-easily-install-and-uninstall-docker-on-macos/65468254#65468254
+```
+rm -rf ~/Library/Caches/com.docker.docker
+rm -rf ~/.docker
+rm -rf ~/Library/Group Containers/group.com.docker
+
+brew install --cask docker
+
+open --background -a Docker
+```
+To move dataFolder you can create a symlink to external storage
+```
+ls -s /Volumes/eksterni/docker_containers/Docker.raw /Users/dule/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw
+```
+Change config does not help since for some reason docker will not start
+```
+vi ~/Library/Group\ Containers/group.com.docker/settings.json
+# "filesharingDirectories": [
+  # eksterni does not work, not sure why, probably because it is usb
+  "dataFolder": "/Volumes/eksterni/docker_containers/DockerDesktop",
+  # sshfs also does not work
+  "dataFolder": "/Users/dule/rails_main/docker_data",
+  # local folders works
+  "dataFolder": "/Users/dule/docker_data",
+  "dataFolder": "/Users/dule/Library/Containers/com.docker.docker/Data/vms/0/data",
+```
+
 `docker-compose build` can raise an error
 ```
 macos FileNotFoundError: [Errno 2] No such file or directory  During handling of the above exception, another exception occurred:
 ```
-solution is to start `Docker Desktop` (and you can quit it)
+solution is to start `Docker Desktop`
 
 If `curl` inside `Dockerfile` raise error
 ```
@@ -1007,3 +1046,45 @@ https://mdapp.medium.com/the-android-emulator-and-charles-proxy-a-love-story-595
   Show Status Bar
 * to take camera picture photo you can open *Photo Booth* app
 * iphone icons https://developer.apple.com/sf-symbols/ https://github.com/cyanzhong/sf-symbols-online
+* to install old python 2 you can not use 
+```
+brew install python@2
+Warning: No available formula with the name "python@2". Did you mean ipython, bpython, jython or cython?
+```
+but you can install https://github.com/pyenv/pyenv
+```
+brew install pyenv
+pyenv install 2.7.18
+# pyenv global 2.7.18
+pyenv versions
+
+# install pyenv to bash by copy paste script from
+# PATH=$(pyenv root)/shims:$PATH
+pyenv init
+```
+
+To set python version to current shell
+```
+eval "$(pyenv init -)"
+pyenv shell 2.7.18
+```
+
+* to mount ssh folder, instead of using brew
+  ```
+  brew install sshfs
+  Error: sshfs has been disabled because it requires closed-source macFUSE!
+  ```
+
+  you can download
+  https://github.com/osxfuse/sshfs/releases
+
+  also https://github.com/osxfuse/osxfuse/releases
+
+  ```
+  sshfs orlovic@main:rails/ ~/rails_main/ -ocache=no -onolocalcaches -ovolname=ssh
+  ```
+
+  unmount with
+  ```
+  umount -f ~/rails_main
+  ```

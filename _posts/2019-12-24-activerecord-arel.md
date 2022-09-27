@@ -160,9 +160,11 @@ User.where(
 
   ```
 
-* use OR statement like
+* use OR or statement like
   ```
     Book.where(category: "Programming").or(Book.where(category: "Ruby"))
 
     member_profile.member_pictures.where(status: 'pending').or(member_profile.member_pictures.where(status: 'approved'))
+
+    scope :web, -> { where.not("last_seen_user_agent LIKE '%iOS_app%' OR last_seen_user_agent LIKE '%Android_app%'").or(where last_seen_user_agent: nil) }
   ```

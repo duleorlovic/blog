@@ -228,7 +228,7 @@ Ruby define scope of variable using its name, precisely, first char:
 * `@` instance `@first_name` you can list with `self.instance_variables` and
 get value with `self.instance_variable_get :@first_name` (note that we need
 both `:` and `@`) and set value `self.instance_variable_set :@first_name,
-'me'`
+'me'`. You can not use `send("@first_name")`
 * `[a-z]|_` local `first_name` in every definition block: proc, loop, def end,
   class end, module end, and is reset on each call. Local variable is very
   scoped (you can not access in another nested method)
@@ -243,7 +243,6 @@ both `:` and `@`) and set value `self.instance_variable_set :@first_name,
 
   but you can access from closure definitions such: `define_method`, `proc` or
   `lambda` or plain old `begin end` block
-
 * `[A-Z]` constant `FIRST_NAME` (only exception is `nil` which is constant and
   `self` which is global maintaned by interpreter). Constant can be changed
   (with warning) so you can include one file several times. Object that
@@ -1479,15 +1478,41 @@ to_upper = -> (str) { str.upcase }
   calls `.match?`, for proc calls `.call`
 * fake dummy objects could be generated from hash with:
   ```
+  require "ostruct"
   d = Struct.new(:name, :type, :years).new 'Dule', :kayak, 35
   d = OpenStruct.new name: 'Dule'
-  d.name
+  d.name # => "Dule"
   ```
-  If you need recursively generated OpenStruct than you can convert to json and
-  parse with Open struct class: `h = { a: 1, b: { c: 1 }};
-  o=JSON.parse(h.to_json, object_class: OpenStruct);`. So now you can use nested
-  attributes  `o.b.c # => '1'`. Another way is to use rails `h =
-  ActionController::Parameters.new a: { b: { c: 1 }}` so you can `h.merge! b:1`
+  If you need recursively generated OpenStruct than you can use it again
+  ```
+   a=OpenStruct.new(user: OpenStruct.new(name: "Dule"))
+   a.user.name # => "Dule"
+  ```
+
+  or you can convert to json and parse with Open struct class: `h = { a: 1, b: {
+  c: 1 }}; o=JSON.parse(h.to_json, object_class: OpenStruct);`. So now you can
+  use nested attributes  `o.b.c # => '1'`.
+  Another way is to use rails `h = ActionController::Parameters.new a: { b: { c:
+  1 }}` so you can `h.merge! b:1`
+  Also you can define methods on OpenStruct properties, usefull when you need to
+  call it with argument or if it is an array
+  ```
+  d = OpenStruct.new(
+    users: [
+      OpenStruct.new(name: "Dule")
+    ].tap do |users|
+      users.define_singleton_method(:active) {users}
+    end
+  ).tap do |d|
+    d.define_singleton_method(:m1) do |param|
+      param
+    end
+  end
+
+  d.m1 123 # => 123
+  d.users.active
+  ```
+
 * raise error when hash key does not exists (instead of returning `nil`).
   `default_proc` will be executed if key does not exists
 
@@ -1571,7 +1596,8 @@ end
   ```
 
   To run use:
-* convert single value and array value to array `Array(1)` and `Array([1])`https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
+* convert cast single value and array value to array `Array(1)` and
+  `Array([1])`https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
 * hash with indifferent access (symbol or string) this is Rails ActiveSupport
   `h = HashWithIndifferentAccess.new a: 2` so you can use `h[:a]` or `h['a']`
 * inserting key value in hash at specific position

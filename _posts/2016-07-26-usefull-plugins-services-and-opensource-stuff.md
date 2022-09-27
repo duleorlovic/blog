@@ -721,6 +721,16 @@ and download only that batch of icons.
 
 # Graphs
 
+* for rails you can use https://chartkick.com (which uses Chart.js)
+  https://github.com/duleorlovic/chartkick_groupdate_graphs_in_rails
+  ```
+  # for graphs
+  gem 'chartkick'
+  gem 'groupdate', '~> 6.1'
+
+  # in view
+      <%= line_chart @registrations_per_day_form.data, height: '400px', width: '99%' %>
+  ```
 * [graphs
 gallery](https://github.com/mbostock/d3/wiki/Gallery) and
 [bl.ocks.org/mbostock](http://bl.ocks.org/mbostock)

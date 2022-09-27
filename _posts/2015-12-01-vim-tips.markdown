@@ -168,7 +168,7 @@ Other usefull commands in insert mode:
   (also in blockwise selection) with `>`.
   In normal mode you can select and indent with `=` To indent whole file you can
   jump to begging and indent to last line `gg=G`.
-* Sort selection with `:sort u`
+* Sort selection with `:sort`
 * `:set scrollbind` in two buffers will make them scroll simultaneously. toggle
 scrolling with `:set scb!`
 
@@ -206,6 +206,8 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
   To get a value use tab two times: `:set isk<TAB>=<TAB>`
 * command line history can be used when you type start of command and `:se<UP>`
   `CTRL-P` will go to previous command no matter what you have types so far
+  `ctrl+p` and `ctrl+n` will go up and down, `ctrl+y` will accept current
+  `ctrl+e` will cancel suggestions
 * Command line window `q:` or `CTRL-F` is used to edit long commands. `<CR>` to
   execute comand and exit. Exit with `:q` or `CTRL-C`. Search previos with `?`
 * You can join multiple commands with `|` or `<NR>` (more help with
@@ -265,8 +267,8 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
 * `cd ~` to change directory to home folder for all windows. If you use `gf` in
   Gemfile, it will not change directory (you can check that `:pwd` is showing
   same folder). To manually change current folder directory to file path you can
-  use `:lcd %:p:h`. `%` is the name, `%:p` file full path, `%:p:h` give its
-  directory.
+  use `:lcd %:p:h`. `%` is the current file name, `%:p` file full path, `%:p:h`
+  give its directory.
   Or you can type `cd` when cursor is on the line where is the path:
   `%<` expands filename without trailing extension
   ```
@@ -289,8 +291,8 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
   increate with `ctrl-w +`
 * `:tabe file` open file in new tab, `gt` switch between tabs
 * move between windows is with `ctrl-w w`
-* `:help Ctrl-W_T` move current buffer in new tab, Disable default Terminal ->
-Preferences -> Shortcuts
+* `:help Ctrl-W_T` move current buffer in new tab (similar to `:tabe %`),
+  Disable default Terminal -> Preferences -> Shortcuts
 * `gx` open link under cursor with `gnome-open`.
 [Issue #1386](https://github.com/vim/vim/issues/1386)
 * `:vsp #1`  vertically split window with file #1
@@ -822,6 +824,14 @@ Inside netrw:
 * to change current directory to selected folder, type in normal mode `cd`. It
 will change directory only in current buffer.
 * refresh with `r` (selected dir) or `R` (all)
+* to preview file you have to open `:NERDTreeToggle` instead of `:e .` and that
+  you can use `go` to preview or `<cr>` to jump to file. To remap `<cr>` for
+  preview and to cursor stay you can add
+  ```
+  " https://github.com/preservim/nerdtree/issues/1123#issuecomment-628737990
+  let NERDTreeCustomOpenArgs = {'file':{'where':'p','keepopen':1,'stay':1}}
+  let g:NERDTreeMapPreview = "<CR>"
+  ```
 
 # CTAGS
 
@@ -926,11 +936,14 @@ You need to install this tools:
   Configuration is in .rubocop.yml in $HOME or project root.
   You can can generate TODO config file with `rubocop --auto-gen-config`
 
-
   My preferred configuration is
 https://github.com/duleorlovic/config/blob/master/.rubocop.yml
 
   * inline in comment `# rubocop:disable Metrics/AbcSize, Metrics/MethodLength`
+    to disable whole file you can put at first line
+    ```
+    # rubocop:todo all
+    ```
   * gem 'rubocop-rspec' is nice linter for rspec.
   You can run manually with `-D` param to see cop names.
 

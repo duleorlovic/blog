@@ -11,12 +11,15 @@ providers](http://socialcompare.com/en/comparison/transactional-emailing-provide
 
 ## Check SMTP
 
-If you need to check smtp use <https://debugmail.io/> free service, just use
-port 9025 instead 25 since ISP is blocking 25.
-For command line you can use `swaks` like `swaks --to duleorlovic@gmail.com
---server $SERVER --port $PORT --auth-user $AUTH_USER --auth-password
-$AUTH_PASSWORD --auth-plaintext --auth-hide-password`
-so in autout you can see all telnet communications:
+If you need to check if smtp configuration is working you can use free service
+<https://debugmail.io/> , just use port 9025 instead 25 since ISP is blocking
+25. Copy configuration from their site and put in to your config.
+
+For cli command line you can use `swaks` like
+```
+swaks --to duleorlovic@gmail.com --server $SERVER --port $PORT --auth-user $AUTH_USER --auth-password $AUTH_PASSWORD --auth-plaintext --auth-hide-password
+```
+so in autput you can see all telnet communications:
 
 ~~~
 # generate base64 encoding
@@ -39,12 +42,35 @@ than put byebug in net smtp class on line 940 `get_response` `recv_response`
 `/home/orlovic/.rvm/rubies/ruby-2.3.3/lib/ruby/2.3.0/net/smtp.rb`
 
 
+## GMX
+
+```
+rails credentials:edit
+smtp_server: mail.gmx.com
+smtp_username: dule****@gmx.com
+smtp_password: *****
+```
+
+```
+# config/application.rb
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: Rails.application.credentials.smtp_username,
+      port: 587,
+      authentication: 'plain',
+      enable_starttls_auto: true,
+      user_name: Rails.application.credentials.smtp_username,
+      password: Rails.application.credentials.smtp_password,
+    }
+```
+
 ## Gmail
 
 Gmail smtp is the most easiest way to start
 
 ~~~
 # config/application.rb
+    config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: 'smtp.gmail.com',
       port: 587,
@@ -54,7 +80,6 @@ Gmail smtp is the most easiest way to start
       user_name: Rails.application.secrets.smtp_username,
       password: Rails.application.secrets.smtp_password
     }
-    config.action_mailer.delivery_method = :smtp
 
 # config/secrets.yml
   smtp_username: <%= ENV["SMTP_USERNAME"] %>

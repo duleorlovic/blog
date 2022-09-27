@@ -515,6 +515,13 @@ use some of your dns.
 ngrok http 3002
 ~~~
 
+In rails you need to allow
+
+```
+# config/environments/development.rb
+  config.hosts << /[a-z0-9-.]+\.ngrok\.io/
+```
+
 # PDF
 
 Merge pdf files

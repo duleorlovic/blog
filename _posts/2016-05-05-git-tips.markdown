@@ -213,7 +213,7 @@ Clone all repositories from same user or organization, for example twitter
 
 Set author localy (config is for local folder only)
 
-    git config user.email myemail@asd.asd
+    git config user.email dule@hey.com
     git config user.name 'Dusan Orlovic'
     git commit --amend --reset-author
 

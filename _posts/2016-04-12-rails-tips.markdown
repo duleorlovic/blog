@@ -171,6 +171,7 @@ end
 
 Write datetime in specific my_time format
 https://apidock.com/ruby/DateTime/strftime
+https://www.foragoodstrftime.com
 ```
 Time.zone.now.strftime '%F %T'
 ```
@@ -1720,61 +1721,8 @@ sessions (since it is easy to differentiate from "sign up").
 form objects (query objects) for multiple in multiple out data. Even for single
 table, main purpose is to add validation errors to the form. For complex
 building object use service object.
-
-~~~
-# app/form_objects/landing_signup.rb
-class LandingSignup
-  include ActiveModel::Model
-
-  # for before_validation :my_prepare_date
-  #   include ActiveModel::Validations::Callbacks
-
-  FIELDS = %i[ current_city current_location current_group prefered_group email].freeze
-  attr_accessor(*FIELDS)
-
-  validates :email, presence: true
-
-  def save
-    _create_users
-    _create_roles
-  end
-
-  # no need for initialize since AR will pick from params
-  # but if you need to set default values, here is a code
-  def initialize(attributes)
-    super(attributes)
-    _after_initialize
-  end
-
-  def _after_initialize
-    self.send_email_invitation = true if send_email_invitation.nil?
-  end
-end
-~~~
-
-Usage
-
-~~~
-# app/controllers/pages_controller.rb
-class PagesController < ApplicationController
-  def home
-    @landing_signup = LandingSignup.new
-    @landing_signup.current_city = City.first
-  end
-
-  def landing_signup
-    @landing_signup = LandingSignup.new landing_signup_params
-    @landing_signup.current_city = City.first
-    if @landing_signup.save
-      sign_in @landing_signup.user
-      redirect_to dashboard_path, notice: @landing_signup.notice
-    else
-      flash.now[:alert] = @landing_signup.errors.full_messages.to_sentence
-      render :home
-    end
-  end
-end
-~~~
+More info on RegistrationForm
+https://github.com/duleorlovic/rails_helpers_and_const/blob/main/app/forms/registration_form.rb
 
 To define url for ActiveModel you need to overwrite some instance vars
 https://stackoverflow.com/questions/3736759/ruby-on-rails-singular-resource-and-form-for
@@ -3922,6 +3870,12 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
 .rvm/gems/ruby-2.5.3/gems/activesupport-6.0.0.rc1/lib/active_support/message_encryptor.rb:206:in `rescue in _decrypt': ActiveSupport::MessageEncryptor::InvalidMessage (ActiveSupport::MessageEncryptor::InvalidMessage)
 ```
 
+  Access with
+  ```
+  Rails.application.credentials[:secret_key_base]
+  # or
+  Rails.application.credentials.secret_key_base
+  ```
   you can create development credentials (config/credentials/development.key and
   config/credentials/development.yml.enc) which will be loaded in development
   environment and take precedence over master credentials (if there is a
@@ -4394,3 +4348,25 @@ can read for `operator_id && operator_id_was`.
 
 * show json pretty_print with `JSON.pretty_generate hash`
 * change database with `rails db:system:change --to=postgresql`
+
+* gem sequel you can create schema with
+  ```
+  DB = Sequel.connect(...)
+  DB.extension :schema_dumper
+  puts DB.dump_schema_migration
+  File.write 'tmp/db.schema', DB.dump_schema_migration
+  ```
+* when loading some files that do not follow naming convention
+  ```
+  2022-09-16T11:09:38.133430+00:00 app[web.1]: /app/vendor/bundle/ruby/3.1.0/gems/zeitwerk-2.6.0/lib/zeitwerk/loader/helpers.rb:127:in `const_get': uninitialized constant Overrides (NameError)
+
+  raise Zeitwerk::NameError.new("expected file #{file} to define constant #{cpath}, but didn't", cref.last)
+  ```
+* adding wild card domain to hosts to allow any subdomain you do not need to use
+star, just use dot like `.mydomain.com`. For multiple level subdomains you need
+to use regexp
+```
+# config/application.rb
+    config.hosts << /.*gitpod.io/
+```
+

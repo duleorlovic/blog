@@ -741,6 +741,11 @@ https://www.phusionpassenger.com/library/config/standalone/reference/#--pid-file
 If you need to run separate command for background jobs, you need to write
 `Procfile`.
 
+When you create an app on macos you need to add linux platform on Gemfile.lock
+```
+bundle lock --add-platform x86_64-linux
+```
+
 Heroku use ubuntu 16 or Ubuntu 18, you can change
 
 ~~~
