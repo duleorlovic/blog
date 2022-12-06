@@ -187,6 +187,10 @@ layout: post
   ```
   SHOW COLUMNS FROM users;
   ```
+* show table create to see all foreign keys like `CONSTRAINT ... FOREIGN_KEY...`
+  ```
+  SHOW CREATE TABLE users;
+  ```
 * mysql settings could be different on production and localhost, for example
   ```
   ActiveRecord::StatementInvalid (Mysql2::Error: Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column 'trk_datatables_demo_development.comments.body' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by):
@@ -223,3 +227,37 @@ FROM information_schema.processlist
 GROUP BY host_short
 ORDER BY COUNT(*), host_short;
   ```
+* load from csv
+```
+# lib/tasks/db.rake
+namespace :db do
+  desc "Load csv dump"
+  task :load_csv, [:filename] => [:"pakyow:prepare"] do |_, args|
+    # https://stackoverflow.com/a/14133740/287166
+    # https://stackoverflow.com/a/62965185/287166
+    # mysql> set global local_infile=true;
+    table_name = File.basename(args[:filename], ".*")
+    cols = open(args[:filename]).gets.split(",")
+    underscored_cols = cols
+      .map do  |col|
+        column = col.split.join.underscore
+        column = "isbn10" if column == "asin"
+        column
+      end
+    # all tables should sort id desc
+    # compare schema with: describe books; show create table books;
+    # show schema from all tables; price_engine_development
+    # prices.csv should move Price Log to the end so source is not currupted
+    system "mysql --local_infile=1 -u#{opts[:user]} #{opts[:database]} -e \"" + <<~SQL + "\""
+    SET FOREIGN_KEY_CHECKS = 0;
+    LOAD DATA LOCAL INFILE '#{args[:filename]}' INTO TABLE #{table_name}
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '\\\"'
+    IGNORE 1 LINES
+    (#{underscored_cols.join(",")});
+    SET FOREIGN_KEY_CHECKS = 1;
+    SQL
+    # LINES TERMINATED BY '\r\n'
+    puts "Completed loading #{opts[:database]}"
+  end
+```

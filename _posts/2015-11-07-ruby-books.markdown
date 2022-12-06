@@ -193,6 +193,10 @@ to execute the code.
 know for current folder, so you need to use `./` dot that explicitly define path
 `require "./f.rb"` or `$: << "."` or `require_relative "f"`(extension is not
 needed `.rb`)
+Before we used to extend load path
+```
+$LOAD_PATH.unshift(Dir.pwd)
+```
 
 Variables are not objects. They just hold a reference to objects. You can use
 `var.dup` to create another object or you can `var.freeze` to prevent
@@ -218,7 +222,8 @@ be used for namespacing some classes. When we see `M::C` we don't know if `C` is
 constant, module or class, but `M` is a class or module since it has nested
 items.
 
-Proc are objects that can be called (executed) `p = proc { puts 1 };p.call`
+Proc are objects that can be called (executed) `p = proc { puts 1 };p.call`.
+Rubocop suggest using `proc` instead of `Proc.new`.
 
 Variables and scope
 
@@ -687,7 +692,7 @@ takes other functions as arguments).
 ~~~
 def gen_times(factor)
   shared = 1
-  _proc = Proc.new {|n| n*factor*shared }
+  _proc = proc {|n| n*factor*shared }
   shared = 2
   _proc
 end
@@ -711,7 +716,7 @@ def functor(a, b)
   a.call b
 end
 
-p = Proc.new { |i| puts i }
+p = proc { |i| puts i }
 functor(p, 1) # 1
 ~~~
 
@@ -727,7 +732,7 @@ not match. lamda are strict about arguments but procs are not
   my_lambda = lambda {|a, b| a + b }
   call_with_multiline_lambda(lambda do
   end)
-  my_proc   = Proc.new  { |a, b| a + b }
+  my_proc   = proc { |a, b| a + b }
 
   my_lambda.call(2)
   # ArgumentError: wrong number of arguments (1 for 2)
@@ -748,7 +753,7 @@ double(l) # => 20
 ```
 ```
 def another_double
-  p = Proc.new { return 10 }
+  p = proc { return 10 }
   result = p.call
   return result * 2 # unreachable code!
 end
@@ -965,9 +970,9 @@ merge](https://apidock.com/rails/Hash/reverse_merge)
   bundle exec ruby -rbyebug $(which vagrant) up
   ~~~
 
-  To exit from script you can use
+  To exit from script you can use puts || since puts returns nil
   ```
-  puts "max=#{max} should be greater than 10" and exit unless max > 10
+  puts "max=#{max} should be greater than 10" || exit unless max > 10
 
   ```
 
@@ -1059,8 +1064,8 @@ end
 && user.name` can be written as `user&.name`. It is usefull with find_by for
 example `User.find_by(email: 'a@b.c')&.tap { |u| }`
 * In ruby 2.3 there is also `Array#dig` and `Hash#dig` so instead of
-  `params[:a].try(:[], :b)` you can `params.dig(:a, :b)`. when you need to take
-  value and not sure if provided (usually in some json response)
+  `params[:a].try(:[], :b)` you can pick `params.dig(:a, :b)`. when you need to
+  take value and not sure if provided (usually in some json response)
   if you want to find specific object you can use `select{} || {}`
   ```
   (array_or_hash.dig("users", "accounts")&.select{|account| account["type"] ==
@@ -1421,6 +1426,7 @@ ids.map {|id| people_by_id[id] }
 But also ordering and other filtering can be done in sql
 https://stackoverflow.com/questions/10150152/find-model-records-by-id-in-the-order-the-array-of-ids-were-given/38378457#38378457
 
+* count for array presence `[1,1,2].tally # => {1=>2, 2=>1}`
 * switch case example
 
 ~~~

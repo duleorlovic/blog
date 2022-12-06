@@ -23,7 +23,25 @@ title: Ubuntu working environment
   Use `ctrl` instead of alt if you want to copy to clipboard
 * [port
 forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding)
-`ssh -L 8080:localhost:80 my.server.com`
+```
+ssh -L 8080:localhost:80 my.server.com
+```
+* tunel to external server so you do not need to open ports on your router and
+  other can see your local env
+  ```
+  ssh -i $PEM_FILE -R 0.0.0.0:80:localhost:9292 ubuntu@52.202.201.113
+
+  sudo vi /etc/ssh/sshd_config
+  echo "GatewayPorts yes" >> /etc/ssh/sshd_config
+  sudo service ssh restart
+
+  # again connect using tunneling
+  # make sure ports are opened in aws console
+
+  ssh -i $PEM_FILE -R 0.0.0.0:80:localhost:9292 ubuntu@52.202.201.113
+  ```
+* gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
+guest@joes-pc` local
 socks tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
 <about:preferences#advanced> Networktab -> Settings choose "Manual proxy
 configuration" and type SOCKS Host: localhost, and port 1080. Do not write
@@ -92,8 +110,6 @@ curl cheat.sh
 curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
 ```
 ssh igrice https://github.com/chubin/awesome-console-services#entertainment-and-games
-* gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
-guest@joes-pc` local
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
 `sudo make install` and `sudo modprobe v4l2loopback` we can stream some video
 file to device `while true; do gst-launch-0.10 filesrc
@@ -676,12 +692,17 @@ for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
 
 To enable mysql service from remote you need to bind it to 0.0.0.0 in
 configuration. To test on which interface is used port listening you can see
-port use port in used port
+port use port in used port find port
 
 ```
 sudo netstat -tupln | grep 3306
 
+# see all connections
 lsof -wni tcp:3000
+# show puma process
+lsof -t -i:3000 -sTCP:LISTEN
+# so you can kill with
+kill -9 $(lsof -t -i:3000 -sTCP:LISTEN)
 ```
 
 You can try with nmap but it does not show for example neo4j 7474 port
@@ -913,3 +934,9 @@ HERE_DOC
 chmod +x ~/remove-old-snaps.sh
 sudo ~/remove-old-snaps.sh
 ```
+* to enable sent to devices you need to go on your phone Chrome -> three dots ->
+  Recent tabs -> Sign in.
+  Then on Chrome desktop you can click on Share icon in url bar -> Send to
+  devices
+* google drive spreadsheets countcoloredcells
+  https://support.google.com/docs/thread/118955201/script-countcoloredcells?hl=en

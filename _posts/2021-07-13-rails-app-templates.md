@@ -22,7 +22,9 @@ Basic api example
 # you should `run` instead of `generate` or `rails_command`
 # generate(:scaffold, "person name:string")
 # rails_command("db:migrate")
-run <<BASH
+run(<<BASH) or exit 1
+set -e # Any commands which fail will cause the shell script to exit immediately
+set -x # Show command being executed
 rails g scaffold person name:string
 rails db:migrate
 BASH

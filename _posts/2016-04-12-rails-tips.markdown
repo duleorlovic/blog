@@ -434,7 +434,16 @@ r.each { |l| puts l }
 ```
 
 * to find table name `ApplicationRecord.connection.table_exists? :user_sessions`
-* `rails runner "puts ActiveRecord::Base.configurations['development']")`
+  or to see which database is used
+```
+rails runner "puts ActiveRecord::Base.configurations['development']"
+rails runner "puts ActiveRecord::Base.configurations[Rails.env]"
+# new version
+bundle exec rails runner "puts ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).to_s"
+# or
+ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).last.adapter
+```
+
 * for single item, always use `@post.destroy` instead of `@post.delete` because
 it propagates to all `has_many :comments, dependent: :destroy` (also need to
 define this dependent param). `destroy` could be slow if there are a lot of
@@ -891,9 +900,16 @@ class Project < ActiveRecord::Base
 end
 ~~~
 
-You can eager load polymorphic association https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#module-ActiveRecord::Associations::ClassMethods-label-Eager+loading+of+associations
-but can not use it in where https://stackoverflow.com/questions/16123492/eager-load-polymorphic
-You can use `User.preload(:paymenable)` or define specific associations:
+You can eager load polymorphic association without where conditions on other
+tables
+https://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#module-ActiveRecord::Associations::ClassMethods-label-Eager+loading+of+associations
+> Since only one table is loaded at a time, conditions or orders cannot reference tables other than the main one. If this is the case, Active Record falls back to the previously used LEFT OUTER JOIN based strategy. For example:
+
+if you use conditions on polymorphic table than
+ActiveRecord::EagerLoadPolymorphicError is raised.
+since it can not join table name based on name stored in column
+but you can specify relations
+https://stackoverflow.com/questions/16123492/eager-load-polymorphic
 For using in where you need to define specific associations (note: you need to
 add `optional: true`)
 ```
@@ -2646,9 +2662,10 @@ that instead gems version.
   * `Comment.all(include: :user, conditions: { users: { admin: true}})` will
     load also the user model
 * [N+1](http://guides.rubyonrails.org/active_record_querying.html#eager-loading-associations)
-  problem is solved with `includes(:associated_table)` wich is actually LEFT
-  OUTER JOINS, `joins(:associated_table)` is INNER JOIN and do not load the
-  models. Works also for nested joins `includes(jobs: :user)` or for multuple
+  problem is solved with `includes(:associated_table)` This sometimes generate separate query and sometimes it is using left joins
+  https://makandracards.com/makandra/1148-why-preloading-associations-randomly-uses-joined-tables-or-multiple-queries
+  `joins(:associated_table)` is INNER JOIN and do not load the
+  models. Works also for nested joins `includes(jobs: :user)` or for multiple
   you can use array `includes(jobs: [:user, :company])`.
   * Inner `joins` differs if you have has_many or belongs_to association. For
   `has_many :associated_table` `joins` will return multiple values
@@ -2983,7 +3000,7 @@ end
   `gon` is undefined)
 
 * access helpers outside of a view
-  * in rails console you can use `helper.number_to_curerncy 10`
+  * in rails console you can use `helper.number_to_currency 10`
   * if it is standard base helper, than just call it from ActionController,
     ActionView instance or Rails application routes.
 
@@ -4369,4 +4386,13 @@ to use regexp
 # config/application.rb
     config.hosts << /.*gitpod.io/
 ```
-
+* to chech if variable exists in template you can use
+  ```
+  # app/views/users/show.html.erb
+  if local_assigns[:user].present?
+    <%= user.email %>
+  end
+  ```
+* rails one time command `rails runner -e staging "puts "
+* reduce memory with env variable: `MALLOC_ARENA_MAX=2` TODO: track memory usage
+with aws

@@ -38,6 +38,15 @@ Show latest branch ordered by updated time
 
     git branch --sort=-committerdate
 
+Show authors for each line, but skip some common refactoring.
+https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view
+```
+# .git-blame-ignore-revs
+# Removed semi-colons from the entire codebase
+a8940f7fbddf7fad9d7d50014d4e8d46baf30592
+# Converted all JavaScript to TypeScript
+69d029cec8337c616552756310748c4a507bd75a
+```
 # Git log
 
 Show commits that are descendant of commit1 AND ancestors of commit2, in the
@@ -95,6 +104,11 @@ Find difference on this branch (from common ancestor) use three dots
 Show only file names
 
     git diff 134 --name-only
+
+Copy files filename to files path
+
+    git diff --name-only > filelist.txt
+    tar cvf - -T filelist.txt | tar xvf - -C ~/target/folder
 
 show only files that are added or modified
 

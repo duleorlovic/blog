@@ -272,6 +272,9 @@ sed -i '/group :development do/a  \
   # open emails in browser\
   gem "letter_opener"' Gemfile
 sed -i '/^end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb 
+
+# also in config/initializers/exception_notification.rb
+
 ~~~
 
 Note that email letter opener does not work when you run with `rake jobs:work`,

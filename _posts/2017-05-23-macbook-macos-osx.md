@@ -42,6 +42,9 @@ From System Preferences -> Keyboard -> Shortcuts
     on desktop but I changed to Downloads using `cmd shift 5` (record video).
     iphone screenshot use power button and home buttom (or volume up if home
     button does not exists)
+    When you connect with usb cable, the Dusan's iPhone will show up in finder
+    so you can browser files on phone from mac, if iCloud Photos is not used on
+    a phone. If it is used than access with https://www.icloud.com
 
 https://support.apple.com/en-gb/guide/terminal/trmlshtcts/mac
 Typing Command-Full Stop (.) Dot Period is equivalent to entering Control-C on
@@ -782,6 +785,8 @@ In file included from binder.cpp:20:
 
 # or
 ruby 3.1.0 error: incomplete definition of type 'struct TS_verify_ctx'
+# or
+rvm install 3 ossl_pkey_rsa.c:950:5: error: use of undeclared identifier 'RSA_SSLV23_PADDING'
 ```
 
 RVM NEEDS PKD_CONFIG_PATH set to old openssl using
@@ -802,6 +807,8 @@ export LDFLAGS="-L/opt/homebrew/opt/libffi/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/libffi/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/libffi/lib/pkgconfig:$(brew --prefix openssl@1.1)/lib/pkgconfig"
 export RUBY_CFLAGS=-DUSE_FFI_CLOSURE_ALLOC
+bundle update ffi
+# or
 rvm reinstall 2.6.8
 ```
 
@@ -824,10 +831,6 @@ bundle install
 gem install eventmachine -- --with-cppflags=-I$(brew --prefix openssl)/include
 # or set the system
 brew link --force openssl
-```
-Similar error when installing ruby 3.0.0
-```
-rvm install 3 ossl_pkey_rsa.c:950:5: error: use of undeclared identifier 'RSA_SSLV23_PADDING'
 ```
 
 Puma 5.6.4 has problems with ssl
@@ -875,6 +878,12 @@ you have reached maximum number of proccesses
 ```
 ulimit -u
 ```
+
+For error
+```
+ xcodebuild[92386:809018] [MT] DVTPlugInLoading: Failed to load code for plug-in com.apple.dt.IDESimulatorAvailability (/Applications/Xcode.app/Contents/PlugIns/IDESimulatorAvailability.ideplugin), error = Error Domain=NSCocoaErrorDomain Code=3588 "dlopen(/Applications/Xcode.app/Contents/PlugIns/IDESimulatorAvailability.ideplugin/Contents/MacOS/IDESimulatorAvailability, 0x0109): Symbol not found: (_OBJC_CLASS_$_SimDiskImage)
+```
+I solved by starting xcode and it will install some development tools.
 
 # Android USB Thethering
 

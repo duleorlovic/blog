@@ -126,11 +126,12 @@ existing projects and on MySQL db.
 # Sample page
 
 ~~~
-rails g controller pages home --skip-helper --skip-assets
-sed -i config/routes.rb -e "/^end$/i \\
-  # root page\n\
-  root 'pages#home'\
-"
+rails g controller pages index --no-stylesheets --no-helper --no-assets --no-jbuilder
+
+sed -i "" -e '/^end$/i \
+  # root page\
+  root "pages#index"\
+' config/routes.rb
 ~~~
 Rubocop cli
 ~~~
@@ -621,7 +622,8 @@ git add . && git commit -m "Adding sign signout path"
 
 # Company scaffold with skipped unused files
 ~~~
-rails g scaffold company name:string user:references --no-stylesheets --no-fixture --no-test-framework --no-helper --no-assets --no-jbuilder
+rails g scaffold company name:string user:references --no-stylesheets --no-helper --no-assets --no-jbuilder
+# --no-fixture --no-test-framework
 # or put in config/environments/development.rb
   config.generators do |generate|
     generate.helper false

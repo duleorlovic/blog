@@ -219,7 +219,8 @@ alternative `string.start_with? /^[a-z]/`
   `^[0-9]{3}$`. To find two or more spaces you can use `\s{2,}` so 2 is minimum
   count of matching chars.
 * whitespace `\s`, word `\w` character
-* `\A` start and `\z` end of string. That is better than `^` (start of line) and
+* `\A` start and `\z` end of string. End of world is `asd\b`.
+  That is better than `^` (start of line) and
   `$` (end of line) since that will match until a new line
   `asd@asd.asd\n<script>alert('danger')</script>`
 * replace groups of text with another text that use matching text, for example
@@ -268,4 +269,16 @@ cat title.json | jq '.'
 * put all inside array `[.[]]` also works for nested .parents
 ```
 curl 'https://api.github.com/repos/stedolan/jq/commits?per_page=5' | jq '[.[] | {message: .commit.message, name: .commit.committer.name, parents: [.parents[].html_url]}]'
+```
+
+# ag
+
+fast grep
+```
+# find files with content some_string
+ag some_string
+
+# list only filenames
+ag -l some_string
+
 ```

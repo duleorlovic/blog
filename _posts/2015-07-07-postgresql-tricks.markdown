@@ -170,7 +170,7 @@ Some tips:
   'b'`
 * you can use IN, ANY, ALL
 [functions-comparisons](https://www.postgresql.org/docs/current/static/functions-comparisons.html#AEN18509)
-* substring match `WHERE col LIKE '%substr%'` or in rails `.where("mobile LIKE
+* substring match `WHERE col LIKE '%substr%'` or in rails `.where("mobile ILIKE
   ?", '%substr%')`
 * unique index regardless of order (two way combination or columns) can be
   enforced with expressions to build index
@@ -240,6 +240,10 @@ failure.
   * jsonb is much reliable type cast when since json compares as strings
     [link](http://stackoverflow.com/questions/32843213/operator-does-not-exist-json-json)
     you can select json with `SELECT name->'en' from users`
+    for full json search you can use type case
+    ```
+    where data::text ilike '%my_str%'
+    ```
 * to use columns (like `$1` or name `a.b`) you can use
   * string concatenation  `(a.b || ' MINUTES')::INTERVAL`
   * multiplication `a.b * INTERVAL '1 MINUTES'` (much nicer)
@@ -536,6 +540,19 @@ end
   ```
   https://stackoverflow.com/questions/1703495/postgresql-select-from-2-tables-but-only-the-latest-element-from-table-2
 
+* to skip duplicates when you want to join you can use three ways:
+  ```
+  # use distinct
+  select distinct books.id from books join cart_items on cart_items.book_id =
+  books.id
+
+  # use group by
+  select count(*) from (select books.id from books join cart_items on cart_items.book_id = books.id group by books.id) as b
+  select books.id from books join cart_items on cart_items.book_id = books.id group by books.id
+
+  # use nested select subquery
+  select count(books.id) from books where id in (select distinct book_id from cart_items)
+  ```
 * use test data `(VALUES (1, 'Duke'),(2, 'Mike')) users (id, name)`
   ```
   # change column type
@@ -547,3 +564,34 @@ end
   ```
   DELETE FROM table_name;
   ```
+* inspect time consuming quieries
+  ```
+  pg_stat_statements
+  ```
+
+* load from mysql dump to postgres
+  ```
+  pgloader mysql://root@localhost/rails_production postgresql://dule@localhost/rails_production
+  ```
+  but I receive error
+  ```
+   mysql: Failed to connect to mysql at "localhost" (port 3306) as user "root": Condition QMYND:MYSQL-UNSUPPORTED-AUTHENTICATION was signalled.
+   ```
+  https://github.com/dimitri/pgloader/issues/782#issuecomment-502323324
+```
+# sudo vi /opt/homebrew/etc/my.cnf
+sudo vi /opt/homebrew/Cellar/mysql/8.0.31/.bottle/etc/my.cnf
+brew services restart mysql
+mysql -u root
+alter user dule@localhost identified with mysql_native_password by 'dule';
+
+# try to login with new password
+mysql -u root -p
+mysql -u root # this will not work
+
+# to revert to passwordless login use
+ALTER USER 'root'@'localhost' IDENTIFIED BY '';
+mysql -u root
+```
+
+creating a dump using a docker https://gist.github.com/dougvj/49a803c27530161071e7c63cbd9aca1e

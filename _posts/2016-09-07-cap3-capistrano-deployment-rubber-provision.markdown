@@ -1372,6 +1372,10 @@ select 1
 
 # Sidekiq
 
+```
+# use system instead user
+set :sidekiq_service_unit_user, :system
+```
 You need to run on production
 https://github.com/seuros/capistrano-sidekiq#integration-with-systemd
 ```
@@ -1695,6 +1699,12 @@ copy to `~/config/keys/pems/gfd-keypair.pem` or export in PEM_FILE
 ```
 export PEM_FILE=~/gfd-keypair.pem
 ```
+I also got the same error but PEM was there.
+I solved by downgrading and upgrading capistrano gem.
+https://stackoverflow.com/questions/59556891/rails-capistrano-authentication-fail-error
+https://stackoverflow.com/questions/72014495/capistrano-rails-6-netssh-authentication-failed-for-user-deploy-sshkitrun
+https://stackoverflow.com/questions/63309504/ssh-authentication-fails-when-running-capistrano-cap-production-deploy
+
 * error like
 ```
 cap aborted!

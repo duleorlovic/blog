@@ -8,8 +8,8 @@ title: Vim
 [quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
 keynames:
 
-* `<ctrl-d>` is control Ctrl and d, in help it can be written as `^d`. In
-  commands you can also write `<c-d>`
+* `<ctrl-d>` is control Ctrl and d, here and in help it can be written as `^d`.
+  In commands you can also write `<c-d>`
 * `<esc>` is escape key (when recording macro it is `^[<80>y`)
 * `<space>` space
 * `<cr>` sometimes it is `<Enter>`
@@ -131,6 +131,7 @@ Other usefull commands in insert mode:
 * shortcuts `x` (`dl` delete char), `C` (`c$` change to end of line)
 * `ciw` change inner word, `caw` including spaces that follows the word
   * `ca]` change all inside brackets including both [ ]
+  * `S` change whole line (delete and go to insert mode)
 * `daw` removes the inner word
 * `dt ` delete until the space, `df ` delete until the space including space
 * `dap}p` switch two paragraph
@@ -176,7 +177,7 @@ scrolling with `:set scb!`
 
 * `'<` to the first line of last selected visual area. Note that
 you need to exit current visual area and than jump to first or last line/char
-* `gv` to select previous selected visual area
+* `gv` to reselect previous selected visual area
 
 # Normal mode
 
@@ -334,6 +335,7 @@ down
   line) or down (half page, one line). But for one line it is easier to use
   `Ljjj`
 * `H` `M` `L` jump to the top/middle/bottom of what you see
+* move screen one line `CTRL+y` up (down is remaped `ctrl+e`)
 * `mA` then `'A` jump there (downcase letter `a` can jump only on current file
   buffer, use ``a`` backtick to jump to specific column instead of beggining of
   the line), `:marks` gives the jump location, two ' `''` is jump back, `'.`

@@ -458,7 +458,8 @@ your app. Do not use secret stuff in url like `/session=1234/...?user=john`
 rel canonical, redirects, sitemaps
 to define what is canonical url for the page you can use
 ```
-<link rel='canonical' href='https://example.com/path'/>
+<link rel='canonical' href='https://example.com/blog'/>
+<link rel='canonical' href='https://example.com/blog/index.html'/>
 ```
 * imporant content that needs to be indexed should be on visible part of the
 page, not on ajax call since crawl will be able to index that

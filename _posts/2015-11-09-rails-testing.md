@@ -2286,6 +2286,13 @@ RAILS_ENV=test rails webdrivers:chromedriver:update
 RAILS_ENV=test bundle exec rake webdrivers:chromedriver:update
 ```
 
+For error
+```
+Webdrivers::NetworkError: Net::HTTPServerException: 404 "Not Found" with https://chromedriver.storage.googleapis.com/107.0.5304.62/chromedriver_mac64_m1.zip
+```
+You should upgrade to 5.2.0
+https://github.com/titusfortner/webdrivers/pull/239
+
 If you really need external requests you can
 
 ~~~
@@ -2519,6 +2526,11 @@ Improve speed of the tests
     end
   end
   ```
+
+* run test in seed deterministic order
+```
+rails test --seed 12345
+```
 
 https://github.com/palkan/test-prof
 

@@ -20,3 +20,5 @@ General Data Protection Regulation
 # Rails
 
 To write a test so make sure all user data is removed you can try with  https://monolist.co/blog/2019/09/delightful-goodbyes-guaranteeing-deletion/
+
+https://github.com/prey/gdpr_rails

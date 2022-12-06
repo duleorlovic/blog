@@ -101,6 +101,13 @@ vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.2.175.150
 vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.21.103.149
 ```
 
+Redirection in cloudflare can be configured with Lists
+Manage account -> Configurations -> Lists -> Create new list -> Redirect
+
+uplate.trk.in.rs/  to https://docs.google.com/1234
+
+than go to Bulk redirects and Create Bulk Redirect using this list
+
 # Cloudfront
 
 ```

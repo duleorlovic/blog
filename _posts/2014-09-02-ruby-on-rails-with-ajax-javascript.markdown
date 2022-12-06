@@ -193,7 +193,8 @@ $(document).on('click','[data-deactivate]', function(e) {
 
 pros/cons: if there is an error respond.js you will not notice that in console, but in this approach, it will be shown as console error 
 
-Custom js functions like select2 or autosize should be defined next to target elements. for example
+Custom js functions like select2 or autosize should be defined next to target
+elements. for example
 
 ~~~
    <%= f.textarea :content %>

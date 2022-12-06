@@ -471,6 +471,7 @@ used for singleDatePicker, dateTime picker
 
 * [jquery.fileapi](http://rubaxa.github.io/jquery.fileapi/) supports
   webcam, crop, dragndrop
+* https://foliotek.github.io/Croppie/
 * [jQuery-File-Upload](https://blueimp.github.io/jQuery-File-Upload/)
 * [browser-camera](https://davidwalsh.name/browser-camera) html5 getUserMedia
 
@@ -1348,3 +1349,5 @@ EntryNodes {us} StrictNodes 1
 ExitNodes {us} StrictNodes 1
 # and restart tor browser
 ```
+
+* gdpr in rails https://github.com/prey/gdpr_rails

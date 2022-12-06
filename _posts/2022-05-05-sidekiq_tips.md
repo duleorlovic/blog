@@ -245,3 +245,32 @@ and
     end
 ```
 
+# Start with rails
+
+Sidekiq 7 enables you to run sidekiq with `rails s` command
+```
+# config/puma.rb
+# https://www.mikeperham.com/2022/10/27/sidekiq-7.0-embedding/
+workers 2
+threads 1, 3
+
+require "sidekiq"
+# preloading the application is necessary to ensure
+# the configuration in your initializer runs before
+# the boot callback below.
+preload_app!
+
+x = nil
+on_worker_boot do
+  x = Sidekiq.configure_embed do |config|
+    # config.logger.level = Logger::DEBUG
+    config.queues = %w[critical default low]
+    config.concurrency = 2
+  end
+  x.run
+end
+
+on_worker_shutdown do
+  x&.stop
+end
+```

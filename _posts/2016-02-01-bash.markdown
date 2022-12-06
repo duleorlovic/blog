@@ -1032,12 +1032,19 @@ fi
 * in scripts use
 ~~~
 set -e # Any commands which fail will cause the shell script to exit immediately
-set -x # show command being executed
+set -x # Show command being executed
 ~~~
 
 Rescue from error with `|| true` like
 ```
 git clone asd.com || true
+```
+return from function on error. `set -e` or `exit 1` will exit the shell
+completelly.
+```
+my_function() {
+  not_a_command || return 1
+}
 ```
 
 You can read user input
