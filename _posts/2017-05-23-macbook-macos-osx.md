@@ -833,6 +833,10 @@ gem install eventmachine -- --with-cppflags=-I$(brew --prefix openssl)/include
 brew link --force openssl
 ```
 
+```
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=`brew --prefix openssl@1.1`"
+```
+
 Puma 5.6.4 has problems with ssl
 https://github.com/puma/puma/issues/2839#issuecomment-1086147152
 ```

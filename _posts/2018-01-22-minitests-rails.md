@@ -491,7 +491,7 @@ title: "Ahoy!" }, response.parsed_body)`.
   after you call `get`, `post`. You can set `request.remote_ip` by passing
   headers (note that http referrer is written as http referer (single r)
   ```
-  get sign_up_path, params: { user: { email: 'new@email.com' } }, headers: { 'REMOTE_ADDR': '123.123.123.123', HTTP_REFERER: 'http://domain.com' }
+  get sign_up_path, params: { user: { email: 'new@email.com' } }, headers: { 'REMOTE_ADDR': '123.123.123.123', HTTP_REFERER: 'http://domain.com', 'HTTP_USER_AGENT': 'Mozilla'}
   ```
   also you can authenticate basic auth
   ```

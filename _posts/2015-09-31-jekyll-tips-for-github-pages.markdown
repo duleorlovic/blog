@@ -691,7 +691,10 @@ Yet another theme
   [My page]({ % post_url 2016-03-02-my-page %})
   ```
 * images `![alt text]({ { site.baseurl }}/assets/path_to_image "Title text")` If
-  you want to use image in `README.md` than you need to store image and use
+  you want to use image in `README.md` than you need to store image and use full
+  path to raw file. No spaces are allowed, file path should be one string
+  without quotes. Path should be raw (not sure why relative path does not work)
+  https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true
   ```
   ![trk-datatables](test/trk_datatables_with_daterangepicker.png "TRK Datatables")
   ```

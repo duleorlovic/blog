@@ -71,12 +71,6 @@ Git checkout previous branch
 
     git checkout -
 
-Git fetch pull all brancher and fast forward merge. Put this in your
-`.git/config` or `~/.gitconfig` file, and run `git pull-all`
-
-    [alias]
-        pull-all = !"for b in $(git for-each-ref refs/heads --format='%(refname)') ; do git checkout ${b#refs/heads/} ; git pull --ff-only ; done"
-
 When you want to undo some commands
 
     git reflog
@@ -198,6 +192,15 @@ debug1: Next authentication method: password
 ```
 Solution is to remove some public keys or to specify key with `-i ` option
 
+To add hosts to to known_hosts so you do not see this warning
+```
+The authenticity of host 'github.com (140.82.121.3)' can't be established.
+```
+you can use
+```
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+```
+
 # Git commit
 
 If you want to ignore/reignore some files that are tracked (gitignore does not
@@ -296,10 +299,6 @@ To find if given commit hash is incuded on some release (release is a tag)
 To remove tag
 
     git tag -d v1.5
-
-Add global gitignore for all projects
-
-    git config --global core.excludesfile ~/.gitignore
 
 Clone for local or remote folders
 
@@ -407,6 +406,49 @@ fi
 
 You can use `.pre-commit-config.yaml` file
 
+Another example is
+```
+#!/bin/bash
+#
+# https://gist.github.com/jimschubert/9073276
+# Automatically adds branch name to every commit message.
+# Modified from the stackoverflow answer here: http://stackoverflow.com/a/11524807/151445
+#
+
+# Get branch name, use sed to strip name if needed
+# branchName=$(git branch | grep '*' | sed 's/* i//')
+branchName=$(git branch --show-current)
+
+# Get the first line, ex: from ammending or mmm from git commit -am'mmm'
+firstLine=$(head -n1 $1)
+
+if ! [[ $firstLine =~ $branchName ]] ; then
+  # Prepend branchName to COMMIT_MSG
+  echo "$branchName"' '$(cat "$1"| sed '/^#.*/d') > "$1"
+  #
+  # Append branchName to COMMIT_MSG
+  # echo -n "vishwasb/gfd-ui#$branchName" >> "$1" # this will add at the end
+  # echo $(cat "$1" | sed '/^#.*/d')' '"vishwasb/gfd-ui#$branchName" > "$1"
+
+  # Insert branchName at the end of the commit message file
+  # sed -i "1s@^@\n\n$branchName@" $1
+fi
+```
+
+Add global gitignore for all projects
+
+    git config --global core.excludesfile ~/.gitignore
+
+this will add to `~/.gitconfig` file. You could also use local `.git/config`.
+Here is my global config
+```
+# ~/.gitconfig
+[alias]
+    # Git fetch pull all brancher and fast forward merge `git pull-all`
+    pull-all = !"for b in $(git for-each-ref refs/heads --format='%(refname)') ; do git checkout ${b#refs/heads/} ; git pull --ff-only ; done"
+
+```
+
 # Github
 
 For you project you can set instructions for issues, look example
@@ -447,4 +489,3 @@ browse -- issues` to open issues. `git browse user/repo` to open user/repo
 # Github CLI
 
 https://github.com/cli/cli
-

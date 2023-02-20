@@ -5,7 +5,12 @@ layout: post
 
 # Arduino
 
-To install I download tar.gz and run `./install.sh`
+To install I download source tar.gz and run `./install.sh` or download binaries.
+https://github.com/arduino/arduino-ide/releases
+
+You should add user to `dialout` group (or try to install from ubuntu software
+and installation will add your user to the group automatically, you just have to
+log out)
 
 ## Arduino Makefile
 

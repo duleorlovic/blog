@@ -1019,3 +1019,12 @@ https://getbootstrap.com/docs/3.3/javascript/#carousel
   ```
   Array.from(select.options)
   ```
+* embed video using webm and subtitles using vtt
+  ```
+  <video controls="">
+    <source src="https://swaywm.org/intro.webm" type="video/webm">
+    <track src="subtitles/intro.vtt" kind="captions" srclang="en" label="English">
+    <track src="subtitles/intro-it_IT.vtt" kind="captions" srclang="it" label="Italiano">
+    <p>Your browser does not support HTML5 video.</p>
+  </video>
+  ```

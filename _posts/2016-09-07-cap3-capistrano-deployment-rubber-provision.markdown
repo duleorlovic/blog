@@ -1762,3 +1762,20 @@ or
 Manifest webpack
 ```
 please make sure that instance contains all roles `roles: %w[app web db]`
+
+# Errors
+
+For error
+```
+cap production elbas:ssh
+(Backtrace restricted to imported tasks)
+cap aborted!
+LoadError: cannot load such file -- elbas/capistrano
+/home/dule/myapp/myapp/Capfile:13:in `<top (required)>'
+(See full trace by running task with --trace)
+```
+solution is to use `bundle exec`
+```
+bundle exec cap production elbas:ssh
+```
+

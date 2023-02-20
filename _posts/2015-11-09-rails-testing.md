@@ -1401,7 +1401,8 @@ end
 ~~~
 
 I got error: `UncaughtThrowError: uncaught throw :warden` and that is because
-user was unconfirmed. Better is be by default confirmed:
+user was unconfirmed or database was empty.
+The best is to be by default confirmed:
 
 ~~~
   factory :user do

@@ -7,23 +7,29 @@ tags: ruby-on-rails postgresql
 
 ```
 sudo -u postgres psql
-create database mydb;
 create user myuser with encrypted password 'mypass';
-grant all privileges on database mydb to myuser;
+
+# this is temporary default database, used when you just run `psql`
+create database myuser;
+grant all privileges on database myuser to myuser;
 ```
 to allow local user to createdb and seed fixtures you need to
 ```
-ALTER USER orlovic WITH SUPERUSER;
+ALTER USER myuser WITH SUPERUSER;
 
 # in one command
-sudo su postgres -c "psql -d postgres -c 'ALTER USER orlovic WITH SUPERUSER;'"
+sudo su postgres -c "psql -d postgres -c 'ALTER USER myuser WITH SUPERUSER;'"
 ```
 
 ```
 # allow localhost connection using password (instead of socket with same
 username)
 sudo vi /etc/postgresql/10/main/pg_hba.conf
-# change peer to md5: 
+# change all 'peer' and 'md5' to 'trust': 
+sudo service postgres reload
+
+# test with bash
+psql
 
 # allow remote connections; find file with: SHOW config_file;
 # on macOD find config folder with ps aux|grep postgres
@@ -274,7 +280,7 @@ simplify representations. You need to install hstore extension
 [link](https://gist.github.com/terryjray/3296171) for test and develop db:
 
 ~~~
-sudo psql -d myapp_development -U orlovic
+sudo psql -d myapp_development -U myuser
 CREATE EXTENSION hstore;
 #or in one command: 
 sudo su postgres -c "psql myapp_test -c 'CREATE EXTENSION hstore;'"

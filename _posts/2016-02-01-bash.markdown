@@ -434,6 +434,26 @@ hostname=main
 
 but not reliable...
 
+# SWAY
+
+https://github.com/swaywm/sway/wiki
+
+```
+mkdir -p ~/.config/sway
+cp /etc/sway/config ~/.config/sway/
+$EDITOR ~/.config/sway/config
+```
+
+TODO; example of moving to target window
+
+# Quitebrowser
+
+https://qutebrowser.org/doc/quickstart.html
+
+* left(right) tab `J` (`K`), back (forth) in history `H` (`L`)
+* `d` close tab (`u` undo closing tab)
+* `wi` toggle web developers tools
+
 # Tar
 
 comress folder: `tar -zcvf folder.tar.gz folder`
@@ -1135,4 +1155,52 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   ctrl + ]
   ```
   telnet selenium 4444
+  ```
+* `man man` can give you more info how to use manual pages for help
+  ```
+  # seach short descriptions for pwd
+  man --apropos pwd
+  man -k pwd
+
+  # search all text and open man page for each
+  man -K pwd
+
+  # open specific section, for example 5 is conventions, 7 miscellaneous
+  man sway.5
+  man 5 sway
+  ```
+* send email from bash
+  ```
+  sudo apt-get install ssmtp
+  sudo vim /etc/ssmtp/ssmtp.conf
+
+  rewriteDomain=gmx.com
+  FromLineOverride=YES
+  mailhub=mail.gmx.com:587
+  useSTARTTLS=YES
+  AuthUser=duleorlovic@gmx.com
+  AuthPass=my-passs
+  TLS_CA_File=/etc/pki/tls/certs/ca-bundle.crt
+  ```
+  when sending from username that is different we need to define `From:` and
+  separate with two lines `\n\n`
+  ```
+  echo -e "From: duleorlovic@gmx.com\nSubject: My subject\n\nTest message body ssmtp" | ssmtp -vvv duleorlovic@asd.com
+  ```
+  here is a script that you can run from crontab
+  ```
+  #/bin/bash
+  # ~/my-app/my-app/tmp/notify_if_failed.sh
+  if ~/my-app/my-app/tmp/a.sh | grep -q DS ; then
+    echo 'found DS'
+    echo -n "." >> ~/my-app/my-app/tmp/a.sh.log
+  else
+    echo "no DS"
+    echo "$(date) NO DS =============================================================================" >> ~/my-app/my-app/tmp/a.sh.log
+
+    if [ ! -f ~/my-app/my-app/tmp/a.sh.stop ]; then
+      echo "From: duleorlovic@gmx.com\nSubject: my-app login from mail failed\n\nTo continue with this notification you need to run\nrm ~/my-app/my-app/tmp/a.sh.stop" | ssmtp -vvv duleorlovic@asd.com >> ~/my-app/my-app/tmp/a.sh.log 2>&1
+      touch ~/my-app/my-app/tmp/a.sh.stop
+    fi
+  fi
   ```
