@@ -16,14 +16,33 @@ should not be backtick  \`\` since it will be evaluated as shell command.
 ~~~
 cat > my.txt << 'HERE_DOC'
 here can be ' " \ / anything
+there is no interpolation
+echo multi\
+line works with one backslash
+HERE_DOC
+
+cat > my.txt << HERE_DOC
+echo single\
+line
+echo multi\\
+line needs two backslashes
 HERE_DOC
 ~~~
 
 # Sed
 
-`sed -i '/haus/a home' filename` will inplace (`-i`) search for *haus* and
-append *home* after that line (beside insert before `i`, this could be `a`
-append, `c` change matched line, `d` delete matched line).
+`sed -i "" -e '/haus/ s/$/home/' filename` will inplace (`-i`) search for *haus* and
+append *home* at the end of each line
+You can use matched line in result, for example to add quotes `sed 's/.*/"&"/'
+filename`
+You can practice with echo and use `--regexp-extended` or `-r`, for example
+remove lines that begins with `T` or `X` ignoring space or tabs
+```
+echo -e " T\n\t T\nT\n   X" | sed -r -e "/^[[:space:]]*(T|X)/ d"
+```
+
+Insert before line `i`, append after line `a`, `c` change matched line,
+delete matched line `d`, change matched line `s`
 Multiple lines need to have "\" at the end of line because only first line will
 be used otherwise.
 When using double quotes you also need `\n` (last line should not put `\n\ `

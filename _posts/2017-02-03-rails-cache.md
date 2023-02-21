@@ -4,24 +4,51 @@ title: Rails cache
 ---
 
 [Guide](http://guides.rubyonrails.org/caching_with_rails.html) tells that page
-and action caching has been extracted to gems. Now we can use fragment caching
+and action caching has been extracted to gems and currently we use fragment
+caching only.
 
 By default caching in rails development environment is disabled. To enable you
-need to `touch tmp/caching-dev.txt` AND to restart after enabling in config
+need to `touch tmp/caching-dev.txt` AND to restart the server. You can see in
+config that you can also toggle with `rails dev:cache`
 ```
 # config/environments/development.rb
-  config.cache_store = :memory_store
+  # Enable/disable caching. By default caching is disabled.
+  # Run rails dev:cache to toggle caching.
+  if Rails.root.join("tmp/caching-dev.txt").exist?
+    config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
 
-  config.action_controller.perform_caching = true
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      "Cache-Control" => "public, max-age=#{2.days.to_i}"
+    }
+  else
+    config.action_controller.perform_caching = false
+
+    config.cache_store = :null_store
+  end
 ```
-By default it uses `ActiveSupport::Cache::FileStore`. Instead of file you should
-use `dalli+memcached` or `redis`  (you already have redis you use background
-jobs like Sidekiq).
-Another way to start caching is using rake cache task so rails cache is enabled
+So by default is not enabled in development so in rails console we see
+```
+Rails.cache
+#    @name="ActiveSupport::Cache::Strategy::LocalCache">
 
-~~~
-rails dev:cache
-~~~
+Rails.cache.class
+ => ActiveSupport::Cache::NullStore
+```
+If we run `rails dev:cache` than it uses memory (persists untill you exit the
+console)
+```
+Rails.cache
+ => #<ActiveSupport::Cache::MemoryStore entries=0, size=0, options={:compress=>false}>
+
+Rails.cache.class
+ => ActiveSupport::Cache::MemoryStore
+
+# before it was `ActiveSupport::Cache::FileStore`
+```
+On production we should switch to use `dalli+memcached` or `redis`  (you already
+have redis when you use background jobs like Sidekiq).
 
 Filestore will create files on `tmp/cache/:rand/:rand/cache_key` so you can find
 them `ls -R tmp/cache/`. If cache_key is array, it is joined with `/`.
@@ -111,7 +138,7 @@ end
 HERE_DOC
 ~~~
 
-Test with `heroku run rails c`
+Try with `heroku run rails c`
 ```
 Rails.application.config.cache_store
 ```
@@ -202,11 +229,10 @@ connect using that domain name. So you need to change
 -l 0.0.0.0
 ~~~
 
-You can test check in console if properly enabled
+You can check in console if properly enabled
 
 ~~~
 Rails.cache.class
-# if not enabled => ActiveSupport::Cache::NullStore
 ~~~
 
 And if check its stats
@@ -360,6 +386,62 @@ before actions).
 You can use this [snippets
 ](http://vinsol.com/blog/2014/02/11/guide-to-caching-in-rails-using-memcache/)
 
+# Test
+
+Enable caching in test with
+```
+# config/environments/test.rb
+  if Rails.root.join("tmp/caching-test.txt").exist?
+    config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
+
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      "Cache-Control" => "public, max-age=#{2.days.to_i}"
+    }
+  else
+    config.action_controller.perform_caching = false
+
+    config.cache_store = :null_store
+  end
+```
+you can use helpers
+```
+# test/a/rails_cache_helper.rb
+# Add `include RailsCacheHelper` to test/test_helper.rb
+#
+# Credits https://kevinjalbert.com/testing-the-use-of-rails-caching/
+module RailsCacheHelper
+  # Enable cache with config/environments/test.rb and
+  #   touch tmp/caching-test.txt
+  def with_clean_caching
+    Rails.cache.clear
+    yield
+  ensure
+    Rails.cache.clear
+  end
+
+  def cache_has_value?(value)
+    cache_data.values.map(&:value).any?(value)
+  end
+
+  def key_for_cached_value(value)
+    cache_data.each_value do |key, entry|
+      return key if entry&.value == value
+    end
+  end
+
+  private
+
+  def cache_data
+    Rails.cache.instance_variable_get(:@data)
+  end
+end
+```
+
+and test for example
+```
+```
 # Theory
 
 [mnot cache_docs](https://www.mnot.net/cache_docs/)

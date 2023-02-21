@@ -40,6 +40,12 @@ cat >> ~/.railsrc << HERE_DOC
 HERE_DOC
 ```
 
+For existing apps you can change database from sqlite to postgres with one
+command
+```
+rails db:system:change --to=postgresql
+```
+
 Create new app
 
 ```
@@ -855,6 +861,11 @@ heroku plugins:install heroku-repo
 heroku repo:purge_cache -a appname
 git commit --allow-empty -m "Purge cache"
 git push heroku master
+```
+now it is renamed to heroku-build
+```
+heroku plugins:install heroku-builds
+heroku builds:cache:purge -a example-app
 ```
 
 Remove remote branch on heroku ie clear reset repository

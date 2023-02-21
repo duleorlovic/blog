@@ -5,25 +5,32 @@ title: Vim
 
 # Internals
 
-[quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
-keynames:
+```
+vimtutor
+```
+To follow navigation in vim `:help` you can use `<c-]>`
 
-* `<ctrl-d>` is control Ctrl and d, here and in help it can be written as `^d`.
-  In commands you can also write `<c-d>`
+
+[quick reference card](http://tnerual.eriogerg.free.fr/vimqrc.html)
+We will use vims keynames `:help keycode` but lowercase (anywas it is case
+insensitive), for example `<c-d>` is control Ctrl and d, in help it can be
+written as `^d` or `<ctrl-d>` but we will stick with `<c-d>`
+
 * `<esc>` is escape key (when recording macro it is `^[<80>y`)
 * `<space>` space
 * `<cr>` sometimes it is `<Enter>`
 * `<bs>` backspace
 * `<left>` left arrow
 * `<s-left>` shift left
-* `<ctrl-left>` control left
+* `<c-left>` control left
 * `^I` is when we insert `<tab>`
 * `<nl>` new line. If you use `echom "a\nb"` you will see `a^@b` (`CTRL-v` and
   `CTRL-j`)
 * `<tab>` tab
 
-If you press `ctrl-s` ^s than terminal will freeze all output and looks like
-vim hangs and stop working, but you need to run `ctrl-q` ^q to exit from that.
+If you press `<c-s>` ctrl-s ^s than terminal will freeze all output and looks
+like vim hangs and stop working, but you need to run `<c-q>` ctrl-q ^q to exit
+from that.
 
 special variables
 
@@ -471,8 +478,7 @@ the middle `/asd^qwe`)
   * `/asd\_.\{-}qwe` find asd followed with any character (including new line)
     and stop at qwe (match as few as possible)
   * `/asd\(.*\n\)\{2,3}.*qwe` find `qwe` if it is after `asd` in 2 or 3 lines
-  *  You can use [S and S!
-    snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
+  *  You can use [S and S! snippet](http://vim.wikia.com/wiki/Search_across_multiple_lines#Searching_over_multiple_lines_with_a_user_command)
 * *or* operator is `\|` for example `/one\|two`. If you use inside other match
   you need to put `\(` and `\)`, for example `t\(wo\|hree\)`. If it is chars
   than use character ranges for example:
@@ -621,9 +627,7 @@ Help doc files are added to `~/.vim/doc` like `~/.vim/doc/my_plug.vim`, than run
 files is `:help local-additions`
 
 
-
-Install [pathogen](https://github.com/tpope/vim-pathogen) and other interesting
-plugins:
+Instead of installing [pathogen](https://github.com/tpope/vim-pathogen) and
 
 ~~~
 mkdir -p ~/.vim/autoload ~/.vim/bundle && \
@@ -632,6 +636,11 @@ curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 cd ~/.vim/bundle
 git clone git://github.com/tpope/vim-rails.git # example: Rview
 ~~~
+
+you can use vim builtin way
+```
+:help packages
+```
 
 
 You can find [my list of

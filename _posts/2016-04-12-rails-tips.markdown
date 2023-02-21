@@ -955,6 +955,9 @@ validation error instead of database esception, should also be in rails
 class AddUniqContacts < ActiveRecord::Migration
   def change
     add_index :contacts, [:email, :user_id], unique: true
+
+    # partial index
+    add_index :contacts, [:email, :user_id], unique: true, where: ""
   end
 end
 ~~~
@@ -3076,7 +3079,7 @@ but IE10 wont.
 * request object contains a lot of data:
   * `request.xhr?` is it ajax
   * `request.ip` `request.referrer` `request.remote_ip`
-  * `request.env["HTTP_USER_AGENT"]`
+  * `request.user_agent` `env["HTTP_USER_AGENT"]`
 
 * if you want to add flash_alert for all `flash.now[:alert]='message'` you can
   use
@@ -4396,3 +4399,4 @@ to use regexp
 * rails one time command `rails runner -e staging "puts "
 * reduce memory with env variable: `MALLOC_ARENA_MAX=2` TODO: track memory usage
 with aws
+* kaminari first page is page 1

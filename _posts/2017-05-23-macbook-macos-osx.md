@@ -792,6 +792,34 @@ rvm install 3 ossl_pkey_rsa.c:950:5: error: use of undeclared identifier 'RSA_SS
 RVM NEEDS PKD_CONFIG_PATH set to old openssl using
 ```
 PKG_CONFIG_PATH="$(brew --prefix openssl@1.1)/lib/pkgconfig" rvm reinstall 2.6.8 --with-out-ext=fiddle
+# or
+PKG_CONFIG_PATH="$(brew --prefix openssl@1.1)/lib/pkgconfig" bundle
+```
+
+```
+brew info openssl
+If you need to have openssl@1.1 first in your PATH run:
+  echo 'export PATH="$(brew --prefix openssl@1.1)/bin:$PATH"' >> ~/.zshrc
+
+For compilers to find openssl@1.1 you may need to set:
+  export LDFLAGS="-L$(brew --prefix openssl@1.1)/lib"
+  export CPPFLAGS="-I$(brew --prefix openssl@1.1)/include"
+
+For pkg-config to find openssl@1.1 you may need to set:
+  export PKG_CONFIG_PATH="$(brew --prefix openssl@1.1)/lib/pkgconfig"
+
+```
+
+for grpc https://github.com/grpc/grpc/issues/30976#issuecomment-1299550028
+you can either
+```
+# recompile ruby
+
+# gem install
+gem install grpc -v 1.48.0 -- --with-ldflags="-Wl,-undefined,dynamic_lookup"
+
+# bundle config
+bundle config build.grpc --with-ldflags="-Wl,-undefined,dynamic_lookup"
 ```
 
 when you also need to install ffi than join path with colon `:`
@@ -1095,9 +1123,18 @@ pyenv shell 2.7.18
 
   ```
   sshfs orlovic@main:rails/ ~/rails_main/ -ocache=no -onolocalcaches -ovolname=ssh
+  sshfs dule@trk:. ~/trk/ -ocache=no -onolocalcaches -ovolname=ssh
   ```
 
   unmount with
   ```
   umount -f ~/rails_main
   ```
+* you can use Real VNC to connect to ubuntu (just enable Share -> Remove
+  desktop) but it shows black screen
+  Better is to use native vnc clint from Finder -> Go -> Connect to server or
+  just `open vnc://user@machine`
+  Note that on ubuntu you have to do Login (if you enable autologin you will not
+  be able to connect with VNC, it will just ask for password indefinitely).
+  So on restart, until you are logged in, VNC server will not start.
+
