@@ -922,19 +922,54 @@ Example on https://github.com/trkin/premesti.se/tree/master/blog
 # Tips
 
 * if you want to move page it is advised to leave old page some time so you do
-not confuse crawlers. You can add redirection in html
+not confuse crawlers. The best is to add redirection in html so that you do not
+add duplicate posts
 
 ~~~
-<!-- narucivanje.html -->
+# mkdir -p 2023/01/04
+# 2023/01/04/intership.html
 <html>
   <head>
-    <meta http-equiv="refresh" content="0; url=http://tasterkljuc.rs/naruci"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="refresh" content="1;url=https://www.trk.in.rs/2023/01/04/internship.html"/>
+    <link rel="canonical" href="https://www.trk.in.rs/2023/01/04/internship.html"/>
+    <script type="text/javascript">
+      window.location.href = "https://www.trk.in.rs/2023/01/04/internship.html"
+    </script>
+    <title>Page Redirection</title>
   </head>
   <body>
-    You are redirected to http://tasterkljuc.rs/naruci
+    If you are not redirected automatically, follow <a href='https://www.trk.in.rs/2023/01/04/internship.html'>this link</a>.
   </body>
 </html>
 ~~~
+If you have a lot of redirections, you can use different layout
+```
+# _layouts/redirect.html
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="refresh" content="1;url={{ page.redirect }}"/>
+    <link rel="canonical" href="{{ page.redirect }}"/>
+    <script type="text/javascript">
+      window.location.href = "{{ page.redirect }}"
+    </script>
+    <title>Page Redirection</title>
+  </head>
+  <body>
+    If you are not redirected automatically, follow <a href='{{ page.redirect }}'>this link</a>.
+  </body>
+</html>
+```
+and define redirection in markdown. Since jekyll does not support using liquid
+in frontmatter you have to specify whole url
+```
+# _posts/2022-02-02-old-page.md
+---
+layout:     redirect
+redirect:   https://www.example.org
+---
+```
 
 # Slides
 
