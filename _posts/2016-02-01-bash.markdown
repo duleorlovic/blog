@@ -7,7 +7,7 @@ tags: bash
 
 In two ways
 
-* `su deployer -c 'whoami` can add login `-l` option `su -l deployer -c 'rvm
+* `su deployer -c 'whoami'` can add login `-l` option `su -l deployer -c 'rvm
   list'` so PATH is extended with `~/.rvm/bin/` and rvm script works
 * `sudo -u deployer whoami` simpler, no need for quotes
   * Add option `-i` or `--login` to run as login shell. In login shell `~` is
@@ -16,6 +16,31 @@ In two ways
   other ruby commands: `sudo -i -u deployer /bin/bash -c "cd /vagrant && rails
   c"`. Also when you use pipe `|` or `&&` or redirection `>>`, you should wrap
   inside bash or use `eval`
+
+You can find all login shells as they start with hyphen minus sign in `ps -f`.
+Interactive shell is one which reads commands from it's standard input.
+When you ssh than that session is both login and interactive.
+```
+ssh trk
+ps -f
+# this is login shell
+dule .... -bash
+
+# when you type bash you get another interactive (but not login shell)
+bash
+ps -f
+dule ... -bash
+dule ... bash
+
+# when you run scripts than you do not have interactive shell
+```
+Login shell is running `/etc/profile` and `~/.bash_profile`, `~/.bash_login` and
+`~/.profile` (first found file is sourced, others are ignored)
+
+Interactive shell is running `~/.bashrc`
+I usually `source ~/.bashrc` from `~/.bash_profile` so login shell become also
+interactive shell.
+
 
 # Shortcuts for windows
 
@@ -508,7 +533,10 @@ it will be in `tmp/db.dump`
 
   ~~~
   # check if $a is present (not null) empty
-  if [[ -n $a ]]
+  if [[ -n $a ]]; then
+
+  # check if output contains result
+  if [[ $(which aws) ]]; then
 
   # if conditional to check if string is substring
   string='my long string'
@@ -1136,3 +1164,12 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   ```
   telnet selenium 4444
   ```
+* show motherboard info
+  ```
+  sudo dmidecode -t 2
+  ```
+  show number of cores and cpu info
+  ```
+  lscpu
+  ```
+

@@ -22,6 +22,8 @@ rails test:system
 # invoke test by line
 rails test test/models/article_test.rb:6
 # or name
+# works only when you use `def test_example` syntax
+# for `test "test_example" do` you should use -n test_test_example
 rails test -n test_example
 ~~~
 
@@ -474,8 +476,10 @@ For integration we use `ActionDispatch::IntegrationTest` which gives methods:
 * also `put`, `patch`, `head`, `delete`
 * for ajax use `post path, xhr: true`
 * add `as: :json` as third param for json requests so you can use something like
-* `assert_equal({ id: Article.last.id,
-title: "Ahoy!" }, response.parsed_body)`.
+  ```
+  get article_path(@article), as: :json
+  assert_equal "my title", response.parsed_body["title"]
+  ```
 
 * `follow_redirect!`
 * `assert_redirected_to post_url(Post.last)`,or you can match only part of url
@@ -707,9 +711,15 @@ Capybara assertions
 * `assert_text /dule/` or `assert_text Regexp.new('dule', Regexp::MULTILINE)`
   (instead of `assert_match /dule/, page.body` or in rspec `expect(page).to
   include 'dule'`
-* `assert_selector 'a', text: 'duke'` (you can assert other html attributes with
-  square brackets `assert_selector '#my_id[readonly="readonly"][value="My
-  Name"]'`
+* `assert_selector 'a', text: 'duke'`
+   you can assert other html attributes with square brackets
+   ```
+   assert_selector '#my_id[readonly="readonly"][value="My Name"]'
+   ```
+   or if you use find.attribute
+   ```
+   assert_match "avatar_female4", find('[data-test="profile-image"]').native.attribute("src")
+   ```
 * `assert_equal admin_path, page.current_path` page.url ie page.current_url
   contains also http:// so better is to use page path
 

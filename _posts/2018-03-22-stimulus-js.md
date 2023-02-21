@@ -357,3 +357,25 @@ end
 
     <%= form.text_field :start_end_date, "data-action": "my-change-event->forms#submit_on_change" %>
   ```
+
+  ```
+https://stackoverflow.com/a/66674451/287166
+            <%= form.text_field :start_end_date, "data-use-daterangepicker": true, "data-action": "focusout->forms#submit_on_change_delayed" %>
+
+  // <%= f.check_box :near_me, 'data-controller': 'forms', 'data-action': 'forms#submit_on_change' %>
+  submit_on_change(event) {
+    let form = event.currentTarget.closest('form')
+    form.submit()
+    console.log('forms#submit_on_change')
+  }
+
+  submit_on_change_delayed(event) {
+    let form = event.currentTarget.closest('form')
+    setTimeout(function () {
+      form.submit()
+      console.log('forms#submit_on_change_delayed finished')
+    }, 100)
+    console.log('forms#submit_on_change_delayed')
+  }
+
+  ```

@@ -36,7 +36,8 @@ sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce
 Finish setup using browser (copy paste your public key `~/.ssh/id_rsa.pub` and
 select Use virtualhost naming for apps)
 
-> App name must begin with lowercase alphanumeric character, and cannot include uppercase characters, colons, or underscores
+> App name must begin with lowercase alphanumeric character, and cannot include
+> uppercase characters, colons, or underscores
 To create app you can
 ```
 dokku apps:create my-app
@@ -191,7 +192,7 @@ dokku nginx:access-logs my-app -t
 dokku nginx:error-logs my-app -t
 ```
 
-## Posgres
+## Postgres
 
 Install plugin
 ```

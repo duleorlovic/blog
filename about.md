@@ -19,6 +19,9 @@ code
 <https://github.com/rails/rails/pull/36428>.
 <https://github.com/rails/rails/pull/32241>
 <br>
+Comments:
+<https://github.com/rails/rails/issues?q=commenter%3Aduleorlovic+>
+<br>
 Issues:
 <https://github.com/hotwired/turbo-rails/issues/180>
 <br>

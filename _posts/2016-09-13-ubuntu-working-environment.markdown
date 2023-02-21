@@ -940,3 +940,33 @@ sudo ~/remove-old-snaps.sh
   devices
 * google drive spreadsheets countcoloredcells
   https://support.google.com/docs/thread/118955201/script-countcoloredcells?hl=en
+
+# Multiseat
+
+https://www.apalrd.net/posts/2022/multiseat_intro/
+https://wiki.gentoo.org/wiki/Multiseat
+https://wiki.archlinux.org/title/xorg_multiseat#top-page
+https://wiki.debian.org/Multi_Seat_Debian_HOWTO
+
+```
+sudo apt install openssh-server
+sudo apt install radentop
+sudo vi /etc/gdm3/custom.conf
+# uncomment WaylandEnable=false to switch to Xorg
+```
+
+Attach
+```
+sudo loginctl list-seats
+sudo loginctl seat-status seat0
+sudo loginctl attach seat1 /dev...
+sudo loginctl list-seats
+```
+* enable remote desktop by going to Settings -> Sharing -> enable Remote Desktop
+  then Enable Legacy VNC Protocol and set the password.
+  Default is to prompt but you can change to password using dconf
+  /org/gnome/desktop/remote-desktop/vnc/auth-method and uncheck Use default
+  value and pick "password"
+  To enable locked users to connect you can use extension
+  https://extensions.gnome.org/extension/4338/allow-locked-remote-desktop/
+  TODO still black screen when I connect from Vnc Viewer from mac

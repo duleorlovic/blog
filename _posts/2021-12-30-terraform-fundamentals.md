@@ -240,6 +240,7 @@ merge(map1, map2) # merge two hashes
 
 # list
 var.mylist[0] # same as element(var.mylist, 0)
+var.mylist[*].arn # splat expression `*` instead of index returns list or arns
 index(mylist, elem) # find index of element in a mylist
 slice(var.mylist, 0, 2)
 
@@ -284,19 +285,128 @@ To output variable which was marked as sensitive you can
 
 Math `${2+3*4}`
 
-Count
+Count object has `.index` attribute and can be used for iterations
 ```
-count.FIELD
-$[count.index]
+resource "aws_iam_user" "example" {
+  count = length(var.mylist)
+  # name = "neo.${count.index}"
+  name = var.mylist[count.index]
+}
 ```
+and resulting resource is actually array of resources so we have to use `[]`
+```
+output "first_user_arn" {
+  value = aws_iam_user.example[0].arn
+}
+output "all_users_arn" {
+  value = aws_iam_user.example[*].arn
+}
+```
+Count can not be used to loop over inline block.
+When you remove from the list, other elements will be moved by one position ie
+lot of resources changes instead of one single resource deletion
+This is not the case with `for_each`
+https://www.terraform.io/language/meta-arguments/for_each
+Usually create variable map with numbers and you can use `each.key` and
+`each.value`
+```
+variable "public_subnet_numbers" {
+  type = map(number)
+  description = "Map of AZ to a number that should be used for public subnet, used in for_each"
+  default = {
+    us-east-1a = 1
+    us-east-1b = 2
+  }
+}
+resource "aws_subnet" "public" {
+  for_each = var.private_subnet_numbers
+  cidr_block = each.value
+}
 
-Conditionals
+output "keys" {
+  value = keys(aws_subnet.public)
+}
+# or in console: keys(aws_subnet.public)
+# [ "us-east-1a", "us-east-1b"...
+output "all_arns" {
+  value = values(aws_subnet.public)[*].arn
+}
 ```
+output of for_each on resource is a map, keys are keys in for_each, values are
+resources.
+Removing one element from map will result in removing one resource (no shifting
+down other resources).
+
+
+Conditionals can be defined in 3 ways, using count paramentar, string directives
+and for_each
+
+```
+# ternary syntax
 count = "${var.env == "prod" ? 2 : 1 }"
 ```
+To conditionally make resource use `count` and star `*` for output
+```
+variable "enable_eip" {
+  description = "If set to true, enable eip"
+  type        = bool
+}
 
-For loops. Return type depends if we wrap with [] or {} (requires `=>` sumbol).
-https://www.terraform.io/language/expressions/for
+resource "aws_eip" "ec2_eip" {
+  # ternary syntax
+  count = var.enable_eip ? 1 : 0
+}
+
+output "ec2_eip_public_ip" {
+  value = aws_eip.ec2_eip.*.public_ip
+  # or
+  value = var.enable_eip ? aws_eip.ec2_eip[0].public_ip : null
+}
+```
+If else can be implemented in a similar way (`count = var.enable_eip ? 0 : 1`)
+When you need to pick the value of one that has been defined you can use
+`one(concat())`
+```
+output "neo_cloudwatch_policy_arn" {
+  value = one(concat(
+    aws_iam_user_policy_attachment.full_access[*].policy_arn,
+    aws_iam_user_policy_attachment.read_only[*].policy_arn
+  ))
+}
+```
+
+String directives can have two forms: for directive (loop) and if directive
+(conditional)
+
+```
+# %{ for <ITEM> in <COLLECTION> }<BODY>%{ endfor }
+output "for_directive" {
+  value = "%{ for name in var.mylist }${name}, %{ endfor }"
+}
+# for_directive = "neo, trinity, morpheus, "
+
+# for directive with index
+# %{ for <INDEX>, <ITEM> in <COLLECTION> }<BODY>%{ endfor }
+output "for_directive_index" {
+  value = "%{ for i, name in var.names }(${i}) ${name}, %{ endfor }"
+}
+# for_directive_index = "(0) neo, (1) trinity, (2) morpheus, "
+```
+`if` string directive for condition to remove last `, ` and put `.`
+```
+output "for_directive_index_if_else_strip" {
+  value = <<EOF
+%{~ for i, name in var.names ~}
+${name}%{ if i < length(var.names) - 1 }, %{ else }.%{ endif }
+%{~ endfor ~}
+EOF
+}
+# for_directive_index_if_else_strip = "neo, trinity, morpheus."
+```
+
+
+For expression (for loops). Return type depends if we wrap with [] or {}
+(requires `=>` sumbol).  https://www.terraform.io/language/expressions/for
 ```
 [for s in ["a", 1]: upper(s)]
 {for k,v in { "a"=1 } : upper(k) => v}
@@ -321,22 +431,6 @@ locals {
   }
 }
 ```
-To conditionally make resource use `count` and star `*` for output
-```
-resource "aws_eip" "ec2_eip" {
-  count = var.create_eip ? 1 : 0
-}
-
-output "ec2_eip_public_ip" {
-  value = aws_eip.ec2_eip.*.public_ip
-  # or
-  value = var.create_eip ? aws_eip.ec2_eip[0].public_ip : null
-}
-```
-for string you can add attribute conditionally
-```
-variable
-```
 
 Nested block does no have equal sign and we can repeat them
 ```
@@ -345,8 +439,10 @@ Nested block does no have equal sign and we can repeat them
   nested_block {
   }
 ```
-For each loop uses `dynamic` and `content` keywords and `.key` and `.value`
-attributes of the variable
+For nested block we can use for_each loop using `dynamic` and `content` keywords
+and `.key` and `.value` attributes of the `nested_block` variable.
+Iteration with for_each uses set or map (list can be converted
+with`for_each = toset(var.mylist)`)
 ```
   dynamic "nested_block" {
     for_each = [22, 443]
@@ -357,34 +453,11 @@ attributes of the variable
     }
   }
 ```
-https://www.terraform.io/language/meta-arguments/for_each
-Usually create variable map with numbers and you can use `each.key` and
-`each.value`
+To create multiple subnets you can use https://www.terraform.io/language/functions/cidrsubnets
+
 ```
-variable "public_subnet_numbers" {
-  type = map(number)
-  description = "Map of AZ to a number that should be used for public subnet, used in for_each"
-  default = {
-    us-east-1a = 1
-    us-east-1b = 2
-  }
-}
-resource "aws_subnet" "public" {
-  for_each = var.private_subnet_numbers
-  # https://www.terraform.io/language/functions/cidrsubnet
   cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 4, each.value)
 
-  tags = merge(local.common_tags, { Name = "${var.env}-${each.value}-public-subnet-${each.key}"})
-}
-
-output "keys" {
-  values = keys(aws_subnet.public)
-}
-# or in console: keys(aws_subnet.public)
-# [ "us-east-1a", "us-east-1b"...
-```
-To create multiple subnets you can use https://www.terraform.io/language/functions/cidrsubnets
-```
 # X.X.xxxx0000.0000
 cirdsubnets("10.1.0.0/16",4)
 # ["10.1.0.0/20"]
@@ -736,7 +809,8 @@ locals {
     Name = "${var.environment}-web-server"
     Environment = var.environment
     ManagedBy = "terraform"
-    SourcePath = "@air:web-tips/terraform-fundamentals/"
+    SourceUrl = "https://github.com/duleorlovic/tf-aws-s3-static-website-bucket"
+    TfstateUrl = "@air:terraform_modules/tf-aws-s3-static-website-bucket/examples/create_static_site/terraform.tfstate"
   }
 
 resource "aws_vpc" "vpc" {
@@ -779,10 +853,16 @@ You can ignore certain changes (for example tags) and create before destroy
   }
 ```
 
+To prevent downtime you can create new resources, apply, remove unused
+resources, and apply again.
+Many resources has immutable parameters so terraform will remove them and create
+another (instead of updating) so try to use `create_before_destroy` strategy.
+
 # Modules
 
 Done https://learn.hashicorp.com/collections/terraform/modules
 Todo https://www.terraform.io/language/modules/develop/composition
+TODO: https://blog.gruntwork.io/how-to-create-reusable-infrastructure-with-terraform-modules-25526d65f73d
 
 You can organize files inside folders (locally) or remote on github.
 To use it you need to define `source`. You can define `version` and other meta
@@ -798,7 +878,7 @@ module "module-example" {
 }
 ```
 Example module has at least three files: main, outputs.tf (variables that other
-modules can use) and variables.tf:
+modules can use) and variables.tf (input variables defined inside `module`):
 ```
 # module-example/variables.tf
 variable "region" {} # the input parameter

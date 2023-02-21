@@ -168,3 +168,12 @@ User.where(
 
     scope :web, -> { where.not("last_seen_user_agent LIKE '%iOS_app%' OR last_seen_user_agent LIKE '%Android_app%'").or(where last_seen_user_agent: nil) }
   ```
+* `users.page(page).size` when applied to ActiveRecord and pagination, it might
+  raise
+  ```
+  PG::UndefinedColumn: ERROR:  column "distance" does not exist
+  LINE 1: ...g" = $3 AND "member_profiles"."id" != $4 ORDER BY distance A...
+  ```
+  but it works if you convert to array `users.page(page).to_a.size` (this
+  exception is raised even when there is a single page, for example one result)
+  Solution to this is using `users = users.distinct`
