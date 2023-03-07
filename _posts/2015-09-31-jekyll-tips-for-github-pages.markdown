@@ -101,12 +101,20 @@ vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.2.175.150
 vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.21.103.149
 ```
 
-Redirection in cloudflare can be configured with Lists
-Manage account -> Configurations -> Lists -> Create new list -> Redirect
+Redirection in cloudflare can be configured with Bulk Redirect Lists than you
+can find on main account page menu as `Bulk Redirects`.
+First click on Create Bulk Redirect List, from `uplate.trk.in.rs/`  to
+`https://docs.google.com/1234`
+and than Create Redirect Rule and choose the list.
+You also need to create a subdomain `uplate` A record `192.0.2.1` Proxied.
+IP address is not important, but keep 192.0.2.1 for simplicity.
 
-uplate.trk.in.rs/  to https://docs.google.com/1234
 
-than go to Bulk redirects and Create Bulk Redirect using this list
+Use bulk redirects also for redirection from root to subdomain https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/manage-subdomains/
+Just add subdomain `@` root, A record with value `192.0.2.1` Proxied.
+Then add Bulk redirection list to redirect from `trk.in.rs` to
+`https://www.trk.in.rs`.
+
 
 # Cloudfront
 

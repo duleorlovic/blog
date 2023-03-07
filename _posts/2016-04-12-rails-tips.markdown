@@ -218,9 +218,24 @@ https://github.com/kbaum/browser-timezone-rails/issues/45#issuecomment-915124466
 
 But if you
 need something from rails console, you need to set timezone manually.
-`Time.zone = 'Belgrade'` (list all in `rake time:zones:all`). It is good to
-always use `Time.zone.now` and `Time.zone.today`. Rails helpres use zone
-(`1.day.from_now`)
+`Time.zone = 'Belgrade'` (list all in `rake time:zones:all`  or
+`ActiveSupport::TimeZone.all`).
+Problem is that the name is different
+```
+Time.zone.to_s # "(GMT+01:00) Europe/Belgrade"
+Time.zone.name  # "Europe/Belgrade"
+
+ActiveSupport::TimeZone.all.map &:to_s # [ ..."(GMT+01:00) Belgrade"
+ActiveSupport::TimeZone.all.map &:name # [ ..."Belgrade"
+
+# so we need to use utc_offset or time_zone.tzinfo.name
+ActiveSupport::TimeZone.all.select { |timezone| timezone.utc_offset == Time.zone.utc_offset }
+ActiveSupport::TimeZone.all.select { |timezone| Time.zone.name.include? timezone.tzinfo.name }.first
+
+# group by utc_offset
+``` 
+It is good to always use `Time.zone.now` and
+`Time.zone.today`. Rails helpres use zone (`1.day.from_now`)
 Change system timezone (which is used by browsers) with `sudo dpkg-reconfigure
 tzdata`. Note that `rails c` uses UTC `Time.zone # => "UTC"`, but byebug in
 rails s returns default time zone `Time.zone # CEST Europe`.
@@ -651,6 +666,7 @@ table 'table' is too long; the limit is 64 characters`) than you can use
 different name in separate add_index command (can not rename in same command).
 NOTE that you need to use exact column name (with `_id`)
 `add_index :users, :company_id, name: 'index company on users'`
+change_index does not exists, we need to remove_index and add_index
 https://github.com/gregnavis/active_record_doctor to help you find columns
 without index
 * In migration Product.save will probably break in the future, because *Product*
@@ -3884,8 +3900,11 @@ RAILS_MASTER_KEY=`cat config/master.key` and you can use inside rails and config
   # config/database.yml
 
   ```
-* when bcrypt is updated you need to update secrets credentials with `rails
-  credentials:edit`
+* when bcrypt is updated you need to update secrets credentials with 
+```
+rails credentials:edit
+```
+When you do not have `config/master.key` or `config/credentials/development.key` error is
 ```
 .rvm/gems/ruby-2.5.3/gems/activesupport-6.0.0.rc1/lib/active_support/message_encryptor.rb:206:in `rescue in _decrypt': ActiveSupport::MessageEncryptor::InvalidMessage (ActiveSupport::MessageEncryptor::InvalidMessage)
 ```
@@ -4360,7 +4379,7 @@ can read for `operator_id && operator_id_was`.
   ```
   <iframe width='100%' height="500px" srcdoc="
     <%= @run.response.gsub '"', "'" %>
-    "></iframe>
+   '></iframe>
   ```
   on w3school we can see the page
   https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_iframe

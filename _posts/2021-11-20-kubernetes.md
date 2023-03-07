@@ -417,10 +417,10 @@ https://helm.sh/docs/chart_template_guide/getting_started/
 Template
 
 It is using sprig library https://helm.sh/docs/howto/charts_tips_and_tricks/
-* `{{/*` and `*/}}` comment
-* `{{- define "labels" -}}` and use with `{{ include "application-1" . |
+* `{ {/*` and `*/}}` comment
+* `{ {- define "labels" -}}` and use with `{ { include "application-1" . |
   nindent 4 }}`
-* `{{- if eq .Values.container1.enabled true -}}` or short `{{- if
+* `{ {- if eq .Values.container1.enabled true -}}` or short `{ {- if
   .Values.container1.enabled -}}` flow control
   https://helm.sh/docs/chart_template_guide/control_structures/
 

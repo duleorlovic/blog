@@ -249,6 +249,12 @@ alternative `string.start_with? /^[a-z]/`
 When using grep, you can enable Per regexp PCRE with `-P` or `--per-regexp`.
 That is needed for negative lookahead.
 When using `-P` than no need to escape.
+`grep -e pattern` is for regexp, but for advances regular expression use
+```
+# find all _url links without email_token param
+grep -P '_url((?!email_token).)*$' app/views/user_mailer/*
+```
+note this is not supported on macOS. For Mac os use `ag`
 
 In bash you need to escape `()|\` (for both single and double quotes).
 In vim you also need to escape again (for both single and double quotes):

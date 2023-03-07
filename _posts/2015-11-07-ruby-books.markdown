@@ -1603,7 +1603,7 @@ end
 
   To run use:
 * convert cast single value and array value to array `Array(1)` and
-  `Array([1])`https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
+  `Array([1])` https://stackoverflow.com/questions/18358717/ruby-elegantly-convert-variable-to-an-array-if-not-an-array-already
 * hash with indifferent access (symbol or string) this is Rails ActiveSupport
   `h = HashWithIndifferentAccess.new a: 2` so you can use `h[:a]` or `h['a']`
 * inserting key value in hash at specific position

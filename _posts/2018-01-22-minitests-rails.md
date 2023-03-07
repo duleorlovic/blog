@@ -525,7 +525,8 @@ For integration we use `ActionDispatch::IntegrationTest` which gives methods:
   assert_select 'a[href=?]', tasks_path
   assert_select 'input[value=?]', username   # substitute username
   assert_select 'input[value*=?]', username   # match when containing username
-  assert_select '[data-test=unread-count]', '123'
+  assert_select '[data-test=unread-count]', count: 123
+  assert_select '[data-test=unread-count]', minimum: 123
 
   # use custom pseudo class `:match(attribute_name, attribute_value)`
   assert_select "ol>li:match('id', ?)", /item-\d+/       # exists li id='item-1'
@@ -616,7 +617,7 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
     # or you can parse `response.body` do it manually
 
     doc = Nokogiri::HTML response.body
-    # you can get all text with doc.text.split.join(' ')
+    # you can get all respone text with doc.text.split.join(' ')
     el = doc.search "#tutorial-#{tutorials(:priced_course_first_free_tutorial).id}"
     assert_match 'Watch this lesson now', el.text
     el = doc.search "#tutorial-#{tutorials(:priced_course_third_tutorial).id}"

@@ -28,6 +28,12 @@ Issues:
 My conference lighting
 talk on Balkan Ruby <https://youtu.be/lpkePkbYeoI?t=882>.
 
+<div>
 <video  width="320" height="240" controls>
   <source src='https://github.com/duleorlovic/big_files/blob/master/balkan_ruby_duleorlovic_2018.mp4?raw=true' type="video/mp4">
 </video>
+<a
+href="https://www.credly.com/badges/3e26fdf1-db92-454f-863b-e822724328c2/public_url">
+<img src="{{ site.baseurl }}/assets/aws-certified-sysops-administrator-associate.png" style="">
+</a>
+</div>
