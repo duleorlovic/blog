@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Vue Js</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Vue Js</h1>
+    <p class="meta">Oct 2, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installation"><span class="tocnumber">1</span> <span class="toctext">Installation</span></a></li><li class="toc_level-1 toc_section-2"><a href="#basic-directive-helpers"><span class="tocnumber">2</span> <span class="toctext">Basic directive helpers</span></a></li><li class="toc_level-1 toc_section-3"><a href="#tips"><span class="tocnumber">3</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-4"><a href="#vue-instance"><span class="tocnumber">4</span> <span class="toctext">Vue instance</span></a></li><li class="toc_level-1 toc_section-5"><a href="#transitions-and-animations"><span class="tocnumber">5</span> <span class="toctext">Transitions and animations</span></a></li><li class="toc_level-1 toc_section-6"><a href="#components"><span class="tocnumber">6</span> <span class="toctext">Components</span></a></li><li class="toc_level-1 toc_section-7"><a href="#vue-cli"><span class="tocnumber">7</span> <span class="toctext">Vue cli</span></a></li><li class="toc_level-1 toc_section-8"><a href="#styleguide"><span class="tocnumber">8</span> <span class="toctext">Styleguide</span></a></li><li class="toc_level-1 toc_section-9"><a href="#scss-style"><span class="tocnumber">9</span> <span class="toctext">SCSS style</span></a></li><li class="toc_level-1 toc_section-10"><a href="#vuex"><span class="tocnumber">10</span> <span class="toctext">Vuex</span></a></li><li class="toc_level-1 toc_section-11"><a href="#axios"><span class="tocnumber">11</span> <span class="toctext">Axios</span></a></li><li class="toc_level-1 toc_section-12"><a href="#router"><span class="tocnumber">12</span> <span class="toctext">Router</span></a></li><li class="toc_level-1 toc_section-13"><a href="#mixins"><span class="tocnumber">13</span> <span class="toctext">Mixins</span></a></li><li class="toc_level-1 toc_section-14"><a href="#bootstrap"><span class="tocnumber">14</span> <span class="toctext">Bootstrap</span></a><ul><li class="toc_level-2 toc_section-15"><a href="#veevalidate"><span class="tocnumber">14.1</span> <span class="toctext">Veevalidate</span></a></li><li class="toc_level-2 toc_section-16"><a href="#vuelidate"><span class="tocnumber">14.2</span> <span class="toctext">Vuelidate</span></a></li></ul></li><li class="toc_level-1 toc_section-17"><a href="#errors"><span class="tocnumber">15</span> <span class="toctext">Errors</span></a></li><li class="toc_level-1 toc_section-18"><a href="#gridsome"><span class="tocnumber">16</span> <span class="toctext">Gridsome</span></a></li><li class="toc_level-1 toc_section-19"><a href="#vuepress"><span class="tocnumber">17</span> <span class="toctext">Vuepress</span></a></li><li class="toc_level-1 toc_section-20"><a href="#nuxtjs"><span class="tocnumber">18</span> <span class="toctext">Nuxt.js</span></a></li><li class="toc_level-1 toc_section-21"><a href="#quasar"><span class="tocnumber">19</span> <span class="toctext">Quasar</span></a></li><li class="toc_level-1 toc_section-22"><a href="#integrating-with-rails"><span class="tocnumber">20</span> <span class="toctext">Integrating with rails</span></a></li><li class="toc_level-1 toc_section-23"><a href="#tutorials"><span class="tocnumber">21</span> <span class="toctext">Tutorials</span></a></li></ul></td></tr></tbody></table></div><h1 id="installation">Installation</h1>
+
+<p>Demo app on https://github.com/duleorlovic/hello_vue
+Integration with rails</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new hello_vue --webpack=vue
+</code></pre></div></div>
+<p>this will add <code class="language-plaintext highlighter-rouge">vue</code>, <code class="language-plaintext highlighter-rouge">vue-loader</code> and <code class="language-plaintext highlighter-rouge">vue-template-compiler</code> to package.json
+and create <code class="language-plaintext highlighter-rouge">app/javascript/packs/vue.js</code> and <code class="language-plaintext highlighter-rouge">app/javascript/app.vue</code> (and
+some conf file <code class="language-plaintext highlighter-rouge">config/webpack/loaders/vue.js</code> and update
+<code class="language-plaintext highlighter-rouge">config/webpack/environment.js</code>).
+Run <code class="language-plaintext highlighter-rouge">bin/webpack-dev-server</code> and <code class="language-plaintext highlighter-rouge">rails s</code> and edit</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/javascript/packs/vue.js
+import Vue from 'vue/dist/vue.esm'
+import App from '../app.vue'
+
+document.addEventListener('DOMContentLoaded', () =&gt; {
+  const app = new Vue({
+    el: '#hello',
+    data: {
+      message: "Can you say hello?"
+    },
+    components: { App }
+  })
+})
+</code></pre></div></div>
+
+<h1 id="basic-directive-helpers">Basic directive helpers</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div id='app'&gt;
+  
+  &lt;input v-model='message'&gt;
+  &lt;ul&gt;
+    &lt;li v-for='item in items' :key='item'&gt;
+      
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>Interpolation:</p>
+<ul>
+  <li>mustaches <code class="language-plaintext highlighter-rouge">{ { message }}</code> can be used only as inner block (not html
+attributes, which need v-bind directive so instead <code class="language-plaintext highlighter-rouge">&lt;img source='{ {}}'&gt;</code> use
+<code class="language-plaintext highlighter-rouge">&lt;img :src='comment.image'&gt;</code>). Use ternary expression instead <code class="language-plaintext highlighter-rouge">if</code> flow. Can
+not use statement like <code class="language-plaintext highlighter-rouge">a=1</code>. When you need to output html than use <code class="language-plaintext highlighter-rouge">&lt;span
+v-html='rawHtml'&gt;&lt;/span&gt;</code> will output without html encoding</li>
+  <li>For attributes you have to use <code class="language-plaintext highlighter-rouge">&lt;div v-bind:id='dynamicId'&gt;&lt;/div&gt;</code>. When
+html atribute is boolean (it’s presence is important, not value) than <code class="language-plaintext highlighter-rouge">true</code>
+value will show it. When value is <code class="language-plaintext highlighter-rouge">false</code>, <code class="language-plaintext highlighter-rouge">null</code>, <code class="language-plaintext highlighter-rouge">undefined</code> it hides that
+attribute for example <code class="language-plaintext highlighter-rouge">&lt;button v-bind:disabled='isButtonDisabled'&gt;B&lt;/button&gt;</code>.
+Shorthand for <code class="language-plaintext highlighter-rouge">v-bind:</code> is <code class="language-plaintext highlighter-rouge">:</code>. To pass all properties from parent to child
+you can use <code class="language-plaintext highlighter-rouge">v-bind='$attrs'</code>.
+Inside data binding you can use any javascript expressions (calling methods
+<code class="language-plaintext highlighter-rouge">message.split('')</code> and calculations <code class="language-plaintext highlighter-rouge">number + 1</code>) but assignment is not
+working (since it is a statement, it can be used on <code class="language-plaintext highlighter-rouge">v-on</code> but not <code class="language-plaintext highlighter-rouge">v-bind</code>),
+control flow <code class="language-plaintext highlighter-rouge">if (true) {}</code> is not available and <code class="language-plaintext highlighter-rouge">this.data</code> is not available
+(this is only available in methods or computed)
+https://vuejs.org/v2/guide/syntax.html#Using-JavaScript-Expressions
+For <code class="language-plaintext highlighter-rouge">class</code> and <code class="language-plaintext highlighter-rouge">style</code> attribute you can also use object or array syntax
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;div :class='{ active: isActive, 'text-danger': hasError }'&gt;&lt;/div&gt;
+  &lt;div :class='[ isActive ? 'active' : '', hasError ? 'text-danger': '' ]'&gt;&lt;/div&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Directives:</p>
+<ul>
+  <li>model <code class="language-plaintext highlighter-rouge">v-model='message'</code> is used for two way binding. <code class="language-plaintext highlighter-rouge">v-bind='message'</code> is
+only one way binding (if used on input element, it will not change <code class="language-plaintext highlighter-rouge">message</code>).
+    <ul>
+      <li>text and textarea use <code class="language-plaintext highlighter-rouge">value</code> property and <code class="language-plaintext highlighter-rouge">input</code> event (use modifier
+<code class="language-plaintext highlighter-rouge">v-model.lazy='msg'</code> if you want to sync after <code class="language-plaintext highlighter-rouge">change</code> event)</li>
+      <li>checkbox and radiobutton use <code class="language-plaintext highlighter-rouge">checked</code> property and <code class="language-plaintext highlighter-rouge">change</code> event</li>
+      <li>select field use <code class="language-plaintext highlighter-rouge">value</code> property and <code class="language-plaintext highlighter-rouge">change</code> event.
+It ignores initial <code class="language-plaintext highlighter-rouge">value</code> attributes, and uses vue instance data. Modifiers:
+<code class="language-plaintext highlighter-rouge">.number</code> typecast to Number, <code class="language-plaintext highlighter-rouge">.trim</code> strip whitespace.
+```</li>
+    </ul>
+    <p></p>
+    <p><input v-model="message" />
+```</p>
+  </li>
+  <li>conditional <code class="language-plaintext highlighter-rouge">v-if='seen'</code> directive to render block. Also supports else that
+immediatelly follows <code class="language-plaintext highlighter-rouge">v-if</code>.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;h1 v-if="awesome"&gt;Vue is awesome!&lt;/h1&gt;
+&lt;h1 v-else&gt;Oh no 😢&lt;/h1&gt;
+</code></pre></div>    </div>
+    <p>You can attach to <code class="language-plaintext highlighter-rouge">&lt;template v-if='ok'</code> to wrap other elements and
+<code class="language-plaintext highlighter-rouge">&lt;template&gt;</code> itself will not be rendered.
+<code class="language-plaintext highlighter-rouge">v-show</code> will always render, but it uses <code class="language-plaintext highlighter-rouge">display: none</code> css property to hide
+(so <code class="language-plaintext highlighter-rouge">v-show</code> has higher initial render cost but no cost for show hide since
+event listeners and child components inside no need to be destroyed/created).
+Use <code class="language-plaintext highlighter-rouge">v-else-if</code> like switch case statement.
+Use <code class="language-plaintext highlighter-rouge">key</code> to distinguish between different elements, if you do not want them
+to share same value. For example, changing loginType will change only
+placeholder, but value will be the same, so we need different <code class="language-plaintext highlighter-rouge">key</code>.</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;template v-if="loginType === 'username'"&gt;
+  &lt;label&gt;Username&lt;/label&gt;
+  &lt;input placeholder="Enter your username" key="username-input"&gt;
+&lt;/template&gt;
+&lt;template v-else&gt;
+  &lt;label&gt;Email&lt;/label&gt;
+  &lt;input placeholder="Enter your email address" key="email-input"&gt;
+&lt;/template&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>loops <code class="language-plaintext highlighter-rouge">v-for='item in items'</code> you need a key (which is uniq) so it keeps
+track of changes between dom and virtual dom. <code class="language-plaintext highlighter-rouge">v-bind:key='item.id'</code> or
+shorthand <code class="language-plaintext highlighter-rouge">:key='item.id'</code>. You can get the index also
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;li v-for='(item, index) in items'&gt;
+  . 
+&lt;/li&gt;
+</code></pre></div>    </div>
+    <p>You can iterate object properties and also index</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;li v-for='(value, name, index) in object'&gt;
+  . : 
+&lt;/li&gt;
+</code></pre></div>    </div>
+    <p>Use <code class="language-plaintext highlighter-rouge">key</code> attribute so updating does not only patch inline el, but completelly
+remove/create <code class="language-plaintext highlighter-rouge">&lt;div v-for="item in items" v-bind:key="item.id"&gt;</code>.
+You can mutate <code class="language-plaintext highlighter-rouge">items</code> array with <code class="language-plaintext highlighter-rouge">push()</code>, <code class="language-plaintext highlighter-rouge">pop()</code>, <code class="language-plaintext highlighter-rouge">sort()</code>… and replace
+with new array with <code class="language-plaintext highlighter-rouge">filter()</code>, <code class="language-plaintext highlighter-rouge">concat()</code> or <code class="language-plaintext highlighter-rouge">slice()</code>.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;span v-once&gt;{ { message }}&lt;/span&gt;</code> will render only once even you change
+data for inside model interpolation <code class="language-plaintext highlighter-rouge">{ { message }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;span v-html='rawHtml'&gt;&lt;/span&gt;</code> will output without html encoding</li>
+  <li>events <code class="language-plaintext highlighter-rouge">v-on:click='shuffle'</code> or shorthand <code class="language-plaintext highlighter-rouge">@click='shuffle'</code>. You can use
+modifiers (start with dot) like <code class="language-plaintext highlighter-rouge">&lt;form v-on:submit.prevent='onSubmit'&gt;</code> which
+call <code class="language-plaintext highlighter-rouge">preventDefault()</code> on triggered event. Other event modifiers are:
+<code class="language-plaintext highlighter-rouge">.stop</code>, <code class="language-plaintext highlighter-rouge">.prevent</code>, <code class="language-plaintext highlighter-rouge">.capture</code>, <code class="language-plaintext highlighter-rouge">.self</code>, <code class="language-plaintext highlighter-rouge">.once</code> and <code class="language-plaintext highlighter-rouge">.passive</code> (do not
+prevent default behavior, usefull for <code class="language-plaintext highlighter-rouge">v-on:scroll.passive='onScroll'</code>).
+Value of <code class="language-plaintext highlighter-rouge">v-on</code> attribute accepts name of a method which is defined under
+<code class="language-plaintext highlighter-rouge">methods: { myMethod: function (event) {} }</code>.
+There is also key modifiers, so it triggers that callback only when specific
+key is used <code class="language-plaintext highlighter-rouge">v-on:keyup.page-down='onPageDown'</code> (<code class="language-plaintext highlighter-rouge">$event.key == 'PageDown'</code>)
+It can also accept js expression <code class="language-plaintext highlighter-rouge">counter += 1</code> but that is not feasible.
+It can also accept inline js statement, method invocation with parameter
+(in this case, if you need event: which is default first parameter, you can
+pass event using special variable <code class="language-plaintext highlighter-rouge">$event</code> like this <code class="language-plaintext highlighter-rouge">say('hi', $event)</code>).
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div id='example-3'&gt;
+  &lt;button v-on:click='say("hi")'&gt;Say hi&lt;/button&gt;
+  &lt;button v-on:click='say("what")'&gt;Say what&lt;/button&gt;
+&lt;/div&gt;
+new Vue({
+  el: '#example-3',
+  methods: {
+    say: function(message) {
+      alert(message)
+    }
+  }
+})
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">is</code> attribute is usefull when you want to rename <code class="language-plaintext highlighter-rouge">&lt;table&gt;&lt;tr
+is='blog-post-component'&gt;</code> or for dynamic component <code class="language-plaintext highlighter-rouge">&lt;component
+v-bind:is='currentTabComponent'&gt;&lt;/component&gt;</code>. Dynamic component is chached so
+not recreated each time you activate it, using <code class="language-plaintext highlighter-rouge">&lt;keep-alive&gt;</code> wrapper.</li>
+  <li>dynamic arguments
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a v-on:[eventName]='doSomething'&gt;
+is equivalent to &lt;a v-on:focus='doSomething'&gt; when eventName=='focus'
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>instead of attaching to <code class="language-plaintext highlighter-rouge">beforeDestoy</code> you can use <code class="language-plaintext highlighter-rouge">$on</code> or <code class="language-plaintext highlighter-rouge">$once</code> (only
+once) to destroy objects, for example
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mounted: function () {
+  this.attachDatepucker('startDateInput')
+},
+methods: {
+  attachDatepucker: function(refName) {
+    var picker = new Pikaday({
+      field: this.$refs[refname],
+      format: 'YYYY-MM-DD'
+    })
+
+    this.$once('hook:beforeDestroy', function () {
+      picker.destroy()
+    })
+  }
+}
+</code></pre></div>    </div>
+  </li>
+  <li>use <code class="language-plaintext highlighter-rouge">&lt;div ref='my-ref'&gt;</code> to reference using <code class="language-plaintext highlighter-rouge">this.$refs['my-ref'].focus()</code>
+(similar as <code class="language-plaintext highlighter-rouge">document.querySelect("[ref='my-ref']").focus()</code> but ref is not
+showed in DOM, vue will use <code class="language-plaintext highlighter-rouge">data-v-123asd</code> attribute). ref does not work
+inside <code class="language-plaintext highlighter-rouge">v-if</code> since that element is not rendered (use <code class="language-plaintext highlighter-rouge">v-show</code> instead, but
+still focusing does not work since it is not visible untill js finishes
+running method… I end up using $nextTick (similar to setTimeout)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    this.$nextTick(() =&gt; {
+      this.$refs['new-title'].focus()
+    })
+
+    // this is similar to old unused way
+    const vm = this
+    setTimeout(function() {
+      vm.$refs['new-title'].focus()
+    }, 0)
+</code></pre></div>    </div>
+  </li>
+  <li>for alert and notice you can use https://github.com/euvl/vue-notification/blob/master/README.md
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add vue-notification
+
+# app/javascript/packs/application.js
+import Notifications from 'vue-notification'
+Vue.use(Notifications)
+
+# app/javascript/app.vue
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;notifications group="alerts" position="top center" /&gt;
+    &lt;router-view&gt;&lt;/router-view&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+# app/javascript/components/sign-in.vue
+this.$notify({
+  group: 'alert',
+  type: 'error',
+  title: 'Error',
+  text: 'Invalid credentials'
+})
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">v-cloak</code> hides any un-compiled data bindings until the Vue instance is ready</li>
+  <li>custom filter <code class="language-plaintext highlighter-rouge">123</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vue.filter('currency', function(value) {
+  return '$' + value.toFixed(2)
+})
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="vue-instance">Vue instance</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var vm = new Vue({
+  el: '#example',
+  mixins:[
+    myMixin
+  ]
+  data: {
+    asd: 1 // you can access data with `vm.asd`
+  },
+  // lifecycle hooks created, mounted, updated, destroyed
+  // `this` points to the vm instance
+  // do not use arrow functions since they do not have `this`
+  created: function() {
+    console.log('asd is: ' + this.asd)
+  },
+  computed: {
+    // getters for computed values are like methods/helpers, but result is
+    // cached as long as dependencies are not changed (message is not updated).
+    // `Date.now()` is not reactive dependency so it will never update
+    reverseMessage: function() {
+      return this.message.split('').reverse().join('')
+    },
+    // computed property can also define a setter `vm.fullName = 'Joe Doe'
+    fullName: {
+      get: function() {
+        return this.firstName + ' ' + this.lastName
+      },
+      set: function(newValue) {
+        var names = newValue.split(' ')
+        this.firstName = names[0]
+        this.lastName = names[names.length - 1]
+      }
+    }
+
+  },
+  methods: {
+    reverseMessageAlwaysCalculated: function() {
+      return this.message.split('').reverse().join('')
+    }
+  },
+  watch: {
+    // It is easier to use computed property than to watch for all changes on
+    // dependent properties for example FullName depends on First and Last name
+    firstName: function(val) {
+      this.fullName = val + ' ' + this.lastName
+    },
+    lastName: function(val) {
+      this.fullName = this.firstName + ' ' + val
+    }
+  }
+
+})
+
+vm.asd // =&gt; 1
+vm.asd = 2 // reactiveness in action will update data.asd == 2
+vm.non_bind = 1 // this was not defined at time of instantiating so no update
+
+// instance properties starts with dollar $, like $data, $el
+vm.$data === data // =&gt; true
+vm.$el === document.getElementById('example') // =&gt; true
+
+// $watch is an instance method
+vm.$watch('a', function (newValue, oldValue) {
+  // This callback will be called when `vm.a` changes
+})
+
+</code></pre></div></div>
+
+<p>Do not use arrow functions since <code class="language-plaintext highlighter-rouge">this</code> will not be bound to view instance.</p>
+
+<h1 id="transitions-and-animations">Transitions and animations</h1>
+
+<p>Vue will sniff whether the target element has CSS transitions or animations
+property and add css classes at appropriate timings. Default name is <code class="language-plaintext highlighter-rouge">v-</code>.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">v-enter</code> added before element is inserted, removed after element is inserted
+and this is very short (one frame). Use this to define starting
+opacity/transform before transition is applied…</li>
+  <li><code class="language-plaintext highlighter-rouge">v-enter-active</code> added before element is inserted, removed when transition
+finishes. Use this to define <code class="language-plaintext highlighter-rouge">transition</code> duration (since <code class="language-plaintext highlighter-rouge">v-enter</code> is removed
+it’s properties will transit slowly to normal state) or define <code class="language-plaintext highlighter-rouge">animation</code> to
+use (no need to use <code class="language-plaintext highlighter-rouge">v-enter</code> since you can define keyframes for whole
+animation).</li>
+  <li><code class="language-plaintext highlighter-rouge">v-enter-to</code> added one frame after element is inserted (when <code class="language-plaintext highlighter-rouge">v-enter</code> is
+removed), removed when trans finishes.
+For leave action, you should use <code class="language-plaintext highlighter-rouge">v-leave-active</code> (or <code class="language-plaintext highlighter-rouge">v-leave-to</code>) to define
+properties for end state.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.v-enter-active, .v-leave-active {
+  transition: all .75s ease;
+}
+.v-enter, .v-leave-active {
+  opacity: 0;
+  transform: translate(30px, 0);
+}
+</code></pre></div></div>
+
+<p>You can use custom class names, for example with Animate.js
+https://vuejs.org/v2/guide/transitions.html#Custom-Transition-Classes</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;transition
+  enter-active-class="animated tada"
+  leave-active-class="animated bounceOutRight"
+&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;transition-group tag='ul name='items'&gt;
+&lt;/transition-group&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.items-move {
+  transition: transform 0.5s ease;
+}
+</code></pre></div></div>
+
+<h1 id="components">Components</h1>
+
+<p>Data must be function not an object (because if we instantiate two components,
+they should be totally separated).
+Pass data to component’s <code class="language-plaintext highlighter-rouge">props</code> that are <em>attributes</em> for components. They
+are passed with <code class="language-plaintext highlighter-rouge">v-bind:name_of_attribute='value_of_attribute'</code>.
+Props can be defined as array of names, or object where key is props name and
+value is object with following attributes <code class="language-plaintext highlighter-rouge">type: String</code> (also Number, Boolean,
+Array, Function, Promise), <code class="language-plaintext highlighter-rouge">required: true</code>, <code class="language-plaintext highlighter-rouge">default: 1</code>, <code class="language-plaintext highlighter-rouge">validator:
+function(value) { return ['draft', 'public'].indexOf(value) !== -1 }</code>.  Props
+are one-way-down binding. Any change in parent will update childs so do not
+manually update props (you can use computed property).
+To send data to parent use <code class="language-plaintext highlighter-rouge">this.$emit('update:name-of-attribute', newValue)</code>
+and parent can listen that event <code class="language-plaintext highlighter-rouge">v-on:update:name-of-attribute'='doc.title =
+$event</code>. Shorthand for this is using modifier <code class="language-plaintext highlighter-rouge">.sync</code> like here <code class="language-plaintext highlighter-rouge">&lt;text-document
+v-bind:title.sync='doc.title'&gt;&lt;/text-document&gt;</code>.</p>
+
+<p>In single file vue</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script&gt;
+import MyComponent from 'components/my-component.vue'
+export default {
+  components: {MyComponent}
+}
+
+</code></pre></div></div>
+
+<p>Or in global javascript. You can import component and attach using</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import AppComponent from 'app-component'
+Vue.component('app-component', AppComponent)
+
+# use with &lt;app-component&gt;&lt;/app-component&gt;
+</code></pre></div></div>
+
+<p>or you can define template in <code class="language-plaintext highlighter-rouge">text/x-template</code> script tag.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vue.component('app-component', {
+  template: '#componentTemplate',
+  data: function() {
+    return {
+      count: 0
+    }
+  },
+  props: ['comment']
+})
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ul&gt;
+  &lt;li is='app-component' v-for='comment in comments' :key='comment'
+:comment='comment'&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type='text/x-template' id='componentTemplate'&gt;
+  &lt;li&gt;
+    
+  &lt;/li&gt;
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Defining html markup for component can be using <em>script type=’text/x-template’</em>
+(as in above example), using inline html <code class="language-plaintext highlighter-rouge">template: '&lt;div...'</code> or single file
+.vue components (this requires preprocessors like webpack).
+Single file vue component https://vuejs.org/v2/guide/single-file-components.html
+enable us to use <code class="language-plaintext highlighter-rouge">&lt;style lang='stylus' scoped&gt;</code> styles, <code class="language-plaintext highlighter-rouge">&lt;template
+lang="jade"&gt;</code>.</p>
+
+<p>Listening to child component events is vith <code class="language-plaintext highlighter-rouge">v-on='name-of-event'</code> and child
+should <code class="language-plaintext highlighter-rouge">$emit('name-of-event')</code> (always use kebab-case because html is case
+insensitive so myEvent becomes myevent). Passing variable is catched using
+<code class="language-plaintext highlighter-rouge">$event</code> or in case of function, it is first parameter.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;blog-post
+  v-on:enlarge-text="postFontSize += $event
+  v-on:enlarge-text="onEnlargeText"
+&gt;&lt;/blog-post&gt;
+
+methods: {
+  onEnlargeText: function (enlargeAmount) {
+    this.postFontSize += enlargeAmount
+  }
+}
+
+&lt;button v-on:click="$emit('enlarge-text', 0.1)"&gt;
+  Enlarge text
+&lt;/button&gt;
+</code></pre></div></div>
+
+<p>When parent is using v-model</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;enlarge-text v-model='count'&gt;&lt;/enlarge-text&gt;
+</code></pre></div></div>
+<p>this is equivalent <code class="language-plaintext highlighter-rouge">v-bind:value='count'</code> and <code class="language-plaintext highlighter-rouge">v-on:input='count = $event'</code>
+than in component you can use <strong>value</strong> prop and you should emit <strong>input</strong> event</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;template&gt;
+  &lt;div&gt;
+    My Component
+    &lt;input
+      v-on:input="$emit('input', $event.target.value)"
+      v-bind:value='value'
+    &gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  props: ['value']
+}
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Any other (non props) attribute is passed directly to the root element of the
+component.</p>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">&lt;slot&gt;&lt;/slot&gt;</code> to get inner html <code class="language-plaintext highlighter-rouge">&lt;my-component&gt;inner
+html &lt;/my-component&gt;</code>. Note that `` is compiled in
+parent scope.
+To pass to the specific slot you use <code class="language-plaintext highlighter-rouge">&lt;template v-slot:name-of-slot&gt;</code>. Note
+that it is like <code class="language-plaintext highlighter-rouge">v-bind:</code> (using colon argument <code class="language-plaintext highlighter-rouge">:</code> not the value of attribute).
+Attributes <code class="language-plaintext highlighter-rouge">slot</code> and <code class="language-plaintext highlighter-rouge">slot-scope</code> are deprecated.
+You can define <code class="language-plaintext highlighter-rouge">&lt;template v-slot:default&gt;...</code> and for each named slot. In case
+there is only default template, you can merge attributees to parent so we have
+<code class="language-plaintext highlighter-rouge">&lt;current-user v-slot&gt;This will populate default &lt;slot&gt;&lt;/slot&gt;&lt;/current-user&gt;</code></p>
+
+<p>So defining is using <code class="language-plaintext highlighter-rouge">&lt;slot name='my-name'&gt;</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># base-layout.vue
+&lt;div class="container"&gt;
+  &lt;header&gt;
+    &lt;slot name="header"&gt;&lt;/slot&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;slot&gt;&lt;/slot&gt;
+  &lt;/main&gt;
+  &lt;slot name='footer' v-bind:user='user'&gt;default &lt;/slot&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>to populate named slot you can use <code class="language-plaintext highlighter-rouge">&lt;template v-slot:my-name&gt;</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># index.vue
+&lt;base-layout&gt;
+  &lt;template v-slot:header&gt;
+    &lt;h1&gt;Here might be a page title&lt;/h1&gt;
+  &lt;/template&gt;
+
+  &lt;p&gt;A paragraph for the main content.&lt;/p&gt;
+  &lt;p&gt;And another one.&lt;/p&gt;
+
+  &lt;template v-slot:footer='slotProps'&gt;I'm footer &lt;/footer&gt;
+&lt;/base-layout&gt;
+</code></pre></div></div>
+
+<p>To make <code class="language-plaintext highlighter-rouge">user</code> available to the slot in the parent, we can create <strong>slot props</strong>
+with <code class="language-plaintext highlighter-rouge">&lt;slot v-bind:nameForParent='nameInChildComponent'&gt;</code>. In parent scope, you
+can access to child data inside slot by defining name <code class="language-plaintext highlighter-rouge">v-slot='slotProps'</code> like:
+<code class="language-plaintext highlighter-rouge">&lt;template v-slot:footer='slotProps'&gt;&lt;/template&gt;</code>.
+You can use ES6 destructuring <code class="language-plaintext highlighter-rouge">&lt;template v-slot='{ user }'&gt;</code>.</p>
+
+<h1 id="vue-cli">Vue cli</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># yarn will install old ~2 version
+# yarn global add @vue/cli
+npm install -g @vue/cli
+
+vue create my-project
+</code></pre></div></div>
+
+<p>Running server</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn serve # which is actually `vue-cli-service serve`
+</code></pre></div></div>
+
+<h1 id="styleguide">Styleguide</h1>
+
+<p>Install eslint and create configuration <code class="language-plaintext highlighter-rouge">.eslintrc.js</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add eslint --dev
+npx eslint --init
+</code></pre></div></div>
+<p>TODO: https://docs.gitlab.com/ee/development/fe_guide/style/vue.html
+In components use following order: <code class="language-plaintext highlighter-rouge">&lt;template&gt;</code> than <code class="language-plaintext highlighter-rouge">&lt;script&gt;</code> than <code class="language-plaintext highlighter-rouge">&lt;style&gt;</code></p>
+
+<ul>
+  <li>component name should be multi-word</li>
+  <li>always use <code class="language-plaintext highlighter-rouge">:key='item.id'</code> with <code class="language-plaintext highlighter-rouge">v-for</code>. avoid using <code class="language-plaintext highlighter-rouge">v-if</code> on the same
+element as <code class="language-plaintext highlighter-rouge">v-for</code> (if not aplicable to single item then move to parent,
+otherwise use computed property to filter the list instead of using <code class="language-plaintext highlighter-rouge">v-if</code>)</li>
+  <li>user defined private properties should start with <code class="language-plaintext highlighter-rouge">$_</code> and include component
+name like <code class="language-plaintext highlighter-rouge">methods: { $_myComponent_update: function() {} }</code>. Or you can
+define function outside of main params
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function myPrivateFunction() {
+}
+export default {
+  methods: {
+    publicMethod: {
+      myPrivateFunction()
+    }
+  }
+}
+</code></pre></div>    </div>
+  </li>
+  <li>single file components should be PascalCase.vue (kebab-case is only used when
+referencing in DOM). Use <code class="language-plaintext highlighter-rouge">Base</code> or <code class="language-plaintext highlighter-rouge">App</code> prefix for presentational components
+(they only contain html elements or other base components, no code).
+Alphabetically sorted will first list base components. <code class="language-plaintext highlighter-rouge">The</code> prefix is for
+single instance components (they never accepts props). Subcomponents should
+retain name <code class="language-plaintext highlighter-rouge">TodoListItem</code>.</li>
+  <li>self closing components <code class="language-plaintext highlighter-rouge">&lt;MyComponent/&gt;</code></li>
+  <li>prop name case should be camelCase during declaration, but kebab-case in
+templates
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>props: {
+  greetingText: String
+}
+
+&lt;WelcomeMessage greeting-text="hi"/&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>more than one property should be in separate lines
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;MyComponent
+  foo='a'
+  bar='b'
+/&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>do not use directive shorthands <code class="language-plaintext highlighter-rouge">:</code> for <code class="language-plaintext highlighter-rouge">v-bind:</code>, <code class="language-plaintext highlighter-rouge">@</code> for <code class="language-plaintext highlighter-rouge">v-on:</code> and <code class="language-plaintext highlighter-rouge">#</code> for
+<code class="language-plaintext highlighter-rouge">v-slot</code>.</li>
+  <li>component options order
+https://vuejs.org/v2/style-guide/#Component-instance-options-order-recommended
+    <ul>
+      <li>el - Side Effects, triggers effects outside the component</li>
+      <li>name, parent - Global Awareness, requires knowledge beyond the component</li>
+      <li>functional - Component Type, changes the type of component</li>
+      <li>delimiters, comments - Template Modifiers, changes the way templates are
+compiled</li>
+      <li>components, directives, filters - Template Dependencies, assets used in
+template</li>
+      <li>extends, mixins - Composition, merges properties into the options</li>
+      <li>inheritAttrs, model, props/propsData - Interface</li>
+      <li>data, (validations from vuelidate), computed - Local State, local reactive
+properties</li>
+      <li>watch, beforeCreate, created, beforeMount, mounted, beforeUpdate, updated,
+activated, deactivated, beforeDestroy, destroyed - Events, callbacks
+triggered by reactive events</li>
+      <li>methods - Non-Reactive Properties, instance properties independent of the
+reactivity system</li>
+      <li>template/render, renderError - Rendering, declarative description of the
+component output</li>
+    </ul>
+  </li>
+  <li>element attribute order:
+    <ul>
+      <li>is - Definition, provides the component options</li>
+      <li>v-for - List Rendering, creates multiple variations of the same element</li>
+      <li>v-if, v-else-if, v-else, v-show, v-cloak - Conditionals, whether the element
+is rendered</li>
+      <li>v-pre, v-once - Render Modifiers, changes the way the element renders</li>
+      <li>id - Global Awareness, requires kknowledge beyod component</li>
+      <li>ref, key - Unique Attributes, attributes that require unique values</li>
+      <li>v-model - Two Way Binding, compbining binding and events</li>
+      <li>v-on - Events, component event listeners</li>
+      <li>v-html, v-text - Content, overrides the content of the element</li>
+    </ul>
+  </li>
+  <li>in scoped styles, use class instead element selectors because of speed</li>
+</ul>
+
+<h1 id="scss-style">SCSS style</h1>
+
+<p>Use <code class="language-plaintext highlighter-rouge">scoped</code> attribute which will write all component css using data selector
+<code class="language-plaintext highlighter-rouge">p[data-v-123] { }</code> so it not affect other components.</p>
+
+<p>Use css module (not sure how)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;template&gt;
+  &lt;button :class="[$style.button, $style.buttonClose]"&gt;X&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;!-- Using CSS modules --&gt;
+&lt;style module&gt;
+.button {
+  border: none;
+  border-radius: 2px;
+}
+
+.buttonClose {
+  background-color: red;
+}
+&lt;/style&gt;
+</code></pre></div></div>
+
+<p>To include sass from other modules</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;style lang="sass"&gt;
+  @import 'typeface-roboto/index.css'
+&lt;/style&gt;
+</code></pre></div></div>
+
+<p>If you include .css it gives error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failed to compile.
+
+./app/javascript/components/ListAcquisition.vue?vue&amp;type=style&amp;index=0&amp;lang=sass&amp; (./node_modules/css-loader/dist/cjs.js??ref--4-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--4-2!./node_modules/resolve-url-loader!./node_modules/sass-loader/lib/loader.js??ref--4-4!./node_modules/vue-loader/lib??vue-loader-options!./app/javascript/components/ListAcquisition.vue?vue&amp;type=style&amp;index=0&amp;lang=sass&amp;)
+Module not found: Error: Can't resolve './files/roboto-latin-100.woff' in '/home/orlovic/rails/action/app/javascript/components'
+</code></pre></div></div>
+<p>so we need to add resolve-url-loader, but since this is .css it won’t help (it
+must be .scss to be processed with sass and resolve-url-loader).
+https://github.com/KyleAMathews/typefaces/issues/79</p>
+
+<h1 id="vuex">Vuex</h1>
+
+<p>Using props and events works only for parent child relation, not for siblings,
+so better is to use one common store using vuex.
+https://docs.gitlab.com/ee/development/fe_guide/vue.html#testing-vuex
+When a user clicks on an action, we need to <strong>dispatch</strong> it. This action will
+<strong>commit</strong> a <strong>mutation</strong> that will change the <strong>state</strong>. Note: The action
+itself will not update the state, only a mutation should update the state.</p>
+
+<p>Inside components you can access store using <code class="language-plaintext highlighter-rouge">this.$store</code> attribute. Even
+better is using <code class="language-plaintext highlighter-rouge">mapState</code> which enables you to define arrow functions or create
+properties by listing the names so use <code class="language-plaintext highlighter-rouge">count</code> instead of
+<code class="language-plaintext highlighter-rouge">this.$store.state.count</code>. Similarly <code class="language-plaintext highlighter-rouge">mapGetters</code> is used for getters,
+<code class="language-plaintext highlighter-rouge">mapMutations</code> for <code class="language-plaintext highlighter-rouge">.commit</code> and <code class="language-plaintext highlighter-rouge">mapActions</code> for <code class="language-plaintext highlighter-rouge">.dispatch</code> (they requries
+root <code class="language-plaintext highlighter-rouge">store: store</code> injection).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+
+const store = new Vuex.Store({
+  state: {
+    count: 0,
+    todos: [
+      { id: 1, text: 'first', done: true },
+      { id: 2, text: 'second', done: false }
+    ],
+  },
+  getters: {
+    doneTodos: state =&gt; {
+      return state.todos.filter(todo =&gt; todo.done)
+    },
+    doneTodosCount: (state, getters) =&gt; {
+      return getters.doneTodos.length
+    },
+    getTodoById: (state) =&gt; (id) =&gt; {
+      return state.todos.find(todo =&gt; todo.id === id)
+    }
+  }
+  mutations: {
+    // call with store.commit('INCREMENT', { amount: 10 })
+    INCREMENT (state, payload) {
+      state.count += payload.amount
+    }
+  },
+  actions: {
+    // invoke with store.dispatch('incrementAsync')
+    //
+    // context.commit context.state context.getters
+    incrementAsync (context) {
+      setTimeout(function() {
+        context.commit('INCREMENT')
+      }, 1000)
+    },
+    // instead of actionA (context) we can use argument destructuring
+    actionA ({ commit }) {
+      return new Promise((resolve) =&gt; {
+        setTimeout(() =&gt; {
+          commit('INCREMENT')
+          resolve({data: {email: 'my@email.com'}})
+        }, 1000)
+      })
+    },
+    actionB ({ dispatch, commit }) {
+      dispatch('actionA').then(() =&gt; {
+        commit('INCREMENT')
+      })
+    }
+
+
+    // assuming `getData()` and `getOtherData()` return Promises
+    async actionA ({ commit }) {
+      commit('gotData', await getData())
+    },
+    async actionB ({ dispatch, commit }) {
+      await dispatch('actionA') // wait to finish
+      commit('gotOtherData', await getOtherData())
+    }
+  }
+})
+const app = new Vue({
+  el: '#hello',
+  store: store,
+  // instead of using full store.state.count you can use mapState
+  // computed: {
+  //   count () {
+  //     return store.state.count
+  //   }
+  // }
+  computed: mapState({
+    count: state =&gt; state.count,
+    countAlias: 'count',
+  })
+  computed: {
+    // mix the getters into computed with object spread operator
+    ...mapState(['count']),
+    ...mapGetters([
+      'doneTodosCount',
+      'getTodoById'
+    ]),
+  },
+  methods: {
+    ...mapMutations(['INCREMENT']),
+    ...mapActions(['incrementAsync', 'actionB'])
+  }
+})
+</code></pre></div></div>
+<p>Getters are computed properties for stores, they accept parameters <code class="language-plaintext highlighter-rouge">state</code>,
+<code class="language-plaintext highlighter-rouge">getters</code> (<code class="language-plaintext highlighter-rouge">this</code> is not usefull to access other getters, so we need to use
+second parameter <code class="language-plaintext highlighter-rouge">getters</code>).
+Mutations are similar to events. <em>event registration</em> is using name ie <strong>type</strong>
+and <strong>handler</strong> function that receive <code class="language-plaintext highlighter-rouge">state</code> param. Second parameter can be
+<strong>payload</strong> (used as argument when commiting a mutation). Since state is
+reactive, when we mutate the state, components observing the state will update
+automatically. Mutation are synchronous transactions, to handle asynchronous,
+use Actions (which use Mutations).
+Actions are called with <code class="language-plaintext highlighter-rouge">.dispatch</code> and also accepts payload and all params can
+be one object <code class="language-plaintext highlighter-rouge">store.dispatch(type: 'increment', amout: 10)</code></p>
+
+<p>Modules contains its own state, mutations, actions…</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const store = new Vuex.Store({
+  modules: {
+    a: moduleA,
+    b: moduleB
+  },
+  state: {
+    count: 2
+  },
+  mutation: {
+    increment
+  }
+})
+
+// use like
+store.state.count
+store.state.a.count
+store.state.b.count
+
+// if `namespaces: true` than mutations, getters and actions are not global and
+// we need to use path (for getters use square brackets)
+store.commit('a/increment')
+store.dispatch('b/increment')
+store.getters['b/count']
+
+// for getters use additional argument rootState, rootGetters
+  getters: {
+    someGetter (state, getters, rootState, rootGetters) {}
+  }
+// for actions use rootGetters
+  actions: {
+    someAction({ dispatch, commit, getters, rootGetters }) {
+      getters.someGetter
+      rootGetters.someGetter
+
+      dispatch('someOtherAction')
+      dispatch('someOtherAction', null, { root: true })
+
+      commit('someMutation')
+      commit('someMutation', null, { root: true })
+    }
+  }
+
+  // in components when `namespace: true` you need to provide path to module
+  methods: mapActions('some/module/path', [
+    foo
+  ])
+</code></pre></div></div>
+<p>Use strict mode to raise error when you change state without mutation</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  const store = new Vuex.Store({
+    // use strict mode to raise error when you change state without mutation
+    strict: process.env.NODE_ENV !== 'production',
+    actions: {
+      changeCountWithoutMutation ({ state }) {
+        state.count += 1
+      }
+    }
+  })
+
+  "Error: [vuex] do not mutate vuex store state outside mutation handlers."
+</code></pre></div></div>
+<p>Handle form inputs with two-way computed property (with getter and setter)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// in template
+      &lt;input v-model='vuexData'&gt;
+
+// in store
+    mutations: {
+      updateVuexData (state, value) {
+        state.vuexData = value
+      }
+    },
+
+// in component
+  computed: {
+    vuexData: {
+      get () {
+        return this.$store.state.vuexData
+      },
+      set (value) {
+        this.$store.commit('updateVuexData', value)
+      }
+    }
+  },
+</code></pre></div></div>
+
+<p>Note that you should define all state properties upfront so Vuex can observe and
+update dependent components automatically. If you want to add new properties,
+instead of <code class="language-plaintext highlighter-rouge">obj.newProp = 123</code> you should either:</p>
+<ul>
+  <li>use <code class="language-plaintext highlighter-rouge">Vue.set(obj, 'newProp', 123)</code></li>
+  <li>use spread <code class="language-plaintext highlighter-rouge">state.obj = { ...state.obj, newProp: 123 }</code></li>
+</ul>
+
+<p>Testing vuex
+https://vuex.vuejs.org/guide/testing.html
+https://scrimba.com/p/pnyzgAP/cPGkpJhq</p>
+
+<h1 id="axios">Axios</h1>
+
+<p>To work with rails you need to use cookie with <code class="language-plaintext highlighter-rouge">form_authenticity_token</code> and
+respond to <code class="language-plaintext highlighter-rouge">:json</code>
+https://github.com/duleorlovic/hello_vue/commit/7dc7154a80d1ef2e7bff1aa516c1dc23de236d87</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+class ApplicationController &lt; ActionController::Base
+  before_action :_set_csrf_cookie
+
+  respond_to :html, :json
+
+  def _set_csrf_cookie
+    cookies['CSRF-TOKEN'] = form_authenticity_token
+  end
+end
+
+# config/routes.rb
+  scope :api, defaults: {format: :json} do
+    devise_scope :user do
+      post 'signup', to: 'devise/registrations#create'
+      post 'login', to: 'devise/sessions#create'
+      delete 'logout', to: 'devise/sessions#destroy'
+    end
+  end
+
+# app/javascript/api.js
+
+import axios from 'axios'
+
+axios.defaults.xsrfCookieName = "CSRF-TOKEN";
+axios.defaults.xsrfHeaderName = "X-CSRF-TOKEN";
+axios.defaults.withCredentials = true;
+
+const BASE_PATH = '/api';
+
+export default {
+  // Auth
+  getUser() {
+    return axios.get(`${BASE_PATH}/user`)
+  },
+  login(payload) {
+    return axios.post(`${BASE_PATH}/login`, payload)
+  },
+}
+</code></pre></div></div>
+
+<h1 id="router">Router</h1>
+
+<p>https://router.vuejs.org/</p>
+
+<p>Adding with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add vue-router
+
+# app/javascript/packs/hello_vue.js
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+const routes = [
+  { path: '/foo', component: { template: '&lt;div&gt;foo&lt;/div&gt;' } },
+  { path: '/bar', component: { template: '&lt;bar&gt;bar&lt;/div&gt;' } }
+]
+const router = new VueRouter({
+  routes
+})
+
+const app = new Vue({
+  el: '#hello',
+  router
+})
+
+# app/views/pages/home.html.erb
+  &lt;p&gt;
+    &lt;router-link to='/foo'&gt;Go to foo&lt;/router-link&gt;
+    &lt;router-link to='/bar'&gt;Go to bar&lt;/router-link&gt;
+  &lt;/p&gt;
+  &lt;router-view&gt;&lt;/router-view&gt;
+</code></pre></div></div>
+
+<p>By injecting <code class="language-plaintext highlighter-rouge">router</code> you can access <code class="language-plaintext highlighter-rouge">this.$router</code> inside any component.
+For current active <a href="https://router.vuejs.org/api/#the-route-object">$route</a>
+object you have access to:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">$route.path</code>, <code class="language-plaintext highlighter-rouge">$route.query</code> and <code class="language-plaintext highlighter-rouge">$route.hash</code> /path?query=123#hash</li>
+  <li><code class="language-plaintext highlighter-rouge">$route.params</code> for dynamic route <code class="language-plaintext highlighter-rouge">/users/:id</code>, since <code class="language-plaintext highlighter-rouge">$route</code> is the same
+(renders same component) lifecycle hooks of the components will not be called
+(for that hooks you need to <code class="language-plaintext highlighter-rouge">watch: { $router(to, from) { } }</code>). You can use
+<code class="language-plaintext highlighter-rouge">{ path: '/user/:id', component: User, props: true }</code> and <code class="language-plaintext highlighter-rouge">props: ['id']</code>
+inside User component, so you can use <code class="language-plaintext highlighter-rouge">{ { id }}</code> instead of <code class="language-plaintext highlighter-rouge">{ {
+this.$route.params.id }}</code></li>
+</ul>
+
+<p>Match everything with <code class="language-plaintext highlighter-rouge">path: '*'</code>, match partial <code class="language-plaintext highlighter-rouge">path: 'user-*'</code>.</p>
+
+<p>Manually go to specific route with <code class="language-plaintext highlighter-rouge">this.$router.push('/user-admin')</code> location
+can be an object <code class="language-plaintext highlighter-rouge">$router.push({ path: '/user-admin', query: { plan: 'id' }})</code>.
+Note that when you use <code class="language-plaintext highlighter-rouge">path: '/user/${userId}''</code> than <code class="language-plaintext highlighter-rouge">params: { userId }</code> is
+ignored. If you want to use params than you need to use name <code class="language-plaintext highlighter-rouge">name: 'user',
+params: { userId }</code>.
+Changing path without new history entry is with <code class="language-plaintext highlighter-rouge">$router.replace(location)</code>.
+Going up/down in history <code class="language-plaintext highlighter-rouge">$router.go(-1)</code> (as as <code class="language-plaintext highlighter-rouge">history.back()</code>)
+Use <code class="language-plaintext highlighter-rouge">mode: 'history',</code> to see real path change <code class="language-plaintext highlighter-rouge">path/user-admin</code> instead of hash
+<code class="language-plaintext highlighter-rouge">path/#/user-admin</code>. For Rails you need to render same vue page for example
+<code class="language-plaintext highlighter-rouge">get '*path', to: 'pages#home'</code> in routes.</p>
+
+<p>Named views can be used to render components on two places for one specific path</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;router-view name='default'&gt;&lt;/router-view&gt;
+&lt;router-view name='a'&gt;&lt;/router-view&gt;
+&lt;router-view name='b'&gt;&lt;/router-view&gt;
+
+const router = new VueRouter({
+  routes: [
+    { path: '/',
+      components: {
+        default: ComponentDefault,
+        a: ComponentA,
+        b: ComponentB
+      }
+    }
+  ]
+})
+</code></pre></div></div>
+
+<p>Meta attribute <code class="language-plaintext highlighter-rouge">{ path: 'bar', meta: { requiresAuth: true }</code> and check for that</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>router.beforeEach((to, from, next) =&gt; {
+  if (to.matched.some(record =&gt; record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!auth.loggedIn()) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // make sure to always call next()!
+  }
+})
+</code></pre></div></div>
+
+<p>Nested routes https://router.vuejs.org/guide/essentials/nested-routes.html
+Use <code class="language-plaintext highlighter-rouge">children</code> in router definition and template should have it’s own
+<code class="language-plaintext highlighter-rouge">&lt;router-view&gt;&lt;/router-view&gt;</code>.</p>
+
+<p>Data fetching https://router.vuejs.org/guide/advanced/data-fetching.html could
+be before or after route change (this is easier since we can show loading and
+fetch data in <code class="language-plaintext highlighter-rouge">created</code> hook, no need to think how to load data for each next
+route).</p>
+
+<h1 id="mixins">Mixins</h1>
+
+<p>You can share specific properties in mixins.
+Hook functions</p>
+
+<p>Import can be absolute (relative path will prevent easy moving files around) but
+there could be package with same name, so better is to put them inside folder.</p>
+
+<p>Plugins are similar
+Here is example of console log as mixin, plugin or global.
+https://stackoverflow.com/questions/45547089/how-to-bind-console-log-to-l-in-vue-js</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/javascript/plugins/log.js
+export default {
+  // use inside components like: this.$log('hi')
+  install (Vue, options) {
+    Vue.prototype.$log = process.env.NODE_ENV === 'production' ? function() {} : console.log.bind(console)
+  }
+}
+
+// app/javascript/packs/application.js
+import log from '../plugins/log'
+
+Vue.use(log)
+</code></pre></div></div>
+
+<h1 id="bootstrap">Bootstrap</h1>
+
+<p>https://bootstrap-vue.org/docs#using-module-bundlers
+Adding bootstrap and bootstrap-vue will <code class="language-plaintext highlighter-rouge">import 'vue'</code> not vue.esm as we do in
+rails so we need to set up alias
+https://github.com/vuetifyjs/vuetify/discussions/4068#discussioncomment-24987</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add bootstrap-vue bootstrap
+
+# config/webpack/environment.js
+environment.config.resolve.alias = { 'vue$': 'vue/dist/vue.esm.js' };
+
+# app/javascript/packs/hello_vue.js
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+Vue.use(BootstrapVue)
+Vue.use(IconsPlugin)
+
+# app/javascript/stylesheet/application.scss
+@import '~bootstrap';
+@import '~bootstrap-vue';
+</code></pre></div></div>
+<p>Validation can be implemented with Veevalidate
+https://bootstrap-vue.org/docs/reference/validation</p>
+
+<h2 id="veevalidate">Veevalidate</h2>
+
+<p><code class="language-plaintext highlighter-rouge">yarn add vee-validate</code> and use in component so that it wraps input with
+<code class="language-plaintext highlighter-rouge">v-model</code> or <code class="language-plaintext highlighter-rouge">:value</code> binding.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/javascript/components/my-component.vuue
+
+
+&lt;script&gt;
+import { ValidationProvider } from 'vee-validate'
+export default {
+  components: {
+    ValidationProvider,
+  },
+&lt;/script&gt;
+</code></pre></div></div>
+
+<h2 id="vuelidate">Vuelidate</h2>
+
+<p>https://github.com/vuelidate/vuelidate/
+You can install in whole Vue app</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/javascript/packs/hello_vue.js
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
+</code></pre></div></div>
+
+<p>or for specific component (as in example)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import { validationMixin } from 'vuelidate'
+
+export default {
+  mixins: [validationMixin],
+  validations: { ... }
+}
+</code></pre></div></div>
+<p>Define <code class="language-plaintext highlighter-rouge">validations</code> property after <code class="language-plaintext highlighter-rouge">data</code> property for each data item.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/javascript/components/sign-up.vue
+import { required, minLength } from 'vuelidate/lib/validators'
+export default {
+  data () {
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  validations: {
+    email: {
+      required,
+    },
+    password: {
+      minLength: minLength(6)
+    }
+  },
+  methods: {
+    validateState(name) {
+      const { $dirty, $error } = this.$v[name];
+      return $dirty ? !$error : null;
+    },
+    onSubmit() {
+      this.$v.$touch();
+      if (this.$v.$anyError) {
+        return;
+      }
+      alert("Form submitted!");
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>In template you can use <code class="language-plaintext highlighter-rouge">&lt;b-form-input&gt;</code> with model <code class="language-plaintext highlighter-rouge">$v.email.$model</code> and
+<code class="language-plaintext highlighter-rouge">:state</code> prop on it to bind to true/false whether error exists. Also use
+<code class="language-plaintext highlighter-rouge">&lt;b-form-invalid-feedback&gt;</code> adjacent to <code class="language-plaintext highlighter-rouge">&lt;b-form-input&gt;</code> and it will be shown if
+there is a <code class="language-plaintext highlighter-rouge">.is-invalid</code> class on adjacent input.
+https://bootstrap-vue.org/docs/components/form#feedback-helpers
+For checkbox use <code class="language-plaintext highlighter-rouge">state='false'</code> to add <code class="language-plaintext highlighter-rouge">.d-block</code> class so it is visible.
+<code class="language-plaintext highlighter-rouge">&lt;b-form-invalid-feedback :state='validateState("accept")'&gt;You need to accept in
+order to proceed</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;b-form @submit.prevent="onSubmit"&gt;
+    &lt;b-form-input
+      v-model.trim='$v.email.$model'
+      :state='validateState("email")'
+      &gt;
+    &lt;/b-form-input&gt;
+    &lt;b-form-invalid-feedback id='email-feedback'&gt;Field is required&lt;/b-form-invalid-feedback&gt;
+  &lt;/b-form&gt;
+</code></pre></div></div>
+
+<p>but you can use vuelidate without bootstrap-vue, just check for
+<code class="language-plaintext highlighter-rouge">$v.password.minLength</code> or other validations.
+https://vuelidate.js.org/#sub-basic-form</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;div class="error" v-if="!$v.email.required"&gt;Field is required&lt;/div&gt;
+</code></pre></div></div>
+
+<p>You can create addition api to prevent server errors using async validation
+https://vuelidate.js.org/#sub-asynchronous-validation
+For error messages you can use
+https://github.com/dobromir-hristov/vuelidate-error-extractor
+Also server errors https://github.com/vuelidate/vuelidate/issues/124
+https://github.com/vuelidate/vuelidate/issues/277 can be inserted like in
+https://jsfiddle.net/doginthehat/LoLbfsoe/ and for both client and server side
+error this is my example https://jsfiddle.net/duleorlovic/0tdpu32a/16/</p>
+
+<h1 id="errors">Errors</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Vue warn]: You may have an infinite update loop in a component render function.
+</code></pre></div></div>
+<p>This occurs when you iterate <code class="language-plaintext highlighter-rouge">v-for</code> over some array which is updated during
+render (it could be that you use v-bind : instead v-on @ <code class="language-plaintext highlighter-rouge">&lt;a href='#'
+:click='toggleActiveService(service)' v-for='service in services'</code>)</p>
+
+<h1 id="gridsome">Gridsome</h1>
+
+<p>Install with <code class="language-plaintext highlighter-rouge">yarn global add @gridsome/cli</code> and create project</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gridsome create my-gridsome-site
+cd my-gridsome-site
+gridsome develop
+</code></pre></div></div>
+
+<h1 id="vuepress">Vuepress</h1>
+
+<p>For documentation</p>
+
+<h1 id="nuxtjs">Nuxt.js</h1>
+
+<p>Similar to gatsby for React.js</p>
+
+<h1 id="quasar">Quasar</h1>
+
+<p>UI framework</p>
+
+<h1 id="integrating-with-rails">Integrating with rails</h1>
+
+<p>Wrap whole layout in vue so it can load and parse json</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import TurbolinksAdapter from 'vue-turbolinks'
+import Vue from 'vue/dist/vue.esm'
+import AppComponent from '../app-component.vue'
+
+Vue.use(TurbolinksAdapter)
+Vue.component('app-component', AppComponent)
+
+document.addEventListener('turbolinks:load', () =&gt; {
+  const app = new Vue({
+    el: '[data-behavior="vue"]',
+  })
+})
+</code></pre></div></div>
+
+<p>Pass json using props</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;app-component :messsage=='&lt;%= data.to_json %&gt;'&gt;&lt;/app-component&gt;
+</code></pre></div></div>
+
+<p>You can also overwrite template but not recomended since code is not in the same
+place as the markup.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;app-component inline-template&gt;
+  &lt;h1&gt;&lt;/h1&gt;
+&lt;/app-component&gt;
+</code></pre></div></div>
+<p>https://nebulab.it/blog/build-rails-application-vuejs-using-jsx/
+Rails engine to write javascript and vue code in ruby
+https://github.com/basemate/matestack-ui-core</p>
+
+<h1 id="tutorials">Tutorials</h1>
+
+<p>video series
+https://gorails.com/series/using-vuejs-with-rails</p>
+
+<p>todo:
+https://nebulab.it/blog/build-rails-application-vuejs-using-jsx/
+https://medium.com/@yuliaoletskaya/rails-api-jwt-auth-vuejs-spa-part-2-roles-601e4372a7e7
+https://technology.doximity.com/articles/token-authentication-with-rails-vue-graphql-and-devise</p>
+
+<p>http://quasar-framework.org/
+https://www.reddit.com/r/javascript/comments/6v1ki7/weex_vs_framework7_vs_quasar/
+https://blog.logrocket.com/an-imperative-guide-to-forms-in-vue-js-7536bfa374e0
+<a href="https://vuejsdevelopers.com/2017/10/23/vue-js-tree-menu-recursive-components/">https://vuejsdevelopers.com/2017/10/23/vue-js-tree-menu-recursive-components/</a>
+https://www.classandobjects.com/tutorial/using_vue_js_with_rails
+https://www.thepolyglotdeveloper.com/2017/11/pass-data-between-routes-vuejs-web-application/
+https://github.com/calirojas506/vue-inspector
+https://engineering.doximity.com/articles/five-traps-to-avoid-while-unit-testing-vue-js
+https://wyeworks.com/blog/2018/1/16/Testing-Vuejs-in-Rails-with-Webpacker-and-Jest
+https://alligator.io/vuejs/vue-parceljs/
+http://epic-spinners.epicmax.co/#/
+https://blog.codeship.com/vuejs-components-with-coffeescript-for-rails/
+https://github.com/epicmaxco/vuestic-admin</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>From simple Devise to Oauth on Angular</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>From simple Devise to Oauth on Angular</h1>
+    <p class="meta">Dec 20, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#sign-in-using-username-or-phone"><span class="tocnumber">1</span> <span class="toctext">Sign in using username or phone</span></a></li><li class="toc_level-1 toc_section-2"><a href="#devise-and-omniauth"><span class="tocnumber">2</span> <span class="toctext">Devise and Omniauth</span></a></li><li class="toc_level-1 toc_section-3"><a href="#facebook-app"><span class="tocnumber">3</span> <span class="toctext">Facebook app</span></a></li><li class="toc_level-1 toc_section-4"><a href="#google-console"><span class="tocnumber">4</span> <span class="toctext">Google console</span></a></li><li class="toc_level-1 toc_section-5"><a href="#twitter-app"><span class="tocnumber">5</span> <span class="toctext">Twitter app</span></a></li><li class="toc_level-1 toc_section-6"><a href="#linkedin"><span class="tocnumber">6</span> <span class="toctext">Linkedin</span></a></li><li class="toc_level-1 toc_section-7"><a href="#angular-authentication"><span class="tocnumber">7</span> <span class="toctext">Angular authentication</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#ng-token-auth-demo-example"><span class="tocnumber">7.1</span> <span class="toctext">ng-token-auth demo example</span></a></li><li class="toc_level-2 toc_section-9"><a href="#ng-token-auth-from-scratch-with-yeoman"><span class="tocnumber">7.2</span> <span class="toctext">ng-token-auth from scratch with Yeoman</span></a></li><li class="toc_level-2 toc_section-10"><a href="#angular-devise"><span class="tocnumber">7.3</span> <span class="toctext">Angular-devise</span></a></li></ul></li><li class="toc_level-1 toc_section-11"><a href="#resend-confirmation-email-on-login"><span class="tocnumber">8</span> <span class="toctext">Resend confirmation email on login</span></a></li><li class="toc_level-1 toc_section-12"><a href="#sign-in-after-user-click-on-confirmation-link"><span class="tocnumber">9</span> <span class="toctext">Sign in after user click on confirmation link</span></a></li><li class="toc_level-1 toc_section-13"><a href="#admin-sign-in-as-another-user"><span class="tocnumber">10</span> <span class="toctext">Admin sign in as another user</span></a></li><li class="toc_level-1 toc_section-14"><a href="#serialization"><span class="tocnumber">11</span> <span class="toctext">Serialization</span></a></li><li class="toc_level-1 toc_section-15"><a href="#redirection-after-sign-in"><span class="tocnumber">12</span> <span class="toctext">Redirection after sign in</span></a></li><li class="toc_level-1 toc_section-16"><a href="#testing"><span class="tocnumber">13</span> <span class="toctext">Testing</span></a></li><li class="toc_level-1 toc_section-17"><a href="#http-basic-auth"><span class="tocnumber">14</span> <span class="toctext">HTTP Basic auth</span></a></li><li class="toc_level-1 toc_section-18"><a href="#sorcery"><span class="tocnumber">15</span> <span class="toctext">Sorcery</span></a></li><li class="toc_level-1 toc_section-19"><a href="#devise-send-email-in-background"><span class="tocnumber">16</span> <span class="toctext">Devise send email in background</span></a></li><li class="toc_level-1 toc_section-20"><a href="#custom-devise-mailer"><span class="tocnumber">17</span> <span class="toctext">Custom devise mailer</span></a></li><li class="toc_level-1 toc_section-21"><a href="#session-expired"><span class="tocnumber">18</span> <span class="toctext">Session expired</span></a></li><li class="toc_level-1 toc_section-22"><a href="#detect-if-already-signed-in-to-social-sites"><span class="tocnumber">19</span> <span class="toctext">Detect if already signed in to social sites</span></a></li><li class="toc_level-1 toc_section-23"><a href="#warden"><span class="tocnumber">20</span> <span class="toctext">Warden</span></a></li></ul></td></tr></tbody></table></div><p>Override default devise views with my views with locales, follow instructions on
+https://github.com/duleorlovic/devise-views-i18n</p>
+
+<p>You can add facebook auth below.</p>
+
+<p>Read <em>config/initializers/devise.rb</em> about default configuration.
+You need to set default sender:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># devise
+sed -i config/initializers/devise.rb -e '/mailer_sender/c \
+  config.mailer_sender = Rails.application.secrets.mailer_sender'
+</code></pre></div></div>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">before_action :authenticate_user!</code> in controllers that will
+redirect to <code class="language-plaintext highlighter-rouge">/users/sign_in</code>. You need to <a href="/2015/04/05/common-rails-bootstrap-snippets/">set up
+emails</a>
+to actually receive registration email.</p>
+
+<p>If you enable <code class="language-plaintext highlighter-rouge">lockable</code> than user will be locked when number of failed login
+attempts reaches 20. You can send internal notification when that happens by
+overriding devise mailer and method <code class="language-plaintext highlighter-rouge">def unlock_instructions(record, token,
+opts={})</code></p>
+
+<p>When user is logged in, than in session there is a id of current_user
+<code class="language-plaintext highlighter-rouge">session['warden.user.user.key'] # =&gt; [[9], "$2a$10$TUfyHaPAWV.A1/6JLuCTGO"]</code></p>
+
+<p>Errors like <code class="language-plaintext highlighter-rouge">ActionView::Template::Error (undefined method new_confirmation_path
+for Did you mean?  new_user_confirmation_path user_confirmation_path):</code> occurs
+when you add, for example <code class="language-plaintext highlighter-rouge">confirmable</code> in model, but gem are already loaded in
+spring, so you need to <code class="language-plaintext highlighter-rouge">spring stop</code> and restart rails server.</p>
+
+<p>To enable additional fields to be permited attributes for new columns, to allow
+new params for user, for example <code class="language-plaintext highlighter-rouge">:username</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ApplicationController &lt; ActionController::Base
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
+  end
+end
+</code></pre></div></div>
+
+<p>To pass some values to devise controller, you can use hidden field</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.text_field :username, value: f.object.username || params[:username] %&gt;
+</code></pre></div></div>
+
+<p>Errors like <code class="language-plaintext highlighter-rouge">NoMethodError (undefined method 'users_url' for
+#&lt;DeviseRegistrationsController:0x007ff6068d92b8&gt;):</code></p>
+
+<p>IF you need to check user.authenticate_with password you can use valid password</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user.valid_password? 'new_password'
+</code></pre></div></div>
+
+<p>There are some modules which you can use</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :confirmable,
+         :omniauthable
+</code></pre></div></div>
+
+<h1 id="sign-in-using-username-or-phone">Sign in using username or phone</h1>
+
+<p>https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address</p>
+
+<p>Enable login with phone or email</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  # https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit :sign_in, keys: %i[login password]
+  end
+
+# app/models/user.rb
+  attr_writer :login
+
+  # https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
+  def login
+    @login || mobile || email
+  end
+
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login) # rubocop:todo Lint/AssignmentInCondition
+      where(conditions.to_h).where(['lower(mobile) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions.key?(:mobile) || conditions.key?(:email)
+      where(conditions.to_h).first
+    end
+  end
+
+# config/initializers/devise.rb
+  config.authentication_keys = [:login]
+
+# app/views/devise/sessions/new.html.erb
+  &lt;%= f.text_field :login, autofocus: true, autocomplete: "email", placeholder: 'Enter Mobile No. / Email ID', skip_label: true %&gt;
+</code></pre></div></div>
+
+<p>For enabling forgot password with mobile or email you need to add
+<code class="language-plaintext highlighter-rouge">User.find_first_by_auth_conditions</code> method
+https://github.com/heartcombo/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address#allow-users-to-recover-their-password-or-confirm-their-account-using-their-username</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login) # rubocop:todo Lint/AssignmentInCondition
+      where(conditions.to_h).where(['lower(mobile) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions.key?(:mobile) || conditions.key?(:email)
+      where(conditions.to_h).first
+    end
+  end
+
+  def self.find_first_by_auth_conditions(warden_conditions)
+    conditions = warden_conditions.dup
+    if login = conditions.delete(:login) # rubocop:todo Lint/AssignmentInCondition
+      where(conditions).where(['lower(mobile) = :value OR lower(email) = :value', { value: login.downcase }]).first
+    elsif conditions[:mobile].nil?
+      where(conditions).first
+    else
+      where(mobile: conditions[:mobile]).first
+    end
+  end
+
+# config/initializers/devise.rb
+  config.reset_password_keys = %i[login]
+
+# app/views/devise/passwords/new.html.erb
+    &lt;%= f.text_field :login, autofocus: true, autocomplete: "email", placeholder: 'Enter Mobile No. / Email ID', skip_label: true %&gt;
+</code></pre></div></div>
+
+<p>Hotwire issue</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Rails/Devise: Nil location provided. Can't build URI. on Password reset
+</code></pre></div></div>
+<p>you need to disable hotwire with <code class="language-plaintext highlighter-rouge">data-turbo='false'</code></p>
+
+<h1 id="devise-and-omniauth">Devise and Omniauth</h1>
+
+<p>Read <a href="https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview">wiki</a> to
+add facebook and google authentication. It’s easy installation.
+For facebook we use
+<a href="https://github.com/mkdynamic/omniauth-facebook">omniauth-facebook</a>
+and excellent <a href="https://www.youtube.com/watch?v=E_XACDrZSiI">rails casts #360</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt;HERE_DOC
+gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2', '0.2.5'
+# https://github.com/zquestz/omniauth-google-oauth2/issues/204
+# fix to 1.3.1 because of redirect_uri_mismatch
+gem "omniauth-oauth2", '1.3.1'
+# 1.2.1 to skip_jwt issue
+# Could not find a valid mapping for path "/omniauth/google_oauth2/callback"
+HERE_DOC
+bundle
+rails g migration AddOmniauthToUsers provider:index uid:index
+rake db:migrate
+sed -i config/initializers/devise.rb -e '/APP_ID/a \
+  config.omniauth :facebook,\
+                  Rails.application.secrets.facebook_key,\
+                  Rails.application.secrets.facebook_secret,\
+                  scope: "public_profile,email",\
+                  info_fields: "email,name"\
+  config.omniauth :google_oauth2,\
+                  Rails.application.secrets.google_client_id,\
+                  Rails.application.secrets.google_client_secret,\
+                  {} # skip_jwt: true'
+# skip_jwt only needed for omniauth &gt; 1.2.2
+# https://github.com/zquestz/omniauth-google-oauth2/issues/197
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # Facebook Autentication\
+  facebook_key: &lt;%= ENV["FACEBOOK_KEY"] %&gt;\
+  facebook_secret: &lt;%= ENV["FACEBOOK_SECRET"] %&gt;\
+  # Google signup\
+  google_client_id: &lt;%= ENV["GOOGLE_CLIENT_ID"] %&gt;\
+  google_client_secret: &lt;%= ENV["GOOGLE_CLIENT_SECRET"] %&gt;\
+'
+</code></pre></div></div>
+
+<p>If you need to send some params to callback (for example current user, or some
+other state) you can do it and access using <code class="language-plaintext highlighter-rouge">params['omniauth.params']</code> env
+field.  There are also: <code class="language-plaintext highlighter-rouge">["omniauth.strategy", "omniauth.origin",
+"omniauth.params", "omniauth.auth"]</code>. <code class="language-plaintext highlighter-rouge">omniauth.origin</code> is usefull to redirect
+back to the page on which he logs in.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i app/views/layouts/application.html.erb -e '/&lt;body&gt;/a \
+&lt;%= link_to "Sign in with Facebook",
+user_facebook_omniauth_authorize_path(my_param: 1) %&gt;'
+
+vi app/models/user.rb # add :omniauthable
+# no need for , :omniauth_providers =&gt; [:facebook], but :omniauthable is needed
+
+# config/routes.rb
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'devise/my_omniauth_callbacks',
+    confirmations: 'devise/my_confirmations',
+    registrations: 'devise/my_registrations',
+  }
+
+# app/controllers/devise/my_omniauth_callbacks_controller.rb
+module Devise
+  class MyOmniauthCallbacksController &lt; OmniauthCallbacksController
+    # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
+    # data is in request.env["omniauth.auth"]
+    %i[facebook google_oauth2].each do |provider| # yaho_oauth2 twitter
+      define_method provider do
+        # to get params use request.env["omniauth.params"]["my_param"]
+        @user = User.from_omniauth(request.env['omniauth.auth'])
+
+        if @user.persisted?
+          sign_in_and_redirect @user, event: :authentication
+          # this will throw if @user is not activated
+          set_flash_message(:notice, :success, kind: provider) if is_navigational_format?
+        else
+          session['devise.facebook_data'] = request.env['omniauth.auth']
+          redirect_to new_user_registration_url
+        end
+      end
+    end
+    def failure
+      # this could be: no_authorization_code # when we did not whitelisted domain
+      # on facebook app settings
+      alert = t('can_sign_in_reason_name',
+                reason_name: "#{request.env['omniauth.error'].try(:message)} #{request.env['omniauth.error.type']}")
+      redirect_to root_path, alert: alert
+    end
+  end
+end
+
+# app/models/user.rb
+  def self.from_omniauth(auth)
+    user = find_by(email: auth.info.email)
+    return user if user
+    # user changed his email on facebook
+    user = find_by(provider: auth.provider, uid: auth.uid)
+    return user if user
+    # create new user with some passwor
+    user = User.create!(
+      email: auth.info.email,
+      password: Devise.friendly_token[0, 20],
+      provider: auth.provider,
+      uid: auth.uid,
+    )
+    user.skip_confirmation! # this will just add confirmed_at = Time.now
+    # if you change email than you need to run
+    user.skip_reconfirmation!
+    # user.name = auth.info.name # assuming the user model has a name
+    # user.image = auth.info.image # assuming the user model has an image
+    user
+  end
+</code></pre></div></div>
+
+<p>If you need multiple identities per account than create separate table for
+identity.</p>
+
+<p>Note this situations:</p>
+
+<ul>
+  <li>
+    <p>user changed email address (lost password for old one) and updated on
+facebook profile. He should be able to add new email address, not just to
+change old one. Maybe he used the same password which he can not recover. If
+user can recover password only using original email than they are blocked.
+Hackerrank has a button to “Add another email”.
+So we should check if his facebook email address was updated and add add that
+email to our database as well.</p>
+  </li>
+  <li>user click forgot password, it change password, than it is asked to login,
+than he should not see again forgot password page</li>
+  <li>when user change the password it should stay logged in
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  unless current_user.valid_password? params[:user][:current_password]
+    current_user.errors.add(:current_password, t('my_devise.current_password_is_not_correct'))
+  end
+  current_user.password='asdfasdf'
+  current_user.password_confirmation='asdfasdf'
+  # current_user.save!
+  current_user.errors.blank? &amp;&amp; current_user.save!
+  bypass_sign_in current_user if current_user.errors.blank?
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="facebook-app">Facebook app</h1>
+
+<p>Is you use <code class="language-plaintext highlighter-rouge">omniauth-facebook</code> alone than there are problems with devise (it
+double redirect and raise csrf exception). So do not use with devise, or
+configure devise to use facebook auth.</p>
+
+<ol>
+  <li>
+    <p>Create app on <a href="http://developers.facebook.com">developers.facebook.com</a>. By
+default fb app is in development mode and can only be used by app admins,
+developers and testers. Add Contact Email if not already there on
+https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/</p>
+  </li>
+  <li>
+    <p>For production you need to go <em>App Review</em>
+https://developers.facebook.com/apps/FACEBOOK_APP_ID/review-status/ and
+toggle switch on</p>
+  </li>
+  <li>
+    <p>Add <em>Facebook Login</em> product and go to settings
+https://developers.facebook.com/apps/FACEBOOK_APP_ID/fb-login/ (before it was
+inside advance settings
+https://developers.facebook.com/apps/FACEBOOK_APP_ID/settings/advanced)
+Find input for <em>Valid OAuth redirect URIs</em> and fill with all links that are
+redirected. You can find the link on facebook error page url
+<code class="language-plaintext highlighter-rouge">www.facebook.com/dialog/oauth?client_id=...&amp;redirect_uri=...</code>. You can add
+just domain (<code class="language-plaintext highlighter-rouge">/omniauth/facebook/callback</code> is not needed)
+Note that this are server url (not frontend url):</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">http://localhost.local:3003</code></li>
+      <li><code class="language-plaintext highlighter-rouge">http://localhost:9000</code> and for https also</li>
+      <li><code class="language-plaintext highlighter-rouge">https://localhost.local:3003</code></li>
+    </ul>
+  </li>
+</ol>
+
+<p>Changes are visible immediatelly.
+More on blog facebook share buttons.</p>
+
+<p>Notes:</p>
+
+<ul>
+  <li>no need to check if email is verified, since facebook will not allow
+unverified accounts to use oauth</li>
+</ul>
+
+<h1 id="google-console">Google console</h1>
+
+<p>Create a project in <a href="https://console.developers.google.com/apis/">https://console.developers.google.com/apis/</a> and enable
+<em>Google+ API</em>.
+Create <em>OAuth 2.0 client ID</em> (or edit exists one clicking on its
+name) and set <em>Authorized redirect URIs</em> to all urls that will be used (not just
+domain like for facebook, we need whole url path), like redirect_uri</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">https://myapp.com/users/auth/google_oauth2/callback</code></li>
+  <li>you can add also for http and https</li>
+  <li>you can add localhost
+<code class="language-plaintext highlighter-rouge">http://localhost:3003/users/auth/google_oauth2/callback</code> but can not add
+subdomain of localhost, like <code class="language-plaintext highlighter-rouge">myapp.localhost</code></li>
+  <li><em>Authorized JavaScript origins</em> will be automatically filled with domain like
+<code class="language-plaintext highlighter-rouge">myapp.com</code></li>
+</ul>
+
+<p>https://stackoverflow.com/questions/10456174/oauth-how-to-test-with-local-urls</p>
+
+<p>Dont forget to save <strong>Changes needs 5 min to propagate</strong></p>
+
+<p>For API keys, you need to add website restrictions: myapp.com, localhost:3003</p>
+
+<h1 id="twitter-app">Twitter app</h1>
+
+<p>On <a href="https://apps.twitter.com/">https://apps.twitter.com/</a> you can create application.
+Setup callbacks urls to point to you server, but this is not required with
+twitter.
+<code class="language-plaintext highlighter-rouge">app//keys</code> will give you TWITTER_API_KEY and TWITTER_API_SECRET</p>
+
+<p>Twitter
+<a href="https://github.com/arunagw/omniauth-twitter#authentication-hash">response</a> do
+not provide user’s email address.</p>
+
+<h1 id="linkedin">Linkedin</h1>
+
+<p>Create app on <a href="https://www.linkedin.com/developer/apps">https://www.linkedin.com/developer/apps</a> and save to
+LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET.
+Add <code class="language-plaintext highlighter-rouge">gem 'omniauth-linkedin'</code></p>
+
+<h1 id="angular-authentication">Angular authentication</h1>
+
+<p>I tried two approaches for authentication</p>
+
+<ul>
+  <li><a href="https://github.com/cloudspace/angular_devise">angular_devise</a></li>
+  <li><a href="https://github.com/lynndylanhurley/ng-token-auth">ng-token-auth</a></li>
+</ul>
+
+<p>For demo usage checkout my repository
+<a href="https://github.com/duleorlovic/angular-devise-ng-token-auth">angular-devise-ng-token-auth</a></p>
+
+<h2 id="ng-token-auth-demo-example">ng-token-auth demo example</h2>
+
+<p>Angular <a href="https://github.com/lynndylanhurley/ng-token-auth">ng-token-auth</a> is
+used with
+<a href="https://github.com/lynndylanhurley/devise_token_auth">devise-token-auth</a>.</p>
+
+<p>Run <a href="https://github.com/lynndylanhurley/ng-token-auth#development">client</a> with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ng-token-auth
+npm install
+cd test &amp;&amp; bower install
+vi config/default.yml # edit API_URL to match server port
+# SITE_DOMAIN is only required for sitemap
+cd ..
+gem install sass
+gulp dev
+gnome-open http://localhost:7777/
+</code></pre></div></div>
+
+<p>For server side you can see <a href="https://github.com/lynndylanhurley/devise_token_auth_demo/compare/dbf0a69b1e67e34862906c3d24747bc98ffff815...master">devise_token_auth_demo
+compare</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd devise_token_auth_demo
+vi config/database.yml # change to your username
+echo -e 'gem "letter_opener", :group =&gt; :development' &gt;&gt; Gemfile
+sed -i '/end$/i \  config.action_mailer.delivery_method = :letter_opener' config/environments/development.rb
+
+# hosts should be the same as in ng-token-auth/test/config/default.html
+# config/environments/development.rb redirection url
+# OmniAuth.config.full_host = "http://localhost.local:3003"
+
+export GITHUB_KEY=asd GITHUB_SECRET=asd GOOGLE_KEY=$GOOGLE_CLIENT_ID GOOGLE_SECRET=$GOOGLE_CLIENT_SECRET FACEBOOK_KEY=$FACEBOOK_KEY FACEBOOK_SECRET=$FACEBOOK_SECRET
+rails s
+</code></pre></div></div>
+
+<h2 id="ng-token-auth-from-scratch-with-yeoman">ng-token-auth from scratch with Yeoman</h2>
+
+<p>When use signin, he get <code class="language-plaintext highlighter-rouge">access-token</code> in Response Header. Than he uses that
+<code class="language-plaintext highlighter-rouge">access-token</code> for next request (Request Header), and for it he gets new
+<code class="language-plaintext highlighter-rouge">access-token</code> in response <a href="https://github.com/lynndylanhurley/devise_token_auth#token-header-format">Token Header
+Format</a></p>
+
+<p>IMPORTANT:</p>
+
+<p>Mount path is important. <code class="language-plaintext highlighter-rouge">mount_devise_token_auth_for 'User', at: '/auth'</code> so if
+you access <code class="language-plaintext highlighter-rouge">api/v1</code> and <code class="language-plaintext highlighter-rouge">api/v2/...</code> it will send headers. If you mount under
+<code class="language-plaintext highlighter-rouge">api/v1/auth</code> than headers will not be send for <code class="language-plaintext highlighter-rouge">api/v2/articles</code></p>
+
+<p>Rails 4.2.5 use uppercase header names (Access-Token), but that does not affect
+the app. Also the method you fetch the resource does not matter, it could be
+$http, angular-rails-resource… headers will be send with ng-token-auth</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new my_app
+cd my_app
+cat &gt;&gt; Gemfile &lt;&lt;HERE_DOC
+# user auth with devise and ng-token-auth
+gem 'devise_token_auth', '=0.1.37.beta4' # fix version because of url localhost:3000//api/ issue
+# github: 'lynndylanhurley/devise_token_auth'
+gem 'omniauth'
+HERE_DOC
+bundle
+rails g devise_token_auth:install User auth
+rake db:migrate
+git add . &amp;&amp; git commit -m "rails g devise_token_auth:install User auth"
+rails g devise:install
+git add . &amp;&amp; git commit -m "rails g devise:install"
+
+# leave original route auth for mount_devise_token_auth_for
+
+# config/environments/development.rb
+# OmniAuth.config.full_host = "http://localhost:9000/" # this is url for google callback, not needed since it will read from request
+
+# on registration, do not raise exception
+sed -i app/controllers/application_controller.rb \
+-e '/end$/i\
+  protect_from_forgery with: :null_session\
+  respond_to :json'
+
+# allow unconfirmed access
+sed -i config/initializers/devise.rb -e '/config.allow_unconfirmed_access_for/a \
+  config.allow_unconfirmed_access_for = 7.days'
+
+</code></pre></div></div>
+
+<p>Perform some <a href="/2015/04/05/common-rails-bootstrap-snippets/">common bootstrap stuff for secrets and emails</a> and add <a href="#devise-and-omniauth">oauth
+installation as above</a>.</p>
+
+<p>For client start with steps at <a href="/2015/11/26/angular-and-ruby-on-rails/">2015-11-26-angular-and-ruby-on-rails</a>.</p>
+
+<p>We will use <a href="https://material.angularjs.org/latest/demo/dialog">md-dialog</a> to
+show signup buttons or login form in another
+<a href="https://material.angularjs.org/latest/demo/tabs">tab</a>.</p>
+
+<p>I have some problems to stay logged in immediatelly after log in and than hit
+refresh (while some params in url). We need to remove those params.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd client
+bower install ng-token-auth --save
+
+# add module dependency
+sed -i src/app/index.module.coffee  -e "/]/i \  'ng-token-auth',"
+
+# inject dependencies
+sed -i src/app/components/navbar/navbar.directive.coffee -e ":a;N;\$!ba;s/    NavbarController.*return/$(sed ':a;N;$!ba;s/\n/ћ/g;s:\\:\\\\:g;s:/:\\/:g;' &lt;&lt;'MY_TEXT'
+    NavbarController = (moment, $mdDialog, $auth, $rootScope) -&gt;
+      'ngInject'
+      dialog = null
+      vm = this
+      # "vm.creation" is avaible by directive option "bindToController: true"
+      vm.relativeDate = moment(vm.creationDate).fromNow()
+
+      vm.showLoginDialog = (ev) -&gt;
+        dialog = $mdDialog.show
+          controller: 'LoginController'
+          controllerAs: 'vm'
+          templateUrl: 'app/login/login.html'
+          parent: angular.element(document.body)
+          targetEvent: ev
+          clickOutsideToClose: true
+
+      vm.signOut = -&gt;
+        $auth.signOut()
+
+      $rootScope.$on 'auth:login-success', (ev, user) -&gt;
+        $mdDialog.hide dialog
+      return
+MY_TEXT
+)/g;s/ћ/\n/g"
+
+# add links
+sed -i src/app/components/navbar/navbar.html \
+-e '/Contact/a \
+    &lt;md-button href="#" ng-show="!$root.user.id" ng-click="vm.showLoginDialog()"&gt;Try For Free&lt;/md-button&gt;\
+    &lt;div ng-show="!!$root.user.id"&gt;Hello { { $root.user.email }}&lt;/div&gt;\
+    &lt;md-button href="#" ng-show="!!$root.user.id" ng-click="vm.signOut()"&gt;Sign Out&lt;/md-button&gt;'
+
+# config routes since default /api/auth/facebook does not match rails /auth/:provider
+sed -i src/app/index.config.coffee \
+-e 's/config (/config ($authProvider, /' \
+-e '$a\
+    $authProvider.configure\
+      apiUrl: "/"\
+      authProviderPaths:\
+        google:   "/auth/google_oauth2"\
+        facebook: "/auth/facebook"'
+mkdir src/app/login
+cat &gt; src/app/login/login.html &lt;&lt;\HERE_DOC
+&lt;md-dialog aria-label="login" ng-cloak&gt;
+  &lt;md-toolbar&gt;
+    &lt;div class="md-toolbar-tools"&gt;
+      &lt;h2&gt;Try for free!&lt;/h2&gt;
+    &lt;/div&gt;
+  &lt;/md-toolbar&gt;
+  &lt;md-dialog-content&gt;
+    &lt;md-tabs md-selected="vm.tabsData.selectedIndex" md-align-tabs="bottom"
+    md-dynamic-height&gt;
+      &lt;md-tab label="defalt"&gt;
+        &lt;md-content class="md-padding"&gt;
+          &lt;md-button ng-click="$root.authenticate('google')"&gt;Sign in with Gmail&lt;/md-button&gt;
+          &lt;md-button ng-click="$root.authenticate('facebook')"&gt;Sign in with Facebook&lt;/md-button&gt;
+          &lt;md-button ng-click="vm.tabsData.selectedIndex=1"&gt;
+            Sign in with email
+          &lt;/md-button&gt;
+        &lt;/md-content&gt;
+      &lt;/md-tab&gt;
+
+      &lt;md-tab label="Email"&gt;
+        &lt;md-content class="md-padding"&gt;
+          &lt;form ng-submit="vm.submitLogin(vm.login, loginForm)" name="loginForm" role="form"&gt;
+            &lt;md-input-container class="md-block"&gt;
+              &lt;label&gt;Email&lt;/label&gt;
+              &lt;input ng-model="vm.login.email" ng-required="true" name="email" placeholder="Email" type="email"&gt;
+              &lt;div ng-messages="loginForm.email.$error"&gt;
+                &lt;div ng-message="required"&gt;Email is required.&lt;/div&gt;
+                &lt;div ng-message="server"&gt;
+                  { { vm.serverErrors.login.email }}.
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/md-input-container&gt;
+            &lt;md-input-container class="md-block"&gt;
+              &lt;label&gt;Password&lt;/label&gt;
+              &lt;input ng-model="vm.login.password" name="password"
+              placeholder="Password" type="password" ng-required="true"&gt;
+              &lt;div ng-messages="loginForm.password.$error"&gt;
+                &lt;div ng-message="required"&gt;Password is required.&lt;/div&gt;
+                &lt;div ng-message="server"&gt;
+                  { { vm.serverErrors.login.join(', ') }}.
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/md-input-container&gt;
+            &lt;md-button type="submit" class="md-raised md-primary"&gt;Sign in&lt;/md-button&gt;
+            or
+            &lt;md-button ng-click="vm.tabsData.selectedIndex=2"&gt;
+              Register with email
+            &lt;/md-button&gt;
+          &lt;/form&gt;
+        &lt;/md-content&gt;
+      &lt;/md-tab&gt;
+
+      &lt;md-tab label="Registration"&gt;
+        &lt;md-content&gt;
+          &lt;form name="registrationForm"
+            ng-submit="vm.handleRegBtnClick(vm.registration, registrationForm)" role="form"&gt;
+            &lt;md-input-container class="md-block"&gt;
+              &lt;md-icon&gt;email&lt;/md-icon&gt;
+              &lt;input ng-model="vm.registration.email" type="email"
+              placeholder="Email (required)" ng-required="true" name="email"
+              ng-email="true"&gt;
+              &lt;div ng-messages="registrationForm.email.$error"&gt;
+                &lt;div ng-message="required"&gt;Email is required.&lt;/div&gt;
+                &lt;div  ng-message="email"&gt;Must look like email.&lt;/div&gt;
+                &lt;div ng-message="server"&gt;
+                  { { vm.serverErrors.registration.email.join(', ') }}.
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/md-input-container&gt;
+            &lt;md-input-container md-no-float class="md-block"&gt;
+              &lt;input ng-model="vm.registration.password" type="password"
+              placeholder="password" ng-required="true" ng-minlength=6
+              ng-maxlength=20 name="password"&gt;
+              &lt;div ng-messages="registrationForm.password.$error"&gt;
+                &lt;div ng-message="required"&gt;Password is required.&lt;/div&gt;
+                &lt;div ng-message="minlength,maxlength"&gt;Password should be between 6 and 20
+                  chars.&lt;/div&gt;
+                &lt;div ng-message="server"&gt;
+                  { { vm.serverErrors.registration.password.join(', ') }}.
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/md-input-container&gt;
+            &lt;md-input-container md-no-float class="md-block"&gt;
+              &lt;input ng-model="vm.registration.password_confirmation"
+              type="password" placeholder="Password confirmation"
+              name="password_confirmation" ng-required="true"&gt;
+              &lt;div ng-messages="registrationForm.password_confirmation.$error"&gt;
+                &lt;div ng-message="required"&gt;Password confirmation is required.&lt;/div&gt;
+                &lt;div ng-message="password_match"&gt;Passwords don't match.&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div
+            ng-messages="vm.serverErrors.registration.password_confirmation"&gt;
+                &lt;div&gt;{ { vm.serverErrors.registration.password_confirmation.join(', ') }}&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/md-input-container&gt;
+
+            &lt;md-button type="submit" class="md-raised md-primary"
+            &gt;Register&lt;/md-button&gt;
+          &lt;/form&gt;
+        &lt;/md-content&gt;
+      &lt;/md-tab&gt;
+    &lt;/md-tabs&gt;
+  &lt;/md-dialog-content&gt;
+&lt;/md-dialog&gt;
+HERE_DOC
+
+cat &gt; src/app/login/login.controller.coffee &lt;&lt;\HERE_DOC
+angular.module 'client'
+  .controller 'LoginController', ($mdDialog, $auth, $log, $scope) -&gt;
+    'ngInject'
+    vm = this
+    vm.login = {}
+    vm.registration = {}
+    # vm.registration =
+    #   email: 'asd@asd.asd'
+    #   password: 'asdasd'
+    #   password_confirmation: 'asdasd'
+    # vm.login =
+    #   email: 'asd@asd.asd'
+    #   password: 'asdasd'
+
+    vm.tabsData = {
+      selectedIndex: 0,
+    }
+
+    vm.submitLogin = (login, loginForm) -&gt;
+      handleError = (resp) -&gt;
+        loginForm.password.$setValidity('server',false)
+        $scope.vm.serverErrors =
+          login: resp.errors
+        $log.debug loginController: 'submitLogin handleError', resp_errors: resp.errors
+      $auth.submitLogin(login)
+        .then (resp) -&gt;
+          $log.debug  loginController: 'submitLogin then', resp: resp
+        .catch handleError
+      return
+
+    vm.handleRegBtnClick = (registration, registrationForm) -&gt;
+      handleError = (resp) -&gt;
+        for field of resp.data.errors
+          if registrationForm[field]
+            registrationForm[field].$setValidity('server',false)
+        $scope.vm.serverErrors =
+          registration: resp.data.errors
+        $log.debug 'handleError'
+      $auth.submitRegistration(registration)
+        .then (resp) -&gt;
+          $auth.submitLogin
+            email: $scope.vm.registration.email
+            password: $scope.vm.registration.password
+          $log.debug 'submitRegistration then'
+        .catch handleError
+    return
+HERE_DOC
+</code></pre></div></div>
+
+<p>When you want to override default initial behavior, for example create another
+table that will hold identities, you need to override a lot of things
+<a href="https://github.com/lynndylanhurley/devise_token_auth/issues/23">#23</a>
+<a href="https://github.com/lynndylanhurley/devise_token_auth/pull/453">#453</a> Another
+approach (plan B) is to put your business logic in another model let say,
+<code class="language-plaintext highlighter-rouge">participant</code> thas has many <code class="language-plaintext highlighter-rouge">users</code>. This has a problem of assigning oauth
+account to the current email-user participant (we need to pass current
+email-user token to oauth session so we know that we can connect those two users
+to the same participant). Also adds new unnecessary model.</p>
+
+<p>Easiest solution is to add uniqueness to email field and rescue with signing in.
+Then we just repeat whole proccess from <code class="language-plaintext highlighter-rouge">omniauth_success</code> from
+devise_token_auth gem.
+Similar approach is in this opensource rails angular app
+<a href="https://github.com/manshar/manshar/pull/177/files">manshar</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g migration add_uniq_index_to_users
+sed -i db/migrate/*add_uniq_index_to_users* -e '/change/a\
+    remove_index :users, :email\
+    add_index :users, :email, unique: true'
+rake db:migrate
+
+sed -i config/routes.rb -e "s^\(mount_devise_token_auth_for.*$\)^\1, controllers: {\n\
+    omniauth_callbacks: 'users/omniauth_callbacks',\n  }^"
+mkdir app/controllers/users
+cat &gt; app/controllers/users/omniauth_callbacks_controller.rb &lt;&lt;\HERE_DOC
+module Users
+  class OmniauthCallbacksController &lt;
+    DeviseTokenAuth::OmniauthCallbacksController
+
+    rescue_from ActiveRecord::RecordNotUnique,
+                with: :user_already_registered_with_this_email
+
+    def user_already_registered_with_this_email
+      # repeat whole omniauth_success method for this user
+      @resource = User.find_by_email(@resource.email)
+      # get_resource_from_auth_hash
+      create_token_info
+      set_token_on_resource
+      create_auth_params
+
+      if resource_class.devise_modules.include?(:confirmable)
+        # don't send confirmation email!!!
+        @resource.skip_confirmation!
+      end
+
+      sign_in(:user, @resource, store: false, bypass: false)
+
+      unless @resource.image.present?
+        @resource.image = auth_hash['info']['image']
+      end
+      @resource.save!
+
+      render_data_or_redirect(
+        'deliverCredentials',
+        @auth_params.as_json,
+        @resource.as_json
+      )
+    end
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>Also override session and password controller to use
+<code class="language-plaintext highlighter-rouge">email</code> field instead of <code class="language-plaintext highlighter-rouge">uid</code> field. That way oauth users can use email login
+and email users can use oauth login without rescue exceptions (only first time)</p>
+
+<p>Some links for Ionic authentication:</p>
+
+<ul>
+  <li>Ionic does not like ipCookies <a href="https://github.com/lynndylanhurley/ng-token-auth/issues/222">#222</a> <a href="https://github.com/lynndylanhurley/ng-token-auth/issues/90">#90</a></li>
+  <li><a href="https://github.com/jwako/ionic_rails_sample">ionic-rails-sample</a></li>
+  <li><a href="https://github.com/search?q=ionic+ng-token-auth&amp;ref=reposearch&amp;type=Code&amp;utf8=%E2%9C%93">ionic
+ng-token-auth</a></li>
+  <li><a href="https://github.com/search?utf8=%E2%9C%93&amp;q=ionic+rails">ionic rails</a></li>
+</ul>
+
+<h2 id="angular-devise">Angular-devise</h2>
+
+<p>IMPORTANT:</p>
+
+<p>For angular_devise, path could be default <code class="language-plaintext highlighter-rouge">users/sign_in.json</code> (no need to place
+it on the root).
+In order to send headers and cookies, you need to add
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials">$httpProvider.defaults.withCredentials =
+true</a>
+to the <code class="language-plaintext highlighter-rouge">index.config.coffee</code>.</p>
+
+<p>If protect_from_forgery is enabled, you need to pass <code class="language-plaintext highlighter-rouge">XSRF-TOKEN</code> token as
+cookie, and it will be returned later. We will read from that cookie (not from
+hidden input fields as rails does).</p>
+
+<p>Sometime rails responds multiple times, and last cookie is used.</p>
+
+<p><del>Note that <code class="language-plaintext highlighter-rouge">Set-Cookie</code> is only of GET request</del> Set-cookie could be
+missing if you use <code class="language-plaintext highlighter-rouge">protect_from_forgery with: :null_session</code>. Best way is to
+always rise exception, so you know when xsrf happens.</p>
+
+<p>Note that cookies are stored per domain. In ajax, if you request two different
+domains a.local and b.local, they will receive different sessions cookies (in
+rails for example <code class="language-plaintext highlighter-rouge">session[:customer_id]</code> will show different values)
+Chrome Developer Tools hides cookies for other domains…
+I do not know how to clear cookies for other domain since I can not see them in
+Developer Tools Resources…
+So it is imporant to have same AuthProvider loginPath and logoutPath (login
+at a.local and logout at b.local will not work).</p>
+
+<p>Protect from forgery is for all requests except HEAD and GET
+<a href="http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection/ClassMethods.html">link</a>.
+<a href="http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html">link2</a></p>
+
+<p>It is important if you <code class="language-plaintext highlighter-rouge">Set-Cookie</code> on before OR after action. If it is
+<code class="language-plaintext highlighter-rouge">after_action</code> than if request is not authorized (<code class="language-plaintext highlighter-rouge">before_action
+:authenticate_user!</code>) than that after_action will not be done, so NO XSRF-TOKEN
+will be set. So better is to use <code class="language-plaintext highlighter-rouge">before_action</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">request.xhr?</code> is strange. It returns nil for angular requests. Also, when there
+are not cookies and login POST is sent, it passes <code class="language-plaintext highlighter-rouge">before_action
+:set_csrf_cookie_for_ng, if: -&gt; { request.xhr? }</code> but <code class="language-plaintext highlighter-rouge">puts request.xhr?
+'XHR=true' : 'XHR=nil'</code> shows nil.</p>
+
+<p>Example application
+<a href="https://github.com/duleorlovic/angular-devise-ng-token-auth">angular-devise-ng-token-auth</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+
+  protect_from_forgery with: :exception
+
+  # http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on
+  after_action :set_csrf_cookie_for_ng # , if: -&gt; { request.xhr? }
+
+  def set_csrf_cookie_for_ng
+    cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
+  end
+
+  rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    respond_to do |format|
+      format.html { raise exception }
+      format.json do
+        set_csrf_cookie_for_ng
+        render json: { error: 'Invalid authenticity token' }, status: :unprocessable_entity
+      end
+    end
+  end
+
+protected
+
+  def verified_request?
+    super || valid_authenticity_token?(session, cookies['XSRF-TOKEN'])
+  end
+</code></pre></div></div>
+
+<p>Here is example login controller for ionic</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install --save angular-devise
+
+# www/index.html
+    &lt;!-- Devise https://github.com/cloudspace/angular_devise --&gt;
+    &lt;script src="lib/AngularDevise/lib/devise-min.js"&gt;&lt;/script&gt;
+
+# www/js/app.js
+angular.module('starter', ['ionic', 'Devise'])
+
+# www/js/app.config.cofee
+angular.module 'starter'
+  .config (AuthProvider, $httpProvider, CONSTANT, AuthInterceptProvider) -&gt;
+    AuthProvider.loginPath CONSTANT.SERVER_URL + '/users/sign_in.json'
+    AuthProvider.logoutPath CONSTANT.SERVER_URL + '/users/sign_out.json'
+    $httpProvider.defaults.withCredentials = true
+    $httpProvider.interceptors.unshift 'csrfInterceptor'
+    AuthInterceptProvider.interceptAuth true
+    console.log 'config'
+
+# www/js/interceptors/csrf.interceptor.coffee
+# http://stackoverflow.com/questions/14734243/rails-csrf-protection-angular-js-protect-from-forgery-makes-me-to-log-out-on
+window.csrfRepeated = false
+angular.module 'starter'
+  .factory 'csrfInterceptor', ($q, $injector) -&gt;
+    responseError: (rejection) -&gt;
+      if rejection.status == 422 &amp;&amp;
+      rejection.data.error == 'Invalid authenticity token'
+        console.log "CSRF error so try again and only one time"
+        if ! window.csrfRepeated
+          window.csrfRepeated = true
+          deferred = $q.defer()
+
+          successCallback = (resp) -&gt;
+            deferred.resolve(resp)
+          errorCallback = (resp) -&gt;
+            deferred.reject(resp)
+
+          $http = $http || $injector.get('$http')
+          $http(rejection.config).then(successCallback, errorCallback)
+          return deferred.promise
+
+      $q.reject(rejection)
+
+# www/js/login/login.jade
+ion-view(view-title="Sign In")
+  ion-content
+    .list
+      form(ng-submit='vm.handleSubmitLogin(vm.login)')
+        label.item.item-input.item-stacked-label
+          span.input-label Username
+          input(type="text" placeholder="Your username"
+          ng-model="vm.login.email")
+        label.item.item-input.item-stacked-label
+          span.input-label Password
+          input(type="password" placeholder="Your password"
+          ng-model="vm.login.password")
+        .padding
+          button.button.button-block.button-positive Sign In
+
+# www/js/login/login.controller.coffee
+angular.module 'starter'
+  .controller 'LoginController', (Auth, $state) -&gt;
+    vm = this
+    vm.login =
+      email: 'asd@asd.asd'
+      password: 'asdfasdf'
+
+    init = -&gt;
+      Auth.currentUser().then(
+        (user) -&gt;
+          console.log user
+          $state.go 'tab.dashboard'
+        (error) -&gt;
+          console.log error
+      )
+
+    vm.handleSubmitLogin = (login) -&gt;
+      Auth.login(login).then(
+        (user) -&gt;
+          console.log user
+          $state.go 'tab.dashboard'
+        (error) -&gt;
+          console.log error
+      )
+
+    init()
+    return
+
+
+# www/js/app.router.coffee
+angular.module 'starter'
+  .config ($stateProvider, $urlRouterProvider) -&gt;
+    $stateProvider
+      .state 'login',
+        url: '/login'
+        templateUrl: 'jade_build/js/login/login.html'
+        controller: 'LoginController'
+        controllerAs: 'vm'
+      .state 'tab',
+        url: '/tab'
+        abstract: true
+        templateUrl: 'jade_build/js/tabs/tabs.html'
+        controller: 'TabsController'
+      .state 'tab.dashboard',
+        url: '/dashboard'
+        views:
+          'tab-dashboard':
+            templateUrl: 'jade_build/js/dashboard/dashboard.html'
+            controller: 'DashboardController'
+            controllerAs: 'vm'
+      .state 'tab.account',
+        url: '/account'
+        views:
+          'tab-account':
+            templateUrl: 'jade_build/js/account/account.html'
+            controller: 'AccountController'
+            controllerAs: 'vm'
+
+    $urlRouterProvider.otherwise '/login'
+
+# www/js/app.run.coffee
+angular.module 'starter'
+  .run ($rootScope, NotifyService, $state) -&gt;
+    $rootScope.$on 'devise:login', (event, currentUser) -&gt;
+      console.log 'devise:login'
+
+    $rootScope.$on 'devise:new-session', (event, currentUser) -&gt;
+      console.log 'devise:new-session user logs in with Auth.login'
+
+    $rootScope.$on 'devise:unauthorized', (event, xhr, deferred) -&gt;
+      NotifyService.toast "Unauthorized. Please log in again"
+      $state.go 'login'
+
+    return
+
+# www/js/tabs/tabs.controller.coffee
+angular.module 'starter'
+  .controller 'TabsController', (Auth, $state, $rootScope) -&gt;
+    init = -&gt;
+      Auth.currentUser().then(
+        (user) -&gt;
+          $rootScope.user = user
+        (error) -&gt;
+          console.log error
+          $state.go 'login'
+      )
+    init()
+    console.log 'TabsController'
+    return
+
+</code></pre></div></div>
+
+<h1 id="resend-confirmation-email-on-login">Resend confirmation email on login</h1>
+
+<p>When user has not confirmed email and <code class="language-plaintext highlighter-rouge">config.allow_unconfirmed_access_for =
+3.days</code> has expired, and when he login there will be an error:</p>
+
+<blockquote>
+  <p>Failed to login because A confirmation email was sent to your account at
+asd@asd.asd. You must follow the instructions in the email before your account
+can be activated</p>
+</blockquote>
+
+<p>We can resend confirmation in this failed login attempt (don’t resend email in
+case <code class="language-plaintext highlighter-rouge">allow_unconfirmed_access_for</code> is not set or zero and you automatically log
+in user after registration). You can also check if confirmation is send more
+than 1.day ago and update <code class="language-plaintext highlighter-rouge">@resource.confirmation_sent_at = Time.now.utc -
+Devise.allow_unconfirmed_access_for</code> (this substraction is needed because
+someone can try to login right after confirmation email is send).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/routes.rb
+#   mount_devise_token_auth_for( 'User', controllers: { sessions: 'users/sessions' })
+# config/initializers/devise_token_auth.rb define url or use from secrets
+#  config.default_confirm_success_url = 'http://localhost:9000'
+#  config.default_confirm_success_url = \
+#    "http://#{Rails.application.secrets.default_url['host']}" \
+#    ":#{Rails.application.secrets.default_url['port']}"
+
+cat &gt; app/controllers/users/sessions_controller.rb &lt;&lt;\HERE_DOC
+module Users
+  class SessionsController &lt; DeviseTokenAuth::SessionsController
+    def render_create_error_not_confirmed
+      @redirect_url = DeviseTokenAuth.default_confirm_success_url
+      @resource.send_confirmation_instructions(
+        redirect_url: @redirect_url,
+      )
+      super
+    end
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>Problem with <code class="language-plaintext highlighter-rouge">ng-token</code> is that is returns user object with snake
+<code class="language-plaintext highlighter-rouge">user.first_name</code> instead of camelCase <code class="language-plaintext highlighter-rouge">user.firstName</code> as it is for Rails
+Resources</p>
+
+<h1 id="sign-in-after-user-click-on-confirmation-link">Sign in after user click on confirmation link</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/confirmations_controller.rb
+class ConfirmationsController &lt; Devise::ConfirmationsController
+  def show
+    super do
+      sign_in resource if resource.confirmed?
+    end
+
+    def after_confirmation_path_for(resource_name, resource)
+      profile_edit_path
+    end
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/routes.rb
+  devise_for :users, controllers: {
+    confirmations: :confirmations
+  }
+</code></pre></div></div>
+
+<h1 id="admin-sign-in-as-another-user">Admin sign in as another user</h1>
+
+<p>If admin wants to become some other user <code class="language-plaintext highlighter-rouge">login_as</code> he can use <code class="language-plaintext highlighter-rouge">sign_in(:user,
+@user, { :bypass =&gt; true })</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/layouts/application.html.erb
+&lt;% if Rails.env.development? %&gt;
+  &lt;small&gt;
+    only_on_development
+    &lt;% User.first(10).each do |user| %&gt;
+      &lt;%= link_to user.email, sign_in_as_path(user_id: user.id) %&gt;
+    &lt;% end %&gt;
+  &lt;/small&gt;
+&lt;% end %&gt;
+
+# config/routes.rb
+  get 'sign_in_as', to: 'application#sign_in_as'
+
+# app/controllers/application_controller.rb
+  before_action :authenticate_user!, except: [:sign_in_as]
+  def sign_in_as
+    return unless Rails.env.development?
+    user = User.find params[:user_id]
+    request.env['devise.skip_trackable'] = true
+    sign_in :user, user, bypass: true
+    redirect_to root_path
+  end
+</code></pre></div></div>
+
+<p>With ng-token is similar</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def sign_in_as
+  @resource = @user
+  # copy original code
+  # https://github.com/lynndylanhurley/devise_token_auth/blob/master/app/controllers/devise_token_auth/sessions_controller.rb#L33
+  # create client id
+  @client_id = SecureRandom.urlsafe_base64(nil, false)
+  @token     = SecureRandom.urlsafe_base64(nil, false)
+
+  @resource.tokens[@client_id] = {
+    token: BCrypt::Password.create(@token),
+    expiry: (Time.zone.now + DeviseTokenAuth.token_lifespan).to_i
+  }
+  @resource.save
+
+  sign_in(:user, @resource, store: false, bypass: false)
+  render json: @user
+end
+</code></pre></div></div>
+
+<p>just note that user need to be <code class="language-plaintext highlighter-rouge">user.active_for_authentication?</code>. In seed you
+need to have <code class="language-plaintext highlighter-rouge">user.skip_confirmation!</code> since you will not be able to log in as.</p>
+
+<h1 id="serialization">Serialization</h1>
+
+<p>Devise will show only id, email, create_at and updated_at. To add more fields
+override user as_json</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  def as_json(options={})
+    r = super(options)
+    r["domains"] = 'trk.in.rs'
+    r
+  end
+</code></pre></div></div>
+
+<h1 id="redirection-after-sign-in">Redirection after sign in</h1>
+
+<p>Stored location for resource is usually kept in <code class="language-plaintext highlighter-rouge">session[:user_return_to]</code>. Yo
+enable it you have to add before action
+https://github.com/plataformatec/devise/wiki/How-To:-Redirect-back-to-current-page-after-sign-in,-sign-out,-sign-up,-update</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+class ApplicationController &lt; ActionController::Base
+  before_action :_store_user_location!, if: :_storable_location?
+  # The callback which stores the current location must be added before you authenticate the user
+  # as `authenticate_user!` (or whatever your resource is) will halt the filter chain and redirect
+  # before the location can be stored.
+
+  # Its important that the location is NOT stored if:
+  # - The request method is not GET (non idempotent)
+  # - The request is handled by a Devise controller such as Devise::SessionsController as that could cause an 
+  #    infinite redirect loop.
+  # - The request is an Ajax request as this can lead to very unexpected behaviour.
+  def _storable_location?
+    request.get? &amp;&amp; is_navigational_format? &amp;&amp; !devise_controller? &amp;&amp; !request.xhr?
+  end
+
+  def _store_user_location!
+    # :user is the scope we are authenticating
+    # this path can be fetched with path = stored_location_for(resource)
+    store_location_for(:user, request.path)
+  end
+
+  # https://www.rubydoc.info/github/plataformatec/devise/Devise/Controllers/Helpers:after_sign_in_path_for
+  # override in ApplicationController since if you override in
+  # SessionsController and it wont be used in RegistrationController (for example
+  # user already signed in and needs to be redirected)
+  def after_sign_in_path_for(resource)
+    # we need save stored location in variable since it is not idempotent
+    # if we call twice stored_location_for(:user) than second will be nil
+    # so do not use stored_location_for in views or anywhere else... you can use
+    # session[:user_return_to] if you really need
+    redirect_url = stored_location_for(resource)
+    return redirect_url if redirect_url.present?
+    # calculate default paths for user
+  end
+
+
+# app/controllers/users/registrations_controller.rb
+note that inside Devise controllers and also in application controller you can
+use `stored_location_for :user`
+
+</code></pre></div></div>
+
+<p>If you need to store landing page for future analitics or you need to redirect
+users after specific actions, you can implement your own</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+  before_action :set_back_variable_into_session_if_exists
+  before_action :save_landing_page, unless: :current_user
+
+  def set_back_variable_into_session_if_exists
+    session[:_back] = params[:_back] if params[:_back].present?
+    # facebook login overwrite params and querystring so we need to use request.env to get _back param
+    # https://github.com/intridea/omniauth-oauth2/issues/28
+    session[:_back] = request.env['omniauth.params'].try(:[],'_back') if request.env['omniauth.params'].try(:[],'_back').present?
+  end
+  def save_landing_page
+    if ! session[:landing_page].present?
+      session[:landing_page] = request.fullpath
+    end
+  end
+
+  # this overrides devise default
+  def after_sign_in_path_for(resource)
+    view_context.after_log_in_path_for(resource)
+  end
+
+# app/helpets/application_helper.rb
+  def after_log_in_path_for(user)
+    track_sign_in(user) if user.customer?
+    origin = request.env['omniauth.origin'] unless [new_user_session_url, signup_jobseeker_url, signup_employer_url, user_omniauth_authorize_url(:linkedin), user_omniauth_authorize_url(:facebook)].include? "#{request.env['omniauth.origin']}".split('?').first
+    session[:_back] || origin || controller.stored_location_for(user) || if user.user?
+      job_seeker_first_step_path
+    elsif user.customer?
+      employer_after_signup_path(:subscribe)
+    elsif user.admin?
+      users_path
+    elsif user.superadmin?
+      users_path
+    else
+      root_path
+    end
+  end
+</code></pre></div></div>
+
+<h1 id="testing">Testing</h1>
+
+<p>You can use <a href="/2015/11/09/rails-testing/&#10;#login-helper">test login helpers</a>
+In <code class="language-plaintext highlighter-rouge">spec/rails_helper.rb</code> uncomment line that require all <code class="language-plaintext highlighter-rouge">spec/support/**/*.rb</code>
+files and create that login helper.</p>
+
+<p>And you can use in your acceptance tests <code class="language-plaintext highlighter-rouge">login_as user</code> where <code class="language-plaintext highlighter-rouge">user =
+User.create email: 'asd@.asd.asd', password: 'asdasd'</code></p>
+
+<p>To suppress error in tests <code class="language-plaintext highlighter-rouge">ERROR -- omniauth: (facebook) Authentication
+failure! invalid_credentials encountered.  </code> you can use this helper</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def silence_omniauth
+    previous_logger = OmniAuth.config.logger
+    OmniAuth.config.logger = Logger.new("/dev/null")
+    yield
+  ensure
+    OmniAuth.config.logger = previous_logger
+  end
+
+  silence_omniauth { click_link 'Sign in using Facebook' }
+</code></pre></div></div>
+
+<h1 id="http-basic-auth">HTTP Basic auth</h1>
+
+<p>You can use basic http auth but you should <code class="language-plaintext highlighter-rouge">config.force_ssl = true</code> for
+production env.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/admin/admin_controller.rb
+module Admin
+  class AdminController &lt; ApplicationController
+    http_basic_authenticate_with(
+      name: Rails.application.credentials.admin_username,
+      password: Rails.application.credentials.admin_password
+    )
+  end
+end
+
+# app/controllers/admin/users_controller.rb
+module Admin
+  class UsersController &lt; Admin::AdminController
+  end
+end
+</code></pre></div></div>
+
+<p>If you want different password for different request type</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ApplicationController &lt; ActionController::Base
+  protect_from_forgery with: :exception
+  skip_before_action :verify_authenticity_token, if: :json_request?
+
+  before_action :authenticate
+
+  def authenticate
+    return true if Rails.env.test?
+    authenticate_or_request_with_http_basic do |username, password|
+      return true if request.format.html? &amp;&amp; username == Rails.application.secrets.admin_username &amp;&amp; password == Rails.application.secrets.admin_password
+      return true if request.format.json? &amp;&amp; username == Rails.application.secrets.admin_json_username &amp;&amp; password == Rails.application.secrets.admin_json_password
+      false
+    end
+  end
+end
+</code></pre></div></div>
+
+<h1 id="sorcery">Sorcery</h1>
+
+<p><a href="https://github.com/Sorcery/sorcery">https://github.com/Sorcery/sorcery</a></p>
+
+<h1 id="devise-send-email-in-background">Devise send email in background</h1>
+
+<p>Read this gem
+https://github.com/plataformatec/devise/wiki/How-To:-Send-devise-emails-in-background-(Resque,-Sidekiq-and-Delayed::Job)
+or you can add manually (just put lines in User model, so it overrides devise’s)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  devise :database_authenticatable, :device_async
+
+# config/initializers/devise.rb
+# Register devise-async model in Devise
+Devise.add_module(:devise_async, model: 'devise_async')
+
+# app/models/concerns/devise_async.rb
+module DeviseAsync
+  extend ActiveSupport::Concern
+
+  included do
+    # This method overwrites devise's own `send_devise_notification`
+    # message = devise_mailer.send(notification, self, *args)
+    # message.deliver_now
+    # also need to fetch user in MyDeviseMailer
+    # protected is required, or ActionView::Template::Error: undefined method `main_app'
+    protected
+    def send_devise_notification(notification, *args)
+      message = devise_mailer.send(notification, self, *args)
+      message.deliver_later
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>or oneliner instead of all above</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  # https://github.com/plataformatec/devise#activejob-integration
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+</code></pre></div></div>
+
+<p>Look below if you have problem with serilization</p>
+
+<h1 id="custom-devise-mailer">Custom devise mailer</h1>
+
+<p>https://github.com/plataformatec/devise/wiki/How-To:-Use-custom-mailer
+I override becaus I wante dto use delive_later but have a problem with
+serilization (Neo4j objects)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveJob::SerializationError: Unsupported argument type: User
+</code></pre></div></div>
+
+<p>so I send <code class="language-plaintext highlighter-rouge">id</code> instead of <code class="language-plaintext highlighter-rouge">self</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+  # This method overwrites devise's own `send_devise_notification`
+  # message = devise_mailer.send(notification, self, *args)
+  # message.deliver_now
+  # also need to fetch user in MyDeviseMailer
+  # protected is required, or ActionView::Template::Error: undefined method `main_app'
+
+  protected
+
+  def send_devise_notification(notification, *args)
+    message = devise_mailer.send(notification, id, *args)
+    message.deliver_later
+  end
+</code></pre></div></div>
+
+<p>So My devise mailer just call super with same arguments</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/mailers/my_devise_mailer.rb
+class MyDeviseMailer &lt; Devise::Mailer
+  helper :application # gives access to all helpers defined within `application_helper`.
+  include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
+  default template_path: 'devise/mailer' # to make sure that your mailer uses the devise views
+
+  def confirmation_instructions(record_id, token, opts = {})
+    record = User.find record_id
+    super record, token, opts
+  end
+
+  def reset_password_instructions(record_id, token, opts = {})
+    record = User.find record_id
+    super record, token, opts
+  end
+
+  def unlock_instructions(record_id, token, opts = {})
+    record = User.find record_id
+    super record, token, opts
+  end
+
+  def email_changed(record_id, opts = {})
+    record = User.find record_id
+    super record, opts
+  end
+
+  def password_change(record_id, opts = {})
+    record = User.find record_id
+    super record, opts
+  end
+end
+</code></pre></div></div>
+
+<h1 id="session-expired">Session expired</h1>
+
+<p>For ajax requests when session is expired we need to redirect
+https://coderwall.com/p/zxe6dq/devise-redirect-ajax-request-when-session-timed-out-timeoutable-module</p>
+
+<h1 id="detect-if-already-signed-in-to-social-sites">Detect if already signed in to social sites</h1>
+
+<p>http://www.tomanthony.co.uk/blog/detect-visitor-social-networks/</p>
+
+<h1 id="warden">Warden</h1>
+
+<p>Devise uses warden which is rack middleware. Rack application is convection how
+server (puma/unicorn) talk to rails or sinatra, it needs a method <code class="language-plaintext highlighter-rouge">.call(env)</code>
+env is: rack_version, server_protocol, http_user_agent…</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config.ru
+class MyRackApp
+  def call(env)
+    status = 200
+    headers = { "Content-Type" =&gt; "application/json" }
+    body = ['{ "text": "Hello" }']
+    [status, headers, body]
+  end
+end
+run MyRackApp.new
+</code></pre></div></div>
+
+<p>and run this rackapp with <code class="language-plaintext highlighter-rouge">rackup</code> command (default server is puma). Note that
+you can also run rails using whit <code class="language-plaintext highlighter-rouge">rackup</code> command.
+To test how it works:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -i localhost:9292
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+
+{ "text": "Hello" }
+</code></pre></div></div>
+
+<p>Middleware is like rack application but it receive rack application instance so
+it can modify <code class="language-plaintext highlighter-rouge">env</code> hash (add some objects, set cookie header in response etc)
+and stop further execution of middlewares (response with 401 unauthorized).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyRackMiddleware
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
+    # do something with env
+    @app.call(env)
+  end
+end
+</code></pre></div></div>
+
+<p>Warden does not handle session store, but it depends on <code class="language-plaintext highlighter-rouge">Rack::Session::Cookie</code>
+middleware that sets <code class="language-plaintext highlighter-rouge">env['rack.session']</code> and at the end it will generate
+<code class="language-plaintext highlighter-rouge">env['warden']</code>.
+https://github.com/wardencommunity/warden/wiki
+Strategies will be tried one after another until: one succees, or no strategies
+are found relevant, or strategy fails. Inside it you need to define <code class="language-plaintext highlighter-rouge">.valid?</code>
+(acts as guard, so do not fail strategy if params does not exists) and
+<code class="language-plaintext highlighter-rouge">.authenticate!</code> methods, you can use <code class="language-plaintext highlighter-rouge">params</code>, <code class="language-plaintext highlighter-rouge">env</code>, <code class="language-plaintext highlighter-rouge">session</code> object and
+should call <code class="language-plaintext highlighter-rouge">success!</code>, <code class="language-plaintext highlighter-rouge">fail!</code>. <code class="language-plaintext highlighter-rouge">halt!</code>.
+To use strategy, pass it as <code class="language-plaintext highlighter-rouge">env['warden'].authenticate :password</code> or define
+<code class="language-plaintext highlighter-rouge">manager.default_stategies :password</code> and call without param. You can use bang
+version to call <code class="language-plaintext highlighter-rouge">failure_app</code> if user is not authenticated.</p>
+
+<p>Scope is used to enable multiple users to be logged in in the same time, for
+example <code class="language-plaintext highlighter-rouge">env['rack.session'] = { 'warden.user.user.key' =&gt; 1,
+'warden.user.customer.key' =&gt; 1 }</code>. You can use by passign as hash argument
+<code class="language-plaintext highlighter-rouge">env['warden'].authenticate :api_token, scope: :customer</code>, check with
+<code class="language-plaintext highlighter-rouge">env['warden'].authenticated? :customer</code>, fetch the customer
+<code class="language-plaintext highlighter-rouge">env['warden'].user :customer</code>, log out <code class="language-plaintext highlighter-rouge">env['warden'].logout :customer</code>. Or you
+can define default_scope and scope_defaults strategies <code class="language-plaintext highlighter-rouge">config.default_scope =
+:customer</code> and <code class="language-plaintext highlighter-rouge">config.scope_defaults :customer, strategies: :api_token</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+source 'http://rubygems.org'
+gem 'byebug'
+gem 'warden'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config.ru
+require 'warden'
+
+use Rack::Session::Cookie, secret: 'warden'
+use Warden::Manager do |manager|
+  manager.default_strategies :password
+  manager.failure_app = FailureApp.new
+end
+
+class MyRackApp
+  def call(env)
+    env['warden'].authenticate!
+    user = env['warden'].user
+    status = 200
+    headers = { 'Content-Type' =&gt; 'application/json' }
+    body = ["{ \"text\": \"Hello #{user[:email]}\" }"]
+    [status, headers, body]
+  end
+end
+
+USERS = [
+  { id: 1, email: 'my@email.com', password: 'mypassword' },
+  { id: 2, email: 'your@email.com', password: 'yourpassword' },
+].freeze
+
+Warden::Manager.serialize_into_session do |user|
+  user[:id]
+end
+
+Warden::Manager.serialize_from_session do |id|
+  USERS.find { |user| user[:id] == id }
+end
+
+Warden::Strategies.add(:password) do
+  def valid?
+    params['email'] &amp;&amp; params['password']
+  end
+
+  def authenticate!
+    user = USERS.find { |u| u[:email] == params['email'] }
+    fail!('Invalid email') and return if user.nil?
+    fail!('Invalid password') and return if user[:password] != params['password']
+    success!(user)
+  end
+end
+
+class FailureApp
+  def call(env)
+    status = 401
+    headers = { 'Content-Type' =&gt; 'application/json' }
+    body = ["{ \"error\" : \"Something went wrong. #{env['warden'].message}\" }"]
+
+    [status, headers, body]
+  end
+end
+run MyRackApp.new
+</code></pre></div></div>
+
+<p>You can test</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -i 'localhost:9292?email=my@email.com&amp;password=mypassword'
+
+HTTP/1.1 200 OK 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Server: WEBrick/1.4.2 (Ruby/2.5.1/2018-03-29)
+Date: Thu, 01 Aug 2019 10:11:49 GMT
+Connection: Keep-Alive
+Set-Cookie: rack.session=BAh7B0kiD3Nlc3Npb25faWQGOgZFVEkiRWE5YzA3ZjFmYTgyNTg1NTk0YTY5%0AOWMzMmVkNmU3NWM4YjIzOTVkNGFiOTU5MWQxMzdkOGI1MDU2MTIzMDAxNTcG%0AOwBGSSIcd2FyZGVuLnVzZXIuZGVmYXVsdC5rZXkGOwBUaQY%3D%0A--3ad8682341ce7faff8b2140264f03932344cbb7b; path=/; HttpOnly
+
+{ "text": "Hello my@email.com" }
+
+</code></pre></div></div>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

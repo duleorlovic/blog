@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Swift Xcode Ios</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Swift Xcode Ios</h1>
+    <p class="meta">Feb 6, 2022</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#swift"><span class="tocnumber">1</span> <span class="toctext">Swift</span></a></li><li class="toc_level-1 toc_section-2"><a href="#ubuntu"><span class="tocnumber">2</span> <span class="toctext">Ubuntu</span></a></li><li class="toc_level-1 toc_section-3"><a href="#ios-in-xcode"><span class="tocnumber">3</span> <span class="toctext">iOS in XCode</span></a></li><li class="toc_level-1 toc_section-4"><a href="#to-share-styles-use-extension-of-labelstyle-and-override-makebody"><span class="tocnumber">4</span> <span class="toctext">to share styles use extension of LabelStyle and override makeBody</span></a></li><li class="toc_level-1 toc_section-5"><a href="#use-like-this"><span class="tocnumber">5</span> <span class="toctext">use like this</span></a></li><li class="toc_level-1 toc_section-6"><a href="#tips"><span class="tocnumber">6</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><h1 id="swift">Swift</h1>
+
+<p>https://docs.swift.org/swift-book/GuidedTour/GuidedTour.html</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let myConst = 42
+var myVariable = 1
+let implicitDobule = 70.0
+let explicitDouble: Double = 70
+
+// string interpolation using \()
+var myStr = "My name is \(name)"
+// indent is removed if it is the same as ending quotation marks
+var myMultilineStr = """
+I say "My name is \(name)"
+"""
+</code></pre></div></div>
+
+<p>Arrays and dictionaries</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var myArray = ["a", "b"]
+var myDictionary = [
+  "name": "Duke",
+]
+// to define empty arrays you need to declare type
+let emptyArray: [String] = []
+let emptyDictionary: [String: Float] = [:]
+}
+
+myArray.append("first")
+</code></pre></div></div>
+
+<p>Control flow for loops <code class="language-plaintext highlighter-rouge">for in</code>, <code class="language-plaintext highlighter-rouge">while</code>, <code class="language-plaintext highlighter-rouge">repeat while</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let scores = [1, 2]
+var result = 0
+for score in scores {
+  if score &gt; 1 {
+    result += 2
+  } else {
+    result += 1
+  }
+}
+
+// range of indexes
+for i in 0..&lt;4 { }
+for i in 0...3 { }
+
+for (_, name) in myDictionary {}
+
+while n &lt; 100 { n *= 2 }
+
+repeat {
+  m *= 2
+} while m &lt; 100
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">if</code> statement requires boolean expression or using <code class="language-plaintext highlighter-rouge">let</code> with optional string</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var optionalName: String? = "a"
+if let name = optionalName {
+}
+optionalName = nil
+</code></pre></div></div>
+<p>Handle optional values with default value using <code class="language-plaintext highlighter-rouge">??</code> operator</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let greeting = "Hi \(name ?? "guest")'
+</code></pre></div></div>
+<p>If class is optional than you can use <code class="language-plaintext highlighter-rouge">?</code> before calling a method or
+property, <code class="language-plaintext highlighter-rouge">optionalSquare?.radius</code> returns an optional value.</p>
+
+<p>Switch using case</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let vegetable = "red pepper"
+switch vegetable {
+case "celery":
+    print("Add some raisins and make ants on a log.")
+case "cucumber", "watercress":
+    print("That would make a good tea sandwich.")
+case let x where x.hasSuffix("pepper"):
+    print("Is it a spicy \(x)?")
+default:
+    print("Everything tastes good in soup.")
+}
+</code></pre></div></div>
+
+<p>Functions and Closures
+Arguments are parameter name and type, You can use custom argument label before
+parameter name or <code class="language-plaintext highlighter-rouge">_</code> to use no argument label (otherwise you need to call a
+function with parameter name like <code class="language-plaintext highlighter-rouge">greet(person: "John", day: "Wed")</code> if there
+are more than one parameter)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func greet(_ person: String, on day: String) -&gt; String {
+  return "Hello \(person) today is \(day)"
+}
+print(greet("John", on: "Wed"))
+</code></pre></div></div>
+<p>Return value can be a tuple</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func cal(scores: [Int]) -&gt; (min: Int, max:  Int) {
+  var min = scores[0]
+  var max = scores[0]
+  return (min, max)
+}
+</code></pre></div></div>
+<p>You can nest functions.
+Functions are first class type ie it can be return value from function.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func makeInc() -&gt; ((Int) -&gt; Int) {
+  func add(number: Int) -&gt; Int {
+    return 1 + number
+  }
+  return add
+}
+var inc = makeInc()
+print(inc(3))
+</code></pre></div></div>
+
+<p>Functions can take another function as one of its arguments</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func hasAnyMatches(_ list: [Int], condition: (Int) -&gt; Bool) -&gt; Bool {
+  for item in list {
+    if condition(item) {
+      return true
+    }
+  }
+  return false
+}
+
+func lessThanTen(number: Int) -&gt; Bool {
+  return number &lt; 10
+}
+
+var numbers = [30, 2, 12]
+print(hasAnyMatches(numbers, condition: lessThanTen))
+</code></pre></div></div>
+
+<p>Functions are actually a special case of closures, blocks of code that can be
+called later. Closure without a name is surrounded with braces, use <code class="language-plaintext highlighter-rouge">in</code> to
+separate arguments and return type from the body</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var numbers = [30, 2, 12]
+print(numbers.map({ (number: Int) -&gt; Int in
+  return 3 * number
+}))
+</code></pre></div></div>
+<p>When closure type is known (in callback for a delegate) you can omit return
+type. Single line can omit return. You can also omit parameters and use <code class="language-plaintext highlighter-rouge">$0</code>
+<code class="language-plaintext highlighter-rouge">$1</code>. You can omit parentheses if closure if the only argument.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var numbers = [30, 1, 12]
+print(numbers.map({ number in 3 * number}))
+print(numbers.map { 3 * $0})
+var sorted = numbers.sorted { $0 &gt; $1 }
+print(sorted)
+</code></pre></div></div>
+
+<p>Classes uses same <code class="language-plaintext highlighter-rouge">let</code> for constants, <code class="language-plaintext highlighter-rouge">var</code> for instance property, except that
+it’s in the context of a class. Use <code class="language-plaintext highlighter-rouge">init()</code> for initializers (<code class="language-plaintext highlighter-rouge">deinit()</code> for
+deinitializer for cleanup). If there is a parameter with same name, you can use
+<code class="language-plaintext highlighter-rouge">self.name</code> (otherwise, it is not required when assigning instance property)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class NamedShape {
+  var numberOfSides: Int = 0
+  var name: String
+
+  init(_ name: String) {
+    self.name = name
+  }
+
+  func simpleDescription() -&gt; String {
+    return "The \(name) shape has \(numberOfSides) sides."
+  }
+}
+var s = NamedShape("My")
+s.numberOfSides = 2
+print(s.simpleDescription())
+</code></pre></div></div>
+<p>Subclasses can <code class="language-plaintext highlighter-rouge">override</code> methods. You need to manually call <code class="language-plaintext highlighter-rouge">super.init()</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Circle: NamedShape {
+  var radius: Int = 0
+
+  init(radius: Int, name: String) {
+    super.init(name)
+    self.radius = radius
+  }
+  override func simpleDescription() -&gt; String {
+    return "The \(name) circle has \(radius) radius."
+  }
+}
+</code></pre></div></div>
+<p>In addition to simple instance properties, you can have a getter and a setter
+(it uses <code class="language-plaintext highlighter-rouge">newValue</code> implicit name for setter). If you need to call a method when
+changing the property, you can use <code class="language-plaintext highlighter-rouge">willSet</code> and <code class="language-plaintext highlighter-rouge">didSet</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass {
+  var length: Int
+  init(newLength length: Int) {
+    length = newLength
+  }
+
+  var t: Int {
+    get {
+      return length
+    }
+    set {
+      length = newValue / 3
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>Enumerations <code class="language-plaintext highlighter-rouge">enum</code> can have methods. It starts from zero unless explicitly
+specifying value. Access raw values using <code class="language-plaintext highlighter-rouge">.rawValue</code> property.
+Use <code class="language-plaintext highlighter-rouge">init?(rawValue:)</code> initializer to make an instance of an enumeration from a
+raw value.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum Rank: Int {
+    case ace = 1
+    case two, three
+
+    func simpleDescription() -&gt; String {
+        switch self {
+        case .ace:
+            return "ACE"
+        default:
+            return String(self.rawValue)
+        }
+    }
+}
+let ace = Rank.ace
+// or let ace: Rank = .ace
+print(ace)
+print(ace.rawValue)
+print(ace.simpleDescription())
+</code></pre></div></div>
+<p>You can use values associated with the case, which are determined when you make
+an instance, so they can be different for each instance of enumeration case
+(like stored properties of the enumeration case instance)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum ServerResponse {
+    case result(String, String)
+    case failure(String)
+}
+
+let success = ServerResponse.result("6:00 am", "8:09 pm")
+let failure = ServerResponse.failure("Out of cheese.")
+
+switch success {
+case let .result(sunrise, sunset):
+    print("Sunrise is at \(sunrise) and sunset is at \(sunset).")
+case let .failure(message):
+    print("Failure...  \(message)")
+}
+// Prints "Sunrise is at 6:00 am and sunset is at 8:09 pm."
+</code></pre></div></div>
+
+<p>Structires <code class="language-plaintext highlighter-rouge">struct</code> are similar to <code class="language-plaintext highlighter-rouge">class</code> just they are always copied, but
+classes are passed by reference</p>
+
+<p>Protocols can be declared with <code class="language-plaintext highlighter-rouge">protocol</code>. use <code class="language-plaintext highlighter-rouge">mutating</code> to mark a method that
+modifies the structure.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>protocol ExampleProtocol {
+  var simpleDescription: String { get }
+  mutating func adjust()
+}
+
+class SimpleClass: ExampleProtocol {
+  var simpleDescription: String = "A very simple class"
+  func adjust() {
+    simpleDescription += " now adjusted"
+  }
+}
+</code></pre></div></div>
+
+<p>Use <code class="language-plaintext highlighter-rouge">extension</code> to add functionality to an existing type.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extension Int: ExampleProtocol {
+    var simpleDescription: String {
+        return "The number \(self)"
+    }
+    mutating func adjust() {
+        self += 42
+    }
+}
+print(7.simpleDescription)
+// Prints "The number 7"
+</code></pre></div></div>
+<p>Extension is also used to write seed sample data</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Card {
+  var title: String
+}
+extension Card {
+  static let sampleData: [Card] =
+  [
+    Card(title: "First"),
+    Card(title: "Second"),
+  ]
+}
+</code></pre></div></div>
+
+<p>Error Handling is using any type that adopts <code class="language-plaintext highlighter-rouge">Error</code> protocol
+Use <code class="language-plaintext highlighter-rouge">throw</code> to raise an error and <code class="language-plaintext highlighter-rouge">throws</code> to mark a function that can throw an
+error. Code that called a function (with <code class="language-plaintext highlighter-rouge">try</code> prefix) handles the error with:
+<code class="language-plaintext highlighter-rouge">do catch</code>, catch is similar to <code class="language-plaintext highlighter-rouge">switch Error case ...</code> automatic
+name is <code class="language-plaintext highlighter-rouge">error</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum PrinterError: Error {
+  case outOfPaper
+  case onFire
+}
+func send(job: Int, printerName: String) throws -&gt; String {
+  if printerName == "Never has paper" {
+    throw PrinterError.outOfPaper
+  }
+  return "Job \(job) sent"
+}
+
+do {
+  let result = try send(job: 42, printerName: "Never has paper")
+  print(result)
+} catch PrinterError.onFire {
+  print("Call the fireman")
+} catch let printerError as PrinterError {
+  print("Printer error: \(printerError)")
+} catch {
+  print(error)
+}
+</code></pre></div></div>
+<p>Another way to handle errors is to use <code class="language-plaintext highlighter-rouge">try?</code> to convert the result to an
+optional.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let result = try? send(job: 42, printerName: "Never has paper")
+</code></pre></div></div>
+<p>Use <code class="language-plaintext highlighter-rouge">defer</code> to write a block of code that’s executed after all other code in the
+function, just before function returns, it is executed regardless of whether the
+function throws an error. Please use this cleanup code after setup block</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var fridgeIsOpen = false
+let fridgeContent = ["milk", "eggs"]
+func fridgeContains(_ food: String) -&gt; Bool {
+  fridgeIsOpen = true
+  defer {
+    fridgeIsOpen = false
+  }
+  let result = fridgeContent.contains(food)
+  return result
+}
+print(fridgeContains("banana"))
+print(fridgeIsOpen)
+</code></pre></div></div>
+
+<p>Generic function is created using <code class="language-plaintext highlighter-rouge">&lt;Name&gt;</code> which is populated when it is called</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func makeArray&lt;Item&gt;(_ item: Item, numberOfTimes: Int) -&gt; [Item] {
+  var result: [Item] = []
+  for _ in 0..&lt;numberOfTimes {
+    result.append(item)
+  }
+  return result
+}
+print(makeArray("asd", numberOfTimes: 3))
+print(makeArray(1, numberOfTimes: 0))
+</code></pre></div></div>
+<p>You can make generic forms of functions, methods, classes, enumeration and
+structures</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Reimplement the Swift standard library's optional type
+enum OptionalValue&lt;Wrapped&gt; {
+  case none
+  case some(Wrapped)
+}
+var possibleInteger: OptionalValue&lt;Int&gt; = .none
+possibleInteger = .some(100)
+</code></pre></div></div>
+<p>Use <code class="language-plaintext highlighter-rouge">where</code> right before the body to specify a list of requirements, for example
+require type to implement a protocol, require a class to have superclass</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func anyCommonElements&lt;T: Sequence, U: Sequence&gt;(_ lhs: T, _ rhs: U) -&gt; Bool
+    where T.Element: Equatable, T.Element == U.Element
+{
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                return true
+            }
+        }
+    }
+    return false
+}
+anyCommonElements([1, 2, 3], [3])
+</code></pre></div></div>
+
+<h1 id="ubuntu">Ubuntu</h1>
+
+<p>Use official vim support</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git@github.com:apple/swift.git --depth 1
+mkdir ~/.vim/pack/bundle/start -p
+cp vim ~/.vim/pack/bundle/start/swift -r
+</code></pre></div></div>
+
+<p>Install swift on Ubuntu from https://www.swift.org/download/
+extract to Programs and add Path</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "PATH=~/Programs/swift-5.5.3-RELEASE-ubuntu20.04/usr/bin:$PATH" &gt;&gt; ~/.bashrc
+. ~/.bashrc
+</code></pre></div></div>
+<p>Build</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch Package.swift
+mkdir Sources
+echo print("Hello, world") &gt;&gt; Sources/main.swift
+swift build
+# .build/debug/Hello
+</code></pre></div></div>
+
+<h1 id="ios-in-xcode">iOS in XCode</h1>
+
+<p>https://developer.apple.com/tutorials/app-dev-training</p>
+
+<ul>
+  <li>right_click -&gt; Refactor -&gt; Rename</li>
+  <li>cmd + click -&gt; Embed in VStack</li>
+  <li>cmd + right_click -&gt; Find</li>
+  <li>navigate Show next tab, show previous tab with cmd+shift+{} (with default
+key bindings cmd+{}) I need shift because of karabiner so I remaped Show
+next/previous tab to cmd+[] so now it works cmd+{} (also use other key
+kombination for conflicts like Shift left/right and Align left/right edges)</li>
+  <li>enable vim in Editor -&gt; Vim Mode . You can visually select and cmd+c to copy
+to clipboard and paste in another program (yank paste works only inside xcode)
+Add to project  .gitignore
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .gitignore
+*.xcodeproj/
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>When there is an error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Select a scheme that builds a target which contains the current file, or add this file to a target that is built by the current scheme.
+</code></pre></div></div>
+<p>than you should close Xcode and remove clean the build folder</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm -rf ~/Library/Developer/Xcode/DerivedData/*
+</code></pre></div></div>
+
+<p>Elements:</p>
+<ul>
+  <li>view
+```
+import SwiftUI</li>
+</ul>
+
+<p>struct CardView: View {
+    let card: Card
+    var body: some View {
+    }
+}
+struct CardView_Previews: PreviewProvider {
+    static var card = Card.sampleData[0]
+    static var previews: some View {
+        CardView(card: card)
+            .background(card.theme.mainColor)
+            .previewLayout(.fixed(width: 400, height: 60))
+    }
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* stacks
+</code></pre></div></div>
+<p>VStack {
+  Text(“a”)
+  Spacer()
+  HStack {
+    Label(“Info”)
+    Spacer()
+    Label(“More Info”)
+  }
+}
+.padding()
+.foregroundColor(scrum.theme.accentColor)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* List https://developer.apple.com/documentation/swiftui/list
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Label pick icons on https://developer.apple.com/sf-symbols/
+</code></pre></div></div>
+<p>Label(“300”, systemImage: “hourglass.bottomhalf.fill”)</p>
+
+<h1 id="to-share-styles-use-extension-of-labelstyle-and-override-makebody">to share styles use extension of LabelStyle and override makeBody</h1>
+<p>struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -&gt; some View {
+        HStack {
+            configuration.title
+            configuration.icon
+        }
+    }
+}</p>
+
+<p>extension LabelStyle where Self == TrailingIconLabelStyle {
+    static var trailingIcon: Self { Self() }
+}</p>
+<h1 id="use-like-this">use like this</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* accesibility
+</code></pre></div></div>
+<p>Image(systemName: “person”)
+.accessibilityLabel(“Person”)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Errors
+
+For
+</code></pre></div></div>
+
+<p>Showing Recent Messages
+Signing for “Scrumdinger” requires a development team. Select a development team in the Signing &amp; Capabilities editor.
+```
+You need to select Team by navigating to project (left icon on left window) and
+find second tab on right window <em>Signing &amp; Capabilities</em> and choose the team
+(for example Personal Team) and choose unique <em>Bundle Indentifier</em> and you
+should see: Signging Ceritficate Apple Development email (ASD123)</p>
+
+<h1 id="tips">Tips</h1>
+
+<p>Open emulator by navigating to in menu bar Xcode -&gt; Open Developer Tool -&gt;
+Simulator</p>
+
+<ul>
+  <li>icons https://developer.apple.com/sf-symbols/ or online
+https://github.com/cyanzhong/sf-symbols-online</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

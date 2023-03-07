@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Stripe</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Stripe</h1>
+    <p class="meta">Aug 29, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installation"><span class="tocnumber">1</span> <span class="toctext">Installation</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#checkout-redirection"><span class="tocnumber">1.1</span> <span class="toctext">Checkout redirection</span></a></li><li class="toc_level-2 toc_section-3"><a href="#iframe-using-elements"><span class="tocnumber">1.2</span> <span class="toctext">Iframe using Elements</span></a></li><li class="toc_level-2 toc_section-4"><a href="#find-or-create-stripe-customer"><span class="tocnumber">1.3</span> <span class="toctext">Find or create Stripe customer</span></a></li></ul></li><li class="toc_level-1 toc_section-5"><a href="#example-using-subscriptions"><span class="tocnumber">2</span> <span class="toctext">Example using subscriptions</span></a></li><li class="toc_level-1 toc_section-6"><a href="#stripe-ruby-mock"><span class="tocnumber">3</span> <span class="toctext">Stripe ruby mock</span></a></li><li class="toc_level-1 toc_section-7"><a href="#testing-stripe"><span class="tocnumber">4</span> <span class="toctext">Testing Stripe</span></a></li></ul></td></tr></tbody></table></div><h1 id="installation">Installation</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'stripe'
+
+rails credentials:edit
+# add two keys from test env https://dashboard.stripe.com/test/apikeys
+stripe_publishable_key: pk_test_I...
+stripe_secret_key: sk_test_g...
+
+# config/initializers/stripe.rb
+Stripe.api_key = Rails.application.credentials.stripe_secret_key
+</code></pre></div></div>
+
+<p>checkout.js is deprecated and now we use stripe.js You can use as module
+https://github.com/stripe/stripe-js but PCI compliant requires to load from
+<code class="language-plaintext highlighter-rouge">&lt;script src="https://js.stripe.com/v3/"&gt;&lt;/script&gt;</code></p>
+
+<p>There are two kind of intergrations, using redirection or iframe.</p>
+
+<h2 id="checkout-redirection">Checkout redirection</h2>
+
+<p>Server generate session and client redirects to checkout page on stripe
+https://stripe.com/docs/payments/checkout/accept-a-payment?lang=ruby</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/pages_controller.rb
+
+  def checkout
+    @stripe_session = Stripe::Checkout::Session.create(
+      client_reference_id: 'my_reference',
+      customer_email: 'my@email.com',
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'T-shirt',
+          },
+          unit_amount: params[:amount].presence || 123,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: pages_success_checkout_url + '?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: pages_cancel_url,
+    )
+  end
+
+  def success_checkout
+    @stripe_session = Stripe::Checkout::Session.retrieve(params[:session_id])
+    @stripe_payment_intent = Stripe::PaymentIntent.retrieve(@stripe_session.payment_intent)
+  end
+
+# app/views/pages/checkout.js.erb
+stripe = Stripe('&lt;%= Rails.application.credentials.stripe_publishable_key %&gt;')
+stripe.redirectToCheckout({
+  sessionId: '&lt;%= @stripe_session.id %&gt;'
+}).then(function (result) {
+});
+</code></pre></div></div>
+<p>You need to use session_id to check amount that is received and status of the
+payment. Note that redirection success_url can use placeholder to mark that we
+need session_id <code class="language-plaintext highlighter-rouge">?session_id={CHECKOUT_SESSION_ID}</code> so we can retrieve Session.
+Use <code class="language-plaintext highlighter-rouge">client_reference_id</code> to fetch payment from db and update logs with
+status, customer (stripe customer id), amount_received from PaymentIntent.
+Params https://stripe.com/docs/api/checkout/sessions/create
+https://stripe.com/docs/api/payment_intents/object
+Real world will use webhooks.</p>
+
+<h2 id="iframe-using-elements">Iframe using Elements</h2>
+
+<p>https://stripe.com/docs/stripe-js?lang=html
+https://stripe.com/docs/payments/accept-a-payment?lang=ruby#web-create-payment-intent
+https://stripe.com/docs/payments/integration-builder?platform=web&amp;lang=ruby&amp;client=html</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def iframe
+    amount = params[:amount].presence || 123
+    @stripe_payment_intent = Stripe::PaymentIntent.create(amount: amount, currency: 'usd')
+    payment = Payment.create! payment_intent_id: @stripe_payment_intent.id, user_id: 1, amount: amount, status: :initiated
+    # we need to check since payment could be made and redirection fails
+    CheckPaymentIntentJob.set(wait: 1.minute).perform_later payment
+  end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var stripe = Stripe('pk_test_Ib1l2OSfSQv8DieeTjCHsNoU');
+var elements = stripe.elements()
+var card = elements.create("card")//, { style: style });
+var clientSecret = '&lt;%= @stripe_payment_intent.client_secret %&gt;';
+
+card.mount("#card-element");
+stripe
+  .confirmCardPayment(clientSecret, {
+    payment_method: {
+      card: card
+    }
+  })
+  .then(function(result) {
+    if (result.error) {
+      // Show error to your customer
+      showError(result.error.message);
+    } else {
+      // The payment succeeded!
+      // orderComplete(result.paymentIntent.id);
+      form.submit();
+    }
+  });
+</code></pre></div></div>
+
+<p>When checking PaymentIntent status should be successfull
+https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
+Sample ids</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@stripe_payment_intent.id = "pi_1H3JL1Cmrv971Cndt8fOYDud"
+</code></pre></div></div>
+<p>and this can be used for stripe url</p>
+
+<h2 id="find-or-create-stripe-customer">Find or create Stripe customer</h2>
+
+<p>You can create stripe customer on signup (if email column has uniq index). In
+case when users does not have uniq index on email column (can be created without
+email) than signup flow could create multiple same stripe customers. In this
+case you need to search if there exists stripe customer.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+
+<h1 id="example-using-subscriptions">Example using subscriptions</h1>
+
+<p>https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect#</p>
+
+<h1 id="stripe-ruby-mock">Stripe ruby mock</h1>
+
+<p>https://github.com/rebelidealist/stripe-ruby-mock is a nice way to mock all API
+calls. To mock js calls you need to override js or mock params
+https://github.com/rebelidealist/stripe-ruby-mock/issues/360</p>
+
+<p>You can find on github https://github.com/duleorlovic/stripe_demo</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def stub_stripe(status, plan_id: nil)
+    StripeMock.start
+    stripe_helper = StripeMock.create_test_helper
+    token = stripe_helper.generate_card_token(last4: '1234')
+    script = "document.token_id = '#{token}'"
+    page.evaluate_script(script)
+    stripe_helper.create_plan(id: plan_id) if plan_id.present?
+    yield if block_given?
+    # note that you should make assertion before the block finish
+    StripeMock.stop
+  end
+</code></pre></div></div>
+
+<h1 id="testing-stripe">Testing Stripe</h1>
+
+<p>Test numbers <code class="language-plaintext highlighter-rouge">4242424242424242</code> or some of declined cards:
+https://stripe.com/docs/testing#cards</p>
+<ul>
+  <li>incorrect_number <code class="language-plaintext highlighter-rouge">424242424242424241</code></li>
+  <li>incorrect cvc is just use two digits or <code class="language-plaintext highlighter-rouge">4000000000000127</code> or
+  <code class="language-plaintext highlighter-rouge">4000000000000101</code></li>
+  <li>can attach card but attempts to charge fails <code class="language-plaintext highlighter-rouge">4000000000000341</code></li>
+  <li>3D secure is required <code class="language-plaintext highlighter-rouge">4000000000003220</code>
+https://stripe.com/docs/payments/3d-secure#three-ds-cards</li>
+</ul>
+
+<p>Demo app but Rails 4 can be found <a href="https://github.com/andrewculver/koudoku">https://github.com/andrewculver/koudoku</a>
+http://koudoku.org/</p>
+
+<p>You can test using server https://github.com/stripe/stripe-mock or using mocking
+library https://github.com/rebelidealist/stripe-ruby-mock</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

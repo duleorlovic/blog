@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Kubernetes</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Kubernetes</h1>
+    <p class="meta">Nov 20, 2021</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#learn"><span class="tocnumber">1</span> <span class="toctext">Learn</span></a></li><li class="toc_level-1 toc_section-2"><a href="#install-kubernetes-locally"><span class="tocnumber">2</span> <span class="toctext">Install Kubernetes locally</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#kind"><span class="tocnumber">2.1</span> <span class="toctext">Kind</span></a></li><li class="toc_level-2 toc_section-4"><a href="#k3d"><span class="tocnumber">2.2</span> <span class="toctext">K3d</span></a></li><li class="toc_level-2 toc_section-5"><a href="#minikube"><span class="tocnumber">2.3</span> <span class="toctext">Minikube</span></a></li><li class="toc_level-2 toc_section-6"><a href="#microk8s"><span class="tocnumber">2.4</span> <span class="toctext">Microk8s</span></a></li></ul></li><li class="toc_level-1 toc_section-7"><a href="#kubectl"><span class="tocnumber">3</span> <span class="toctext">Kubectl</span></a></li><li class="toc_level-1 toc_section-8"><a href="#docs"><span class="tocnumber">4</span> <span class="toctext">Docs</span></a><ul><li class="toc_level-2 toc_section-9"><a href="#yaml"><span class="tocnumber">4.1</span> <span class="toctext">Yaml</span></a></li><li class="toc_level-2 toc_section-10"><a href="#pods"><span class="tocnumber">4.2</span> <span class="toctext">Pods</span></a></li><li class="toc_level-2 toc_section-11"><a href="#services"><span class="tocnumber">4.3</span> <span class="toctext">Services</span></a></li><li class="toc_level-2 toc_section-12"><a href="#namespaces"><span class="tocnumber">4.4</span> <span class="toctext">Namespaces</span></a></li><li class="toc_level-2 toc_section-13"><a href="#configmap"><span class="tocnumber">4.5</span> <span class="toctext">ConfigMap</span></a></li><li class="toc_level-2 toc_section-14"><a href="#secrets"><span class="tocnumber">4.6</span> <span class="toctext">Secrets</span></a></li><li class="toc_level-2 toc_section-15"><a href="#statefulsets"><span class="tocnumber">4.7</span> <span class="toctext">StatefulSets</span></a></li></ul></li><li class="toc_level-1 toc_section-16"><a href="#templating-yaml"><span class="tocnumber">5</span> <span class="toctext">Templating YAML</span></a><ul><li class="toc_level-2 toc_section-17"><a href="#helm"><span class="tocnumber">5.1</span> <span class="toctext">Helm</span></a></li></ul></li><li class="toc_level-1 toc_section-18"><a href="#dashboard"><span class="tocnumber">6</span> <span class="toctext">Dashboard</span></a></li><li class="toc_level-1 toc_section-19"><a href="#context"><span class="tocnumber">7</span> <span class="toctext">Context</span></a></li><li class="toc_level-1 toc_section-20"><a href="#security"><span class="tocnumber">8</span> <span class="toctext">Security</span></a></li><li class="toc_level-1 toc_section-21"><a href="#ruby"><span class="tocnumber">9</span> <span class="toctext">Ruby</span></a></li><li class="toc_level-1 toc_section-22"><a href="#rails"><span class="tocnumber">10</span> <span class="toctext">Rails</span></a></li><li class="toc_level-1 toc_section-23"><a href="#digital-ocean"><span class="tocnumber">11</span> <span class="toctext">Digital ocean</span></a></li><li class="toc_level-1 toc_section-24"><a href="#vim"><span class="tocnumber">12</span> <span class="toctext">Vim</span></a></li><li class="toc_level-1 toc_section-25"><a href="#sidecar-pattern"><span class="tocnumber">13</span> <span class="toctext">Sidecar pattern</span></a></li></ul></td></tr></tbody></table></div><h1 id="learn">Learn</h1>
+
+<p>Online learn deploy
+https://kubernetes.io/docs/tutorials/kubernetes-basics/
+(it uses https://www.katacoda.com/ ) Another online playground
+https://labs.play-with-k8s.com/</p>
+
+<h1 id="install-kubernetes-locally">Install Kubernetes locally</h1>
+
+<p>Kind, k3d, minikube or microk8s</p>
+
+<h2 id="kind">Kind</h2>
+
+<p>https://kind.sigs.k8s.io/</p>
+
+<h2 id="k3d">K3d</h2>
+
+<p>https://k3d.io/</p>
+
+<p>Example 3 nodes</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>k3d cluster create gaia --servers 1 --agents 2 --port 80:80@loadbalancer --port 443:443@loadbalancer --api-port 6443 --k3s-arg '--no-deploy=traefik@server:*'
+</code></pre></div></div>
+
+<h2 id="minikube">Minikube</h2>
+
+<p>Install minikube</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+</code></pre></div></div>
+<p>minicube itself is running inside docker</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>minikube start
+minikube ip
+
+# to stop
+docker ps
+minikube stop
+</code></pre></div></div>
+
+<h2 id="microk8s">Microk8s</h2>
+
+<p>For ubuntu you can use https://microk8s.io/docs</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo snap install microk8s --classic --channel=1.21
+sudo usermod -a -G microk8s $USER
+newgrp microk8s
+
+microk8s status --wait-ready
+# microk8s is running
+
+# to stop
+microk8s stop
+</code></pre></div></div>
+
+<p>You can use alias</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alias k=microk8s.kubectl
+</code></pre></div></div>
+<p>or you can copy config</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>microk8s config &gt; ~/.kube/config
+</code></pre></div></div>
+
+<p>It is running as <code class="language-plaintext highlighter-rouge">/snap/microk8s/2694/kubelite</code> proccess.
+To stop run</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>microk8s stop
+</code></pre></div></div>
+
+<h1 id="kubectl">Kubectl</h1>
+
+<p>Install kubectl https://kubernetes.io/docs/tasks/tools/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+</code></pre></div></div>
+<p>Check if kubectl can access</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export KUBECONFIG=~/.kube/kubernetes-rails-example-kubeconfig.yaml
+kubectl version
+
+# this will create Deployment, ReplicaSet and Pod
+kubectl run my-nginx --image nginx
+
+kubectl create deployment httpenv --image=bretfisher/httpenv
+kubectl delete pod/httpenv-6fdc8554fb-f568c
+kubectl scale deployment/httpenv --replicas 5
+# create ClusterIP
+kubectl expose deployment/httpenv --port 8888
+
+kubectl get nodes -o wide # find node ip address
+kubectl get pods -o wide # pods are running on nodes, always replaced
+kubectl get pods -w # watch
+kubectl get pod my-pod -o jsonpath="{.spec.containers[0].ports[0].containerPort}"
+kubectl get services
+kubectl get svc hello
+kubectl get events
+kubectl get deployments
+kubectl get all
+
+kubectl describe service my-load-balancer
+kubectl describe pods
+
+kubectl config view
+
+kubectl logs -l app=rails-app -f # print logs from rails-app pods
+kubectl logs my-pod -p # log for specific pod of previous crashed CrashLoopBackOff instance
+
+kubectl apply -f config/kube/terminal.yml
+
+# live edit kubernetes
+kubectl edit service/my-service
+kubectl edit replicaset/app-nginx-deployment-56845f96cc
+
+kubectl exec terminal -- date # run command in first container inside pod
+kubectl exec terminal -it -- bash # run bash inside first container
+kubectl exec terminal -c ruby-container -it bash # run ssh inside specific con
+kubectl exec terminal -it -- bundle exec rails console
+
+# to trigger refresh deploy you can simply remove
+kubectl delete pods -l app=rails-app
+
+kubectl create -f config/kube/migrate.yml
+kubectl wait --for=condition=complete --timeout=600s job/migrate
+kubectl delete job migrate
+
+export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=application-1,app.kubernetes.io/instance=chart-1" -o jsonpath="{.items[0].metadata.name}")
+export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+echo "Visit http://127.0.0.1:8080 to use your application"
+# $POD_NAME is chart-1-application-1-6bcd5f68bd-kjmqr $CONTAINER_PORT is 80
+kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
+</code></pre></div></div>
+
+<p>To list all kinds that we can create</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl api-resources
+NAME        SHORTNAMES   APIVERSION NAMESPACED   KIND
+bindings                 v1         true         Binding
+componentstatuses cs     v1         false        ComponentStatus
+nodes       no           v1         false        Node
+deployments deploy       apps/v1    true         Deployment
+</code></pre></div></div>
+
+<p>To list all versions that are supported</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl api-versions
+</code></pre></div></div>
+<p>Find docs for specific API object</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl explain services
+kubectl explain services --recursive
+kubectl explain services.spec.type
+# note that this is a documentation of the client (not from the server, so maybe
+server does not support that version)
+</code></pre></div></div>
+<p>Full references is on https://kubernetes.io/docs/reference/</p>
+
+<p>To see what generated configuration is used from cli arguments</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create deployment sample --image nginx --dry-run -o yaml &gt; deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: sample
+  name: sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample
+      ...
+
+kubectl expose deployment/test --port 80 --dry-run -o yaml
+</code></pre></div></div>
+
+<p>You can see changes on server that differs from yaml</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl diff -f app.yml
+</code></pre></div></div>
+
+<p>Declarative is more <code class="language-plaintext highlighter-rouge">what</code> needs to be created, but impperative is more <code class="language-plaintext highlighter-rouge">how</code>.
+Declerative is using apply command and we do not care how it will be performed
+to the desired state.</p>
+
+<h1 id="docs">Docs</h1>
+
+<p>Learn Kubernetes with videos
+https://www.youtube.com/hashtag/kubernetesessentialsfromgooglecloud
+and documentation for example Specs for pod
+https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec</p>
+
+<p>Control plane is a set of containers that manage the cluster, includes: API
+server, scheduler, controller manager, etcd, CoreDNS
+On nodes we have: kubelet (agent running on nodes) and kube-proxy.</p>
+
+<h2 id="yaml">Yaml</h2>
+
+<p>Four root keys are: <code class="language-plaintext highlighter-rouge">apiVersion</code>, <code class="language-plaintext highlighter-rouge">kind</code>, <code class="language-plaintext highlighter-rouge">metadata</code> and <code class="language-plaintext highlighter-rouge">spec</code>.
+Inside <code class="language-plaintext highlighter-rouge">metadata</code> you can use <code class="language-plaintext highlighter-rouge">labels</code> (for example: <code class="language-plaintext highlighter-rouge">app: api</code>, <code class="language-plaintext highlighter-rouge">env: prod</code>)
+and for large objects use <code class="language-plaintext highlighter-rouge">annotations</code></p>
+
+<h2 id="pods">Pods</h2>
+
+<p>Pod is one or more containers running together on one Node. Pod is basic unit
+of deployment. Containers are always in pods.
+Controller is used for creating and updating pods, many types of controlles:
+Deployment, ReplicaSet, DaemonSet, Job</p>
+
+<p>Pod can be in Pending Running Succeded Failed Unknown phase
+https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase
+Container state (old has Pending state - insufficient resource)</p>
+<ul>
+  <li>Waiting - Pod can’t run (there are enough resource but maybe image can not be
+downloaded yet)</li>
+  <li>Running - you can debug using exec or logs</li>
+  <li>Terminated - either ran to completion or failed for some reason</li>
+</ul>
+
+<p>Use probe to check container status
+https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes</p>
+
+<p>Example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.17.3
+    ports:
+    - containerPort: 80
+</code></pre></div></div>
+<p>but that does not create replica set so better is to create Deployment</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/kube/deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-rails-example-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rails-app
+  template:
+    metadata:
+      labels:
+        app: rails-app
+    spec:
+      containers:
+      - name: rails-app
+        image: duleorlovic/kubernetes-rails-example:latest
+        ports:
+        - containerPort: 3000
+</code></pre></div></div>
+
+<h2 id="services">Services</h2>
+
+<p>Services route traffic to pods matching <code class="language-plaintext highlighter-rouge">app: MyApp</code> and redirects traffic from
+80 to 9376 only on internal cluster ip address.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: ClusterIP
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+</code></pre></div></div>
+<p>https://www.youtube.com/watch?v=uGm_A9qRCsk
+https://kubernetes.io/docs/concepts/services-networking/service/
+https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0
+Service types:
+<code class="language-plaintext highlighter-rouge">ClusterIP</code> (default) is reachable only inside cluster.
+<code class="language-plaintext highlighter-rouge">NodePort</code> is opening a specific (high) port on a specific machine
+<code class="language-plaintext highlighter-rouge">LoadBalancer</code> is used for using cloud-provided load balancer to route traffic
+between services pods but since you pay for every exposed service it is cheaper
+to use <code class="language-plaintext highlighter-rouge">Ingress</code> which can run on one port and route based on domain or path
+<code class="language-plaintext highlighter-rouge">ExternalName</code> adds CNAME DNS record to CoreDNS</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create ClusterIP
+kubectl expose deployment/httpenv --port 8888
+# create terminal
+kubectl run tmp-shell --rm -it --image bretfisher/netshoot -- bash
+curl httpenv:8888
+# find ip from kubectl get services
+curl 10.152.183.129:8888
+
+# create NodePort
+kubectl expose deployment/httpenv --port 8888 --name httpenv-np --type NodePort
+kubectl get services # this returns ports 8888:31471
+# from host
+curl localhost:31471
+curl 10.152.183.129:8888
+curl &lt;hostname&gt;.&lt;namespace&gt;.svc.cluster.local
+</code></pre></div></div>
+
+<p>3rd party proxy: Traefik, HAProxy, Nginx</p>
+
+<h2 id="namespaces">Namespaces</h2>
+
+<p>Namespaces is used to filter group of object in cluster
+https://www.youtube.com/watch?v=plB3kyZLHe8
+Debug services and dns with exec
+https://www.youtube.com/watch?v=CSKRy7Ldqis</p>
+
+<p>Namespace Authentication and cluster is defined inside <code class="language-plaintext highlighter-rouge">~/.kube/config</code>
+You can see all clusters with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl config get-contexts
+CURRENT   NAME       CLUSTER            AUTHINFO   NAMESPACE
+*         microk8s   microk8s-cluster   admin
+</code></pre></div></div>
+
+<h2 id="configmap">ConfigMap</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create configmap nginx-frontend.conf --from-file nginx/frontend.conf
+</code></pre></div></div>
+
+<p>You can create using yml</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/kube/env.yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env
+data:
+  RAILS_ENV: production
+  RAILS_LOG_TO_STDOUT: enabled
+  RAILS_SERVE_STATIC_FILES: enabled
+  DATABASE_URL: postgresql://example.com/mydb
+  REDIS_URL: redis://redis.default.svc.cluster.local:6379/
+</code></pre></div></div>
+<p>and use in your container</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>envFrom:
+- configMapRef:
+    name: env
+</code></pre></div></div>
+
+<p>You can create from text</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create secret generic rails-secrets --from-literal=rails_master_key='example'
+</code></pre></div></div>
+<p>and use in container</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>env:
+  - name: RAILS_MASTER_KEY
+    valueFrom:
+      secretKeyRef:
+        name: rails-secrets
+        key: rails_master_key
+</code></pre></div></div>
+
+<h2 id="secrets">Secrets</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create secret generic tls-certs --from-file tls/
+</code></pre></div></div>
+
+<h2 id="statefulsets">StatefulSets</h2>
+
+<p>Use db-as-a-service whenever you can.
+<code class="language-plaintext highlighter-rouge">Volumes</code> tied to lifecycle of a Pod, all containers in a single Pod can share
+them.
+<code class="language-plaintext highlighter-rouge">PersistentVolumes</code> created at cluster level, outlives a Pod, multiple Pods can
+share them.</p>
+
+<h1 id="templating-yaml">Templating YAML</h1>
+
+<p>https://kustomize.io/ is template free, using overrides</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker app</code> and compose-on-kubernetes https://kompose.io/</p>
+
+<h2 id="helm">Helm</h2>
+
+<p>It is similar to liquid shopify template language.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo snap install helm --classic
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>microk8s.enable helm3
+</code></pre></div></div>
+
+<p>Example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heml install chart-1 .
+heml list
+helm uninstall chart-1
+</code></pre></div></div>
+
+<p>You can see generated template or apply them</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm template .
+helm template . | kubectl apply -f -
+</code></pre></div></div>
+
+<p>https://helm.sh/docs/chart_template_guide/getting_started/
+Template</p>
+
+<p>It is using sprig library https://helm.sh/docs/howto/charts_tips_and_tricks/</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">{ {/*</code> and <code class="language-plaintext highlighter-rouge">*/}}</code> comment</li>
+  <li><code class="language-plaintext highlighter-rouge">{ {- define "labels" -}}</code> and use with <code class="language-plaintext highlighter-rouge">{ { include "application-1" . |
+nindent 4 }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">{ {- if eq .Values.container1.enabled true -}}</code> or short <code class="language-plaintext highlighter-rouge">{ {- if
+.Values.container1.enabled -}}</code> flow control
+https://helm.sh/docs/chart_template_guide/control_structures/</li>
+</ul>
+
+<p>Chart repository
+https://helm.sh/docs/topics/chart_repository/
+you can run your own chartmuseum https://chartmuseum.com/docs/#helm-chart
+For grafana we use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm repo add grafana https://grafana.github.io/helm-charts
+helm search repo grafana
+helm install my-grafana grafana/grafana
+
+# if you want to customize
+helm pull grafana/grafana
+tar -xf grafana-6.20.3.tgz
+
+# remove chart
+helm uninstall my-grafana
+</code></pre></div></div>
+
+<h1 id="dashboard">Dashboard</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
+kubectl proxy
+Starting to serve on 127.0.0.1:8001
+</code></pre></div></div>
+
+<h1 id="context">Context</h1>
+
+<p>https://blog.mikesir87.io/2019/08/using-ssh-connections-in-docker-contexts/
+You can access docker using ssh (no need to expose docker port, only ssh with
+keys authentication is enough)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create
+docker context create ssh-box --docker "host=ssh://user@my-box"
+
+
+# Set the context for a single command
+docker --context=ssh-box ps
+
+# OR set the context globally
+docker context use ssh-box
+docker ps
+
+# OR use the DOCKER_CONTEXT env var
+DOCKER_CONTEXT=ssh-box docker ps
+</code></pre></div></div>
+
+<h1 id="security">Security</h1>
+
+<p>https://docs.docker.com/engine/security/
+https://github.com/BretFisher/ama/issues/17</p>
+<ul>
+  <li>namespace: access to own cpu, ram… (by default they can use all, so you need
+to limit) and view only its own filesystem (not from other containers)</li>
+  <li>use non root user <code class="language-plaintext highlighter-rouge">USER node</code> and <code class="language-plaintext highlighter-rouge">COPY --chown=node</code></li>
+</ul>
+
+<h1 id="ruby">Ruby</h1>
+
+<p>https://kubernetes.io/docs/reference/using-api/client-libraries/#community-maintained-client-libraries</p>
+
+<h1 id="rails">Rails</h1>
+
+<p>Deploy rails to kubernetes https://kubernetes-rails.com/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Dockerfile
+FROM ruby:2.6.3
+
+# update yarn repo
+RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" &gt; /etc/apt/sources.list.d/yarn.list
+# update node
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get update &amp;&amp; apt-get install -y nodejs yarn postgresql-client
+
+RUN mkdir /app
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler
+RUN bundle install
+COPY . ./
+
+RUN bundle exec rake assets:precompile
+
+EXPOSE 3000
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
+</code></pre></div></div>
+<p>Create, test and push image to duleorlovic/kubernetes-rails-example:latest</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build -t duleorlovic/kubernetes-rails-example .
+docker run -p 3000:3000 duleorlovic/kubernetes-rails-example
+docker push duleorlovic/kubernetes-rails-example
+</code></pre></div></div>
+
+<p>Enable kubernetes to download docker from private repo</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create secret docker-registry my-docker-secret --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
+kubectl edit serviceaccounts default
+</code></pre></div></div>
+
+<p>TODO
+http://blog.jedrychowski.org/2018/rails-kubernetes-basic-deployment/
+rancher
+https://www.youtube.com/watch?v=LK6KbAlQRIg
+kubernetes
+https://www.youtube.com/watch?v=X48VuDVv0do</p>
+
+<p>https://evilmartians.com/chronicles/kubing-rails-stressless-kubernetes-deployments-with-kuby</p>
+
+<h1 id="digital-ocean">Digital ocean</h1>
+
+<p>Digital ocean install</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo snap install doctl
+doctl auth init
+doctl kubernetes cluster kubeconfig save 901f6f80-2728-4ac7-bc5e-77365d839e39
+</code></pre></div></div>
+<p>Check if we can access</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export KUBECONFIG=~/.kube/kubernetes-rails-example-kubeconfig.yaml
+kubectl version
+kubectl get nodes
+</code></pre></div></div>
+<p>Setup Kubernetes using Vagrant Virtuarbox
+https://medium.com/swlh/setup-own-kubernetes-cluster-via-virtualbox-99a82605bfcc
+https://github.com/mbaykara/k8s-cluster</p>
+
+<h1 id="vim">Vim</h1>
+
+<p>Using coc-yaml plugin for coc https://github.com/neoclide/coc-yaml so we have
+code completion and documentation similar to VSCode
+https://octetz.com/docs/2020/2020-01-06-vim-k8s-yaml-support/
+https://www.youtube.com/watch?v=eSAzGx34gUE</p>
+
+<p>Install coc https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim using
+native package manager vim8</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir -p ~/.vim/pack/coc/start
+cd ~/.vim/pack/coc/start
+git clone --branch release https://github.com/neoclide/coc.nvim.git --depth=1
+</code></pre></div></div>
+<p>inside vim run</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:CocInfo
+:CocInstall coc-yaml
+</code></pre></div></div>
+
+<p>It is installing https://github.com/redhat-developer/vscode-yaml so run
+<code class="language-plaintext highlighter-rouge">:CocConfig</code> to edit <code class="language-plaintext highlighter-rouge">~/.vim/coc-settings.json</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "yaml.schemas": {
+      "kubernetes": ["/*.yaml"]
+  }
+}
+</code></pre></div></div>
+<p>Copy paste keys https://github.com/neoclide/coc.nvim#example-vim-configuration</p>
+
+<p>Control-space or tab is used to code complete. Use <code class="language-plaintext highlighter-rouge">&lt;c-p&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;c-n&gt;</code> to go to
+next or prev item, or just type letters.</p>
+
+<h1 id="sidecar-pattern">Sidecar pattern</h1>
+
+<p>Book Designed Distributed Systems” by Brendan Burns
+https://azure.microsoft.com/en-us/resources/designing-distributed-systems/</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

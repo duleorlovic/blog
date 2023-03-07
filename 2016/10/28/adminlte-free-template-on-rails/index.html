@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>AdminLTE Free Template on Rails</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>AdminLTE Free Template on Rails</h1>
+    <p class="meta">Oct 28, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installation"><span class="tocnumber">1</span> <span class="toctext">Installation</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#notify-if-template-is-missing"><span class="tocnumber">1.1</span> <span class="toctext">Notify if template is missing</span></a></li></ul></li><li class="toc_level-1 toc_section-3"><a href="#turbolinks"><span class="tocnumber">2</span> <span class="toctext">Turbolinks</span></a></li><li class="toc_level-1 toc_section-4"><a href="#configuration"><span class="tocnumber">3</span> <span class="toctext">Configuration</span></a><ul><li class="toc_level-2 toc_section-5"><a href="#plugins"><span class="tocnumber">3.1</span> <span class="toctext">Plugins</span></a></li><li class="toc_level-2 toc_section-6"><a href="#premium-plugins"><span class="tocnumber">3.2</span> <span class="toctext">Premium plugins</span></a></li><li class="toc_level-2 toc_section-7"><a href="#options"><span class="tocnumber">3.3</span> <span class="toctext">Options</span></a></li></ul></li><li class="toc_level-1 toc_section-8"><a href="#less-source"><span class="tocnumber">4</span> <span class="toctext">Less source</span></a></li><li class="toc_level-1 toc_section-9"><a href="#crud-and-ajax"><span class="tocnumber">5</span> <span class="toctext">CRUD and ajax</span></a></li><li class="toc_level-1 toc_section-10"><a href="#using-with-existing-template"><span class="tocnumber">6</span> <span class="toctext">Using with existing template</span></a></li></ul></td></tr></tbody></table></div><h1 id="installation">Installation</h1>
+
+<p>You can start by cloning template from github
+<a href="https://github.com/almasaeed2010/AdminLTE">adminLTE</a> and preview localy (it
+should look the same as <a href="https://almsaeedstudio.com/preview">preview</a>). You can
+open documentation localy or
+<a href="https://almsaeedstudio.com/themes/AdminLTE/documentation/index.html">online</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/almasaeed2010/AdminLTE.git
+cd AdminLTE
+gnome-open index.html
+gnome-open documentations/index.html
+</code></pre></div></div>
+
+<p>Latest version is 2.4.2 uses bootstrap 3 and jquery 3.
+To install to existing rails project you can use <a href="/2014/07/01/ruby-on-rails-layouts-and-rendering/&#10;#bower">bower inside rails</a> and than add admin-lte</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install --save admin-lte boostrap font-awesome ionicons
+</code></pre></div></div>
+
+<p>I use separated bootstrap (not from admin-lte package) because “Glyphicons” are
+properly linked. Also I use latest font awesome.
+There is <a href="https://github.com/aguegu/AdminLTE">admin-lte.scss</a> version but not
+updated.</p>
+
+<p>We can use <a href="https://adminlte.io/themes/AdminLTE/starter.html">starter.html</a> for
+testing, just copy from <code class="language-plaintext highlighter-rouge">vendor/assets/bower_components/admin-lte/starter.html</code>
+select <code class="language-plaintext highlighter-rouge">&lt;div class="wrapper"&gt;</code> and put on your page. CSS and js will we using
+sprockets and compiled in one big application.css/.js file.</p>
+
+<p>When using webpacker you can install with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add admin-lte jquery
+
+# Heroku will automatically run "build" script so you can add to package.json
+ "scripts": {
+   "build": "yarn --cwd node_modules/admin-lte run install"
+ },
+# but I have some problems linking packages under plugins so I link them
+# directly
+
+# app/javascript/packs/application.js
+import 'stylesheet/application'
+
+# import plugins directly, not 'admin-lte/plugins/select2/js/select2'
+import "select2/dist/js/select2"
+
+
+# app/javascript/stylesheet/application.scss
+@import "~admin-lte/plugins/select2/css/select2";
+
+I think is similar to
+# app/javascript/stylesheet/application.css
+@import 'admin-lte'
+</code></pre></div></div>
+
+<p>Since adminlte is using less we will use two wrappers.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/application.css
+/*
+ * load bootstrap here since importing in less will use css import file command
+ *= require bootstrap/dist/css/bootstrap.css
+ *= require application_less_wrapper
+ *= require application_scss_wrapper
+ */
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile, below sass-rails
+# Also need less for adminlte
+gem 'less-rails', '~&gt; 3.0.0'
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'therubyracer'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/assets.rb
+
+# We need to add also subpaths admin-lte and admin-lte/skins since there is
+# relative reference for bootstrap in skins less files
+Rails.application.config.assets.paths &lt;&lt; Rails.root.join('vendor', 'assets', 'bower_components')
+Rails.application.config.assets.paths &lt;&lt; Rails.root.join('vendor', 'assets', 'bower_components', 'admin-lte')
+Rails.application.config.assets.paths &lt;&lt; Rails.root.join('vendor', 'assets', 'bower_components', 'admin-lte', 'skins')
+Rails.application.config.assets.precompile &lt;&lt; /\.(?:svg|eot|woff|ttf)$/
+</code></pre></div></div>
+
+<p>Copy some header from starter.html to your layout file</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/layouts/applicantion.html.erb
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+    &lt;title&gt;&lt;%= content_for?(:page_title) ? yield(:page_title) : default_page_title %&gt;&lt;/title&gt;
+    &lt;!-- Tell the browser to be responsive to screen width --&gt;
+    &lt;meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"&gt;
+    &lt;%= csrf_meta_tags %&gt;
+
+    &lt;%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %&gt;
+    &lt;%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %&gt;
+    &lt;!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --&gt;
+    &lt;!-- WARNING: Respond.js doesn't work if you view the page via file:// --&gt;
+    &lt;!--[if lt IE 9]&gt;
+    &lt;script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+
+    &lt;!-- Google Font --&gt;
+    &lt;link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"&gt;
+  &lt;/head&gt;
+
+  &lt;body class="hold-transition skin-blue sidebar-mini &lt;%= sidebar_collapse %&gt;"&gt;
+    &lt;div class="wrapper"&gt;
+
+      &lt;!-- Main Header --&gt;
+      &lt;header class="main-header"&gt;
+        &lt;!-- Logo --&gt;
+        &lt;a href="/" class="logo"&gt;
+          &lt;!-- mini logo for sidebar mini 50x50 pixels --&gt;
+          &lt;span class="logo-mini"&gt;
+            &lt;b&gt;ST&lt;/b&gt;
+          &lt;/span&gt;
+          &lt;!-- logo for regular state and mobile devices --&gt;
+          &lt;span class="logo-lg"&gt;
+            &lt;b&gt;Stuff&lt;/b&gt;Timesheet
+          &lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;!-- Header Navbar --&gt;
+        &lt;nav class="navbar navbar-static-top" role="navigation"&gt;
+          &lt;!-- Sidebar toggle button--&gt;
+          &lt;a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" data-server-url="&lt;%= preferences_path %&gt;"&gt;
+            &lt;span class="sr-only"&gt;Toggle navigation&lt;/span&gt;
+          &lt;/a&gt;
+          &lt;!-- Navbar Right Menu --&gt;
+          &lt;div class="navbar-custom-menu"&gt;
+            &lt;ul class="nav navbar-nav"&gt;
+              &lt;!-- Messages: style can be found in dropdown.less--&gt;
+              &lt;li class="dropdown messages-menu"&gt;
+                &lt;!-- Menu toggle button --&gt;
+                &lt;a href="#" class="dropdown-toggle" data-toggle="dropdown"&gt;
+                  &lt;i class="fa fa-envelope-o"&gt;&lt;/i&gt;
+                  &lt;span class="label label-success"&gt;4&lt;/span&gt;
+                &lt;/a&gt;
+                &lt;ul class="dropdown-menu"&gt;
+                  &lt;li class="header"&gt;You have 4 messages&lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;!-- inner menu: contains the messages --&gt;
+                    &lt;ul class="menu"&gt;
+                      &lt;li&gt;&lt;!-- start message --&gt;
+                        &lt;a href="#"&gt;
+                          &lt;div class="pull-left"&gt;
+                            &lt;!-- User Image --&gt;
+                            &lt;img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"&gt;
+                          &lt;/div&gt;
+                          &lt;!-- Message title and timestamp --&gt;
+                          &lt;h4&gt;
+                            Support Team
+                            &lt;small&gt;&lt;i class="fa fa-clock-o"&gt;&lt;/i&gt; 5 mins&lt;/small&gt;
+                          &lt;/h4&gt;
+                          &lt;!-- The message --&gt;
+                          &lt;p&gt;Why not buy a new awesome theme?&lt;/p&gt;
+                        &lt;/a&gt;
+                      &lt;/li&gt;
+                      &lt;!-- end message --&gt;
+                    &lt;/ul&gt;
+                    &lt;!-- /.menu --&gt;
+                  &lt;/li&gt;
+                  &lt;li class="footer"&gt;&lt;a href="#"&gt;See All Messages&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;!-- /.messages-menu --&gt;
+
+              &lt;!-- Notifications Menu --&gt;
+              &lt;li class="dropdown notifications-menu"&gt;
+                &lt;!-- Menu toggle button --&gt;
+                &lt;a href="#" class="dropdown-toggle" data-toggle="dropdown"&gt;
+                  &lt;i class="fa fa-bell-o"&gt;&lt;/i&gt;
+                  &lt;span class="label label-warning"&gt;10&lt;/span&gt;
+                &lt;/a&gt;
+                &lt;ul class="dropdown-menu"&gt;
+                  &lt;li class="header"&gt;You have 10 notifications&lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;!-- Inner Menu: contains the notifications --&gt;
+                    &lt;ul class="menu"&gt;
+                      &lt;li&gt;&lt;!-- start notification --&gt;
+                        &lt;a href="#"&gt;
+                          &lt;i class="fa fa-users text-aqua"&gt;&lt;/i&gt; 5 new members joined today
+                        &lt;/a&gt;
+                      &lt;/li&gt;
+                      &lt;!-- end notification --&gt;
+                    &lt;/ul&gt;
+                  &lt;/li&gt;
+                  &lt;li class="footer"&gt;&lt;a href="#"&gt;View all&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;!-- Tasks Menu --&gt;
+              &lt;li class="dropdown tasks-menu"&gt;
+                &lt;!-- Menu Toggle Button --&gt;
+                &lt;a href="#" class="dropdown-toggle" data-toggle="dropdown"&gt;
+                  &lt;i class="fa fa-flag-o"&gt;&lt;/i&gt;
+                  &lt;span class="label label-danger"&gt;9&lt;/span&gt;
+                &lt;/a&gt;
+                &lt;ul class="dropdown-menu"&gt;
+                  &lt;li class="header"&gt;You have 9 tasks&lt;/li&gt;
+                  &lt;li&gt;
+                    &lt;!-- Inner menu: contains the tasks --&gt;
+                    &lt;ul class="menu"&gt;
+                      &lt;li&gt;&lt;!-- Task item --&gt;
+                        &lt;a href="#"&gt;
+                          &lt;!-- Task title and progress text --&gt;
+                          &lt;h3&gt;
+                            Design some buttons
+                            &lt;small class="pull-right"&gt;20%&lt;/small&gt;
+                          &lt;/h3&gt;
+                          &lt;!-- The progress bar --&gt;
+                          &lt;div class="progress xs"&gt;
+                            &lt;!-- Change the css width attribute to simulate progress --&gt;
+                            &lt;div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
+                                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"&gt;
+                              &lt;span class="sr-only"&gt;20% Complete&lt;/span&gt;
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                        &lt;/a&gt;
+                      &lt;/li&gt;
+                      &lt;!-- end task item --&gt;
+                    &lt;/ul&gt;
+                  &lt;/li&gt;
+                  &lt;li class="footer"&gt;
+                    &lt;a href="#"&gt;View all tasks&lt;/a&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;!-- User Account Menu --&gt;
+              &lt;li class="dropdown user user-menu"&gt;
+                &lt;!-- Menu Toggle Button --&gt;
+                &lt;a href="#" class="dropdown-toggle" data-toggle="dropdown"&gt;
+                  &lt;!-- The user image in the navbar--&gt;
+                  &lt;img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image"&gt;
+                  &lt;!-- hidden-xs hides the username on small devices so only the image appears. --&gt;
+                  &lt;span class="hidden-xs"&gt;Alexander Pierce&lt;/span&gt;
+                &lt;/a&gt;
+                &lt;ul class="dropdown-menu"&gt;
+                  &lt;!-- The user image in the menu --&gt;
+                  &lt;li class="user-header"&gt;
+                    &lt;img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"&gt;
+
+                    &lt;p&gt;
+                      Alexander Pierce - Web Developer
+                      &lt;small&gt;Member since Nov. 2012&lt;/small&gt;
+                    &lt;/p&gt;
+                  &lt;/li&gt;
+                  &lt;!-- Menu Body --&gt;
+                  &lt;li class="user-body"&gt;
+                    &lt;div class="row"&gt;
+                      &lt;div class="col-xs-4 text-center"&gt;
+                        &lt;a href="#"&gt;Followers&lt;/a&gt;
+                      &lt;/div&gt;
+                      &lt;div class="col-xs-4 text-center"&gt;
+                        &lt;a href="#"&gt;Sales&lt;/a&gt;
+                      &lt;/div&gt;
+                      &lt;div class="col-xs-4 text-center"&gt;
+                        &lt;a href="#"&gt;Friends&lt;/a&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;!-- /.row --&gt;
+                  &lt;/li&gt;
+                  &lt;!-- Menu Footer--&gt;
+                  &lt;li class="user-footer"&gt;
+                    &lt;div class="pull-left"&gt;
+                      &lt;a href="#" class="btn btn-default btn-flat"&gt;Profile&lt;/a&gt;
+                    &lt;/div&gt;
+                    &lt;div class="pull-right"&gt;
+                      &lt;a href="#" class="btn btn-default btn-flat"&gt;Sign out&lt;/a&gt;
+                    &lt;/div&gt;
+                  &lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;!-- Control Sidebar Toggle Button --&gt;
+              &lt;li&gt;
+                &lt;a href="#" data-toggle="control-sidebar"&gt;&lt;i class="fa fa-gears"&gt;&lt;/i&gt;&lt;/a&gt;
+              &lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/nav&gt;
+      &lt;/header&gt;
+      &lt;!-- Left side column. contains the logo and sidebar --&gt;
+      &lt;aside class="main-sidebar"&gt;
+
+        &lt;!-- sidebar: style can be found in sidebar.less --&gt;
+        &lt;section class="sidebar"&gt;
+
+          &lt;!-- Sidebar user panel (optional) --&gt;
+          &lt;div class="user-panel"&gt;
+            &lt;div class="pull-left image"&gt;
+              &lt;img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"&gt;
+            &lt;/div&gt;
+            &lt;div class="pull-left info"&gt;
+              &lt;p&gt;Alexander Pierce&lt;/p&gt;
+              &lt;!-- Status --&gt;
+              &lt;a href="#"&gt;&lt;i class="fa fa-circle text-success"&gt;&lt;/i&gt; Online&lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- search form (Optional) --&gt;
+          &lt;form action="#" method="get" class="sidebar-form"&gt;
+            &lt;div class="input-group"&gt;
+              &lt;input type="text" name="q" class="form-control" placeholder="Search..."&gt;
+              &lt;span class="input-group-btn"&gt;
+                  &lt;button type="submit" name="search" id="search-btn" class="btn btn-flat"&gt;&lt;i class="fa fa-search"&gt;&lt;/i&gt;
+                  &lt;/button&gt;
+                &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+          &lt;!-- /.search form --&gt;
+
+          &lt;!-- Sidebar Menu --&gt;
+          &lt;ul class="sidebar-menu" data-widget="tree"&gt;
+            &lt;li class="header"&gt;HEADER&lt;/li&gt;
+            &lt;!-- Optionally, you can add icons to the links --&gt;
+            &lt;li class="active"&gt;&lt;a href="#"&gt;&lt;i class="fa fa-link"&gt;&lt;/i&gt; &lt;span&gt;Link&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;&lt;i class="fa fa-link"&gt;&lt;/i&gt; &lt;span&gt;Another Link&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+            &lt;li class="treeview"&gt;
+              &lt;a href="#"&gt;&lt;i class="fa fa-link"&gt;&lt;/i&gt; &lt;span&gt;Multilevel&lt;/span&gt;
+                &lt;span class="pull-right-container"&gt;
+                    &lt;i class="fa fa-angle-left pull-right"&gt;&lt;/i&gt;
+                  &lt;/span&gt;
+              &lt;/a&gt;
+              &lt;ul class="treeview-menu"&gt;
+                &lt;li&gt;&lt;a href="#"&gt;Link in level 2&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;Link in level 2&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/section&gt;
+      &lt;/aside&gt;
+
+      &lt;!-- Content Wrapper. Contains page content --&gt;
+      &lt;div class="content-wrapper"&gt;
+        &lt;!-- Content Header (Page header) --&gt;
+        &lt;section class="content-header"&gt;
+          &lt;h1&gt;
+            &lt;%= yield :page_header %&gt;
+            &lt;small&gt;&lt;%= yield :page_description %&gt;&lt;/small&gt;
+          &lt;/h1&gt;
+          &lt;ol class="breadcrumb"&gt;
+            &lt;% get_breadcrumb_list.each_with_index do |(text, link), i| %&gt;
+              &lt;li class="&lt;%= 'active' if i == get_breadcrumb_list.length - 1 %&gt;"&gt;
+                &lt;% if link.present? %&gt;
+                  &lt;%= link_to link do %&gt;
+                    &lt;% if i == 0 %&gt;
+                      &lt;i class="fa fa-dashboard"&gt;&lt;/i&gt;
+                    &lt;% end %&gt;
+                    &lt;%= text %&gt;
+                  &lt;% end %&gt;
+                &lt;% else %&gt;
+                  &lt;% if i == 0 %&gt;
+                    &lt;i class="fa fa-dashboard"&gt;&lt;/i&gt;
+                  &lt;% end %&gt;
+                  &lt;%= text %&gt;
+                &lt;% end %&gt;
+              &lt;/li&gt;
+            &lt;% end %&gt;
+
+          &lt;/ol&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Main content --&gt;
+        &lt;section class="content"&gt;
+
+          &lt;% if notice %&gt;
+            &lt;div class="hide-to-up"&gt;&lt;%= notice %&gt;&lt;/div&gt;
+            &lt;script&gt;
+              flash_notice('&lt;%= j notice %&gt;');
+            &lt;/script&gt;
+          &lt;% end %&gt;
+
+          &lt;% if alert %&gt;
+            &lt;div class="hide-to-up"&gt;&lt;%= alert %&gt;&lt;/div&gt;
+            &lt;script&gt;
+              flash_alert('&lt;%= j alert %&gt;');
+            &lt;/script&gt;
+          &lt;% end %&gt;
+
+          &lt;!-- Your Page Content Here --&gt;
+          &lt;%= yield %&gt;
+
+        &lt;/section&gt;
+        &lt;!-- /.content --&gt;
+      &lt;/div&gt;
+      &lt;!-- /.content-wrapper --&gt;
+
+      &lt;!-- Main Footer --&gt;
+      &lt;footer class="main-footer"&gt;
+        &lt;!-- To the right --&gt;
+        &lt;div class="pull-right hidden-xs"&gt;
+          Anything you want
+        &lt;/div&gt;
+        &lt;!-- Default to the left --&gt;
+        &lt;strong&gt;Copyright &amp;copy; 2016 &lt;a href="#"&gt;Company&lt;/a&gt;.&lt;/strong&gt; All rights reserved.
+      &lt;/footer&gt;
+
+      &lt;!-- Control Sidebar --&gt;
+      &lt;aside class="control-sidebar control-sidebar-dark"&gt;
+      &lt;/aside&gt;
+      &lt;!-- /.control-sidebar --&gt;
+      &lt;!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar --&gt;
+      &lt;div class="control-sidebar-bg"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+      &lt;%= yield :javascript %&gt;
+    &lt;/script&gt;
+
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div></div>
+
+<p>Some helpers</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/helpers/page_helper.rb
+module PageHelper
+  def sidebar_collapse
+    if current_user&amp;.sidebar_collapse
+      'sidebar-collapse'
+    end
+  end
+
+  def preferences_path
+    '/'
+  end
+
+  # use in view: page_title "Home"
+  def page_title(title)
+    # this will add both page title and header below topnav
+    content_for(:page_title) { title }
+    content_for(:page_header) { title }
+  end
+
+  def default_page_title
+    add_location_to_title(
+      "Internet Subscriber Management"
+    )
+  end
+
+  # use in view: page_description "Dashboard"
+  def page_description(description)
+    content_for(:page_description) { description.html_safe }
+  end
+
+  # use in view: breadcrumb "Home": root_path, "Dashboard": nil
+  def breadcrumb(list)
+    @breadcrumb = list
+  end
+
+  def get_breadcrumb_list
+    @breadcrumb || []
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/stylesheets/application_less_wrapper.less
+@import "Ionicons/less/ionicons";
+// AdminLTE.less stuff need to be after bootstrap which includes normalize.scss
+@import "AdminLTE/build/less/AdminLTE";
+@import "AdminLTE/build/less/skins/skin-blue";
+
+// default sidebar width is 230px
+@sidebar-width: 170px;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/stylesheets/application_scss_wrapper.scss
+// on production all assets gets fingerprint, but here we can define only path
+// $fa-font-path: 'font-awesome/fonts';
+// so use Bootstrap CDN for font files
+$fa-font-path: "//netdna.bootstrapcdn.com/font-awesome/4.7.0/fonts" !default;
+@import 'font-awesome/scss/font-awesome';
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/javascript/application_adminlte.js
+//= require rails-ujs
+//= require turbolinks
+//= require_tree .
+//= require js.cookie
+//= require jstz
+//= require browser_timezone_rails/set_time_zone
+//
+// AdminLTE stuff
+//= require jquery/dist/jquery.min
+//= require bootstrap/dist/js/bootstrap.min
+//= require admin-lte/dist/js/adminlte
+</code></pre></div></div>
+
+<p>Also you need to exclude those <code class="language-plaintext highlighter-rouge">_adminlte</code> files in original sprockets:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/stylesheets/application.scss
+ *= stub application_adminlte
+
+// app/assets/javascript/application.js
+//= stub application_adminlte
+</code></pre></div></div>
+
+<p>Stubing in sprockets is recursive so if you need to include libraries (for
+example <code class="language-plaintext highlighter-rouge">jquery_ujs</code>) in both layouts it will <a href="https://github.com/sstephenson/sprockets/issues/467">stub that
+libraries also</a>. Also if
+use use <code class="language-plaintext highlighter-rouge">require_tree .</code> than you can inadvertently add some libs to some
+layout which you have not consider in that moment.</p>
+
+<p>Better approach is to create new folder <code class="language-plaintext highlighter-rouge">app/assets/adminlte</code> and add it to
+asset pipeline paths.</p>
+
+<p>Since asset pipeline <a href="/2014/07/01/ruby-on-rails-layouts-and-rendering/">ignore first subfolders</a> you need to take
+care to name files differently when you create new scss and coffee files. I
+solved that by adding suffix <code class="language-plaintext highlighter-rouge">_adminlte</code>.</p>
+
+<h2 id="notify-if-template-is-missing">Notify if template is missing</h2>
+
+<p>You can notify if some of the translated templates does not exists using <a href="/2016/04/12/rails-tips/#get-template-name">get
+template name</a> and add notification</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/notify_if_adminlte_template_is_not_present.rb
+# getting current template is not possible in rails
+# https://github.com/rails/rails/issues/4876
+# patch taken from
+# http://stackoverflow.com/questions/4973699/rails-3-find-current-view-while-in-the-layout/8310881#8310881
+class ActionView::TemplateRenderer
+  alias_method :_render_template_original, :render_template
+
+  def render_template(template, layout_name = nil, locals = {})
+    if I18n.locale == :in &amp;&amp;
+      template.inspect.end_with?(".in.html.erb") &amp;&amp;
+      template.inspect.end_with?(".in.js.erb") &amp;&amp;
+      template.inspect.end_with?(".in.json.jbuilder") &amp;&amp;
+      template.inspect.start_with?("app/views/devise/mailer") &amp;&amp;
+      template.inspect.start_with?("app/views/mailers") &amp;&amp;
+      template.inspect.start_with?("app/views/api") &amp;&amp;
+      template.inspect.start_with?("rails/mailers/email") &amp;&amp;
+      template.inspect != "text template".freeze &amp;&amp; # this is when send_data
+      template.inspect != "html template".freeze # this is when render html
+      cache_key = "adminlte_#{template.virtual_path}"
+      if Rails.cache.fetch cache_key
+        # already notified
+      else
+        Rails.cache.write cache_key, Time.now
+        UserMailer.internal_notification(
+          "Adminlte Template does not exists for #{template.virtual_path}",
+          template
+        ).deliver_now
+      end
+    end
+    result = _render_template_original( template, layout_name, locals)
+    result
+  end
+end
+</code></pre></div></div>
+
+<h1 id="turbolinks">Turbolinks</h1>
+
+<p><a href="https://github.com/almasaeed2010/AdminLTE/issues/563">https://github.com/almasaeed2010/AdminLTE/issues/563</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(document).on 'turbolinks:load', -&gt;
+  console.log 'turbolinks:load'
+  $(window).trigger('resize')
+</code></pre></div></div>
+
+<h1 id="configuration">Configuration</h1>
+
+<h2 id="plugins">Plugins</h2>
+
+<p>AdminLTE is based on Bootstrap 3 and jQuery 1.11+. It contains a lot of plugins
+as you can see in their
+<a href="https://almsaeedstudio.com/themes/AdminLTE/documentation/index.html#plugins">documentation</a></p>
+
+<ul>
+  <li>
+    <p><a href="https://github.com/fronteed/icheck">iCheck</a> for checkboxes</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install icheck --save
+
+/* app/assets/adminlte/application_adminlte.scss
+*= require iCheck/skins/square/blue
+
+// app/assets/adminlte/application_adminlte.js
+//= require iCheck/icheck.min
+</code></pre></div>    </div>
+
+    <p>Note that when you run <code class="language-plaintext highlighter-rouge">bower install</code> than some version of jquery will be
+installed and it will overwrite existing jquery if you have used it (in old or
+new application.scss layout file).</p>
+
+    <p>If you receive error similar to <code class="language-plaintext highlighter-rouge">Refused to execute script from
+because its MIME type ('text/html') is not executable, and strict MIME type
+checking is enabled</code> that means that asset path is bad, and rails can not find
+that precompiled asset. Sometime this happens only on production env.</p>
+  </li>
+  <li><a href="/2016/07/26/usefull-plugins-services-and-opensource-stuff/&#10;#datatables">datatables</a> is used for search and ordering on client side</li>
+  <li><a href="https://github.com/uxsolutions/bootstrap-datepicker">bootstrap-datepicker</a></li>
+  <li><a href="https://github.com/dangrossman/bootstrap-daterangepicker">bootstrap-daterangepicker</a></li>
+</ul>
+
+<h2 id="premium-plugins">Premium plugins</h2>
+
+<p>You can check premium version:
+<a href="http://wrapbootstrap.com/preview/WB0N89JMK">adminlte</a> which usually use free
+plugins which you can download separatelly. It looks more professional.</p>
+
+<ul>
+  <li><a href="https://wrapbootstrap.com/theme/inspinia-responsive-admin-theme-WB0R5L90S">wrapboostrap inspinia</a>
+    <ul>
+      <li>checkbox <a href="https://github.com/abpetkov/switchery">abpetkov/switchery</a></li>
+    </ul>
+  </li>
+  <li><a href="https://themeforest.net/item/ucm-theme-adminlte-crm/8565409?sso=1&amp;_ga=2.183038054.1513538055.1496854657-1559534847.1496854657">themeforest ucm theme crm</a></li>
+</ul>
+
+<h2 id="options">Options</h2>
+
+<p>It contains nice features (as stated in their <a href="https://almsaeedstudio.com/blog/features-of-adminlte-2.1">blog</a>)</p>
+
+<ul>
+  <li>toolbar can be autoexpand using js options</li>
+</ul>
+
+<p>You can use colors with background <code class="language-plaintext highlighter-rouge">bg-red</code> <code class="language-plaintext highlighter-rouge">bg-blue</code> … or for text
+<code class="language-plaintext highlighter-rouge">text-red</code>, <code class="language-plaintext highlighter-rouge">text-blue</code>…
+Colors could be also for components. For example
+<a href="https://almsaeedstudio.com/themes/AdminLTE/documentation/index.html#component-box">box</a>
+could be <code class="language-plaintext highlighter-rouge">box-default</code>, <code class="language-plaintext highlighter-rouge">box-primary</code>, <code class="language-plaintext highlighter-rouge">box-info</code>, <code class="language-plaintext highlighter-rouge">box-success</code>, <code class="language-plaintext highlighter-rouge">box-danger</code>
+and <code class="language-plaintext highlighter-rouge">box-warning</code>.</p>
+
+<p>You can <a href="https://github.com/almasaeed2010/AdminLTE/blob/master/dist/js/app.js#L562">collapse
+box</a>
+in javascript by calling <code class="language-plaintext highlighter-rouge">$.AdminLTE.boxWidget.collapse($('#box-id'));</code> but it
+is better to write custom code.</p>
+
+<p><a href="https://github.com/bootstrap-ruby/rails-bootstrap-forms">rails bootstrap forms</a>
+works nice with template, for example registration form:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/devise/registrations/new.html.erb %&gt;
+&lt;%= bootstrap_form_for resource, as: resource_name, url: registration_path(resource_name) do |f| %&gt;
+  &lt;%= f.email_field :email, autofocus: true, placeholder: "Email", skip_label: true, icon: 'user' %&gt;
+  &lt;%= f.password_field :password, class: 'form-control', placeholder: 'Password', skip_label: true, icon: 'lock' %&gt;
+  &lt;%= f.password_field :password_confirmation, class: 'form-control', placeholder: 'Password Confirmation', skip_label: true, icon: 'lock' %&gt;
+  &lt;button type="submit" class="btn btn-primary btn-block btn-flat" data-disable-with="Processing..."&gt;Sign up&lt;/button&gt;
+&lt;% end %&gt;
+&lt;%= render "devise/shared/links" %&gt;
+</code></pre></div></div>
+
+<h1 id="less-source">Less source</h1>
+
+<p>Since AdminLTE is build using less, you can set variables to customize colors
+and sizes.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/adminlte/stylesheets/less_wrapper_adminlte.less
+// AdminLTE stuff need to be after bootstrap (which includes normalize.scss)
+@import "AdminLTE/build/less/AdminLTE";
+@import "AdminLTE/build/less/skins/skin-blue";
+
+@sidebar-width: 170px;
+</code></pre></div></div>
+
+<h1 id="crud-and-ajax">CRUD and ajax</h1>
+
+<p>My prefered setup is to use ajax for edit/update form, use modal for create
+(with prefilled form, without ajax, since in case of success it should
+redirect).</p>
+
+<h1 id="using-with-existing-template">Using with existing template</h1>
+
+<p>To add new template while keeping existing you can use different layout base on
+locale. You can set new layout with option <code class="language-plaintext highlighter-rouge">?layout=true</code>
+So if you add param <code class="language-plaintext highlighter-rouge">?layout=true</code> it will render <code class="language-plaintext highlighter-rouge">index.in.html.erb</code> variant
+using new layout and put that in session (so all form submissions also use new
+layout). You can disable new_layout with <code class="language-plaintext highlighter-rouge">?layout=false</code>. If you have locale
+files (probably <code class="language-plaintext highlighter-rouge">devise.en.yml</code>) than you need to copy to <code class="language-plaintext highlighter-rouge">:in</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/application_controller.rb
+  layout proc { |controller| controller.new_layout? ? 'adminlte' : 'application' }
+  before_filter :set_locale_for_layout
+
+  def new_layout?
+    I18n.locale == :rs
+  end
+
+  def set_locale_for_layout
+    if session[:layout] == true
+      if params[:layout] == "false"
+        # disable new layout
+        session[:layout] = false
+        I18n.locale = 'en'
+        logger.debug "layout became false"
+      else
+        logger.debug "layout still true"
+        I18n.locale = 'rs'
+      end
+    else
+      # session[:layout] == false
+      if params[:layout] == "true"
+        # enable new layout
+        session[:layout] = true
+        logger.debug "layout became true"
+        I18n.locale = 'rs'
+      else
+        I18n.locale = 'rs'
+        logger.debug "layout still false"
+      end
+    end
+  end
+</code></pre></div></div>
+
+<p>Also we need to make changes on other places</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/application.rb
+    config.i18n.available_locales = [:en, :rs]
+
+# config/locales/en.yml
+# config/locales/devise.en.yml
+en: &amp;default
+rs:
+  &lt;&lt;: *default
+
+# app/views/pages/sample_page.in.html.erb
+I'm from adminlte layout
+
+
+&lt;!-- above Main content in app/views/layouts/adminlte.html.erb --&gt;
+    &lt;div class="new-layout-switch"&gt;
+      &lt;%= link_to "Go Back To Old Layout", params.merge(layout: false) %&gt;
+    &lt;/div&gt;
+
+// app/assets/stylesheets/application_adminlte.scss
+.m-b-10 {
+  margin-bottom: 10px;
+}
+
+// similar to pull-right just without float
+.text-align-right {
+  text-align: right;
+}
+
+.new-layout-switch {
+  position: absolute;
+  padding-left: 4px;
+  top: 50px;
+  right: 0px;
+  border-bottom-left-radius: 5px;
+  background: #3C8DBC;
+  a {
+    color: white;
+  }
+}
+</code></pre></div></div>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Javascript theory</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Javascript theory</h1>
+    <p class="meta">Feb 10, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#closures"><span class="tocnumber">1</span> <span class="toctext">Closures</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#resolution-of-property-names-on-objects"><span class="tocnumber">1.1</span> <span class="toctext">Resolution of property names on objects</span></a></li><li class="toc_level-2 toc_section-3"><a href="#identifier-resolution-execution-contexts-and-scope-chains"><span class="tocnumber">1.2</span> <span class="toctext">Identifier resolution, execution contexts and scope chains</span></a></li><li class="toc_level-2 toc_section-4"><a href="#identifier-resolution"><span class="tocnumber">1.3</span> <span class="toctext">Identifier Resolution</span></a></li><li class="toc_level-2 toc_section-5"><a href="#forming-closure"><span class="tocnumber">1.4</span> <span class="toctext">Forming closure</span></a></li></ul></li></ul></td></tr></tbody></table></div><h1 id="closures">Closures</h1>
+
+<p><a href="http://www.jibbering.com/faq/notes/closures/">source</a></p>
+
+<blockquote>
+  <p>A closure is formed when one of those inner functions is made accessible
+ outside of the function in which it was contained, so that it may be executed
+ after the outer function has returned. At which point it still has access to
+ the local variables, parameters and inner function declarations of its outer
+ function.</p>
+</blockquote>
+
+<p>Nice example on
+<a href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">wiki</a>
+Example from
+<a href="http://stackoverflow.com/questions/643542/doesnt-javascript-support-closures-with-local-variables/643664#643664">stackoverflow</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var closures = [];
+function create() {
+  for (var i = 0; i &lt; 5; i++) {
+    closures[i] = function() {
+      alert("i = " + i);
+    };
+  }
+}
+
+function run() {
+  for (var i = 0; i &lt; 5; i++) {
+    closures[i]();
+  }
+}
+
+create();
+run();
+</code></pre></div></div>
+
+<p>This will print 5,5,5,5,5 since at the time function is created it reference to
+variable <code class="language-plaintext highlighter-rouge">i</code>, but when function is called <code class="language-plaintext highlighter-rouge">for</code> loop already set <code class="language-plaintext highlighter-rouge">i</code> to 5. More
+correct is to call inner function when you define it</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function create() {
+  for (var i = 0; i &lt; 5; i++) {
+    closures[i] = (function(tmp) {
+        return function() {
+          alert("i = " + tmp);
+        };
+    })(i);
+  }
+</code></pre></div></div>
+
+<p>Thats why <code class="language-plaintext highlighter-rouge">do</code> exist in coffee script</p>
+
+<blockquote>
+  <p>When using a JavaScript loop to generate functions, it’s common to insert a
+closure wrapper in order to ensure that loop variables are closed over, and
+all the generated functions don’t just share the final values. CoffeeScript
+provides the do keyword, which immediately invokes a passed function,
+forwarding any arguments.</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>closures = []
+create -&gt;
+  for i in [0..5]
+    # instead of closuers[i] = -&gt;
+    closures[i] = do (i) -&gt;
+      -&gt; alert i
+</code></pre></div></div>
+
+<p>Here is example in ruby</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def create
+  r = []
+  # 1.upto 5 do |i| # this will print 1,2,3,4,5 since i is not shared between
+  for i in 1..5
+    r.push Proc.new { i }
+  end
+  r
+end
+
+a = create
+a.each {|f| puts f.call } # [5,5,5,5,5] since i is shared for all closures
+</code></pre></div></div>
+
+<h2 id="resolution-of-property-names-on-objects">Resolution of property names on objects</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// assignment of values
+var objectRef = new Object();
+objectRef.testNumber = 5;
+objectRef["testNumber"] = 5;
+// reading of values
+alert(objectRef.testNumber);
+</code></pre></div></div>
+
+<p><a href="http://www.w3schools.com/js/js_object_prototypes.asp">w3 prototypes</a></p>
+
+<blockquote>
+  <p>All JavaScript objects inherit their properties and methods from their
+prototype. The Object.prototype is on the top of the prototype chain.</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">prototype</code> property is on functions only. Prototype is an object.
+Function by default have Object.prototype prototype object.
+We can add properties to prototype object even after we create object.
+Function is constructor function when we use it to create new objects and they
+are UpperCased. Object, Array, Date are function constructors.
+The default prototype for the Object constructor has a null prototype.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function People(name) {
+  this.name = name;
+}
+function Man(car) {
+  this.car = car;
+}
+Man.prototype = new People('dule');
+var p = new Man('renault');
+People.prototype.age = 30;
+Man.prototype.say = function() { return this.name + " (" + this.age +
+  ") drive " + this.car;
+};
+alert(p.say()); // dule (30) drive renault
+</code></pre></div></div>
+
+<h2 id="identifier-resolution-execution-contexts-and-scope-chains">Identifier resolution, execution contexts and scope chains</h2>
+
+<h3 id="intro">Intro</h3>
+
+<p>Scope of variable is from a moment of declaration to the end of function where
+it is declared (global context acts like one big function encompassing the code
+on the page)</p>
+
+<p>Scope of a function is <strong>entire</strong> function where it is declared (ie function
+hoising).
+Block nesting like in <code class="language-plaintext highlighter-rouge">if</code> statement, does not affect scope. Scope of inline
+function <code class="language-plaintext highlighter-rouge">var b=function a(){}</code> is only inside function (this is function
+expression and hoising is not applied here).</p>
+
+<p>Function context (<em>this</em> variable) is:</p>
+
+<ul>
+  <li><em>window</em> for invocation as function <code class="language-plaintext highlighter-rouge">a()</code></li>
+  <li>current object for invocation as method <code class="language-plaintext highlighter-rouge">objB={};objB.a=a;objB.a()</code></li>
+</ul>
+
+<p>Invocation as contructor <code class="language-plaintext highlighter-rouge">var n=new A();</code> creates new object and pass to
+function as <em>this</em>.</p>
+
+<p>Invocation with <code class="language-plaintext highlighter-rouge">a.apply(objB,[1,2])</code> and <code class="language-plaintext highlighter-rouge">a.call(objB,1,2)</code> set manually the
+context <code class="language-plaintext highlighter-rouge">objB</code> of a function (apply and call are function methods).</p>
+
+<p>You can see the source code of a method with <code class="language-plaintext highlighter-rouge">objB['a']</code></p>
+
+<p>When function is called it enters an execution context:</p>
+
+<ol>
+  <li>first is “Activation” object is created with <code class="language-plaintext highlighter-rouge">arguments</code> property</li>
+  <li><em>scope chain</em> (list of objects) from last to first:
+    <ul>
+      <li>global object</li>
+      <li>Activation object for inner functions</li>
+      <li><code class="language-plaintext highlighter-rouge">y</code> if <code class="language-plaintext highlighter-rouge">y</code> is object for execution of <code class="language-plaintext highlighter-rouge">x()</code> in <code class="language-plaintext highlighter-rouge">var x;with(y){
+ x=function(){}; }</code></li>
+    </ul>
+  </li>
+  <li>variable instantiation to “Variable” object
+    <ul>
+      <li>function’s formal parameters with name and value if value is provided</li>
+      <li>inner function definitions are creating <strong>function objects</strong> with inner
+ function name as key</li>
+      <li>named properties for all local variables, just key, value is not yet defined</li>
+    </ul>
+  </li>
+  <li>value is assigned to <em>this</em> keyword</li>
+</ol>
+
+<h2 id="identifier-resolution">Identifier Resolution</h2>
+
+<ol>
+  <li>it starts from first object in the scope chain (it is Activation/Variable)</li>
+  <li>it also check it’s prototype chain</li>
+  <li>go to the next object from scope chain, until global object</li>
+</ol>
+
+<p>Functions are objects and are created:</p>
+
+<ul>
+  <li>during “Variable” instantiation from function declaration</li>
+  <li>during evaluation of function expressions</li>
+  <li>or invoking <em>Function</em> contructor</li>
+</ul>
+
+<p>Upon exiting an execution context all scope chain, Activation/Variable object
+and any object created (including function objects) are no longer accessible.</p>
+
+<h2 id="forming-closure">Forming closure</h2>
+
+<p>A closure is formed by returning a function object that was created withing an
+execution of a function call and assigning that reference to a property of
+another object. Or assigning (not returning) reference of such function object
+to global variable, or a property of global object or object passed by reference
+as an argument to the outer function call.</p>
+
+<p>Tip: in chrome console when you stop with <code class="language-plaintext highlighter-rouge">debugger</code> and try to reference
+variable than has not been referenced than is could say <code class="language-plaintext highlighter-rouge">undefined reference</code>
+although you can use it</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function() 
+</code></pre></div></div>
+
+<p>Examples</p>
+
+<ul>
+  <li>
+    <p>closure for function without arguments can be passed to</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function callLater(arg1) {
+  return (function() {
+    return "I'm " + arg1;
+  });
+}
+var fRef=callLater('arg1');
+setTimeout(fRef,3000);
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>associating functions with a lot of object instances</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function associateObjWithEvent(obj, methodName) {
+  return (function(e) {
+    e = e || window.event;
+    return obj[methodName](e, this); // this will be element object
+  });
+}
+function DhtmlObject(elementId) {
+  var el = getElementWithId(elementId);
+  if (el) {
+    el.onclick = associateObjWithEvent(this, "doOnClick");
+    // el.onclick = this.doOnClick; //
+    el.onmouseover = associateObjWithEvent(this, "doMouseOver");
+  }
+}
+DhtmlObject.prototype.doOnClick = function(event, element) {
+  // doOnClick body
+}
+DhtmlObject.prototype.doMouseOver = function(event, element) {
+  // doMouseOver body
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Encapsulating related functionality. Crete execution context by executing a
+function expression in-line and return function (or object)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var getImgInPositionedDivHtml = (function(){
+  var innerArray = [
+    '&lt;div id="',
+    '', // index 1 DIV ID
+    '"&gt;&lt;/div&gt;',
+  ];
+  return (function(id){
+    innerArray[1] = id;
+    return innerArray.join;
+  }
+})(); /* the inline execution of the outer function expression */
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Accidental closures. Do not use inner functions as event handlers that will be
+used in a lot of places since every time new function object is created</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var quantaty = 5;
+function addGlobalQueryOnClick(linkRef) {
+  if (linkRef) {
+    linkRef.onlick = function() {
+      this.href += ('?quantaty='+escape(quantaty));
+      return true;
+    }
+  }
+}
+// better is to define on property
+var quantaty = 5;
+function addGlobalQueryOnClick(linkRef) {
+  if (linkRef) {
+    linkRef.onlick = forAddQuaryOnClick;
+  }
+}
+addGlobalQueryOnClick.prototype.forAddQuaryOnClick = function() {
+  this.href += ('?quantaty='+escape(quantaty));
+  return true;
+};
+  
+// similar is for object constructor functions for a lot of objects
+// instead
+function ExampleConstuctor(p) {
+  this.publicProp = p;
+  this.method1 = function() {
+    // method body
+  }
+}
+// we shuold write
+function ExampleConstuctor(p) {
+  this.publicProp = p;
+}
+ExampleConstuctor.prototype.method1 = function() {
+  // method body
+};
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Bootstrap front-end framerwork</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Bootstrap front-end framerwork</h1>
+    <p class="meta">May 3, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#bootstrap-4"><span class="tocnumber">1</span> <span class="toctext">Bootstrap 4</span></a></li><li class="toc_level-1 toc_section-2"><a href="#bootstrap"><span class="tocnumber">2</span> <span class="toctext">Bootstrap</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#bootstrap-modal"><span class="tocnumber">2.1</span> <span class="toctext">Bootstrap modal</span></a></li><li class="toc_level-2 toc_section-4"><a href="#bootstrap-tooltip"><span class="tocnumber">2.2</span> <span class="toctext">Bootstrap tooltip</span></a></li><li class="toc_level-2 toc_section-5"><a href="#bootstrap-input-group-and-button-group"><span class="tocnumber">2.3</span> <span class="toctext">Bootstrap input group and button group</span></a></li></ul></li><li class="toc_level-1 toc_section-6"><a href="#helpers"><span class="tocnumber">3</span> <span class="toctext">Helpers</span></a></li><li class="toc_level-1 toc_section-7"><a href="#rails"><span class="tocnumber">4</span> <span class="toctext">Rails</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#overrides"><span class="tocnumber">4.1</span> <span class="toctext">Overrides</span></a></li><li class="toc_level-2 toc_section-9"><a href="#nabar"><span class="tocnumber">4.2</span> <span class="toctext">Nabar</span></a></li><li class="toc_level-2 toc_section-10"><a href="#bootstrap-form"><span class="tocnumber">4.3</span> <span class="toctext">Bootstrap form</span></a></li><li class="toc_level-2 toc_section-11"><a href="#form-builder"><span class="tocnumber">4.4</span> <span class="toctext">Form builder</span></a></li><li class="toc_level-2 toc_section-12"><a href="#data-confirm-modal"><span class="tocnumber">4.5</span> <span class="toctext">Data confirm modal</span></a></li><li class="toc_level-2 toc_section-13"><a href="#navbar"><span class="tocnumber">4.6</span> <span class="toctext">Navbar</span></a></li><li class="toc_level-2 toc_section-14"><a href="#cards"><span class="tocnumber">4.7</span> <span class="toctext">Cards</span></a></li><li class="toc_level-2 toc_section-15"><a href="#login-box"><span class="tocnumber">4.8</span> <span class="toctext">Login box</span></a></li><li class="toc_level-2 toc_section-16"><a href="#sidebar"><span class="tocnumber">4.9</span> <span class="toctext">Sidebar</span></a></li></ul></li><li class="toc_level-1 toc_section-17"><a href="#improvements"><span class="tocnumber">5</span> <span class="toctext">Improvements</span></a></li></ul></td></tr></tbody></table></div><h1 id="bootstrap-4">Bootstrap 4</h1>
+
+<h1 id="bootstrap">Bootstrap</h1>
+
+<p><code class="language-plaintext highlighter-rouge">div</code> is block element and by default it will be stacked. Bootstrap grid is
+mobile first, so three <code class="language-plaintext highlighter-rouge">.col-md-4</code> will be stacked until desktop, so on desktop,
+large and extra large desktop it will be like three equal width columns.  You do
+not need to define all 12, <code class="language-plaintext highlighter-rouge">.col</code> will occupy rest of place. <code class="language-plaintext highlighter-rouge">.col-auto</code> will
+occupy only that is needed (based on it’s contents, it uses <code class="language-plaintext highlighter-rouge">max-width: 100%</code>).
+When you specify for sm, you do not need to specify for md or lg. <code class="language-plaintext highlighter-rouge">col-xs-12</code> is
+<code class="language-plaintext highlighter-rouge">width: 100%</code> which is default so no need to write that. Write only when you
+need columns. Gutter between columns (padding) is 30px, ie 15px on each side,
+so when nesting column inside column, first column will get blank space on its
+left (unneeded indent from 15px padding from first column and 15px padding from
+nested column) so that the reason why row has -15px margin (to fix eventual
+parent column padding) and you have to wrap row with <code class="language-plaintext highlighter-rouge">.container</code> class to
+compensate that (padding 15px) or to add class <code class="language-plaintext highlighter-rouge">px-3</code>, otherwise you will get
+horizontal scrollbar since body will be larger than 100% by 30px.
+Also for <code class="language-plaintext highlighter-rouge">.container-fluid</code></p>
+
+<p>Bootstrap Media queries:</p>
+
+<ul>
+  <li>xs - phones (no need for media queary since this is default)</li>
+  <li>sm - tablets <code class="language-plaintext highlighter-rouge">@media (min-width: map-get($grid-breakpoints, 'sm') { // 576px (Bv3 768px) and up</code></li>
+  <li>md - desktops <code class="language-plaintext highlighter-rouge">@media (min-width: @screen-md-min) { // 768px (Bv3 992px)</code></li>
+  <li>lg - larger desktops <code class="language-plaintext highlighter-rouge">@media (min-width: @screen-lg-min) { // 992px (Bv3 1200px)</code></li>
+  <li>xl - extra lage <code class="language-plaintext highlighter-rouge">@media (min-width: @screen-xl-min) { // 1200pxa</code></li>
+</ul>
+
+<p>With bootstrap 4 you can use mixins for media queries:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// given (sm) and larger
+@include media-breakpoint-up(sm) {
+  .some-class {
+    display: block;
+
+// or other direction (given and smaller)
+@include media-breakpoint-down(sm) {}
+
+// only given size
+@include media-breakpoint-only(sm) {}
+
+// multiple sizes
+@include media-breakpoint-between(md, xl) {}
+@media (min-width: 768px) and (max-width: 1199.98px) { ... }
+</code></pre></div></div>
+
+<p>With Bootstrap3 you can use their predefined media queries with <code class="language-plaintext highlighter-rouge">min-width</code>
+(mobile first), for example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@media(min-width:$screen-sm){
+  .alert {
+    position: absolute;
+    bottom: 0px;
+    right: 20px;
+  }
+}
+
+// or in other direction (given and smaller)
+@media(max-width: $screen-sm) { }
+// or better do not use boundary
+@media(max-width: 575.98px) { }
+</code></pre></div></div>
+
+<p>Bootstrap <code class="language-plaintext highlighter-rouge">container</code> has fixed width for big devices.</p>
+
+<p>Difference with bootstrap 3 is that there is new grid tier <code class="language-plaintext highlighter-rouge">xl</code> that was <code class="language-plaintext highlighter-rouge">lg</code> in
+B3 (<code class="language-plaintext highlighter-rouge">sm</code> is 576px instead of 768px in B3) and all are bumped up one level (so
+<code class="language-plaintext highlighter-rouge">.col-md-6</code> in v3 is now <code class="language-plaintext highlighter-rouge">.col-lg-6</code> in v4)
+Boostrap 3 you can use <a href="http://getbootstrap.com/css/#responsive-utilities-classes">responsive available
+classes</a> to toggle
+between <code class="language-plaintext highlighter-rouge">display: block, inline, inline-block</code> or to hide, for specific viewport
+size <code class="language-plaintext highlighter-rouge">.visibe-sm-block .hidden-md .hidden-sm-up</code></p>
+
+<p>In Bootstrap 4 you can use <code class="language-plaintext highlighter-rouge">d-*-none</code> class
+https://getbootstrap.com/docs/4.1/utilities/display/
+To hide on smaller than md (ie show on md and larger) use <code class="language-plaintext highlighter-rouge">d-none d-md-block</code>
+To show only on md use <code class="language-plaintext highlighter-rouge">.d-none .d-md-block .d-lg-none</code></p>
+
+<p>You can write your own to match all greater (or smaller) sizes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># when it is max-width than it is Non-Mobile First Method
+# so we use le (less or equal then)
+# (min-width is Mobile First and we use hide-ge-)
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+  .hide-le-lg {
+    display: none;
+  }
+}
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+  .hide-le-md {
+    display: none;
+  }
+}
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+  .hide-le-sm {
+    display: none;
+  }
+}
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+  .hide-le-xs {
+    display: none;
+  }
+}
+</code></pre></div></div>
+
+<ul>
+  <li>you can center bootstrap column with offset</li>
+  <li>you can set icons on inputs, easy with generators, just add <code class="language-plaintext highlighter-rouge">prepend:
+'password'</code></li>
+</ul>
+
+<h2 id="bootstrap-modal">Bootstrap modal</h2>
+
+<p>On B3 you can use ajax and <code class="language-plaintext highlighter-rouge">render layout: false</code> and provide only inner html of
+<code class="language-plaintext highlighter-rouge">&lt;div class="modal"&gt;&lt;div class="modal-dialog"&gt;...</code> ie only <code class="language-plaintext highlighter-rouge">.modal-content</code> will
+be replaced. So you should use same header and footer in initial and ajax
+version.</p>
+
+<p>On B4 we need to replace the modal content with custom js, so I use jBox modal
+in this case.</p>
+
+<p>To close modal with escape key you need to add tabindex on modal elemenent:
+<code class="language-plaintext highlighter-rouge">&lt;div class="modal" tabindex="-1"&gt;</code>. Note that on Firefox ESC closing modal
+works without this tabindex attribute. Note also that select2 dows</p>
+
+<p>On activation button you do not need <code class="language-plaintext highlighter-rouge">data-keyboard="true"</code> since that is
+default. But remove <code class="language-plaintext highlighter-rouge">data-keyboard="false"</code> if exists and you want to close
+modal with escape key.</p>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">autofocus="true"</code> option to focus input field when modal shows up.</p>
+
+<p>For <a href="http://getbootstrap.com/javascript/#tooltips">tooltips</a> you can use html
+version <code class="language-plaintext highlighter-rouge">data-html="true" data-toggle="tooltip" title="&lt;h2&gt;Hi&lt;/h2&gt;"</code>.</p>
+
+<p>If you use ajax than modal content is cached, you can clear that cache on shown
+or hidden event (or in ajax response).
+Note that inline javascript will not be run again, cached content will be
+cleared (and modal will be loaded again) but new javascript will not be run for
+the same url… Actually it does not run <script></script> tags in subsequent
+runs (only on first fetch).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script&gt;
+$('#assign-location-modal').on('shown.bs.modal', function () {
+  $(this).removeData('bs.modal');
+});
+&lt;/script&gt;
+# or for all, for example in document_on.coffee
+$(document).on 'hidden.bs.modal', '.modal', -&gt;
+  $(this).removeData('bs.modal')
+  console.log "remove boostrap modal"
+</code></pre></div></div>
+
+<p>You can hide close modal with <code class="language-plaintext highlighter-rouge">$('#my-modal').modal('toggle');</code></p>
+
+<p>Usually <code class="language-plaintext highlighter-rouge">fade</code> makes some problem with positioning so you should not use fadding
+for custom modals.</p>
+
+<h2 id="bootstrap-tooltip">Bootstrap tooltip</h2>
+
+<p>To inspect <code class="language-plaintext highlighter-rouge">data-toggle="tooltip"</code> you need to find it’s selector and
+manually call <code class="language-plaintext highlighter-rouge">$('.myel').tooltip("show");</code> or in developer tools when you
+select <code class="language-plaintext highlighter-rouge">&lt;a title=</code> element you can reference it with <code class="language-plaintext highlighter-rouge">$0</code> so command is
+<code class="language-plaintext highlighter-rouge">$($0).tooltip("show")</code> or you can increase delay for hide</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  $('[data-toggle="tooltip"]').tooltip(
+    delay:
+      hide: 100000
+  )
+</code></pre></div></div>
+
+<p>If it is inside element with <code class="language-plaintext highlighter-rouge">overflow-y: scroll;</code> than it won’t be seen if it
+goes over borders. You need to change container of the tooltip. You can do it
+simply for all tooptips by overwriting DEFAULTS (if you need more customization,
+you can overwrite any prototype of the class)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$.fn.tooltip.Constructor.DEFAULTS.container = 'body'
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'right'
+</code></pre></div></div>
+
+<h2 id="bootstrap-input-group-and-button-group">Bootstrap input group and button group</h2>
+
+<p>Buttons and inputs can be grouped, but <a href="http://getbootstrap.com/components/#btn-groups">input
+group</a> is not advised to group
+with select. <a href="http://jsfiddle.net/MansukhKhandhar/4309n31p/1/">Here</a> is example
+of input with select and button.</p>
+
+<h1 id="helpers">Helpers</h1>
+
+<p>Color helpers
+Primary colors are <a href="https://getbootstrap.com/docs/4.0/utilities/colors/">link</a>
+<code class="language-plaintext highlighter-rouge">primary</code>, <code class="language-plaintext highlighter-rouge">secondary</code>, <code class="language-plaintext highlighter-rouge">success</code>, <code class="language-plaintext highlighter-rouge">danger</code>, <code class="language-plaintext highlighter-rouge">warning</code>, <code class="language-plaintext highlighter-rouge">info</code>, <code class="language-plaintext highlighter-rouge">dark</code>, <code class="language-plaintext highlighter-rouge">light</code>,
+<code class="language-plaintext highlighter-rouge">white</code>.  For text there is <code class="language-plaintext highlighter-rouge">muted</code>. Background <code class="language-plaintext highlighter-rouge">bg-dark text-light</code>. There is a border corols <code class="language-plaintext highlighter-rouge">border-white</code>.
+You can set default body background by defining variable <code class="language-plaintext highlighter-rouge">$body-bg: #bcdee3</code>
+before importing boostrap.
+You can use css <code class="language-plaintext highlighter-rouge">darken</code> for example for variable
+<code class="language-plaintext highlighter-rouge">$link-hover-color: darken($link-color, 15%) !default;</code>
+https://github.com/twbs/bootstrap/blob/e7e43edf65306efaf46a16ffc9fe35ef623bffef/scss/_variables.scss#L171</p>
+
+<ul>
+  <li>text and links <code class="language-plaintext highlighter-rouge">.text-success</code></li>
+  <li>background <code class="language-plaintext highlighter-rouge">.bg-warning</code></li>
+  <li>buttons <code class="language-plaintext highlighter-rouge">.btn-primary</code></li>
+  <li>borders <code class="language-plaintext highlighter-rouge">.border-primary</code> (<code class="language-plaintext highlighter-rouge">border border-top-0</code> to disable, <code class="language-plaintext highlighter-rouge">rounded-pill</code> to
+add radius to border)</li>
+</ul>
+
+<p>Other helpers are:</p>
+
+<ul>
+  <li>position helpers <code class="language-plaintext highlighter-rouge">position-relative</code>, <code class="language-plaintext highlighter-rouge">position-absolute</code> https://github.com/twbs/bootstrap/blob/e57a2f244ba8446fffe71847e6a58b18f7b2d541/scss/utilities/_position.scss</li>
+  <li><code class="language-plaintext highlighter-rouge">.clearfix</code></li>
+  <li>text size <code class="language-plaintext highlighter-rouge">.h1</code>(2.5rem), <code class="language-plaintext highlighter-rouge">.h2</code>(2rem), <code class="language-plaintext highlighter-rouge">.h3</code>(1.75rem), <code class="language-plaintext highlighter-rouge">.h4</code>(1.5rem), <code class="language-plaintext highlighter-rouge">.h5</code>(1.25rem), <code class="language-plaintext highlighter-rouge">.h6</code>(1rem) so you can use <code class="language-plaintext highlighter-rouge">h2</code> instead defining <code class="language-plaintext highlighter-rouge">font-size-2</code></li>
+  <li><code class="language-plaintext highlighter-rouge">font-weight-bold</code> to use bold font</li>
+  <li>text position<code class="language-plaintext highlighter-rouge">.text-center</code>, <code class="language-plaintext highlighter-rouge">.text-left</code>, <code class="language-plaintext highlighter-rouge">.text-nowrap</code>
+ https://www.w3schools.com/bootstrap/bootstrap_ref_css_text.asp</li>
+  <li><code class="language-plaintext highlighter-rouge">text-truncate</code> with <code class="language-plaintext highlighter-rouge">max-width: 100px</code>
+https://getbootstrap.com/docs/4.1/utilities/text/#text-wrapping-and-overflow</li>
+  <li><code class="language-plaintext highlighter-rouge">.show</code> and <code class="language-plaintext highlighter-rouge">.hidden</code></li>
+  <li><code class="language-plaintext highlighter-rouge">.d-none</code> to hide something. But when I want to show/hide in js I usually
+create my own <code class="language-plaintext highlighter-rouge">.d-none-not-important</code> since bootstrap’s is with <code class="language-plaintext highlighter-rouge">important</code>.
+I used <code class="language-plaintext highlighter-rouge">hide-not-important</code> with jQuery <code class="language-plaintext highlighter-rouge">$el.show()</code> (hide) or
+<code class="language-plaintext highlighter-rouge">$el.slideDown()</code> (slideUp) but they use <code class="language-plaintext highlighter-rouge">display: block</code> which does not work
+well with <code class="language-plaintext highlighter-rouge">display: flex</code> elements, better is to use
+<code class="language-plaintext highlighter-rouge">$(el).addClass('d-none-not-important')</code>. There is also
+<a href="https://getbootstrap.com/docs/4.0/content/reboot/#html5-hidden-attribute">hidden</a></li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/common/show_hide.sass
+.d-none-not-important,.hide-not-important
+  visibility: hidden
+  opacity: 0
+  transition: visibility 0.5s ease, opacity 0.5s ease
+  // display: none
+  &amp;.active
+    visibility: visible
+    opacity: 1
+    // display: initial
+</code></pre></div></div>
+<ul>
+  <li>
+    <p>margin and padding helpers in format <code class="language-plaintext highlighter-rouge">&lt;property&gt;&lt;sides&gt;-&lt;breakpoint&gt;-&lt;size&gt;</code>
+<a href="https://getbootstrap.com/docs/4.0/utilities/spacing/#notation">https://getbootstrap.com/docs/4.0/utilities/spacing/#notation</a> 
+property is <code class="language-plaintext highlighter-rouge">m</code> margin or <code class="language-plaintext highlighter-rouge">p</code> padding
+sides <code class="language-plaintext highlighter-rouge">t</code> top, <code class="language-plaintext highlighter-rouge">b</code> bottom, <code class="language-plaintext highlighter-rouge">l</code> left, <code class="language-plaintext highlighter-rouge">r</code> right, <code class="language-plaintext highlighter-rouge">x</code> both l and r, <code class="language-plaintext highlighter-rouge">y</code> t and b
+size <code class="language-plaintext highlighter-rouge">0</code>, <code class="language-plaintext highlighter-rouge">1</code> (<code class="language-plaintext highlighter-rouge">$spacer * 0.25</code>), <code class="language-plaintext highlighter-rouge">2</code> (<code class="language-plaintext highlighter-rouge">$spacer * .5</code>), <code class="language-plaintext highlighter-rouge">3</code> (<code class="language-plaintext highlighter-rouge">$spacer</code>), <code class="language-plaintext highlighter-rouge">4</code>
+(<code class="language-plaintext highlighter-rouge">$spacer * 1.5</code>), <code class="language-plaintext highlighter-rouge">5</code> (<code class="language-plaintext highlighter-rouge">$spacer * 3</code>), By default <code class="language-plaintext highlighter-rouge">$spacer: 1rem</code> 1rem is
+default font size ie 16px on B4 (1.5 line height) and 14px in B3 (1.428 line
+height)</p>
+
+    <p><code class="language-plaintext highlighter-rouge">mx-auto</code> for <code class="language-plaintext highlighter-rouge">margin: 0px auto</code>.
+sides or breakpoint not required: <code class="language-plaintext highlighter-rouge">p-0</code> padding none, <code class="language-plaintext highlighter-rouge">mt-5</code> margin top, but
+you can use <code class="language-plaintext highlighter-rouge">mb-lg-5</code>. Note that margins are not applicable for <code class="language-plaintext highlighter-rouge">d-inline</code>
+elements.</p>
+
+    <p>For inline elements you can use <code class="language-plaintext highlighter-rouge">float-left</code> (instead of <code class="language-plaintext highlighter-rouge">pull-left</code>).
+For block elements with fixed width <code class="language-plaintext highlighter-rouge">ml-auto</code> to align to the right (same as
+pull-right in B3), <code class="language-plaintext highlighter-rouge">mx-auto</code> for horizontal centering (need fixed width).
+For block elements that are by default 100% width, you can wrap inside <code class="language-plaintext highlighter-rouge">d-flex
+w-100 justify-content-between</code> width 100% is important because you want right
+element to go right.
+https://getbootstrap.com/docs/4.0/components/list-group/#custom-content
+(also <code class="language-plaintext highlighter-rouge">justify-content-around justify-content-center justify-content-start</code>).</p>
+
+    <p>For cross axis it will be scretched so use <code class="language-plaintext highlighter-rouge">d-flex align-items-center</code> to
+center verticaly (or horizontaly if it is column based).
+You can also align for particular item <code class="language-plaintext highlighter-rouge">align-self-center</code>.
+Grow item with <code class="language-plaintext highlighter-rouge">flex-grow-1</code> or <code class="language-plaintext highlighter-rouge">flex-shrink-1</code>.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">d-flex</code> class to convert to flexbox container. You can change display with
+<code class="language-plaintext highlighter-rouge">d-inline</code>, <code class="language-plaintext highlighter-rouge">d-inline-block</code>.  Other flex helpers
+https://getbootstrap.com/docs/4.0/utilities/flex/
+for example to enable wrap use <code class="language-plaintext highlighter-rouge">d-flex flex-wrap</code>. You can use those classes
+instead of row col. For example
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class='d-flex flex-column flex-md-row'&gt;
+  &lt;div&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+is similar to
+
+&lt;div class='row'&gt;
+  &lt;div class='col-md-6'&gt;&lt;/div&gt;
+  &lt;div class='col-md-6'&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+but it will be justify-content-start(so no padding around columns )and size is depending on the content (not 50% as in col-6)
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">dl-horizontal</code> can be replaces with
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dl class='row justify-content-start'&gt;
+  &lt;dt class='col-sm-2'&gt;Sign In Count&lt;/dt&gt;
+  &lt;dd class='col'&gt;&lt;%= @user.sign_in_count %&gt;&lt;/dd&gt;
+  &lt;dt class='w-100'&gt;&lt;/dt&gt;
+  &lt;dt class='col-sm-2'&gt;Last Sign In at&lt;/dt&gt;
+  &lt;dd class='col'&gt;&lt;%= @user.last_sign_in_at.to_s :short %&gt;&lt;/dd&gt;
+  &lt;dt class='w-100'&gt;&lt;/dt&gt;
+&lt;/dl&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>to use variable unkown number of columns with multi line you can insert
+<code class="language-plaintext highlighter-rouge">.w-100</code> where you want on specific responsive (for example on md you can
+insert after every 6 columnts) https://getbootstrap.com/docs/4.4/layout/grid/#equal-width-multi-line
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class="container"&gt;
+  &lt;div class="row"&gt;
+    &lt;div class="col"&gt;col&lt;/div&gt;
+    &lt;div class="col"&gt;col&lt;/div&gt;
+    &lt;div class="w-100"&gt;&lt;/div&gt;
+    &lt;div class="col"&gt;col&lt;/div&gt;
+    &lt;div class="col"&gt;col&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div>    </div>
+
+    <p>Btw there are helpers for max-width <code class="language-plaintext highlighter-rouge">.mw-100</code>, view port <code class="language-plaintext highlighter-rouge">.vh-100</code> (<code class="language-plaintext highlighter-rouge">heigh:
+100vh</code>).</p>
+
+    <p>another way is to use row-cols https://getbootstrap.com/docs/4.4/layout/grid/#row-columns</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class="container"&gt;
+  &lt;div class="row row-cols-2"&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+    &lt;div class="col"&gt;Column&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="rails">Rails</h1>
+
+<h2 id="overrides">Overrides</h2>
+
+<p>There are two files that configure and override bootstrap</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/stylesheets/application.sass
+// default
+@import 'common/variable_default_values'
+
+// node_modules
+@import 'bootstrap/scss/bootstrap'
+
+// common
+@import 'common/variables'
+@import 'common/bootstrap_overrides'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/common/bootstrap_overrides
+// it is not actually overrides, but additional classes that modify existing
+
+// this is used if you want btn inside h1
+.btn.btn__font-size-inherit
+  font-size: inherit
+
+.btn.btn__text_wrap
+  white-space: normal
+</code></pre></div></div>
+
+<h2 id="nabar">Nabar</h2>
+
+<p>https://getbootstrap.com/docs/4.0/examples/navbars/ shows different styles</p>
+
+<p>Here is an example adding style for specific media for alert</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/stylesheets/common.scss
+@import "bootstrap-variables";
+
+.hidden-left {
+  position: absolute;
+  left: -1000px;
+}
+
+@media(min-width:$screen-sm){
+  .alert {
+    position: absolute;
+    top: 8px;
+    padding: 8px;
+    padding-right: 30px; // close sign
+    z-index: 9999;
+    left: 480px; // enought to see nav buttons
+  }
+}
+</code></pre></div></div>
+
+<p>Still, default rails form build will render <code class="language-plaintext highlighter-rouge">field_with_errors</code> on label and
+input wrap, so if you need to change for bootstrap error classes.
+Note that with Bootstrap 3, you have to change <code class="language-plaintext highlighter-rouge">control-group</code> to <code class="language-plaintext highlighter-rouge">form-group</code>,
+add <code class="language-plaintext highlighter-rouge">form-control</code> to <code class="language-plaintext highlighter-rouge">&lt;input&gt;</code> elements, <code class="language-plaintext highlighter-rouge">help-inline</code> to <code class="language-plaintext highlighter-rouge">help-block</code>, and
+<code class="language-plaintext highlighter-rouge">warning</code> to <code class="language-plaintext highlighter-rouge">has-warning</code> or <code class="language-plaintext highlighter-rouge">error</code> to <code class="language-plaintext highlighter-rouge">has-error</code>.
+The easiest approach is with <strong>bootstrap form</strong>.</p>
+
+<h2 id="bootstrap-form">Bootstrap form</h2>
+
+<p><a href="https://github.com/bootstrap-ruby/rails-bootstrap-forms">bootstrap_form gem rails-bootstrap-forms
+git</a> (not old pluralize
+<a href="https://github.com/sethvargo/bootstrap_forms">bootstrap_forms</a>). Just add two
+lines</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# adding bootstrap_form_for
+gem 'bootstrap_form'
+HERE_DOC
+
+sed -i app/assets/stylesheets/application.css -e '1i\
+/*\
+ *= require rails_bootstrap_forms\
+ */'
+# or sass
+cat &gt;&gt; app/assets/stylesheets/application.sass &lt;&lt; HERE_DOC
+// gems
+@import 'rails_bootstrap_forms'
+HERE_DOC
+</code></pre></div></div>
+
+<p>and use your <code class="language-plaintext highlighter-rouge">bootstrap_form_for</code></p>
+
+<p>You can use <a href="https://github.com/bootstrap-ruby/rails-bootstrap-forms#horizontal-forms">horizontal
+forms</a>
+with <code class="language-plaintext highlighter-rouge">layout: :horizontal</code> (note that it won’t work for string <code class="language-plaintext highlighter-rouge">layout:
+'horizontal'</code>). You can add options <code class="language-plaintext highlighter-rouge">label_col: 'col-sm-4', control_col:
+'col-sm-8'</code>. Also you can override <code class="language-plaintext highlighter-rouge">control_class</code>, <code class="language-plaintext highlighter-rouge">wrapper_class</code> (if it is a
+hash you can override any option).</p>
+
+<p>If you want all controlls and submit button to be in one line, you can use
+<code class="language-plaintext highlighter-rouge">layout: :inline</code> (note that only symbols works, string does not <code class="language-plaintext highlighter-rouge">layout:
+'inline'</code>). For text_field maximum size use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= bootstrap_form_for @form, layout: :inline do |f|
+  &lt;%= f.text_field :name, size: 2 %&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>Use placeholders instead of labels</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= f.text_field :email, label_as_placeholder: true %&gt;
+</code></pre></div></div>
+
+<p>For Select2, you can resolve with to the current value (for ajax you need to
+populate with <code class="language-plaintext highlighter-rouge">prompt: 'Please select'</code>). I need to populate with label so I add
+this helper</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/form_builders/my_form_builder.rb
+class MyFormBuilder &lt; BootstrapForm::FormBuilder
+  def select(method, choices = nil, options = {}, html_options = {}, &amp;block)
+    if options.delete :label_as_prompt
+      options[:prompt] = form_group_placeholder(options, method)
+    else
+      options[:prompt] ||= I18n.t('please_select')
+    end
+    super
+  end
+end
+</code></pre></div></div>
+
+<p>you can make checkbox inline with button</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.check_box :remember_me, inline: true %&gt;
+  &lt;%= f.submit t "sign_in" %&gt;
+</code></pre></div></div>
+
+<p>You can change form-group wrapper class so to make two inputs inline you wrap
+with <code class="language-plaintext highlighter-rouge">form-inline</code>. If you need more customisation you can override wrapper
+class</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class='form-inline'&gt;
+  &lt;%= f.text_input :name, wrapper_class: 'form-group__with_select'
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>You can also use bootstrap row and cols or d-flex</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= f.text_field :name %&gt;
+&lt;div class='d-flex flex-row justify-content-between'&gt;
+  &lt;div&gt;
+    &lt;%= f.text_field :address %&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;%= f.text_field :city %&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>You can use form to have horizontal layout, and some input group can be inline,
+so you can group input and select (note that is you have horizontal layout you
+can not use this since col-sm-2 and col-sm-10 will be added, look below for
+custom form builder).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/todos/_form.html.erb %&gt;
+&lt;%= bootstrap_form_for @task, url: todos_path do |f| %&gt;
+  &lt;div class="form-inline"&gt;
+    &lt;%= f.label :name %&gt;
+    &lt;div class="input-group input-group__with-select"&gt;
+      &lt;%= f.text_field :name, input_group_class: 'input-group-under-group-with-select', skip_label: true %&gt;
+      &lt;%= f.select :id, 1..5, skip_label: true %&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/application.scss
+.input-group__with-select {
+  .input-group-under-group-with-select,.form-group {
+    position: initial;
+    display: initial;
+    border-collapse: initial;
+  }
+  .form-control {
+    width: 50%!important;
+  }
+}
+</code></pre></div></div>
+
+<p>You can prepend or append strings or buttons</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.text_field :price, append: '$' %&gt;
+  &lt;%= f.text_field :body, append: f.primary(t('send')) %&gt;
+</code></pre></div></div>
+
+<p>Checkboxes or radio buttons should be inside a <code class="language-plaintext highlighter-rouge">form-group</code> if you want to show
+them indented (inside wrapper class) and to show label (control class) and help
+text</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.form_group label: { text: 'Admin', for: 'admin' }, help: 'This option enables admin' do %&gt;
+    &lt;%= f.check_box :admin, hide_label: true, id: 'admin' %&gt;
+  &lt;% end %&gt;
+</code></pre></div></div>
+
+<p>To hide label instead of <code class="language-plaintext highlighter-rouge">label: ''</code> you need to use <code class="language-plaintext highlighter-rouge">hide_label: true</code></p>
+
+<p>Static text can be displayed with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= f.static_control :email %&gt;
+&lt;%= f.static_control label: 'Custom Static Control' do %&gt;
+  Content here
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>You can use original rails form builder appending <code class="language-plaintext highlighter-rouge">_without_bootstrap</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;%= f.text_field_without_bootstrap :name %&gt;
+</code></pre></div></div>
+
+<h2 id="form-builder">Form builder</h2>
+
+<p>You can write your own form builder that extends for example
+<a href="https://github.com/bootstrap-ruby/rails-bootstrap-forms">rails-bootstrap-forms</a>
+But since <code class="language-plaintext highlighter-rouge">bootstrap_form_for</code> (which is defined inside helper) calculate layout
+class (<code class="language-plaintext highlighter-rouge">:inline</code> or <code class="language-plaintext highlighter-rouge">:horizontal</code>) we need to use same helper
+(<code class="language-plaintext highlighter-rouge">bootstrap_form_for ... builder: MyFormBuilder</code> instead of <code class="language-plaintext highlighter-rouge">form_for ...
+builder: MyFormBuilder</code>). I noticed huge chrome memory problems (memory chrome
+is increasing when there is no <code class="language-plaintext highlighter-rouge">form-horizontal</code> class).
+To override some form elements you need to override bootstrap_form_for helper</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/helpers/form_helper.rb
+module FormHelper
+  include BootstrapForm::Helper
+  def bootstrap_form_for(object, options = {}, &amp;block)
+    options.reverse_merge! builder: MyFormBuilder
+    super(object, options, &amp;block)
+  end
+  def bootstrap_form_with(options = {}, &amp;block)
+    options.reverse_merge! builder: MyFormBuilder
+    super(options, &amp;block)
+  end
+  def options_for_select(container, attr = {})
+    # do not show Const.not_specified option
+    container = container.reject { |k, _| k.to_s.match Const.not_specified } unless attr[:show_not_specified]
+    super container, attr
+  end
+end
+</code></pre></div></div>
+
+<p>Oneliner form is using button_to with: input label, target url, form class…</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= button_to t('notify'), notify_device_path(device), class: 'btn btn-sm btn-secondary', title: t('send_notification_to_this_device'), form_class: 'd-inline' %&gt;
+</code></pre></div></div>
+
+<p>You can change default <code class="language-plaintext highlighter-rouge">col-sm-2</code> control col class</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/bootstrap_form.rb
+module BootstrapForm
+  class FormBuilder
+    def default_label_col
+      'col-sm-3'
+    end
+
+    def default_control_col
+      'col-sm-9'
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Here is example of input with select base od
+<a href="http://jsfiddle.net/MansukhKhandhar/4309n31p/1/">example</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/form_builders/my_form_builder.rb
+class MyFormBuilder &lt; BootstrapForm::FormBuilder
+  def my_text_field(method, options = {})
+    content_tag :div, class: "my-wrapper" do
+      super method, options
+    end
+  end
+  def text_field_with_select(method_for_text_input, options_for_text_input, method_for_select, choices, options_for_select = {}, html_options = {})
+    content_tag :div, class: "from-group form-group__with_select" do
+      form_group_builder method_for_text_input, options_for_text_input do
+        select_without_group = form_group_builder_without_group(method_for_select, options_for_select, html_options) do
+          select_without_bootstrap(method_for_select, choices, options_for_select, html_options)
+        end
+        text_field_without_bootstrap(method_for_text_input, options_for_text_input) +
+          select_without_group
+      end
+    end
+  end
+
+  # this will overwrite all f.submit form helpers. data-disable-with does not
+  # work well when responding with csv so there you should explicitly disable:
+  # &lt;%= f.submit "Generate CSV", 'data-disable-with': nil %&gt;
+  def submit(name, options = {})
+    options.reverse_merge! 'data-disable-with': "&lt;i class='fa fa-spinner fa-spin'&gt;&lt;/i&gt; #{name}"
+    hidden_field_tag(:commit, name) +
+      button(name, options)
+  end
+
+  def single_image_upload(method, options = {})
+    
+  end
+
+  private
+
+  def form_group_builder_without_group(method, options, html_options = nil)
+    # copy from original form_group_builder
+    # bootstrap_form-2.5.2/lib/bootstrap_form/form_builder.rb
+    options.symbolize_keys!
+    html_options.symbolize_keys! if html_options
+
+    # Add control_class; allow it to be overridden by :control_class option
+    css_options = html_options || options
+    control_classes = css_options.delete(:control_class) { control_class }
+    css_options[:class] = [control_classes, css_options[:class]].compact.join(" ")
+
+    options = convert_form_tag_options(method, options) if acts_like_form_tag
+
+    wrapper_class = css_options.delete(:wrapper_class)
+    wrapper_options = css_options.delete(:wrapper)
+    help = options.delete(:help)
+    icon = options.delete(:icon)
+    label_col = options.delete(:label_col)
+    control_col = options.delete(:control_col)
+    layout = get_group_layout(options.delete(:layout))
+    form_group_options = {
+      id: options[:id],
+      help: help,
+      icon: icon,
+      label_col: label_col,
+      control_col: control_col,
+      layout: layout,
+      class: wrapper_class
+    }
+
+    if wrapper_options.is_a?(Hash)
+      form_group_options.merge!(wrapper_options)
+    end
+
+    unless options.delete(:skip_label)
+      if options[:label].is_a?(Hash)
+        label_text  = options[:label].delete(:text)
+        label_class = options[:label].delete(:class)
+        options.delete(:label)
+      end
+      label_class ||= options.delete(:label_class)
+      label_class = hide_class if options.delete(:hide_label)
+
+      if options[:label].is_a?(String)
+        label_text ||= options.delete(:label)
+      end
+
+      form_group_options.merge!(label: {
+        text: label_text,
+        class: label_class,
+        skip_required: options.delete(:skip_required)
+      })
+    end
+    form_group_without_group(method, form_group_options) do
+      yield
+    end
+  end
+
+  def form_group_without_group(*args, &amp;block)
+    options = args.extract_options!
+    name = args.first
+
+    options[:class] = ["form-group", options[:class]].compact.join(' ')
+    options[:class] &lt;&lt; " #{error_class}" if has_error?(name)
+    options[:class] &lt;&lt; " #{feedback_class}" if options[:icon]
+
+    control = capture(&amp;block).to_s
+    control.concat(generate_help(name, options[:help]).to_s)
+    control.concat(generate_icon(options[:icon])) if options[:icon]
+
+    control
+  end
+end
+end
+</code></pre></div></div>
+
+<h2 id="data-confirm-modal">Data confirm modal</h2>
+
+<p>When rails use <code class="language-plaintext highlighter-rouge">data-confirm='Are you sure?'</code> it opens default browser’s builtin
+<code class="language-plaintext highlighter-rouge">confirm()</code>. Instead of that, you can open bootstrap 3 or 4 modal with
+<a href="https://github.com/ifad/data-confirm-modal">https://github.com/ifad/data-confirm-modal</a></p>
+
+<h2 id="navbar">Navbar</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">navbar</code> is starting class which <code class="language-plaintext highlighter-rouge">display: flex; flex-wrap: wrap; align-items:
+center; justify-content: space-between</code> (so if you have two childs like
+<code class="language-plaintext highlighter-rouge">navbar-brand</code> and <code class="language-plaintext highlighter-rouge">navbar-toggler</code> they will be on left and right side, but
+<code class="language-plaintext highlighter-rouge">navbar-collapse</code> has <code class="language-plaintext highlighter-rouge">flex-grow: 1; flex-basis: 100%</code> so that’s why it looks
+like it’s on left, also <code class="language-plaintext highlighter-rouge">navbar-expand-lg</code> has <code class="language-plaintext highlighter-rouge">justify-content: flex-start</code>).</li>
+  <li><code class="language-plaintext highlighter-rouge">navbar-light bg-light</code> to add colors (it will change color of nav-links)</li>
+  <li><code class="language-plaintext highlighter-rouge">navbar-collapse</code> contains all navbar. add <code class="language-plaintext highlighter-rouge">navbar-expand-lg</code> on navbar so on
+lg <code class="language-plaintext highlighter-rouge">navbar-toggler</code> dissapears, <code class="language-plaintext highlighter-rouge">navbar-collapse</code> expands and <code class="language-plaintext highlighter-rouge">navbar-nav</code>
+change from <code class="language-plaintext highlighter-rouge">column</code> to <code class="language-plaintext highlighter-rouge">flex-direction: row</code>. Inside <code class="language-plaintext highlighter-rouge">navbar-collapse</code> beside
+<code class="language-plaintext highlighter-rouge">navbar-nav</code> you can also nest one more <code class="language-plaintext highlighter-rouge">navbar-nav ml-auto</code> if you want to
+pull some links to right.</li>
+</ul>
+
+<h2 id="cards">Cards</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class="card" style="width: 18rem;"&gt;
+  &lt;img class="card-img-top" src=".../100px180/" alt="Card image cap"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h5 class="card-title"&gt;Card title&lt;/h5&gt;
+    &lt;p class="card-text"&gt;Some quick example text to build on the card title and make up the bulk of the card's content.&lt;/p&gt;
+    &lt;a href="#" class="btn btn-primary"&gt;Go somewhere&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>Cards occupy full width, so you need to set width manually.
+You can use <code class="language-plaintext highlighter-rouge">card-group</code> or <code class="language-plaintext highlighter-rouge">card-deck</code> (it has padding), or you can simply add
+<code class="language-plaintext highlighter-rouge">d-flex flex-wrap</code> to wrapped element.
+<code class="language-plaintext highlighter-rouge">card-body</code> is used for padding.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/components/sizes.sass
+.card--max-width
+  @include media-breakpoint-up(md)
+    // single card on sm and start with two on a md(minus two margins m-2)
+    max-width: map-get($grid-breakpoints, 'md') / 2 - to-px(2 * map-get($spacers, 2))
+
+# app/views/cards/index.html
+&lt;div class='d-flex flex-wrap justify-content-center'&gt;
+  &lt;% @tasks.all.each do |task| %&gt;
+    &lt;div class='card m-2 card--max-width'&gt;
+      &lt;div class='card-body'&gt;
+</code></pre></div></div>
+
+<p>To add buttons to card using list group, use flush to remove some borders and
+render edge to edge, use <code class="language-plaintext highlighter-rouge">btn</code> to add hover icon</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class='card'&gt;
+  &lt;div class='list-group list-group-flush text-center'&gt;
+    &lt;%= button_tag class: 'list-group-item list-group-item-action btn' do %&gt;
+      &lt;i class="fa fa-pencil-alt" aria-hidden="true"&gt;&lt;/i&gt;
+      &lt;%= t('edit') %&gt;
+    &lt;% end %&gt;
+  &lt;/div&gt;
+</code></pre></div></div>
+
+<h2 id="login-box">Login box</h2>
+
+<p>On responsive, instead of margin (margin is used with auto so it is
+centered on bigger screens) you can use <code class="language-plaintext highlighter-rouge">max-width: 90vw</code> or better is to wrap
+inside container with <code class="language-plaintext highlighter-rouge">padding: 0.5rem</code>.
+Since I like to put a logo and text which is larger than box, I use two times
+max with and mx-auto, one for wrapper (60rem) and one for white box (sm size).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/common/sizes.sass
+.login--wrapper-max-width
+  max-width: 60rem
+
+.login--max-width
+  max-width: 30rem
+
+# app/views/layouts/application.html.erb
+  &lt;% if login_layout? %&gt;
+    &lt;body&gt;
+      &lt;div class='text-center'&gt;
+        &lt;%= link_to root_path do %&gt;
+          &lt;%= image_tag 'cable_crm_logo.png', class: 'login-logo' %&gt;
+        &lt;% end %&gt;
+        &lt;h2&gt;&lt;%= login_title %&gt;&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;div class='container'&gt;
+        &lt;div class='login--wrapper-max-width mx-auto'&gt;
+          &lt;div class="&lt;%= 'login--max-width mx-auto bg-white shadow p-4' unless controller_name == 'companies' %&gt;"&gt;
+            &lt;%= yield %&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/body&gt;
+  &lt;% else %&gt;
+</code></pre></div></div>
+
+<h2 id="sidebar">Sidebar</h2>
+
+<p>https://bootstrapious.com/p/bootstrap-sidebar#3-fixed-scrollable-sidebar-menu-with-a-content-overlay</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/stylesheets/components/sidebar.sass
+$sidebar-width: 20rem
+#sidebar
+  &amp;.active
+    right: 0
+  min-width: $sidebar-width
+  max-width: $sidebar-width
+  height: 100vh
+  position: fixed
+  top: 0
+  right: -$sidebar-width
+  background: #7386D5
+  color: #fff
+  transition: right 0.3s
+  z-index: 9999
+
+.sidebar__overlay
+  display: none
+  position: fixed
+  width: 100vw
+  height: 100vh
+  background: rgba(0, 0, 0, 0.7)
+  z-index: 998
+  opacity: 0
+  transition: all 0.5s ease-in-out
+  &amp;.active
+    display: block
+    opacity: 1
+
+.sidebar__dismiss
+  width: 35px
+  height: 35px
+  position: absolute
+  top: 10px
+  right: 10px
+
+# app/views/layouts/_sidebar.html.erb
+&lt;nav id='sidebar'&gt;
+  &lt;div class='sidebar__dismiss' data-toggle-active='#sidebar,.sidebar__overlay'&gt;
+    &lt;i class="fa fa-times"&gt;&lt;/i&gt;
+  &lt;/div&gt;
+
+  &lt;ul class='list-unstyled'&gt;
+    &lt;p&gt;My App&lt;/p&gt;
+    &lt;li class='&lt;%= 'active' if controller_name == 'tasks' %&gt;'&gt;
+      &lt;%= link_to 'Past tasks', '#' %&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+&lt;div class='sidebar__overlay' data-toggle-active='#sidebar,.sidebar__overlay'&gt;&lt;/div&gt;
+</code></pre></div></div>
+
+<h1 id="improvements">Improvements</h1>
+
+<ul>
+  <li>create classes for text primary for list groups. There is only a color
+variants <code class="language-plaintext highlighter-rouge">list-group-item-primary</code> but I do not see variant with white
+background and blue text
+https://github.com/twbs/bootstrap/blob/v4-dev/scss/_list-group.scss#L148
+My fix is:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// by defauls list-group-item-action.active background is white, but when we add
+// text-primary if overrides that, so we need to define again
+.list-group-item-action.active.text-primary
+  color: #ffffff !important
+  &amp;:hover
+    color: #ffffff !important
+</code></pre></div>    </div>
+  </li>
+  <li>to check if postcss autoprefixer was applied you need to create <code class="language-plaintext highlighter-rouge">&lt;select
+class='custom-select'&gt;&lt;/select&gt;</code> and inspect that element. When there is no
+autoprefixer than it will contain <code class="language-plaintext highlighter-rouge">appearance: none</code>, if there is autoprefixed
+than it will be <code class="language-plaintext highlighter-rouge">-mox-appearance: none</code> or <code class="language-plaintext highlighter-rouge">-webkit-appearance: none</code></li>
+  <li>badge label <code class="language-plaintext highlighter-rouge">&lt;span class="badge badge-primary"&gt;Primary&lt;/span&gt;</code></li>
+  <li>use with webpacker is simply adding few lines of stylesheets
+https://github.com/bootstrap-ruby/bootstrap_form/issues/554
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/javascript/stylesheets/application.scss:
+@import "~bootstrap/scss/bootstrap";
+
+// https://github.com/bootstrap-ruby/bootstrap_form/issues/554
+.rails-bootstrap-forms-date-select select,
+.rails-bootstrap-forms-time-select select,
+.rails-bootstrap-forms-datetime-select select {
+  display: inline-block;
+  width: auto;
+}
+
+.rails-bootstrap-forms-error-summary {
+  margin-top: 10px;
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Docker Tips</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Docker Tips</h1>
+    <p class="meta">Sep 27, 2022</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#commands"><span class="tocnumber">1</span> <span class="toctext">Commands</span></a></li><li class="toc_level-1 toc_section-2"><a href="#pwd-try-online-in-play-with-docker"><span class="tocnumber">2</span> <span class="toctext">PWD Try online in Play with docker</span></a></li><li class="toc_level-1 toc_section-3"><a href="#swarm"><span class="tocnumber">3</span> <span class="toctext">Swarm</span></a></li><li class="toc_level-1 toc_section-4"><a href="#run-a-private-docker-registry"><span class="tocnumber">4</span> <span class="toctext">Run a private docker registry</span></a></li><li class="toc_level-1 toc_section-5"><a href="#instalation"><span class="tocnumber">5</span> <span class="toctext">Instalation</span></a></li><li class="toc_level-1 toc_section-6"><a href="#running-on-windows"><span class="tocnumber">6</span> <span class="toctext">Running on windows</span></a></li><li class="toc_level-1 toc_section-7"><a href="#deploy"><span class="tocnumber">7</span> <span class="toctext">Deploy</span></a></li><li class="toc_level-1 toc_section-8"><a href="#testing-with-docker"><span class="tocnumber">8</span> <span class="toctext">Testing with docker</span></a></li><li class="toc_level-1 toc_section-9"><a href="#dockhero"><span class="tocnumber">9</span> <span class="toctext">Dockhero</span></a></li><li class="toc_level-1 toc_section-10"><a href="#tutorials"><span class="tocnumber">10</span> <span class="toctext">Tutorials</span></a></li><li class="toc_level-1 toc_section-11"><a href="#tips"><span class="tocnumber">11</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><p>Best way to start is https://docs.docker.com/get-started/
+that is running</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -d -p 80:80 docker/getting-started
+</code></pre></div></div>
+<p>and follow instructions.</p>
+
+<p>Example docker run command</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run hello-world
+# if you have exposed ports you need to
+docker run -p 80:3000 my-image
+# if you want to remove after
+docker run -it --rm -p 3000:3000 static:latest
+</code></pre></div></div>
+<h1 id="commands">Commands</h1>
+
+<p>container</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker container run name-of-image</code> run (download if does not exists)
+https://docs.docker.com/engine/reference/run/
+if you add another commands they will be added to ENTRYPOINT as arguments
+<code class="language-plaintext highlighter-rouge">docker container run --rm ruby_echo some arguments</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">-it</code> interactive and enable tty for example to start bash on ubuntu
+container, without need to ssh to it. This will start new container named
+proxy and start bash <code class="language-plaintext highlighter-rouge">docker container run -it --name proxy ubuntu bash</code>
+To run on existing container see <code class="language-plaintext highlighter-rouge">exec</code></li>
+      <li><code class="language-plaintext highlighter-rouge">-p local-port:image-port</code> open port: <code class="language-plaintext highlighter-rouge">docker container run -p 80:80 nginx</code>
+To see ports for existing container <code class="language-plaintext highlighter-rouge">docker container port nginx</code></li>
+      <li><code class="language-plaintext highlighter-rouge">-e</code> add ENV variable for example <code class="language-plaintext highlighter-rouge">docker container run -d --name mysql -e
+MYSQL_RANDOM_ROOT_PASSWORD=true mysql</code></li>
+      <li><code class="language-plaintext highlighter-rouge">-d</code> detach, <code class="language-plaintext highlighter-rouge">--rm</code> automatically remove container when exits, usefull just
+to test some distros <code class="language-plaintext highlighter-rouge">docker container run --rm -it ubuntu bash</code> so you do
+not neet to remove exited containers</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docker container inspect name-of-image</code> to see how we started the container
+To format output you can use format <code class="language-plaintext highlighter-rouge">-f</code> option</li>
+  <li>to debug echo run see commands in build I see sleep. Note only 6 lines of
+output I can see
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUN ls &amp;&amp; sleep 10
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docker container exec -it container-name ls</code> run additional command in
+existing specific container (docker ps will not show additional container) for
+example rake task or rails console
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker exec -it my-web-1 /docker-entrypoint-web.sh bundle exec rails c
+</code></pre></div>    </div>
+    <p>To use byebug debugger you need to attach to proccess `docker attach</p>
+    <name_or_image_id>` and byebug will stop there.
+</name_or_image_id>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docker container start -ai ubuntu</code> start stopped container and open a shell</li>
+  <li><code class="language-plaintext highlighter-rouge">docker container ls --all</code> list all containers (spawned by the image), if it
+still running than no need <code class="language-plaintext highlighter-rouge">--all</code>. List processes <code class="language-plaintext highlighter-rouge">docker top container-name</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker ps</code> To see all running containers. Container is a running instance of
+an image. Also <code class="language-plaintext highlighter-rouge">docker container stats</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker container logs my_nginx</code> or follow <code class="language-plaintext highlighter-rouge">docker container logs -f postgres</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker container stop 323232</code>, stop all <code class="language-plaintext highlighter-rouge">docker kill $(docker ps -q)</code>, remove
+stopped container <code class="language-plaintext highlighter-rouge">docker rm my_nginx</code> (force <code class="language-plaintext highlighter-rouge">docker container rm -f
+my_nginx</code>. Remove stopped containers, not used networks and image images clear
+<code class="language-plaintext highlighter-rouge">docker system prune -a</code>. See system usage with <code class="language-plaintext highlighter-rouge">docker system df</code>.</li>
+</ul>
+
+<p>Image build
+Image is app binaries and dependencies and metadata (docker inspect) about the
+image data and how to run image (ports opened, env set, command to be run).
+‘ordered collection of root filesystem changes and the corresponding execution
+parameters for use within a container runtime’. Host is providing a kernel and
+drivers.
+http://hub.docker.com/ Alpine means it is light</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker pull nginx:1.11.9</code> pull image from repository</li>
+  <li><code class="language-plaintext highlighter-rouge">docker image ls</code> list local images, also <code class="language-plaintext highlighter-rouge">docker images</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker image tag name-of-source-image duleorlovic/my-image:latest</code> put a tag
+If a tag starts with your-docker-id/some-tag it will create a repo on hub.
+<code class="language-plaintext highlighter-rouge">:latest</code> tag is default tag.</li>
+  <li><code class="language-plaintext highlighter-rouge">docker image push duleorlovic/my-image</code> push to
+https://hub.docker.com/u/duleorlovic/ you need to login <code class="language-plaintext highlighter-rouge">docker login</code> (save
+in <code class="language-plaintext highlighter-rouge">/home/orlovic/.docker/config.json</code>) or to make sure you use correct
+username try <code class="language-plaintext highlighter-rouge">docker login -u duleorlovic</code></li>
+  <li><code class="language-plaintext highlighter-rouge">docker image build -t my-image .</code> build image from current folder with
+Dockerfile and name it my-image</li>
+  <li><code class="language-plaintext highlighter-rouge">docker history nginx:latest</code> show layers how image was built</li>
+</ul>
+
+<p>Network</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">docker network ls</code> type: bridge (connected to my card), host (skips virtual
+networks) and null. Inside same network containers can communicate without
+need to open ports.</li>
+  <li><code class="language-plaintext highlighter-rouge">docker network inspect bridge</code> you can see containers connected
+To see ip address of container
+`docker container inspect –format ‘{ { .NetworkSettings.IPAddress }}’
+    <container-id>`
+</container-id>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">docker network create</code> create new network</li>
+  <li><code class="language-plaintext highlighter-rouge">docker network connect my_net my_web</code> to plug in cable</li>
+  <li><code class="language-plaintext highlighter-rouge">docker network disconnect my_net my_web</code> to disconnect</li>
+  <li>default <code class="language-plaintext highlighter-rouge">bridge</code> network does not have DNS, but if you create new network
+(which includes DNS) and create containers with <code class="language-plaintext highlighter-rouge">--net my_net</code> so you can ping
+between containers using their name
+<code class="language-plaintext highlighter-rouge">docker container exec -it my_web curl my_new_web</code></li>
+  <li>round robin (poor man loadbalancer) is made using a <code class="language-plaintext highlighter-rouge">--network-alias</code> (or
+<code class="language-plaintext highlighter-rouge">--net-alias</code>)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create my_net
+docker container run -d --net my_net --net-alias duke elasticsearch:2
+docker container run -d --net my_net --net-alias duke elasticsearch:2
+docker container run --rm --net my_net alpine nslookup duke
+
+Non-authoritative answer:
+Name:	duke
+Address: 172.18.0.4
+Name:	duke
+Address: 172.18.0.5
+</code></pre></div>    </div>
+  </li>
+  <li>to see host port from docker you can use internal IP address or special DNS
+name <code class="language-plaintext highlighter-rouge">host.docker.internal</code> (on linux you need to enable on docker cli with
+<code class="language-plaintext highlighter-rouge">--add-host=host.docker.internal:host-gateway</code> or <code class="language-plaintext highlighter-rouge">extra_hosts: -
+"host.docker.internal:host-gateway"</code> on docker-compose</li>
+</ul>
+
+<p>Dockerfile stanzas (commands)
+https://docs.docker.com/engine/reference/builder/
+Only <code class="language-plaintext highlighter-rouge">RUN</code>, <code class="language-plaintext highlighter-rouge">COPY</code> and <code class="language-plaintext highlighter-rouge">ADD</code> create layers (other instructions create temp
+intermediate images, but do not increase the size of the build)</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">FROM ruby:2.7.0</code> set parent image</li>
+  <li><code class="language-plaintext highlighter-rouge">COPY local-file /docker/target/folder</code> copy from local to container. Any
+change to the files will cause rebuilt of this layer
+When copy more than one file the destination must end with a /</li>
+  <li><code class="language-plaintext highlighter-rouge">WORKDIR /app</code> change root to the folder</li>
+  <li><code class="language-plaintext highlighter-rouge">RUN bundle install</code> run commands is creating new layer so it is good to use
+<code class="language-plaintext highlighter-rouge">&amp;&amp;</code> to join all bash commands so it create a single layer, huge RUN command
+is using cache busting. To efectivelly boost cache and keep images small use
+clean or rm in same RUN command since <code class="language-plaintext highlighter-rouge">RUN apt-get clean</code> will not
+affect previous images size since they are already created.
+Also using separate <code class="language-plaintext highlighter-rouge">RUN apt-get update</code> and <code class="language-plaintext highlighter-rouge">RUN apt-get install git</code> will
+cause that old cache is used when you change to <code class="language-plaintext highlighter-rouge">RUN apt-get install git curl</code>
+since all previous lines RUN commands are using from cached images, so the
+advice is to always use <code class="language-plaintext highlighter-rouge">update</code>, <code class="language-plaintext highlighter-rouge">install</code> and <code class="language-plaintext highlighter-rouge">rm</code> on the same line.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUN apt-get update &amp;&amp; apt-get install -y \
+  alphabetically_sorted_package \
+&amp;&amp; rm -rf /var/lib/apt/lists/*
+</code></pre></div>    </div>
+    <p>Use version when installing apps so it not installed latest.
+Do not store secrets in image, better to use orchestration for that.
+Repeat CMD and ENTRYPOINT from base image as a comment so user do not need to
+search in base image.
+https://goinbigdata.com/docker-run-vs-cmd-vs-entrypoint/
+To enable logging all you need to do is to redirect to stdout</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+  &amp;&amp; ln -sf /dev/stderr /var/log/nginx/error.log
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ENV</code> set key value enviroment variable, but it is hardcoded in the layer so
+better is to unset also in the same line
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUN export ADMIN_USER=mark \
+  &amp;&amp; echo $ADMIN_USER &gt; ./mark \
+  &amp;&amp; unset ADMIN_USER
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">CMD ["nginx", "-g", "daemon off;"]</code> this command is run when container starts
+(created or started again from exited container). It is overwritten when
+container runs with arguments</li>
+  <li><code class="language-plaintext highlighter-rouge">ENTRYPOINT</code> it can be ruby script so you can pass arguments to it. It is used
+when running container as an executable.
+https://docs.docker.com/engine/reference/builder/#entrypoint
+Shell form (as string <code class="language-plaintext highlighter-rouge">ENTRYPOINT command param1</code>) starts as subcommand of
+<code class="language-plaintext highlighter-rouge">/bin/sh -c</code> so process does not receive <code class="language-plaintext highlighter-rouge">SIGTERM</code> from <code class="language-plaintext highlighter-rouge">docker stop</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Dockerfile
+RUN mkdir -p /app
+WORKDIR /app
+COPY . ./
+RUN chmod +x app.rb
+
+ENTRYPOINT ["/app/app.rb"]
+</code></pre></div>    </div>
+
+    <p>ruby file</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app.rb
+#!/usr/bin/env ruby
+if __FILE__==$0
+  puts "args=#{ARGV}"
+end
+</code></pre></div>    </div>
+
+    <p>so you can run</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image build . -t ruby_echo
+docker run ruby_echo param1
+</code></pre></div>    </div>
+
+    <p>Entry point can be a script (for example to load the db schema when docker
+image is going to be started) which can continue with other arguments. If you
+have both ENTRYPOINT and CMD, it will be concatenated <code class="language-plaintext highlighter-rouge">ENTRYPOINT CMD</code> when
+you do <code class="language-plaintext highlighter-rouge">docker run my-image</code>, but if you add other arguments (after <code class="language-plaintext highlighter-rouge">docker</code>
+you can have options like <code class="language-plaintext highlighter-rouge">-v</code>, and image name <code class="language-plaintext highlighter-rouge">my-image</code>) those arguments
+will replace default <code class="language-plaintext highlighter-rouge">CMD</code>.
+Entrypoing can be a script like
+<a href="https://github.com/docker-library/mysql/blob/15fe7357b165ee8aaa3ce165386f910a53a75087/8.0/Dockerfile.debian#L93">docker-entrypoint.sh</a>
+that will read ENV variables and perform some tasks (make sure it works well
+if for example db already has loaded the schema), and at the end it will
+execute what you have passed (or default <code class="language-plaintext highlighter-rouge">CMD</code>) with a <code class="language-plaintext highlighter-rouge">exec $@</code>
+<a href="https://github.com/docker-library/mysql/blob/15fe7357b165ee8aaa3ce165386f910a53a75087/8.0/docker-entrypoint.sh#L409">link</a></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">VOLUME /var/lib/mysql</code> Use it for mutable ara, like store data and make it
+persitent data (since we could redeploy containers which are ment to be
+immutable, instead of upgrading package on existing we change in config and
+deploy again). Volumes make special location outside of containers UFS Union
+File System, you can see by <code class="language-plaintext highlighter-rouge">docker container inspect mysql</code> (search for
+Mounts).  List all volumes <code class="language-plaintext highlighter-rouge">docker volume ls</code>.  They need extra step to be
+removed <code class="language-plaintext highlighter-rouge">docker volume prune</code>. To reuse existing volume use <code class="language-plaintext highlighter-rouge">-v</code> option to use
+friendly name instead of ID
+<code class="language-plaintext highlighter-rouge">docker container run -d --name mysql -e MYSQL_RANDOM_ROOT_PASSWORD=true -v
+dule-mysql:/var/lib/mysql mysql</code>.
+https://docs.docker.com/storage/volumes/</p>
+
+    <p>Bind Mounts is mounting local file path (not inside docker installation
+folder as it is for volumes), it starts with slash and can not be
+used in Dockerfile. So instead of COPY we can mount and see our local
+index.html. To find correct path where to put a code you can see Dockerfile of
+official image on hub and search for VOLUME</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker container run -d --name nginx -v $(pwd):/usr/share/nginx/html -p 80:80 nginx
+# to check that in container we see all local files
+docker container exec nginx ls /usr/share/nginx/html
+Dockerfile
+index.html
+</code></pre></div>    </div>
+    <p>To mount in read only use <code class="language-plaintext highlighter-rouge">ro</code> option: <code class="language-plaintext highlighter-rouge">orig:target:ro</code>
+To find on which port certain image will run the service you can click on tag
+and open dockerfile and search for <code class="language-plaintext highlighter-rouge">EXPOSE 80</code> command.
+Or you can download image and run inspect <code class="language-plaintext highlighter-rouge">docker container inspect drupal</code>
+and search for <code class="language-plaintext highlighter-rouge">ExposedPorts</code>. If you do not need access service from host
+(for example postgres service is can be used using internal network) you do
+not need to define <code class="language-plaintext highlighter-rouge">ports</code> in docker compose.</p>
+
+    <p>Example to run yekyll serve which will generate <code class="language-plaintext highlighter-rouge">_site</code> folder and run server</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --rm -v $(pwd):/srv/jekyll -p 80:4000 jekyll/jekyll jekyll serve
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Follow https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+Also https://vitobotta.com/2020/04/06/optimised-docker-builds-rails-apps/</p>
+
+<p>Docker compose yml file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># docker-compose.yml
+version: '3.1'
+services: # this is actual container
+  #{servicename}: # this is --name in docker coommand, used as DNS name
+    image: wordpress
+    command: # CMD in Docker
+      - 
+    # you can build custom image using ./nginx.Dockerfile
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    image: nginx-custom
+
+
+    environment: # -e in docker
+      DB_PASSWORD: password
+    env_file:
+      - .env
+    volumes: # -v in docker, use . instead of $(pwd) Used to perseve data
+      - ./data:/var/www/html
+      - dule-mysql:/var/lib/mysql
+    ports: # -v in docker
+      # use quotes https://github.com/docker/compose/issues/3109#issuecomment-645858273
+      - '80:4000'
+    depends_on: # start also this service mysql-primary before self
+      - mysql-primary
+    # on reboot it will restart unless we stop. For restart: always we need to
+    # disable with: docker update --restart=no $(docker ps -a -q)
+    restart: unless-stopped
+  #{servicename2}:
+
+# when using friendly name for volumes
+volumes:
+  dule-mysql:
+
+network:
+</code></pre></div></div>
+
+<p>To start containers use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up
+
+# Instead of remove you can build rebuild without cache 
+docker-compose up --always-recreate-deps
+
+# this will remove containers and networks
+docker-compose down
+# this will also remove volumes
+docker-compose down -v
+# to remove custom build images that does not have a name
+docker-compose down --rmi local
+
+# to see logs
+docker-compose logs -t
+
+# see running containers similar to docker ps
+docker-compose ps
+
+# to run proccesses on new containers
+docker-compose run &lt;name-of-service&gt; &lt;command&gt;
+docker-compose run rails bundle exec rake db:setup
+#`docker-compose up will not generate TTY session but docker-compose run will do
+# Add option `--service-ports` to map container ports if you use them.
+
+# exec is used to run on existing containers (run is running on new containers)
+# usefull for one time actions
+docker-compose exec rails rails db:create
+docker-compose exec rails rails c
+
+# for byebug you need to attach to existing using docker command
+docker attach myapp-rails-1
+</code></pre></div></div>
+
+<p>To see config that is generated from multiple config
+(docker-compose.override.yml if exists, is default override docker-compose.yml)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose -f a.yml -f b.yml config
+</code></pre></div></div>
+
+<p>For rails we can use this Dockerfile
+<a href="http://blog.codeship.com/running-rails-development-environment-docker/">link</a>
+Also checkout my app:
+orlovic@main:~/rails/tmp/docker_rails$</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Dockerfile
+# syntax=docker/dockerfile:1
+# https://registry.hub.docker.com/_/ruby?tab=tags
+# https://docs.docker.com/samples/rails/
+FROM ruby:3.0.2
+
+# update yarn repo
+RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" &gt; /etc/apt/sources.list.d/yarn.list
+# update node
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+
+# Install apt based dependencies required to run Rails as
+# well as RubyGems. As the Ruby image itself is based on a
+# Debian image, we use apt-get to install those.
+RUN apt-get update -qq &amp;&amp; apt-get install -y nodejs postgresql-client yarn
+
+# Configure the main working directory. This is the base
+# directory used in any further RUN, COPY, and ENTRYPOINT
+# commands.
+WORKDIR /myapp
+
+# Install latest bundler
+RUN gem install bundler
+
+# Copy the Gemfile as well as the Gemfile.lock and install
+# the RubyGems. This is a separate step so the layers with gems
+# will be cached unless changes to one of those two files
+# are made.
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# Copy the main application. Not needed when using volumes
+COPY . ./
+
+RUN bundle exec rake assets:precompile
+
+# Add a script to be executed every time the container starts.
+# COPY entrypoint.sh /usr/bin/
+# RUN chmod +x /usr/bin/entrypoint.sh
+# ENTRYPOINT ["entrypoint.sh"]
+
+# Expose port 3000 to the Docker host, so we can access it from the outside when
+# we run with a docker run -p 3000:3000 myimage
+EXPOSE 3000
+
+# Configure the main process to run when running the image
+CMD ["rails", "server", "-b", "0.0.0.0"]
+</code></pre></div></div>
+<p>For error nokogiri version for specific platform not found
+https://github.com/rubygems/rubygems/issues/4269</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/local/lib/ruby/3.0.0/bundler/spec_set.rb:41:in `block in for': Unable to find a spec satisfying nokogiri (~&gt; 1.8) in the set. Perhaps the lockfile is corrupted? Found nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-x86_64-linux), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin), nokogiri (1.13.1-arm64-darwin) that did not match the current platform. (Bundler::GemNotFound)
+</code></pre></div></div>
+<p>I just removed <code class="language-plaintext highlighter-rouge">PLATFORMS</code> block from Gemfile.lock (and make sure it is not
+generated) or add all platforms</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle lock --add-platform  x86_64-linux
+
+# Gemfile.lock
+PLATFORMS
+  x86_64-linux
+  aarch64-linux
+  arm64-darwin-21
+</code></pre></div></div>
+
+<p>Ignore all files that are not needed for the app, image should be smaller as
+possible</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .dockerignore
+.git*
+db/*.sqlite3
+db/*.sqlite3-journal
+log/*
+tmp/*
+Dockerfile
+README.md
+</code></pre></div></div>
+
+<p>Also you can mount volume with <code class="language-plaintext highlighter-rouge">docker run -P -v $(pwd):/app image-search</code>.
+It is easier to write volume in composer file which is used to write all
+communication between images</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># docker-compose.yml
+version: '3.9'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    # no need to open ports if it used only inside internal docker network
+  rails:
+    # https://stackoverflow.com/questions/58933929/yarn-packages-out-of-date-when-running-rails-app-in-docker
+    # Instead of building the Docker image every time we change something in app
+    # we can run bundle and yarn in boot command, note that current folder will
+    # overwrite WORKDIR /myapp folder (also node_modules)
+    command: bash -c "bundle install &amp;&amp; yarn install --check-files &amp;&amp; bundle exec rails s -p 3000 -b '0.0.0.0'"
+    build: .
+    volumes:
+      - .:/myapp
+      - /myapp/node_modules # ignore platform specific node_modules
+    ports:
+      - '80:3000'
+    depends_on:
+      - postgres
+</code></pre></div></div>
+
+<p>In rails config you can use container name as DNS name for database</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/database.yml
+
+default: &amp;default
+  adapter: postgresql
+  host: postgres
+  username: postgres
+  password: example
+
+</code></pre></div></div>
+
+<h1 id="pwd-try-online-in-play-with-docker">PWD Try online in Play with docker</h1>
+
+<p>https://hub.docker.com/_/drupal
+https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/docker-library/docs/f81077b92e4522999836b8c5d098a103f568a431/drupal/stack.yml</p>
+
+<p>Here is a source of PWD 
+https://github.com/play-with-docker/play-with-docker
+and you can run locally with a <code class="language-plaintext highlighter-rouge">docker-compose up</code></p>
+
+<h1 id="swarm">Swarm</h1>
+
+<p>https://www.youtube.com/watch?v=wYMLP1k9aWQ
+You can use docker-machine to create three virtualbox instances</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-machine create manager
+docker-machine create worker1
+docker-machine create worker2
+docker-machine ls
+</code></pre></div></div>
+<p>note that they are not automatically started when you reboot the machine so you
+need to run <code class="language-plaintext highlighter-rouge">docker-machine start manager</code> but once manager is started it will
+try to start its services on all workers. You can test that by manually shut
+down and start worker machine.
+Docker Desktop Enterprise includes <code class="language-plaintext highlighter-rouge">docker cluster</code> which can create nodes on
+any provider.
+Docker machine can deploy any where amazon, do, google but only for development.
+Install docker on any machine using a script https://get.docker.com/
+See env which you can use for docker cli to send comands to worker1</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-machine env worker1
+eval $(docker-machine env worker1)
+docker info | grep Name
+# Name: worker1
+
+# remeber to unset in this shell
+unset DOCKER_TLS_VERIFY DOCKER_CERT_PATH DOCKER_MACHINE_NAME DOCKER_HOST
+</code></pre></div></div>
+
+<p>Inside manager (it is a worker with a permission to controll the swarm)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-machine ssh manager
+# find address with `ip addr` under `eth1`
+ip addr show
+
+docker swarm init --advertise-addr 192.168.99.101
+# this will create certificate on first manager node, and generate join tokens
+# raft is database for configuration, secrets, root CA, it is replicated to
+# other mangaers
+# copy command docker swarm join --token ...
+
+# on manager you can see all nodes
+docker node ls
+</code></pre></div></div>
+
+<p>inside workers you need to join</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-machine ssh worker
+docker swarm join --token asd123 192.168.99.101:2377
+</code></pre></div></div>
+
+<p>Run service on all nodes (service is similar to run, but swarm will execute it)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create --name mynginx --publish 8080:80 --replicas 3 nginx
+overall progress: 3 out of 3 tasks
+1/3: running   [==================================================&gt;]
+2/3: running   [==================================================&gt;]
+3/3: running   [==================================================&gt;]
+verify: Service converged
+
+# check their status
+docker service ls
+# see on which node it is running
+docker service ps mynginx
+
+# To find container id you can join service name and prefix name from ps command
+# Note that you can access container by container name only on current manager
+# node, you need to inspect service one by one to confirm it is running on
+# current node, and to find prefix of container name
+docker exec -it &lt;service-name-on-manager-node&gt;.&lt;container-name-prefix&gt;&lt;TAB&gt; bash
+docker exec -it psql.1.qepi7z3dgmb1&lt;press tab&gt;
+docker exec -it psql.1.qepi7z3dgmb1adg1mdastap35 bash
+</code></pre></div></div>
+<p>You can access any node to see default page http://192.168.99.100:8080/
+http://192.168.99.101:8080/ http://192.168.99.102:8080/
+To change default page you can run bash</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker container ls # find id or name
+docker container exec -it d33b9ef99995 bash
+echo dule &gt; /usr/share/nginx/html/index.html
+</code></pre></div></div>
+
+<p>To scale up the service you can change number of replicas</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service update &lt;service-id&gt; --replicas 3
+# easier way
+docker service scale web=8 api=6
+</code></pre></div></div>
+<p>More examples for updating</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service update --image myapp:1.2.1 &lt;service-name&gt;
+docker service update --env-add NODE_ENV=production --publish-rm 8080 &lt;service-name&gt;
+
+# you can rebalance, to is will clean up and start again
+docker service update --force &lt;service-name&gt;
+</code></pre></div></div>
+
+<p>HEALTCHECK is running from inside the container. It is supported in Dockerfile,
+docker-compose, stacks</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run --health-cmd="curl -f localhost:9200/_cluster/health || false" elasticsearch
+</code></pre></div></div>
+<p>interval (default 30s), timeout (default 30s) start-period (default 0) retries
+(default 3).
+3 statuses: pending, healthy</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create --health-cmd='pg_isready -U user postgres || exit 1' --name p1 postgres
+</code></pre></div></div>
+
+<p>To test that machines are regenerated when they are killed</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker container ls # find container-id
+docker container rf -f &lt;container-id&gt;
+docker container ls
+</code></pre></div></div>
+
+<p>Create network <code class="language-plaintext highlighter-rouge">overlay</code> for intranetwork container-to-container traffic inside
+single swarm (overlay across all nodes)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create --driver overlay mynetwork
+</code></pre></div></div>
+<p>Service and networks are many-to-many relationships.</p>
+
+<p>Example setting up drupal and postgresql</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create --name psql --network mynetwork -e POSTGRES_PASSWORD=mypass postgres
+# for password-less use -e POSTGRES_HOST_AUTH_METHOD=trust
+docker service create --name drupal --network mynetwork -p 80:80 drupal
+</code></pre></div></div>
+<p>Runing <code class="language-plaintext highlighter-rouge">docker service ps drupal</code> you can see that node on which drupal is
+running but you can go to any api address of the node <code class="language-plaintext highlighter-rouge">docker node inspect
+--format '{ { .Status.Addr }}' worker1</code> for example it http://192.168.99.102/ and
+procceed with db name <code class="language-plaintext highlighter-rouge">postgres</code> db username <code class="language-plaintext highlighter-rouge">postgres</code> password <code class="language-plaintext highlighter-rouge">mypass</code> and
+for the host use service name <code class="language-plaintext highlighter-rouge">psql</code>.
+Routing mesh uses virtual ip (vip) address so it load balancing between all
+nodes for that service (for example <code class="language-plaintext highlighter-rouge">psql</code> is dns name for the service).
+Routing mash takes ingress (incomming) packets for a service to proper Task
+(spans all nodes in a swarm, so you can access any node). External traffic for
+all open ports can be accepted on ip of any node, and routed to any other node
+(ingress network) for example it can receive on the node that is not even
+running the container. This is stateless load balancing (does not work with
+session cookies), OSI layer 3 (TCP) not layer 4 (DNS) so you need to use Nginx
+or HAProxy LB proxy.</p>
+
+<p>To enable bind mount for service you need to use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create --mount type=volume,source=db-data,target=/var/lib/postgresql/data postgres:9.4
+</code></pre></div></div>
+
+<p>To see logs</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service logs &lt;my-service&gt;
+</code></pre></div></div>
+
+<p>Stacks is for production grade compose, so instead <code class="language-plaintext highlighter-rouge">docker service create</code> we
+use <code class="language-plaintext highlighter-rouge">docker stack deploy</code> once for all object: services, networks and volumes.
+Similar to docker-compose but for swarm, it uses <code class="language-plaintext highlighter-rouge">deploy:</code> instead <code class="language-plaintext highlighter-rouge">build:</code>
+(which is ignored if you use docker-compose) and docker-compose is not needed.
+Stack is running only on one swarm.  Example on
+https://github.com/BretFisher/udemy-docker-mastery/blob/main/swarm-stack-1/example-voting-app-stack.yml</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># example-voting-app-stack.yml
+version: "3"
+services:
+  redis:
+    image: redis:alpine
+    networks:
+      - frontend
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+</code></pre></div></div>
+
+<p>to deploy stack</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://raw.githubusercontent.com/BretFisher/udemy-docker-mastery/main/swarm-stack-1/example-voting-app-stack.yml
+docker stack deploy -c example-voting-app-stack.yml voteapp
+docker stack services voteapp # similar to service ls
+docker stack ps voteapp # similar to service ps
+</code></pre></div></div>
+
+<p>You can see where nodes are located using visualizer http://192.168.99.102:8080/</p>
+
+<p>Secrets in the swarm</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker secret create psql_user &lt;file_name.txt&gt;
+echo 'mydbpass' | docker secret create psql_pass -
+
+docker secret ls
+</code></pre></div></div>
+<p>to access secrets in containers use file <code class="language-plaintext highlighter-rouge">/run/secrets/psql_pass</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create --name psql-test --secret psql_pass -e POSTGRES_PASSWORD_FILE=/run/secrets/psql_pass postgres
+
+docker service ps psql-test
+docker exec -it psql-test.1.obksdv2dqxms9907c1t7ae7z1 bash
+root@e9c3be01cc9f:/# cat /run/secrets/psql_pass
+mydbpass
+</code></pre></div></div>
+<p>You can add or remove existing containers</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service update --secret-rm psql_user
+</code></pre></div></div>
+<p>To use in stacks</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># stack.yml
+version: '3.1'
+services:
+  drupal:
+    image: drupal
+    secrets:
+      - psql_password
+      - psql_user
+    enviroment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/psql_password
+secrets:
+  psql_user:
+    file: ./psql_user.txt
+  psql_password:
+    external: true
+</code></pre></div></div>
+<p>you need to create password <code class="language-plaintext highlighter-rouge">psql_password</code> before deploying stack.
+You can use secrets in <code class="language-plaintext highlighter-rouge">docker-compose -d</code> (-d is development) without swarm. It
+will bind mounts at runtime into the container (-v with file based secrets, does
+not work with external passwords).</p>
+
+<h1 id="run-a-private-docker-registry">Run a private docker registry</h1>
+
+<p>https://hub.docker.com/_/registry from Dockerfile
+https://github.com/docker/distribution-library-image/blob/ab00e8dae12d4515ed259015eab771ec92e92dd4/amd64/Dockerfile#L11
+you can see where data is stored, ie path to volume</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker container run -d -p 5000:5000 --name registry -v $(pwd)/registry-data:/var/lib/registry registry
+</code></pre></div></div>
+<p>and use https://docs.docker.com/registry/#basic-commands</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker image tag hello-world:latest localhost:5000/hello-world
+docker push localhost:5000/hello-world
+</code></pre></div></div>
+<p>You can see new repository on http://127.0.0.1:5000/v2/_catalog</p>
+
+<h1 id="instalation">Instalation</h1>
+
+<p>Installing with script <code class="language-plaintext highlighter-rouge">curl -fsSL https://get.docker.com/ | sh</code> is shorter
+script than installing using <a href="https://docs.docker.com/engine/installation/linux/ubuntulinux/">installing commands</a></p>
+
+<p><code class="language-plaintext highlighter-rouge">docker-ce</code> is package name (older is docker-engine)
+Check version</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo docker version
+</code></pre></div></div>
+
+<p>After you install you should add user to docker group so you do not need <code class="language-plaintext highlighter-rouge">sudo</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo usermod -aG docker ${USER}
+</code></pre></div></div>
+
+<p>You need to install two binaries docker machine and docker composer with
+https://docs.docker.com/machine/install-machine/
+https://docs.docker.com/compose/install/</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>base=https://github.com/docker/machine/releases/download/v0.16.0 \
+  &amp;&amp; curl -L $base/docker-machine-$(uname -s)-$(uname -m) &gt;/tmp/docker-machine \
+  &amp;&amp; sudo mv /tmp/docker-machine /usr/local/bin/docker-machine \
+  &amp;&amp; chmod +x /usr/local/bin/docker-machine
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+</code></pre></div></div>
+
+<p>Change image folder to another bigger hard drive if you need, simply create a
+file daemon.json and restart the computer</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/docker/daemon.json
+{
+   "data-root": "/media/orlovic/bf12a7e5-a5d4-4532-8612-a3984f90b56c/var-lib-docker"
+}
+
+</code></pre></div></div>
+
+<h1 id="running-on-windows">Running on windows</h1>
+
+<p>Install Docker desktop https://www.docker.com/get-started but it requires
+Windows 10 Pro or Enterprise version 15063 :(
+https://www.docker.com/products/docker-desktop</p>
+
+<h1 id="deploy">Deploy</h1>
+
+<p><a href="http://blog.codeship.com/deploying-docker-rails-app">http://blog.codeship.com/deploying-docker-rails-app</a>
+https://github.com/docker/labs/tree/master/developer-tools/ruby
+<a href="http://blog.kontena.io/heroku-style-application-deployments-with-docker">http://blog.kontena.io/heroku-style-application-deployments-with-docker</a></p>
+
+<h1 id="testing-with-docker">Testing with docker</h1>
+
+<p><a href="https://blog.codeship.com/effectively-testing-dockerized-ruby-applications/">https://blog.codeship.com/effectively-testing-dockerized-ruby-applications/</a></p>
+
+<h1 id="dockhero">Dockhero</h1>
+
+<p>Run Docker on Heroku
+https://devcenter.heroku.com/articles/dockhero
+https://dockhero.io/
+https://docs.dockhero.io/chapter1.html</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this will also provission ec2 intance
+heroku addons:create dockhero
+# once provisioned you will have DOCKHERO_HOST
+heroku config
+DOCKHERO_HOST:             dockhero-silhouetted-33029.dockhero.io
+
+# read docs https://devcenter.heroku.com/articles/dockhero
+heroku addons:docs dockhero
+# show status https://dockhero.herokuapp.com/dashboard/setup
+heroku addons:open dockhero
+</code></pre></div></div>
+
+<p>To access provisioned machine you need plugin</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this will install dh: commands
+heroku plugins:install dockhero
+
+# list of commands https://github.com/dockhero/dockhero-cli
+heroku dh:docker ps
+heroku dh:compose up
+heroku dh:compose start
+heroku dh:compose build
+
+dh:env      #  downloads TSL certificates and prints out the environment variables to work with Dockhero
+dh:sh       #  run local shell with environment configured for Dockhero
+dh:ssh      #  interactive shell in the Docker machine (e.g. to reboot it)
+dh:wait     #  waits for the provisioning to finish
+</code></pre></div></div>
+
+<p>Generate sample stackfile <code class="language-plaintext highlighter-rouge">dockhero-compose.yml</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># installs the pre-defined stack locally
+heroku dh:generate helloworld
+
+# this reads local dockhero-compose.yml
+heroku dh:compose up -d
+
+# opens your Dockhero stack web UI in the browser (https://)
+heroku dh:open
+</code></pre></div></div>
+
+<p>See the logs and status on</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># status
+heroku addons:open dockhero
+
+# Dockhero logs are streamed into Heroku app's logs:
+heroku logs -p dockhero --tail
+
+# or from docker directly
+heroku dh:compose logs --follow
+</code></pre></div></div>
+
+<p>There is a problem on ubuntu
+https://github.com/dockhero/dockhero-cli/issues/34</p>
+
+<h1 id="tutorials">Tutorials</h1>
+
+<p>https://www.udemy.com/course/docker-mastery/
+https://github.com/bretfisher/udemy-docker-mastery tutorial code</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">chown orlovic -R .</code> after initial build, since owner is set to root</li>
+  <li>tips https://nickjanetakis.com/blog/best-practices-around-production-ready-web-apps-with-docker-compose</li>
+  <li>https://dagger.io/ is used to run CICD on docker</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

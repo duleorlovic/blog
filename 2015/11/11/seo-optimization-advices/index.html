@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Seo Optimization Advices</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Seo Optimization Advices</h1>
+    <p class="meta">Nov 11, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#webpagetest"><span class="tocnumber">1</span> <span class="toctext">WEBPAGETEST</span></a></li><li class="toc_level-1 toc_section-2"><a href="#general-tips"><span class="tocnumber">2</span> <span class="toctext">General Tips</span></a></li><li class="toc_level-1 toc_section-3"><a href="#rails-gzip"><span class="tocnumber">3</span> <span class="toctext">Rails gzip</span></a></li><li class="toc_level-1 toc_section-4"><a href="#robots"><span class="tocnumber">4</span> <span class="toctext">Robots</span></a></li><li class="toc_level-1 toc_section-5"><a href="#sitemap"><span class="tocnumber">5</span> <span class="toctext">Sitemap</span></a><ul><li class="toc_level-2 toc_section-6"><a href="#sitemapgeneratorsitemap-options"><span class="tocnumber">5.1</span> <span class="toctext">SitemapGenerator::Sitemap options</span></a></li><li class="toc_level-2 toc_section-7"><a href="#sitemap-on-heroku"><span class="tocnumber">5.2</span> <span class="toctext">Sitemap on Heroku</span></a></li><li class="toc_level-2 toc_section-8"><a href="#webmaster-tools"><span class="tocnumber">5.3</span> <span class="toctext">Webmaster tools</span></a></li></ul></li><li class="toc_level-1 toc_section-9"><a href="#other-tools"><span class="tocnumber">6</span> <span class="toctext">Other tools</span></a></li><li class="toc_level-1 toc_section-10"><a href="#schemaorg"><span class="tocnumber">7</span> <span class="toctext">Schema.org</span></a></li><li class="toc_level-1 toc_section-11"><a href="#open-graph"><span class="tocnumber">8</span> <span class="toctext">Open graph</span></a></li><li class="toc_level-1 toc_section-12"><a href="#addwords"><span class="tocnumber">9</span> <span class="toctext">Addwords</span></a></li><li class="toc_level-1 toc_section-13"><a href="#user-mailing-list"><span class="tocnumber">10</span> <span class="toctext">User mailing list</span></a></li><li class="toc_level-1 toc_section-14"><a href="#customer-analitics"><span class="tocnumber">11</span> <span class="toctext">Customer Analitics</span></a></li><li class="toc_level-1 toc_section-15"><a href="#seo-search-enginge-optimization"><span class="tocnumber">12</span> <span class="toctext">SEO search enginge optimization</span></a></li><li class="toc_level-1 toc_section-16"><a href="#off-page-seo"><span class="tocnumber">13</span> <span class="toctext">Off page SEO</span></a></li></ul></td></tr></tbody></table></div><p>Guides
+<a href="http://goo.gle/search-guides">http://goo.gle/search-guides</a>
+<a href="https://www.google.com/webmasters/connect/">https://www.google.com/webmasters/connect/</a>
+<a href="https://webmasters.googleblog.com/">https://webmasters.googleblog.com/</a></p>
+
+<p>Test your site on
+<a href="https://developers.google.com/speed/pagespeed/insights/">https://developers.google.com/speed/pagespeed/insights/</a>
+<a href="https://search.google.com/test/mobile-friendly">https://search.google.com/test/mobile-friendly</a>
+<a href="https://search.google.com/search-console/inspect">https://search.google.com/search-console/inspect</a>
+<a href="https://search.google.com/test/rich-results">https://search.google.com/test/rich-results</a>
+<a href="https://search.google.com/structured-data/testing-tool/u/0/">https://search.google.com/structured-data/testing-tool/u/0/</a></p>
+
+<p>Free trial seo report rank <a href="https://www.woorank.com/">https://www.woorank.com/</a>
+Also on <a href="https://www.webpagetest.org/">https://www.webpagetest.org/</a>
+<a href="https://gtmetrix.com/">https://gtmetrix.com/</a>
+https://www.semrush.com/</p>
+
+<h1 id="webpagetest">WEBPAGETEST</h1>
+
+<p>Videos https://www.youtube.com/watch?v=6UeRMMI_IzI&amp;index=7&amp;list=PLWa0Ky8nXQTaFXpT_YNvLElTEpHUyaZi4
+Github https://github.com/WPO-Foundation/webpagetest
+Docs https://sites.google.com/a/webpagetest.org/docs/advanced-features/webpagetest-restful-apis</p>
+
+<h1 id="general-tips">General Tips</h1>
+
+<ul>
+  <li>Be sure that each page has a unique title on each page <code class="language-plaintext highlighter-rouge">&lt;title&gt;Nice
+page&lt;/title&gt;</code>, 10-70 chars, with keywords</li>
+  <li>also <code class="language-plaintext highlighter-rouge">&lt;meta name="description" content="It's really nice page &lt;%=
+@user.name if @user.present? %&gt;"&gt;</code> should be 70-160 chars, uniq per page</li>
+  <li>use one <code class="language-plaintext highlighter-rouge">&lt;h1&gt;</code> per page with keywords but do not duplicate title, use h2-h6
+for other keywords.</li>
+  <li>use alt atribute for description of images, but also image source link should
+we unique and self explanatory</li>
+  <li>Links within your content tend to carry more weight than links within a
+sidebar or footer.</li>
+  <li>try to have more and more inbound links from other sites. Increase link count
+using: social media, directories, some sites links to competition, try to write
+them explaining why your site is better. To find inbound links use google
+webmaster tools, <a href="https://moz.com/researchtools/ose/">https://moz.com/researchtools/ose/</a></li>
+  <li>if your content expires (like job posts, wheater data) than link old pages to
+category pages (group of similar results)</li>
+  <li>outbound links can be no-follow, especially outgoing links that are not
+relevant (do not have quality content). For example, links to a Feedburner page.</li>
+  <li>anchor text plays the most important role in link building. If you want to
+rank for ‘blue widget’ then you want the anchor text of the link to be <code class="language-plaintext highlighter-rouge">&lt;a&gt;blue
+widget&lt;/a&gt;</code></li>
+  <li>25-70% should be only text (not html markup tags)</li>
+  <li>add <a href="#sitemap">XML sitemap</a> (with correct protocol http/s, subdomain,
+trailing slash) if more than 100 than only most popular</li>
+  <li>use 301 redirect from root domain (apex) to www domain (or vice versa) do not
+split value to two different domains (also from IP address)
+(you can not redirect in nginx or rails since apex domain do not event point
+to your server, you need to change on dns level, for example route53
+https://stackoverflow.com/a/28978783/287166 )</li>
+  <li>replace undrescore _ with dash (hyphens) - in urls</li>
+  <li>flash and frames are not indexed</li>
+  <li>nice mobile rendering (buttons at least 48px width/height, 32px padding around
+tap targets)</li>
+  <li>add viewport meta tag <code class="language-plaintext highlighter-rouge">&lt;meta content="width=device-width, initial-scale=1,
+maximum-scale=1, user-scalable=no" name="viewport"&gt;</code> and use CSS media queries
+to apply different style depending of screen size</li>
+  <li>
+    <p>enable gzip compresion, optimize image size using Lighthouse
+https://web.dev/serve-images-with-correct-dimensions/</p>
+  </li>
+  <li>use <code class="language-plaintext highlighter-rouge">srcset</code> for responsive images,
+specify image dimensions
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;img src="https://example.com/images/image.png" srcset="https://example.com/images/image-1024.png 1024w, https://example.com/images/image-512.png 512w" sizes="100vw"&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>eliminate render-blocking javascript
+and css, leverage browser caching, minify css, to have small page size (less
+than 320Kb) and load under one second
+<a href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans">google web
+fonts</a> are
+cached only for one day (each day, it is downloaded again). For
+different browsers it uses diffent files: woff2, svg … Download fonts using
+<a href="https://google-webfonts-helper.herokuapp.com/fonts">this heroku app</a>. Change
+folder prefix to <code class="language-plaintext highlighter-rouge">poppins/</code>, and extract downloaded fonts (without folder) to
+<code class="language-plaintext highlighter-rouge">app/assets/fonts/poppins</code> so you can see the file
+<code class="language-plaintext highlighter-rouge">app/assets/fonts/poppins/poppins-v1-latin-regular.svg</code>. Copy/paste the
+content to some <code class="language-plaintext highlighter-rouge">app/assets/stylesheets/popins.scss</code> file and include in
+<code class="language-plaintext highlighter-rouge">applications.scss</code> with <code class="language-plaintext highlighter-rouge">@import 'popins';</code></p>
+  </li>
+  <li>add favicon. It is fine just to add to the root of web site
+(for rails just copy your png to <code class="language-plaintext highlighter-rouge">public/favicon.ico</code>) Size should be 32x32.
+Some of the best favicons is
+https://cdn.shopify.com/shopify-marketing_assets/static/shopify-favicon.png
+More info on
+https://en.wikipedia.org/wiki/Favicon#How_to_use</li>
+  <li>custom 404 error page</li>
+  <li>add language <code class="language-plaintext highlighter-rouge">&lt;html lang="en"&gt;</code></li>
+  <li>SSL secure (http should redirect to https), add STS in header,
+xml sitemap, link to css files to use https</li>
+  <li>social media</li>
+  <li>optimize css https://csswizardry.com/2018/11/css-and-network-performance/</li>
+  <li>use seserver side rendering, which is important because of: rendering
+performance: ability to cache or prerender a site, easier to write tests,
+accessibility and no-script concerns, loading a page in its rendered state for
+SEO</li>
+</ul>
+
+<h1 id="rails-gzip">Rails gzip</h1>
+
+<p>It should show in Response Headers:</p>
+
+<p>Content-Encoding:gzip</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'heroku-deflater', :group =&gt; :production
+
+# config/environments/production.rb
+  config.assets.compress = true
+</code></pre></div></div>
+
+<h1 id="robots">Robots</h1>
+
+<p>https://en.wikipedia.org/wiki/Robots_exclusion_standard</p>
+
+<p><code class="language-plaintext highlighter-rouge">/robots.txt</code> is used to tell some good crawlers wheter they should read or not.
+Bad crawlers will read the site anyway.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># public/robots.txt
+# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+#
+# To ban all spiders from the entire site uncomment the next two lines:
+User-agent: *
+
+Disallow: /users/password/new
+Disallow: /users/sign_in
+Disallow: /users/confirmation/new
+
+Sitemap: http://www.example.com/sitemap.xml.gz
+</code></pre></div></div>
+
+<p>You can use meta tags to disable some well known robots. Add <code class="language-plaintext highlighter-rouge">&lt;meta
+name="robots" content="noodp,noydir"&gt;</code> to disable Open Directory Project and
+Yahoo Directory to provide description for your site</p>
+
+<h1 id="sitemap">Sitemap</h1>
+
+<p><a href="https://github.com/kjvarga/sitemap_generator">sitemap_generator</a> gem is
+excellent tool.
+This gem follows <a href="http://www.sitemaps.org/protocol.html">protocol</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'sitemap_generator', '~&gt;6.1.2'" &gt;&gt; Gemfile
+bundle
+rake sitemap:install # this will generate config/sitemap.rb
+vi config/sitemap.rb # put some `add path, options`
+
+rake sitemap:refresh:no_ping # to generate sitemap to public folder without ping
+less public/sitemap.xml.gz
+gunzip public/sitemap.xml.gz &amp;&amp; chromium-browser public/sitemap.xml
+</code></pre></div></div>
+
+<p>Use <code class="language-plaintext highlighter-rouge">Post.find_each</code> instead of <code class="language-plaintext highlighter-rouge">Post.all.each</code> since we do not want to load all
+posts in memory.</p>
+
+<p>To run every day, you can use <a href="https://github.com/javan/whenever">whenever</a> to
+call <code class="language-plaintext highlighter-rouge">rake sitemap:refresh -s</code> (<code class="language-plaintext highlighter-rouge">-s</code> is silent)</p>
+
+<h2 id="sitemapgeneratorsitemap-options"><code class="language-plaintext highlighter-rouge">SitemapGenerator::Sitemap</code> options</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Sitemap.default_host = 'http://example.com'</code> is your default url</li>
+  <li><code class="language-plaintext highlighter-rouge">Sitemap.create_index = true</code> always create index file
+<code class="language-plaintext highlighter-rouge">&lt;sitemapindex&gt;&lt;sitemap&gt;&lt;loc&gt;http://www.example.com/sitemap1.xml.gz&lt;/loc&gt;&lt;/sitemap&gt;&lt;/sitemapindex&gt;</code>
+that will link to other sitemap files
+<a href="http://www.sitemaps.org/protocol.html#index">definition</a></li>
+  <li><code class="language-plaintext highlighter-rouge">Sitemap.sitemaps_host = 'http://s3.amazonaws.com/my-site/'</code> where we will
+deploy sitemaps. User with <code class="language-plaintext highlighter-rouge">Sitemap.adapter = </code>
+    <ul>
+      <li>Here <code class="language-plaintext highlighter-rouge">include_index</code> (include
+<code class="language-plaintext highlighter-rouge">&lt;url&gt;&lt;loc&gt;http://www.example.com/sitemap.xml.gz&lt;/loc&gt;&lt;/url&gt;</code>) be off since
+<code class="language-plaintext highlighter-rouge">sitemaps_host</code> is different than <code class="language-plaintext highlighter-rouge">default_host</code> and we can not have different
+domains in same sitemap</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">Sitemap.public_path</code> directory used to write localy before eventual upload
+ (default is ‘public/’).</li>
+  <li><code class="language-plaintext highlighter-rouge">Sitemap.sitemaps_path = 'my-folder/'</code> is relative folder where to store
+sitemaps, it will be used to determine url in index file.</li>
+</ul>
+
+<p>Options for
+<a href="https://github.com/kjvarga/sitemap_generator#supported-options-to-add">add</a>
+base on <a href="http://www.sitemaps.org/protocol.html#xmlTagDefinitions">Sitemaps.org
+protocol</a> are:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">changefreq</code> default is <code class="language-plaintext highlighter-rouge">weekly</code></li>
+  <li><code class="language-plaintext highlighter-rouge">lastmod</code> default is <code class="language-plaintext highlighter-rouge">Time.now</code></li>
+  <li><code class="language-plaintext highlighter-rouge">priority</code> default is <code class="language-plaintext highlighter-rouge">0.5</code></li>
+  <li><code class="language-plaintext highlighter-rouge">expires</code> request removal <code class="language-plaintext highlighter-rouge">expires: Time.now + 1.day</code></li>
+</ul>
+
+<p>You can add some existing sitemaps with <code class="language-plaintext highlighter-rouge">add_to_index '/my-old-sitemap.xml.gz'</code></p>
+
+<h2 id="sitemap-on-heroku">Sitemap on Heroku</h2>
+
+<p>For heroku you need to move it on
+<a href="https://github.com/kjvarga/sitemap_generator/wiki/Generate-Sitemaps-on-read-only-filesystems-like-Heroku#configure-carrierwave">S3</a>.
+It is straighforward configuration, AWS S3 does not need to be public.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SitemapGenerator::Sitemap.sitemaps_host = "http://"\
+ "#{Rails.application.secrets.aws_bucket_name}"\
+ ".s3.amazonaws.com/"
+SitemapGenerator::Sitemap.sitemaps_path = 'my-sitemaps/'
+SitemapGenerator::Sitemap.adapter = SitemapGenerator::S3Adapter.new(
+  fog_provider: 'AWS',
+  aws_access_key_id: Rails.application.secrets.aws_access_key_id,
+  aws_secret_access_key: Rails.application.secrets.aws_secret_access_key,
+  fog_directory: Rails.application.secrets.aws_bucket_name,
+)
+</code></pre></div></div>
+
+<p>If your bucket is not on <code class="language-plaintext highlighter-rouge">us-east-1</code> region you need to add fog_region option to
+adapter</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  fog_region: Rails.application.secrets.aws_region
+</code></pre></div></div>
+
+<p>Than you need robots txt to point to that sitemap url (
+<code class="language-plaintext highlighter-rouge">bucket-name</code>.s3.amazonaws.com/<code class="language-plaintext highlighter-rouge">filename</code>)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># public/robots.txt
+Sitemap: http://s3.amazonaws.com/my-site/my-folder/sitemap_index.xml.gz
+</code></pre></div></div>
+
+<p>Test with <code class="language-plaintext highlighter-rouge">heroku run sitemap:refresh</code>.</p>
+
+<p>Also interesting tool to check validity of sitemap is
+https://www.websiteplanet.com/webtools/sitemap-validator/</p>
+
+<h2 id="webmaster-tools">Webmaster tools</h2>
+
+<p>Check your sitemap on <a href="https://www.google.com/webmasters/tools/home?hl=en">google
+webmaster tools</a>.
+Just click <em>Add property</em> and and verify your domain.
+(For AWS S3 you need to enable website hosting).
+Refresh robots.txt to point on new sitemap location.</p>
+
+<p>From <a href="http://www.sitemaps.org/protocol.html#index">sitemaps.org</a> you can see
+that one sitemap should not have more than 50.000 links and uncompressed size
+10MB.
+Url should be less than 2048 chars.</p>
+
+<p>You can use search to see current <a href="https://support.google.com/webmasters/answer/35256">index
+status</a>
+Just type <code class="language-plaintext highlighter-rouge">info:www.my-site.com</code> and you can find links there.
+Or you can add to https://www.google.rs/search?q=site:<code class="language-plaintext highlighter-rouge">www.my-site.com</code></p>
+
+<ul>
+  <li>site: search only for this domain or even subdirectory. You can use this to
+see if some page is indexed, just add uniq part of page url</li>
+  <li>link: find links for specific domain or subdirectory or pages (this is no
+longer supported as of Jan 2017)</li>
+  <li>cache: see current archived copy of domain or page. It is better to use
+<a href="https://www.google.com/webmasters/tools/googlebot-fetch">https://www.google.com/webmasters/tools/googlebot-fetch</a> since google crawler
+can execute javascript. You can submit to index on the page, but even google
+renders it properly (with ajax/angular data) it will not add to index for some
+other reasons.</li>
+</ul>
+
+<p>Some reasons could be
+<a href="https://moz.com/ugc/8-reasons-why-your-site-might-not-get-indexed">post</a></p>
+
+<ul>
+  <li>server can not respond fast enough to all crawler requests, maybe it will
+help to reoder sitemap</li>
+  <li>All links in sitemap should return 200 (not redirection 3xx). Also you need to
+check <a href="https://support.google.com/webmasters/answer/2642366?hl=en">this answer</a>
+for duplicates (this is common for angular since data is fetched after page
+load), canonical url (this is common when you have search queries that return
+same results)</li>
+</ul>
+
+<p>If you have more domains on same server than you need to iterate for each
+<code class="language-plaintext highlighter-rouge">default_host</code> and to call <code class="language-plaintext highlighter-rouge">SitemapGenerator::Sitemap.ping_search_engines</code>
+(since by default is to ping when whole sitemap process finishes, so than it
+will ping only last one).</p>
+
+<h1 id="other-tools">Other tools</h1>
+
+<p>Chrome plugins</p>
+
+<ul>
+  <li><a href="https://chrome.google.com/webstore/detail/browserstack-local/mfiddfehmfdojjfdpfngagldgaaafcfo?utm_source=chrome-app-launcher-info-dialog">https://chrome.google.com/webstore/detail/browserstack-local/mfiddfehmfdojjfdpfngagldgaaafcfo?utm_source=chrome-app-launcher-info-dialog</a></li>
+  <li><a href="https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk?utm_source=chrome-app-launcher-info-dialog">https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk?utm_source=chrome-app-launcher-info-dialog</a></li>
+</ul>
+
+<h1 id="schemaorg">Schema.org</h1>
+
+<p>RDFa https://rdfa.info/ is extension of HTML to markup thinks on page.
+Tutorials on https://json-ld.org/learn.html
+There is a Facebook open graph protocol https://ogp.me/ or Google Schema org
+<a href="http://schema.org/docs/gs.html">http://schema.org/docs/gs.html</a> to add microdata in your markup like: <code class="language-plaintext highlighter-rouge">&lt;div
+itemscope&gt;&lt;h1 itemprop="name"&gt;Duke&lt;/h1&gt;&lt;/div&gt;</code> or to add ld+json (recommended on
+this page
+https://developers.google.com/search/docs/guides/intro-structured-data#structured-data-format
+)</p>
+
+<p>with various models Person, Place, Event https://schema.org/docs/full.html
+or on Google search gallery https://developers.google.com/search/docs/guides/search-gallery
+and test on https://search.google.com/test/rich-results</p>
+
+<p>Main syntax json-ld https://www.youtube.com/watch?v=UmvWk_TQ30A</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">@context</code> shows how to interpred keys</li>
+  <li><code class="language-plaintext highlighter-rouge">@id</code> universal point on the web</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">@type</code> thing/object types: Person, Event … or data type: String, Date</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{ @context: {},
+  // Value of type (`Person`) will expand to full URL in that particular context.
+  @type: Person,
+  name: Duke,
+
+  // For data type we use expanded form using @value keyword
+  birthday: {
+    @value: '2000-01-01',
+    @type: 'xsd:date'
+  }
+  // instead of defining type inline in expanded form, we can define in
+  //context (Type coercion) and use simply `birthday: '2000-01-01'`
+  context: {
+    birthday: {
+      @id: 'http://schema.org/birthday',
+      @type: xsd:date
+    }
+  }
+</code></pre></div>    </div>
+  </li>
+  <li>To create a links we can embed object or referencing using url</li>
+  <li>FAQ example https://saijogeorge.com/json-ld-schema-generator/faq/
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is it Free to Register on MyApp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Registration on MyApphe is free"
+      }
+    },
+</code></pre></div>    </div>
+  </li>
+  <li>Keyword aliasing when you want to use <code class="language-plaintext highlighter-rouge">obj.id</code> instead of <code class="language-plaintext highlighter-rouge">obj['@id']</code></li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script type="application/ld+json"&gt;
+[  {  "@context":"http://schema.org",
+    "logo":"https://mycomp.co.uk/assets/logo-b7b1cda2d08187dc17d1751096e3a88988f6ddae3febf19d7bb4540b434aef92.png",
+    "image":["https://mycomp.co.uk/assets/blogs/honeymoon_one-57c2ec4ae43614d072e715d7bc2ba465e2e9c0c40c596f9af542e20b36612e4a.jpg"],
+    "@type":"Service",
+    "@id":"https://mycomp.co.uk",
+    "description":"mycomp - my way",
+    "name":"mycomp.co.uk",
+    "url":"https://mycomp.co.uk",
+    "sameAs":["https://www.mycomp.co.uk/guide"]
+  },
+  {  
+    "@context":"http://schema.org",
+    "@type":"LocalBusiness",
+    "@id":"https://mycomp.co.uk/",    
+    "logo":"https://mycomp.co.uk/assets/logo-b7b1cda2d08187dc17d1751096e3a88988f6ddae3febf19d7bb4540b434aef92.png",
+    "image":"https://mycomp.co.uk/assets/blogs/honeymoon_one-57c2ec4ae43614d072e715d7bc2ba465e2e9c0c40c596f9af542e20b36612e4a.jpg",
+    "name":"mycomp",
+    "alternateName":"mycomp UK",
+    "geo":{  "@type":"GeoCoordinates",
+        "latitude":  "11.4197157",
+        "longitude":"-1.5141248"
+    },
+    "priceRange":"From &amp;pound;29.95",
+    "telephone":"11223",
+    "url":"https://mycomp.co.uk",
+    "address":{
+        "@type":"PostalAddress",
+        "streetAddress":"My",
+        "addressLocality":"My",
+        "addressRegion":"My",
+        "postalCode":"My",
+        "addressCountry":"United Kingdom"
+    },
+    "branchOf":{"@type":"Organization",
+          "name":"mycomp UK",
+          "sameAs":"https://mycomp.co.uk"
+    }
+  }
+]
+&lt;/script&gt;
+</code></pre></div></div>
+
+<h1 id="open-graph">Open graph</h1>
+
+<p>You can add head tags for facebook <a href="http://ogp.me/">open graph protocol</a>. In
+Rails it will be like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+/ haml
+- content_for :head do
+  %meta{property: "og:type",        content: "article"}
+  %meta{property: "og:title",       content: "MySite | #{@post.title}"}
+  %meta{property: "og:image",       content: share_image_url(@post)}
+  %meta{property: "og:description", content: @post.description}
+  %meta{property: "og:url",         content: post_url(@post.id)}
+  %meta{property: "og:site_name",   content: "MySite"}
+  %meta{name: "twitter:card",       content: "photo"}
+  %meta{name: "twitter:site",       content:"@mysite"}
+  %meta{name: "twitter:title",      content: "MySite | #{@post.title}"}
+  %meta{name: "twitter:image",      content: share_image_url(@post)}
+  %meta{name: "twitter:url",        content: post_url(@post.id)}
+
+# at least you have to have one meta tag og:image for sharing on viber
+    &lt;meta property="og:image" content="&lt;%= asset_url("logo.jpg") %&gt;" /&gt;
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">og:title</code> usually have same content as <code class="language-plaintext highlighter-rouge">&lt;title&gt;</code> and <code class="language-plaintext highlighter-rouge">og:description</code> is the
+same as <code class="language-plaintext highlighter-rouge">&lt;meta name="description"&gt;</code>.
+In rails you can use meta tags gem so you can set title in html and meta tag in
+one place. Also set language alternative url
+https://github.com/kpumuk/meta-tags#multi-regional-and-multilingual-urls-rss-and-mobile-links</p>
+
+<h1 id="addwords">Addwords</h1>
+
+<p>You can enable <code class="language-plaintext highlighter-rouge">Destination URL Auto-tagging. Automatically tag my ad
+destination URLs</code> in Account Settings -&gt; Preferences</p>
+
+<h1 id="user-mailing-list">User mailing list</h1>
+
+<p>If someone is linking your site or your competitor site, you can email the site
+owner (need a script that will search for email address on that site) saying
+that you have some new content, video or other material that will be interesting
+for his audience.</p>
+
+<h1 id="customer-analitics">Customer Analitics</h1>
+
+<p>You can use some of the services: Google Analytics, Firebase anal, Amazon anal,
+Fabric Answers, Mixpanel, Keen, Segment, Amplitude, Localytics, Ionic Analytics</p>
+
+<p>Go to https://analytics.google.com and on left sidebar click Admin to add
+property and get UA code.</p>
+
+<h1 id="seo-search-enginge-optimization">SEO search enginge optimization</h1>
+
+<p>hangouts tutorials <a href="https://plus.google.com/collection/oSHR9">https://plus.google.com/collection/oSHR9</a></p>
+
+<ul>
+  <li>subdomain is not bad for rank, since google can treat as two different sites</li>
+</ul>
+<p><a href="https://www.youtube.com/watch?v=onNwqFa-e_s#t=2904">https://www.youtube.com/watch?v=onNwqFa-e_s#t=2904</a></p>
+<ul>
+  <li>url is most important and should point to single state (not multiple states).
+After hash <code class="language-plaintext highlighter-rouge">#</code> usually everythings is ignored so that should not be a router for
+your app. Do not use secret stuff in url like <code class="language-plaintext highlighter-rouge">/session=1234/...?user=john</code></li>
+  <li>canonical url is the main key for this content, and can be defined using link
+rel canonical, redirects, sitemaps
+to define what is canonical url for the page you can use
+```</li>
+</ul>
+<link rel="canonical" href="https://example.com/blog" />
+
+<link rel="canonical" href="https://example.com/blog/index.html" />
+
+<p>```</p>
+<ul>
+  <li>imporant content that needs to be indexed should be on visible part of the
+page, not on ajax call since crawl will be able to index that</li>
+  <li>always use links with href. Onclick is ok if it uses history js api. Note that
+crawlers do not clicks, just looks for links. So don’t use buttons, span
+onclick or href to hash link (part of a page)</li>
+  <li>If content change often, crawler will check more often. Popular and fresh.</li>
+  <li>Do not load too much files, crawl budget.</li>
+  <li>Do not duplicate content, same content but different url, use link rel
+canonical ie canonicalize.</li>
+  <li>Prevent crawling with robots.txt, but link from other site is followed
+(robots is not read) so for this case use header.</li>
+  <li>Non existing urls should use redirection (or add meta tag) to page not found
+with status 403</li>
+  <li>Bot does not save cookies, so do not rely on persisting data.  Also does not
+accepts geolocation</li>
+  <li>Do not use different parameters to same page</li>
+</ul>
+
+<h1 id="off-page-seo">Off page SEO</h1>
+
+<ul>
+  <li>backlinks, find links to your site: https://moz.com/link-explorer</li>
+  <li>guest blogging on some of those blogs https://www.websitehostingrating.com/list-of-200-websites-that-accept-guest-posts/ or find where similar images are used https://images.google.com/ upload and reverse search image</li>
+  <li>social media engagement</li>
+  <li>influencer marketing, ask them to share a link</li>
+  <li>video, podcasts, webinars</li>
+  <li>
+    <p>Kloaking is when heading seo keywoards says nice words but content sell drugs.</p>
+  </li>
+  <li>https://www.screamingfrog.co.uk/seo-spider/ Screamingfrog shows how google bot
+works</li>
+  <li>It is important that there are 301 redirections from www to root, http to
+https, chain redirections do not transmit seo juice (after 3 redirections
+stop)</li>
+  <li>All 404 pages should be redirected to live pages</li>
+  <li>When two pages open for the same keywords, so you don’t need to use the same
+tags on multiple pages. Cannibalization can be detected on gsc where all pages
+for specific keywords are visible. If you google both, then don’t touch
+anything, but when one falls, then optimize it so that you don’t drag the
+first page as well. For example, a blog should not contain the same keywords.
+When you gets bored, then put 301 on the first page</li>
+  <li>The link builder is done by contacting a thousand blogs, 1% of them will
+accept to put a link for 100 euros</li>
+  <li>Anchor text ratio, 70% brand text</li>
+  <li>Ahrefs can give you a list of link texts so you can analyze the competition to
+use the same text ratio. buy a site that is popular and put your link</li>
+  <li>External links can be with rel nofollow and will not take juice from the site.
+You can link large authoritative sites (wikis) or small sites that are not in
+the same are business. You should not link a competing site in any way.</li>
+</ul>
+
+<p>TODO
+https://www.youtube.com/watch?v=Afy7H04X9Us
+https://dev.to/jbobbink/what-i-learned-about-seo-from-using-the-10-most-used-js-frameworks-4alk</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>
