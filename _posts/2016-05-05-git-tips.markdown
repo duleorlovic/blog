@@ -146,16 +146,26 @@ Versioning [SEMVER](http://semver.org/)
 
 # Multiple accounts
 
-If there is two accounts on bitbucket or kgithub with different keys use
-`.ssh/config` file and put:
+If there is two accounts on bitbucket or github with different keys you can use
+host alias with those keys, defined in `.ssh/config`. Let's first generate
+another key with `ssh-keygen` and type the full path of the new key:
 
-    Host newbitbucket.org
-      Hostname bitbucket.org
-      IdentityFile ~/.ssh/id_rsa_new
+    ssh-keygen 
+    Generating public/private rsa key pair.
+    Enter file in which to save the key (/home/dule/.ssh/id_rsa): /home/dule/.ssh/id_rsa_kulakajak
 
-    Host bitbucket.org
-      Hostname bitbucket.org
-      IdentityFile ~/.ssh/id_rsa
+Than create a file with slighty different domain
+
+    # ~/.ssh/config
+    Host kgithub.com
+      Hostname kgithub.com
+      IdentityFile ~/.ssh/id_rsa_kulakajak
+
+and now you can clone using new key and host kgithub.com
+
+    cat ~/.ssh/id_rsa_kulakajak.pub 
+    # copy and paste this to https://github.com/settings/keys
+    git clone git@kgithub.com:kulakajak/3d-slova.in.rs.git
 
 Note that you need to use `git` protocol url when seting remote (`https`
 protocol does not use this mappings). To change current url you can edit
@@ -339,7 +349,7 @@ To fetch use `git submodule update` to get actuall SHA that was commited.
 To do both init and submodule update you can use option while cloning parent
 (recursive mean to fetch submdules of submodules - nested submodules if exists)
 ```
-git clone --recurse-submodules git@github.com/duleorlovic/web-tips.git
+git clone --recurse-submodules git@github.com:trkin/web-tips.git
 ```
 or if it already cloned, it can pull latest parent changes and update
 ```

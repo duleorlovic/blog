@@ -1196,6 +1196,13 @@ no match (so you need to check if not nil).
 https://ruby-doc.org/core-3.1.2/Regexp.html#class-Regexp-label-Named+captures
 ```
 /(\w)(\w)/.match("ab").captures # => ["a", "b"]
+
+# you can reverse arguments
+'ab'.match(/(\w)(\w)/).captures # => ["a", "b"]
+
+# you can use `scan` which will return captures
+'ab'.scan(/\w/) # => ["a", "b"]
+
 ```
 
 For MatchData you can call `captures` to get matched groups. You can use block

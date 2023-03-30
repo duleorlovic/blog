@@ -16,9 +16,15 @@ grant all privileges on database myuser to myuser;
 to allow local user to createdb and seed fixtures you need to
 ```
 ALTER USER myuser WITH SUPERUSER;
+```
 
+to do that in bash in one and use `$USER`
+
+```
 # in one command
-sudo su postgres -c "psql -d postgres -c 'ALTER USER myuser WITH SUPERUSER;'"
+sudo su postgres -c "psql -d postgres -c 'ALTER USER $USER WITH SUPERUSER;'"
+# or
+sudo -u postgres psql -d postgres -c "CREATE USER igor WITH SUPERUSER;"
 ```
 
 ```

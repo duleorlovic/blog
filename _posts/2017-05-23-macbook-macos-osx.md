@@ -802,8 +802,8 @@ If you need to have openssl@1.1 first in your PATH run:
   echo 'export PATH="$(brew --prefix openssl@1.1)/bin:$PATH"' >> ~/.zshrc
 
 For compilers to find openssl@1.1 you may need to set:
-  export LDFLAGS="-L$(brew --prefix openssl@1.1)/lib"
-  export CPPFLAGS="-I$(brew --prefix openssl@1.1)/include"
+export LDFLAGS="-L$(brew --prefix openssl@3)/lib"
+export CPPFLAGS="-I$(brew --prefix openssl@3)/include"
 
 For pkg-config to find openssl@1.1 you may need to set:
   export PKG_CONFIG_PATH="$(brew --prefix openssl@1.1)/lib/pkgconfig"
@@ -881,7 +881,7 @@ DISABLE_SSL=1 rails new
 Also you can compile with flags
 
 ```
-gem install puma -v 2.11.3 -- --with-cppflags=-I/usr/local/opt/openssl/include --with-ldflags=-L/usr/local/opt/openssl/lib
+gem install puma -v 5.6.5 -- --with-cppflags=-I`brew --prefix openssl@3`/include --with-ldflags=-L`brew --prefix openssl@3`/lib
 ```
 
 

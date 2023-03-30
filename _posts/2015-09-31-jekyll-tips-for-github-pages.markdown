@@ -109,7 +109,6 @@ and than Create Redirect Rule and choose the list.
 You also need to create a subdomain `uplate` A record `192.0.2.1` Proxied.
 IP address is not important, but keep 192.0.2.1 for simplicity.
 
-
 Use bulk redirects also for redirection from root to subdomain https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/manage-subdomains/
 Just add subdomain `@` root, A record with value `192.0.2.1` Proxied.
 Then add Bulk redirection list to redirect from `trk.in.rs` to
@@ -984,7 +983,7 @@ redirect:   https://www.example.org
 Google io slides can be found https://github.com/willnorris/io-slides
 After you clone the repository
 
-# Tips
+# Tip
 
 <https://jekyllrb.com/docs/plugins/>
 <https://github.com/planetjekyll/awesome-jekyll>
@@ -1075,3 +1074,9 @@ https://mademistakes.com/articles/using-jekyll-2016/
   ```
   bundle add webrick
   ```
+* for error
+```
+Could not find sass-embedded-1.58.3-x86_64-linux in any of the sources
+```
+solution is to remove Gemfile.lock
+
