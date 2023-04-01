@@ -948,7 +948,8 @@ and the repository exists.
 solution is
 ```
 ssh-add ~/.ssh/id_rsa
-# sometimes you need to start agent
+# sometimes you need to start agent, for error like:
+# Could not open a connection to your authentication agent.
 # eval "$(ssh-agent -s)"
 ```
 

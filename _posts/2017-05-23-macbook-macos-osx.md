@@ -663,7 +663,10 @@ sudo mkdir -p /var/run/mysqld
 sudo ln -s /tmp/mysql.sock /var/run/mysqld/mysqld.sock
 ~~~
 
-To start mysql server you can run `mysql.server start`
+To start mysql server you can run 
+```
+mysql.server start
+```
 To find location of mysql config files
 
 ```
@@ -737,6 +740,13 @@ https://github.com/rubyjs/libv8/issues/309
 ```
 brew install v8
 gem install libv8 -v '3.16.14.19' -- --with-system-v8
+
+gem install libv8-node -v '16.10.0.0' -- --with-system-v8
+
+pyenv global 3.9.1
+
+gem install mini_racer -- --with-v8-dir=`brew --prefix v8`
+gem install therubyracer -v '0.12.3' -- --with-v8-dir=`brew --prefix v8`
 ```
 
 for error
@@ -863,6 +873,25 @@ brew link --force openssl
 
 ```
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=`brew --prefix openssl@1.1`"
+```
+
+To install old ruby 2.6.7 for error
+```
+vm.c:2295:9: error: implicit declaration of function 'rb_native_mutex_destroy' is invalid in C99 
+```
+we need
+```
+CFLAGS="-Wno-error=implicit-function-declaration" rbenv install 2.6.7
+```
+but ruby 2.6.7 EOL so can not install on m1, and you should use 2.7.0
+
+For error
+```
+closure.c:264:14: error: implicit declaration of function 'ffi_prep_closure' is invalid in C99
+```
+you can use
+```
+RUBY_CFLAGS=-DUSE_FFI_CLOSURE_ALLOC rbenv install 2.7.0
 ```
 
 Puma 5.6.4 has problems with ssl
@@ -1099,15 +1128,25 @@ pyenv install 2.7.18
 # pyenv global 2.7.18
 pyenv versions
 
-# install pyenv to bash by copy paste script from
+# install pyenv to .bashrc by copy paste script from
 # PATH=$(pyenv root)/shims:$PATH
-pyenv init
+eval "$(pyenv init -)"
 ```
 
 To set python version to current shell
 ```
-eval "$(pyenv init -)"
 pyenv shell 2.7.18
+```
+
+For error
+```
+lease use python3.9 or python3.8 or python3.7 or python3.6.
+Node.js configure: Found Python 3.11.2...
+````
+use
+https://gist.github.com/fernandoaleman/868b64cd60ab2d51ab24e7bf384da1ca?permalink_comment_id=4211086#gistcomment-4211086
+```
+pyenv global 3.9.1
 ```
 
 * to mount ssh folder, instead of using brew
@@ -1128,13 +1167,20 @@ pyenv shell 2.7.18
 
   unmount with
   ```
-  umount -f ~/rails_main
+  umount -f ~/trk
   ```
 * you can use Real VNC to connect to ubuntu (just enable Share -> Remove
   desktop) but it shows black screen
   Better is to use native vnc clint from Finder -> Go -> Connect to server or
   just `open vnc://user@machine`
-  Note that on ubuntu you have to do Login (if you enable autologin you will not
-  be able to connect with VNC, it will just ask for password indefinitely).
-  So on restart, until you are logged in, VNC server will not start.
+  Note that on ubuntu you have to do login in order to unlock Keyring (for
+  example f you have autologin enabled you will not be able to connect with VNC,
+  it will just ask for password indefinitely, untill you open eg Chrome which
+  will ask you to unlock keyring).
+  One solution is to set empty Login password
+  https://linuxconfig.org/how-to-disable-keyring-popup-on-ubuntu Search for
+  Passwords > right click on Login > insert current password > insert blank
+  password and confirm blank password. Now you do not need to unlock keyring.
+  When vnc password is changed, than you will get error `Authentication failed
+  to "trk"`. I do not know how to clear saved passwords for Finder.
 

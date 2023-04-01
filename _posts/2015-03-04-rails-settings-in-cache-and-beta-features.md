@@ -89,6 +89,10 @@ rails g administrate:dashboard MySetting
 
 # ActiveAdmin
 
+Does not work with Rails 7
+https://github.com/activeadmin/activeadmin/issues/7264#issuecomment-1073980209
+In package.json `build:css "sass"` can not find active admin files.
+
 [activeadmin gem](https://github.com/activeadmin/activeadmin) is nice way to
 edit stuff. It contains generators, for example `rails g active_admin:resource
 Banner`

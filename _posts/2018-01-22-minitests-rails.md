@@ -573,7 +573,7 @@ Nokogiri::CSS::SyntaxError: unexpected '$' after '[:equal, "id-1"]'
     (eval):3:in `_racc_do_parse_c'
     (eval):3:in `do_parse'
   ```
-  occurs when you forget closing brackets `assert_selector '[data-test=id-1'`
+  occurs when you forget closing brackets like `assert_selector '[data-test=id-1'`
 
   To check html in emails use assert_select_email
 

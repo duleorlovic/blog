@@ -32,7 +32,8 @@ sudo apt install git postgresql libpq-dev nodejs
 # Initial commit
 
 You can choose database with rails param `rails new myapp --database=postgresql`
-but it is better to create `.railsrc` so it is used for all rails
+You can also create `.railsrc` so it is used for all rails but that is not so
+obvious.
 
 ```
 cat >> ~/.railsrc << HERE_DOC
@@ -57,23 +58,28 @@ rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ```
 
-Skip generators
+For tailwind or bootstrap you can use
+```
+rails new kindergarten-exchange -j esbuild --css tailwind -d postgresql --skip-active-storage -a propshaft --skip-jbuilder
+
+# note that there is an output note to add scripts to package.json
+# for tailwind
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets",
+    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
+  }
+
+# for bootstrap
+    "build:css": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
+```
+
+There is no option like `--skip-helper` but we can configure that in
 
 ~~~
-vi config/environments/development.rb
-  config.i18n.enforce_available_locales = true
-  config.generators do |generate|
-    generate.jbuilder false
-    generate.helper false
-    generate.javascript_engine false
-    generate.request_specs false
-    generate.routing_specs false
-    generate.view_specs false
-    generate.stylesheets false
-  end
-  config.action_controller.action_on_unpermitted_parameters = :raise
-
-git add . && git commit -m "Skip generators"
+# config/initializers/generators.rb
+Rails.application.config.generators do |g|
+  g.helper false
+end
 ~~~
 
 You can start from template for devise and i18n

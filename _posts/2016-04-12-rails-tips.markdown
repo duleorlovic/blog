@@ -2329,8 +2329,6 @@ https://github.com/urvin-compliance/caracal
 
 # Style guide
 
-[toughtbot style
-guide](https://github.com/thoughtbot/guides/tree/master/best-practices)
 
 * do not reference model class directly from a view (how to render counts than
 ?)
