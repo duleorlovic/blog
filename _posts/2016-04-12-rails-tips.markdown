@@ -399,6 +399,8 @@ rails db
 
 ## Active record
 
+arel https://blog.saeloun.com/2021/10/19/rails-arel-primer
+https://gist.github.com/ProGM/c6df08da14708dcc28b5ca325df37ceb
 * one issue is when you use different table name `self.table_name =
   'something_other'` than relations could not be picked correctly
 * union is not supported [issue 929](https://github.com/rails/rails/issues/939)
@@ -2389,6 +2391,12 @@ rubocop -a --only 'Rails/HttpPositionalArguments'
 ```
 
 # Geocoder
+
+You can use plain postgresql function
+```
+Location.order(Arel.sql "POINT(latitude, longitude) <-> POINT(#{current_location.latitude},#{current_location.longitude})")
+```
+or you can use gem geocoder.
 
 If you need to search with association, for example [User has many
 locations](https://stackoverflow.com/questions/14188568/using-geocoder-on-a-child-association-how-to-find-all-parents-in-a-given-locati)

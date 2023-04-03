@@ -915,6 +915,15 @@ see all configuration options `ALEInfo`.
 There was issue with erb <https://github.com/w0rp/ale/issues/580> but this
 erubylint was recently removed from ale linters.
 
+On Ruby 3.2.0 there is a warning
+
+```
+Passing trim_mode with the 3rd argument of erb.new is deprecated.
+````
+https://github.com/dense-analysis/ale/issues/4167 so maybe the solution could be
+to define it's own linter like
+https://github.com/dense-analysis/ale/issues/580#issuecomment-337676607
+
 ## Syntastic (deprecated, use ALE instead)
 
 [syntastic](https://github.com/scrooloose/syntastic) vim plugin is great to
