@@ -213,19 +213,25 @@ Also valid factory can be shared between tests
 ~~~
 # spe/models/user_spec.rb
 RSpec.describe User do
-  it_behaves_like 'has_valid_factory'
+  it_behaves_like "has_valid_factory"
 end
 
-# spec/support/factory_bot.rb
-RSpec.shared_examples 'has_valid_factory' do
-  it 'has a valid factory' do
+# spec/support/shared_examples.rb
+# If you are using factoryBot
+RSpec.shared_examples "has_valid_factory" do
+  it "has a valid factory" do
     expect(create(described_class.name.underscore)).to be_valid
   end
 end
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 ~~~
+
+for fixtures 
+```
+```
 
 Some [rspec
 expectations](http://www.relishapp.com/rspec/rspec-expectations/docs) built in

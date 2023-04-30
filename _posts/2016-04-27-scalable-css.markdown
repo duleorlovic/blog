@@ -20,7 +20,8 @@ tags: css
 * layout: divide page into sections. prefix with `l-` like `l-inline`
 * module: reusable parts: `callouts`, `products` When used in different part
   of page you should use subclassing classname-module, for example: `<div
-  class="pod pod-callout">` instead of specificity war `.callout .pod`
+  class="pod pod-callout">` instead of specificity war `.callout .pod` target
+  element.
 * state: how module or layout looks in particular state (active/inactive, home
   page/sidebar, small/big screens), prefixed with `is-`, like `is-hidden`. For
   specific states of module, you can use `is-callout-minimized` and place it

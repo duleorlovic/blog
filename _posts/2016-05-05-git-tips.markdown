@@ -107,6 +107,9 @@ Show only file names
 
     git diff 134 --name-only
 
+Merge tool
+
+     git config --global merge.tool meld
 Copy files filename to files path
 
     git diff --name-only > filelist.txt

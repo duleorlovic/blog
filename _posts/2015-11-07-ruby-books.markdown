@@ -1702,7 +1702,9 @@ railse
   need parenthesis for example `scope :active, (lambda do ... end)`
 
 * `.map` two arguments is not easy
-*
+* parenthesis in ruby is not required, here are exceptions:
+  * parameter notice is for first `redirect_to` method not for path method
+    `redirect_to admin_webhook_path(@webhook), notice: "Successfully updated"`
 todo
 
 http://norswap.com/ruby-dark-corners/

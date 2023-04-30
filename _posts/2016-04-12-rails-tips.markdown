@@ -3993,7 +3993,8 @@ When you do not have `config/master.key` or `config/credentials/development.key`
   gem install bundler-audit
   bundle audit check --update
   ```
-* camel case to underscore snake_case is with `'HiBye'.underscore`
+* camel case to underscore snake_case is with `'HiBye'.underscore` but in
+  ActiveRecord it is better to use `LocationUser.model_name.collection`
 * csrf When you want to submit form from another domain you get this error
 
   ~~~
@@ -4425,3 +4426,15 @@ to use regexp
 * reduce memory with env variable: `MALLOC_ARENA_MAX=2` TODO: track memory usage
 with aws
 * kaminari first page is page 1
+* copy files from ruby
+```
+def self.initialize_fixture_blob
+  return if File.exist? "#{Rails.root}/tmp/storage/or/9s/or9sbwfely5gby30qdvtoa1cu09a"
+
+  FileUtils.mkdir_p "#{Rails.root}/tmp/storage/or/9s"
+  FileUtils.cp(
+    "#{Rails.root}/test/fixtures/files/computer_text.png",
+    "#{Rails.root}/tmp/storage/or/9s/or9sbwfely5gby30qdvtoa1cu09a"
+  )
+end
+```

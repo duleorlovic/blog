@@ -467,6 +467,11 @@ Attaching existing file
 ```
 # to store something in temp file
 tempfile = Tempfile.new
+# you can set extension for tempfile
+tempfile = Tempfile.new(["any_prefix", ".pdf"])
+# but instead of manually tempfile.unlink youshould use block syntaxt
+Tempfile.create do |tempfile|
+
 tempfile.binmode
 encoded_image = params[:data_url].split(',')[1]
 decoded_image = Base64.decode64(encoded_image)

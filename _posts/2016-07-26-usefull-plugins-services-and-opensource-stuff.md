@@ -1351,3 +1351,7 @@ ExitNodes {us} StrictNodes 1
 ```
 
 * gdpr in rails https://github.com/prey/gdpr_rails
+* create image with command line generate image email
+  ```
+  magick -gravity center -size 100x20 -font /System/Library/Fonts/Times.ttc caption:"ruby@trk.in.rs" email.png && open email.png
+  ```

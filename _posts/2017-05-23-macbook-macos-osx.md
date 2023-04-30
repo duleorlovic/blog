@@ -1165,9 +1165,9 @@ pyenv global 3.9.1
   sshfs dule@trk:. ~/trk/ -ocache=no -onolocalcaches -ovolname=ssh
   ```
 
-  unmount with
+  unmount and mount in one command:
   ```
-  umount -f ~/trk
+  umount -f ~/trk; sshfs dule@trk:. ~/trk/ -ocache=no -onolocalcaches -ovolname=ssh
   ```
 * you can use Real VNC to connect to ubuntu (just enable Share -> Remove
   desktop) but it shows black screen

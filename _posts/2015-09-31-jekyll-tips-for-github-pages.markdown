@@ -401,7 +401,7 @@ namespace :blog do
 end
 ~~~
 
-# Moving avaw from gh pages so we can see the access logs
+# Moving away from gh pages so we can see the access logs
 
 https://belief-driven-design.com/moving-from-github-pages-to-self-hosted-ab1231fb7fa/
 
