@@ -3,7 +3,7 @@ layout: post
 ---
 
 
-# Arduino
+# Install
 
 To install I download source tar.gz and run `./install.sh` or download binaries.
 https://github.com/arduino/arduino-ide/releases
@@ -142,6 +142,18 @@ arduino-cli upload --fqbn  esp8266:esp8266:generic -p /dev/cu.usbserial-13320
 arduino-cli monitor -p /dev/cu.usbserial-13320
 ```
 
+## Arduino tips
+
+`millis()` is unsigned long, it will go overflow (ie return to zero) after 50
+days https://www.arduino.cc/reference/en/language/functions/time/millis/
+Note that you should not use substraction since you might have what you do not
+expect
+```
+unsigned long current = millis();
+
+
+```
+
 ## Low cost tx rx
 
 VirtualWire works fine on ATMEGA Follow installation
@@ -169,12 +181,20 @@ Note that port name is: `/dev/cu.usbserial-13310`
 
 My model is NodeMCU 1.0 ESP-12E (older is 0.9 ESP-12)
 
+Pinouts https://lastminuteengineers.com/esp8266-pinout-reference/
+
 ## Webserver
 
 https://randomnerdtutorials.com/esp32-websocket-server-arduino/
 https://randomnerdtutorials.com/esp32-relay-module-ac-web-server/
 
 ## Arduino cloud
+
+Install iot cloud libraries https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries
+by menu Sketch > Include library > Manage libraries > Bridge (by Arduino)
+
+also if you have *ArduinoIoTCloud.h: No such file or directory* search for
+ArduinoIoTCloud library and install it.
 
 https://cloud.arduino.cc/home/
 Create device

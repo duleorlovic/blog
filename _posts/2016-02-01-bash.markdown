@@ -145,7 +145,7 @@ switch](http://peter.sh/experiments/chromium-command-line-switches/)
 `chromium-browser --auto-open-devtools-for-tabs` does work only on
 google-chrome.
 
-Intresting [devtools-cheatcheet](http://anti-code.com/devtools-cheatsheet/)
+Interesting [devtools-cheatcheet](http://anti-code.com/devtools-cheatsheet/)
 (search by filename Ctrl+O, search all sources Ctrl+Shift+F).
 
 Look my
@@ -1061,7 +1061,8 @@ fi
   * list all session `screen -list` start new named session `screen -S dule`
   * create new window `Ctrl+A + c` and switch to it using `Ctrl+A + 1`
   * list all windows `Ctrl+ "` you can switch to it by jk and enter
-  * exit detach with `Ctrl+A + d` and reattach with `screen -r`
+  * exit detach with `Ctrl+A + d` and reattach with `screen -r` or you can exit
+    with `ctrl+a` followed by `ctrl + \`
   * `Ctrl + A + {command}` for example vertical split `Ctrl+A + |` and move to
     it `Ctrl+A + <tab>` and create new window `Ctrl+A + c`. Use `Ctrl+A + X` to
     close the window.

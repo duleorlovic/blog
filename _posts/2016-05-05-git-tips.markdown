@@ -69,9 +69,10 @@ Git stash only unstaged changes
 
     git stash --keep-index
 
-Git checkout previous branch
+Git checkout previous branch, last branch
 
     git checkout -
+    git checkout @{-1}
 
 Git fetch pull all brancher and fast forward merge. Put this in your
 `.git/config` or `~/.gitconfig` file, and run `git pull-all`
