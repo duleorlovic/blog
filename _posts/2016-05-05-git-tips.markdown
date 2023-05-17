@@ -72,13 +72,6 @@ Git stash only unstaged changes
 Git checkout previous branch, last branch
 
     git checkout -
-    git checkout @{-1}
-
-Git fetch pull all brancher and fast forward merge. Put this in your
-`.git/config` or `~/.gitconfig` file, and run `git pull-all`
-
-    [alias]
-        pull-all = !"for b in $(git for-each-ref refs/heads --format='%(refname)') ; do git checkout ${b#refs/heads/} ; git pull --ff-only ; done"
 
 When you want to undo some commands
 
@@ -108,9 +101,6 @@ Show only file names
 
     git diff 134 --name-only
 
-Merge tool
-
-     git config --global merge.tool meld
 Copy files filename to files path
 
     git diff --name-only > filelist.txt
@@ -322,10 +312,6 @@ To remove tag
 
     git tag -d v1.5
 
-Add global gitignore for all projects
-
-    git config --global core.excludesfile ~/.gitignore
-
 Clone for local or remote folders
 
     git remote add local orlovic@192.168.2.103:/home/orlovic/ruby/securiPi/.git
@@ -516,8 +502,15 @@ browse -- issues` to open issues. `git browse user/repo` to open user/repo
 
 https://github.com/cli/cli
 
-Download code from github repository with curl
+gh cli is used to automatically close pr
+```
+gh auth login
+```
+Check that you can connect using gh cli
+```
+gh repo clone some-private-repo
+gh auth status
+```
 
-```
-curl -L https://codeload.github.com/mzrnsh/jekyllwind/tar.gz/refs/tags/v1.0.0 | tar -xz --strip-components=1
-```
+Permission problem is when you install gh cli using snap. Solved with installing
+with apt-get.

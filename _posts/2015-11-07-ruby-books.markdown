@@ -70,6 +70,9 @@ methods if you include this module.
 
 When you extend `class A; extend B;end` than `A.is_a?(B) == true`. When you
 include `class A; include B; end` than `A.new.is_a?(B) == true`.
+For inheritance ie subclass `class A < B;end` you can NOT use `A.is_a? B` (it
+returns false), but you can use `A.superclass == B` (true) or `A<B` (true). You
+can even use `A<=B` (true) also it is true that `A<=A`
 
 `self` in a definition of a class is class object (which is assigned to
 constant `MyClass`) so calling any methods will run in context of that class

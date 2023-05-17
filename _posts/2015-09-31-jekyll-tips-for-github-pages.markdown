@@ -114,6 +114,7 @@ Just add subdomain `@` root, A record with value `192.0.2.1` Proxied.
 Then add Bulk redirection list to redirect from `trk.in.rs` to
 `https://www.trk.in.rs`.
 
+than go to Bulk redirects and Create Bulk Redirect using this list
 
 # Cloudfront
 
@@ -556,7 +557,19 @@ not find the page.
 # Config
 
 You can serve using different port, just add `port: 4001` to your `_config.yml`
-file.
+file or using `--port` attribute (`-p` does not work)
+```
+jekyll s --port 4001
+```
+
+For jekyll-postcss the port 8124 is hardcoded so if you want to change than
+update two files
+
+```
+bundle open jekyll-postcss
+bin/postcss
+lib/jekyll-postcss/socket.rb
+```
 
 # Theme
 
@@ -983,7 +996,7 @@ redirect:   https://www.example.org
 Google io slides can be found https://github.com/willnorris/io-slides
 After you clone the repository
 
-# Tip
+# Tips
 
 <https://jekyllrb.com/docs/plugins/>
 <https://github.com/planetjekyll/awesome-jekyll>
@@ -1080,3 +1093,56 @@ Could not find sass-embedded-1.58.3-x86_64-linux in any of the sources
 ```
 solution is to remove Gemfile.lock
 
+* good readme file: include repo url, screenshot or video, toc (TODO: vim
+  script)
+```
+# My Project
+
+My description
+
+This repo is hosten on Github
+
+https://github.com/duleorlovic/tailwind_play_responsive_dark_mode
+
+## Preview
+
+Here is a preview how I updated button color only in dark mode
+
+[Screencast from 07.03.2023. 12:01:13.webm](https://user-images.githubusercontent.com/1426092/223404387-c3ee6d53-b84d-4664-a08e-56cbb4886ef9.webm)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Local develoment
+
+## Live Demo
+
+## Authors ✍️
+
+https://github.com/duleorlovic
+
+## 🤝 Contributors
+
+Contributions, issues, and feature requests are greatly appreciated!
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "improvements".
+
+- Fork the Project
+- Create your Feature Branch (git checkout -b feature/yourfeaturename)
+- Commit your Changes (git commit -m 'Add suggested feature')
+- Push to the Branch (git push origin feature/AmazingFeature)
+- Open a Pull Request
+
+Feel free to check the [issues page](https://github.com/DeVuDeveloper/jekyll-tailwind./issues/1).
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## 📝 License
+
+This project is licensed by [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+## Show your support 💪
+
+Give a ⭐️ if you like this project!
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+```
