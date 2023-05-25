@@ -294,6 +294,12 @@ Interactivelly rebase pull request
     git rebase -i rails/master
     git push origin guides_i18n --force-with-lease
 
+To move commit to stage (it is similar to amend, but you have commit files on
+stage so you can restore --staged changes to unstage them)
+
+    git reset --soft HEAD^
+
+
 Mark commit with a tag
 
     git tag -l

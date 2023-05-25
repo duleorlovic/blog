@@ -58,21 +58,6 @@ rails db:create
 git init . && git add . && git commit -m "rails new myapp"
 ```
 
-For tailwind or bootstrap you can use
-```
-rails new kindergarten-exchange -j esbuild --css tailwind -d postgresql --skip-active-storage -a propshaft --skip-jbuilder
-
-# note that there is an output note to add scripts to package.json
-# for tailwind
-  "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets",
-    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
-  }
-
-# for bootstrap
-    "build:css": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
-```
-
 There is no option like `--skip-helper` but we can configure that in
 
 ~~~
@@ -84,16 +69,6 @@ end
 
 You can start from template for devise and i18n
 https://github.com/duleorlovic/devise-views-i18n
-
-For error
-```
-Webpacker can't find application in /home/orlovic/Downloads/rails_6_beta2_stimulus/public/packs/manifest.json. Possible causes:
-```
-you need to install webpack and run initial compilation
-```
-yarn add @rails/webpacker
-bin/webpack
-```
 
 # UUID
 
