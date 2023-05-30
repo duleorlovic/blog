@@ -1175,7 +1175,7 @@ pyenv global 3.9.1
   just `open vnc://user@machine`
   Note that on ubuntu you have to do login in order to unlock Keyring (for
   example f you have autologin enabled you will not be able to connect with VNC,
-  it will just ask for password indefinitely, untill you open eg Chrome which
+  it will just ask for password indefinitely, until you open eg Chrome which
   will ask you to unlock keyring).
   One solution is to set empty Login password
   https://linuxconfig.org/how-to-disable-keyring-popup-on-ubuntu Search for
@@ -1183,4 +1183,9 @@ pyenv global 3.9.1
   password and confirm blank password. Now you do not need to unlock keyring.
   When vnc password is changed, than you will get error `Authentication failed
   to "trk"`. I do not know how to clear saved passwords for Finder.
+  Another case when `Authentication failed` is when you restart but ubuntu but
+  vnc session is still active (not always). Solution is to restart vnc server on
+  ubuntu by disabling and enabling remote desktop again (and `Enable Legacy VNC
+  Protocol` should be checked)
 
+* airdrop store files in Downloads

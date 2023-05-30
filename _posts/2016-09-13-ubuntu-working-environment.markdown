@@ -710,8 +710,11 @@ You can try with nmap but it does not show for example neo4j 7474 port
 nmap 127.0.0.1
 nmap 192.168.3.2
 
-# quick scan all devices
+# quick scan all devices, only ping scan
 nmap -sn 192.168.0.0/24
+
+# port scan, very slow
+nmap -Pn 192.168.3.2
 ```
 
 To start service on boot use

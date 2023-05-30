@@ -1057,19 +1057,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
   echo "==> Bootstrapping Homebrew OSX environment"
 fi
 ~~~
-* screen command
-  * list all session `screen -list` start new named session `screen -S dule`
-  * create new window `Ctrl+A + c` and switch to it using `Ctrl+A + 1`
-  * list all windows `Ctrl+ "` you can switch to it by jk and enter
-  * exit detach with `Ctrl+A + d` and reattach with `screen -r` or you can exit
-    with `ctrl+a` followed by `ctrl + \`
-  * `Ctrl + A + {command}` for example vertical split `Ctrl+A + |` and move to
-    it `Ctrl+A + <tab>` and create new window `Ctrl+A + c`. Use `Ctrl+A + X` to
-    close the window.
-  * `Ctrl+A+]` to go to copy mode
-  * screen will catch ctrl+c so to stop some process you can use ctrl+z to move
-    it to background (move to foreground with `fg`)
-    https://serverfault.com/questions/784645/need-to-send-c-to-cli-using-gnu-screen-over-serial-interface-dev-rfcomm0
 * cheatsheet https://devhints.io/bash
 * `pbcopy` is only on mac
 * to prevent `ctrl-d` to exit terminal bash you can set `IGNOREEOF=3` so shell
@@ -1242,3 +1229,66 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   lscpu
   ```
 
+## Screen
+
+start new version with `screen-4.9.0`
+Find info with `man screen` or online https://www.gnu.org/software/screen/manual/screen.html
+
+https://kapeli.com/cheat_sheets/screen.docset/Contents/Resources/Documents/index
+
+screen command (escape is `ctrl+a` ie `c-a`)
+* `c-a ?` help to show keybindings
+* all session `screen -ls` start new named session `screen -S dule`, exit
+detach with `c-a d` and reattach with `screen -x` or `screen -r dule`. Close
+current region `c-a X` (uppercase X) close all except current `c-a Q`.
+kill current `c-a k`, kill all with `c-a \`.
+* create new window `c-a c` and switch to it using `c-a 1`, list all
+windows `c-a "` you can switch to it by jk and enter, show window bar `c-a w`,
+go to next/prev window `c-a p` or `c-a <space>`
+* split `c-a |` and move to that region `c-a <tab>`
+* `c-a [` (or `c-a <esc>`) to go to copy mode, press space or enter to mark and
+`c-a ]` to paste
+* since screen will catch ctrl+c so to get to shell in window where some process
+  is running you can use ctrl+z to move it to background (move to foreground
+  with `fg`)
+https://serverfault.com/questions/784645/need-to-send-c-to-cli-using-gnu-screen-over-serial-interface-dev-rfcomm0
+* to send ctrl+C to process you can remap `stty intr ^]` so you can use `ctrl+]`
+to kill the process but keep window and shell running
+https://unix.stackexchange.com/a/171707/150895
+
+* change escape key to j https://wiki.archlinux.org/title/GNU_Screen#Change_the_escape_key
+  https://stackoverflow.com/a/7251588/287166
+* multiuser https://unix.stackexchange.com/questions/163872/sharing-a-terminal-with-multiple-users-with-screen-or-otherwise
+set up the server for ssh access
+```
+sudo useradd -m help --shell /bin/bash
+sudo passwd help
+
+sudo vi /etc/ssh/sshd_config
+# enable password authentication
+PasswordAuthentication yes
+```
+so now
+```
+# as user: dule
+screen -d -m -S multisession
+screen -r multisession
+:multiuser on
+:acladd mile
+```
+another user can controller screen session
+```
+# as user: mile
+screen -x dule/multisession
+```
+If you want to enable access of remote user you can use port forwarding
+(no need to `:multiuser on` command)
+```
+# as myuser
+screen -S mysession
+ssh -R 2222:localhost:22 remote-host
+
+# on remote host attach using -x (multi display mode)
+ssh -p 2222 myuser@localhost
+screen -x mysession
+```

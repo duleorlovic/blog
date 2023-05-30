@@ -17,14 +17,9 @@ Remove remote branch delete remote
 
     git push origin --delete gh-pages
 
-Remote all heroku remote branches using a heroku plugin
-https://github.com/heroku/heroku-repo#reset
-
-    heroku repo:reset
-
 Push branch and track
 
-    git push bitbucket development:development
+    git push origin development:development
 
 Get current branch name
 
@@ -33,7 +28,8 @@ Get current branch name
 Getting existing git branches to track remote branches:
 
     git push --set-upstream origin my-branch
-    # but you can set `git config push.default current`
+    # or set default for all branches
+    git config push.default current
     git push
 
 Show latest branch ordered by updated time

@@ -13,6 +13,17 @@ print cv.__version__
 4.1.0
 ```
 
+On macOS
+```
+brew install opencv
+pip3 install opencv-python
+python
+Python 3.9.16 (main, Mar  9 2023, 20:38:51)
+import cv2 as cv
+print(cv.__version__)
+4.7.0
+```
+
 https://docs.opencv.org/4.2.0/dc/d2e/tutorial_py_image_display.html
 Gui
 ```

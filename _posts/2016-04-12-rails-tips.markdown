@@ -1327,7 +1327,15 @@ I prefer to use fixtures
 ```
 # db/seeds.rb
 Rails.logger = Logger.new(STDOUT)
-Rake::Task['db:fixtures:load'].invoke
+Rake::Task["db:fixtures:load"].invoke
+```
+
+This task `db:fixtures:load` is defined
+https://github.com/rails/rails/blob/master/activerecord/lib/active_record/railties/databases.rake#L415
+for rspec you need
+```
+ENV["FIXTURES_PATH"] = "spec/fixtures"
+Rake::Task["db:fixtures:load"].invoke
 ```
 
 More advance seeding from fixture data is on

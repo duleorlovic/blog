@@ -850,6 +850,8 @@ heroku builds:cache:purge -a example-app
 ```
 
 Remove remote branch on heroku ie clear reset repository
+Remove all heroku remote branches using a heroku plugin
+https://github.com/heroku/heroku-repo#reset
 ```
 heroku repo:reset
 ```
