@@ -1292,3 +1292,6 @@ ssh -R 2222:localhost:22 remote-host
 ssh -p 2222 myuser@localhost
 screen -x mysession
 ```
+
+To keep ssh live when changing the networks you can use mosh
+To keep tunnel opened TODO https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-autossh/
