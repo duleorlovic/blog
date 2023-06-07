@@ -303,6 +303,32 @@ Use artifact to debug logs and screenshots
           log/*
 ```
 
+### Self hosted runners
+
+Add self-hosted runner on Settings > Actions > Runners > New self-hosted runner
+https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners#adding-a-self-hosted-runner-to-a-repository
+
+Download and extract runner source
+```
+mkdir actions-runner && cd actions-runner
+curl -o actions-runner-linux-x64-2.304.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.304.0/actions-runner-linux-x64-2.304.0.tar.gz
+tar xzf ./actions-runner-linux-x64-2.304.0.tar.gz
+```
+
+Configure using MY-PROJECT-TOKEN
+```
+./config.sh --url https://github.com/trkin/kindergarten-exchange --token MY-PROJECT-TOKEN
+# this creates .runner .credentials
+```
+
+Remove configuration
+```
+./config.sh remove --token MY-PROJECT-TOKEN
+```
+
+Create selfhosted container based on docker
+https://dev.to/pwd9000/create-a-docker-based-self-hosted-github-runner-linux-container-48dh
+
 ## Cache
 
 https://help.github.com/en/actions/automating-your-workflow-with-github-actions/caching-dependencies-to-speed-up-workflows

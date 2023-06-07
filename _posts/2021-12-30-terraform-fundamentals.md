@@ -86,6 +86,8 @@ terraform remote
 # this will clear the state file but you can restore using git or
 # terraform.tfstate.backup
 terraform destroy
+# destroy specific resource
+terraform destroy --target aws_instance.demo_vm_1
 
 # manually mark resource as tainted, it will be destructed and recreated at the
 # next apply

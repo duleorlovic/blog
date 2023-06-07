@@ -144,7 +144,7 @@ User.where(
   Rows_examinated: 123456 ... Also you can find on left menu Performance
   Insights -> Database load -> Top SQL -> Rows examined
 * squash migrations, just generate new one and copy content from `db/schema.rb`
-  You can use gem squasher https://github.com/jalkoby/squasher or you can
+  You can use gem squasher https://gihttps://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html#finding-quick-start-amihttps://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html#finding-quick-start-amithub.com/jalkoby/squasher or you can
   manually merge migrations
 * if you override setters, for example
   ```

@@ -1276,7 +1276,7 @@ screen -r multisession
 :multiuser on
 :acladd mile
 ```
-another user can controller screen session
+another user can controll screen session
 ```
 # as user: mile
 screen -x dule/multisession
@@ -1293,5 +1293,7 @@ ssh -p 2222 myuser@localhost
 screen -x mysession
 ```
 
-To keep ssh live when changing the networks you can use mosh
+To keep ssh live when changing the networks you can use `mosh`
+Note that with mosh, scroll up and scroll down does not work well as with ssh.
+
 To keep tunnel opened TODO https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-autossh/
