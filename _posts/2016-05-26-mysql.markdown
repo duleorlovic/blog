@@ -86,7 +86,7 @@ layout: post
   alter table operators drop index fk_rails_7bd209f074;
   alter table operators drop column user_id;
   ~~~
-* drop all local databases
+* drop all local databases, use script to run single mysql command
   ```
   mysql -uroot -p<password> -e "show databases" | grep -v Database | grep -v mysql| grep -v information_schema| gawk '{print "drop database `" $1 "`;select sleep(0.1);"}' | mysql -uroot -p<password>
   ```

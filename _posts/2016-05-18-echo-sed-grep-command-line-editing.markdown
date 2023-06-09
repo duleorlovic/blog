@@ -225,7 +225,7 @@ dl `s.match /dl.*dl/m`
   or `+`, like
   `registration_email.html_part.decoded.match(/(http:.*?confirmation.*?)"/)[1]`
   to grab inside first next `"`.
-* to match all occurences yuo can use `"string",scan /(.*?)/`
+* to match all occurences you can use `"string",scan /(.*?)/`
 * to include matching delimiter when spliting in ruby, instead of
   `content.split(/[?.!]/)` we can use a positive lookbehind regular expression
   (i.e. `?<=`) inside a parenthesis capture group to keep the delimiter at the

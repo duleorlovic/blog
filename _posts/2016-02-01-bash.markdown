@@ -987,6 +987,9 @@ HERE_DOC
 sudo systemctl start mongodb
 sudo systemctl status mongodb
 sudo systemctl enable mongodb
+
+# find startup applications
+sudo systemctl list-unit-files | grep mongo
 ~~~
 
 https://datatables.net/development/server-side/php_mongodb

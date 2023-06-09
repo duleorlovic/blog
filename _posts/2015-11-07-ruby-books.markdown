@@ -1637,7 +1637,7 @@ end
 * if you need snake case from class name, you can
 `described_class.name.underscore`. Of you need class from controller name
 `users_controller` you can `controller_name.classify.constantize` which returns
-`UsersController`. Classify uses camellize and singularize ie inflectors
+`UsersController`. Classify uses camelize and singularize ie inflectors
 https://github.com/duleorlovic/rails/blob/master/activesupport/lib/active_support/inflector/methods.rb#L203
 To check if exists use `['my_table'].inject(Object) { |c, n| c.const_defined? n}
 # => true false` source

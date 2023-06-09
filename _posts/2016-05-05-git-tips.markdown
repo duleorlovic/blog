@@ -28,8 +28,9 @@ Get current branch name
 Getting existing git branches to track remote branches:
 
     git push --set-upstream origin my-branch
-    # or set default for all branches
+    # but you can set
     git config push.default current
+    # so you can simply
     git push
 
 Show latest branch ordered by updated time
