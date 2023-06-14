@@ -229,8 +229,14 @@ RSpec.configure do |config|
 end
 ~~~
 
-for fixtures 
+for fixtures
 ```
+RSpec.shared_examples "has_valid_fixture" do
+  it "has a valid fixture" do
+    items = send described_class.table_name
+    expect items.map(&:valid?).all?, (items.reject(&:valid?).map { |c| (c.respond_to?(:name) ? "#{c.name} " : '') + c.errors.full_messages.to_sentence })
+  end
+end
 ```
 
 Some [rspec

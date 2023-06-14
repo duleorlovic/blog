@@ -326,8 +326,11 @@ Remove configuration
 ./config.sh remove --token MY-PROJECT-TOKEN
 ```
 
+
 Create selfhosted container based on docker
 https://dev.to/pwd9000/create-a-docker-based-self-hosted-github-runner-linux-container-48dh
+
+Terraform aws github runner https://github.com/philips-labs/terraform-aws-github-runner
 
 ## Cache
 
