@@ -85,6 +85,8 @@ to find last pull request id
 
 # Github actions
 
+Locally you can push to another user and use git hooks to run tests in separate
+folder, so you can continue working in your folder.
 
 docs
 https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#in-this-article

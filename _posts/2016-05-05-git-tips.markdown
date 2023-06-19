@@ -66,7 +66,7 @@ Git stash only unstaged changes
 
     git stash --keep-index
 
-Git checkout previous branch, last branch
+Git checkout previous branch, last branch, latest branch
 
     git checkout -
 

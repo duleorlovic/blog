@@ -19,6 +19,9 @@ test:system somefile`)
 ~~~
 rails test
 rails test:system
+# sometimes assets are not compiled properly or node is different version so to
+# trigger precompile you should run `rm -rf tmp public && git checkout tmp public`
+# so with `rails test:system` new folder will be created `public/packs-test`
 # invoke test by line
 rails test test/models/article_test.rb:6
 # or name
