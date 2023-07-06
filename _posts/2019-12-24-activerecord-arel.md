@@ -10,6 +10,22 @@ https://www.youtube.com/watch?v=ShPAxNcLm3o&feature=youtu.be
 
 `left_outer_joins` is available in [recent
 rails](https://guides.rubyonrails.org/active_record_querying.html#left-outer-joins)
+but usually you do not need joins.
+For example
+```
+# instead of joins
+  def self.with_approved_picture
+    left_outer_joins(:member_pictures)
+      .where.not("member_pictures.id": nil)
+      .where(member_pictures: { status: MemberPicture.statuses[:approved] })
+      .distinct # since there could be multiple pictures
+  end
+
+# we can write
+  def self.with_approved_picture
+    where id: MemberPicture.approved.select(:member_profile_id)
+  end
+```
 
 Online SQL to Arel [www.scuttle.io](http://www.scuttle.io) EXCELLENT
 Playground https://jpospisil.com/2014/06/16/the-definitive-guide-to-arel-the-sql-manager-for-ruby.html

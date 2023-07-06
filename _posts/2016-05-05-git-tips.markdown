@@ -69,6 +69,8 @@ Git stash only unstaged changes
 Git checkout previous branch, last branch, latest branch
 
     git checkout -
+    # more robust way to reffer prev branch
+    git checkout @{-1}
 
 When you want to undo some commands
 

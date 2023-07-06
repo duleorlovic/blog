@@ -958,6 +958,14 @@ multiple ssh keys to the server. You can limit to only one identity
 ssh -i some_id_rsa -o IdentitiesOnly=yes host
 ~~~
 
+To automatically change folder on remove server you can add `cd folder` in
+remote `.bashrc`, or you can add `command=` in `.ssh/authorized_keys` on remote
+Note that this does not work with umount
+```
+# ~/.ssh/authorized_keys
+command="cd /home/dule/folder ; /bin/bash -l" ssh-rsa AAA....
+```
+
 # Rsyslog
 
 Install
