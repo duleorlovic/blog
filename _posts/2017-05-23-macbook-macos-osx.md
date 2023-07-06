@@ -1168,6 +1168,8 @@ pyenv global 3.9.1
   unmount and mount in one command:
   ```
   umount -f ~/trk; sshfs dule@trk:. ~/trk/ -ocache=no -onolocalcaches -ovolname=ssh
+  # on ubuntu we can use lazy umount because of error umount: /home/dule/trk: target is busy.
+  sudo umount -l ~/trk; sshfs dule@trk:. ~/trk/
   ```
 * you can use Real VNC to connect to ubuntu (just enable Share -> Remove
   desktop) but it shows black screen
