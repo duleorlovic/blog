@@ -352,8 +352,24 @@ steps per milimeter is 83
 
 https://howtomechatronics.com/projects/arduino-cnc-foam-cutting-machine/
 To prepare image you can use https://www.youtube.com/watch?v=ie5SqPaIaBw :
+Similar is https://www.foxalien.com/en-gb/products/foxalien-cnc-machine-hot-wire-cutter-hw40
+and preparing is https://youtu.be/iSNEocVpkKU?t=225
 * gimp : clear background and use right click -> Colors -> Levels and move to
   right input level
+Inscape:
+* for 3D letters nice font name is "Luminari"
+* path difference is first created - second created, to make reverse click on
+  first created and than "Move to top"
+* to cut a path you should duplicate the object (knife) (since it will be
+  removed) and select the object you want to cut and click Path > Cat Path,
+  deselect everything and move the cutted object
+* node on path can be a cornera (independent) or smooth (curve direction handles
+  is on same line, there is also a simetric node) or a line (without curve
+  handles) or a simple line (in this case it is not a curve)
+* to increase object by path you should Path > Stroke to path, Object > Ungroup,
+  Path > Union https://www.youtube.com/watch?v=Sy0nUkUt9CA&t=152s 1mm is enough
+  to stick, you need again to break all circles
+
 
 # Solar food dehydrator
 

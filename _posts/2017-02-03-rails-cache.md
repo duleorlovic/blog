@@ -311,6 +311,21 @@ Date in cache keys since it should be updated (event we do not touch any user)
 <% end %>
 ```
 
+To use simple keys you can
+```
+<% cache "asd", skip_digest: true do %>
+<% end %>
+```
+To find cache key you can use
+```
+old = Rails.cache.redis.keys
+# make a request
+new = Rails.cache.redis.keys
+
+new - old
+["views/asd"]
+```
+
 You can clear cache in rails console : `Rails.cache.clear`, also
 `rake tmp:cache:clear` for rails clear cache
 

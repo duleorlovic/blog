@@ -262,3 +262,11 @@ namespace :db do
     puts "Completed loading #{opts[:database]}"
   end
 ```
+* create a row with
+  ```
+  INSERT INTO table_name(column1, column2) VALUES (value1, value2);
+  # when you are defining all columns
+  INSERT INTO table_name VALUES ("01", value1, value2);
+  # use SET
+  INSERT INTO table_name SET id=2, column1=value1
+  ```

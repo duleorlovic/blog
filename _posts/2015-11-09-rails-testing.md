@@ -58,9 +58,9 @@ Javascript test also rely on precompiled assets so you need to run
 `conig/environments/test.rb` (this could slow down).
 Somehow when running with headless driver than I do not need to precompile
 assets for those js tests (this is when I run `rake`).
-But when I run single test `rspec ./spec/features/my_spec.rb` I need to `rm -rf
-public/assets` (do not know how they appear here) and also `spring stop` so than
-it will use fresh code (not precompiled)
+But when I run single test `rspec ./spec/features/my_spec.rb` I need to trigger
+`rm -rf public/assets` (do not know how they appear here) and also `spring stop`
+so than it will use fresh code (not precompiled). Also check `node -v`
 
 # Rspec
 
