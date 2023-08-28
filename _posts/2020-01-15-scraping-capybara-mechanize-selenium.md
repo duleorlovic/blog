@@ -7,6 +7,8 @@ https://github.com/lorien/awesome-web-scraping/blob/master/ruby.md
 
 # Capybara
 
+**PLEASE MOVE ALL CAPYBARA RELATED TIPS TO https://github.com/duleorlovic/rails_capybara_selenium**
+
 Some of the most used capybara methods
 [link](https://gist.github.com/duleorlovic/042178b92f1badc09490) or [cheat
 sheet](https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf)

@@ -29,7 +29,7 @@ Getting existing git branches to track remote branches:
 
     git push --set-upstream origin my-branch
     # but you can set
-    git config push.default current
+    git config --global push.default current
     # so you can simply
     git push
 
@@ -371,6 +371,11 @@ set option `git config --global diff.submodule log` so you do not need to pass
 `--submodule` attribute every time). Similar for status, you can se `git config
 status.submodulesummary 1` so `git status` will show changes that are done for
 submodules.
+To see actual submodule commit which is commited in main repo
+```
+git log -p my-app
+```
+
 To work inside submodules you need to checkout branch (initially `git submodule
 update` is leaving the subrepository in *detached HEAD* state). After you commit
 you need to push to submodule repo or you can do from superrepository with

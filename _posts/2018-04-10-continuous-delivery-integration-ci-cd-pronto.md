@@ -85,6 +85,8 @@ to find last pull request id
 
 # Github actions
 
+**PLEASE MOVE GITHUB ACTIOONS TO https://github.com/duleorlovic/rails_github_actions**
+
 Locally you can push to another user and use git hooks to run tests in separate
 folder, so you can continue working in your folder.
 
@@ -145,7 +147,7 @@ jobs:
       run: |
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt-get update && sudo apt-get install -y xvfb google-chrome-stable
-    - name: Install dependecies
+    - name: Install dependencies
       run: |
         sudo apt-get -yqq install libpq-dev
         gem install bundler
@@ -290,20 +292,6 @@ There is an error when I use credentials, it seems that for test env no
 credentials are loaded even I commited test key (github ci works fine).
 
 
-Use artifact to debug logs and screenshots
-
-```
-# .github/workflows/testyml
-        bundle exec rails test:system || echo continue
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: my-artifact
-        # https://github.com/actions/upload-artifact#upload-using-multiple-paths-and-exclusions
-        path: |
-          tmp/screenshots/*
-          log/*
-```
 
 ### Self hosted runners
 

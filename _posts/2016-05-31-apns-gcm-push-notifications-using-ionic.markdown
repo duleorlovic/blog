@@ -15,6 +15,13 @@ Register with npm package inside webpacker
 https://firebase.google.com/docs/web/setup#add-sdks-initialize
 
 
+If rpush does not work (ie queued: 123 and not queued: 0), you can restart every day
+```
+0 0 * * * su - ubuntu -c 'cd /home/ubuntu/myapp/current && if ! /home/ubuntu/.rbenv/bin/rbenv exec bundle exec rpush status | grep -q "queued: 0"; then echo `date` restarting because queued is not zero | sudo tee -a /home/ubuntu/myapp/current/log/rpush.log; sudo monit restart rpush;echo restarted; fi' >> /home/ubuntu/myapp/current/log/crontab.log;
+
+```
+
+
 # Old docs
 
 # APNS

@@ -46,8 +46,8 @@ cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e
   controller `static targets = [ 'name' ]`. Beside `this.nameTarget` you can
   check if there are more targets like this `this.nameTargets` or if exists at
   all `this.hasNameTarget` (return true or false)
-  You can use any term, for example `static values = { authorId: String }` and
-  `this.authorIdValue`
+  To pass values you can use `data-hello-author-id-value="my-id"` and `static
+  values = { authorId: String }` and `this.authorIdValue`
 * to access current element on which whole controller is connected you can use
   `this.element`. To access element on which action is triggered you can pass
   the event to the action `hello(event) { event.currentTarget }`

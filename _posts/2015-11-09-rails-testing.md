@@ -1237,6 +1237,8 @@ RSpec.feature "Search recipes", js: true do
 end
 ~~~
 
+For /
+
 # Rspec Helpers
 
 You an define your helpers in separate file and include it in Rspec
@@ -2305,6 +2307,22 @@ Webdrivers::NetworkError: Net::HTTPServerException: 404 "Not Found" with https:/
 ```
 You should upgrade to 5.2.0
 https://github.com/titusfortner/webdrivers/pull/239
+
+For error
+```
+rails c
+Loading development environment (Rails 7.0.6)
+irb(main):001:0> Webdrivers::Chromedriver.update
+/home/dule/.rbenv/versions/3.2.0/lib/ruby/gems/3.2.0/gems/webdrivers-5.2.0/lib/webdrivers/chromedriver.rb:83:in `rescue in latest_point_release': Unable to find latest point release version for 115.0.5790. You appear to be using a non-production version of Chrome. Please set `Webdrivers::Chromedriver.required_version = <desired driver version>` to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html (Webdrivers::VersionError)
+/home/dule/.rbenv/versions/3.2.0/lib/ruby/gems/3.2.0/gems/webdrivers-5.2.0/lib/webdrivers/network.rb:19:in `get': Net::HTTPClientException: 404 "Not Found" with https://chromedriver.storage.googleapis.com/LATEST_RELEASE_115.0.5790 (Webdrivers::NetworkError)
+```
+It means you are using very recent version of chrome which is not yet supported.
+So you can hardcode to latest supported version https://chromedriver.storage.googleapis.com/LATEST_RELEASE for example 114.0.5735.90 so it does not autodetect based on you nightly builded chrome
+```
+# config/initializers/webdrivers.rb
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+```
+
 
 If you really need external requests you can
 
