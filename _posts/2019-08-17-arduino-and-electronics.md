@@ -188,6 +188,19 @@ Pinouts https://lastminuteengineers.com/esp8266-pinout-reference/
 https://randomnerdtutorials.com/esp32-websocket-server-arduino/
 https://randomnerdtutorials.com/esp32-relay-module-ac-web-server/
 
+# ThingsBoard
+
+Start with:
+https://thingsboard.io/docs/paas/getting-started-guides/helloworld/
+Connect to esp8266  https://thingsboard.io/docs/samples/esp8266/gpio/
+
+Use server `thingsboard.cloud` instead of `demo.thingsboard.io`
+
+## Selfhosting
+
+https://thingsboard.io/docs/user-guide/install/ubuntu/
+
+
 ## Arduino cloud
 
 Install iot cloud libraries https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries

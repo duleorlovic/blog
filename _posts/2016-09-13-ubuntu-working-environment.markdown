@@ -340,6 +340,7 @@ and clear cookies.
 
 You can check your domain name resolutions with mxtoolbox.com or domain settings
 with command `nslookup` (dns resolution, dns lookup)
+On web you can check on https://dns.google domain resolution for google
 
 ~~~
 nslookup asd.localhost
@@ -712,6 +713,8 @@ nmap 192.168.3.2
 
 # quick scan all devices, only ping scan
 nmap -sn 192.168.0.0/24
+# fast scan
+nmap -F 192.168.0.0/24
 
 # port scan, very slow
 nmap -Pn 192.168.3.2

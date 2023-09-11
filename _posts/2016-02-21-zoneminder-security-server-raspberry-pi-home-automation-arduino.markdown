@@ -849,3 +849,12 @@ To stream screen recordings you can download
 https://www.tightvnc.com/download.php vnc server (default configuration is
 enough). Run Server in Application Mode.
 
+# Yi IOT camera
+
+https://www.aliexpress.com/item/1005005426848727.html
+
+model number A1214 does not support smart home platform and any of the hacks.
+Other cameras could support hacks like
+https://github.com/roleoroleo/yi-hack-Allwinner-v2
+https://github.com/roleoroleo/yi-hack_ha_integration
+Also Home assistant https://www.home-assistant.io/integrations/yi/

@@ -5,6 +5,14 @@ tags: ruby-on-rails postgresql
 
 # Create
 
+On Mac create `postgres` user
+```
+createuser -s postgres
+# login to database as user
+psql --user postgres
+```
+
+On ubuntu
 ```
 sudo -u postgres psql
 create user myuser with encrypted password 'mypass';
@@ -25,6 +33,14 @@ to do that in bash in one and use `$USER`
 sudo su postgres -c "psql -d postgres -c 'ALTER USER $USER WITH SUPERUSER;'"
 # or
 sudo -u postgres psql -d postgres -c "CREATE USER igor WITH SUPERUSER;"
+```
+
+List all users
+```
+\du
+ Role name |                         Attributes                         | Member of
+-----------+------------------------------------------------------------+-----------
+ postgres  | Superuser, Create role, Create DB                          | {}
 ```
 
 ```

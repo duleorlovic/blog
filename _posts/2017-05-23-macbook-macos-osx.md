@@ -1009,11 +1009,6 @@ ps auxwww | grep postgres
 psql
 ```
 
-Create `postgres` user
-```
-createuser -s postgres
-```
-
 see logs with
 
 ```
@@ -1159,6 +1154,16 @@ pyenv global 3.9.1
   https://github.com/osxfuse/sshfs/releases
 
   also https://github.com/osxfuse/osxfuse/releases
+
+  for error
+  ```
+  mount_macfuse: the macFUSE kernel extension is not loaded
+  ```
+  we need to allow
+  https://github.com/osxfuse/osxfuse/issues/851#issuecomment-1052261655
+   System Preference > Security & Privacy > Privacy > Full Disk Access
+   enable Terminal
+
 
   ```
   sshfs orlovic@main:rails/ ~/rails_main/ -ocache=no -onolocalcaches -ovolname=ssh
