@@ -1161,9 +1161,14 @@ pyenv global 3.9.1
   ```
   we need to allow
   https://github.com/osxfuse/osxfuse/issues/851#issuecomment-1052261655
-   System Preference > Security & Privacy > Privacy > Full Disk Access
-   enable Terminal
+  System Preference > Privacy & Security > Privacy > Full Disk Access
+  enable Terminal
+  and run
+  ```
+  sudo kextunload -b io.macfuse.filesystems.macfuse
+  ```
 
+  Example
 
   ```
   sshfs orlovic@main:rails/ ~/rails_main/ -ocache=no -onolocalcaches -ovolname=ssh
@@ -1179,7 +1184,7 @@ pyenv global 3.9.1
 * you can use Real VNC to connect to ubuntu (just enable Share -> Remove
   desktop) but it shows black screen
   Better is to use native vnc clint from Finder -> Go -> Connect to server or
-  just `open vnc://user@machine`
+  just `open vnc://user@machine` (eg `open vnc://dule@trk`)
   Note that on ubuntu you have to do login in order to unlock Keyring (for
   example f you have autologin enabled you will not be able to connect with VNC,
   it will just ask for password indefinitely, until you open eg Chrome which

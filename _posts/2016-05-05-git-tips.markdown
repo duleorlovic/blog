@@ -136,6 +136,9 @@ To push to heroku without changes, try
 To sort authors by number of commits
 
     git shortlog -e -s -n
+    # last month for each user
+    git log --since="last month" --format='%aN' | sort | uniq -c | sort -n
+
 
 Versioning [SEMVER](http://semver.org/)
 
