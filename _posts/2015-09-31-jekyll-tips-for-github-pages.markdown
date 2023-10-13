@@ -1146,3 +1146,17 @@ Give a ⭐️ if you like this project!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 ```
+
+# Just the docs
+
+* source https://github.com/just-the-docs/just-the-docs
+* documentation https://just-the-docs.com/
+* demo https://just-the-docs.github.io/just-the-docs-template/
+* to use the template go to https://github.com/just-the-docs/just-the-docs-template/generate
+It will be live under username.github.io/reponame but you can set to your domain
+by adding CNAME record with value username.github.io.
+If you receive error "redirected you too many times ERR_TOO_MANY_REDIRECTS than
+enable Full instead of Flexibly encryption on Cloudflare.
+This can be on per host basis
+Note that custom hostname requires to change relative
+

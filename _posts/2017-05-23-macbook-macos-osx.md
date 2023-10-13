@@ -749,6 +749,11 @@ gem install mini_racer -- --with-v8-dir=`brew --prefix v8`
 gem install therubyracer -v '0.12.3' -- --with-v8-dir=`brew --prefix v8`
 ```
 
+Also do cleanup before installing
+```
+gem uninstall --all mini_racer libv8-node
+```
+
 for error
 ```
 checking for -lmysqlclient... no
@@ -780,6 +785,15 @@ ld: library not found for zstd
 I solved https://stackoverflow.com/a/69722047/287166
 ```
 bundle config --local build.mysql2 "--with-opt-dir="$(brew --prefix zstd)""
+```
+For error
+```
+=> Pouring openjdk@11--11.0.20.1.x86_64_linux.bottle.tar.gz
+Error: Too many open files @ rb_sysopen - /home/linuxbrew/.linuxbrew/Cellar/openjdk@11/11.0.20.1/libexec/lib/libjimage.so
+```
+solved
+```
+ulimit -n 8192
 ```
 
 For error
