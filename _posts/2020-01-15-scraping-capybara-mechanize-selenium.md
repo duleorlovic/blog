@@ -512,6 +512,15 @@ update chromedriver to 2.38
 If you see error `SocketError: getaddrinfo: Name or service not known` than make
 sure you have defined localhost `127.0.0.1 localhost` in `/etc/hosts`
 
+For error
+```
+Selenium::WebDriver::Error::SessionNotCreatedError:
+session not created: This version of ChromeDriver only supports Chrome version 114
+Current browser version is 117.0.5938.88 with binary path /usr/bin/google-chrome
+```
+you should remove webdrivers gem and use latest selenium-webdriver
+
+
 If you see error `Selenium::WebDriver::Error::StaleElementReferenceError: stale
 element reference: element is not attached to the page document` it could be
 that element was removed, page reloaded in javascript, or when you use `within

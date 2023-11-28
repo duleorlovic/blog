@@ -87,6 +87,15 @@ Version string `"Version": "2012-10-17"` should not be changed.
 On s3 you can leave checked `Block public access` but you have to enable cors if
 you have javascript upload.
 
+If you upload images using default rails amazon storage, then each image will
+first go to the server and server returns amazon url with temporary public
+access.
+If you want to use direct public url than create another storage with `public:
+true` and also enable public access (uncheck "Block all public
+access") and ACLs enabled (otherwise "The bucket does not allow ACLs" error) so
+the uploaded image can be accessible using direct link (no redirection from
+server is needed anymore).
+
 CORS
 
 When you upload files using action storage ie [directly on S3](

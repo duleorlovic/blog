@@ -1031,8 +1031,9 @@ https://github.com/heroku/heroku-buildpack-nodejs
 For nodejs buildpack you can define version in package.json. When deploying
 Ruby, it will use latest nodejs and this `engines` property will be ignored.
 ```
+# package.json
   "engines": {
-    "node": "10.x"
+    "node": "14.x"
   }
 ```
 

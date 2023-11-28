@@ -4446,3 +4446,7 @@ def self.initialize_fixture_blob
   )
 end
 ```
+* contact form should use recaptcha but also check for the content
+  ```
+  asd
+  ```

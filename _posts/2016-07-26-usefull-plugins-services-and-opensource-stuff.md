@@ -506,10 +506,11 @@ $(document).on 'ready page:load', ->
       </div>
 ```
 
-# Rich text editors wyswyg
+# Rich text editors wysiwyg
 
 list:
 
+* <https://summernote.org/>
 * <http://wagn.org> wiki with cards with editor
 * <https://beefree.io/>
 * [fireEdit](https://github.com/coltaemanuela/FireEdit)

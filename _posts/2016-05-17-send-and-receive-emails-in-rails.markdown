@@ -404,12 +404,10 @@ If you are using catch all route than add those lines
   match '*a', to: 'home#routing_error', via: [:get, :post]
 ```
 
-Add authentication
+Add authentication to mailer preview
 ```
 # config/initializers/mailer_preview.rb
-# https://stackoverflow.com/questions/60934362/rails-6-actionmailer-previews-and-http-basic-authentication
-# https://stackoverflow.com/a/39399116/287166
-class ::Rails::MailersController
+class Rails::MailersController
   before_filter :_authenticate_admin!
   def _authenticate_admin!
     redirect_to root_path, alert: 'Only admin' unless current_admin_user.present?
