@@ -53,7 +53,7 @@ layout: post
 * change root password:
 
   ~~~
-  sudo /etc/init.d/mysql stop
+  sudo /etc/init.d/mysql stop # macos: sudo mysql.server stop
   sudo mysqld --skip-grant-tables &
   mysql -u root mysql
   UPDATE user SET authentication_string=PASSWORD('dule') WHERE user='root' AND host = 'localhost';

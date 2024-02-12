@@ -23,6 +23,7 @@ Push branch and track
 
 Get current branch name
 
+    git branch --show-current
     git symbolic-ref --short HEAD
 
 Getting existing git branches to track remote branches:

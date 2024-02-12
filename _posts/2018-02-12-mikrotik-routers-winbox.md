@@ -2,32 +2,6 @@
 layout: post
 ---
 
-I got Router Board [rb 750 gr3](https://mikrotik.com/product/RB750Gr3) with 16MB
-RAM in flash.
-
-# Winbox on Wine
-
-There is also a snap package `winbox` but here are instructions for old ubuntu:
-
-<https://wiki.winehq.org/Ubuntu>
-
-~~~
-sudo dpkg --add-architecture i386
-wget -nc https://dl.winehq.org/wine-builds/Release.key
-sudo apt-key add Release.key
-sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
-sudo apt-get update
-sudo apt-get install --install-recommends winehq-stable
-~~~
-
-Run `winbox.exe` in wine and download plugins. Click on tab `Neighbors` and when
-it finds it, use Login: admin and empty password.
-I'm using WinBox v3.12.
-
-On router there is RouterOS.  To upgrade, download routeros
-https://mikrotik.com/download for your specific archicteture and drag and drop
-(works in wine) to "Files" (it will appear on root) and simply reboot.
-I'm using RouterOS v6.41.2
 
 You can connect to terminal using Winbox or using ssh (look below for how to
 connect to mikrotik)
@@ -540,6 +514,7 @@ using static IP addresses.
 
 # Connect to Mikrotik
 
+You can use web interface http://192.168.88.1/webfig/
 You can FTP to Mikrotik `ftp 192.168.5.1` (username `admin` and blank password).
 
 ~~~
@@ -1102,3 +1077,8 @@ https://github.com/astounding/mtik/
   add bridge=bridge interface=ether4
   add bridge=bridge interface=ether5
   ```
+
+# OpenWRT
+
+We have old router
+https://openwrt.org/toh/asus/rt-n15u

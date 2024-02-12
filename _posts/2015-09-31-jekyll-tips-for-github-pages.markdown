@@ -732,6 +732,7 @@ highlight ruby %}`, `{{ '{%' }} highlight bash %}`
 
 * inline and block html elements
   ```
+  We have old router
   <div class='pull-right'>
     Text right
   </div>

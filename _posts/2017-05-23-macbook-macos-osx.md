@@ -19,7 +19,6 @@ System preferences -> Keyboard -> Modifier Keys -> Globe key -> ^Control
 
 Xkill on macOS is Force Quit Applications which can be started with ⌘ ⌥ Esc
 
-
 To start inserting emoji use: Control + Command + Space
 
 https://support.apple.com/en-gb/HT201236
@@ -27,6 +26,14 @@ https://support.apple.com/en-gb/HT201236
 In any window, or shell, you can:
 * `⌘ n` new window
 * `⌘ t` new tab, `⌘ w` close tab
+* `⌘ ,` cmd + comma, open preferences, I have remaped this to `⇧⌘,` shift cmd
+  comma since I use cmd + jklm,. for quick window navigations
+
+Another interesting keyboard shortcut is `⌥ ⌘` option + cmd and double click on
+the icon in Applications folder, it works for Photos app and it shows: "Repair
+Library", "You are about to repair the library 'Photos Library'".
+
+
 
 From System Preferences -> Keyboard -> Shortcuts
 * Spotlight
@@ -1026,9 +1033,12 @@ psql
 see logs with
 
 ```
+cat /opt/homebrew/var/log/postgresql@14.log 
 pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
 # upgrade datatabases
 rm -rf /usr/local/var/postgres && initdb /usr/local/var/postgres -E utf8
+# or if you have multiple versions you need to initialize specific version
+initdb /opt/homebrew/var/postgresql@14
 ```
 
 # Docker
@@ -1215,3 +1225,6 @@ pyenv global 3.9.1
   Protocol` should be checked)
 
 * airdrop store files in Downloads
+* disable popup "Do you want to enable Dictation? To start dictacting press or
+  choose start dictation from the edit menu" by going to System Preferences >
+  Keyboard > Dictation tab change keyboard shortcut
