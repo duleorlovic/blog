@@ -14,9 +14,9 @@ layout: post
   SELECT User FROM mysql.user;
   ```
 
-* grant access to specific db
+* grant access to all db
   ~~~
-  GRANT ALL PRIVILEGES ON mydb. * TO 'newuser'@'%' IDENTIFIED BY 'mypass';
+  GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'%';
   FLUSH PRIVILEGES;
   ~~~
 
@@ -56,7 +56,7 @@ layout: post
   sudo /etc/init.d/mysql stop # macos: sudo mysql.server stop
   sudo mysqld --skip-grant-tables &
   mysql -u root mysql
-  UPDATE user SET authentication_string=PASSWORD('dule') WHERE user='root' AND host = 'localhost';
+  ALTER USER 'root'@'localhost' IDENTIFIED BY 'dule';
   FLUSH PRIVILEGES
   ~~~
 
@@ -175,6 +175,19 @@ layout: post
       - run: |
           sudo /etc/init.d/mysql start
   ```
+  or to change socket location to match app configuration, eg in
+  ```
+  # /etc/mysql/mysql.conf.d/mysql.cnf
+  [mysql]
+  socket  = /tmp/mysql.sock
+  ```
+  and
+  ```
+  # /etc/mysql/mysql.conf.d/mysqld.cnf
+  [mysqld]
+  socket  = /tmp/mysql.sock
+  ```
+  and restart `sudo service mysql restart`
 * show all datatabases (schemas)
   ```
   SHOW DATABASES;
@@ -270,3 +283,49 @@ namespace :db do
   # use SET
   INSERT INTO table_name SET id=2, column1=value1
   ```
+
+* error for mysql 8.3 on macos is
+```
+client.c:1318:3: error: call to undeclared function 'mysql_ssl_set'; ISO C99 and later do not support implicit function declarations
+[-Wimplicit-function-declaration]
+```
+solution is to downgrade and force with
+`brew link mysql@8.0 --force`
+https://github.com/feast-dev/feast/issues/3916#issuecomment-1931711571
+```
+brew uninstall mysql
+brew install mysql@8.0
+We've installed your MySQL database without a root password. To secure it run:
+    mysql_secure_installation
+
+MySQL is configured to only allow connections from localhost by default
+
+To connect run:
+    mysql -u root
+
+mysql@8.0 is keg-only, which means it was not symlinked into /opt/homebrew,
+because this is an alternate version of another formula.
+
+If you need to have mysql@8.0 first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"' >> /Users/dule/.bash_profile
+
+For compilers to find mysql@8.0 you may need to set:
+  export LDFLAGS="-L/opt/homebrew/opt/mysql@8.0/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/mysql@8.0/include"
+
+For pkg-config to find mysql@8.0 you may need to set:
+  export PKG_CONFIG_PATH="/opt/homebrew/opt/mysql@8.0/lib/pkgconfig:/opt/homebrew/opt/zlib/lib/pkgconfig"
+
+To start mysql@8.0 now and restart at login:
+  brew services start mysql@8.0
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/mysql@8.0/bin/mysqld_safe --datadir\=/opt/homebrew/var/mysql
+
+brew link mysql@8.0 --force
+```
+note that you need to have mysql in your PATH
+```
+export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
+# or permanently
+echo 'export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"' >> /Users/dule/.bash_profile
+``

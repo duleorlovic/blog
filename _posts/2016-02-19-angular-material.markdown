@@ -20,7 +20,7 @@ tags: css angular
 * [md-autofocus](https://material.angularjs.org/1.0.4/api/directive/mdAutofocus)
   is nice tool to save users clicks, just add to attribude like `<input
   md-autofocus="!vm.menuItem.name">`. It works ONLY on `$mdDialog`,
-  `$mdBottomSheet` and `$mdSidenav`
+  `$m@import "mdb5-free-standard/css/mdb.min.css"dBottomSheet` and `$mdSidenav`
 
 * [md-select](https://material.angularjs.org/latest/api/directive/mdSelect) and
   `md-option` should have values inside quotes like

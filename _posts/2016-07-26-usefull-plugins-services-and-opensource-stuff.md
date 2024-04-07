@@ -12,6 +12,9 @@ https://github.com/awesome-selfhosted/awesome-selfhosted#ticketing
 
 * https://cantunsee.space/ practice tests design details css question answer
   pick better solution left or right
+* similar to design questions, here is examples of do and donts
+  https://material-minimal.com/learn/design-hacks/tips-and-tricks/
+  also tutorial https://mdbootstrap.com/learn/mdb-foundations/basics/introduction/
 * tailwind questions https://twwordle.hyperui.dev/?
 * [fastclick](https://github.com/ftlabs/fastclick)
 * [zeroclipboard](https://github.com/zeroclipboard/zeroclipboard) to copy some

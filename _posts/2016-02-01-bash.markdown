@@ -478,7 +478,7 @@ https://qutebrowser.org/doc/quickstart.html
 * left(right) tab `J` (`K`), back (forth) in history `H` (`L`)
 * `d` close tab (`u` undo closing tab)
 * `wi` toggle web developers tools
-* ``
+* `o` open link, `O` in new tab, `go` edit current link
 
 # Tar
 
@@ -1257,8 +1257,9 @@ kill current `c-a k`, kill all with `c-a \`.
 * create new window `c-a c` and switch to it using `c-a 1`, list all
 windows `c-a "` you can switch to it by jk and enter, show window bar `c-a w`,
 go to next/prev window `c-a p` or `c-a <space>`
-* split `c-a |` and move to that region `c-a <tab>`
-    * `c-a [` (or `c-a <esc>`) to go to copy mode, press space or enter to mark and
+* split `c-a |` and move to that region `c-a <tab>`, close all splits except
+current `c-Q`
+* `c-a [` (or `c-a <esc>`) to go to copy mode, press space or enter to mark and
 `c-a ]` to paste
 * since screen will catch ctrl+c so to get to shell in window where some process
   is running you can use ctrl+z to move it to background (move to foreground

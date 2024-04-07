@@ -520,7 +520,13 @@ Mandrill:
 * create rules that match api and hooktype and send it to webhook
 
 authentication
-http://www.openspf.org/SPF_Record_Syntax
+
+You should add an IP address or domain from which you will send email so
+receiving server can check if you authorized them to deliver
+https://www.cloudflare.com/en-gb/learning/dns/dns-records/dns-spf-record/
+```
+v=spf1 include:_spf.google.com ~all
+```
 
 Feedback Loop is in a header and some clients enable them
 http://www.list-unsubscribe.com/

@@ -49,6 +49,11 @@ anyting in HTTP proxy... For Chrome or another connections you can use system
 wide Ubuntu Settings -> Network -> Network Proxy -> Method: Manual -> Socks Host
 localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
 than I can access cameras http://192.168.1.3:81/zm
+You can start chromium with those settings and hosts from remote machine will be
+used
+```
+chromium --proxy-server="socks5://127.0.0.1:1080"
+```
 For `curl` you need to export variable
 ```
 export https_proxy=socks5://localhost:1080 http_proxy=socks5://localhost:1080
@@ -720,6 +725,13 @@ nmap -F 192.168.0.0/24
 nmap -Pn 192.168.3.2
 ```
 
+## Network
+
+Find mac address
+```
+ip link
+```
+
 To start service on boot use
 
 ```
@@ -975,4 +987,12 @@ sudo loginctl list-seats
   value and pick "password"
   To enable locked users to connect you can use extension
   https://extensions.gnome.org/extension/4338/allow-locked-remote-desktop/
-  TODO still black screen when I connect from Vnc Viewer from mac
+  When you see black screen when you connect from Vnc Viewer from mac, than
+  go to Vnc Connection > Properties > Picture quality > High or Medium (not
+  Automatic)
+* on ubuntu you can simulate cpu usage load
+```
+sudo apt install stress
+stress --cpu 2 --timeout 300
+```
+* fzf https://github.com/junegunn/fzf?tab=readme-ov-file

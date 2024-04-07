@@ -674,6 +674,26 @@ To start mysql server you can run
 ```
 mysql.server start
 ```
+For error
+```
+Starting MySQL
+. ERROR! The server quit without updating PID file (/opt/homebrew/var/mysql/air.local.pid).
+```
+try to reinstall
+https://stackoverflow.com/a/36156848
+
+```
+brew remove mysql@8.0
+brew cleanup
+launchctl unload -w ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+rm ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+sudo rm -rf /opt/homebrew/var/mysql
+
+brew install mysql@8.0
+mysqld --initialize --explicit_defaults_for_timestamp
+mysql.server start # no sudo!
+```
+
 To find location of mysql config files
 
 ```
@@ -1215,8 +1235,9 @@ pyenv global 3.9.1
   will ask you to unlock keyring).
   One solution is to set empty Login password
   https://linuxconfig.org/how-to-disable-keyring-popup-on-ubuntu Search for
-  Passwords > right click on Login > insert current password > insert blank
-  password and confirm blank password. Now you do not need to unlock keyring.
+  application (not inside Settings) Passwords and Keys > right click on Login >
+  Insert current password > insert blank password and confirm blank password.
+  Now you do not need to unlock keyring.
   When vnc password is changed, than you will get error `Authentication failed
   to "trk"`. I do not know how to clear saved passwords for Finder.
   Another case when `Authentication failed` is when you restart but ubuntu but
@@ -1228,3 +1249,6 @@ pyenv global 3.9.1
 * disable popup "Do you want to enable Dictation? To start dictacting press or
   choose start dictation from the edit menu" by going to System Preferences >
   Keyboard > Dictation tab change keyboard shortcut
+* install chroimum browser `brew install chromium --no-quarantine` (without no
+  quarantine there is an error `“Chromium” is damaged and can’t be opened. You
+  should move it to the Bin. `
