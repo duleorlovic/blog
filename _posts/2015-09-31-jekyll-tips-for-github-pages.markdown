@@ -74,6 +74,23 @@ serverd under HTTP. To enable HTTPS for custom domains you can try
 [cloudflare](https://www.cloudflare.com/) but recently, all github pages are
 enypted with free <https://letsencrypt.org/> certificate.
 
+## Do not leave dns record to github without domain validation
+
+What happened to me is that I leave CNAME record openfoodnetwork.trk.in.rs to
+point to github kulakajak.github.io but did not use custom domain on github
+pages and attacker used same domain to serve his website.
+I found because I received email that attacker added account on
+google search console for my domain
+```
+New owner for http://openfoodnetwork.trk.in.rs/
+
+To owner of trk.in.rs,
+
+Google has identified that hoshi.zora.1804126@students.um.ac.id has been added as an owner of http://openfoodnetwork.trk.in.rs/.
+```
+
+openfoodnetwork.trk.in.rs
+
 # Cloudflare
 
 Adding CNAME on root domain is possible, it is calling CNAME Flattening.
