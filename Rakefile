@@ -5,9 +5,9 @@
 #
 # Rquire jekyll to compile the site.
 require "jekyll"
-require 'tmpdir'
+require "tmpdir"
 
-task :default => "blog:publish"
+task default: "blog:publish"
 # Github pages publishing.
 namespace :blog do
   #
@@ -24,7 +24,7 @@ namespace :blog do
   task :publish do
     # Compile the Jekyll site using the config.
     Jekyll::Site.new(Jekyll.configuration({
-      "source"      => ".",
+      "source" => ".",
       "destination" => "_site",
       "config" => "_config.yml"
     })).process
