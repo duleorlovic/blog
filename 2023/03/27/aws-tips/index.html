@@ -1,0 +1,2183 @@
+<h1 id="aws-devops-skillbuilder">AWS Devops skillbuilder</h1>
+
+<p>Browse courses on https://explore.skillbuilder.aws/learn You can log in with AWS
+Partner or AWS account.</p>
+
+<p>Note that links on left menu contains signature so anyone with the link can
+watch your videos and update your progress :)
+Completed:</p>
+
+<p>acloud.guru completed courses</p>
+<ul>
+  <li>Introduction to AWS https://learn.acloud.guru/course/intro-to-aws</li>
+  <li>TODO: Mastering the AWS Well-Architected Framework https://learn.acloud.guru/course/aws-well-architected-framework/dashboard</li>
+  <li>TODO: AWS Certified SysOps Administrator - Associate https://learn.acloud.guru/course/aws-certified-sysops-admin-associate/dashboard</li>
+</ul>
+
+<p>udemy.com courses</p>
+<ul>
+  <li>Ultimate AWS Certified SysOps Administrator Associate 2022 https://www.udemy.com/course/ultimate-aws-certified-sysops-administrator-associate/</li>
+  <li>Practice Exams: AWS Certified SysOps Administrator Associate https://www.udemy.com/course/practice-exams-aws-certified-sysops-administrator-associate/</li>
+</ul>
+
+<p>To test on AWS you can create new Organizations asd@email.com so the test does
+not affect much (except billing:) your account. Your account is management
+account and all other accounts (member accounts) can only be part of one
+organization. Benefits: volume discount, shared reserved instances and savings
+plans discounts across accounts. Each Organization Units OU is separated VPC,
+but we can establish single CloudTrail logs.
+Service Control Policies SCP are policies for memeber accounts (management
+account is not affected by scp) can be used to deny services to other OUs.
+In IAM policy you can use <code class="language-plaintext highlighter-rouge">aws:PrincipalOrgId</code> to allow principals from any OU.</p>
+
+<p>User Control tower service to automate setup of multi account aws with a best
+practices, govern a secure and compliant multi-account environment. It runs on
+top of AWS Organizations. Detect policy violations and remediate them.</p>
+
+<p>After you sign in as root (username is asd@email.com), create IAM account alias
+trkasd so all IAM users can log in on
+https://trkasd.signin.aws.amazon.com/console
+You should enable MFA (you can do in emulator by installing Google Authenticator
+and inserting security code)
+create IAM user with AdministratorAccess and use that
+IAM user for all following tasks (create other IAM users, instances…)</p>
+
+<h1 id="aws-cli">Aws cli</h1>
+
+<p>https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+Install on ubuntu with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo aws/install
+</code></pre></div></div>
+<p>and you can configure default credentials with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws configure
+AWS Access Key ID
+</code></pre></div></div>
+<h1 id="billing">Billing</h1>
+
+<p>Use consolidated billing for Aws Organizations to see combined usage, share
+volume pricing discount, receive single bill for multiple accounts.
+You should enabled Budget alerts on
+https://us-east-1.console.aws.amazon.com/billing/home#/budgets/overview
+so you receive email when forecasted cost is greater than for example $10.
+First two budgets are free.
+Similar to Cloudwatch Billing alerts (available only on us-east-1, deprecated
+since it is only using actual spend) but more granular, and can filter by
+service, by tags, and alerts by forecasted cost.</p>
+
+<p>You can enable Cost Allocation Tags so when you tag resources, you can filter by
+those tags in Cost Explorer. By default you can use group by dimension Service,
+but you can also group by Cost allocation tag. You can filter also.
+Cost and Usage Reports are most comprehensive set of AWS cost and usage data
+available. AWS Compute Optimizer used to reduce cost and improve perfomance.</p>
+
+<h1 id="iam-identity-and-access-management">IAM Identity and access management</h1>
+
+<p>https://explore.skillbuilder.aws/learn/course/479/play/1367/aws-identity-and-access-management-architecture-and-terminology
+https://explore.skillbuilder.aws/learn/course/internal/view/elearning/120/introduction-to-aws-identity-and-access-management-iam</p>
+
+<p>AWS re:Invent 2016: Become an AWS IAM Policy Ninja in 60 Minutes or Less
+(SAC303) https://www.youtube.com/watch?v=y7-fAT3z8Lo</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html
+{
+  "Version": "2012-10-17", # use 2012-10-17 version to use policy variables like ${Account}
+  "Statement": [
+    {
+      "Effect": "Allow", # Allow or Deny
+      "Action": [ # this could we "*" or array
+        "iam: ChangePassword",
+        "iam: GetUser"
+      ]
+      "Resource": "arn:aws:iam::123456789012:user/${aws:username}" # object that statement covers
+      "Condition": {"IpAddress": {"aws:sourceIp":"192.0.2.0/24"}}
+    }
+  ]
+}
+</code></pre></div></div>
+
+<p>Evaluation logic: assumes Deny, if there is explicit Deny than it stops, if
+there is allow for that resource/action than it Allow, otherwise it Deny
+(impliciy deny).</p>
+
+<p>Two types of policy:
+https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_access-management.html#intro-access-resource-based-policies</p>
+<ul>
+  <li>Identity policy (policy attached to IAM identities: user, group, role) grant
+only the actions your identity uses. Does not have principal property (who can
+assume this role) since it is attached to identity. Defines what actions on
+what resource is allowed.</li>
+  <li>Resource-based policy: permission policy attach to a resource, like S3 or IAM
+role trust policy. What action a specified principal can perform on that
+resource and under what conditions. You can enable cross account access by
+specifing entire account or iam entities in another account as principal.</li>
+</ul>
+
+<p>Video on “Role-Based Access in AWS”
+Role is assummed programmatically and credentials are temporary and
+automatically rotated (they do not have username and passwords).
+Only IAM Role can have two policies: resource policy and one for principal.
+Role defines Trust policy (which Principal can assume the role)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "action": ["sts:AssumeRole"],
+  "Principal": {"Service": "ec2.amazonaws.com"},
+
+  "Principal": {"AWS": "arn:aws:iam::123123123123:user/test"}, # assume user
+  "Principal": {"AWS": "123123123123"}, # assume account
+
+  "Principal": {"Federated": "arn:aws:iam::123123123123:sampl-provider/ADFS"},
+}
+</code></pre></div></div>
+<p>and Permission policy (what permissions the role can perform).</p>
+
+<p>Resource-based policy is used on S3 bucket, SNS topic, SQS queue, KMS key</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "Statement": [{
+    "Principal": {"AWS":["arn:aws:iam:123123123123"root]},
+    "Effect": "Allow",
+    "Action":["s3":"PutObject"],
+    "Resource":"arn:aws:S3:::exampleBucket/*"
+  }
+}
+</code></pre></div></div>
+<p>To allow access for all users under one account</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     "Principal": {
+        "AWS": "*"
+      },
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceOwner": "121153076256"
+        },
+        "DateGreaterThan": {
+          "aws:CurrentTime": ["2020-11-11T00:00:00z","2022-11-12T00:00:00z"]
+        }
+</code></pre></div></div>
+
+<p>Principal is entity (root user, IAM user, or role) actor, can perform action or
+access resources.
+Action is list of API actions. You can use wild cards <code class="language-plaintext highlighter-rouge">?</code> for single char, <code class="language-plaintext highlighter-rouge">*</code>
+for multiple characters like <code class="language-plaintext highlighter-rouge">"Action": "iam:*AccessKey*"</code> for all
+create/delete/list/update AccessKey apis.
+<code class="language-plaintext highlighter-rouge">NotAction</code> is used for exclusion (it is not <code class="language-plaintext highlighter-rouge">Deny</code> since other part of policy
+can allow it, very different from case when other part is explicitly <code class="language-plaintext highlighter-rouge">Deny</code>).
+Conditions all must match <code class="language-plaintext highlighter-rouge">AND</code>, with some value from array <code class="language-plaintext highlighter-rouge">OR</code>.
+Variables: <code class="language-plaintext highlighter-rouge">${aws:username}</code>.</p>
+
+<p>To restrict access you can use:</p>
+<ul>
+  <li>AWS Organizations service control policy SCPs guardrails restrict except for
+admins</li>
+  <li>IAM permissions boundaries: developers can manage roles safely</li>
+  <li>VPC endpoint policies</li>
+  <li>Block public access BPA</li>
+</ul>
+
+<p>ARN format: arn:partition:service:region:account-id:resourcetype/resource</p>
+<ul>
+  <li>arn:aws:iam::123123123123:user/Bob</li>
+</ul>
+
+<p>You can use Access Analyzer to make least privilege permissions. Access Analyzer
+helps you identify the resources in your organization and accounts, such as
+Amazon S3 buckets or IAM roles, shared with an external entity. This lets you
+identify unintended access to your resources and data, which is a security risk.
+https://aws.amazon.com/iam/features/analyze-access/</p>
+
+<p>Instead of writting policy to each user, you can write policy for a group and
+use policy variables in <code class="language-plaintext highlighter-rouge">Resource</code> or in string comparisons in <code class="language-plaintext highlighter-rouge">Condition</code>
+element, for example access to their home folder under mybucket.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": ["s3:ListBucket"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::mybucket"],
+      "Condition": {"StringLike": {"s3:prefix": ["${aws:username}/*"]}}
+    },
+    {
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::mybucket/${aws:username}/*"]
+    }
+  ]
+}
+</code></pre></div></div>
+
+<p>You can use S3 Batch operations to add tags or copy
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/batch-ops-iam-role-policies.html
+After creating a role, you should start creating a batch job.
+When you run a job, if there is <code class="language-plaintext highlighter-rouge">Not available</code> Total objects listed in
+manifest, than you should check permissions.</p>
+
+<p>AWS IAM is a service to securely manage access to aws account services and
+resources. Amazon Cognito manages identity inside applications, federate sign-in
+using OIDC or SAML, or social sign in like Facebook
+Identity Federation lets users outside of AWS to assume temporary role. Identity
+is stored on 3rd party authentication LDAP, Open ID, Cognito, SAML (Active
+Directory). Do not need to create AWS users, and no need to manage them.
+Custom Identity Broker Application can asks AWS Security Token Service STS for
+security credentials (we need to determine appropriate IAM policy).
+AWS Cognito - Federated Identity Pools for Public applications, goal is to
+provide direct access to AWS Resources from the Client side: Log in to
+FB than use that token to login to FIP federated identity provider (verify token
+and ask STS for credentials and send back temp aws credentials back from the
+federated identity pool (credentials are with pre defined iam policy)
+STS gives the following API:
+AssumeRole (your own account, or cross account - grant permissions on both iam
+accounts: one in UpdateApp role to grant accountA access to productionB S3
+bucket, and another is grant accountA to assume UpdateApp role.
+AssumeRoleWithSAML,
+AssumeRoleWithWebIdentity (fb) deprecated, so use Cognito.</p>
+
+<p>Cognito User Pools CUP, serverless database of users for your web and mobile
+apps, reset password, auth with fb, login send back a JWT token. Integration
+with AWS API Gateway, also with ALB.
+Cognito Identity Pools (Federated Identities) CIP when there are too many users
+or when there age guest users, we can not create IAM. We define default policy
+based on user_id using policy variables.
+CUP is for managing user/password, CIP is access to AWS services.</p>
+
+<p>AWS IAM Identity center (successor to aws single sign-on sso deprecated),
+workforce authentication and authorization. One login to multiple aws accounts,
+business cloud applications (salesforce) and even ec2 windows instance.
+Attribute-based Access Control ABAC define permissions once and than modify
+access by changing the attributes (tags) in IAM Identity Center Identity Store</p>
+
+<h1 id="vpc">VPC</h1>
+
+<p>Videos:
+components of vpc https://youtu.be/LX5lHYGFcnA?t=2921
+https://explore.skillbuilder.aws/learn/course/206/play/7823/subnets-gateways-and-route-tables-explained</p>
+
+<p>To create VPC you need to decide: Region where it is provisioned, IP range
+(CIDR Classless Inter Domain Routing) for example 10.10.0.0/24 ie 10.10.0.x ip
+addressing with mask 255.255.255.0. 192.168.1.1/32 is just one ip. /0 is all ips
+IANA established that 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16 are going to
+be used as private ip addresses in local LAN (you should not use other ip addr).
+VPC default ip addresses:</p>
+<ul>
+  <li>10.10.0.0/24 is too small since only 256 ip addresses 10.10.0.x available</li>
+  <li>172.16.0.0/12: from 172.16.0.0 to 172.31.255.255, this was default before</li>
+  <li>172.31.0.0/16 is now a default VPC cidr created automatically when account is
+created (also the igw, route table with local route and route to igw, nacl).
+For its subnets default is /20 172.31.0.0/20 networks are 172.31.16.0/20
+172.31.32.0/20 172.31.48.0/20…  20 * 1=11111111.11111111.1111xxxx so subnets
+increases by 10000b=16, 32, 48, 64, 80
+VPC are limited to a region (eu-west-1) but stretch across all Availability
+Zones AZs (eu-west-1a, eu-west-1b and eu-west-1c). In each AZ we define subnet.
+Subnets can be Private or Public and are limited to a single AZ. Subnet is a
+place where we deploy instances and databases.</li>
+</ul>
+
+<p>To create a subnet, you need VPC, Availability zone AZ and IP range for subnet,
+for example 10.10.1.0/24.
+Usually you create two subnets (in two different AZ) second is 10.10.2.x
+To add connection, you need to create Internet gatwway IGW and attach to VPC.
+Internet gateway IGW is device in VPC. You need to create if not exists.</p>
+
+<p>Route tables are defining how to route traffic in subnets.
+Determination which subnet is private and which is public is inside route
+table. For public we need to create new route table, add route with destination
+<code class="language-plaintext highlighter-rouge">0.0.0.0/0</code> and target IGW, and associate with subnet.</p>
+
+<p>5 IPs are un-usable reserved .0 (network) .1 (gateway) .2 (dns) .3 (future) .255
+(broadcast) http://jodies.de/ipcalc?host=192.168.0.5&amp;mask1=26&amp;mask2=
+so if you need 28 ip address you can not choose /27 (it is 32-5=27 addresses)</p>
+
+<p>You can see inside instance in 10.10.1.0/24 subnet that local IPs are not using
+gateway (gateway 0.0.0.0 which means to connect directly) but other IPs like
+8.8.8.8 are going to gateway on <code class="language-plaintext highlighter-rouge">.1</code> address.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># check routes on the server, flags Up, Gateway, Host
+route -n
+Destination      Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0          10.10.1.1       0.0.0.0         UG    0      0        0 eth0
+10.10.0.2        10.10.1.1       255.255.255.255 UGH   100    0        0 eth0
+10.10.1.0        0.0.0.0         255.255.255.0   U     100    0        0 eth0
+10.10.1.1        0.0.0.0         255.255.255.255 UH    100    0        0 eth0
+</code></pre></div></div>
+
+<p>This table is the same for private instances (you need to temporary assign
+route table with IGW to run <code class="language-plaintext highlighter-rouge">sudo apt install net-tools</code>). As long as IGW route
+is assigned you can ping external IPs  <code class="language-plaintext highlighter-rouge">ping 8.8.8.8</code>.
+To ping local resources you need to add <code class="language-plaintext highlighter-rouge">All ICMP - IPv4</code> from <code class="language-plaintext highlighter-rouge">0.0.0.0</code> to
+security group used for those instances.
+Alternativelly, you can use nmap with <code class="language-plaintext highlighter-rouge">-Pn</code> (threat all as online) or <code class="language-plaintext highlighter-rouge">-sn</code>
+(ping scan, note that it does not discover instances when used with <code class="language-plaintext highlighter-rouge">-</code>, only
+direct ip) for example to find all:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmap -sn 10.1.3.22
+nmap -Pn 10.1.3.22
+nmap -Pn 10.1.3.-
+nmap -Pn 10.1.1-3.-
+nmap -Pn 10.1.0.0/16
+</code></pre></div></div>
+
+<p>Subnets define sub-networks that must be ip range of VPC, for example if VPC
+is 10.3.0.0/16 than subnets can be /17 …/24… for example 10.3.1.0/24
+(10.5.0.0/24 is not part of the VPC network 10.3.0.0/16)</p>
+
+<p>Subnet is associated with route table, so when EC2 instance inside it wants to
+communicate to internet outband, route table should contain IGW along with
+default local entry (private subnet are not associated to route table which has
+entry with IGW).
+0.0.0.0/0 means any IP address.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># route table for public subnet
+10.10.0.0/16  Local
+0.0.0.0/0    IGW (Internet Gateway)
+</code></pre></div></div>
+<p>Inter subnet communications is possible because we use routes from VPC.</p>
+
+<p>EC2 instance can use Elastic IP (static public IP address) to be able to get
+inbound internet connections. Elastic is assigned to Elastic Network Interface
+ENI (ENI is attached to EC2 instance).
+You can use public ip addresses (no need to be static) but check “Auto assign
+public IP” before you start instance since later you can not change that (and
+instance can not get new ip address).
+Note that even instance contains Public Ip Address but resides in subnet which
+is not associated with route table that goes to IGW, you can not connect to it
+outsite, and when you connect using bastion, you do not have access to internet
+from the instance.</p>
+
+<p>By default, in (private) subnet, instance can not connect to internet.
+AWS managed Network Address Transation gateway service (NAT-GW) enables EC2
+instances in private subnet to connect to internet outband. So here is route
+table for private subnet to point to NAT-GW which is in public subnet so it can
+connect to internet through IGW. NAT-GW is a service (machine managed by aws)
+and should be enabled in each availability zone. You are charged by the hour for
+each NAT-GW (IGW is free).
+NAT-GW allows only outband connections and replay to this connections, prevent
+the internet from initiating a connection to instances in private subnet. Allows
+updates. For IPv6 use Egress only internet gateway</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># route table for private subnet
+10.10.0.0/16  Local
+0.0.0.0/0    NAT-GW
+</code></pre></div></div>
+
+<p>To access private instances you need to connect to public instance which acts as
+Bastion and once user is in VPC it can connect to other private instances.</p>
+
+<p>VPC Endpoints is used to connect to Amazon S3 using Amazon private networks (not
+going to internet using IGW but using private network through VPCE).
+VPC Interface Endpoints is creating elastic network interface (ENI with IP
+address) so you can use them to connect to external services using your own vpc
+private network.</p>
+
+<p>To secure access you can use Network Access control Network ACL and security
+groups.
+Network ACL is stateless so you need to enable both inbound and outbound ports.
+By default it is allowing in and out all ports, but you can for example allow
+443 inbound and 1025-65535 outbound (since http responds to an ephemeral port).
+Security group is required for each EC2 instance. They are considered to be
+statefull resources, they will remember if connection is from outside and allow
+outbound traffic for that connection. By default they block all inbound and
+allow all outboud, so you need to add allow inbound rules.</p>
+
+<p>Difference between Network ACL (NACLs nackles) and Security Groups
+https://youtu.be/LX5lHYGFcnA?t=9070
+Security groups are on instance level, define only Allow rules, statefull
+(return traffic is automatically allowed), all rules decide, applies only if
+someone is atttached to to instance
+NACL operates on subnet level, both allow and deny rules, stateless: return
+traffic must be explicitly allowed, rules in number order decide and if applied
+than other rules are not considered, applies to all subnet instances: good as
+backup layer of defence if someone forgot to use security group.</p>
+
+<p>Virtual VPN-IPSec
+https://youtu.be/LX5lHYGFcnA?t=9498
+Using Virtual gateway VGW
+Direct Connect DX
+VPC can be peered with other VPC.</p>
+
+<p>On new instances Enhanced Networking is automatically enabled
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking-ena.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ethtool -i ens5
+driver: ena
+</code></pre></div></div>
+
+<h1 id="ec2">EC2</h1>
+
+<p>Cheaper Low cost ec2 instances can be obtained by fleet of Spot instances
+https://aws.amazon.com/ec2/spot/pricing/
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-best-practices.html
+https://aws.amazon.com/ec2/spot/instance-advisor/</p>
+
+<p>You can use for steady state workloads using ECS on EC2.
+Fargate (serverless compute for containers) is better for short workloads, like
+tests.</p>
+
+<p>Placement groups: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html</p>
+<ul>
+  <li>Cluster : great network 10GB but high risk since they are on same rack,
+my-high-performance-group</li>
+  <li>Spread: distinct hardware so we can spread on multiple AZ. limit to 7
+instances per placement group. maximize high availability my-critical-group</li>
+  <li>Partition: up to 7 partitions per AZ, up to 100 instances, if one partition
+goes done, other should be fine. Kafka, Cassandra, Hadoop my-distributed-group</li>
+</ul>
+
+<p>You can enable Termination protection <code class="language-plaintext highlighter-rouge">DisableApiTermination true</code> (so you can
+not terminate from console, API or CLI). But if you shutdown from instance <code class="language-plaintext highlighter-rouge">sudo
+shutdown</code>, it can be terminated if Shutdown behavior ec2 option
+<code class="language-plaintext highlighter-rouge">InstanceInitiatedShutdownBehavior</code> is set to <code class="language-plaintext highlighter-rouge">terminate</code>
+Difference between Terminate and Stop is that Stop will not remove any EBS disk,
+but Terminate will mostly remove EBS disks (you can set up this)
+You can Hibernate so the RAM is preserved  (kept on the root EBS) so starting
+from hibernate is much faster, you do not need to boot OS. Use case for EC2
+hibernate is when you have long running processing (it saves the ram) or you
+need to boot up quickly. This is supported on On-Demand, Reserved and Spot
+instances, but max hibernation is 60 days.
+Hibernation has to be enabled when instance is creating, <code class="language-plaintext highlighter-rouge">Advance details &gt; Stop
+-Hibernate behavior &gt; Enable</code> you need to enable encryption for root EBS
+volume.</p>
+
+<p>There is a limit for number of instances in one region (<code class="language-plaintext highlighter-rouge">InstanceLimitExceeded</code>)
+for example 5 vCPU on-demand or spot instances. You need to start instance in
+another region (changing AZ does not help since the limit is for whole region).
+Search for <code class="language-plaintext highlighter-rouge">vcpu</code> on
+https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Limits:
+click on <code class="language-plaintext highlighter-rouge">Calculate vCPU limit</code> or <code class="language-plaintext highlighter-rouge">Request for increase</code>.
+If Amazon does not have sufficient capacity to run new on demand instance in
+specific AZ then error <code class="language-plaintext highlighter-rouge">InsufficientInstanceCapacity</code> will be returned.</p>
+
+<p>Beside ON-demand instances which are most common (pay per second), you can use:</p>
+<ul>
+  <li>Spot instances: short workload, cheap, can lose anytime</li>
+  <li>Reserved instances: 1 or 3 years for long workloads, savings plan. Standard
+RIs you can change the instance size (large, 2xlarge), but not the type. Use
+convertible reserved instance when you need to exchange to another equal or
+greater configuration: instance family: type and size (m4.xlarge), operating
+system and tenancy (default/dedicated)</li>
+  <li>Dedicated Hosts: book entire physical server, control instance placement,
+more control on hardware than dedicated instances</li>
+  <li>Dedicated Instances: no other customers will share your hadrware</li>
+  <li>Capacity Reservations: reserve capacity in specific AZ</li>
+</ul>
+
+<p>Instance types:</p>
+<ul>
+  <li>burstable T2/T3 uses CPU credits, credit usage/credit balance</li>
+  <li>To change instance type you need to stop the EBS backed instance (you lose
+public ip address, but keeps instance id).</li>
+</ul>
+
+<p>You can not purchase CPU credits, but you can change instance type.</p>
+
+<p>SSH to the instance using: SSH, EC2 instance connect or Systems manager Session
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html?icmpid=docs_ec2_console
+SSH private key (pem file, .cer file) should have 400 permission, or
+<code class="language-plaintext highlighter-rouge">unprotected private key file</code> error.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod 400 ~/config/keys/pems/2022trk.cer
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">permission denied</code> error is shown when ssh username is not correct.
+<code class="language-plaintext highlighter-rouge">connection timed out</code> when SG, NACL, route table is no configured correctly, or
+public ip is missing.
+SG security group should allow TCP 22 from your ip or all ips 0.0.0.0</p>
+
+<p>For EC2 Instance Connect inside AWS Console, it will push one time ssh public
+key valid for 60 seconds.
+Instance Connect will not work if you allow SSH 22 only from specific ip
+address which is not aws IP address.  Also, if your user does not have
+permission to SendSSHPublicKey you need to enable it:
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-set-up.html#ec2-instance-connect-configure-IAM-role</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># a.json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": "ec2-instance-connect:SendSSHPublicKey",
+        "Resource": [
+            "arn:aws:ec2:us-east-1:606470370249:instance/i-0b7175eed059b8f41"
+        ],
+        "Condition": {
+            "StringEquals": {
+                "ec2:osuser": "ec2-user"
+            }
+        }
+      },
+      {
+        "Effect": "Allow",
+        "Action": "ec2:DescribeInstances",
+        "Resource": "*"
+      }
+    ]
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws iam create-policy --policy-name add-send-ssh-to-instance --policy-document file://a.json
+# copy policy arn and attach to the user who wants to use EC2 Instance Connect
+aws iam attach-user-policy --policy-arn arn:aws:iam::606470370249:policy/add-send-ssh-to-instance --user-name read-only
+</code></pre></div></div>
+
+<p>If instance does not have public ip address, you need to use:</p>
+<ul>
+  <li>EC2 Instance Connect CLI (web version requires public ip address)
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-methods.html#ec2-instance-connect-connecting-ec2-cli
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip3 install ec2instanceconnectcli
+mssh i-0fd1ea6073db429fe
+# this did not work for me... works if instance has a public ip
+</code></pre></div>    </div>
+  </li>
+  <li>use public bastion instance (called jump box) inside same VPC</li>
+  <li>AWS Direct connect, VPC peering (transit gateway) or VPN connection
+site-to-site</li>
+  <li>ec2 status check can not be disabled</li>
+  <li>ec2 scheduler events (reboot, retirement) are managed by aws and you can not
+schedule events manually.</li>
+</ul>
+
+<h1 id="route-53">Route 53</h1>
+
+<p>Local DNS server asks Root DNS Server, then it gives NS 1.2.3.4 TLD DNS Server
+(top level domain) then it asks him and he returns NS for SLD DNS, so it asks
+him and it returns some IP to local DNS server.</p>
+
+<p>You can not use CNAME records on zone apex (root) domain, but you can use ALIAS
+records, used only on Route 53, used to target other AWS resource. It is
+actually A records but it automatically recognize if IP of the resource changes.
+It can be used for top level domain. Alias Records Targets can be almost
+anything ELB, Cloudfront, API gateway, S3 websites, but not the EC2 DNS name (so
+for ec2 directly you can not use apex domain, but you can use alias to ELB).
+For ALIAS records you can not set TTL Time to live - time period in cache (for
+another record it is using TTL of the target, or if it is other AWS service it
+is 60 seconds). You can inspect with dig</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig alias.mydom.com
+# this returns two ip addresses of load balancer
+
+dig cname.mydom.com
+# this return CNAME load balancer and than two ip addresses
+
+nslookup test.trk.in.rs
+</code></pre></div></div>
+
+<p>dig returns TTL</p>
+
+<p>Hosted Zones can be private (so we can use inside VPC db.example.internal and
+webapp.example.internal) and public (when you buy a domain).</p>
+
+<p>Routing policies:</p>
+<ul>
+  <li>Simple : for multiple A records, random is picked by the client, can not
+enable health check (you should use multi-value instead).</li>
+  <li>Weighted: load balancing between regions, not usefull since this is DNS</li>
+  <li>Latency-based: we need to specify also the region where dns record is deployed</li>
+  <li>Failover: using health check</li>
+  <li>Geolocation: you can serve different language app based on country</li>
+  <li>Geoproximity: using bias we can split proximities. Trafic policy can enable
+visual view for proximity.</li>
+  <li>Multi-value: using health check and return the list of all valid IPs</li>
+</ul>
+
+<p>Hybrid DNS we need Route 53 Resolver Endpoint (inbound/outbound endpoint) when
+onpremise wants to get ip of instance/instance wants to get ip of onpremise.
+Conditional Forwarding Rules used for private hosted zone: ec2.internal,
+compute.amazonaws.com.</p>
+
+<p>S3 with custom domain: bucket name should be the same as domain, grant public
+access and enable static website hosting, in route 53 use ALIAS A to S3 bucket.
+For https we need to use cloudfront (we need something to terminate ssl).</p>
+
+<h1 id="aws-load-balancer-lb">AWS Load balancer LB</h1>
+
+<p>Diffrent types:</p>
+<ul>
+  <li>Application LB: http, https, websocket, routes based on request</li>
+  <li>Network LB: high troughput for TCP, TLS and UDP traffic. NLB has less latency
+(100ms vs 400ms for ALB). It has one static IP per AZ and you can assign
+Elastic IP (ex: helpfull for whitelistening specific IP). Target group can be
+EC2 instances, IP address (must be private, can point to your datacenter on
+premises) and can be ALB (combination of NLB and ALB gives you fixed IP
+addresses and ability to route baased on path). Healyh check is TCP, HTTP and
+HTTPS protocol.</li>
+  <li>Classic LB: legacy</li>
+  <li>Gateway LB: for 3th party virtual appliances: firewalls, intrusion detection
+and preventions systems. Operates at layer 3 network layer (IP protocol). You
+need to update Route table to route to GLB, which will distribute traffic to
+your virtual appliances for a security check, and if traffic is good, it can
+return to GLB and to target application. Uses GENEVE protocol on 6081 port.</li>
+</ul>
+
+<p>ALB Load balancer security group should enable http and https access from
+0.0.0.0/0 and ec2 instances should allow http (no need for https) only from load
+balancer security group (if you do not need direct access, for example use SSM
+Session manager for accessing the shell). Use the name like
+<code class="language-plaintext highlighter-rouge">myapp-lb-http-https-sg-also-used-to-accept-http-on-ec2-sg</code></p>
+
+<p>ALB Load balancing can be:</p>
+<ul>
+  <li>to multiple http applications across machines (target groups) routing based on
+hostname/path?httpparams (ex: good for microservices <code class="language-plaintext highlighter-rouge">/user</code> -&gt; target group
+for User app, <code class="language-plaintext highlighter-rouge">/search</code> -&gt; target group for Search app, <code class="language-plaintext highlighter-rouge">/job</code> -&gt; target group
+on premises)</li>
+  <li>to multiple applications on the same machine (ex: containers) use a Port
+mapping feature to redirect to dynamic port in ECS</li>
+  <li>it supports redirect http -&gt; https, and custom response, for example <code class="language-plaintext highlighter-rouge">/error</code>
+path will response with status 404 and message “this is not found”</li>
+</ul>
+
+<p>ALB has fixed hostname XXX.region.elb.amazonaws.com and passes client IP as a
+headers: X-Forwared-For and X-Forwared-Port and X-Forwared-Proto</p>
+
+<p>Default load balancing algorithm is round robin, which distrubutes each requests
+in turn. Another is LOR least outstanding requests, next instance is the
+instance with the lowest number of pending/unfinished requests. Can not be used
+with “Slow start duration” ex 30 seconds newly created instances receives 1,
+than 2, then 3 requests (not a bunch of them in first second) Slow start mode is
+defined on Target Group.
+For apps that store session info locally, you can enable Sticky Sessions so ALB
+will send to the same target (it can generate inbalanced load). Application
+based: Cookie name is AWSALBAPP (or custom cookie when target generate the
+cookie <code class="language-plaintext highlighter-rouge">_myapp_session</code>). Duration based cookies AWSALB.
+NLB uses a flow hash (hash of Protocol, Source IP, Destination IP, Source Port,
+Destination Port, TCP sequence number) and if that does not change, it will
+be routed to the same instance.</p>
+
+<p>Cross-zone Load balancing is to distribute evenly across all instances in all AZ
+(ex: 2 in us-east-1a and 8 in us-east-1-b, each instance get 10% of traffic). It
+is enabled by default so user is not charged for inter AZ communication. For NBL
+and GLB is not enabled by default so user is charged for inter AZ data.</p>
+
+<p>Target group weighting is that you can controller distribution of the traffict
+Blue/green deployment ex: create a new instances that will receive 10% of the
+traffic.</p>
+
+<p>SSL is Secure Sockets Layer, newer version is TLS Transport Layer Security are
+issues by CA Certificate Authorities (Letsencrypt, GoDaddy…). ALB is SSL
+termination, it uses ACM Aws Certificate Manager to manage certs.</p>
+
+<p>HTTPS listeners can use default and multiple certs to support multiple domains.
+Different domains supported by SNI Server Name Indication, ALB pick correct SSL
+cert and route to target group for that domain.</p>
+
+<p>Generate new cert in ACM is easy, you just need to click on email confirmation
+link for your domain, or change dns settings for your domain. Cert is issued by
+Common Name (CN) Amazon RSA 2048 M01, and valid for 13 months. You need to add
+CNAME that points to ALB ex: mylb-1386560557.us-east-1.elb.amazonaws.com</p>
+
+<p>Connection draining is Time to complete “in-flight requests” while the instance
+is de-regestering or unhealthy. Default is 300 seconds (5min). You can set 30s
+if you have ready-to-use AMI. During this cooldown deregistration period ASG
+will not launch or terminate additional instances to allow for metrics to
+stabilize.
+Y/ou can use ASG Lifecycle Hooks to pause ec2 instance in the terminating state
+for troubleshooting.</p>
+
+<p>New requests are send to other healthy instances. All healthy statuses are:</p>
+<ul>
+  <li>initial: registering the target</li>
+  <li>healthy</li>
+  <li>unhealthy</li>
+  <li>unused: target is not registered</li>
+  <li>draining: de-registering the target</li>
+  <li>unavailable: health check disabled</li>
+</ul>
+
+<p>TG health check: if Target group contains only unhealthy targets, ELB routes
+requests across it’s unhealthy targets since it assume that health check is
+wrong. <code class="language-plaintext highlighter-rouge">HealthyThresholdCount</code> default 5 and <code class="language-plaintext highlighter-rouge">UnhealthyThresholdCount</code> default
+2 is how many checks every <code class="language-plaintext highlighter-rouge">HealthCheckIntervalSeconds</code> consecutive (in a row)
+is enough to consider target healthy or unhealthy.</p>
+
+<p>Common errors
+https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/ts-elb-error-message.html#ts-elb-errorcodes-http504</p>
+
+<p>5xx are server side errors, 5 looks like S (server) for example:</p>
+<ul>
+  <li>HTTP 500: Internal server error (on the ELB itself)</li>
+  <li>HTTP 502: Bad gateway (target is unreachable, check security groups)</li>
+  <li>HTTP 503: Service unavailable, solution: ensure you have instances in every AZ
+ELB is configured to respond in</li>
+  <li>HTTP 504: Gateway timeout (check target is registered), solution: check if
+keep-alive timeout settings on your ec2 is greater than the idle timeout of
+load balancer</li>
+  <li>HTTP 561: Unauthorized</li>
+</ul>
+
+<p>4xx are client errors (from browser to load balancer).</p>
+<ul>
+  <li>HTTP 400: Bad request (mailformed request)</li>
+  <li>HTTP 401: Unauthorized</li>
+  <li>HTTP 403: Forbidden</li>
+  <li>HTTP 408: Request timeout (idle timeout period expired)</li>
+  <li>HTTP 460: Client closed connection</li>
+  <li>HTTP 463: X-Forwarded For header with &gt;30 IP (similar to mailformed request)</li>
+  <li>HTTP 464: Unsportotred protocol</li>
+</ul>
+
+<p>ClodWatch metrics:</p>
+<ul>
+  <li>BackendConnectionErrors</li>
+  <li>HealthyHostCount UnHealthyHostCount</li>
+  <li>HTTPCode_Backend_2xx successfully requests</li>
+  <li>HTTPCode_Backend_3xx redirected errors</li>
+  <li>HTTPCode_ELB_4xx client error codes</li>
+  <li>HTTPCode_ELB_5xx server error codes generated by LB</li>
+  <li>Latency</li>
+  <li>RequestCount</li>
+  <li>RequestCountPerTarget</li>
+  <li>SurgeQueueLength: number of pending requests, routing to healthy instance (max
+is 1024)</li>
+  <li>SpilloverCount: number of rejected requests because the surge queue is full,
+to prevent this error you can monitor for <code class="language-plaintext highlighter-rouge">SurgeQueueLength</code> and auto scale</li>
+</ul>
+
+<p>You can trace single user in logs using custom header <code class="language-plaintext highlighter-rouge">X-Amzn-Trace-Id</code> and you
+might use for X-Ray</p>
+
+<h2 id="auto-scalling-group">Auto scalling group</h2>
+
+<p>Auto scalling can be manual, dynamic (based on CloudWatch metrics and target
+value) and predictive (forecast for recurring cyclic patterns)</p>
+
+<p>When you create ASG you need to define Launch template LT first. LT can have
+multiple versions (default is used). LT can create on-demand and spot instances.
+LT supports placement groups capacity reservations, dedicated hosts and multiple
+instance types. LT can use T2 unlimited burst feature.:</p>
+
+<p>ASG Health check is using Health check grace period (default 300s 5min) so new
+instance will not be registered untill 5 minutes is passed.</p>
+
+<p>ASG can be: simple step scaling (when CW alarm is triggered, ex CPU &gt; 70% than
+add 1 unit), target tracking (it will automatically create two CW alarms for
+scale in (AlarmLow, remove instances) and scale out (AlarmHigh, add instances),
+(scale up means using bigger instances, vertical scalling), scheduled (on known
+used pattern) and predictive scaling (forecast load based on history).</p>
+
+<p>Good metrics to scale on:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">CPUUtilization</code> average CPU utilization across your instances</li>
+  <li><code class="language-plaintext highlighter-rouge">RequestCountPerTarget</code> stable number of requests per instance</li>
+  <li><code class="language-plaintext highlighter-rouge">Average Network In/Out</code> for NLB
+Here are some ASG level metrics (enable on Auto Scaling group metrics
+collection on Monitoring tab):</li>
+  <li><code class="language-plaintext highlighter-rouge">GroupMinSize</code>, <code class="language-plaintext highlighter-rouge">GroupMaxSize</code></li>
+  <li><code class="language-plaintext highlighter-rouge">GroupInServiceInstaces</code>, <code class="language-plaintext highlighter-rouge">GroupTitalInstances</code></li>
+</ul>
+
+<p>Some reasons when scaling fails: reached MaximumCapacity, some LT dependency was
+deleted (security group, key pair). If ASG fails 24h it will be suspended
+administration suspension.</p>
+
+<p>AWS Auto Scaling Plans, similar to ASG, but as separate service.</p>
+
+<h2 id="ec2-image-builder">EC2 Image Builder</h2>
+
+<p>Automatically create new image (select base image, update and customize), run
+tests on new ec2 instance running new image and distribute image to regions.</p>
+
+<p>You need to create a <code class="language-plaintext highlighter-rouge">MyImageBuilderEC2Role</code> role with
+<code class="language-plaintext highlighter-rouge">Ec2InstanceProfileForImageBuilder</code> and <code class="language-plaintext highlighter-rouge">AmazonSSMMAnagedInstanceCore</code> policies.
+Make sure you Deregister AMI and delete Image Build Version, so you do not get
+charged.</p>
+
+<p>Note that AMI is region locked, you can not share the same AMI between regions.
+AMI is used when you want to move EC2 to another AZ (but there is no reason for
+that since AZ are randomly enumerated by AWS).</p>
+
+<h1 id="ebs">EBS</h1>
+
+<p>https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volume-types.html
+Block storage (you can update part of if) is provided with Elastic Block Storage
+EBS (one instance attached, or multi attach feature) instances has to be in
+same AZ as volume. You can increase volume size till 16 TB or you can attach
+multiple EBS to single EC2 instance. To use on multiple instances you should use
+Elastic File System EFS.
+EBS is used as a root boot device launched from AMI.
+It is like USB stick but as network drive (not physically attached) so there are
+latency.
+Delete on Termination attribute is by default enabled for the first volume (if
+you want to preserve root volume you need to disable this).</p>
+
+<p>There are Provisioned SDD, General purpose SSD, and HDD volume type. You can
+make a backup using snapshot (they are incremental, save only what is changed).</p>
+<ul>
+  <li>Provisioned IOPS SSD <em>io1</em> is 50 IOPS per GB, up to 64.000 for Nitro instances
+(expensive but very low latency, good for large databases) <em>io2</em> 500 per GB
+and durability 99.999% instead of 99.9% (256.000 IOPS)</li>
+  <li>General purpose provisioned ssd <em>gp2</em> <em>gp3</em>, 3 IOPS per GB for smaller than
+1TB it can burst up to 3.000 IOPS (good for boot volumes)
+max size 16 TB, and max IOPS is 16.000, and max troughput is 1000 MiB/s (gp3
+throughput is independent of IOPS).</li>
+  <li>troughput optimized HDD (not ssd) <em>st1</em> (low cost, up to 250 MB/s per TB, good
+for big data, datawarehouse, log proccessing frequently accesses through
+intensive)</li>
+  <li>cold HDD <em>sc1</em> up to 80 MB/s per TB, good for a fewer scans per day</li>
+</ul>
+
+<p>st1 and sc1 can not be used as boot volume, size from 125GB to 16 TB.
+io1 and io2 volume can use ebs multi-attach (attach to multiple machines) to
+achieve higher application avilability in clustered linux applications like
+Teradata (app must manage concurent write operations). Still inside one AZ.
+Multi attach limit is max to 16 instances.</p>
+
+<p>EC2 Instance Store is high performance hardware disk, directly attached to
+machine on which we run instance. It is ephemeral volume (lose on termination)
+so good for buffer, cache, scratch data and other temporary content
+Example is i3.large 100.000 IOPS, i3.16xlarge 3.300.000 IOPS.</p>
+
+<p>We can not decrease (only to create new and copy)
+We can increase the EBS volume size (and IOPS for io1) but it will be in
+“optimisation” phase to be repartitioned.
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html
+find hypervisor</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws --profile 2022trk ec2 describe-instance-types --instance-type t2.micro --query "InstanceTypes[].Hypervisor"
+[
+    "xen"
+]
+</code></pre></div></div>
+<p>then check the current size</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsblk
+NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0   8G  0 disk 
+└─xvda1 202:1    0   8G  0 part /
+
+df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/xvda1      8.0G  1.6G  6.4G  20% /
+
+</code></pre></div></div>
+<p>increase and you can see bigger size</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsblk
+NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0  10G  0 disk 
+└─xvda1 202:1    0   8G  0 part /
+</code></pre></div></div>
+<p>now you need to resize partition</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo growpart /dev/xvda 1
+</code></pre></div></div>
+<p>so we can see bigger partition size, but still is not available untill we reboot</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsblk 
+NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0  10G  0 disk 
+└─xvda1 202:1    0  10G  0 part /
+
+df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/xvda1      8.0G  1.6G  6.4G  20% /
+</code></pre></div></div>
+
+<p>Amazon Data lifecycle management</p>
+
+<p>DLM is used to create and delete EBS snapshots automatically - scheduled.</p>
+
+<p>EBS snapshots are incremental backups, so only the blocks that have changed are
+saved.</p>
+
+<p>EBS Snaphosts - FSR Fast Snapshot Restore is used to prepare shapshot in each AZ
+that you want to restore the volume since it is much faster than pulling from S3</p>
+
+<p>EBS Snapshots - Archive: move to 75% cheaper, but restoring is 24 to 72 hours
+Recycle bin for snapshots, specify retention for deleted snapshots.</p>
+
+<p>To encrypt an unencrypted EBS volume you need to create snapshot, encrypt
+snapshot, create a new volume from it and attach it.</p>
+
+<p>Amazon EFS - Elastic File System</p>
+
+<p>This is managed NFS network file system that can be mount on many ec2, and those
+instances can be in any availability zone.
+You do not need to plan capacity, it can grow to Petabyte.
+1000s of concurent NFS clients, 10GB/s throughput.
+Performance mode: general purpose is latency sensitive, max I/O is higher
+latency (web), but better throughput and higly parallel (big data and media).
+Throughput mode: bursting 1TB = 50 MiB/s and burst to 100MB/s
+provisioned 1GiB/s for 1TB, and elastic.
+Storage tiels: standard, infrequent access EFS-IA cheaper to store, but
+expensive to access (we need to use Lifecycle Policy).
+EFS One zone IA is 90% saving since it is only in one AZ.</p>
+
+<p>EFS Access Points, restrict access to a directory based on IAM user.</p>
+
+<p>EFS Operations : lifecycle policy (enable IA), throughput mode. When coping you
+need to use AWS DataSync to keep attributes and metadata.</p>
+
+<p>EFS CloudWatch Metrics:</p>
+<ul>
+  <li>PercentIOLimit</li>
+  <li>BurstCreditBalance</li>
+  <li>StorageBytes</li>
+</ul>
+
+<h2 id="aws-databases-rds">AWS Databases RDS</h2>
+
+<p>Managed database service: postgres, mysql, mariadb, oracle, microsoft sql,
+aurora (aws proprietary database).
+RDS multi AZ deployment will use single DNS and it will automatically failover
+in case disaster recovery DR (those standby instance becomes master instance).
+Failover happens when primary db instance: failed, OS is undergoing software
+patching, unreachable due to loss of network connectivity, modified eg db
+instance type changes, busy and unresponsive, underlying storage failure, or AZ
+outage happens, or manually failover when you initiate Reboot with failover.
+Scalling vertical (bigger instance) and horizontal (add more read replicas).
+Read replicas can be setup as multi AZ for DR.
+Going from single AZ to multi AZ is single click, which creates standby
+instance in another AZ, with zero downtime.
+You can not access to underlying instance (no ssh except RDS Custom).
+Storage Auto Scaling feature, it will scale automatically until Maximum Storage
+Threshold (for example 10% is free, 6h from last scalling event). RDS Read
+replicas is up to 5 another rds replicas, same AZ, Cross AZ, Cross Region.</p>
+
+<p>Lambda can access only public RDS. For private RDS you need to start Lamda in
+VPC ie usine Elastic Network Interface ENI in your subnets.
+RDS proxy is used to manage connection pool and clean up iddle connections made
+by lambda functions, to avoud TooManyConnections exception.</p>
+
+<p>Database Type 	Use Cases	AWS Service
+Relational	Traditional applications, ERP, CRM, e-commerce	Amazon RDS, Amazon Aurora, Amazon Redshift (cloud data warehouse)
+Key-value	High-traffic web apps, e-commerce systems, gaming applications	Amazon DynamoDB In-memory Caching, session management, gaming leaderboards, geospatial applications Amazon ElastiCache for Memcached, Amazon ElastiCache for Redis
+Document Content management, catalogs, user profiles Amazon DocumentDB (with MongoDB compatibility)
+Wide column High-scale industrial apps for equipment maintenance, fleet management, and route optimization Amazon Keyspaces (for Apache Cassandra)
+Graph Fraud detection, social networking, recommendation engines Amazon Neptune
+Time series IoT applications, DevOps, industrial telemetry Amazon Timestream
+Ledger Systems of record, supply chain, registrations, banking transactions Amazon QLDB</p>
+
+<p>RDS Parameter Groups: dynamic parameter are applied immediatelly, static params
+are applied after instance reboot.
+Force SSL: on postgres use <code class="language-plaintext highlighter-rouge">rds.force_ssl = 1</code>, on mysql <code class="language-plaintext highlighter-rouge">GRANT SELECT ON
+mydatabase.* TO 'myuser'@'%' IDENTIFIED BY 'asd' REQUIRE SSL;</code>.</p>
+
+<p>Backups are continuous, allow point in time recovery PITR happens during
+maintenance windows. Backups have a retention period you set between 0
+(disabled) and 35 days and can not be shared. Backup frequency eg daily.
+AWS Backup Vault Lock is used to apply archive policies, for example enforce
+WORK Write Once Read Many state, no body can delete backup. Backup plans can
+work on specific tags.</p>
+
+<p>Snapshot are incremental (only first snapshot is full). Snapshots takes IO and
+can stop the database from seconds to minutes. You can share manual snapshots
+with another account (automated snapshots needs to be copied). You can not share
+encrypted with AWS keys since you do not have access to those keys, only KMS
+encrypted and user need to have access to the key.
+AWS owned keys (free, default), AWS managed keys (free aws/service-name)
+KMS Customer-managed keys CMK can be rotated manually.
+Imported KMS keys only manual rotation using alias.
+MKS Key Policies are used to control access to KMS CMK. CloudTrail log is used
+to audit KMS key usage.  Symetric (one key to encrypt and descrypt). Asymetic
+(public is downloadable).</p>
+
+<p>RDS Events are changes to states like pending/running, parameter groups. You can
+send to SNS or EventBridge.
+RDS Database Log files and you can send to CW Logs (slow query logs)
+CW merics associated with RDS gathered from the hypervisor: DatabaseConnections,
+SwapUsage, ReadIOPS, WriteIOPS, ReadLatency/WriteLatency, DiskQueueDepth,
+FreeStorageSpace.
+Enhanced monitoring gathered from an agent on the db instance: threads, cpu,
+memory metrics.</p>
+
+<h1 id="aurora">Aurora</h1>
+
+<p>Unparalleled high performance and availability at global scale compatible with
+MySQL and PostgeSQL.
+When primary instance of Amazon Auror cluster is unavailable, aurora promotes an
+existing replica in another AZ to a new primary instance automatically.
+Aurora master and up to 15 auto scalled read replicas, similar to RDS multiAZ.
+Storage is replicated, self healing auto expanding (10GB up to 128TB).
+Writer Endpoint, point always to the single master.
+Reader Endpoint (help to find read replicas), connection load balancing.
+Automatic failover, Aurora Backtracking without using backups, but it is
+in-place restore, Aurora DB Cluster Automatic Backups and restore to a new db
+cluster (this can not be disabled), automated patching with zero downtime,
+advanced monitoring, Aurora Database Cloning by using the same cluster volume
+and copy-on-write protocol eg create a test env from prod</p>
+
+<p>Aws Privatelink is used for a private, encrypted channel of communication
+between its on-premises data center and a VPC in the AWS Cloud</p>
+
+<h1 id="amazon-elasticache">Amazon ElastiCache</h1>
+
+<p>In memory database Redis or Memcached.
+Redis is used for: multi AZ with auto failover, read replicas to scale reads and
+have high availability, backup and restore features, supports Sets and Sorted
+Sets
+cluster mode disabled: one shard - node group (all nodes have all the
+data, 1 primary and upto 5 replica) horizontal scaling by adding new read
+replicas, vertical by changing node type (internally create a new node group,
+then data replication, than DNS update)
+cluster mode enabled: data is partitioned into shards (up to 500 nodes per
+cluster, 500 shards with single master, or 250 shards with 1 master and 1
+replica). scaling has two modes: online scaling (no downtime, some degradation
+in performance), offline scaling (unable to serve during backup and restore,
+changing node type).
+horizontal scaling: Resharding (scale out/in by adding/removing shards) and
+Shard Rebalancing (equally distribute the keyspaces among the shards) can be
+online or offline scaling
+vertical scaling (change node type) can be done as online scaling</p>
+
+<p>To test connection from EC2 you use use <em>Primary endpoint</em> (not Node Endpoint):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli -h gofordesi-redis.nivmdy.ng.0001.use1.cache.amazonaws.com ping
+PONG
+</code></pre></div></div>
+
+<p>Redis metrics to monitor:</p>
+<ul>
+  <li>Evictions: the number of non-expired items the cache evicted to allow space
+for new writes (memory is overfilled)</li>
+  <li>CPUUtilization: solution to high cpu is to scale up to larger node, or scale
+out to adding more nodes</li>
+  <li>SwapUsage: should not exceed 50MB otherwise use more memory</li>
+  <li>CurrConnections:</li>
+  <li>DatabaseMemoryUsagePercentage:</li>
+  <li>NetworkBytesIn</li>
+  <li>ReplicationBytes, ReplicationLag:</li>
+</ul>
+
+<p>Memcached: multi-node for partitioning of data (sharging, split data), no high
+avilability (reprication), non persistent, no backup and restore, multi-threaded
+architecture
+horizontal scaling: adding new nodes, auto-discovery allow the app to find nodes
+scale vertical: change node type, they start blank since there is no restore
+Memcached metrics to monitor:</p>
+<ul>
+  <li>Evictions</li>
+  <li>CPUUtilization</li>
+  <li>SwapUsage</li>
+  <li>CurrConnections</li>
+  <li>FreeableMemory</li>
+</ul>
+
+<h1 id="amazon-cloudwatch">Amazon CloudWatch</h1>
+
+<p>CloudWatch is a service for monitoring metrics and logs.
+Basic monitoring is collecting every 5 minutes, detailed monitoring is paid and
+it collects every 1 min.
+It includes: <code class="language-plaintext highlighter-rouge">CPUUtilization</code> (processing power), <code class="language-plaintext highlighter-rouge">NetworkIn</code>/<code class="language-plaintext highlighter-rouge">NetworkOut</code>,
+DiskReadOps/DiskWriteOps, DiskReadBytes/DiskWriteBytes (only when disk is
+attached, not for ebs), <code class="language-plaintext highlighter-rouge">CPUCreditUsage</code> 1 cpu running 100% for 1 minute.
+Metrics belong to namespaces and can have up to 30 dimensions per metric
+(environment, instance id).
+Dashboards are global and can include metrics from different AWS accounts and
+regions. You can change time zone and set up auto refresh. Sharing to outside
+using SSO provider Amazon Cognito.
+3 dashboards up to 50 metics for free. $3/dashboard/month afterwards.</p>
+
+<p>You can push custom metrics, for example RAM or from application, every second
+if you want. Two weeks in the past and two hours in the future is accepted for a
+timestamp value.
+You can use PutMetricData API to send data using cli, you can test using cloud
+shell</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws cloudwatch put-metric-data --metric-name Buffers --namespace MyNameSpace --unit Bytes --value 231434333 --dimensions InstanceId=1-23456789,InstanceType=m1.small
+# after 5 minutes
+aws cloudwatch put-metric-data --metric-name Buffers --namespace MyNameSpace --unit Bytes --value 231434333 --dimensions InstanceId=1-23456789,InstanceType=m1.small
+</code></pre></div></div>
+<p>or an Unified Cloudwatch agent installed with AWS System Manager Agent SSM agent).
+Example for memory util https://dev.to/drewmullen/send-memory-utilization-metrics-to-cloudwatch-5g28</p>
+
+<p>procstat Plugin for CWAgent can collect specific proccess CPU time, memory.
+Prefix is procstat_cpu_time, procstat_cpu_usage.</p>
+
+<p>You can also export data using GetMetricData API.</p>
+
+<p>https://explore.skillbuilder.aws/learn/course/external/view/elearning/203/introduction-to-amazon-cloudwatch
+You can create alarm from EC2 instance -&gt; right click -&gt; Manage cloudwatch alarm</p>
+
+<p>Log groups (arbitrary name, eg application name), log stream (instances within
+application), can define log expiration policies (7 day expiration since we pay
+for cw logs storage).</p>
+
+<p>Logs are received from sdk, Cloudwatch Unified Agent, each AWS service.</p>
+
+<p>Logs exports can be send to S3, Kinesis Data Streams, Kinesis Data Firehose, AWS
+Lambda, Amazon OpenSearch. 12h to be exported.</p>
+
+<p>Using a custom metrics, CloudWatch filter and CloudWatch alarm you can get
+notification when it is triggered more than 5 times per minute.</p>
+
+<p>Amazon Cloudwatch Logs Insight perform queries and search and analyze logs
+interactively.</p>
+
+<p>Cloudwatch Alarms are used to trigger notification for any metric, It can be in
+3 states: OK, INSUFFICIENT_DATA, ALARM. Period is length of time in seconds to
+evaluate the metrics. Instead of sns notification we can trigger Reboot EC2
+instance, trigger autoscaling action.</p>
+
+<p>CloudWatch Composite Alarm monitors states of other alarms. Helpfull to reduce
+alarm noise eg skip high CPU when there is a high Network.</p>
+
+<p>Manually trigger alarm</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws cloudwatch set-alarm-state --alarm-name "myalarm" --state-value ALARM --state-reason "testing purposes"
+</code></pre></div></div>
+
+<p>EC2 Status Check metrics:</p>
+<ul>
+  <li>instance status: your individual instance (<code class="language-plaintext highlighter-rouge">StatusCheckFailed_Instance</code>)
+incorrect networking or startup conf, exhausted memory, corrupted file
+system. You need to reboot with new conf.</li>
+  <li>system status: AWS system or hardware on which the instance runs
+ (<code class="language-plaintext highlighter-rouge">StatusCheckFailed_System</code>, <code class="language-plaintext highlighter-rouge">StatusCheckFailed</code>) loss of network connectivity,
+ system power, software or hardware issues on physical host. You can move to the
+ new host (if you used EBS) or wait for AWS to fix the issue</li>
+</ul>
+
+<p>EC2 Instace Recovery will keep same ip addresses.</p>
+
+<p>For Load balancer you can use: RequestCount, HealthyHostCount,
+UnHealthyHostCount, TargetResponseTime, HTTP status codes
+https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-cloudwatch-metrics.html</p>
+
+<p>Event bridge is serverless event bus used to build event driven apps.
+You can receive webhook on API Gateway which uses lambda to put event on
+EventBridge which is using another lambda to put message to CloudWatch logs
+stream. For example S3 Event notification (create object) can trigger stream.
+Amazon EventBridge Overview and Integration with SaaS Applications
+https://explore.skillbuilder.aws/learn/course/119/play/457/amazon-eventbridge-overview-and-integration-with-saas-applications
+Amazon EventBridge is similar to Cloudwatch Events (deprecated), but with more
+features. You can schedule automated snapshot of ebs.
+Default Event Bus (generated by AWS services, CW events), Partner Event Bus
+(receive events from SaaS service), Custom Event Buses (our own apps)</p>
+
+<p>Amazon EventBridge Schema Registry gives the structure of the data.
+Amazon EventBridge Resource-based Policy manage permissin for specific Event Bus
+so we can allow PutsEvents from 3-th party accounts.</p>
+
+<p>CloudWatch ServiceLens integrate health info in one place.
+Also integrates with Synthetics.
+It integrates with AWS X-Ray to pinpoint performance bottleneck. X-Ray is used
+for understading dependencies in microservice architecture, service graph.</p>
+
+<p>CloudWatch Synthetics, to monitor API from outside-in using canaries: scripts
+that run on a schedule, written in Node.js or Python. Canaries offer access to
+headless Google Chrome via puppeteer or selenium webdriver.
+https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Create.html</p>
+
+<p>ClodWatch Synthetics Canary Blueprints:</p>
+<ul>
+  <li>Heartbeat Monitor: load URL store screenshot and http archive file</li>
+  <li>API Canary: test basic read and write function of REST APIs</li>
+  <li>Broken Link Checker: check all links inside the URL that you are testing</li>
+  <li>Visual Monitoring: compare a screenshot take during a canary run</li>
+  <li>Canary Recorder: used with CloudWatch Synthetics Recorder to record your
+actions and automatically generates a script for that</li>
+  <li>GUI Workflow Builder: verifies that actions can be takeon on your webpage, eg
+test login form</li>
+</ul>
+
+<p>The AWS Health Dashboard is the single place to learn about the availability and
+operations of AWS services. It displays relevant and timely information to help
+users manage events in progress, and provides proactive notifications to help
+plan for scheduled activities</p>
+
+<h1 id="aws-systems-manager-ssm">AWS Systems Manager SSM</h1>
+
+<p>It is a free service.
+https://explore.skillbuilder.aws/learn/course/456/play/1308/aws-systems-manager
+Run command, state manager, inventory, patch manager, automation, explorer,
+Parameter Store, session manager (ssh), OpsCenter
+AWS Systems Manager gives you visibility and control of your infrastructure on
+operational data from multiple AWS services and allows you to automate
+operational tasks across your AWS resources.</p>
+
+<p>To install SSM follow
+https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-setting-up-ec2.html
+and create SSMInstanceProfile (this name from docs so we will use it) with
+AmazonSSMManagedInstanceCore policy.</p>
+
+<p>When creating a EC2 instance you need to attach created ec2 instance profile
+SSMInstanceProfile.
+For existing ec2, you can also attach/replace IAM Role SSMInstanceProfile, and it will
+be automatically recognized with the Session Manager.
+You can activate hybrid intance with script.</p>
+
+<p>It is usefull to remotelly run commands without need to open inbound ssh ports,
+and you can control which commands can be performed and it is auditable.
+Free service.</p>
+
+<p>Command for cpu stress is:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo amazon-linux-extras install epel -y
+sudo yum install stress -y
+stress --cpu 1 --timeout 10m
+</code></pre></div></div>
+
+<p>You can see that it is working by clicking on “Public IPv4 address” or “Public
+IPv4 DNS” and removing “s” from “https://”.</p>
+
+<p>To connect you can use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PEM_FILE=~/config/keys/pems/2022.pem
+export SERVER_IP=174.129.128.6
+ssh -i $PEM_FILE ubuntu@$SERVER_IP
+ssh -i $PEM_FILE ec2-user@$SERVER_IP
+
+curl $SERVER_IP
+</code></pre></div></div>
+<p>To connect without asking for password and not using PEM you can ssh-copy-id but
+manually</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp -i $PEM_FILE ~/.ssh/id_rsa.pub ubuntu@$SERVER_IP:
+ssh -i $PEM_FILE ubuntu@$SERVER_IP
+cat id_rsa.pub &gt;&gt; .ssh/authorized_keys &amp;&amp; rm id_rsa.pub
+exit
+</code></pre></div></div>
+
+<h2 id="ssm-run-command">SSM Run command</h2>
+
+<p>Documents can be: Managed (predefined) or custom documents (can be versioned).
+Command is set of actions, document, targets and run time paramaters. Use case:</p>
+<ul>
+  <li>monitoring</li>
+  <li>bootstrap scripts (user data)
+```
+#!/bin/bash
+    <h1 id="use-amazon-linux-ami">use Amazon linux AMI</h1>
+    <p>yum update -y
+yum install httpd -y
+echo “hello from $(hostname -f)” &gt; /var/www/html/index.html
+systemctl start httpd</p>
+    <h1 id="automatically-start-on-reboot">automatically start on reboot</h1>
+    <p>systemctl enable httpd</p>
+  </li>
+</ul>
+
+<h1 id="on-amazon-linux-ami-you-should-use-service-instead-systemctl">on Amazon linux ami you should use service instead systemctl</h1>
+<p>service httpd start</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Inside the machine you can find user script on
+</code></pre></div></div>
+<p>cat /var/lib/cloud/instance/cloud-config.txt</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Look for logs on
+</code></pre></div></div>
+<p>cat /var/log/cloud-init-output.log</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To see error in custom schema
+</code></pre></div></div>
+<p>cloud-init schema –system</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+## SSM Automation
+
+It uses Automation Runbook (SSM Documents of type Automation).
+Can be triggered manually, EventBridge, on a schedule, by AWS Config
+Use case: Restart instance, create an AMI, EBS snapshot...
+
+## SSM Session manager
+
+Another way to connect is using AWS Systems manager &gt; Fleet manager
+https://us-east-1.console.aws.amazon.com/systems-manager/managed-instances?region=us-east-1
+EC2 need to create a role with `AmazonSSMManagedInstanceCore` policy (deprecated
+policy is AmazonEC2RoleforSSM). In tutorials it is called instance profile so
+put a name for a role `SSMInstanceProfile` and attach role to existing or new
+ec2. No need for ssh keys nor open ports, you can use web or aws cli just
+download and install session manager plugin with `sudo
+./sessionmanager-bundle/install -i /usr/local/sessionmanagerplugin -b
+/usr/local/bin/session-manager-plugin `
+https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html#install-plugin-macos
+</code></pre></div></div>
+<p>aws ec2 describe-instances –query “Reservations[].Instances[].InstanceId”</p>
+<h1 id="get-instance-id-i-0f3dde08ce455a628">get instance id “i-0f3dde08ce455a628”</h1>
+<p>aws ssm start-session –target “i-0f3dde08ce455a628”</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+CloudTrail can intercept StartSession events if you need for compliance.
+You can also restict to specific tags for other users, for example use policy
+that permits `sssm:StartSession` Action with Condition StringLike
+`"ssm:resourceTag/Environment": ["Dev"]`
+Session log data can be sent to s3 or CloudWatch logs.
+Preferences are on this tab
+https://us-east-1.console.aws.amazon.com/systems-manager/session-manager/preferences
+
+## SSM parameter store
+
+It is used for configurations.
+It stores passwords in plain text, so for passwords usually we use Secrets
+Manager and we can also access them through name
+`/aws/reference/secretsmanager/secret_ID_in_Secrets_Manager`
+We also have data like
+`/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x84_64-gp2` public
+
+It is free for max 10_000 parameters, and max 4KB size.
+$0.05 for new advanced parameter per month (max 8KB, and max 100_000 total) and
+can be attached with Parameter Policy like expiration: EventBridge will receive
+notification 15 days before password expires
+
+Name `/my-app/dev/my-db-url` with value `some url` and one encrypted
+`/my-app/dev/redis-password` with value `encripted***` you can use cli to access
+them (and decrypt if you have access to key store)
+</code></pre></div></div>
+<p>aws ssm get-parameters –names /my-app/dev/db-url /my-app/dev/redis-password –with-decryption</p>
+
+<p>aws ssm get-parameters-by-path –path /my-app/ –recursive</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+## AWS Secrets Manager
+
+It force rotate passwords, database credentials, api keys.
+It can store binaries.
+
+## SSM State manager
+
+Automate the process of keeping instances in state that you define.
+Use case: bootstrap instance with software, updates on a schedule.
+State manager association: defines the state we want.
+
+## SSM Patch manager
+
+Automates the patching managed nodes with security updates, for OS and
+application.
+Patch manager use patch baseline id so you can use SSM Run command to patch
+speficic path groups.
+
+SSM Maintenance windows: defines a schedule, duration, set of registered
+instances, set of registered tasks.
+
+# S3
+
+Objects storage (flat storage and each object has uuid) Scallable Simple Object
+Storage S3. Buckets reside in region, but the name should be uniq across all
+buckets. It looks like that S3 is global service, but not, it is region based,
+and you need to choose in which region to put a bucket.
+
+Usage case is for: backups (EBS snapshot), media hosting, static websites.
+User can create up to 100 buckets (or 1000 by submitting a service limit
+increase). Bucket name should be uniq across all accounts. When deleted the name
+is available after 24 hours. Name is between 3-63 characters long
+Consist only of lowercase letters, numbers, dots (.), and hyphens (-)
+Start with a lowercase letter or number
+Not begin with xn-- (beginning February 2020)
+Not be formatted as an IP address. (i.e. 198.68.10.2)
+Use a dot (.) in the name only if the bucket's intended purpose is to host an
+Amazon S3 static website; otherwise do not use a dot (.) in the bucket name
+since SSL wild card certificate will work for
+https://my.bucket.s3.us-east-1.amazonaws.com/my-file.txt
+Virtual hosted-style URL https://bucket-name.s3.Region.amazonaws.com/key-name
+Path style URL https://s3.Region.amazonaws.com/bucket-name/key-name is
+deprecated.
+MAX object size is 5TB (upload using console is 160GB). Number of objects is
+unlimited.
+For upload bigger than 100MB it is recommended (bigger than 5GB required) to use
+multipart upload and AbortIncompleteMultipartUpload lifecycle rule
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html
+Objects consits: key (uniq in bucket), version ID, value, access control info
+and metadata (like key value pairs, for example content-type, can not be changed
+once object is created).
+You can use ap to 10 tags key value pairs to each object (128 unicode chars for
+key, and 256 chars for value).
+Delete key myfile will permanently remove the object if version is not enabled.
+If version is enabled, then delete key myfile will add a mar
+
+https://my-bucket-name.s3.amazonaws.com/some/key-for-file.jpg
+htpps://my-bucket-name.s3-us-east-1.amazonaws.com/some/key-for-file.jpg
+(deprecated http:s//s3-us-east-1.amazonaws.com/my-bucket-name/key-for-file.jpg)
+
+S3 supports resource based access control: using bucket policy or using Access
+control list ACL on object or bucket level.
+Also supports user based access control.
+
+To enable static website hosting, you need to:
+* enable static web hosting in bucket properties
+* disable "Block public access" for the bucket (also on account level if needed)
+* write bucket policy to grant public read access, update `Bucket-Name` with
+  your bucket name
+</code></pre></div></div>
+<p>{
+    “Version”: “2012-10-17”,
+    “Statement”: [
+        {
+            “Sid”: “PublicReadGetObject”,
+            “Effect”: “Allow”,
+            “Principal”: “<em>”,
+            “Action”: [
+                “s3:GetObject”
+            ],
+            “Resource”: [
+                “arn:aws:s3:::Bucket-Name/</em>”
+            ]
+        }
+    ]
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* if bucket contains objects that are not owned by the bucket owner, you
+  need object ACL access control list that grants everyone read access
+
+Bucket policy is used to: grant public access to the bucket, force objects to be
+encrypted at upload, grant access to another account (cross acount, for example
+you do not have access to another user account, just put its arn in Principal).
+You can track costs by using AWS generated tag for cost allocation. This tag
+will appear in AWS Cost explorer, AWS Budgets (can send alarms for usage
+limits), AWS Cost and usage report.
+
+https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html
+</code></pre></div></div>
+<h1 id="make-bucket">make bucket</h1>
+<p>aws s3 mb s3://mybucket</p>
+<h1 id="copy-local-file-upload">copy local file upload</h1>
+<p>aws s3 cp local-file s3://mybucket</p>
+<h1 id="list-all-buckets">list all buckets</h1>
+<p>aws s3 ls</p>
+<h1 id="list-all-files-from-bucket">list all files from bucket</h1>
+<p>asw s3 ls s3://mybucket</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To move data you should use Aws DataSync (migrating by syncing, not one step),
+DataSync can sync with S3, EFS, FSx, keeps file permissions and metadata. Agent
+is running on schedule, daily weekly. Problem could be a slow internet
+connection. Transfer Family is used when copying using network takes more than a
+week, so we get a device with agent preinstalled, which pull the data into local
+storage and than we ship the device to aws. Sync can be between different
+services, or between different cloud providers.
+For offline: Snowcone (hdd), snowball edge (ssd) and snowmobile (for exabytes).
+Most cost optimal is to transfer on premises data to multiple Snowball edge
+storage optimized devices and copy to Amazon S3 and create lifecycle policy to
+transition the data into AWS Glacier Currently, there is no way of uploading
+objects directly to S3 Glacier using a Snowball Edge.
+https://aws.amazon.com/blogs/storage/using-aws-snowball-to-migrate-data-to-amazon-s3-glacier-for-long-term-storage/
+AWS SMS server migration service does not have relation to shownball edge
+(distractor).
+For streaming use Amazon Kinesis Data Streams and Firehose.
+
+For hybrid service you can use Aws Direct Connect (dedicated network connection
+to AWS from on premise center) or AWS Storage gateway (used to connect data, ie
+store on premise-data in an existing amazon S3 bucket, ie mount as NTF which
+uses s3 file gateway - it is using s3 to store, but also the cache for local
+most used files).
+Those can not extend the VPC network. Use case could be: disaster recovery,
+backup, tiered storage, on-premises cache and low-latency file access.
+
+
+Amazon FSx is service to launch high performance file system to aws, for example
+smb or ntfs, and it is backedup daily to s3.
+FSx for Lustre (linux cluster) for machine learning, high performance computing
+hpc (ssd, hdd options) can be used on premises through vpn or direct connect.
+
+AWS Outposts is service that offers the same AWS infrastructure to any
+datacenter, so you can extend your VPC into the on-premises data center, and you
+can communicate with private ip addresses.
+
+To avoid internet you can use VPC Endpoints.
+
+Security mechanisms for bucket.
+Newly created bucket can only be accessed by the user who created it or the
+account owner. Other users can access using:
+* AWS IAM: use IAM policy for your users accessing your S3 resources (does not
+  have principal)
+</code></pre></div></div>
+<p>{
+  “Version”: “2012-10-17”,
+  “Statement”: [
+  {
+  “Sid”: “VisualEditor0”,
+  “Effect”: “Allow”,
+  “Action”: “s3:ListBucket”,
+  “Resource”: “arn:aws:s3:::my-trk-bucket”
+  }
+  ]
+  }</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* Access control list ACL on individual objects (deprecated)
+* Pre-signed URL: grant for limited time, note that presignigning can be
+  successfully but actuall access will not work if credentials used in presign
+  proccess does not have permission to read the object. If you used Security
+  Token Service, presigned URL will expire when token expires.
+</code></pre></div></div>
+<p># this is default signature version so no need to set, max 7 days
+  # aws configure set default.s3.signature_version s3v4
+  aws s3 presign s3://my-trk-bucket/README.md –expires 60
+  curl “https://my-trk-bucket.s3.us-east-1.amazonaws.com/README.md?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIARYNKJHQQAVHT4P5Q%2F20220706%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20220706T064501Z&amp;X-Amz-Expires=60&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=2ff3afb8b8e0dcc308aaca2e49c94db3c83feaa26675ec35f4d29a47e4e8d7ae”</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Storage classes:
+Default is S3 standard tier. There is S3 IA or one zone IA (infrequent access)
+you are charged for 128KB for object smaller than 128KB, or for 30days if you
+remove before 30days). Use case is backup.
+
+Use Intelligent-Tiering Archive configurations under Properties tab on bucket,
+to minimize the cost: Archive Access tier (90days min, minutes to retrieve up to
+5 hours) or Deep archive access tier (180 days min, up to 5 hours to retreive).
+Object smaller than 128KB are always in frequent access tier.
+
+Glacier Instant retrieval (milisecond retrival, access once a quarter, min 90
+days), Glacier Flexible retrieval (retrieval 1min to 12 hours), Glacier Deep
+Archive (access once or twice in year, retrieval 12-48hours) min 180days.
+You need to initiate a restore and you can use `s3:ObjectRestore:Completed`
+event to send notification (you need to update SNS topic so s3 can send this).
+
+For data that is not often accessed but requires high availability choose Amazon
+S3 standard IA.
+
+Durability is 11 nines, 99,999999999%, loss of 1 object for 10.000.000 objects
+every 10.000 years. That is the same for all storage classes
+Availability is 99.99% for s3 standard ie 53min a year. S3 Standard IA is 99.9%
+availability.
+
+Cost includes https://aws.amazon.com/s3/pricing/
+* storage price: based on storage class, eventual monthly monitoring fee
+* request and data retrieval: every api/sdk call
+* data transfer: price for bandwith in and out of s3, except data transferred in
+  from the internet (upload), data transferred out to EC2 in the same region as
+  bucket, data transferred out to cloudfront
+* management and replication: price for features like S3 inventory, analytics,
+  object tagging
+
+Enable bucket logs under Properties -&gt; Server access logging, you can add
+prefix. It will log all GET requests, API calls.
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/LogFormat.html
+It is advisable to create lifecycle rule under Management, to clear old logs.
+Use Athena to serverless query logs
+https://aws.amazon.com/premiumsupport/knowledge-center/analyze-logs-athena/
+Create report with Amazon Quicksight to create Business intelligence BI
+dashboard.
+Use Glue service to convert csv to Apache Parquet or ORC, so data is stored as
+columnar data for cost saving (less scan). Use larger files &gt; 128 MB.
+
+Object Lock using a write-once-read-many WORM model to prevent object from being
+deleted or overwritten. It can be enabled only during bucket creation. It
+enables versioning. You can configure Default retention mode so no users (or
+governance users) can delete or overwrite during that period (for example 1year)
+
+S3 replication Cross-region replication CRR (use case: low latency, compliance),
+Same-region replication SRR (log aggregation, live reproduction prod to test)
+Replication works only for new objects, for existing objects you need to use s3
+batch replication
+
+S3 object encryption: Server-side encryption sse is default, with sse-s3 key(you
+do not have access to the key, header: x-amz-server-side-encryption": "aes256")
+but you can use kms key sse-kms (you can see logs in cloudtrail, header:
+"x-amz-server-side-encryption": "aws:kms", you need to have access to kms key
+and kms limits are applied) or customer provided keys sse-c (we pass the key in
+header for each requests, when reading we need to send same key in header).
+Client-side encryption (data is encrypted before sending to s3).
+
+Encryption in flight ie encryption in transit ssl/tls.
+
+Cross-origin resource sharing CORS , origin = scheme (protocol) + host (domain)
++ port. Web browsers mechanism to allow visiting other origins, only if other
+origin allow the request using CORS header Access-Control-Alow-Origin Browser
+sends `OPTIONS / Host: www.other.com Origin: www.main.com`, and we need to
+enable CORS for specific origin or for all origins.  CORS can not prevent
+scripts to download files, it is only a webbrowser security.
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html
+</code></pre></div></div>
+<p>[
+    {
+        “AllowedHeaders”: [],
+        “AllowedMethods”: [
+            “GET”
+        ],
+        “AllowedOrigins”: [
+            “*”
+        ],
+        “ExposeHeaders”: []
+    }
+]</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Amazon Cloudfront
+
+Cloudfront is content delivery network CDN.
+400 point of presence in Global Edge network which are caching content and which
+are connected using aws backbone network
+https://aws.amazon.com/blogs/networking-and-content-delivery/400-amazon-cloudfront-points-of-presence/
+
+Difference with S3 Cross Region Replication CRR is that cloudfront is good for
+static files (TTL is a few days) available everywhere. CRR must be setup for
+each region, and files are upding in near real-time so good for dynamic content.
+
+When you enable Cloudfront, you do not need to enable public access for your
+bucket, but you need to attach policy that give access to Cloudfront.
+
+You can use AWS Certificate Manager to obtain ssl certificates.
+
+You can enable Geographic Restrictions, and select countries in which your
+content is available.
+
+Access Logs can generate reports on: Cache Statistics, popular objects, top
+referrers, usage, viewers.
+
+Error codes from origin server 5xx or from S3 4xx are cached also, for example
+user do not have access to the underlying bucket 403, or object not found 404.
+
+Cache based on Headers, Session Cookies, Query String Parameters.
+Expires or better is Cache-Control: max-age header.
+
+AWS Global Accelerator is a networking tool, so when network is congested, is
+optimizes the path to application.
+
+# AWS CloudTrail
+
+Track all user activity across your AWS accounts, see actions that user, role or
+service has taken.
+Inspect logs with CloudWatch Logs or Athena
+https://docs.aws.amazon.com/athena/latest/ug/cloudtrail-logs.html
+For example find who when how deleted a.csv
+</code></pre></div></div>
+<p>SELECT * FROM “s3_access_logs_db”.”mybucket_logs” WHERE key = ‘a.csv’ AND operation LIKE ‘%DELETE%’ limit 10;</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Find sum uploaded files from IP 188.2.98.99 and last month
+</code></pre></div></div>
+<p>SELECT SUM(bytessent) as uploadTotal FROM s3_access_logs_db.mybucket_logs WHERE RemoteIP=’188.2.98.99’
+AND parse_datetime(RequestDateTime, ‘dd/MMM/yyyy:HH:mm:ss Z’) BETWEEN
+parse_datetime(‘2022-06-06’, ‘yyyy-MM-dd’) AND parse_datetime(‘2022-07-07’, ‘yyyy-MM-dd’);</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Difference between server logs and cloudtrail (service for tracking API usage)
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/logging-with-S3.html
+* server access logs delivers within a few hours, cloudtrail in 5min for data
+  and 15min for management events
+* cloudtrail is guaranteed and can be enabled on account, bucket or object level
+  and can deliver logs to multiple destinations, and does not log authentication
+  failures (but AcceessDenied is logged), json format.
+
+When using a tags, you can write access policy with condition key
+"s3:ExistingObjectTag/&lt;key&gt;": "&lt;value&gt;"
+</code></pre></div></div>
+<p>{
+  “Statement”: [
+    {
+      “Effect”: “Allow”,
+      “Action”: “s3:GetObject”,
+      “Resource”: “arn:aws:s3:::photobucket/*”,
+      “Condition”: {
+        “StringEquals”: {
+          “s3:ExistingObjectTag/phototype”: “finished”
+        }
+      }
+    }
+  ]
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>also you can use tags in lifecycle rules, or cloudwatch metrics or croudtrail
+logs.
+
+To list all files, you can use API, but that could be expensive if there are a
+lot of object. Instead you can enable Management -&gt; Inventory service which will
+periodically create cvs file in another bucket that you can query using Amazon
+S3 Select (only SELECT command on csv json files) Note it has to be in one line
+</code></pre></div></div>
+<p>SELECT * FROM s3object s WHERE s._ 1 = ‘a’ LIMIT 5</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-glacier-select-sql-reference-select.html
+or Athena.
+
+S3 event notification can be used to call lambda, sns or sqs service when some
+api call occurs.
+
+Amazon Simple Queue Service (SQS) is a fully managed message queuing service
+that enables you to decouple and scale microservices, distributed systems, and
+serverless applications. SQS eliminates the complexity and overhead associated
+with managing and operating message-oriented middleware and empowers developers
+to focus on differentiating work.
+Used for asynchronous integration between application components
+
+Cloudtrail log file integrity validation can be used for audit.
+
+# AWS Config
+
+AWS config (service that track configurations of resources) can be used to make
+a sns notification when for example bucket become public using a managed rule
+*s3-bucket-public-read-prohibited* also used to enable security and regulatory
+compliance.
+It can also prevent users for using other (unapproved) AMIs.
+https://aws.amazon.com/blogs/security/how-to-use-aws-config-to-monitor-for-and-respond-to-amazon-s3-buckets-allowing-public-access/
+Similar tools that check public access is enabled are:
+* Aws IAM Access Analyzer - check bucket policy ACL, access point policy, IAM
+  roles, KMS keys, Lambda, SQS queues, Secrets Manager Secrets... any
+  resource that can be accessed externally, that is outside of Zone of Trust (eg
+  AWS Organization) for example Principal is "*".
+* AWS Trusted Advisor - check S3 bucket permissions, other Trusted advisor
+  checks can include: Cost Optimization, Performance, Security, Fault Tolerance,
+  Service Limits. For example security group created by Directory Service should
+  not have unrestricted access. Approaching limits.
+  Also Cost optimization, under utilized EBS volumes, idle load balancers.
+  Trus Advisor is free for core checks.
+
+IAM Security Tools like IAM Credentials Report (account-level, download csv when
+keys were used) and IAM Access Advisor (user-level) you can see which service is
+used and identify unnecessary permissions that have been assigned to users.
+
+Use S3 Storage Lens to optimize cost.
+
+# AWS Directory Service
+
+Managed microsoft active directory
+
+# ECS
+
+ECS backplane is communicating with ECS agent for placement decision.
+Cluster is a logical group of EC2 instances on which Task is run. Task could be
+running on EC2 or Fargate. Task can contain one or more container (usually
+second is only for logging), defined in Task Definition (blueprint): which
+images url and configuration.
+Service is for long running applications, is a group of Tasks.
+
+Task definition
+</code></pre></div></div>
+<p>{
+  “containerDefinitions”: [
+    {
+      “name”: “simple-app”,
+      “image”: “httpd:2.4:,
+      “cpu”: 256,  # 1 virtual CPU is 1024 units. Also “0.25 vCpu”
+      “memory”: 300, “ “512 MB, 1 GB”
+      “portMappings”: [
+        {
+          “hostPort”: 80,
+          “coitnanerPort”: 80,
+          “protocol”: “tcp”
+        }
+      ],
+      “essential”: true
+    },
+    {
+      “name”: “busybox”,
+      “image”: “busybox”,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>}   ] } ```
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ecs create-task
+aws ecs create-service
+aws ecs run-task  --launch-type=FARGATE
+</code></pre></div></div>
+<p>Task placement: satisfy CPU, memory and network… than other constraints and
+strategies: Location AZ us-east-1d, which instance type t2.small,
+Strategies: Binpack (minimize number of EC2 instances, choose instance with the
+least amount of memory or CPU, and all other tasks will be deployed there)
+Spread (evenly on all ec2).
+Constraints: Affinity</p>
+
+<p>TODO: https://ecsworkshop.com/introduction/ecs_basics/task_definition/</p>
+
+<h1 id="eks">EKS</h1>
+
+<p>Control-plane nodes: controller manager, cloud controller, scheduler and API
+server that exposes Kubernetes API
+Etcd: key value store
+Worker nodes: Pod (group of one or more containers) similar to Task in ECS,
+created from PodSpec. Runtime (Docker or containerd), kube-proxy and kubelet</p>
+
+<h1 id="aws-elastic-beanstalk">AWS Elastic beanstalk</h1>
+
+<p>AWS Service Catalog is to manage infrastructure as code (IaC) templates, so user
+do not need to know each aws service, then do not even need to be logged in to
+aws. TagOptions can be applies so they user the same tags.
+AWS Elastic beanstalk is for deploys web applications.
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/ruby-rails-tutorial.html#ruby-rails-tutorial-launch
+Each Beanstalk environment will generate: ec2, ALB, S3, ASG, CW alarm,
+CloudFormation stack and domain name.</p>
+
+<h1 id="aws-cloudformation">AWS CloudFormation</h1>
+
+<p>Use it to deploy to multiple AWS Regions quickly, automatically, and reliably.
+Use a template json file and create a stack.</p>
+
+<p>Download templates
+https://github.com/jsur/aws-cloudformation-udemy/tree/master/1-introduction</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-a4c7edb2
+      InstanceType: t2.micro
+</code></pre></div></div>
+<p>You can upload template using cli <code class="language-plaintext highlighter-rouge">aws cloudformation create-stack help</code>
+for example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create
+aws --profile 2022trk cloudformation create-stack --stack-name myteststack --template-body file://terraform/ec2.cloudformation.yml --parameters ParameterKey=KeyName,ParameterValue=2022
+
+# list only CREATE_COMPLETE
+aws --profile 2022trk cloudformation list-stacks --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE
+
+# describe to find output
+export PEM_FILE=~/config/keys/pems/2022.pem
+export SERVER_IP=$(aws --profile 2022trk cloudformation describe-stacks --stack-name myteststack --query 'Stacks[0].Outputs[?OutputKey==`ServerIP`].OutputValue' --output text)
+ssh -i $PEM_FILE ec2-user@$SERVER_IP sudo cat /var/log/cloud-init-output.log
+
+# update
+aws --profile 2022trk cloudformation update-stack --stack-name myteststack --template-body file://terraform/ec2.cloudformation.yml --parameters ParameterKey=KeyName,ParameterValue=2022
+
+# destroy
+aws --profile 2022trk cloudformation delete-stack --stack-name myteststack
+</code></pre></div></div>
+
+<p>There are over 224 resource types, type identifiers is:
+<code class="language-plaintext highlighter-rouge">service-provider::service-name::data-type-name</code> for example
+<code class="language-plaintext highlighter-rouge">AWS::EC2::Instance</code>
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html</p>
+
+<p>Parameters can be: String, Number, CommaDelimitedList, List<Type>, AWS Parameter
+and it can contain Constraints, AllowedValues, AllowedPattern.</Type></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+Parameters:
+  SecurityGroupDescription:
+    Type: String
+    Description: Security Group Description
+</code></pre></div></div>
+<p>Use function <code class="language-plaintext highlighter-rouge">!Ref MyParameter</code> (or <code class="language-plaintext highlighter-rouge">"Fn::Ref":</code> in separate line). When we
+<code class="language-plaintext highlighter-rouge">!Ref</code> parameter then it returns paratemer value, and when we <code class="language-plaintext highlighter-rouge">!Ref</code> some
+resource then it returns physical ID of the underlying resource.  You can
+<code class="language-plaintext highlighter-rouge">"Fn::GetAtt":</code> to get attributes of the resources using dot syntax</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NewVolume:
+  Properties:
+    AvailabilityZone:
+      !GetAtt EC2Instance.AvailabilityZone
+</code></pre></div></div>
+<p>There is also <code class="language-plaintext highlighter-rouge">Fn::GetAZs: !Ref "AWS::Region"</code> which will return a list of all
+AZs so you can pick first using <code class="language-plaintext highlighter-rouge">!Select</code></p>
+
+<p>You can create a string using join and delimiter</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>!Join [ ":", [ a, b, c ] ]
+# =&gt; "a:b:c"
+</code></pre></div></div>
+<p>Substitute values</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>!Sub
+  - String # which contains ${VariableName}
+  - { VariableName: VariableValue }
+</code></pre></div></div>
+
+<p>Pseudo parameters:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">AWS::AccountId</code> example value <code class="language-plaintext highlighter-rouge">123456789012</code></li>
+  <li><code class="language-plaintext highlighter-rouge">AWS::NotificationARNs</code> <code class="language-plaintext highlighter-rouge">{arn:aws:sns:us-east-!:123456789012:MyTopic}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">AWS::Region</code> example <code class="language-plaintext highlighter-rouge">us-east-1</code></li>
+  <li><code class="language-plaintext highlighter-rouge">AWS::StackId</code> and <code class="language-plaintext highlighter-rouge">AWS::StackName</code></li>
+</ul>
+
+<p>Mappings are fixed variables (region, az, ami, environment like dev/prod)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mappings:
+  RegionMap:
+    us-east-1:
+      "32": "ami-a4c7edb2"
+      "64": "ami-a4c7edb2"
+</code></pre></div></div>
+<p>Syntax is <code class="language-plaintext highlighter-rouge">!FindInMap [ MapName, TopLevelKey, SecondLevelKey ]</code>
+Example use <code class="language-plaintext highlighter-rouge">!FindInMap [RegionMap, !Ref "AWS::Region", 32]</code></p>
+
+<p>Outputs are used to link with other Stack (you can not delete a stack if its
+outputs are being referenced by another stack).
+You can find return values in docs https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#aws-properties-ec2-instance-return-values</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Outputs:
+  StackRef:
+    Value: !Ref myStack
+
+  ServerIP:
+    Description: Server IP address
+    Value: !GetAtt MyInstance.PublicIp
+
+  OutputFromNestedStack:
+    Value: !GetAtt myStack.Outputs.WebsiteURL
+
+  StackSSHSecurityGroup:
+    Value: !Ref MyCompanySSHSecurityGroup
+    Export:
+      Name: SSHSecurityGroup
+</code></pre></div></div>
+<p>Example usage for exported outputs is <code class="language-plaintext highlighter-rouge">!ImportValue SSHSecurityGroup</code></p>
+
+<p>Conditions are used to create based on parameter value or mappings using logic
+functions: <code class="language-plaintext highlighter-rouge">!And</code>, <code class="language-plaintext highlighter-rouge">!Equals</code>, <code class="language-plaintext highlighter-rouge">!If</code>, <code class="language-plaintext highlighter-rouge">!Not</code>, <code class="language-plaintext highlighter-rouge">!Or</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Conditions:
+  CreateProdResources: !Equals [ !Ref EnvType, prod ]
+</code></pre></div></div>
+<p>Example usage is in the same level as <code class="language-plaintext highlighter-rouge">Type</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Resources:
+  MountPoint:
+    Type: "AWS::EC2::VolumeAttachment"
+    Condition: CreateProdResources
+</code></pre></div></div>
+
+<p>You can use cfn-init script instead of UserData since it is more readable.
+Also to be sure that stack is really working we can use WaitCondition so only
+after that signal the stack becomes CREATE_COMPLETE.
+So we use <code class="language-plaintext highlighter-rouge">Metadata:</code> and <code class="language-plaintext highlighter-rouge">AWS::Cloudformation::Init</code> to define what we want to
+install and from UserData we call <code class="language-plaintext highlighter-rouge">cfn-init</code> for our MyInstance, than call
+<code class="language-plaintext highlighter-rouge">cfn-signal</code> to send signal to <code class="language-plaintext highlighter-rouge">WaitCondition</code>.
+All logs go to <code class="language-plaintext highlighter-rouge">cat /var/log/cfn-init.log</code> and <code class="language-plaintext highlighter-rouge">/var/log/cfn-init-cmd.log</code>
+and <code class="language-plaintext highlighter-rouge">/var/log/cloud-init.log</code> and <code class="language-plaintext highlighter-rouge">/var/log/cloud-init-output.log</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      UserData:
+        !Base64 |
+          !Sub |
+            #!/bin/bash -xe
+            # Get the latest CloudFormation package
+            yum update -y aws-cfn-bootstrap
+            # Start cfn-init from Metadata
+            /opt/aws/bin/cfn-init -s ${AWS::StackId} -r MyInstance --region ${AWS::Region} || error_exit 'Failed to run cfn-init'
+            # Start up the cfn-hup daemon to listen for changes to the EC2 instance metadata
+            /opt/aws/bin/cfn-hup || error_exit 'Failed to start cfn-hup'
+            # All done so signal success
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --resource SampleWaitCondition --region ${AWS::Region}
+    Metadata:
+      Comment: Install a simple PHP application
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              httpd: []
+              php: []
+          files:
+            "/var/www/html/index.html":
+              ...
+  SampleWaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT1M
+
+  # This will make sure it says CREATE_COMPLETE when all three instances are on
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: "3"
+    CreationPolicy:
+      ResourceSignal:
+        Count: "3"
+        Timeout: PT15M
+</code></pre></div></div>
+
+<p>If Wait condition does not receive the required number of signals from ec2
+instance than it could be: AMI does not have AWS cloudformation helper script
+<code class="language-plaintext highlighter-rouge">aws-cfn-bootstrap</code> package, inspect logs by disabling rollback on failure
+(<code class="language-plaintext highlighter-rouge">OnFailure=DO_NOTHING</code> option while creating a stack), and check that instance
+has internet connectivity with <code class="language-plaintext highlighter-rouge">curl aws.amazon.com</code> (through NAT if it in
+private, or Internet gateway it is in public subnet - public means it has a
+route to IGW in route table anyway)</p>
+
+<p>Rollback means to back to previous known working state (it is was creation than
+everyting gets deleted) but you can enable option to keep other successfully
+created resources (after upload the template on Next there is <code class="language-plaintext highlighter-rouge">Preserve
+successfully provisioned resources</code> option)</p>
+
+<p>If someone delete resource, and we update that resource it for some reason
+update did not succedded, stack will gone into UPDATE_ROLLBACK_FAILED state. We
+can go to Stack Actions -&gt; Continue update rollback and you can skip that
+missing resource or manually create it (with the same name) so it ends up in
+UPDATE_ROLLBACK_COMPLETE state and we can try to update again. We can use drift
+detection to see if we missed when we manually create the resource.
+When template is wrong and we want to create a stack than ROLLBACK_COMPLETE is
+state and we can not update this stack (we can only remove this stack).</p>
+
+<p>Another way to set up dependencies is to use dependon attribute</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Resource:
+  Ec2Instance:
+    DependsOn: MyDB
+
+  MyDb:
+</code></pre></div></div>
+
+<p>Nested stacks is used when you isolate repeated components. We just need a
+template url and parameters that are used</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Resources:
+  SSHSecurityGroupStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/cloudformation-bucket-common-mycorp/ssh-security-group.yaml
+      Parameters:
+        ApplicationName: !Ref AWS::StackName
+        VPCId: !Ref VPCId
+      TimeoutInMinutes: 5
+</code></pre></div></div>
+
+<p>ChangeSets are used to know what changes will be made (still do not know if it
+will be successfull). Change set is created on web for existing stacks.</p>
+
+<p>Cloudformation drift occurs when someone manually change resources created by
+cloudformation. Stack actions -&gt; Detect drift.</p>
+
+<p><code class="language-plaintext highlighter-rouge">DeletionPolicy</code> can be <code class="language-plaintext highlighter-rouge">Retain</code> (keep), <code class="language-plaintext highlighter-rouge">Snapshot</code> (keep the data), <code class="language-plaintext highlighter-rouge">Delete</code>
+(default) when we remove stack.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Resources:
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+</code></pre></div></div>
+<p>Beside createpolicy CreationPolicy deletepolicy DeletionPolicy there is also
+UpdatePolicy which can set <code class="language-plaintext highlighter-rouge">AutoScalingRollingUpdate</code> with
+<code class="language-plaintext highlighter-rouge">MinInstancesInService: "1"</code> and <code class="language-plaintext highlighter-rouge">MaxBatchSize: "2"</code> so we update 2 and keep 1
+(keeps existing auto scalling group).
+Or there is <code class="language-plaintext highlighter-rouge">AutoScalingReplacingUpdate</code> with <code class="language-plaintext highlighter-rouge">WillReplace: "true"</code> (create new
+auto scalling group).</p>
+
+<p>But if you want to prevent Stack to be deleted, you can enable
+TerminationProtection by Action -&gt; Edit termination protection.</p>
+
+<p>Use StackSet to provision across multiple accounts and regions (for example
+deploy IAM role in each account). Stack sets requires specific iam roles</p>
+
+<p>Use Stack Policies to determine which resource can be updated. It is defined in
+separate json file and uploaded on web on Next page while creating stack.
+Action denied by stack policy error will be shown.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "Update:*",
+      "Principal": "*",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Deny",
+      "Action": "Update:*",
+      "Principal": "*",
+      "Resource": "LogicalResourceId/MyInstance"
+    }
+  ]
+}
+</code></pre></div></div>
+
+<p>Use <code class="language-plaintext highlighter-rouge">resource import</code> to bring existing resource to CloudFormation.
+Prevent updates to critical resources by using a Stack policy.</p>
+
+<p>AWS LightSail Use pre-configured development stacks like LAMP, Nginx, MEAN, and
+Node.js. to get online quickly and easily.</p>
+
+<p>AWS Application Discovery Service is used to collect data about the
+configuration, usage, and behavior of its on-premises data centers to assist in
+planning a migration to AWS</p>
+
+<h1 id="amazon-codeguru">Amazon Codeguru</h1>
+
+<p>Only for Jvm java and python</p>
+
+<h1 id="cdk">CDK</h1>
+
+<p>https://aws.amazon.com/cdk/
+defining Kubernetes configuration in TypeScript, Python, and Java</p>
+
+<h1 id="practice">Practice</h1>
+
+<p>acloudgutu courses https://acloudguru.com/learning-paths/aws-devops
+twich https://aws.amazon.com/training/twitch/
+TODO:   https://www.twitch.tv/videos/1439636257</p>
+
+<p>https://www.amazon.com/s?k=aws+sysops+administrator+associate&amp;crid=EILDGRZS79N1&amp;sprefix=aws+sysops+admin%2Caps%2C162&amp;ref=nb_sb_ss_ts-doa-p_1_16
+https://www.examtopics.com/exams/amazon/aws-devops-engineer-professional/</p>
+
+<h1 id="aws-certified-sysops-administrator-associate-soa-co2-exam-guide">AWS Certified SysOps Administrator Associate SOA-CO2 Exam guide</h1>
+
+<ul>
+  <li>monitoring, logging, remediation</li>
+  <li>reliability and business continuity</li>
+  <li>deployment, provisioning and automation</li>
+  <li>security and compliance</li>
+  <li>networking and content delivery</li>
+  <li>cost and performance optimization</li>
+</ul>
+
+<p>preparation with AWS Certified Solutions Architect Associate SAA-CO2</p>
+
+<p>SNS can not monitor Cloudwatch</p>
+
+<h1 id="the-well-architected-framework">The Well Architected Framework</h1>
+
+<p>Set of principles/pillars:</p>
+
+<ul>
+  <li>Operational excellence: all operations are code, documentation is updated
+automatically, make smaller changes you can rollback, iterate and anticipage
+failure (server down)</li>
+  <li>security: identities have the least privileges required, know who did what
+when (traceability), security is woven into the fabric of the system, automate
+security task, encrypt data in transit and at rest, prepare for the worst</li>
+  <li>cost optimization: consumption based pricing, measuring efficiency constantly,
+let aws do the work whenever possible</li>
+  <li>reliability: recover from issues automatically, scale horizontally first for
+resiliency, reduce idle resources, manage change through automation</li>
+  <li>performance efficiency: let aws do the work whenever possible, reduce latency
+through regions and AWS egde, serverless</li>
+  <li>sustainability: adopt new more efficient hardware and software offerings</li>
+</ul>
+
+<p>Agility is all about speed (experiment quickly), and not about autoscale or
+elimination of wasted capacity.</p>
+
+<h1 id="amazon-detective">Amazon detective</h1>
+
+<p>Intrusion detection using cloudtrail logs, vpc flow logs , amazon guardduty, eks
+audit logs.</p>
+
+<p>GuardDuty monitors workloads for malicious activity.
+Amazon GuardDuty is a threat detection service that continuously monitors your
+AWS accounts and workloads for malicious activity and delivers detailed security
+findings for visibility and remediation. It is looking for CloudTrail Events
+Logs, CloudTail Management Events, CloudTrail S3 Data Events (getObject), VPC
+Flow Logs (unusual IP address), DNS Logs. Public revealed keys.
+It has dedicated finding for CryptoCurrency attack.</p>
+
+<p>VPC flow logs capture information about ip traffic to and from network
+interfaces.</p>
+
+<p>Macie is used to detect sensitive data in S3 bucket, eg identify Personally
+Identifieable Information PII.</p>
+
+<p>AWS Shield is managed DDos protection, enabled for free for each account.
+AWS Shield Advanced gives 24/7 support and aws bill reimbursement.</p>
+
+<p>AWS Web Application Firewall WAF prevent web application common web exploits,
+such as bot traffic, sql injection, cross site scripting xss. I can be used to
+block countries (geo-match), Web access control list ACL rules can also block
+specific ip, http headers, url strings. WAF is deployed to ALB, API gateway,
+CloudFront.
+Penetration Testing, aws customers are welcome to carry out security assessment
+againts 8 aws services: ec2, rds, cloudfront, aurora, api gateways, lambda,
+ligtsail, elastic beanstalk. but for other test are profibited: dod, flooding,
+dns zone walking on route 53.</p>
+
+<p>Amazon Inspector is for automated vulnerability detection. For ec2  identify
+unintended network access or OS vulnaerability using SSM agent, for ECR
+assessment of container images, for lambda vulnerabilities in function and
+package dependencies. Send finding to Amazon Event Bridge.
+Free for first 15 days.</p>
+
+<h1 id="amazon-dynamodb">Amazon DynamoDB</h1>
+
+<p>NoSQL database with automatic backup and restore, SLA 99.999%, optimize costs
+with automatic scales up and down.</p>
+
+<h1 id="aws-glue">AWS Glue</h1>
+
+<p>Discover prepare and move from one source for analytics or machine learning.</p>
+
+<h1 id="amazon-emr">Amazon EMR</h1>
+
+<p>Run apache spark, hive, presto, hadoop,</p>
+
+<h1 id="aws-opsworks">AWS OpsWorks</h1>
+
+<p>Configuration management service to automate operations with chef and puppet.
+View operational data from multiple AWS services through a unified user
+interface and automate operational tasks
+This is alternative to AWS SSM.</p>
+
+<h1 id="aws-cloudshm">AWS CloudSHM</h1>
+
+<p>AWS CloudHSM helps you meet corporate, contractual, and regulatory compliance
+requirements for data security.
+It uses a highly secure hardware storage device to store encryption keys.
+KMS is configuring custom key store with cloudhsm.</p>
+
+<h1 id="artifact">Artifact</h1>
+
+<p>Customers can download AWS compliance documentation and AWS agreements.
+Compliance portfolio for Payment card industry PCI, Service Organization Control
+SOC, NDA agreement, HIPPA, audit reports.
+Can be used to support internal audit or compliance.</p>
+
+<h1 id="amazon-opensearch-service">Amazon OpenSearch service</h1>
+
+<p>Use elasticsearch and kabana to analize log, real-time application monitoring,
+website search.</p>
+
+<h1 id="aws-step-functions">AWS Step functions</h1>
+
+<p>Visual workflow service that helps developers use AWS services to build
+distributed applications, automate processes, orchestrate microservices, and
+create data and machine learning (ML) pipelines.</p>
+
+<p>Amazon SageMaker Build, train, and deploy machine learning (ML) models for any
+use case with fully managed infrastructure, tools, and workflows</p>
+
+<p>Amazon simple workflow service swf, build apps that coordinate work across
+distributed components</p>
+
+<h1 id="support-plan">Support plan</h1>
+
+<p>Business support plan includes 24/7 email,chat support
+Enterprise support plan includes dedicated Technical Account Manager TAM, and
+Concierge for account issue.</p>
+
+<h1 id="aws-amplify">AWS Amplify</h1>
+
+<p>Tools that help for full stack web and mobile app, think of it like elastic
+beanstalk for serverless apps.</p>
+
+<h1 id="aws-kibana">AWS Kibana</h1>
+
+<p>Does not support IAM users and roles, but supports HTTP Basic authentication,
+SAML and Amazon Cognito.</p>

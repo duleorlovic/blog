@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Activerecord Arel</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Activerecord Arel</h1>
+    <p class="meta">Dec 24, 2019</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#arel"><span class="tocnumber">1</span> <span class="toctext">Arel</span></a></li><li class="toc_level-1 toc_section-2"><a href="#tips"><span class="tocnumber">2</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><h1 id="arel">Arel</h1>
+
+<p>https://github.com/rails/arel/tree/7-1-stable
+https://github.com/rails/rails/blob/master/activerecord/lib/arel/predications.rb
+https://www.youtube.com/watch?v=ShPAxNcLm3o&amp;feature=youtu.be</p>
+
+<p><code class="language-plaintext highlighter-rouge">left_outer_joins</code> is available in <a href="https://guides.rubyonrails.org/active_record_querying.html#left-outer-joins">recent
+rails</a>
+but usually you do not need joins.
+For example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># instead of joins
+  def self.with_approved_picture
+    left_outer_joins(:member_pictures)
+      .where.not("member_pictures.id": nil)
+      .where(member_pictures: { status: MemberPicture.statuses[:approved] })
+      .distinct # since there could be multiple pictures
+  end
+
+# we can write
+  def self.with_approved_picture
+    where id: MemberPicture.approved.select(:member_profile_id)
+  end
+</code></pre></div></div>
+
+<p>Online SQL to Arel <a href="http://www.scuttle.io">www.scuttle.io</a> EXCELLENT
+Playground https://jpospisil.com/2014/06/16/the-definitive-guide-to-arel-the-sql-manager-for-ruby.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle console
+</code></pre></div></div>
+
+<p>cheatsheet https://devhints.io/arel</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arel_table = User.arel_table
+arel_table = Arel::Table.new(:users)
+arel_col = arel_table[:email]
+
+# select fields
+# NOTE that AS should use string instead of symbols
+arel_table.project(arel_col, arel_col.as('custom_name')).to_sql
+# aggregates
+arel_table.project arel_table[:age].sum
+arel_table.project arel_table[:age].count.as('user_count')
+
+# limit offset
+arel_table.take(3).skip(2)
+
+# order
+arel_table.order(arel_col, arel_col.desc)
+
+# where restrictions
+arel_table.where arel_col.eq 'my@email.com'
+arel_col.eq 'string'
+arel_col.gteq Date.today.beginning_of_month
+arel_col.matches "%#{query}%"  # generate ILIKE
+
+# AR use joins(:photos) but Arel use join
+photos = Photo.arel_table
+arel_table.join(photos, Arel::Nodes::OuterJoin).on(arel_col.eq photos[:user_id]).project(photos[:name].as('photo_name'))
+
+# functions
+SEPARATOR = Arel::Nodes.build_quoted(' ')
+
+Arel::Nodes::NamedFunction.new(
+  'concat',
+  [arel_table[:first_name], SEPARATOR, arel_table[:last_name]]
+)
+</code></pre></div></div>
+
+<p>True relation example is (found using online arel editor http://www.scuttle.io )</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Arel::Nodes::SqlLiteral.new('1').eq(1)
+
+# Arel::Nodes::SqlLiteral.new('true') is also true relation, but can not be
+# first, ie Arel::Nodes::SqlLiteral.new('true').and raises error
+# NoMethodError (undefined method `and' for "true":Arel::Nodes::SqlLiteral):
+</code></pre></div></div>
+
+<p>To execute you can use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>User.select(Arel.star).to_sql # SELECT * FROM users
+# note that if you use joins it will select all columns (id of joined table will
+# override id of User) so better is to use with table
+User.select(User.arel_table[Arel.star]).to_sql # SELECT users.* FROM users
+User.select(User.arel_table[:email].as('m')).first.m
+
+User.where(User.arel_table[:email].eq('Hi')) # it the same as User.where(email: 'Hi')
+User.where(User.areal_table[:log_count].gt(200)) # SELECT users.* FORM users WHERE (users.log_count &gt; 200)
+User.where(
+  User.arel_table[:email].eq('hi').and(
+    User.arel_table[:id].eq(22).or(
+      User.arel_table[:id].in(23,34)
+    )
+  )
+)
+</code></pre></div></div>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>in one request there should be only one query per table</li>
+  <li>instead of <code class="language-plaintext highlighter-rouge">count</code> use <code class="language-plaintext highlighter-rouge">.size</code> (which will use ruby <code class="language-plaintext highlighter-rouge">.length</code> if loaded). To
+force loading (for example to show sieze before <code class="language-plaintext highlighter-rouge">.each</code> is performed) you can
+use <code class="language-plaintext highlighter-rouge">users.load.size</code>. In this case there is no edditional query for
+<code class="language-plaintext highlighter-rouge">users.each</code>. Only way when <code class="language-plaintext highlighter-rouge">.count</code> is used is when you actually do not load
+all records, for example showing some link for all items. Similarly do not use
+<code class="language-plaintext highlighter-rouge">empty?</code>, <code class="language-plaintext highlighter-rouge">any?</code> without <code class="language-plaintext highlighter-rouge">load</code>. Do not use <code class="language-plaintext highlighter-rouge">present?</code> or <code class="language-plaintext highlighter-rouge">blank?</code> if you do
+not need to load all. <code class="language-plaintext highlighter-rouge">exists?</code> will always executes sql query.</li>
+  <li>do not write
+<a href="https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html">QueryMethods</a>,
+<a href="https://api.rubyonrails.org/classes/ActiveRecord/FinderMethods.html">FinderMethods</a>,
+and <a href="https://api.rubyonrails.org/classes/ActiveRecord/Calculations.html">Calculations</a>
+inside methods on ActiveRecord objects since someone will eventually use then
+in index action and N+1 will be triggered. Use scopes instead if you need all
+nested recources (you can have several associations based on one table)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Post
+  has_many :comments
+  has_many :active_comments, -&gt; { active }, class_name: "Comment"
+end
+
+class Comment
+  belongs_to :post
+  scope :active, -&gt; { where(soft_deleted: false) }
+end
+
+class PostsController
+  def index
+    @posts = Post.includes(:active_comments)
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>to fetch all indexes for given table name use
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@connection ||= ActiveRecord::Base.connection
+@tables ||=
+  if ActiveRecord::VERSION::MAJOR == 5
+    connection.data_sources
+  else
+    connection.tables
+  end
+@models = ActiveRecord::Base.descendants
+# reject table_name == 'schema_migrations'
+@connection.indexes(@model.table_name)
+</code></pre></div>    </div>
+  </li>
+  <li>to find belongs_to associations
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>model.reflects_on_all_associations(:belongs_to).
+</code></pre></div>    </div>
+  </li>
+  <li>if you have composite index on column [a, b, c] than you can use <code class="language-plaintext highlighter-rouge">where a ==
+1</code> or <code class="language-plaintext highlighter-rouge">where a == 1 and b == 2</code> or <code class="language-plaintext highlighter-rouge">where a == 1 and b == 2 and c == 3</code>. you
+can not use <code class="language-plaintext highlighter-rouge">where b == 2</code> alone since it will examine all rows, in aws rds
+console under database -&gt; Logs &amp; events -&gt; Logs -&gt; search for slowquery.log
+(with bigger size, created around the time the server was slow) you can see
+Rows_examinated: 123456 … Also you can find on left menu Performance
+Insights -&gt; Database load -&gt; Top SQL -&gt; Rows examined</li>
+  <li>squash migrations, just generate new one and copy content from <code class="language-plaintext highlighter-rouge">db/schema.rb</code>
+You can use gem squasher https://gihttps://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html#finding-quick-start-amihttps://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html#finding-quick-start-amithub.com/jalkoby/squasher or you can
+manually merge migrations</li>
+  <li>if you override setters, for example
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class User
+  def name=(name)
+    self.name = "#{company.name} child"
+  end
+end
+
+company.users.new(name: 'Hi')
+# this will raise error since company is is not defined so better is to use
+company.users.new(name: 'Hi', company: company)
+
+</code></pre></div>    </div>
+  </li>
+  <li>use OR or statement like
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Book.where(category: "Programming").or(Book.where(category: "Ruby"))
+
+  member_profile.member_pictures.where(status: 'pending').or(member_profile.member_pictures.where(status: 'approved'))
+
+  scope :web, -&gt; { where.not("last_seen_user_agent LIKE '%iOS_app%' OR last_seen_user_agent LIKE '%Android_app%'").or(where last_seen_user_agent: nil) }
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">users.page(page).size</code> when applied to ActiveRecord and pagination, it might
+raise
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PG::UndefinedColumn: ERROR:  column "distance" does not exist
+LINE 1: ...g" = $3 AND "member_profiles"."id" != $4 ORDER BY distance A...
+</code></pre></div>    </div>
+    <p>but it works if you convert to array <code class="language-plaintext highlighter-rouge">users.page(page).to_a.size</code> (this
+exception is raised even when there is a single page, for example one result)
+Solution to this is using <code class="language-plaintext highlighter-rouge">users = users.distinct</code></p>
+  </li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

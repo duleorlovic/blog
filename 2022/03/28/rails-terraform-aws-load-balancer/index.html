@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Rails Terraform Aws Load Balancer</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Rails Terraform Aws Load Balancer</h1>
+    <p class="meta">Mar 28, 2022</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#introduction"><span class="tocnumber">1</span> <span class="toctext">Introduction</span></a></li><li class="toc_level-1 toc_section-2"><a href="#aws-cli"><span class="tocnumber">2</span> <span class="toctext">AWS CLI</span></a></li><li class="toc_level-1 toc_section-3"><a href="#file-names"><span class="tocnumber">3</span> <span class="toctext">File names</span></a></li><li class="toc_level-1 toc_section-4"><a href="#ami"><span class="tocnumber">4</span> <span class="toctext">AMI</span></a></li><li class="toc_level-1 toc_section-5"><a href="#vpc"><span class="tocnumber">5</span> <span class="toctext">VPC</span></a></li><li class="toc_level-1 toc_section-6"><a href="#one-instance"><span class="tocnumber">6</span> <span class="toctext">One instance</span></a></li><li class="toc_level-1 toc_section-7"><a href="#nattf"><span class="tocnumber">7</span> <span class="toctext">nat.tf</span></a></li><li class="toc_level-1 toc_section-8"><a href="#elastic-ip-is-needed-for-nat-gw"><span class="tocnumber">8</span> <span class="toctext">elastic ip is needed for nat gw</span></a></li><li class="toc_level-1 toc_section-9"><a href="#vpc-setup-for-nat"><span class="tocnumber">9</span> <span class="toctext">VPC setup for NAT</span></a></li><li class="toc_level-1 toc_section-10"><a href="#route-associations-private"><span class="tocnumber">10</span> <span class="toctext">route associations private</span></a></li><li class="toc_level-1 toc_section-11"><a href="#instancetf"><span class="tocnumber">11</span> <span class="toctext">instance.tf</span></a></li><li class="toc_level-1 toc_section-12"><a href="#instancetf-1"><span class="tocnumber">12</span> <span class="toctext">instance.tf</span></a></li><li class="toc_level-1 toc_section-13"><a href="#cloudinittf"><span class="tocnumber">13</span> <span class="toctext">cloudinit.tf</span></a></li><li class="toc_level-1 toc_section-14"><a href="#scriptsinitcfg"><span class="tocnumber">14</span> <span class="toctext">scripts/init.cfg</span></a></li><li class="toc_level-1 toc_section-15"><a href="#scriptsvolumessh"><span class="tocnumber">15</span> <span class="toctext">scripts/volumes.sh</span></a></li><li class="toc_level-1 toc_section-16"><a href="#install-docker"><span class="tocnumber">16</span> <span class="toctext">install docker</span></a></li><li class="toc_level-1 toc_section-17"><a href="#instancetf-2"><span class="tocnumber">17</span> <span class="toctext">instance.tf</span></a></li><li class="toc_level-1 toc_section-18"><a href="#elastic-ip-address-is-free-when-it-is-assigned-to-instance-otherwise-it-is"><span class="tocnumber">18</span> <span class="toctext">elastic ip address is free when it is assigned to instance, otherwise it is</span></a></li><li class="toc_level-1 toc_section-19"><a href="#not-free-so-better-is-to-use-instance-and-assign-on-create-otherwise-you"><span class="tocnumber">19</span> <span class="toctext">not free, so better is to use instance and assign on create. otherwise you</span></a></li><li class="toc_level-1 toc_section-20"><a href="#can-assign-ip-to-instance-in-association-aws_eip_association"><span class="tocnumber">20</span> <span class="toctext">can assign ip to instance in association aws_eip_association</span></a></li><li class="toc_level-1 toc_section-21"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourceseip"><span class="tocnumber">21</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip</span></a></li><li class="toc_level-1 toc_section-22"><a href="#reute53tf"><span class="tocnumber">22</span> <span class="toctext">reute53.tf</span></a></li><li class="toc_level-1 toc_section-23"><a href="#rdstf"><span class="tocnumber">23</span> <span class="toctext">rds.tf</span></a></li><li class="toc_level-1 toc_section-24"><a href="#securitygrouptf"><span class="tocnumber">24</span> <span class="toctext">securitygroup.tf</span></a></li><li class="toc_level-1 toc_section-25"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcessecurity_group"><span class="tocnumber">25</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group</span></a></li><li class="toc_level-1 toc_section-26"><a href="#iamtf"><span class="tocnumber">26</span> <span class="toctext">iam.tf</span></a></li><li class="toc_level-1 toc_section-27"><a href="#group-definition"><span class="tocnumber">27</span> <span class="toctext">group definition</span></a></li><li class="toc_level-1 toc_section-28"><a href="#resource-aws_iam_group_policy-my_policy-"><span class="tocnumber">28</span> <span class="toctext">resource “aws_iam_group_policy” “my_policy” {</span></a></li><li class="toc_level-1 toc_section-29"><a href="#name----my_administrator_policy"><span class="tocnumber">29</span> <span class="toctext">name   = “my_administrator_policy”</span></a></li><li class="toc_level-1 toc_section-30"><a href="#group---aws_iam_groupadministratorsid"><span class="tocnumber">30</span> <span class="toctext">group  = aws_iam_group.administrators.id</span></a></li><li class="toc_level-1 toc_section-31"><a href="#policy--eof"><span class="tocnumber">31</span> <span class="toctext">policy = «EOF</span></a></li><li class="toc_level-1 toc_section-32"><a href="#"><span class="tocnumber">32</span> <span class="toctext">{</span></a></li><li class="toc_level-1 toc_section-33"><a href="#version-2012-10-17"><span class="tocnumber">33</span> <span class="toctext">“Version”: “2012-10-17”,</span></a></li><li class="toc_level-1 toc_section-34"><a href="#statement-"><span class="tocnumber">34</span> <span class="toctext">“Statement”: [</span></a></li><li class="toc_level-1 toc_section-35"><a href="#-1"><span class="tocnumber">35</span> <span class="toctext">{</span></a></li><li class="toc_level-1 toc_section-36"><a href="#effect-allow"><span class="tocnumber">36</span> <span class="toctext">“Effect”: “Allow”,</span></a></li><li class="toc_level-1 toc_section-37"><a href="#action-"><span class="tocnumber">37</span> <span class="toctext">“Action”: “*”,</span></a></li><li class="toc_level-1 toc_section-38"><a href="#resource-"><span class="tocnumber">38</span> <span class="toctext">“Resource”: “*”</span></a></li><li class="toc_level-1 toc_section-39"><a href="#-2"><span class="tocnumber">39</span> <span class="toctext">}</span></a></li><li class="toc_level-1 toc_section-40"><a href="#-3"><span class="tocnumber">40</span> <span class="toctext">]</span></a></li><li class="toc_level-1 toc_section-41"><a href="#-4"><span class="tocnumber">41</span> <span class="toctext">}</span></a></li><li class="toc_level-1 toc_section-42"><a href="#eof"><span class="tocnumber">42</span> <span class="toctext">EOF</span></a></li><li class="toc_level-1 toc_section-43"><a href="#-5"><span class="tocnumber">43</span> <span class="toctext">}</span></a></li><li class="toc_level-1 toc_section-44"><a href="#user"><span class="tocnumber">44</span> <span class="toctext">user</span></a></li><li class="toc_level-1 toc_section-45"><a href="#s3tf"><span class="tocnumber">45</span> <span class="toctext">s3.tf</span></a></li><li class="toc_level-1 toc_section-46"><a href="#instancetf-3"><span class="tocnumber">46</span> <span class="toctext">instance.tf</span></a></li><li class="toc_level-1 toc_section-47"><a href="#iamtf-1"><span class="tocnumber">47</span> <span class="toctext">iam.tf</span></a></li><li class="toc_level-1 toc_section-48"><a href="#autoscalingtf"><span class="tocnumber">48</span> <span class="toctext">autoscaling.tf</span></a></li><li class="toc_level-1 toc_section-49"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourceslaunch_configuration"><span class="tocnumber">49</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_configuration</span></a></li><li class="toc_level-1 toc_section-50"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcesautoscaling_group"><span class="tocnumber">50</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group</span></a></li><li class="toc_level-1 toc_section-51"><a href="#autoscalingpolicytf"><span class="tocnumber">51</span> <span class="toctext">autoscalingpolicy.tf</span></a></li><li class="toc_level-1 toc_section-52"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcesautoscaling_policy"><span class="tocnumber">52</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_policy</span></a></li><li class="toc_level-1 toc_section-53"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcescloudwatch_metric_alarm"><span class="tocnumber">53</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm</span></a></li><li class="toc_level-1 toc_section-54"><a href="#scale-down-alarm"><span class="tocnumber">54</span> <span class="toctext">scale down alarm</span></a></li><li class="toc_level-1 toc_section-55"><a href="#snstf"><span class="tocnumber">55</span> <span class="toctext">sns.tf</span></a></li><li class="toc_level-1 toc_section-56"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcessns_topic"><span class="tocnumber">56</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic</span></a></li><li class="toc_level-1 toc_section-57"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcessns_topic_subscription"><span class="tocnumber">57</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription</span></a></li><li class="toc_level-1 toc_section-58"><a href="#elbtf"><span class="tocnumber">58</span> <span class="toctext">elb.tf</span></a></li><li class="toc_level-1 toc_section-59"><a href="#httpsdocsawsamazoncomelasticloadbalancinglatestapplicationintroductionhtmlapplication-load-balancer-components"><span class="tocnumber">59</span> <span class="toctext">https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html#application-load-balancer-components</span></a></li><li class="toc_level-1 toc_section-60"><a href="#each-target-group-routes-requests-to-one-or-more-registered-targets-such-as"><span class="tocnumber">60</span> <span class="toctext">Each target group routes requests to one or more registered targets, such as</span></a></li><li class="toc_level-1 toc_section-61"><a href="#ec2-instances-using-the-protocol-and-port-number-that-you-specify-in"><span class="tocnumber">61</span> <span class="toctext">EC2 instances, using the protocol and port number that you specify in</span></a></li><li class="toc_level-1 toc_section-62"><a href="#listener-you-can-register-a-target-with-multiple-target-groups-you-can"><span class="tocnumber">62</span> <span class="toctext">listener. You can register a target with multiple target groups. You can</span></a></li><li class="toc_level-1 toc_section-63"><a href="#configure-health-checks-on-a-per-target-group-basis-health-checks-are"><span class="tocnumber">63</span> <span class="toctext">configure health checks on a per target group basis. Health checks are</span></a></li><li class="toc_level-1 toc_section-64"><a href="#performed-on-all-targets-registered-to-a-target-group-that-is-specified-in-a"><span class="tocnumber">64</span> <span class="toctext">performed on all targets registered to a target group that is specified in a</span></a></li><li class="toc_level-1 toc_section-65"><a href="#listener-rule-for-your-load-balancer"><span class="tocnumber">65</span> <span class="toctext">listener rule for your load balancer.</span></a></li><li class="toc_level-1 toc_section-66"><a href="#old-httpsregistryterraformioprovidershashicorpawslatestdocsresourceselb-classic"><span class="tocnumber">66</span> <span class="toctext">old https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elb classic</span></a></li><li class="toc_level-1 toc_section-67"><a href="#new-httpsregistryterraformioprovidershashicorpawslatestdocsresourceslb-which-can-be-application-network-gateway"><span class="tocnumber">67</span> <span class="toctext">new https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb which can be application, network, gateway</span></a></li><li class="toc_level-1 toc_section-68"><a href="#todo-tutorial-httpsmediumcomcognitoiqterraform-and-aws-application-load-balancers-62a6f8592bcf"><span class="tocnumber">68</span> <span class="toctext">todo: tutorial https://medium.com/cognitoiq/terraform-and-aws-application-load-balancers-62a6f8592bcf</span></a></li><li class="toc_level-1 toc_section-69"><a href="#todo-long-tutorial-httpshiveitcouktechshopterraform-aws-vpc-example"><span class="tocnumber">69</span> <span class="toctext">todo: long tutorial https://hiveit.co.uk/techshop/terraform-aws-vpc-example/</span></a></li><li class="toc_level-1 toc_section-70"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourceslb_listener"><span class="tocnumber">70</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener</span></a></li><li class="toc_level-1 toc_section-71"><a href="#httpsdocsawsamazoncomelasticloadbalancinglatestapplicationload-balancer-listenershtml"><span class="tocnumber">71</span> <span class="toctext">https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html</span></a></li><li class="toc_level-1 toc_section-72"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourceslb_target_group"><span class="tocnumber">72</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group</span></a></li><li class="toc_level-1 toc_section-73"><a href="#to-connect-to-autoscaling-we-define-a-link-in-autoscallingtf"><span class="tocnumber">73</span> <span class="toctext">to connect to autoscaling, we define a link in autoscalling.tf</span></a></li><li class="toc_level-1 toc_section-74"><a href="#aws_lb_target_group_attachment-is-used-to-connect-with-specific-instance"><span class="tocnumber">74</span> <span class="toctext">“aws_lb_target_group_attachment” is used to connect with specific instance</span></a></li><li class="toc_level-1 toc_section-75"><a href="#autoscallingtf"><span class="tocnumber">75</span> <span class="toctext">autoscalling.tf</span></a></li><li class="toc_level-1 toc_section-76"><a href="#we-could-also-use-inline-load_balancers-inside-aws_autoscaling_group"><span class="tocnumber">76</span> <span class="toctext">we could also use inline load_balancers inside “aws_autoscaling_group”</span></a></li><li class="toc_level-1 toc_section-77"><a href="#httpsregistryterraformioprovidershashicorpawslatestdocsresourcesautoscaling_attachment"><span class="tocnumber">77</span> <span class="toctext">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_attachment</span></a></li><li class="toc_level-1 toc_section-78"><a href="#ecstf"><span class="tocnumber">78</span> <span class="toctext">ecs.tf</span></a></li><li class="toc_level-1 toc_section-79"><a href="#cluster"><span class="tocnumber">79</span> <span class="toctext">cluster</span></a></li></ul></td></tr></tbody></table></div><h1 id="introduction">Introduction</h1>
+
+<p>We are using Terraform to provision Loadbalancer and other resources on AWS.
+First you need to learn <a href="https://github.com/duleorlovic/terraform-fundamentals">Terraform
+Fundamentals</a></p>
+
+<p>For AWS, you can start with basic tutorial
+https://learn.hashicorp.com/collections/terraform/aws-get-started and than
+invest in advanced tutorials
+https://learn.hashicorp.com/collections/terraform/aws</p>
+
+<p>We need to ignore terraform internal files, .env and keys</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ignore `.terraform` folders
+cat &gt;&gt; .gitignore &lt;&lt; HERE_DOC
+# ignore terraform folder
+.terraform/
+.env
+# ignore keys in any folder
+mykey
+mykey.pub
+HERE_DOC
+</code></pre></div></div>
+
+<p>Create separate folder for staging and production (it is recommended to have
+same setup on staging as on production), or you can create folder for each setup</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># mkdir terraform_staging
+# mkdir terraform_production
+mkdir terraform_one_instance
+mkdir terraform_load_balancer
+</code></pre></div></div>
+
+<p>Just make sure you <code class="language-plaintext highlighter-rouge">cd</code> to that folder when you are using <code class="language-plaintext highlighter-rouge">terraform</code> cli</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd terraform_one_instance
+</code></pre></div></div>
+
+<p>First file to look at is <code class="language-plaintext highlighter-rouge">terraform_one_instance/main.tf</code> where we define
+provider config with credentials.</p>
+
+<h1 id="aws-cli">AWS CLI</h1>
+
+<p>To authenticate you can use several methods
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration
+One way is to use default config and AWS CLI
+https://aws.amazon.com/cli/
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html</p>
+
+<p>If you export keys, cli will use that env variables.
+To see or update <code class="language-plaintext highlighter-rouge">~/.aws/credentials</code> and <code class="language-plaintext highlighter-rouge">~/.aws/config</code> you can run</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws configure
+</code></pre></div></div>
+<p>To list current instances</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws ec2 describe-instances
+</code></pre></div></div>
+
+<p>But I like to use provider configuration since we can see that we need
+those variables. Anything that could be changed I put inside <code class="language-plaintext highlighter-rouge">var.tf</code>
+For secrets I use <code class="language-plaintext highlighter-rouge">.env</code> file. You can load those keys from .env to bash ENV:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>env
+</code></pre></div></div>
+
+<p>So for AWS keys we define</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .env
+# Load env into current shell with:
+# set -o allexport; source .env; set +o allexport
+TF_VAR_AWS_ACCESS_KEY=AKIA...
+</code></pre></div></div>
+<p>and variable declaration (TF_VAR_{name} is used as {name} variable)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># var.tf
+variable "AWS_ACCESS_KEY" {}
+</code></pre></div></div>
+<p>and use in aws provider configuration</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># main.tf
+provider "aws" {
+  # comment if you want current `aws configure` to be used
+  access_key = var.AWS_ACCESS_KEY
+}
+</code></pre></div></div>
+
+<p>Inside <code class="language-plaintext highlighter-rouge">main.tf</code> we have<code class="language-plaintext highlighter-rouge">terraform</code> block that defines version of providers
+and <code class="language-plaintext highlighter-rouge">provider</code> block that configures specific provider</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># main.tf
+terraform {
+  # this block is optional
+  required_providers {
+    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~&gt; 3.0"
+    }
+  }
+}
+
+provider "aws" {
+  # comment if you want current `aws configure` to be used
+  access_key = var.AWS_ACCESS_KEY
+  secret_key = var.AWS_SECRET_KEY
+  region     = var.AWS_REGION
+}
+</code></pre></div></div>
+
+<p>Maybe the best way is to avoid env variables and use aws profile
+<code class="language-plaintext highlighter-rouge">aws configure --profile 2022trk</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># main.tf
+provider "aws" {
+  profile = "2022trk"
+}
+</code></pre></div></div>
+
+<h1 id="file-names">File names</h1>
+
+<p>We use AWS resources https://registry.terraform.io/providers/hashicorp/aws/latest/docs</p>
+
+<p>Common resources are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">vpc.tf</code> vpc, subnet (a, b), internet gateway and route table, and association
+between route table and subnets</li>
+  <li><code class="language-plaintext highlighter-rouge">security_group.tf</code> for ssh, http, ping, mysql access</li>
+  <li><code class="language-plaintext highlighter-rouge">key.tf</code> to import ssh key</li>
+</ul>
+
+<p>You should organize your modules based on privilege and volatility
+https://learn.hashicorp.com/tutorials/terraform/pattern-module-creation?in=terraform/modules#network-module</p>
+<ul>
+  <li>security: IAM</li>
+  <li>routing: Route53, RouteTable, HostedZone</li>
+  <li>Network: VPC, NAT gateway, security group</li>
+  <li>web: LoadBalancer, AutoScalingGroup, S3</li>
+  <li>app: LoadBalancer, AutoScalingGroup</li>
+  <li>database: RDS</li>
+</ul>
+
+<h1 id="ami">AMI</h1>
+
+<p>name “ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*”</p>
+
+<h1 id="vpc">VPC</h1>
+
+<p>Find all availability zones</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws --profile=2022trk ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName'
+</code></pre></div></div>
+
+<h1 id="one-instance">One instance</h1>
+
+<p>For one instance we can use <code class="language-plaintext highlighter-rouge">instance.tf</code></p>
+<ul>
+  <li>to enable internet for private instances we use <code class="language-plaintext highlighter-rouge">nat_gateway</code> resource type
+(it needs elastic ip)
+```
+    <h1 id="nattf">nat.tf</h1>
+    <h1 id="elastic-ip-is-needed-for-nat-gw">elastic ip is needed for nat gw</h1>
+    <p>resource “aws_eip” “nat” {
+vpc = true
+}</p>
+  </li>
+</ul>
+
+<p>resource “aws_nat_gateway” “nat-gw” {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.main-public-1.id
+  depends_on    = [aws_internet_gateway.main-gw]
+}</p>
+
+<h1 id="vpc-setup-for-nat">VPC setup for NAT</h1>
+<p>resource “aws_route_table” “main-private” {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block     = “0.0.0.0/0”
+    nat_gateway_id = aws_nat_gateway.nat-gw.id
+  }</p>
+
+<p>tags = {
+    Name = “main-private-1”
+  }
+}</p>
+
+<h1 id="route-associations-private">route associations private</h1>
+<p>resource “aws_route_table_association” “main-private-1-a” {
+  subnet_id      = aws_subnet.main-private-1.id
+  route_table_id = aws_route_table.main-private.id
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+ebs_volume
+</code></pre></div></div>
+<h1 id="instancetf">instance.tf</h1>
+<p>resource “aws_ebs_volume” “ebs-volume-1” {
+  availability_zone = “eu-west-1a”
+  size              = 20
+  type              = “gp2”
+  tags = {
+    Name = “extra volume data”
+  }
+}</p>
+
+<p>resource “aws_volume_attachment” “ebs-volume-1-attachment” {
+  device_name = “/dev/xvdh”
+  volume_id   = aws_ebs_volume.ebs-volume-1.id
+  instance_id = aws_instance.example.id
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user_data is used to do script at launch - creation of instance (not reboot): to
+install extra software, join a cluster, mount volumes
+Use as string or templates
+</code></pre></div></div>
+<h1 id="instancetf-1">instance.tf</h1>
+<p>resource “aws_instance” “example” {
+  ami           = var.AMIS[var.AWS_REGION]
+  instance_type = “t2.micro”</p>
+
+<p># the public SSH key
+  key_name = aws_key_pair.mykeypair.key_name</p>
+
+<p># user data
+  user_data = data.template_cloudinit_config.cloudinit-example.rendered
+}</p>
+
+<p>resource “aws_ebs_volume” “ebs-volume-1” {
+  availability_zone = “eu-west-1a”
+  size              = 20
+  type              = “gp2”
+  tags = {
+    Name = “extra volume data”
+  }
+}</p>
+
+<p>resource “aws_volume_attachment” “ebs-volume-1-attachment” {
+  device_name  = var.INSTANCE_DEVICE_NAME
+  volume_id    = aws_ebs_volume.ebs-volume-1.id
+  instance_id  = aws_instance.example.id
+  skip_destroy = true                            # skip destroy to avoid issues with terraform destroy
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data for scripts
+</code></pre></div></div>
+<h1 id="cloudinittf">cloudinit.tf</h1>
+<p>data “template_file” “init-script” {
+  template = file(“scripts/init.cfg”)
+  vars = {
+    REGION = var.AWS_REGION
+  }
+}</p>
+
+<p>data “template_file” “shell-script” {
+  template = file(“scripts/volumes.sh”)
+  vars = {
+    DEVICE = var.INSTANCE_DEVICE_NAME
+  }
+}</p>
+
+<p>data “template_cloudinit_config” “cloudinit-example” {
+  gzip          = false
+  base64_encode = false</p>
+
+<p>part {
+    filename     = “init.cfg”
+    content_type = “text/cloud-config”
+    content      = data.template_file.init-script.rendered
+  }</p>
+
+<p>part {
+    content_type = “text/x-shellscript”
+    content      = data.template_file.shell-script.rendered
+  }
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scripts
+</code></pre></div></div>
+<h1 id="scriptsinitcfg">scripts/init.cfg</h1>
+<p>#cloud-config</p>
+
+<p>repo_update: true
+repo_upgrade: all</p>
+
+<p>packages:</p>
+<ul>
+  <li>lvm2</li>
+</ul>
+
+<p>output:
+  all: ‘| tee -a /var/log/cloud-init-output.log’</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+<h1 id="scriptsvolumessh">scripts/volumes.sh</h1>
+<p>#!/bin/bash</p>
+
+<p>set -ex</p>
+
+<p>vgchange -ay</p>
+
+<p>DEVICE_FS=<code class="language-plaintext highlighter-rouge">blkid -o value -s TYPE ${DEVICE} || echo ""</code>
+if [ “<code class="language-plaintext highlighter-rouge">echo -n $DEVICE_FS</code>” == “” ] ; then 
+  # wait for the device to be attached
+  DEVICENAME=<code class="language-plaintext highlighter-rouge">echo "${DEVICE}" | awk -F '/' '{print $3}'</code>
+  DEVICEEXISTS=’’
+  while [[ -z $DEVICEEXISTS ]]; do
+    echo “checking $DEVICENAME”
+    DEVICEEXISTS=<code class="language-plaintext highlighter-rouge">lsblk |grep "$DEVICENAME" |wc -l</code>
+    if [[ $DEVICEEXISTS != “1” ]]; then
+      sleep 15
+    fi
+  done
+  # make sure the device file in /dev/ exists
+  count=0
+  until [[ -e ${DEVICE} || “$count” == “60” ]]; do
+   sleep 5
+   count=$(expr $count + 1)
+  done
+  pvcreate ${DEVICE}
+  vgcreate data ${DEVICE}
+  lvcreate –name volume1 -l 100%FREE data
+  mkfs.ext4 /dev/data/volume1
+fi
+mkdir -p /data
+echo ‘/dev/data/volume1 /data ext4 defaults 0 0’ » /etc/fstab
+mount /data</p>
+
+<h1 id="install-docker">install docker</h1>
+<p>curl https://get.docker.com | bash</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+static public ip and static private ip
+</code></pre></div></div>
+<h1 id="instancetf-2">instance.tf</h1>
+<p>resource “aws_instance” “example” {
+  ami           = var.AMIS[var.AWS_REGION]
+  instance_type = “t2.micro”
+  subnet_id = aws_subnet.main-public-1.id
+  private_id = “10.0.1.4” # within the range of main-public-1
+}</p>
+
+<h1 id="elastic-ip-address-is-free-when-it-is-assigned-to-instance-otherwise-it-is">elastic ip address is free when it is assigned to instance, otherwise it is</h1>
+<h1 id="not-free-so-better-is-to-use-instance-and-assign-on-create-otherwise-you">not free, so better is to use <code class="language-plaintext highlighter-rouge">instance</code> and assign on create. otherwise you</h1>
+<h1 id="can-assign-ip-to-instance-in-association-aws_eip_association">can assign ip to instance in association aws_eip_association</h1>
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourceseip">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip</h1>
+<p>resource “aws_eip” “example-eip” {
+  instance = aws_instance.example.id
+  vpc = true
+}</p>
+
+<p>output “public-ip” {
+  value = aws_eip.example-eip.public_ip
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>route53 can be used so we use hostname instead of ip address
+</code></pre></div></div>
+<h1 id="reute53tf">reute53.tf</h1>
+<p>resource “aws_route53_zone” “newtech-academy” {
+  name = “newtech.academy”
+}</p>
+
+<p>resource “aws_route53_record” “server1-record” {
+  zone_id = aws_route53_zone.newtech-academy.zone_id
+  name    = “server1.newtech.academy”
+  type    = “A”
+  ttl     = “300”
+  records = [aws_eip.example-eip.public_ip]
+}</p>
+
+<p>resource “aws_route53_record” “www-record” {
+  zone_id = aws_route53_zone.newtech-academy.zone_id
+  name    = “www.newtech.academy”
+  type    = “A”
+  ttl     = “300”
+  records = [“104.236.247.8”]
+}</p>
+
+<p>resource “aws_route53_record” “mail1-record” {
+  zone_id = aws_route53_zone.newtech-academy.zone_id
+  name    = “newtech.academy”
+  type    = “MX”
+  ttl     = “300”
+  records = [
+    “1 aspmx.l.google.com.”,
+    “5 alt1.aspmx.l.google.com.”,
+    “5 alt2.aspmx.l.google.com.”,
+    “10 aspmx2.googlemail.com.”,
+    “10 aspmx3.googlemail.com.”,
+  ]
+}</p>
+
+<p>output “ns-servers” {
+  description = “Use this nameservers on your registar”
+  value = aws_route53_zone.newtech-academy.name_servers
+}
+output “check-server1” {
+  value = “host server1.newtech.academy ${aws_route53_zone.newtech-academy.name_servers[0]}”
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+RDS relation database service: managed database with replication (high
+availability), automated snapshots (backups) and security updates, instance
+replacement (vertical scaling, for example more memory/cpu)
+You need to define: subnet group (to specify in what subnets db will be in),
+parameter group (change settings in db since we do not have ssh access to
+instances) and security group (firewall to enable incomming traffic)
+https://github.com/wardviaene/terraform-course/tree/master/demo-12
+</code></pre></div></div>
+<h1 id="rdstf">rds.tf</h1>
+<p>resource “aws_db_subnet_group” “mariadb-subnet” {
+  name        = “mariadb-subnet”
+  description = “RDS subnet group”
+  subnet_ids  = [aws_subnet.main-private-1.id, aws_subnet.main-private-2.id]
+}</p>
+
+<p>resource “aws_db_parameter_group” “mariadb-parameters” {
+  name        = “mariadb-parameters”
+  family      = “mariadb10.4”
+  description = “MariaDB parameter group”</p>
+
+<p>parameter {
+    name  = “max_allowed_packet”
+    value = “16777216”
+  }
+}</p>
+
+<p>resource “aws_db_instance” “mariadb” {
+  allocated_storage       = 100 # 100 GB of storage, gives us more IOPS than a lower number
+  engine                  = “mariadb”
+  engine_version          = “10.4.13”
+  instance_class          = “db.t2.small” # use micro if you want to use the free tier
+  identifier              = “mariadb”
+  name                    = “mariadb”
+  username                = “root”           # username
+  password                = var.RDS_PASSWORD # password
+  db_subnet_group_name    = aws_db_subnet_group.mariadb-subnet.name
+  parameter_group_name    = aws_db_parameter_group.mariadb-parameters.name
+  multi_az                = “false” # set to true to have high availability: 2 instances synchronized with each other
+  vpc_security_group_ids  = [aws_security_group.allow-mariadb.id]
+  storage_type            = “gp2”
+  backup_retention_period = 30                                          # how long you’re going to keep your backups
+  availability_zone       = aws_subnet.main-private-1.availability_zone # prefered AZ
+  skip_final_snapshot     = true                                        # skip final snapshot when doing terraform destroy
+  tags = {
+    Name = “mariadb-instance”
+  }
+}</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+<h1 id="securitygrouptf">securitygroup.tf</h1>
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcessecurity_group">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group</h1>
+<p>resource “aws_security_group” “example-instance” {
+  vpc_id      = aws_vpc.main.id
+  name        = “allow-ssh”
+  description = “security group that allows ssh and all egress traffic”
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = “-1”
+    cidr_blocks = [“0.0.0.0/0”]
+  }</p>
+
+<p>ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = “tcp”
+    cidr_blocks = [“0.0.0.0/0”]
+  }
+  tags = {
+    Name = “example-instance”
+  }
+}</p>
+
+<p>resource “aws_security_group” “allow-mariadb” {
+  vpc_id      = aws_vpc.main.id
+  name        = “allow-mariadb”
+  description = “allow-mariadb”
+  ingress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = “tcp”
+    security_groups = [aws_security_group.example-instance.id] # allowing access from our example instance
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = “-1”
+    cidr_blocks = [“0.0.0.0/0”]
+    self        = true
+  }
+  tags = {
+    Name = “allow-mariadb”
+  }
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+IAM identity and access management: user can have groups and roles. user can
+login using login/password or token and MFA, and access key and secret key.
+You can use predefined policy and attach to group or you add gruop inline policy
+</code></pre></div></div>
+<h1 id="iamtf">iam.tf</h1>
+<h1 id="group-definition">group definition</h1>
+<p>resource “aws_iam_group” “administrators” {
+  name = “administrators”
+}</p>
+
+<p>resource “aws_iam_policy_attachment” “administrators-attach” {
+  name       = “administrators-attach”
+  groups     = [aws_iam_group.administrators.name]
+  policy_arn = “arn:aws:iam::aws:policy/AdministratorAccess”
+  # or inline
+  policy = «EOF
+}</p>
+
+<h1 id="resource-aws_iam_group_policy-my_policy-">resource “aws_iam_group_policy” “my_policy” {</h1>
+<h1 id="name----my_administrator_policy">name   = “my_administrator_policy”</h1>
+<h1 id="group---aws_iam_groupadministratorsid">group  = aws_iam_group.administrators.id</h1>
+<h1 id="policy--eof">policy = «EOF</h1>
+<h1 id="">{</h1>
+<h1 id="version-2012-10-17">“Version”: “2012-10-17”,</h1>
+<h1 id="statement-">“Statement”: [</h1>
+<h1 id="-1">{</h1>
+<h1 id="effect-allow">“Effect”: “Allow”,</h1>
+<h1 id="action-">“Action”: “*”,</h1>
+<h1 id="resource-">“Resource”: “*”</h1>
+<h1 id="-2">}</h1>
+<h1 id="-3">]</h1>
+<h1 id="-4">}</h1>
+<h1 id="eof">EOF</h1>
+<h1 id="-5">}</h1>
+
+<h1 id="user">user</h1>
+<p>resource “aws_iam_user” “admin1” {
+  name = “admin1”
+}</p>
+
+<p>resource “aws_iam_user” “admin2” {
+  name = “admin2”
+}</p>
+
+<p>resource “aws_iam_group_membership” “administrators-users” {
+  name = “administrators-users”
+  users = [
+    aws_iam_user.admin1.name,
+    aws_iam_user.admin2.name,
+  ]
+  group = aws_iam_group.administrators.name
+}</p>
+
+<p>output “warning” {
+  value = “WARNING: make sure you’re not using the AdministratorAccess policy for other users/groups/roles. If this is the case, don’t run terraform destroy, but manually unlink the created resources”
+}</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iam roles
+Roles are used to add temporary access that they normally would't have.
+Roles can be attached to EC2 instances, from that instance user can obtain
+access credentials, using those credentials user or service can assume the role.
+
+</code></pre></div></div>
+<h1 id="s3tf">s3.tf</h1>
+<p>resource “aws_s3_bucket” “b” {
+  bucket = “mybucket-c29df1”
+  acl    = “private”</p>
+
+<p>tags = {
+    Name = “mybucket-c29df1”
+  }
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+<h1 id="instancetf-3">instance.tf</h1>
+<p>resource “aws_instance” “example” {
+  ami           = var.AMIS[var.AWS_REGION]
+  instance_type = “t2.micro”</p>
+
+<p># the VPC subnet
+  subnet_id = aws_subnet.main-public-1.id</p>
+
+<p># the security group
+  vpc_security_group_ids = [aws_security_group.example-instance.id]</p>
+
+<p># the public SSH key
+  key_name = aws_key_pair.mykeypair.key_name</p>
+
+<p># role:
+  iam_instance_profile = aws_iam_instance_profile.s3-mybucket-role-instanceprofile.name
+}</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+<h1 id="iamtf-1">iam.tf</h1>
+<p>resource “aws_iam_role” “s3-mybucket-role” {
+  name               = “s3-mybucket-role”
+  assume_role_policy = «EOF
+{
+  “Version”: “2012-10-17”,
+  “Statement”: [
+    {
+      “Action”: “sts:AssumeRole”,
+      “Principal”: {
+        “Service”: “ec2.amazonaws.com”
+      },
+      “Effect”: “Allow”,
+      “Sid”: “”
+    }
+  ]
+}
+EOF</p>
+
+<p>}</p>
+
+<p>resource “aws_iam_instance_profile” “s3-mybucket-role-instanceprofile” {
+  name = “s3-mybucket-role”
+  role = aws_iam_role.s3-mybucket-role.name
+}</p>
+
+<p>resource “aws_iam_role_policy” “s3-mybucket-role-policy” {
+  name = “s3-mybucket-role-policy”
+  role = aws_iam_role.s3-mybucket-role.id
+  policy = «EOF
+{
+    “Version”: “2012-10-17”,
+    “Statement”: [
+        {
+            “Effect”: “Allow”,
+            “Action”: [
+              “s3:<em>”
+            ],
+            “Resource”: [
+              “arn:aws:s3:::mybucket-c29df1”,
+              “arn:aws:s3:::mybucket-c29df1/</em>”
+            ]
+        }
+    ]
+}
+EOF</p>
+
+<p>}</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+autoscalling needs: launch configuration (properties of the instance to be
+launched ami id, security group) or launch template () and autoscalling group
+(scaling properties like min instances, health check).
+https://github.com/wardviaene/terraform-course/tree/master/demo-15
+
+launch configuration and autoscalling group
+</code></pre></div></div>
+<h1 id="autoscalingtf">autoscaling.tf</h1>
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourceslaunch_configuration">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_configuration</h1>
+<p>resource “aws_launch_configuration” “movebase-launchconfig” {
+  name_prefix     = “movebase-launchconfig”
+  image_id        = var.AMIS[var.AWS_REGION]
+  instance_type   = “t2.micro”
+  key_name        = aws_key_pair.movebase-key-pair.key_name
+  security_groups = [aws_security_group.movebase-allow-ssh-and-all-egress.id]
+}</p>
+
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcesautoscaling_group">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group</h1>
+<p>resource “aws_autoscaling_group” “movebase-autoscaling-group” {
+  name                      = “movebase-autoscaling-group”
+  vpc_zone_identifier       = [aws_subnet.movebase-subnet-public-1.id, aws_subnet.movebase-subnet-public-2.id]
+  launch_configuration      = aws_launch_configuration.movebase-launchconfig.name
+  min_size                  = 1
+  max_size                  = 2
+  health_check_grace_period = 300
+  health_check_type         = “EC2”
+  force_delete              = true</p>
+
+<p>tag {
+    key                 = “Name”
+    value               = “movebase-ec2-instance”
+    propagate_at_launch = true
+  }
+}</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>policy and alarm
+autoscalling policy is triggered based on threshold (cloudwatch alarm)
+</code></pre></div></div>
+<h1 id="autoscalingpolicytf">autoscalingpolicy.tf</h1>
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcesautoscaling_policy">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_policy</h1>
+<p>resource “aws_autoscaling_policy” “movebase-autoscaling-policy-cpu” {
+  name                   = “movebase-autoscaling-policy-cpu”
+  autoscaling_group_name = aws_autoscaling_group.movebase-autoscaling-group.name
+  adjustment_type        = “ChangeInCapacity”
+  scaling_adjustment     = “1”
+  cooldown               = “300”
+  policy_type            = “SimpleScaling”
+}</p>
+
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcescloudwatch_metric_alarm">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm</h1>
+<p>resource “aws_cloudwatch_metric_alarm” “movebase-cloudwatch-metric-alarm-cpu” {
+  alarm_name          = “movebase-cloudwatch-metric-alarm-cpu”
+  alarm_description   = “movebase-cloudwatch-metric-alarm-cpu”
+  comparison_operator = “GreaterThanOrEqualToThreshold”
+  evaluation_periods  = “2”
+  metric_name         = “CPUUtilization”
+  namespace           = “AWS/EC2”
+  period              = “120”
+  statistic           = “Average”
+  threshold           = “30”</p>
+
+<p>dimensions = {
+    “AutoScalingGroupName” = aws_autoscaling_group.movebase-autoscaling-group.name
+  }</p>
+
+<p>actions_enabled = true
+  alarm_actions   = [aws_autoscaling_policy.movebase-autoscaling-policy-cpu.arn]
+}</p>
+
+<h1 id="scale-down-alarm">scale down alarm</h1>
+<p>resource “aws_autoscaling_policy” “movebase-autoscaling-policy-cpu-scaledown” {
+  name                   = “movebase-autoscaling-policy-cpu-scaledown”
+  autoscaling_group_name = aws_autoscaling_group.movebase-autoscaling-group.name
+  adjustment_type        = “ChangeInCapacity”
+  scaling_adjustment     = “-1”
+  cooldown               = “300”
+  policy_type            = “SimpleScaling”
+}</p>
+
+<p>resource “aws_cloudwatch_metric_alarm” “movebase-cloudwatch-metric-alarm-cpu-scaledown” {
+  alarm_name          = “movebase-cloudwatch-metric-alarm-cpu-scaledown”
+  alarm_description   = “movebase-cloudwatch-metric-alarm-cpu-scaledown”
+  comparison_operator = “LessThanOrEqualToThreshold”
+  evaluation_periods  = “2”
+  metric_name         = “CPUUtilization”
+  namespace           = “AWS/EC2”
+  period              = “120”
+  statistic           = “Average”
+  threshold           = “5”</p>
+
+<p>dimensions = {
+    “AutoScalingGroupName” = aws_autoscaling_group.movebase-autoscaling-group.name
+  }</p>
+
+<p>actions_enabled = true
+  alarm_actions   = [aws_autoscaling_policy.movebase-autoscaling-policy-cpu-scaledown.arn]
+}</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>notification
+</code></pre></div></div>
+<h1 id="snstf">sns.tf</h1>
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcessns_topic">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic</h1>
+<p>resource “aws_sns_topic” “movebase-sns-topic” {
+  name         = “movebase-sns-topic”
+}</p>
+
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcessns_topic_subscription">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription</h1>
+<p>resource “aws_sns_topic_subscription” “user_updates_sqs_target” {
+  topic_arn = aws_sns_topic.movebase-sns-topic.arn
+  protocol = “email”
+  endpoint = var.NOTIFICATION_EMAIL
+}</p>
+
+<p>resource “aws_autoscaling_notification” “example-notify” {
+  group_names = [aws_autoscaling_group.movebase-autoscaling-group.name]
+  topic_arn     = aws_sns_topic.movebase-sns-topic.arn
+  notifications  = [
+    “autoscaling:EC2_INSTANCE_LAUNCH”,
+    “autoscaling:EC2_INSTANCE_TERMINATE”,
+    “autoscaling:EC2_INSTANCE_LAUNCH_ERROR”
+  ]
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+on ubuntu you can simulate the load
+</code></pre></div></div>
+<p>sudo apt install stress
+stress –cpu 2 –timeout 300</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+ELB elastic load balancer distributes incomming traffic, scales when you receive
+more trafic, it healthcheck all instances (and stop sending traffic to them)
+It also used as SSL terminator and manage ssl certificate).
+It can be spread over multiple availability zones.
+Classic load balancer routes on network level: port 80 to port 8080
+ALB routes on application level: /api to different instances
+https://github.com/wardviaene/terraform-course/tree/master/demo-16
+</code></pre></div></div>
+<h1 id="elbtf">elb.tf</h1>
+<h1 id="httpsdocsawsamazoncomelasticloadbalancinglatestapplicationintroductionhtmlapplication-load-balancer-components">https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html#application-load-balancer-components</h1>
+<h1 id="each-target-group-routes-requests-to-one-or-more-registered-targets-such-as">Each target group routes requests to one or more registered targets, such as</h1>
+<h1 id="ec2-instances-using-the-protocol-and-port-number-that-you-specify-in">EC2 instances, using the protocol and port number that you specify in</h1>
+<h1 id="listener-you-can-register-a-target-with-multiple-target-groups-you-can">listener. You can register a target with multiple target groups. You can</h1>
+<h1 id="configure-health-checks-on-a-per-target-group-basis-health-checks-are">configure health checks on a per target group basis. Health checks are</h1>
+<h1 id="performed-on-all-targets-registered-to-a-target-group-that-is-specified-in-a">performed on all targets registered to a target group that is specified in a</h1>
+<h1 id="listener-rule-for-your-load-balancer">listener rule for your load balancer.</h1>
+<h1 id="old-httpsregistryterraformioprovidershashicorpawslatestdocsresourceselb-classic">old https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elb classic</h1>
+<h1 id="new-httpsregistryterraformioprovidershashicorpawslatestdocsresourceslb-which-can-be-application-network-gateway">new https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb which can be application, network, gateway</h1>
+<h1 id="todo-tutorial-httpsmediumcomcognitoiqterraform-and-aws-application-load-balancers-62a6f8592bcf">todo: tutorial https://medium.com/cognitoiq/terraform-and-aws-application-load-balancers-62a6f8592bcf</h1>
+<h1 id="todo-long-tutorial-httpshiveitcouktechshopterraform-aws-vpc-example">todo: long tutorial https://hiveit.co.uk/techshop/terraform-aws-vpc-example/</h1>
+<p>resource “aws_lb” “movebase-lb” {
+  name            = “movebase-lb”
+  security_groups = [aws_security_group.movebase-allow-ssh-and-all-egress.id, aws_security_group.movebase-allow-80.id]
+  subnets         = [aws_subnet.movebase-subnet-public-1.id, aws_subnet.movebase-subnet-public-2.id]
+  tags = {
+    Name = “movebase-lb”
+  }
+}</p>
+
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourceslb_listener">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener</h1>
+<h1 id="httpsdocsawsamazoncomelasticloadbalancinglatestapplicationload-balancer-listenershtml">https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html</h1>
+<p>resource “aws_lb_listener” “movebase-lb-listener-80” {
+  load_balancer_arn = aws_lb.movebase-lb.arn
+  port              = “80”
+  protocol          = “HTTP” # fpr ALB: HTTP or HTTPS for NLB: TCP, TLS, UDP and TCP_UDP</p>
+
+<p>default_action {
+    type             = “forward” # forward, redirect, fixed-response, authenticate-cognito and authenticate-oidc
+    target_group_arn = aws_lb_target_group.movebase-lb-target-group.arn
+  }
+}</p>
+
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourceslb_target_group">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group</h1>
+<p>resource “aws_lb_target_group” “movebase-lb-target-group” {
+  name             = “movebase-lb-target-group”
+  port             = 80
+  protocol         = “HTTP”
+  vpc_id           = aws_vpc.movebase-vpc.id
+  tags = {
+    Name = “movebase-lb-target-group”
+  }
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group#health_check
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 3
+    interval            = 30
+  }
+}</p>
+
+<h1 id="to-connect-to-autoscaling-we-define-a-link-in-autoscallingtf">to connect to autoscaling, we define a link in autoscalling.tf</h1>
+<h1 id="aws_lb_target_group_attachment-is-used-to-connect-with-specific-instance">“aws_lb_target_group_attachment” is used to connect with specific instance</h1>
+
+<h1 id="autoscallingtf">autoscalling.tf</h1>
+<h1 id="we-could-also-use-inline-load_balancers-inside-aws_autoscaling_group">we could also use inline load_balancers inside “aws_autoscaling_group”</h1>
+<h1 id="httpsregistryterraformioprovidershashicorpawslatestdocsresourcesautoscaling_attachment">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_attachment</h1>
+<p>resource “aws_autoscaling_attachment” “movebase-autoscaling-group-attachment” {
+  autoscaling_group_name = aws_autoscaling_group.movebase-autoscaling-group.name
+  alb_target_group_arn   = aws_lb_target_group.movebase-lb-target-group.arn
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+ECS ec2 container services - cluster for docker containers. You need to start
+autoscalling group with custom AMI (which contains ECS agent)
+</code></pre></div></div>
+<h1 id="ecstf">ecs.tf</h1>
+<h1 id="cluster">cluster</h1>
+<p>resource “aws_ecs_cluster” “example-cluster” {
+  name = “example-cluster”
+}</p>
+
+<p>resource “aws_launch_configuration” “ecs-example-launchconfig” {
+  name_prefix          = “ecs-launchconfig”
+  image_id             = var.ECS_AMIS[var.AWS_REGION]
+  instance_type        = var.ECS_INSTANCE_TYPE
+  key_name             = aws_key_pair.mykeypair.key_name
+  iam_instance_profile = aws_iam_instance_profile.ecs-ec2-role.id
+  security_groups      = [aws_security_group.ecs-securitygroup.id]
+  user_data            = “#!/bin/bash\necho ‘ECS_CLUSTER=example-cluster’ &gt; /etc/ecs/ecs.config\nstart ecs”
+  lifecycle {
+    create_before_destroy = true
+  }
+}</p>
+
+<p>resource “aws_autoscaling_group” “ecs-example-autoscaling” {
+  name                 = “ecs-example-autoscaling”
+  vpc_zone_identifier  = [aws_subnet.main-public-1.id, aws_subnet.main-public-2.id]
+  launch_configuration = aws_launch_configuration.ecs-example-launchconfig.name
+  min_size             = 1
+  max_size             = 1
+  tag {
+    key                 = “Name”
+    value               = “ecs-ec2-container”
+    propagate_at_launch = true
+  }
+}
+```</p>
+
+<p>TODO https://medium.com/@ajays871/rails-6-deployment-using-terraform-docker-and-aws-codepipeline-a5fb15ede5eb
+https://nts.strzibny.name/hybrid-docker-compose-rails/</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

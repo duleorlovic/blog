@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Cap3 Capistrano Deployment Rubber Provision</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Cap3 Capistrano Deployment Rubber Provision</h1>
+    <p class="meta">Sep 7, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#complete-provision"><span class="tocnumber">1</span> <span class="toctext">Complete provision</span></a></li><li class="toc_level-1 toc_section-2"><a href="#install-capistrano"><span class="tocnumber">2</span> <span class="toctext">Install capistrano</span></a></li><li class="toc_level-1 toc_section-3"><a href="#configuration-variables"><span class="tocnumber">3</span> <span class="toctext">Configuration variables</span></a></li><li class="toc_level-1 toc_section-4"><a href="#preparing-the-app"><span class="tocnumber">4</span> <span class="toctext">Preparing the app</span></a></li><li class="toc_level-1 toc_section-5"><a href="#tasks"><span class="tocnumber">5</span> <span class="toctext">Tasks</span></a><ul><li class="toc_level-2 toc_section-6"><a href="#task-syntax"><span class="tocnumber">5.1</span> <span class="toctext">Task Syntax</span></a></li></ul></li><li class="toc_level-1 toc_section-7"><a href="#upgrading-capistrano-2-to-3"><span class="tocnumber">6</span> <span class="toctext">Upgrading capistrano 2 to 3</span></a></li><li class="toc_level-1 toc_section-8"><a href="#sample-app-on-ec2"><span class="tocnumber">7</span> <span class="toctext">Sample app on EC2</span></a></li><li class="toc_level-1 toc_section-9"><a href="#capistrano-with-custom-vagrant-script"><span class="tocnumber">8</span> <span class="toctext">Capistrano with custom Vagrant script</span></a></li><li class="toc_level-1 toc_section-10"><a href="#logs"><span class="tocnumber">9</span> <span class="toctext">Logs</span></a></li><li class="toc_level-1 toc_section-11"><a href="#rubber"><span class="tocnumber">10</span> <span class="toctext">Rubber</span></a></li><li class="toc_level-1 toc_section-12"><a href="#errors"><span class="tocnumber">11</span> <span class="toctext">ERRORS</span></a><ul><li class="toc_level-2 toc_section-13"><a href="#rubber-vagrant-rubber-provision"><span class="tocnumber">11.1</span> <span class="toctext">Rubber Vagrant rubber provision</span></a></li></ul></li><li class="toc_level-1 toc_section-14"><a href="#debug-capistrano-tasks"><span class="tocnumber">12</span> <span class="toctext">Debug capistrano tasks</span></a></li><li class="toc_level-1 toc_section-15"><a href="#videos"><span class="tocnumber">13</span> <span class="toctext">Videos</span></a></li><li class="toc_level-1 toc_section-16"><a href="#rbenv"><span class="tocnumber">14</span> <span class="toctext">RBENV</span></a></li><li class="toc_level-1 toc_section-17"><a href="#passenger-and-nginx"><span class="tocnumber">15</span> <span class="toctext">Passenger and NGINX</span></a></li><li class="toc_level-1 toc_section-18"><a href="#redis"><span class="tocnumber">16</span> <span class="toctext">Redis</span></a></li><li class="toc_level-1 toc_section-19"><a href="#sidekiq"><span class="tocnumber">17</span> <span class="toctext">Sidekiq</span></a></li><li class="toc_level-1 toc_section-20"><a href="#tips"><span class="tocnumber">18</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-21"><a href="#homedeploymove_indexrbenv-vars"><span class="tocnumber">19</span> <span class="toctext">/home/deploy/move_index/.rbenv-vars</span></a></li><li class="toc_level-1 toc_section-22"><a href="#check-current-value-of-max-old-space-size-not-that-without-bundle-it-will"><span class="tocnumber">20</span> <span class="toctext">check current value of max-old-space-size, not that without bundle it will</span></a></li><li class="toc_level-1 toc_section-23"><a href="#show-original-value"><span class="tocnumber">21</span> <span class="toctext">show original value</span></a></li><li class="toc_level-1 toc_section-24"><a href="#homerbenvbinrbenv-exec-bundle-exec-node--e-consolelogv8getheapstatisticsheap_size_limit10241024---1024"><span class="tocnumber">22</span> <span class="toctext">$HOME/.rbenv/bin/rbenv exec bundle exec node -e ‘console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))’ # =&gt; 1024</span></a></li><li class="toc_level-1 toc_section-25"><a href="#libtasksbefore_assets_precompilerake"><span class="tocnumber">23</span> <span class="toctext">lib/tasks/before_assets_precompile.rake</span></a></li><li class="toc_level-1 toc_section-26"><a href="#every-time-you-execute-rake-assetsprecompile"><span class="tocnumber">24</span> <span class="toctext">every time you execute ‘rake assets:precompile’</span></a></li><li class="toc_level-1 toc_section-27"><a href="#run-before_assets_precompile-first"><span class="tocnumber">25</span> <span class="toctext">run ‘before_assets_precompile’ first</span></a></li><li class="toc_level-1 toc_section-28"><a href="#errors-1"><span class="tocnumber">26</span> <span class="toctext">ERRORS</span></a></li><li class="toc_level-1 toc_section-29"><a href="#errors-2"><span class="tocnumber">27</span> <span class="toctext">Errors</span></a></li></ul></td></tr></tbody></table></div><h1 id="complete-provision">Complete provision</h1>
+
+<p>https://gorails.com/deploy/ubuntu/18.04
+ubuntu 19 (eoan) does not include passenger yet https://github.com/phusion/passenger/issues/2104</p>
+
+<p>On EC2 you already have non root user <code class="language-plaintext highlighter-rouge">ubuntu</code> so you can skip following steps
+if <code class="language-plaintext highlighter-rouge">ssh -i $PEM_FILE ubuntu@$PRODUCTION_IP</code> works</p>
+
+<p>To create non root user try:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh root@$PRODUCTION_IP
+adduser deploy
+# fill and enter
+adduser deploy sudo
+sudo vi /etc/ssh/sshd_config
+# PasswordAuthentication yes
+sudo systemctl restart ssh
+</code></pre></div></div>
+<p>make sure you can access as deploy</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh deploy@$PRODUCTION_IP
+ssh-copy-id deploy@$PRODUCTION_IP
+ssh-copy-id -i ~/.ssh/specific_key.pub deploy@$PRODUCTION_IP
+ssh deploy@$PRODUCTION_IP
+</code></pre></div></div>
+
+<p>Install node and yarn as deploy user</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># sudo pwd
+# curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo add-apt-repository ppa:chris-lea/redis-server
+# click Enter
+sudo apt-get update
+sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev dirmngr gnupg apt-transport-https ca-certificates redis-server redis-tools nodejs yarn
+# click Enter
+</code></pre></div></div>
+
+<p>Installing latest node can be done with <code class="language-plaintext highlighter-rouge">n</code> package</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn global add n
+yarn global bin
+sudo /home/ubuntu/.yarn/bin/n latest
+</code></pre></div></div>
+
+<p>install rbenv and ruby as deploy user</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' &gt;&gt; ~/.bashrc
+echo 'eval "$(rbenv init -)"' &gt;&gt; ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' &gt;&gt; ~/.bashrc
+git clone https://github.com/rbenv/rbenv-vars.git ~/.rbenv/plugins/rbenv-vars
+exec $SHELL
+rbenv install 2.6.3
+rbenv global 2.6.3
+ruby -v
+gem install bundler
+bundle -v
+</code></pre></div></div>
+<p>Add env variable for mastey key and database url</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir move_index
+vi move_index/.rbenv-vars
+# add lines
+DATABASE_URL=postgres://deploy:1234@127.0.0.1/move_index_production
+RAILS_MASTER_KEY=1234
+RAILS_ENV=production
+# check current value of max-old-space-size
+# $HOME/.rbenv/bin/rbenv exec bundle exec node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
+NODE_OPTIONS=--max-old-space-size=460
+
+echo '# this will load master key in env' &gt;&gt; ~/.bashrc
+echo 'export $(cat ~/move_index/.rbenv-vars)' &gt;&gt; ~/.bashrc
+</code></pre></div></div>
+<p>or add this task to copy master key from shared to config folder. You need to
+create shared file <code class="language-plaintext highlighter-rouge">vi /var/www/my_app/shared/master.key</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+namespace :config do
+   task :symlink do
+      on roles(:app) do
+        execute :ln, "-s #{shared_path}/master.key #{release_path}/config/master.key"
+      end
+   end
+end
+
+after 'deploy:symlink:shared', 'config:symlink'
+</code></pre></div></div>
+
+<p>passenger and nginx</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger bionic main &gt; /etc/apt/sources.list.d/passenger.list'
+sudo apt-get update
+sudo apt-get install -y nginx-extras libnginx-mod-http-passenger
+sudo vim /etc/nginx/conf.d/mod-http-passenger.conf
+# change the line for passenger_ruby
+# passenger_ruby /home/deploy/.rbenv/shims/ruby;
+
+sudo service nginx start
+</code></pre></div></div>
+<p>configure nginx (replace myapp with your app name, usually github folder name)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vi /etc/nginx/sites-enabled/default
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name _;
+  root /home/deploy/myapp/current/public;
+
+  passenger_enabled on;
+  passenger_app_env production;
+
+  location /cable {
+    passenger_app_group_name myapp_websocket;
+    passenger_force_max_concurrent_requests_per_process 0;
+  }
+
+  # Allow uploads up to 100MB in size
+  client_max_body_size 100m;
+
+  location ~ ^/(assets|packs) {
+    expires max;
+    gzip_static on;
+  }
+}
+
+sudo service nginx reload
+</code></pre></div></div>
+<p>install postgres</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get -y install postgresql postgresql-contrib libpq-dev
+sudo su - postgres
+
+createuser --pwprompt deploy
+# enter PASSWORD
+createdb -O deploy move_index_production
+exit
+# test if you can access with:
+psql -d move_index_production
+# change deploy user as superuser so it can create extensions like pgcrypto uuid
+sudo su postgres -c "psql -d postgres -c 'ALTER USER deploy WITH SUPERUSER;'"
+</code></pre></div></div>
+
+<p>dump postgresql with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pg_dump move_index_production &gt; m.dump
+scp m.dump IP:
+ssh IP
+psql move_index_production &lt; ~/m.dump
+</code></pre></div></div>
+
+<h1 id="install-capistrano">Install capistrano</h1>
+
+<p>Capistrano is not server provisioning tool. You need to manually boot up server
+and install ssh, apache, git… usually all tasks that requires sudo should be
+done manually. Capistrano use single non priviliged user in non interactive ssh
+session. Rubber has script for provisioning a server <code class="language-plaintext highlighter-rouge">cap rubber:create</code> and
+installing packages <code class="language-plaintext highlighter-rouge">cap rubber:bootstrap</code></p>
+
+<p>Capistrano version 3 is used here. Below is section for capistrano version 2.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# Use Capistrano for deployment
+group :development do
+  gem 'capistrano', '~&gt; 3.14', require: false
+  gem 'capistrano-rails', '~&gt; 1.6', require: false
+
+  gem 'capistrano-puma', require: false
+  gem 'capistrano-rvm', require: false
+
+  # use those if you do not use puma and rvm
+  gem 'capistrano-passenger', '~&gt; 0.2.0'
+  gem 'capistrano-rbenv', '~&gt; 2.2'
+
+  # cap production rails:c
+  gem 'capistrano-rails-console', require: false
+  # cap production postgres:replicate
+  gem 'capistrano3-postgres', require: false
+end
+HERE_DOC
+
+bundle exec cap install
+# this will generate  Capfile, config/deploy.rb and config/deploy/staging.rb...
+
+cat &gt; Capfile &lt;&lt; HERE_DOC
+# Load DSL and set up stages
+require 'capistrano/setup'
+require 'capistrano/deploy'
+require 'capistrano/scm/git'
+install_plugin Capistrano::SCM::Git
+
+require 'capistrano/rails'
+require 'capistrano/rails/console'
+
+# Include tasks from other gems included in your Gemfile
+require 'capistrano/bundler'
+require 'capistrano/rvm'
+require 'capistrano/puma'
+# if you use passenger and rbenv
+require 'capistrano/passenger'
+require 'capistrano/rbenv'
+
+require 'capistrano/rails/console'
+require 'capistrano3/postgres'
+
+# Load custom tasks from `lib/capistrano/tasks` if you have any defined
+# and add to deploy.rb like `after "deploy:published", "translation:setup"`
+Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
+HERE_DOC
+</code></pre></div></div>
+
+<p>To see all tasks you can run</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap -T
+cap -T postgres
+</code></pre></div></div>
+<p>To see description rake task</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap -D my-task
+</code></pre></div></div>
+
+<p>Custom tasks have some additional format to plain rake tasks</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/capistrano/tasks/rake.cap.rb
+desc 'Invoke a rake command on the remote server: cap qa "invoke[db:migrate]"'
+task :invoke, [:command] =&gt; 'deploy:set_rails_env' do |task, args|
+  on primary(:app) do
+    within current_path do
+      with :rails_env =&gt; fetch(:rails_env) do
+        rake args[:command]
+      end
+    end
+  end
+end
+</code></pre></div></div>
+<p>You need to set credentials master key</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /home/deploy/myapp/.rbenv-vars
+RAILS_MASTER_KEY=1234
+DATABASE_URL=postgresql://deploy:PASSWORD@127.0.0.1/myapp_production
+</code></pre></div></div>
+
+<p>Configure server</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+lock '~&gt; 3.16.0'
+
+set :application, 'myapp'
+set :repo_url, 'git@github.com:duleorlovic/myapp.git'
+
+# Default branch is :master
+# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, :main
+
+# Default deploy_to directory is /var/www/my_app_name
+# set :deploy_to, "/var/www/my_app_name"
+set :deploy_to, "/home/ubuntu/#{fetch(:application)}"
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy/production.rb
+server 'production-app.xceednet.com',
+       user: 'ubuntu',
+       roles: %w[app db web],
+       ssh_options: {
+         keys: '~/.ec2/singapore-webapp01-keypair.pem'
+       }
+</code></pre></div></div>
+
+<p>To deploy you can</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap production deploy
+</code></pre></div></div>
+
+<p>On digital ocean you can create snapshots and use it to create new droplets
+(new droplet can not be less than current hdd size od snapshot).</p>
+
+<p>For redis and sidekiq look below.</p>
+
+<h1 id="configuration-variables">Configuration variables</h1>
+
+<p><a href="http://capistranorb.com/documentation/getting-started/configuration/">configuration</a>
+files can set variables <code class="language-plaintext highlighter-rouge">set :my_var_name, "value"</code> and fetch values <code class="language-plaintext highlighter-rouge">fetch
+:my_var_name</code>. There are some variables that are used by default:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">:application</code> name of application</li>
+  <li><code class="language-plaintext highlighter-rouge">:deploy_to</code> path on the remote server where the app should be deployed,
+initially is <code class="language-plaintext highlighter-rouge">-&gt; { "/var/www/#{fetch(:application)}" }</code> but I like home folder.
+Inside that folder there are:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">current</code> symlink to some release <code class="language-plaintext highlighter-rouge">/var/www/my_app/releases/20170101010101</code></li>
+      <li><code class="language-plaintext highlighter-rouge">releases/</code> contains timestamped subfolder</li>
+      <li><code class="language-plaintext highlighter-rouge">repo/</code> hold git repository</li>
+      <li><code class="language-plaintext highlighter-rouge">revisions.log</code> timestaped log for all deploy or rollback actions. You can
+rollback with <code class="language-plaintext highlighter-rouge">cap production deploy:rollback</code></li>
+      <li><code class="language-plaintext highlighter-rouge">shared/</code> contains <code class="language-plaintext highlighter-rouge">linked_files</code> and <code class="language-plaintext highlighter-rouge">linked_dirs</code> that persists across
+releases (db configuration, user storage)</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">:scm</code> by default is <code class="language-plaintext highlighter-rouge">:git</code></li>
+  <li><code class="language-plaintext highlighter-rouge">:repo_url</code> is url for git. It should be accessible from remote server. For
+local <code class="language-plaintext highlighter-rouge">set :repo_url, 'ssh://orlovic@192.168.2.4/my_project</code></li>
+  <li><code class="language-plaintext highlighter-rouge">:linked_files</code> is symlinked files from shared folder</li>
+  <li><code class="language-plaintext highlighter-rouge">:default_env</code> for specific env variables</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+lock "3.8.0"
+
+set :application, "myapp"
+set :repo_url, "orlovic@192.168.2.4:rails/temp/myapp"
+set :deploy_to, "/home/deploy/#{fetch(:application)}"
+
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+
+# deploy with: cap staging deploy BRANCH=branch, it does not support
+# underscores like: my_branch_name
+set :branch, ENV['BRANCH'] if ENV['BRANCH']
+# rails
+set :rails_env, 'production'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy/staging.rb
+# if you use NAT network
+server "127.0.0.1", user: "deploy", roles: %w{app db web}, port: 2222
+# or if you use private network
+server "192.168.3.2", user: "deploy", roles: %w{app db web}
+</code></pre></div></div>
+
+<h1 id="preparing-the-app">Preparing the app</h1>
+
+<p><a href="http://capistranorb.com/documentation/getting-started/preparing-your-application/">preparing</a>
+is with <code class="language-plaintext highlighter-rouge">cap install</code>.</p>
+
+<p>Tasks are usually only for specific roles so you server needs to belongs to that
+role if you want task to be executed. Three main roles</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">:web</code> role is nginx/apache server. When I look at
+https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/assets.rake#L136
+I see that <code class="language-plaintext highlighter-rouge">assets_roles</code> is by defailt <code class="language-plaintext highlighter-rouge">[:web]</code> so there we execute tasks
+like <code class="language-plaintext highlighter-rouge">deploy:asset</code>. Probably you need to include also <code class="language-plaintext highlighter-rouge">:worker</code> role
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+  # we need assets on worker since we send emails that uses images (like logo)
+  set :assets_roles, %i[web worker]
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">:app</code> role is for rails app. Capistrano’s built-in tasks <code class="language-plaintext highlighter-rouge">deploy:check</code>,
+<code class="language-plaintext highlighter-rouge">deploy:published</code> or <code class="language-plaintext highlighter-rouge">deploy:finished</code> are all run in this role.
+https://capistranorb.com/documentation/getting-started/flow/
+You can attach your tasks after finish publishing the deploy
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/capistrano/tasks/puma.rake
+namespace :puma do
+  desc 'Restart puma service'
+  task :restart do
+    on roles(:app) do
+      execute 'sudo service puma restart'
+    end
+  end
+
+  after 'deploy:published', 'puma:restart'
+end
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">:db</code> role is for mysql/postgresql database (requires <code class="language-plaintext highlighter-rouge">primary: true</code>) or just
+running migrations. <code class="language-plaintext highlighter-rouge">capistrano-rails</code> plugin provides the <code class="language-plaintext highlighter-rouge">deploy:migrate</code>
+https://github.com/capistrano/rails/blob/master/lib/capistrano/tasks/migrations.rake
+Here we are adding <code class="language-plaintext highlighter-rouge">public/assets/</code> to <em>linked_dirs</em> (which should also
+include <code class="language-plaintext highlighter-rouge">public/packs</code>)</li>
+</ul>
+
+<p>You can define in two ways. Properties will be merged.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># using simple syntax
+role :web, %w{hello@world.com example.com:1234}
+
+# using extended syntax (which is equivalent)
+server 'world.com', roles: [:web], user: 'hello'
+server 'example.com', roles: [:web], port: 1234
+</code></pre></div></div>
+
+<p>For local vagrant (see below) you can use</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+set :repo_url, "orlovic@192.168.2.4:rails/temp/myapp"
+
+# config/deploy/staging.rb
+server "127.0.0.1", user: "vagrant", roles: %w{app db web}, port: 2222
+</code></pre></div></div>
+
+<p>If you are using private github repo, than permission problems for git will
+occurs, so you can use your local keys on server with those option:
+<code class="language-plaintext highlighter-rouge">set :ssh_options, forward_agent: true</code></p>
+
+<p>You can check before deploying with <code class="language-plaintext highlighter-rouge">cap staging git:check</code> or <code class="language-plaintext highlighter-rouge">cap staging
+deploy:check</code></p>
+
+<h1 id="tasks">Tasks</h1>
+
+<p>Nice <a href="https://www.youtube.com/watch?v=UQj_01dnEiw">railscasts video</a> but for old
+capistrano.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/capistrano/tasks/notify.rake
+namespace :my_tasks do
+  desc "My first task"
+  task :my_first_task do
+    on roles(:all) do
+      puts "Start my first task"
+    end
+    invoke 'my_tasks:notify'
+  end
+
+  task :notify do
+    on roles(:all) do |host|
+      puts "notify #{host}"
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>To run in specific env, run with: <code class="language-plaintext highlighter-rouge">cap staging my_tasks:my_first_task</code></p>
+
+<h2 id="task-syntax">Task Syntax</h2>
+
+<p><code class="language-plaintext highlighter-rouge">desc</code> and <code class="language-plaintext highlighter-rouge">task</code> are rake methods. Others are taken from
+<a href="https://github.com/capistrano/sshkit/blob/master/EXAMPLES.md">sshkit</a>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">on roles(:all) do |host|</code> will iterate to eah server host, You can run
+locally with <code class="language-plaintext highlighter-rouge">run_locally do</code>. <code class="language-plaintext highlighter-rouge">roles(:all)</code> return list of all hosts</li>
+  <li><code class="language-plaintext highlighter-rouge">as</code></li>
+  <li><code class="language-plaintext highlighter-rouge">capture</code></li>
+  <li><code class="language-plaintext highlighter-rouge">test</code></li>
+  <li><code class="language-plaintext highlighter-rouge">info</code></li>
+  <li><code class="language-plaintext highlighter-rouge">error</code></li>
+  <li><code class="language-plaintext highlighter-rouge">with</code> set ENV variable. only</li>
+  <li><code class="language-plaintext highlighter-rouge">within</code> use folder. should be inside <code class="language-plaintext highlighter-rouge">on</code></li>
+  <li><code class="language-plaintext highlighter-rouge">invoke</code> run other rake task</li>
+  <li><code class="language-plaintext highlighter-rouge">execute</code> used to run command: <code class="language-plaintext highlighter-rouge">execute :rake, 'assets:precompile', env: {
+rails_env: fetch(:rails_env) }</code></li>
+</ul>
+
+<p>You can execute task in before or after hooks.
+<a href="http://capistranorb.com/documentation/getting-started/flow/">flow</a> has several
+points that you can access.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>before :finishing, :notify do
+end
+</code></pre></div></div>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">puts</code> and <code class="language-plaintext highlighter-rouge">run</code> to run command in shell. If you use sudo, than you
+should enable <code class="language-plaintext highlighter-rouge">default_run_options[:pty] = true</code> so when he ask for password it
+prompts in current shell. Also helpfull is <code class="language-plaintext highlighter-rouge">ssh_options[:forward_agent] = true</code>
+which uses your keys on remote server to download private repositories.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>task :hello do
+  puts "Here are all files"
+  run "ls"
+  run "#{sudo} ls /etc"
+end
+</code></pre></div></div>
+
+<h1 id="upgrading-capistrano-2-to-3">Upgrading capistrano 2 to 3</h1>
+
+<p><a href="http://capistranorb.com/documentation/upgrading/">documentation</a>
+here are differences between cap 2 and cap 3</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">repository</code> is renamed to <code class="language-plaintext highlighter-rouge">repo_url</code></li>
+  <li>environment is set instead <code class="language-plaintext highlighter-rouge">RAILS_ENV=vagrant cap -T</code> to second param <code class="language-plaintext highlighter-rouge">cap
+vagrant -T</code></li>
+  <li>instead of positional argument for role <code class="language-plaintext highlighter-rouge">server "123.123.123.123", :web</code> use
+hash <code class="language-plaintext highlighter-rouge">roles</code> argument <code class="language-plaintext highlighter-rouge">server "123.123.123.123", roles: [:web]</code></li>
+</ul>
+
+<h1 id="sample-app-on-ec2">Sample app on EC2</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new myapp
+cd myapp
+git init . &amp;&amp; git add . &amp;&amp; git commit -m "rails new myapp"
+sed -i Gemfile -e '/capistrano/c \
+gem "capistrano-rails", group: :development'
+# capistrano-rails will also install capistrano, capistrano-bundler
+# rvm puma ?
+cap install STAGES=virtual
+echo "require 'capistrano/rails'" &gt;&gt; Capfile
+</code></pre></div></div>
+
+<p>On AWS create new instance and download new key for example <code class="language-plaintext highlighter-rouge">aws_test.pem</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod 400 aws_test.pem
+ssh -i "aws_test.pem" ubuntu@ec2-34-204-86-131.compute-1.amazonaws.com
+</code></pre></div></div>
+
+<h1 id="capistrano-with-custom-vagrant-script">Capistrano with custom Vagrant script</h1>
+
+<p>You can install server localy using <a href="/2015/02/16/rails-through-vagrant-to-digitalocean/">Vagrant scripts</a>.
+You can use default NAT address (access virtual box at ssh port 2222) and port
+forwarding (<code class="language-plaintext highlighter-rouge">config.vm.network :forwarded_port, guest: 80, host: 8080</code>). In
+order to access host machine from virtual box you need to know host IP address.
+So my solution is to use Private IP (<code class="language-plaintext highlighter-rouge">private_network</code>) and host is easilly
+determined from that.
+You need to add public key on host after provision is done so virtual can access
+host without password (maybe to try with
+<a href="https://github.com/emyl/vagrant-triggers">vagrant-triggers</a>), so two commands
+are needed</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -f "/home/orlovic/.ssh/known_hosts" -R 192.168.3.2
+ssh deploy@192.168.3.2 cat .ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre></div></div>
+
+<p>Here are scripts</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant init
+# edit Vagrantfile
+cat &gt;&gt; Vagrantfile &lt;&lt; HERE_DOC
+Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do |vb, vb_config|
+    # list of all machines can be found https://atlas.hashicorp.com/boxes/search
+    vb_config.vm.box = "ubuntu/trusty64"
+    vb.memory = "2048"
+    vb_config.vm.provision :shell, inline: $script, keep_color: true
+    vb_config.vm.network :private_network, ip: $server_ip
+  end
+end
+
+# $ruby_version = `grep "^ruby" Gemfile | awk "{print $2}"`
+$ruby_version = `ruby --version | awk "{print $2}"`.split("p").first # 2.3.1p112
+$public_key = `cat ~/.ssh/id_rsa.pub`.strip
+$server_ip = "192.168.3.2"
+
+$nginx_config = &lt;&lt;-NGINX_CONFIG
+# https://www.digitalocean.com/community/tutorials/deploying-a-rails-app-on-ubuntu-14-04-with-capistrano-nginx-and-puma
+upstream app {
+    # Path to Unicorn SOCK file, as defined previously
+    server unix:/home/deploy/myapp/shared/tmp/sockets/puma.sock;
+}
+
+server {
+    listen 80 default_server deferred;
+    server_name myapp.local;
+    root /home/deploy/myapp/current/public;
+    access_log /home/deploy/myapp/current/log/nginx.access.log;
+    error_log /home/deploy/myapp/current/log/nginx.error.log;
+
+
+    location ^~ /assets/ {
+      gzip_static on;
+      expires max;
+      add_header Cache-Control public;
+    }
+
+    try_files $uri/index.html $uri @app;
+    location @app {
+        proxy_pass http://app;
+        // this forwards remote ip address to the app
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        access_log /home/deploy/myapp/current/log/nginx.rails.access.log;
+
+        // I tried to pass scheme http or http to the app but the problem is nlb
+        // does not send header to the app. Elb sends headers
+        // https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/how-elastic-load-balancing-works.html#request-routing
+        // but NLB does not set headers
+        // https://stackoverflow.com/questions/54558742/x-forwarded-proto-not-being-passed-through-aws-alb-sandwich-with-palo-alto-vm-fi
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        // so only solution is to redirect in javascript
+    }
+
+    error_page 500 502 503 504 /500.html;
+    client_max_body_size 10M;
+    keepalive_timeout 10;
+
+    if ($request_method !~ ^(GET|HEAD|PUT|PATCH|POST|DELETE|OPTIONS)$ ){
+      return 405;
+    }
+
+    if (-f $document_root/system/maintenance.html) {
+      return 503;
+    }
+}
+NGINX_CONFIG
+
+$script = &lt;&lt;-SCRIPT
+set -e # Any commands which fail will cause the shell script to exit immediately
+set -x # show command being executed
+L=en_US.UTF-8
+update-locale LANG=$L LANGUAGE=$L LC_ALL=$L # needed for database default enc
+# or install missing locale with, for example sr_RS
+# locale-gen sr_RS
+
+echo "STEP: update"
+# apt-get -y update &gt; /dev/null # update is needed to set proper apt sources
+if [ "`id -u deploy`" = "" ]; then
+  echo "STEP: creating user deploy (without sudo access)"
+  useradd deploy -md /home/deploy --shell /bin/bash
+  echo deploy:deploy | chpasswd # change password to 'deploy'
+  echo STEP: generate keys and adding host public key to vb authorized keys
+  sudo -i -u deploy /bin/bash -c "yes '' | ssh-keygen -N ''"
+  sudo -i -u deploy /bin/bash -c "echo #{$public_key} &gt;&gt; ~/.ssh/authorized_keys"
+  # TODO: cap staging git:check will add to known hosts
+  sudo -i -u deploy /bin/bash -c "ssh-keyscan #{$server_ip[0..-2]+"1"} &gt;&gt; ~/.ssh/known_hosts"
+
+  # gpasswd -a deploy sudo # add to sudo group
+  # echo "deploy ALL=(ALL) NOPASSWD:ALL" &gt; /etc/sudoers.d/deploy # don't ask for password when using sudo
+  # if [ ! "`id -u vagrant`" = "" ]; then
+  #   usermod -a -G vagrant deploy # adding to vagrant group if vagrant exists
+  # fi
+else
+  echo "STEP: user deploy already exists"
+fi
+
+if [ "`which git`" = "" ]; then
+  echo "STEP: install development tools: git nodejs ..."
+  apt-get -y install build-essential curl git nodejs multitail
+else
+  echo "STEP: development tools already installed"
+fi
+
+if [ "`which nginx`" = "" ]; then
+  echo "STEP: install ngix server"
+  apt-get -y install nginx
+  cat &lt;&lt; 'NGINX_CONFIG' | sudo tee /etc/nginx/sites-available/default
+  #{$nginx_config}
+NGINX_CONFIG
+  # TODO: it seems we need to restart nginx later, probable at this moment puma
+  # sockets do not exists yet
+  sudo service nginx restart
+else
+  echo "STEP: nginx already installer"
+fi
+
+export DATABASE_URL=postgresql://deploy:deploy@localhost/myapp_production
+DATABASE_NAME=${DATABASE_URL##*/}
+if [ `echo $DATABASE_URL | cut -f 1 -d ':'` = "postgresql" ]; then
+  if [ "`which psql`" = "" ]; then
+    echo "STEP: installing postgres"
+    apt-get -y install postgresql postgresql-contrib libpq-dev
+  else
+    echo STEP: postgres already installed
+  fi
+  if [ "`sudo -u postgres psql postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='deploy'"`" = "1" ]; then
+    echo STEP: postgres user 'deploy' already exists
+  else
+    echo STEP: create postgresql database user deploy
+    sudo -u postgres createuser --superuser --createdb deploy
+    sudo -u postgres psql -U postgres -d postgres -c "alter user deploy with password 'deploy';"
+  fi
+  if sudo -u postgres psql -lqt | cut -d \\\| -f 1 | grep -wq $DATABASE_NAME; then
+    echo STEP: $DATABASE_NAME already exists
+  else
+    echo STEP: creating $DATABASE_NAME
+    sudo -u deploy createdb $DATABASE_NAME
+  fi
+else
+  echo STEP: create mysql2 database user deploy
+  if [[ `echo "SELECT user FROM mysql.user WHERE user = 'deploy'" | mysql` = "" ]]; then
+    echo CREATE USER 'deploy'@'localhost' | mysql --user=root
+    echo GRANT ALL PRIVILEGES ON * . * TO 'deploy'@'localhost' | mysql --user=root
+    #FLUSH PRIVILEGES;
+  else
+    echo STEP: mysql user 'deploy' already exists
+  fi
+fi
+
+if [ "`sudo -i -u deploy which bundle`" = "" ]; then
+#if [ ! -f /usr/local/rvm/scripts/rvm ]; then
+  echo "STEP: installing rvm for system so it can download sudo requirements"
+  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+  # multi-user install to /usr/local/rvm, we use vagrant since it is in sudoers list
+  sudo -i -u vagrant /bin/bash -c "curl -sSL https://get.rvm.io | sudo -i bash -s stable --ruby"
+  usermod -a -G rvm deploy # adding to rvm group so it can access /usr/local/rvm
+  usermod -a -G rvm vagrant # adding to rvm group so it can access /usr/local/rvm
+
+  if [ ! "#{$ruby_version}" = "" ]; then
+    echo "STEP: installing ruby version #{$ruby_version}"
+    # sometime we need to remove old cache
+    # rm -rf $rvm_path/archives/rubygems-* $rvm_path/user/{md5,sha512}
+    sudo -i -u vagrant /bin/bash -c "rvm install #{$ruby_version}"
+  fi
+
+  echo "STEP: install bundle for deploy"
+  sudo -i -u deploy /bin/bash -c "rvm install 2.4"
+  sudo -i -u deploy /bin/bash -c "gem install bundler"
+else
+  echo "STEP: rvm and bundler already installed"
+fi
+SCRIPT
+HERE_DOC
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant destroy -f # destroy without confirmation
+vagrant up --provision # to provision again
+vagrant ssh
+# or directly
+ssh -p 2222 vagrant@127.0.0.1
+# username/password is deploy/deploy
+ssh-keygen -f "/home/orlovic/.ssh/known_hosts" -R [127.0.0.1]:2222
+yes | ssh-copy-id -p 2222 deploy@127.0.0.1
+ssh -p 2222 deploy@127.0.0.1
+</code></pre></div></div>
+
+<h1 id="logs">Logs</h1>
+
+<p>See multiple logs (like multilog or multi tail) in one terminal window</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant ssh
+sudo apt-get install multitail
+multitail /var/log/nginx/* /home/deploy/myapp/current/log/*
+</code></pre></div></div>
+
+<p>see logs of capistrano on local machine</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>less log/capistrano.log
+</code></pre></div></div>
+
+<h1 id="rubber">Rubber</h1>
+
+<p>This gem is used just as wrapper for common stack, like passenger_postgresql,
+targeting EC2 instances and do all provision stepts.
+It depends on capistrano 2.
+<a href="http://railscasts.com/episodes/347-rubber-and-amazon-ec2">railscast</a>
+<a href="https://groups.google.com/forum/?fromgroups#!forum/rubber-ec2">google group</a>
+<a href="https://github.com/rubber/rubber/wiki/Quick-Start">wiki</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+  # deploy and provision tool
+  gem "rubber"
+HERE_DOC
+bundle exec rubber vulcanize complete_passenger_postgresql
+# bundle exec rubber vulcanize complete_passenger_mysql
+</code></pre></div></div>
+
+<p>Vulcanize will copy
+<a href="https://github.com/rubber/rubber/blob/master/templates/complete_passenger/templates.yml">templates</a>
+to <code class="language-plaintext highlighter-rouge">config/rubber</code> which you can customize, usually only <code class="language-plaintext highlighter-rouge">yml</code> files.
+Capistrano recepies files <code class="language-plaintext highlighter-rouge">.rb</code>  usually do not need to change, and also
+configuration files <code class="language-plaintext highlighter-rouge">role/*.conf</code> are up-to-date.
+You can start configuring <code class="language-plaintext highlighter-rouge">config/rubber/rubber.yml</code> and <code class="language-plaintext highlighter-rouge">config/deploy.rb</code>.</p>
+
+<p>In <code class="language-plaintext highlighter-rouge">rubber.yml</code> add AWS root security credentials (or another IAM user) to
+access API and EC2 keypairs to access machine.
+User security credentials you can export in env.
+Keypair you can download to home <code class="language-plaintext highlighter-rouge">~/.ec2</code> folder, rename without <code class="language-plaintext highlighter-rouge">pem</code> and
+change permissions <code class="language-plaintext highlighter-rouge">chmod 600 ~/.ec2/gsg-keypair</code>.
+No need to create public version <code class="language-plaintext highlighter-rouge">ssh-keygen -y -f ~/.ec2/aws_test &gt;
+~/.ec2/aws_test.pub</code>). In case of <code class="language-plaintext highlighter-rouge">The key pair  does not exist
+(Fog::Compute::AWS::NotFound)</code> you should check if keypair is for same region.
+Also <code class="language-plaintext highlighter-rouge">image_id</code> should be some of the
+http://cloud-images.ubuntu.com/locator/ec2/ You can choose t2.micro since it
+Free tier applicable:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber.yml
+
+# this should be one word and app will be in /mnt/myapp-production/releases/...
+app_name: myapp
+
+app_user: ubuntu
+
+cloud_providers:
+  aws:
+    access_key: "#{ ENV['AWS_ACCESS_KEY_ID'] }"
+    secret_access_key: "#{ ENV['AWS_SECRET_ACCESS_KEY'] }"
+    account: "#{ ENV['AWS_ACCOUNT_ID'] }"
+
+    key_name: us-east-1-gsg-keypair
+
+    image_type: t2.micro
+    # Ubuntu 16
+    image_id: ami-04169656fea786776
+
+prompt_for_security_group_sync: false
+
+# this is just default prompt
+staging_roles: "app,db:primary=true"
+</code></pre></div></div>
+
+<p>We use just web app and db role, not all roles:
+apache,app,collectd,common,db:primary=true,elasticsearch,examples,graphite_server,graphite_web,graylog_elasticsearch,graylog_mongodb,graylog_server,graylog_web,haproxy,mongodb,monit,passenger,postgresql,postgresql_master,web,web_tools
+Role <code class="language-plaintext highlighter-rouge">app</code> depends on <code class="language-plaintext highlighter-rouge">passenger</code> which depends on <code class="language-plaintext highlighter-rouge">apache</code>.
+Role <code class="language-plaintext highlighter-rouge">"db:primary=true"</code> depends on <code class="language-plaintext highlighter-rouge">postgresql</code> and <code class="language-plaintext highlighter-rouge">postgresql_master</code>
+I had a problem with <code class="language-plaintext highlighter-rouge">web</code> role since it depends on <code class="language-plaintext highlighter-rouge">haproxy</code>
+(<code class="language-plaintext highlighter-rouge">config/rubber/rubber-complete.yml</code>) which has some errors, so I remove that
+dependency:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber-complete.yml
+  web: []
+  app: [passenger]
+</code></pre></div></div>
+<p>We could remove that role, but we need to assign security groups.</p>
+
+<p>That imlies to change passenger port to 80</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber-passenger.yml
+passenger_listen_port: 80
+passenger_listen_ssl_port: 443
+</code></pre></div></div>
+
+<p>For Ubuntu 16 (which is ) we need to remove package libapache2-mod-proxy-html
+for apache
+https://groups.google.com/forum/#!topic/rubber-ec2/fut5WZ6TicE</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber-apache.yml
+roles:
+  apache:
+    packages: [apache2, apache2-utils, libcurl4-openssl-dev, libapache2-mod-xsendfile]
+  web_tools:
+    packages: [apache2, apache2-utils, libcurl4-openssl-dev, libapache2-mod-xsendfile]
+</code></pre></div></div>
+
+<p>and remove apache2-mpm-prefork, apache2-prefork-dev for passenger and remove
+passenger version</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber-passenger.yml
+    packages: [libcurl4-openssl-dev, libapache2-mod-xsendfile, libapache2-mod-passenger]
+</code></pre></div></div>
+
+<p>and make sure it has the same ruby version which if going to be build in
+<code class="language-plaintext highlighter-rouge">config/rubber/deploy-setup.rb</code> You can use later ruby-build https://github.com/rbenv/ruby-build/releases and some of ruby versions <code class="language-plaintext highlighter-rouge">ruby-build --definitions</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/rubber/rubber-ruby.yml
+ruby_build_version: 20180822
+ruby_version: 2.3.3
+</code></pre></div></div>
+
+<p>For rails you need to uncommend <code class="language-plaintext highlighter-rouge">gem 'mini_racer', platforms: :ruby</code> in Gemfile.</p>
+
+<p>To provision you can run</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap rubber:create_staging
+# Hit enter at prompts to accept the default value for params
+# this is the same as manually
+cap rubber:create
+cap rubber:bootstrap
+cap deploy
+# or you can set params in env var like
+# ALIAS=web01 ROLES=app cap rubber:create
+</code></pre></div></div>
+
+<p>This will create <code class="language-plaintext highlighter-rouge">config/rubber/instance-production.yml</code>. It will also reboot
+after creating.  <code class="language-plaintext highlighter-rouge">ALIAS</code> is name ie subdomain and can not contain underscore. If
+you run script again and change name it will add another InstanceItem <code class="language-plaintext highlighter-rouge">web02</code>
+(new EC2 machine). It will also update your <code class="language-plaintext highlighter-rouge">/etc/hosts</code> so you can access in
+browser with production.foo.com instead of ip address of newly created instance.
+You can remove (terminate) all EC2 instances with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap rubber:destroy
+# type 'web01' or your alias
+</code></pre></div></div>
+
+<p>You can create additional instances:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ALIAS=web01 ROLES=app cap rubber:create
+ALIAS=web01 ROLES=app cap rubber:bootstrap # this is idempotent and it is
+# reading config/rubber/instance-production.yml for web01 InstanceItem
+cap deploy:cold
+</code></pre></div></div>
+
+<p>and you can see current in <code class="language-plaintext highlighter-rouge">config/rubber/instance-vagrant.yml</code></p>
+
+<p>Roles should be defined in that instance file. Note that for first time we are
+defining roles using env ROLES on rubber create task.</p>
+
+<p>Note that if <a href="https://github.com/rubber/rubber/blob/master/lib/rubber/recipes/rubber/utils.rb#L20">current instance- file
+does not exists</a>
+<code class="language-plaintext highlighter-rouge">rubber:create_staging</code> will create new instance using <code class="language-plaintext highlighter-rouge">staging_roles</code>. If that
+instance file exists, than roles from it will be used.</p>
+
+<p>Rails is running on port 7000 inside virtualbox. haproxy routes standard http
+80 port to rails 7000, so you can access site on <a href="http://default.foo.com/">http://default.foo.com/</a></p>
+
+<h1 id="errors">ERRORS</h1>
+
+<p>To see logs you can</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -i $PEM_FILE ubuntu@web01.foo.com
+tail -f /var/log/apache2/* /mnt/myapp-production/current/log/*
+# in another terminal
+curl localhost:7000
+</code></pre></div></div>
+
+<p>logs for other services you can find
+https://github.com/rubber/rubber/wiki/Troubleshooting
+or you can use existing task:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAILS_ENV=vagrant cap rubber:tail_logs
+</code></pre></div></div>
+
+<p>If you see only dots, it is probably stuck on passenger</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * executing `rubber:passenger:serial_add_to_pool_reload_default'
+ ** Waiting for passenger to startup
+  * executing "sudo -p 'sudo password: '  bash -l -c 'while ! curl -s -f http://localhost:$CAPISTRANO:VAR$/ &amp;&gt; /dev/null; do echo .; done'"
+    servers: ["default.foo.com"]
+    [default.foo.com] executing command
+ ** [out :: default.foo.com] .
+ ** [out :: default.foo.com] .
+</code></pre></div></div>
+
+<p>Please check rails logs (passenger logs is in apache log) to see if there is any
+error on index page. Probably for first time you need to create database</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd /mnt/myapp-production/current
+bundle exec rake db:setup
+</code></pre></div></div>
+
+<p>For errors like</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+</code></pre></div></div>
+<p>solution is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># sometimes you need to start agent, for example you ssh to machine, so for
+error like: # Could not open a connection to your authentication agent.
+eval "$(ssh-agent -s)"
+
+ssh-add ~/.ssh/id_rsa
+</code></pre></div></div>
+
+<h2 id="rubber-vagrant-rubber-provision">Rubber Vagrant rubber provision</h2>
+
+<p>It works only for old version of vagrant 1.7.4 (just remove and install that
+<a href="https://releases.hashicorp.com/vagrant/1.7.4/">version .deb file</a> using
+software app)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant -v # should return 1.7.4
+vagrant plugin install rubber
+</code></pre></div></div>
+
+<p>It depends on older bundler so run</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem uninstall bunder
+gem install bundler -v 1.10.5
+rm Gemfile.lock
+bundle install
+</code></pre></div></div>
+
+<p>Add vagrant env to secrets, database and env</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "vagrant: *default" &gt;&gt; config/secrets.yml
+cat &gt;&gt; config/database.yml &lt;&lt; HERE_DOC
+vagrant:
+  &lt;&lt;: *default
+HERE_DOC
+cp config/environments/production.rb config/environments/vagrant.rb
+</code></pre></div></div>
+
+<p>To be able to ssh into vagrant you need to use your keys or manually copy
+later.</p>
+
+<p>You need to define your ruby version and roles that you need. Note that current
+ruby version need to be same, so check that <code class="language-plaintext highlighter-rouge">rvm list</code> returns current same as
+your from Vagrantfile.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Vagrantfile &lt;&lt; HERE_DOC
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.box_check_update = false
+  config.vm.network :private_network, ip: "192.168.70.10"
+
+  # do not generate new key, copy my key and use it
+  config.ssh.insert_key = false
+  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+  config.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+  # ruby build fails on 512MB so we increase
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
+  config.vm.provision :rubber do |rubber|
+    rubber.rubber_env = 'vagrant'
+
+    # If you remove this line, staging_roles from config/rubber/rubber.yml is used
+    rubber.roles = 'web,app,apache,hadproxy,monit,passenger,postgresql_master,db:primary=true'
+
+    # Only necessary if you use RVM locally.
+    rubber.rvm_ruby_version = '2.3.1'
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>To create vagrant machine you can run vagrant commands (we use tee to save log)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vagrant up
+# when machine already created
+vagrant provision
+# or to save a log
+vagrant destroy -f &amp;&amp; vagrant up 2&gt;&amp;1 | tee tmp/log.log
+</code></pre></div></div>
+
+<p>Note that if you make changes to <code class="language-plaintext highlighter-rouge">config/rubber/rubber.yml</code> you need to remove
+<code class="language-plaintext highlighter-rouge">config/rubber/instance-vagrant.yml</code>.</p>
+
+<p>I have error</p>
+
+<p>~~
+ ** [out :: default.foo.com] The following packages have unmet dependencies:
+ ** [out :: default.foo.com] libapache2-mod-passenger : Depends: passenger (= 1:5.0.8-1~trusty1) but it is not going to be installed
+ ** [out :: default.foo.com] Unable to correct problems, you have held broken packages.
+~~</p>
+
+<p>so I need to remove version parameter from <code class="language-plaintext highlighter-rouge">config/rubber/rubber-passenger.yml</code></p>
+
+<p>Another error</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ** ERROR:  Error installing rubber:
+ ** xmlrpc requires Ruby version &gt;= 2.3.
+ ** /tmp/gem_helper:32:in `block in &lt;main&gt;'
+ ** Unable to install versioned gem rubber:3.2.2
+ ** RuntimeError
+</code></pre></div></div>
+
+<p>I updated ruby version in <code class="language-plaintext highlighter-rouge">config/rubber/rubber-ruby.yml</code> to match 3.2.1
+Also if <a href="https://github.com/rbenv/ruby-build/issues/721">ruby-build is failed</a>
+you can increase memory or add option to <code class="language-plaintext highlighter-rouge">config/rubber/deploy-setup.rb</code></p>
+
+<p>Also I need to comment out <code class="language-plaintext highlighter-rouge">rsudo "service vboxadd setup"</code> from
+<code class="language-plaintext highlighter-rouge">config/rubber/deploy-setup.rb</code>.
+And for rails asset pipeline you need to add <code class="language-plaintext highlighter-rouge">nodejs</code> package to
+<code class="language-plaintext highlighter-rouge">config/rubber/rubber-ruby.yml</code> to <code class="language-plaintext highlighter-rouge">packages</code> list.</p>
+
+<p>If you change hostname or key, maybe there is connection error like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>. ** timeout in initial connect, retrying
+Trying to enable root login
+  * executing `rubber:_ensure_key_file_present'
+  * executing `rubber:_allow_root_ssh'
+  * executing "sudo -p 'sudo password: '  bash -l -c 'mkdir -p /root/.ssh &amp;&amp; cp /home/vagrant/.ssh/authorized_keys /root/.ssh/'"
+    servers: ["192.168.70.10"]
+
+ ** Failed to connect to 192.168.70.10, retrying
+  * executing `rubber:_ensure_key_file_present'
+  * executing `rubber:_allow_root_ssh'
+  * executing "sudo -p 'sudo password: '  bash -l -c 'mkdir -p /root/.ssh &amp;&amp; cp /home/vagrant/.ssh/authorized_keys /root/.ssh/'"
+    servers: ["192.168.70.10"]
+</code></pre></div></div>
+
+<p>when you try <code class="language-plaintext highlighter-rouge">ssh root@192.168.70.10</code> you see</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the RSA key sent by the remote host is
+SHA256:ur+QgdymSTNZYqImXqmRgw3cZonpVjZjd7gtNyxyR
+Please contact your system administrator.
+Add correct host key in /home/orlovic/.ssh/known_hosts to get rid of this message.
+Offending RSA key in /home/orlovic/.ssh/known_hosts:3
+  remove with:
+  ssh-keygen -f "/home/orlovic/.ssh/known_hosts" -R 192.168.70.10
+RSA host key for 192.168.70.10 has changed and you have requested strict checking.
+Host key verification failed.
+</code></pre></div></div>
+
+<p>Than just remove the key from known_hosts and it will resume without errors.</p>
+
+<p>If you get errors like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Received disconnect from 54.210.7.47 port 22:2: Too many authentication failures
+Connection to production.redirection.my-domain.com closed by remote host.
+Connection to production.redirection.my-domain.com closed.
+</code></pre></div></div>
+
+<p>it might help to add username <code class="language-plaintext highlighter-rouge">ubuntu@</code>, like <code class="language-plaintext highlighter-rouge">ssh -i $PEM_FILE
+ubuntu@54.254.110.113</code></p>
+
+<p>To add env secrets you can write them in a <code class="language-plaintext highlighter-rouge">keys.sh</code> file and source from
+<code class="language-plaintext highlighter-rouge">~/.bashrc</code> before return if not interactivelly. If you are using rubber than
+use system wide bash for example <code class="language-plaintext highlighter-rouge">/etc/profile</code> and put keys for example
+<code class="language-plaintext highlighter-rouge">/root/keys.sh</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># keys.sh
+export SECRET_KEY_BASE=52b57...
+</code></pre></div></div>
+
+<p>To use different domain you need to update <code class="language-plaintext highlighter-rouge">domain: my-domain.vagrant</code> inside
+<code class="language-plaintext highlighter-rouge">config/rubber/rubber.yml</code>.
+To use different subdomain you need to set up in Vagrant file using <code class="language-plaintext highlighter-rouge">define</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Vagrant.configure("2") do |config|
+  config.vm.define "mysubdomain" do |m|
+  end
+end
+</code></pre></div></div>
+
+<p>I tried with <code class="language-plaintext highlighter-rouge">v.name = 'mysubdomain'</code> inside <code class="language-plaintext highlighter-rouge">Vagrantfile</code> but that just rename
+virtual machine name
+(<a href="https://github.com/rubber/rubber/blob/master/lib/rubber/vagrant/provisioner.rb#L39">machine.name</a>]
+inside rubber plugin does not take that name). All that plugin does is a call to
+script command</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUN_FROM_VAGRANT=true RUBBER_ENV=vagrant ALIAS=mysubdomain ROLES='web,app' EXTERNAL_IP=192.168.70.10 INTERNAL_IP=192.168.70.10 RUBBER_SSH_KEY=/home/orlovic/.ssh/id_rsa,/home/orlovic/.vagrant.d/insecure_private_key ruby -e "require 'capistrano/cli'; Capistrano::CLI.execute" rubber:create -S initial_ssh_user=vagrant
+# only rubber:create uses ENV['ROLES'], other task need RUBBER_ENV (this is
+copied from RAILS_ENV)
+# RUBBER_SSH_KEY and FILTER (not req). and create, refresh, destroy use ALIAS
+... cap rubber:refresh -S initial_ssh_user=vagrant
+... cap rubber:bootstrap
+... cap deploy:migrations
+</code></pre></div></div>
+
+<p>For existing machines you can update <code class="language-plaintext highlighter-rouge">name: mysubdomain'</code> in
+<code class="language-plaintext highlighter-rouge">config/rubber/instance-vagrant.yml</code>.</p>
+
+<h1 id="debug-capistrano-tasks">Debug capistrano tasks</h1>
+
+<p>You can just pust <code class="language-plaintext highlighter-rouge">require "byebug"</code> at the top of you .rb file and use <code class="language-plaintext highlighter-rouge">byebug</code>
+command inside the tasks, or you can require using <code class="language-plaintext highlighter-rouge">ruby -rbyebug</code> (no need to
+add require byebug). This does not work in .conf files</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAILS_ENV=vagrant bundle exec ruby -rbyebug $(which cap) rubber:util:backup
+</code></pre></div></div>
+
+<p>You can debug rubber rb files from you gem. If you want to debug rubber plugin
+commands than you need to download source, create gem and copy files
+<a href="https://github.com/duleorlovic/rubber-vagrant-plugin/commit/409801992b9ee87c09e97b198efa85c5e4176322">source</a></p>
+
+<p>To list all tasks your can run <code class="language-plaintext highlighter-rouge">cap -T</code>. To find all tasks you need to set up
+env and use option <code class="language-plaintext highlighter-rouge">-v</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAILS_ENV=vagrant cap -vT
+</code></pre></div></div>
+
+<p>Some tasks could be only for specific roles or providers</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  after "rubber:bootstrap", "rubber:base:reinstall_virtualbox_additions"
+  task :reinstall_virtualbox_additions, only: { provider: 'vagrant' } do
+    rsudo "service vboxadd setup"
+  end
+
+  before "rubber:install_packages", "rubber:base:prepare_passenger_install"
+  task :prepare_passenger_install, roles: :passenger do
+    ...
+  end
+</code></pre></div></div>
+
+<p>Rubber reads all <a href="https://github.com/rubber/rubber/blob/master/templates/base/config/deploy.rb#L79">deploy-*
+files</a>
+(you can find that line in <code class="language-plaintext highlighter-rouge">config/deploy.rb</code>).
+In <code class="language-plaintext highlighter-rouge">rubber.yml</code> you can overwrite some settings for specific roles, enviroments
+and hosts.</p>
+
+<h1 id="videos">Videos</h1>
+
+<p><a href="https://www.youtube.com/watch?v=uXla2yyzH_8">Ruby on Rails - Railscasts PRO #337 Capistrano Recipes (pro)</a>
+<a href="https://www.youtube.com/watch?v=imdrYD4ooIk">How to deploy RubyonRails project to AWS EC2 using capistrano</a></p>
+
+<p>Tips:</p>
+
+<p>I create shortcuts in home <code class="language-plaintext highlighter-rouge">/home/ubuntu</code> and <code class="language-plaintext highlighter-rouge">/home/deploy_user</code> for easier
+access</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ln -s /var/www/myapp/shared/ .
+ln -s /var/www/myapp/current .
+</code></pre></div></div>
+
+<p>Secrets in capistrano is long issue
+https://github.com/capistrano/capistrano/issues/1884
+I put secrets and source in bashrc for both users</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /var/www/myapp/env.sh
+export RAILS_ENV=production
+export SMTP_USERNAME=username
+
+# /home/ubuntu/.bashrc
+...
+# for ubuntu user, it can be at the end of a file
+source /var/www/myapp/env.sh
+
+# /home/deploy_user/.bashrc
+# for deploy_user, it needs to be on first line, since it is used with ssh
+source /var/www/myapp/env.sh
+</code></pre></div></div>
+
+<p>When you update secrets, than you need to restart the server <code class="language-plaintext highlighter-rouge">cap production
+deploy:restart</code>. For background jobs to pick up new secrets you need to restart
+<code class="language-plaintext highlighter-rouge">cap production sidekiq:restart</code>.</p>
+
+<ul>
+  <li>if there is an error for
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sidekiq:monit:monitor
+    01 sudo /usr/bin/monit monitor sidekiq_cablecrm_production_0
+    01 sudo
+    01 :
+    01 no tty present and no askpass program specified
+</code></pre></div>    </div>
+    <p>than I tried to enable ssh with no password for monit with <code class="language-plaintext highlighter-rouge">sudo visudo</code> and
+add line</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>deploy_user ALL= NOPASSWD: /usr/bin/monit
+
+</code></pre></div>    </div>
+    <p>but still same problem.</p>
+  </li>
+</ul>
+
+<h1 id="rbenv">RBENV</h1>
+
+<p>It is better than rvm since for installation it needs just PATH shims.</p>
+
+<p>Choosing ruby version is using: <code class="language-plaintext highlighter-rouge">RBENV_VERSION</code> env variable, <code class="language-plaintext highlighter-rouge">.ruby-version</code>
+file in directory of the script you are executing, or its parents to the root
+of the filesystem, or <code class="language-plaintext highlighter-rouge">.ruby-version</code> file in the current working directory or
+its parents to the root of the filesystem.
+https://github.com/rbenv/rbenv
+https://github.com/rbenv/rbenv-installer
+https://github.com/rbenv/ruby-build
+https://github.com/rbenv/rbenv-vars</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' &gt;&gt; ~/.bashrc
+echo 'eval "$(rbenv init -)"' &gt;&gt; ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+git clone https://github.com/rbenv/rbenv-vars.git ~/.rbenv/plugins/rbenv-vars
+exec $SHELL
+rbenv install 2.6.3
+rbenv global 2.6.3
+</code></pre></div></div>
+
+<p>Add env variables to <code class="language-plaintext highlighter-rouge">/home/orlovic/premesti.se/.rbenv-vars</code></p>
+
+<p>To use rbenb variables in capistrano task you can write</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespace :db do
+  desc 'Load myapp users from shared/users.sql'
+  task :load_myapp_users do
+    on roles(:all) do
+      execute "cd #{current_path} &amp;&amp; $HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_myapp_users.rb"
+
+      # This will raise error Could not locate Gemfile or .bundle/ directory!!!
+      # within current_path do
+      #   execute "$HOME/.rbenv/bin/rbenv exec bundle exec script/db_load_myapp_users.rb"
+      # end
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Not so usefull post
+https://piotrmurach.com/articles/working-with-capistrano-environment-variables-and-remote-commands/</p>
+
+<h1 id="passenger-and-nginx">Passenger and NGINX</h1>
+
+<p>To configure nginx with passenger, and redirect from non www to www, you can use</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/nginx/sites-available/trk.conf
+server {
+    listen 80;
+    server_name www.trkapp.com;
+
+    root /var/www/trkapp/current/public;
+
+    passenger_enabled on;
+    passenger_ruby /usr/local/rvm/gems/ruby-2.5.3/wrappers/ruby;
+}
+server {
+    listen 80;
+    server_name trkapp.com ;
+    return 301 http://www.trkapp.com$request_uri;
+}
+</code></pre></div></div>
+
+<p>Restart rails</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap production passenger:restart
+</code></pre></div></div>
+
+<h1 id="redis">Redis</h1>
+
+<p>To start redis server on boot you need to change <code class="language-plaintext highlighter-rouge">vi /etc/redis/redis.conf</code> to
+contains line:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>supervised systemd
+</code></pre></div></div>
+
+<p>than you need to enable booting redis server on start</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl enable redis-server
+</code></pre></div></div>
+<p>This will create a symlink</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/systemd/system/redis.service → /lib/systemd/system/redis-server.service
+</code></pre></div></div>
+
+<p>You can reboot</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo reboot
+</code></pre></div></div>
+<p>To test if redis is working and to clear cache you can run on server</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-cli FLUSHALL
+</code></pre></div></div>
+
+<p>Instead of disabling protected mode we will bind on private network interface</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># list all interface
+ip a
+# find private ip address like ens5 172.30.5.211
+sudo vi /etc/redis/redis.conf
+# add that ip address to bind command
+bind 127.0.0.1 ::1 172.30.5.211
+# and change the policy
+maxmemory-policy allkeys-lfu
+
+# test that we can not access from outside aws using public ip
+redis-cli -h 3.81.27.218 ping
+# pong
+# but we can access from application server using internal network
+redis-cli -h 172.30.5.211 ping
+
+# to connect to the same database you need to use SELECT in redis-cli
+# for example when redis url is: redis://172.30.5.211:6379/1
+redis-cli -h 172.30.5.211
+select 1
+</code></pre></div></div>
+
+<h1 id="sidekiq">Sidekiq</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># use system instead user
+set :sidekiq_service_unit_user, :system
+</code></pre></div></div>
+<p>You need to run on production
+https://github.com/seuros/capistrano-sidekiq#integration-with-systemd</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo loginctl enable-linger $USER
+</code></pre></div></div>
+<p>To create symlink in <code class="language-plaintext highlighter-rouge">~/.config/systemd/user/sidekiq-production.service</code>
+(which is generated by gem’s default using rvm) you can use shims
+https://gist.github.com/Paprikas/11fc850f81b687d9cbb7a8efb5ead208</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+# https://github.com/seuros/capistrano-sidekiq#integration-with-systemd
+set :bundler_path, '/home/deploy/.rbenv/shims/bundle'
+set :init_system, :systemd
+</code></pre></div></div>
+<p>Than you need to install</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap production sidekiq:install
+# output should be
+      01 mkdir -p /home/deploy/.config/systemd/user
+    ✔ 01 deploy@138.68.225.244 0.583s
+      Uploading /home/deploy/.config/systemd/user/sidekiq-production.service 100.0%
+      02 systemctl --user daemon-reload
+    ✔ 02 deploy@138.68.225.244 0.623s
+      03 systemctl --user enable sidekiq-production.service
+      03 Created symlink /home/deploy/.config/systemd/user/default.target.wants/sidekiq-production.service → /home/deploy/.config/systemd/user/sidekiq-pro...
+    ✔ 03 deploy@138.68.225.244 0.619s
+</code></pre></div></div>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>check if you already pushed before update https://victorafanasev.info/tech/capistrano-automatically-check-if-remote-origin-updated-before-deploy
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/capistrano/tasks/deploy_git_uptodate_check.rake
+# https://victorafanasev.info/tech/capistrano-automatically-check-if-remote-origin-updated-before-deploy
+namespace :deploy do
+  desc 'Check if origin master synced with local repository before deploy'
+  task :git_uptodate_check do
+    if !`git status --short`.empty?
+      raise 'Please commit your changes first'
+    elsif `git remote`.empty?
+      raise 'Please add remote origin repository to your repo first'
+    elsif !`git rev-list master...origin/master`.empty?
+      raise 'Please push your commits to the remote origin repo first'
+    end
+  end
+end
+
+before 'deploy', 'deploy:git_uptodate_check'
+</code></pre></div>    </div>
+  </li>
+  <li>on digital ocean 1GB RAM memory you can not compile webpack, and it stop
+without any error
+```
+ DEBUG [5c5758a9] 	Compiling…</li>
+</ul>
+
+<p>DEBUG [5c5758a9] 	Compilation failed:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  solution is to limit how much memory node can use by setting up env variable
+  https://github.com/rails/webpacker/issues/2033
+  https://github.com/rails/webpacker/issues/2143 (related)
+
+  but if it is too low you can get this error
+</code></pre></div></div>
+<p>FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  and you need to increase the memory to at least 1000MB
+</code></pre></div></div>
+<h1 id="homedeploymove_indexrbenv-vars">/home/deploy/move_index/.rbenv-vars</h1>
+<h1 id="check-current-value-of-max-old-space-size-not-that-without-bundle-it-will">check current value of max-old-space-size, not that without bundle it will</h1>
+<h1 id="show-original-value">show original value</h1>
+<h1 id="homerbenvbinrbenv-exec-bundle-exec-node--e-consolelogv8getheapstatisticsheap_size_limit10241024---1024">$HOME/.rbenv/bin/rbenv exec bundle exec node -e ‘console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))’ # =&gt; 1024</h1>
+<p>node -e ‘console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))’ # =&gt; 994
+NODE_OPTIONS=–max-old-space-size=1000</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To check what memory limit is used you can write a task that is run every time
+before assets:precompile
+</code></pre></div></div>
+<h1 id="libtasksbefore_assets_precompilerake">lib/tasks/before_assets_precompile.rake</h1>
+<p>task :before_assets_precompile do
+  # run a command which starts your packaging
+  system(“env | grep NODE_OPTIONS”)
+  system(“node -e ‘console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))’ # =&gt; 994”)
+end</p>
+
+<h1 id="every-time-you-execute-rake-assetsprecompile">every time you execute ‘rake assets:precompile’</h1>
+<h1 id="run-before_assets_precompile-first">run ‘before_assets_precompile’ first</h1>
+<p>Rake::Task[‘assets:precompile’].enhance [‘before_assets_precompile’]</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>so you can see in output
+</code></pre></div></div>
+<p>00:25 deploy:assets:precompile
+      01 $HOME/.rbenv/bin/rbenv exec bundle exec rake assets:precompile
+      01 ** Invoke assets:precompile (first_time)
+      01 NODE_OPTIONS=–max-old-space-size=1000
+      01 1048
+      01 ** Invoke yarn:install (first_time)
+      01 ** Execute yarn:install</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+not sure how to limit max memory for ruby bundler
+* to run on specific host you can use host filtering
+</code></pre></div></div>
+<p>bundle exec cap staging locally:delayed_job:start HOSTS=18.232.175.34
+  bundle exec cap staging locally:delayed_job:start ROLES=worker</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* upload files
+</code></pre></div></div>
+<p># lib/capistrano/tasks/upload.rake
+  namespace :upload do
+    desc «~HERE_DOC
+      Upload files</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cap production upload:files README.md
+HERE_DOC
+task :files do
+  on roles(:all) do
+    index = ARGV.index 'upload:files'
+    ARGV[index + 1..-1].each do |file_name|
+      puts "Uploading #{file_name} to #{current_path}/#{file_name}"
+      begin
+        upload! file_name, "#{current_path}/#{file_name}"
+      rescue StandardError =&gt; e
+        puts e.message
+        puts 'Try to run cap upload:files_f to create folder first and upload files (slower version)'
+      end
+    end
+    exit # so we do no proccess filename arguments as cap tasks
+  end
+end
+
+desc &lt;&lt;~HERE_DOC
+  Create folder and upload files (this is slower than just upload)
+
+  cap production upload:files_f README.md
+HERE_DOC
+task :files_f do
+  on roles(:all) do
+    index = ARGV.index 'upload:files_f'
+    ARGV[index + 1..-1].each do |file_name|
+      puts "Create folders #{File.dirname("#{current_path}/#{file_name}")} and upload #{file_name}"
+      execute :mkdir, '-p', File.dirname("#{current_path}/#{file_name}")
+      upload! file_name, "#{current_path}/#{file_name}"
+    end
+    exit # so we do no proccess filename arguments as cap tasks
+  end
+end   end   ```
+</code></pre></div></div>
+
+<ul>
+  <li>https://github.com/javan/whenever is used to create crontab listing using
+job type: <code class="language-plaintext highlighter-rouge">runner</code>, <code class="language-plaintext highlighter-rouge">rake</code> or <code class="language-plaintext highlighter-rouge">command</code>. <code class="language-plaintext highlighter-rouge">:task</code> is replaced with first
+argument. here are defaults https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/setup.rb
+https://github.com/javan/whenever/blob/e75fd0c21c73878a6140867ab7053cce9a1e5db6/lib/whenever/job_list.rb#L54
+You can not use capistrano commands even it looks like capistrano. You can set
+:whenever_variables and use that.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>job_type :command, ":task :output"
+job_type :rake,    "cd :path &amp;&amp; :environment_variable=:environment bundle exec rake :task --silent :output"
+job_type :runner,  "cd :path &amp;&amp; bin/rails runner -e :environment ':task' :output"
+job_type :script,  "cd :path &amp;&amp; :environment_variable=:environment bundle exec script/:task :output"
+</code></pre></div>    </div>
+    <p>When using rbenv we need to prepend with <code class="language-plaintext highlighter-rouge">rbenv exec</code> so first we need to pass
+env variable in <code class="language-plaintext highlighter-rouge">config/deploy.rb</code></p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+# https://github.com/javan/whenever/blob/master/lib/whenever/capistrano/v3/tasks/whenever.rake
+set :whenever_roles, -&gt; { :worker }
+# https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+set :whenever_environment, fetch(:stage)
+set :whenever_variables, (lambda do
+  "'environment=#{fetch :whenever_environment}" \
+  "&amp;rbenv_root=#{fetch :rbenv_path}'"
+end)
+</code></pre></div>    </div>
+    <p>and than use it in schedule.rb</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/schedule.rb
+# https://github.com/javan/whenever/issues/75#issuecomment-380747
+# https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+set :path, '/home/ubuntu/movebase/current'
+if @rbenv_root
+  # when calling using capistrano than set correct ruby and env
+  set :rbenv_exec, "#{rbenv_root}/bin/rbenv exec"
+else
+  set :rbenv_exec, ''
+end
+
+# Make sure that log/cron folder exists: mkdir ~/movebase/current/log/cron
+
+# Example: runner 'MyClass.some_function' (please use only one word, no space,
+# brackets...)
+job_type :runner, %(cd :path &amp;&amp;
+   start=`date` &amp;&amp;
+  :rbenv_exec bundle exec rails runner -e :environment :task 2&gt;&amp;1 |
+  (echo $start :task started; cat -; echo `date` :task finished)
+  &gt;&gt; ':path/log/cron/:task.log' 2&gt;&amp;1
+)
+
+job_type :rake, %(cd :path &amp;&amp;
+   start=`date` &amp;&amp;
+  :rbenv_exec bundle exec rake :task |
+  (echo $start :task started; cat -; echo `date` :task finished)
+  &gt;&gt; ':path/log/cron/:task.log' 2&gt;&amp;1
+)
+
+every :reboot do
+  runner 'MyService.new.perform_and_puts'
+  rake 'sitemap:refresh'
+end
+</code></pre></div>    </div>
+
+    <p>Use with capistrano
+https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/deploy.rb
+set :whenever_environment, fetch(:stage)
+set :whenever_variables, (lambda do
+  "'environment=#{fetch :whenever_environment}" \
+  "&amp;rbenv_root=#{fetch :rbenv_path}'"
+end)
+</code></pre></div>    </div>
+    <p>so using capistrano task <code class="language-plaintext highlighter-rouge">cap production whenever:update_crontab</code> you update
+<code class="language-plaintext highlighter-rouge">whenever_variables</code> with <code class="language-plaintext highlighter-rouge">rbenv_root</code> so when ssh command is executed</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap production whenever:update_crontab
+00:00 whenever:update_crontab
+      01 $HOME/.rbenv/bin/rbenv exec bundle exec whenever --update-crontab myapp_production --set 'environment=production&amp;rbenv_root=$HOME/.rbenv' --roles=app,db,web 
+</code></pre></div>    </div>
+    <p>we have defined rbenv_root and whenever can use it</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/schedule.rb
+set :output, error: 'cron.error.log', standard: 'cron.log'
+# https://github.com/javan/whenever/wiki/rbenv-and-capistrano-Notes
+if defined? rbenv_root
+  job_type :delayed_job, %(cd :path :rbenv_root &amp;&amp; :environment_variable=:environment :rbenv_root/bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
+else
+  job_type :delayed_job, %(cd :path &amp;&amp; :environment_variable=:environment bin/rbenv exec bundle exec bin/delayed_job :task --queues=webapp,mailers :output)
+end
+
+every :reboot do
+  delayed_job 'start'
+end
+</code></pre></div>    </div>
+
+    <p>You can use interpolation with <code class="language-plaintext highlighter-rouge">#{name}</code> or <code class="language-plaintext highlighter-rouge">:name</code> inside <code class="language-plaintext highlighter-rouge">job_type</code> but for
+<code class="language-plaintext highlighter-rouge">set</code> you can only use <code class="language-plaintext highlighter-rouge">#{name}</code>. To check crontab syntax simply run
+<code class="language-plaintext highlighter-rouge">whenever</code> in development machine.</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set :path, '/home/ubuntu/myapp/current'
+set :p, "#{path}/log/cron.script.log"
+# this will not work since colon interpolation does not work for set
+# set :p, ":path/log/cron.script.log"
+
+job_type :p, ":path/log/cron.script.log"
+</code></pre></div>    </div>
+  </li>
+  <li>lets encrypt ssl cert
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/etc/letsencrypt/live/myapp.com/renew_and_upload_certificate.sh
+#!/bin/bash
+set -e # Any commands which fail will cause the shell script to exit immediately
+set -x # show command being executed
+
+# Run this script as root user.
+# You can run multiple times
+
+date
+cd /etc/letsencrypt/live/myapp.com
+
+# STEP 1: Generate certificate
+AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys certbot certonly -q --dns-route53 -d *.myapp.com
+# without -q quiet output should be like
+# - Congratulations! Your certificate and chain have been saved at:
+#   /etc/letsencrypt/live/myapp.com/fullchain.pem
+
+# exit if cert has not been changed
+cmp --silent cert.pem.uploaded cert.pem &amp;&amp; exit 1
+cp cert.pem cert.pem.uploaded
+
+# STEP 2: Upload to ACM and get $CERTIFICATE Arn
+AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws acm import-certificate --certificate fileb://cert.pem --certificate-chain fileb://chain.pem --private-key fileb://privkey.pem &gt; step1.json
+export CERTIFICATE=`cat step1.json | jq -r '.CertificateArn'`
+# like CERTIFICATE=arn:aws:acm:us-east-1:664559194543:certificate/16e41ded-6cad-4e6e-b161-018d38d1a378
+
+
+# STEP 3: Find load balancer ARN and set
+# AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws elbv2 describe-load-balancers
+export LOAD_BALANCER=arn:aws:elasticloadbalancing:us-east-1:664559194543:loadbalancer/app/alb-gfd-app/3d181aae37d3b54d
+
+# STEP 4: Find listener ARN
+# AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws elbv2 describe-listeners --load-balancer $LOAD_BALANCER
+export LISTENER=arn:aws:elasticloadbalancing:us-east-1:664559194543:listener/app/alb-gfd-app/3d181aae37d3b54d/827991f6232bcd5c
+
+# STEP 5: Set new certificate for listener
+AWS_CONFIG_FILE=/home/ubuntu/efs/.elbas_keys aws elbv2 add-listener-certificates --listener-arn $LISTENER --certificates CertificateArn=$CERTIFICATE
+</code></pre></div>    </div>
+    <p>and create a crontab task</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap production ssh-worker
+
+sudo ln -s /home/ubuntu/myapp/current/config/etc/letsencrypt/live/myapp.com/renew_and_upload_certificate.sh /etc/letsencrypt/live/myapp.com/
+sudo su
+crontab -e
+# add task
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/snap/bin
+
+0 0 * * * perl -e 'sleep int(rand(43200))' &amp;&amp; /etc/letsencrypt/live/myapp.com/renew_and_upload_certificate.sh &gt;&gt; /home/ubuntu/myapp/current/log/renew_and_upload_certificate.log 2&gt;&amp;1
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="errors-1">ERRORS</h1>
+
+<p>If you have an error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Net::SSH::AuthenticationFailed: Authentication failed for user ubuntu@ec2...
+</code></pre></div></div>
+<p>than it is probably your PEM file in different location, so to fix this you can
+copy to <code class="language-plaintext highlighter-rouge">~/config/keys/pems/gfd-keypair.pem</code> or export in PEM_FILE</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PEM_FILE=~/gfd-keypair.pem
+</code></pre></div></div>
+<p>I also got the same error but PEM was there.
+I solved by downgrading and upgrading capistrano gem.
+https://stackoverflow.com/questions/59556891/rails-capistrano-authentication-fail-error
+https://stackoverflow.com/questions/72014495/capistrano-rails-6-netssh-authentication-failed-for-user-deploy-sshkitrun
+https://stackoverflow.com/questions/63309504/ssh-authentication-fails-when-running-capistrano-cap-production-deploy</p>
+
+<ul>
+  <li>error like
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap aborted!
+Aws::Errors::MissingCredentialsError: unable to sign request without credentials set
+</code></pre></div>    </div>
+    <p>is because you have not set up credentials, env or default location</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/.aws/credentials
+[default]
+aws_access_key_id = AKIA...
+aws_secret_access_key = 545...
+</code></pre></div>    </div>
+    <p>If you have an error</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Aws::Errors::MissingRegionError: No region was provided. Configure the `:region` option or export the region name to ENV['AWS_REGION']
+</code></pre></div>    </div>
+    <p>than it is probably you can not read development credentials so you need a
+<code class="language-plaintext highlighter-rouge">config/credentials/development.key</code> and check if this works</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails credentials:edit -e development
+</code></pre></div>    </div>
+    <p>You should also get a <code class="language-plaintext highlighter-rouge">config/master.key</code> to be able to edit production secrets.</p>
+  </li>
+  <li>error like
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap aborted!
+NoMethodError: undefined method `instances' for nil:NilClass
+Did you mean?  instance_values
+</code></pre></div>    </div>
+    <p>is solved by adding credentials, in my case I store in <code class="language-plaintext highlighter-rouge">rails credentials:edit</code>
+so you need both <code class="language-plaintext highlighter-rouge">config/master.key</code> and <code class="language-plaintext highlighter-rouge">config/credentials.yml.enc</code></p>
+  </li>
+  <li>error like
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>00:01 git:check
+    01 git ls-remote git@github.com:duleorlovic/myapp.git HEAD
+    01 git@github.com: Permission denied (publickey).
+    01 fatal: Could not read from remote repository.
+    01
+    01 Please make sure you have the correct access rights
+    01 and the repository exists.
+    01 git@github.com: Permission denied (publickey).
+    01 fatal: Could not read from remote repository.
+    01
+    01 Please make sure you have the correct access rights
+</code></pre></div>    </div>
+    <p>can be solved with</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-add ~/.ssh/id_rsa
+</code></pre></div>    </div>
+  </li>
+  <li>for error
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Missing template layouts/application with
+or
+Manifest webpack
+</code></pre></div>    </div>
+    <p>please make sure that instance contains all roles <code class="language-plaintext highlighter-rouge">roles: %w[app web db]</code></p>
+  </li>
+</ul>
+
+<h1 id="errors-2">Errors</h1>
+
+<p>For error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cap production elbas:ssh
+(Backtrace restricted to imported tasks)
+cap aborted!
+LoadError: cannot load such file -- elbas/capistrano
+/home/dule/myapp/myapp/Capfile:13:in `&lt;top (required)&gt;'
+(See full trace by running task with --trace)
+</code></pre></div></div>
+<p>solution is to use <code class="language-plaintext highlighter-rouge">bundle exec</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle exec cap production elbas:ssh
+</code></pre></div></div>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

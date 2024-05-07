@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Mysql</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Mysql</h1>
+    <p class="meta">May 26, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#or-permanently"><span class="tocnumber">1</span> <span class="toctext">or permanently</span></a></li></ul></td></tr></tbody></table></div><ul>
+  <li>
+    <p>create user in mysql database</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+</code></pre></div>    </div>
+
+    <p>list all users</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -u root -p mysql
+SELECT User FROM mysql.user;
+</code></pre></div>    </div>
+  </li>
+  <li>grant access to all db
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'localhost';
+FLUSH PRIVILEGES;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>to see all grants (note that single quote <code class="language-plaintext highlighter-rouge">'</code> is required)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SHOW GRANTS FOR 'newuser';
+SHOW GRANTS FOR 'newuser'@'localhost';
+</code></pre></div>    </div>
+  </li>
+  <li>to remove a grant
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>REVOKE ALL PRIVILEGES, GRANT OPTION FROM newuser
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>change some user password you can do in three ways</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SET PASSWORD FOR 'myuser'@'localhost' =newpass;
+
+ALTER USER myuser@localhost IDENTIFIED BY 'newpass';
+
+USE mysql;
+UPDATE user SET authentication_string = PASSWORD('newpass') WHERE user = 'myuser' AND host = 'localhost'
+FLUSH PRIVILEGES;
+</code></pre></div>    </div>
+  </li>
+  <li>allow log in without password is actually empty password <code class="language-plaintext highlighter-rouge">""</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ALTER USER 'username'@'localhost' IDENTIFIED WITH 'mysql_native_password' AS '';
+FLUSH PRIVILEGES;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>change root password:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo /etc/init.d/mysql stop # macos: sudo mysql.server stop
+sudo mysqld --skip-grant-tables &amp;
+mysql -u root mysql
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'dule';
+FLUSH PRIVILEGES
+</code></pre></div>    </div>
+
+    <p>if you know current root password, you can update root password using</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql_secure_installation
+</code></pre></div>    </div>
+  </li>
+  <li>login <code class="language-plaintext highlighter-rouge">mysql -u root -p</code></li>
+  <li>select database <code class="language-plaintext highlighter-rouge">USE mysql</code>, create database <code class="language-plaintext highlighter-rouge">CREATE DATABASE mydb</code></li>
+  <li>import dump with <code class="language-plaintext highlighter-rouge">mysql -u newuser -p dbname &lt; web001db.sql</code></li>
+  <li>create dump specific tables and rows… only one <code class="language-plaintext highlighter-rouge">where</code>, <code class="language-plaintext highlighter-rouge">no-create-info</code> to
+keep old data while you are importing. use <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> if you need two tables with
+specific <code class="language-plaintext highlighter-rouge">where</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysqldump -h&lt;hostname&gt; -u&lt;username&gt; -p &lt;databasename&gt; users --where 'created &gt; DATE_SUB(now(), INTERVAL 7 DAY)' --single-transaction --no-create-info --set-gtid=purged=OFF &gt;&gt; users.sql
+</code></pre></div>    </div>
+  </li>
+  <li>delete table is <code class="language-plaintext highlighter-rouge">drop table users;</code> This will also remove index and foreign
+keys that belongs to table.</li>
+  <li>
+    <p>to remove column you need first to remove foreign keys and index. If you have
+two or more foreign keys than remove all them by name… find name in mysql if
+not defined in db/schema.rb, sometimes name is different for index and key.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SHOW CREATE TABLE operators;
+alter table operators drop foreign key fk_rails_7bd209f074;
+alter table operators drop index fk_rails_7bd209f074;
+alter table operators drop column user_id;
+</code></pre></div>    </div>
+  </li>
+  <li>drop all local databases, use script to run single mysql command
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -uroot -p&lt;password&gt; -e "show databases" | grep -v Database | grep -v mysql| grep -v information_schema| gawk '{print "drop database `" $1 "`;select sleep(0.1);"}' | mysql -uroot -p&lt;password&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>to connect to remote datatabase url using command line cli, for example heroku
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -u hj9gpgm687w1qwx -pvuxns3sidwrjjf8 -h tviw6wn5xwxejwj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com -P 3306 u6rhqznmtth3j4g
+
+# or aws
+DATABASE_URL=mysql2://dbuser:123456@xn01-db01.hrblhe.ap-southeast-1.rds.amazonaws.com/web001db
+mysql -u dbuser -p123456 -h xn01-db01.hrblhe.ap-southeast-1.rds.amazonaws.com web001db
+
+</code></pre></div>    </div>
+  </li>
+  <li>to enable access to mysql on my own local ubuntu mysql user
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># create user and grant access in one command
+GRANT ALL ON wordpressdb.* TO 'wpadmin'@'192.168.1.100' IDENTIFIED BY '%u#098Tl3' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+</code></pre></div>    </div>
+
+    <p>change port first see on which interface it is using</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo netstat -plutn | grep 3306
+# or see if there is a difference
+nmap 127.0.0.1
+nmap 192.168.3.2
+</code></pre></div>    </div>
+    <p>if it is <code class="language-plaintext highlighter-rouge">127.0.0.1</code> than change binding in <code class="language-plaintext highlighter-rouge">/etc/mysql/my.cnf</code> (not in
+<code class="language-plaintext highlighter-rouge">/etc/mysql/mysql.conf.d/mysqld.cnf</code>)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># bind-address = 127.0.0.1
+bind-address = 0.0.0.0
+</code></pre></div>    </div>
+
+    <p>make sure that you do not have firewals (on ubuntu <code class="language-plaintext highlighter-rouge">sudo ufw status</code>) and
+enable port forwarding on routers for TCP 3306</p>
+  </li>
+  <li>
+    <p>restart</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># restart mysql with
+sudo systemctl restart mysql.service
+# or
+sudo /etc/init.d/mysql restart
+# check if port is enabled
+nmap 192.168.1.100
+</code></pre></div>    </div>
+  </li>
+  <li>repair
+https://stackoverflow.com/questions/8843776/mysql-table-is-marked-as-crashed-and-last-automatic-repair-failed
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo service mysql stop
+cd /var/lib/mysql/$DATABASE_NAME
+myisamchk -r $TABLE_NAME
+myisamchk -r -v -f $TABLE_NAME
+sudo service mysql start
+</code></pre></div>    </div>
+  </li>
+  <li>search by regexp
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># when column is string or text
+relation.where('column LIKE :search', search: "%#{search_value}%")
+# otherwise use cast
+relation.where('CAST(column AS CHAR) LIKE :search', search: "%#{search_value}%")
+</code></pre></div>    </div>
+  </li>
+  <li>convert time zone. Only once, you need to upload timezone table using
+<code class="language-plaintext highlighter-rouge">mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql</code> and than
+you can use
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT CONVERT_TZ('2004-01-01 12:00:00','UTC','MET') AS time
+</code></pre></div>    </div>
+  </li>
+  <li>on github actions there is an error
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mysql2::Error: Can't connect to local MySQL server through socket
+'/var/run/mysqld/mysqld.sock' (2)
+</code></pre></div>    </div>
+
+    <p>solution is to start server, in yml it is</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        sudo /etc/init.d/mysql start
+</code></pre></div>    </div>
+    <p>or to change socket location to match app configuration, eg in</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/mysql/mysql.conf.d/mysql.cnf
+[mysql]
+socket  = /tmp/mysql.sock
+</code></pre></div>    </div>
+    <p>and</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/mysql/mysql.conf.d/mysqld.cnf
+[mysqld]
+socket  = /tmp/mysql.sock
+</code></pre></div>    </div>
+    <p>and restart <code class="language-plaintext highlighter-rouge">sudo service mysql restart</code></p>
+  </li>
+  <li>show all datatabases (schemas)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SHOW DATABASES;
+USE mydb;
+</code></pre></div>    </div>
+  </li>
+  <li>show all tables
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SHOW TABLES;
+</code></pre></div>    </div>
+  </li>
+  <li>show table definition
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SHOW COLUMNS FROM users;
+</code></pre></div>    </div>
+  </li>
+  <li>show table create to see all foreign keys like <code class="language-plaintext highlighter-rouge">CONSTRAINT ... FOREIGN_KEY...</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SHOW CREATE TABLE users;
+</code></pre></div>    </div>
+  </li>
+  <li>mysql settings could be different on production and localhost, for example
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ActiveRecord::StatementInvalid (Mysql2::Error: Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column 'trk_datatables_demo_development.comments.body' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by):
+</code></pre></div>    </div>
+    <p>to inspect sql more you can run</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT @@session.sql_mode;
++-----------------------------------------------------------------------------------------------------------------------+
+| @@session.sql_mode                                                                                                    |
++-----------------------------------------------------------------------------------------------------------------------+
+| ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION |
++-----------------------------------------------------------------------------------------------------------------------+
+</code></pre></div>    </div>
+    <p>so to update you can run</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';
+</code></pre></div>    </div>
+    <p>but this is only until it is restarted. To make it permanent add to</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/mysql/mysql.conf.d/mysqld.cnf
+[mysqld]
+sql-mode = NO_ENGINE_SUBSTITUTION
+</code></pre></div>    </div>
+  </li>
+  <li>see cpu usage
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select * from INFORMATION_SCHEMA.PROCESSLIST where db = 'web001db' and INFO is not null;
+</code></pre></div>    </div>
+    <p>Find host url ip connection</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT SUBSTRING_INDEX(host, ':', 1) AS host_short,
+     GROUP_CONCAT(DISTINCT user) AS users,
+     COUNT(*) AS threads
+FROM information_schema.processlist
+GROUP BY host_short
+ORDER BY COUNT(*), host_short;
+</code></pre></div>    </div>
+  </li>
+  <li>load from csv
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># lib/tasks/db.rake
+namespace :db do
+desc "Load csv dump"
+task :load_csv, [:filename] =&gt; [:"pakyow:prepare"] do |_, args|
+  # https://stackoverflow.com/a/14133740/287166
+  # https://stackoverflow.com/a/62965185/287166
+  # mysql&gt; set global local_infile=true;
+  table_name = File.basename(args[:filename], ".*")
+  cols = open(args[:filename]).gets.split(",")
+  underscored_cols = cols
+    .map do  |col|
+      column = col.split.join.underscore
+      column = "isbn10" if column == "asin"
+      column
+    end
+  # all tables should sort id desc
+  # compare schema with: describe books; show create table books;
+  # show schema from all tables; price_engine_development
+  # prices.csv should move Price Log to the end so source is not currupted
+  system "mysql --local_infile=1 -u#{opts[:user]} #{opts[:database]} -e \"" + &lt;&lt;~SQL + "\""
+  SET FOREIGN_KEY_CHECKS = 0;
+  LOAD DATA LOCAL INFILE '#{args[:filename]}' INTO TABLE #{table_name}
+  FIELDS TERMINATED BY ','
+  ENCLOSED BY '\\\"'
+  IGNORE 1 LINES
+  (#{underscored_cols.join(",")});
+  SET FOREIGN_KEY_CHECKS = 1;
+  SQL
+  # LINES TERMINATED BY '\r\n'
+  puts "Completed loading #{opts[:database]}"
+end
+</code></pre></div>    </div>
+  </li>
+  <li>create a row with
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INSERT INTO table_name(column1, column2) VALUES (value1, value2);
+# when you are defining all columns
+INSERT INTO table_name VALUES ("01", value1, value2);
+# use SET
+INSERT INTO table_name SET id=2, column1=value1
+</code></pre></div>    </div>
+  </li>
+  <li>error for mysql 8.3 on macos is
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client.c:1318:3: error: call to undeclared function 'mysql_ssl_set'; ISO C99 and later do not support implicit function declarations
+[-Wimplicit-function-declaration]
+</code></pre></div>    </div>
+    <p>solution is to downgrade and force with
+<code class="language-plaintext highlighter-rouge">brew link mysql@8.0 --force</code>
+https://github.com/feast-dev/feast/issues/3916#issuecomment-1931711571
+```
+brew uninstall mysql
+brew install mysql@8.0
+We’ve installed your MySQL database without a root password. To secure it run:
+  mysql_secure_installation</p>
+  </li>
+</ul>
+
+<p>MySQL is configured to only allow connections from localhost by default</p>
+
+<p>To connect run:
+    mysql -u root</p>
+
+<p>mysql@8.0 is keg-only, which means it was not symlinked into /opt/homebrew,
+because this is an alternate version of another formula.</p>
+
+<p>If you need to have mysql@8.0 first in your PATH, run:
+  echo ‘export PATH=”/opt/homebrew/opt/mysql@8.0/bin:$PATH”’ » /Users/dule/.bash_profile</p>
+
+<p>For compilers to find mysql@8.0 you may need to set:
+  export LDFLAGS=”-L/opt/homebrew/opt/mysql@8.0/lib”
+  export CPPFLAGS=”-I/opt/homebrew/opt/mysql@8.0/include”</p>
+
+<p>For pkg-config to find mysql@8.0 you may need to set:
+  export PKG_CONFIG_PATH=”/opt/homebrew/opt/mysql@8.0/lib/pkgconfig:/opt/homebrew/opt/zlib/lib/pkgconfig”</p>
+
+<p>To start mysql@8.0 now and restart at login:
+  brew services start mysql@8.0
+Or, if you don’t want/need a background service you can just run:
+  /opt/homebrew/opt/mysql@8.0/bin/mysqld_safe –datadir=/opt/homebrew/var/mysql</p>
+
+<p>brew link mysql@8.0 –force</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>note that you need to have mysql in your PATH
+</code></pre></div></div>
+<p>export PATH=”/opt/homebrew/opt/mysql@8.0/bin:$PATH”</p>
+<h1 id="or-permanently">or permanently</h1>
+<p>echo ‘export PATH=”/opt/homebrew/opt/mysql@8.0/bin:$PATH”’ » /Users/dule/.bash_profile
+``</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

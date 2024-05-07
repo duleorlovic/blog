@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Ubuntu working environment</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ubuntu working environment</h1>
+    <p class="meta">Sep 13, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#ubuntu-stuff"><span class="tocnumber">1</span> <span class="toctext">Ubuntu stuff</span></a></li><li class="toc_level-1 toc_section-2"><a href="#inline-public-ip-address"><span class="tocnumber">2</span> <span class="toctext">inline public ip address</span></a></li><li class="toc_level-1 toc_section-3"><a href="#new-line"><span class="tocnumber">3</span> <span class="toctext">new line</span></a></li><li class="toc_level-1 toc_section-4"><a href="#geolocation-of-ip-address"><span class="tocnumber">4</span> <span class="toctext">geolocation of ip address</span></a></li><li class="toc_level-1 toc_section-5"><a href="#vicevi"><span class="tocnumber">5</span> <span class="toctext">vicevi</span></a></li><li class="toc_level-1 toc_section-6"><a href="#show-a-zoomable-world-map"><span class="tocnumber">6</span> <span class="toctext">show a zoomable world map</span></a></li><li class="toc_level-1 toc_section-7"><a href="#unixlinux-commands-cheat-sheets-using-curl-chubincheatsh"><span class="tocnumber">7</span> <span class="toctext">UNIX/Linux commands cheat sheets using curl (chubin/cheat.sh)</span></a></li><li class="toc_level-1 toc_section-8"><a href="#test-upload-download-speed"><span class="tocnumber">8</span> <span class="toctext">test upload download speed</span></a></li><li class="toc_level-1 toc_section-9"><a href="#configenvironmentsdevelopmentrb"><span class="tocnumber">9</span> <span class="toctext">config/environments/development.rb</span></a></li><li class="toc_level-1 toc_section-10"><a href="#see-all-connections"><span class="tocnumber">10</span> <span class="toctext">see all connections</span></a></li><li class="toc_level-1 toc_section-11"><a href="#show-puma-process"><span class="tocnumber">11</span> <span class="toctext">show puma process</span></a></li><li class="toc_level-1 toc_section-12"><a href="#so-you-can-kill-with"><span class="tocnumber">12</span> <span class="toctext">so you can kill with</span></a></li><li class="toc_level-1 toc_section-13"><a href="#quick-scan-all-devices-only-ping-scan"><span class="tocnumber">13</span> <span class="toctext">quick scan all devices, only ping scan</span></a></li><li class="toc_level-1 toc_section-14"><a href="#fast-scan"><span class="tocnumber">14</span> <span class="toctext">fast scan</span></a></li><li class="toc_level-1 toc_section-15"><a href="#port-scan-very-slow"><span class="tocnumber">15</span> <span class="toctext">port scan, very slow</span></a></li><li class="toc_level-1 toc_section-16"><a href="#to-automatically-boot"><span class="tocnumber">16</span> <span class="toctext">to automatically boot</span></a></li><li class="toc_level-1 toc_section-17"><a href="#to-remove-from-auto-start"><span class="tocnumber">17</span> <span class="toctext">to remove from auto start</span></a></li><li class="toc_level-1 toc_section-18"><a href="#another-way-to-set-up-to-run-at-boot-"><span class="tocnumber">18</span> <span class="toctext">another way to set up to run at boot [+]</span></a></li><li class="toc_level-1 toc_section-19"><a href="#to-load-just-header-block-to-find-size-of-image"><span class="tocnumber">19</span> <span class="toctext">to load just header block to find size of image</span></a></li><li class="toc_level-1 toc_section-20"><a href="#to-return-to-ruby-and-not-block-the"><span class="tocnumber">20</span> <span class="toctext">to return to ruby and not block the</span></a></li><li class="toc_level-1 toc_section-21"><a href="#you-can-close-from-ruby"><span class="tocnumber">21</span> <span class="toctext">you can close from ruby</span></a></li><li class="toc_level-1 toc_section-22"><a href="#write-output-to-different-file"><span class="tocnumber">22</span> <span class="toctext">write output to different file</span></a></li><li class="toc_level-1 toc_section-23"><a href="#removes-old-revisions-of-snaps"><span class="tocnumber">23</span> <span class="toctext">Removes old revisions of snaps</span></a></li><li class="toc_level-1 toc_section-24"><a href="#close-all-snaps-before-running-this"><span class="tocnumber">24</span> <span class="toctext">CLOSE ALL SNAPS BEFORE RUNNING THIS</span></a></li><li class="toc_level-1 toc_section-25"><a href="#uncomment-waylandenablefalse-to-switch-to-xorg"><span class="tocnumber">25</span> <span class="toctext">uncomment WaylandEnable=false to switch to Xorg</span></a></li></ul></td></tr></tbody></table></div><h1 id="ubuntu-stuff">Ubuntu stuff</h1>
+
+<ul>
+  <li>upgrading
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>do-release-upgrade
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>find ubuntu and linux version</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsb_release -a
+cat /proc/version
+uname -a
+</code></pre></div>    </div>
+  </li>
+  <li>taks screenshot: fullsize <code class="language-plaintext highlighter-rouge">Print</code>, currently active window <code class="language-plaintext highlighter-rouge">Alt+Print</code>, area
+<code class="language-plaintext highlighter-rouge">Shift+Print</code> (select window or drag area). images are automatically saved to
+~/Pictures
+Use <code class="language-plaintext highlighter-rouge">ctrl</code> instead of alt if you want to copy to clipboard</li>
+  <li><a href="https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding">port
+forwarding</a>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -L 8080:localhost:80 my.server.com
+</code></pre></div>    </div>
+  </li>
+  <li>tunel to external server so you do not need to open ports on your router and
+other can see your local env
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -i $PEM_FILE -R 0.0.0.0:80:localhost:9292 ubuntu@52.202.201.113
+
+sudo vi /etc/ssh/sshd_config
+echo "GatewayPorts yes" &gt;&gt; /etc/ssh/sshd_config
+sudo service ssh restart
+
+# again connect using tunneling
+# make sure ports are opened in aws console
+
+ssh -i $PEM_FILE -R 0.0.0.0:80:localhost:9292 ubuntu@52.202.201.113
+</code></pre></div>    </div>
+  </li>
+  <li>gui ssh forwarding <code class="language-plaintext highlighter-rouge">ssh -X server</code> remote <code class="language-plaintext highlighter-rouge">ssh -R 5900:localhost:5900
+guest@joes-pc</code> local
+socks tunel <code class="language-plaintext highlighter-rouge">ssh -C -D 1080 server_url_or_ip</code>, than in firefox</li>
+</ul>
+<p>&lt;about:preferences#advanced&gt; Networktab -&gt; Settings choose “Manual proxy
+configuration” and type SOCKS Host: localhost, and port 1080. Do not write
+anyting in HTTP proxy… For Chrome or another connections you can use system
+wide Ubuntu Settings -&gt; Network -&gt; Network Proxy -&gt; Method: Manual -&gt; Socks Host
+localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
+than I can access cameras http://192.168.1.3:81/zm
+You can start chromium with those settings and hosts from remote machine will be
+used</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chromium --proxy-server="socks5://127.0.0.1:1080"
+</code></pre></div></div>
+<p>For <code class="language-plaintext highlighter-rouge">curl</code> you need to export variable</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export https_proxy=socks5://localhost:1080 http_proxy=socks5://localhost:1080
+curl ifconfig.me
+</code></pre></div></div>
+<p>For ruby, you can check public ip address with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "net/http"
+Net::HTTP.get(URI("https://api.ipify.org"))
+</code></pre></div></div>
+<p>but ruby does not support proxy using socks. Here are some alternatives: polipo
+http proxy using socks upstream, torsocks wrapper
+https://superuser.com/questions/280129/http-proxy-over-ssh-not-socks</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/polipo/config
+# proxyAddress = "::1"
+proxyPort = 8118
+socksParentProxy = "localhost:1080"
+socksProxyType = socks5
+</code></pre></div></div>
+<p>restart with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo /etc/init.d/polipo restart
+</code></pre></div></div>
+<p>for curl use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export https_proxy=localhost:8118 http_proxy=localhost:8118
+</code></pre></div></div>
+<p>but the best option is to change in system settings (it will add new env
+variable) and open new terminals, curl and ruby works fine</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "puts Net::HTTP.get(URI('http://ifconfig.me'))" | ruby -rnet/http
+</code></pre></div></div>
+
+<ul>
+  <li>disable root login if you see a lot of failed login attempts
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat /var/log/auth.log | grep root
+</code></pre></div>    </div>
+  </li>
+  <li>to find my public ip address you can use what is my ip address
+and other tools from https://github.com/chubin/awesome-console-services
+```
+    <h1 id="inline-public-ip-address">inline public ip address</h1>
+    <p>curl l2.io/ip</p>
+  </li>
+</ul>
+
+<h1 id="new-line">new line</h1>
+<p>curl eth0.me
+dig +short myip.opendns.com @resolver1.opendns.com</p>
+
+<h1 id="geolocation-of-ip-address">geolocation of ip address</h1>
+<p>curl ip-api.com
+curl ip-api.com/8.8.8.8</p>
+
+<h1 id="vicevi">vicevi</h1>
+<p>curl https://icanhazdadjoke.com</p>
+
+<h1 id="show-a-zoomable-world-map">show a zoomable world map</h1>
+<p>telnet mapscii.me</p>
+
+<h1 id="unixlinux-commands-cheat-sheets-using-curl-chubincheatsh">UNIX/Linux commands cheat sheets using curl (chubin/cheat.sh)</h1>
+<p>curl cheat.sh</p>
+
+<h1 id="test-upload-download-speed">test upload download speed</h1>
+<p>curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh igrice https://github.com/chubin/awesome-console-services#entertainment-and-games
+* [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
+`sudo make install` and `sudo modprobe v4l2loopback` we can stream some video
+file to device `while true; do gst-launch-0.10 filesrc
+location=~/Desktop/buck.ogv ! decodebin ! v4l2sink device=/dev/video1;done`
+* dim screen adjust brightness `xrandr -q | grep " connected"` to find the
+name, for example *DFP1*, than `xrandr --output DFP1 --brightness 0.5`. Here is
+what I use `d 0.8` in
+[my_bashrc.sh](https://github.com/duleorlovic/config/blob/master/my_bashrc.sh#L32)
+
+~~~
+# ~/.bashrc
+function d {
+  if [  -z $1 ]
+  then
+    echo Default is middle value: d 0.5
+  fi
+  xrandr --output DFP1 --brightness ${1:-0.5}
+}
+alias dim=d
+~~~
+
+there is [f.lux](https://justgetflux.com/) software that can automate screen
+brighthness.
+
+* webcam does not work on chrome but works in firefox
+
+~~~
+sudo apt-get install libv4l-0
+sudo mv /opt/google/talkplugin/GoogleTalkPlugin /opt/google/talkplugin/GoogleTalkPlugin.real 
+cat &gt; /opt/google/talkplugin/GoogleTalkPlugin &lt;&lt;HERE_DOC
+#!/bin/bash
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libv4l/v4l1compat.so /opt/google/talkplugin/GoogleTalkPlugin.real
+HERE_DOC
+~~~
+
+## Cups
+
+Simple scan scanner for HP LasetJet MF1212nf MFP does not work if you add
+  printer from gui. Better is to use:
+
+  ~~~
+  sudo apt install hplip # install hp-setup
+  hp-setup -i
+  # chose net
+  # chose to download driver from hp site
+  # no need to install fax printer
+  ~~~
+
+  On ubuntu 16 it works for 3.16.3 version
+</code></pre></div></div>
+<p>HP Linux Imaging and Printing System (ver. 3.16.3)
+  Printer/Fax Setup Utility ver. 9.0
+  Plugin Download and Install Utility ver. 2.1
+  Plugin Installer ver. 3.0</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  On ubuntu 18 I used binary installation hplip-3.19.6.run from
+  https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
+  but somehow `hp-plugin` does not work, so I used old version
+
+To install hp-plugin I disabled aamor https://bugs.launchpad.net/hplip/+bug/1813768/comments/8
+</code></pre></div></div>
+<p>sudo apt-get install apparmor-utils
+sudo aa-disable /usr/share/hplip/plugin.py
+hp-plugin</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To remove package and reinstall printer you can follow
+https://askubuntu.com/questions/1056077/how-to-install-latest-hplip-on-my-ubuntu-to-support-my-hp-printer-and-or-scanner
+</code></pre></div></div>
+<p>sudo apt-get purge hplip hplip-data hplip-doc hplip-gui hpijs-ppds <br />
+libsane-hpaio printer-driver-hpcups printer-driver-hpijs
+sudo rm -rf /usr/share/hplip/
+sudo apt-get autoremove</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To remove hplip
+</code></pre></div></div>
+<p>sh hplip-3.19.8.run –noexec
+cd hplip-3.19.8
+sudo ./uninstall.py
+sudo rm -rf /usr/share/hplip/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+On ubuntu 18 I used official
+</code></pre></div></div>
+<p>sudo apt-get install hplip-gui</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+Enable automatic adding network printers
+</code></pre></div></div>
+<p>sudo systemctl start cups-browsed
+sudo systemctl disable cups-browsed # remove from /etc/cups/cupsd.conf
+sudo systemctl stop cups-browsed</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To use HP color laserjet CP1215 you can use http://foo2hp.rkkda.com/
+</code></pre></div></div>
+<p>wget -O foo2zjs.tar.gz http://foo2zjs.rkkda.com/foo2zjs.tar.gz
+tar zxf foo2zjs.tar.gz
+cd foo2zjs
+make
+./getweb 1215      # Get HP LaserJet CP1215 .ICM files
+sudo make install
+sudo make cups</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Go to &lt;http://localhost:631/admin/&gt; (your username and password) and configure
+Color mode to Color instead of Monochrome. Instructions as screenshots
+http://foo2hp.rkkda.com/cups/
+Note that pdf usually use monochrome colors (unless after Ctrl+P under Advanced
+tab Color Mode is Color) so use Writter to insert image and print document.
+
+
+* recently I got dns error (I'm using 8.8.8.8). Following
+  [post](http://askubuntu.com/questions/368435/how-do-i-fix-dns-resolving-which-doesnt-work-after-upgrading-to-ubuntu-13-10-s)
+  I comment out `# dns=dnsmasq` from /etc/NetworkManager/NetworkManager.conf and
+  `sudo restart network-manager`
+
+* test sound using
+</code></pre></div></div>
+<p>speaker-test -t wav -c 6</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* if `Bus 002 Device 003: ID 0d8c:013c C-Media Electronics, Inc. CM108 Audio
+Controller` microphone does not work automatically (but you can see in sound
+settings as *CM108 Audio Controller* than you need to comment out last line
+`#options snd-usb-audio index=0 ` in `/etc/modprobe.d/alsa-base.conf`.
+
+# Chrome chromium
+
+* take screenshot with `ctrl+Shift + p` and search screenshot
+* [chrome scrambled](https://code.google.com/p/chromium/issues/detail?id=375957)
+  can be solved with `sudo amdconfig --initial`
+* chrome flickers on resize
+  [link](http://askubuntu.com/questions/279088/google-chrome-flickering)
+  solution is to disable (uncheck) **Use hardware acceleration when available**
+  in System Settings -&gt; Show Advanced -&gt; (at bottom, search for this option) (or
+  `--disable-gpu` in `/usr/share/applications/chromium-browser.desktop`). I try
+  to disable only composition `--blacklist-accelerated-compositing` but still is
+  enabled. Check that features is software only on &lt;chrome://gpu/&gt;.
+* you can open extension by going to &lt;chrome://apps&gt;
+* enable some flags on &lt;chrome://flags&gt;
+  * for example sound icon
+* dns or other network &lt;chrome://net-internals&gt;
+* T-rex game &lt;chrome://network-error/-106&gt;
+* disable url minimisation, go to
+  chrome://flags/#omnibox-ui-hide-steady-state-url-trivial-subdomains and set
+  Omnibox UI Hide Steady-State URL Path, Query, and Ref On Interaction to
+  Disabled
+
+## Chrome plugins and extensions
+
+* [user agent switcher](https://github.com/chrispederick/user-agent-switcher/)
+* to check which browsers was used by useragent string
+[parse user agent strings](https://developers.whatismybrowser.com/useragents/parse)
+* [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
+
+## Chrome DNS and HSTS problem for .localhost and .dev
+
+Since google owns `.dev` domain and it exists in hsts list, in chrome (no
+firefox) request to `my-domain.dev` will be always https.
+You can also use `lvh.me` since it always resolves to 127.0.0.1.
+But for local development I use `.loc` with dnsmasq or `.localhost` also with
+dnsmasq.
+Old answer: __I did not choose to use `localhost` because I can not remap subdomain of localhost in /etc/hosts and use in google
+chrome (firefox works fine) for some pathetic reason
+&lt;https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost&gt;__
+Now localhost works in Chrome but not in Firefox (about:config
+network.dns.disableIPv6 set to false did not work for me).
+When I change `loc` to `localhost` in `/etc/dnsmasq.d/dev-tld` than it works.
+
+For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
+subdomain:
+
+~~~
+# /etc/dnsmasq.d/dev-tld
+local=/localhost/
+address=/localhost/127.0.0.1
+~~~
+
+restart with
+
+~~~
+sudo systemctl restart NetworkManager
+sudo /etc/init.d/dnsmasq restart
+~~~
+
+Also follow [instructions](https://gist.github.com/marek-saji/6808114)
+
+DNS server dnsmasq for .dev domains for osx &lt;https://passingcuriosity.com/2013/dnsmasq-dev-osx/&gt;
+https://gist.github.com/ogrrd/5831371
+https://kharysharpe.medium.com/automatic-local-domains-setting-up-dnsmasq-for-macos-high-sierra-using-homebrew-caf767157e43
+
+~~~
+brew install dnsmasq
+# read suggested commands and apply them
+# cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
+sudo brew services start dnsmasq
+
+# in /usr/local/etc/dnsmasq.conf
+# or /opt/homebrew/etc/dnsmasq.conf 
+address=/localhost/127.0.0.1
+
+sudo brew services restart dnsmasq
+
+sudo mkdir -p /etc/resolver
+sudo tee /etc/resolver/localhost &gt;/dev/null &lt;&lt;EOF
+nameserver 127.0.0.1
+EOF
+~~~
+
+Test with
+
+~~~
+scutil --dns
+# resolver #8
+#   domain   : localhost
+#   nameserver[0] : 127.0.0.1
+
+# Make sure you haven not broken your DNS.
+ping -c 1 www.google.com
+# Check that .localhost names work
+ping -c 1 this.is.a.test.localhost
+~~~
+
+Clear chrome dns cache on chrome://net-internals/#dns
+and clear cookies.
+
+You can check your domain name resolutions with mxtoolbox.com or domain settings
+with command `nslookup` (dns resolution, dns lookup)
+On web you can check on https://dns.google domain resolution for google
+
+~~~
+nslookup asd.localhost
+# Server:		127.0.0.1
+# Address:	127.0.0.1#53
+#
+# Name:	asd.localhost
+# Address: 127.0.0.1
+
+# To display the MX records, use the -query=mx option:
+# you can show any records with
+nslookup -query=any move-index.org
+~~~
+
+You can also use dig to find out dns lookup
+</code></pre></div></div>
+<p>dig +short trk.in.rs</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Also host command
+</code></pre></div></div>
+<p>host trk.in.rs</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+You can see redirection url with
+</code></pre></div></div>
+<p>curl -I mydomain.com</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+On linux you can update `/etc/hosts` with you custom domain name and use it
+instead of IP address.
+On window it is `c:\Windows\System32\Drivers\etc`. Just edit with notepad and
+save. No need to restart (maybe it will be cleared on restart).
+
+## Chrome Developer tools
+
+* open developer tools on last tab that was used is with `F12` or
+  `ctrl+shift+i`. Switch to next and prev panel with `ctrl+]` and `ctrl+[`.
+  `ctrl+shift+d` dock undock. Open drawer with `ESC`
+* on drawer three dots, you can
+  * to search file in google developer tools you can open console window (not
+  console tab with console input, window can be opened on any tab with ESC key
+  in dev tools). Than on three dots, open dropdown menu and find *Search*
+  (keyboard shortcut is `ctrl+shift+f`). To search current panel use `ctrl+f`
+* three dots -&gt; Coverage can give how much of css or js is used on the page
+* [network tab filter
+  request](https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/resource-loading#filter-requests)
+  will filter by filename containg the string `posts`. But it also supports
+  keywords with autosuggestions. Examples: `domain:*.com`, `larger-than:1K`, 
+* to stop on some page that redirects immediatelly, you can go `Sources` tab and
+  *Event Listener Breakpoints* and *Load -&gt; beforeunload* or *Script -&gt; Script
+  first statement*.
+  To stop on XHR/Fetch call you can set breakpoint on Sources -&gt; XHR breakpoint
+* to search all files `ctrl+o`
+* to open **command menu** use `ctrl+shift+p`
+  * `screenshot`
+* to open **Console panel** you can use `ctrl+shift+j` (also on a page). You can
+ use `monitor(function)`, `monitorEvents($0, "key");` `debug(function)` or
+  `undebug(function)`. Usefull when you want to stop on some event listener
+  `debug(getEventListeners($0).click[0].listener)` (you can do the same using
+  Elements, Event Listeners tab, click, and jump to source where you want
+  breakpoint). To show some value in log you can add Conditional breakport with
+  `console.log(varname);` to use current selected element in console use `$0`
+  (`$1` previous selected and so on), for xpath use `$x()`. Use `$_` for last
+  returned value in console.
+  [link](https://developers.google.com/web/tools/chrome-devtools/console/command-line-reference)
+* to open **Elements panel** (if developer tools is not yet opened) is
+  `ctrl+shift+c`. You can use `h` to hide element (`visibility: hidden`). Use
+  `ctrl+f` to find element (`enter` to find next). You can use `.class` to
+  locate by css class.
+
+* `ctrl+Shift + m` to toggle mobile responsive view
+* `ctrl+o` find filename
+* `ctrl+shift+`
+ * `^shift+c` to click and locate element
+ * `^shift+f` to find string in all files
+ * `^shift+o` find functions in the current js file
+ * `^shift+p` chrome shortcuts
+
+Enable experiments with &lt;chrome://flags/#enable-devtools-experiments&gt; and go to
+Experiments menu in Settings (F1 or Ctrl+P+Settings)
+
+To clear autofill suggestions you can use keyboard shortcut. First select
+  suggestion with UP or Down arrows than press Shift + Delete
+  [answer](https://support.google.com/chrome/answer/142893?p=settings_autofill&amp;rd=1)
+
+In console you can call
+
+~~~
+url="http://numbersapi.com/5/math"
+await fetch(url)
+await r.text()
+~~~
+
+Audit tab can give you broken best practices and explanations.
+
+# Firefox
+
+url suggestion does not use port number, so it is advised to disable it on
+`about:config` for `browser.urlbar.autoFill` to false. That way only history
+links will be provided, so you can navigate to them using tab.
+
+
+Search
+https://thoughtbot.com/blog/make-the-most-of-your-browser-s-address-bar
+
+`^ str`, matches history with str, `# str` matches page titles
+
+when strange characters are shown as squares on ubuntu
+https://askubuntu.com/questions/1224125/font-characters-displayed-as-squares-in-ubuntu-18-04
+
+</code></pre></div></div>
+<p>rm -rf ~/.cache/fontconfig
+sudo fc-cache -r -v</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+and restart computer (restarting firefox is also ok is you kill all firefox
+sessions).
+
+## Firefox developer tools and navigations
+
+like vim
+* `ctrl+[` back
+* `ctrl+]` forward
+* `ctrl+f` find (`F3` and `shift+F3` find next and prev)
+* `/` quick find, `'` find only in links
+* `ctrl+j` focus search bar
+* `ctrl+shift+i` toggle developer tools (`F12`), `ctrl+shift+k` console,
+  `ctrl+shift+c` inspector, `shift+F7` style, `ctrl+shift+m` mobile responsive,
+  `ctrl+shift+j` browser console
+* `shift+f4` scratchpad and run with `ctrl+r`
+* `shift+f2` developer toolbar
+* `ctrl+i` page info (content-type, referring url, size...)
+* `f7` carret browsing so you can navigate cursor with shift arrow and ctrl+c
+
+## Firefox WebIDE
+
+You can remotelly debug a page on your phone. Start
+https://developer.mozilla.org/en-US/docs/Tools/Remote_Debugging Enable Developer
+mode on Android: Settings -&gt; About Phone -&gt; Build Number -&gt; Tap 10 times and you
+will see parent Setting menu -&gt; Developer Options -&gt; enable USB Debugging.
+
+On desktop Firefox open Settings -&gt; Web Developer -&gt; WebIDE (shift+F8).
+On android Firefox open Settings -&gt; Advanced -&gt; enable Remote Debugging via USB.
+
+Android Firefox needs to confirm Incomming connection: Allow USB debugging
+connection ?.  Also the app needs to be opened (in focus).
+
+# Opera
+
+Download for ubuntu https://www.opera.com/
+Download mobile browser Opera mobile emulator https://www.opera.com/developer/mobile-emulator
+
+~~~
+./opera-mobile-emulator
+# error while loading shared libraries: libQtGui.so.4: cannot open shared object file: No such file or directory
+
+# to find in which package this file belongs use
+# apt-file search libQtGui.so
+
+sudo apt install libqtwebkit4
+./opera-mobile-emulator
+# still same error
+~~~
+
+# Gimp
+
+Cage transform https://www.youtube.com/watch?v=jL8TepHX0qE does not work in
+latest gimp so use old ubuntu 14 in virtual box.
+
+# FTP
+
+To enable ftp write you need to uncomment `sudo vi /etc/vsftpd.conf`
+`write_enable=YES` and restart `sudo service vsftpd restart`. You need to create
+folder (owner should be trkftp user).
+
+# Ngrok
+
+Also https://localtunnel.github.io/www/
+
+You can create local tunnel with ngrok.
+
+When you signup you can generate authtoken in your `~/.ngrok2/ngrok.yml`.
+
+You need to upgrade to use custom subdomains, but free domain is fine if you can
+use some of your dns.
+
+~~~
+ngrok http 3002
+~~~
+
+In rails you need to allow
+
+</code></pre></div></div>
+<h1 id="configenvironmentsdevelopmentrb">config/environments/development.rb</h1>
+<p>config.hosts « /[a-z0-9-.]+.ngrok.io/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# PDF
+
+Merge pdf files
+
+~~~
+pdftk * cat output ../p.pdf
+~~~
+
+Convert images files to pdf. Some restrictions should be removed
+https://askubuntu.com/questions/1081895/trouble-with-batch-conversion-of-png-to-pdf-using-convert
+</code></pre></div></div>
+<p>sudo mv /etc/ImageMagick-6/policy.xml /etc/ImageMagick-6/policy.xmlout</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+<p>convert johny* nin.pdf</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+# Canon camera wifi
+
+&lt;http://www.testcams.com/airnef/&gt; is used to download files from Canon camera.
+
+# Network
+
+`ifconfig` is a tool to change network configuration, but changes are not
+persisted unless you save them in `/etc/network/interfaces`
+
+~~~
+ifconfig eth0
+~~~
+
+To configure default dateway gw you can use `route` command
+
+~~~
+sudo route add default gw 10.0.0.1 eth1
+route -n
+~~~
+
+To configure DNS you can edit `/etc/resolv.conf`.
+To purge all configuration you can `ip addr flush eth0`
+
+To prevent Network manager to use connection as default route, you can edit
+connections -&gt; IPv4 Settings -&gt; Routes -&gt; check "Use this connection only for
+resources on its network"
+
+To remove docker bridge you can run `ip link del docker0`
+
+Now
+
+* resize mp4 video with avconv
+
+~~~
+avconv -i input.mp4 -s 640x480 -strict -2 output.mp4
+for i in *.MP4; do avconv -i "$i" -strict -2 "resized/$i"; done
+~~~
+
+* convert dvd vob to mp4
+</code></pre></div></div>
+<p>for f in <em>.VOB ; do ffmpeg -i “$f” -vcodec copy -strict experimental -c:a aac “${f%.</em>.VOB}.mp4”; done</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* join videos using ffmpeg
+
+</code></pre></div></div>
+<p>ffmpeg -i concat:”input1.mp4|input2.mp4” -fflags +genpts output.mp4</p>
+
+<p># or
+  # ls &gt; textfile
+  # edit file to contain:
+  # file ‘input1.mp4’
+  # file ‘input2.mp2’
+  # …
+  ffmpeg -f concat -i textfile -fflags +genpts merged.mp4
+  ffmpeg -f concat -i mylist.txt -c copy -safe 0 output.mp4</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* slideshow using ffmpeg https://trac.ffmpeg.org/wiki/Slideshow
+</code></pre></div></div>
+<p># hold single image duration
+  ffmpeg -loop 1 -i a00.jpg  -c:v libx264 -t 10 -pix_fmt yuv420p a00.mp4</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* rotate video file using ffmpeg
+</code></pre></div></div>
+<p>ffmpeg -i in.mov -vf “transpose=1” out.mov # 90 clockwise
+  ffmpeg -i in.mov -vf “transpose=2” out.mov # 90 counter-clockwise</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* cat video
+</code></pre></div></div>
+<p>ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* default gnome screenshot folder `dconf-editor` find
+  `org-&gt;gnome-&gt;gnome-screenshot-&gt; auto-save-directory -&gt;
+  file:///home/user/Download/`
+
+* install Oracle Java instead of OpenJDK http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html
+
+  ~~~
+  sudo add-apt-repository ppa:webupd8team/java
+  sudo apt-get update
+  sudo apt-get install oracle-java8-installer
+  sudo update-alternatives --config java
+  java -version
+  javac -version
+  ~~~
+
+* bluetooth
+
+  https://forums.bunsenlabs.org/viewtopic.php?id=4375
+  ~~~
+  systemctl status bluetooth.service
+  sudo systemctl restart bluetooth.service
+  lsusb
+  lspci -knn
+
+  bluetoothctl
+  list
+  show
+  agen on
+  power on
+  scan on
+  ~~~
+
+  My is
+
+  ~~~
+  04:00.0 Network controller [0280]: Qualcomm Atheros AR9462 Wireless Network Adapter [168c:0034] (rev 01)
+    Subsystem: Lite-On Communications Inc AR9462 Wireless Network Adapter [11ad:6621]
+  ~~~
+
+  https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1394368
+
+  ~~~
+  sudo -i
+  echo "options ath9k btcoex_enable=1"  &gt;  /etc/modprobe.d/ath9k.conf
+  ~~~
+
+* trim or mute vocals in mp3 files with audacity
+* boot old computers
+  * unetbootin http://unetbootin.github.io/
+  * burn cd with mini.iso
+    https://help.ubuntu.com/community/Installation/MinimalCD (since full iso is
+    850MB &gt; 700 MB CD capacity)
+
+* find motherboard proccessor model with `sudo dmidecode | less`. To find type
+  of memory run `sudo dmidecode --type 17` and look for `Type Detail` (for
+  my server [Dell power Edge
+  T110](https://www.dell.com/ky/business/p/poweredge-t110-2/pd)  it is `Type
+  Detail: Synchronous Unbuffered (Unregistered)` and `Part Number`
+  (M391B5273DH0-CK0) so it does not support registered/buffered memory
+  [link](https://www.dell.com/community/PowerEdge-Hardware-General/PowerEdge-T110-RAM-compatibility/td-p/5816309)
+
+# Remote access to services
+
+To enable mysql service from remote you need to bind it to 0.0.0.0 in
+configuration. To test on which interface is used port listening you can see
+port use port in used port find port
+
+</code></pre></div></div>
+<p>sudo netstat -tupln | grep 3306</p>
+
+<h1 id="see-all-connections">see all connections</h1>
+<p>lsof -wni tcp:3000</p>
+<h1 id="show-puma-process">show puma process</h1>
+<p>lsof -t -i:3000 -sTCP:LISTEN</p>
+<h1 id="so-you-can-kill-with">so you can kill with</h1>
+<p>kill -9 $(lsof -t -i:3000 -sTCP:LISTEN)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+You can try with nmap but it does not show for example neo4j 7474 port
+</code></pre></div></div>
+<p>nmap 127.0.0.1
+nmap 192.168.3.2</p>
+
+<h1 id="quick-scan-all-devices-only-ping-scan">quick scan all devices, only ping scan</h1>
+<p>nmap -sn 192.168.0.0/24</p>
+<h1 id="fast-scan">fast scan</h1>
+<p>nmap -F 192.168.0.0/24</p>
+
+<h1 id="port-scan-very-slow">port scan, very slow</h1>
+<p>nmap -Pn 192.168.3.2</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+## Network
+
+Find mac address
+</code></pre></div></div>
+<p>ip link</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To start service on boot use
+
+</code></pre></div></div>
+<p>service –status-all</p>
+
+<h1 id="to-automatically-boot">to automatically boot</h1>
+<p>sudo update-rc.d neo4j defaults</p>
+<h1 id="to-remove-from-auto-start">to remove from auto start</h1>
+<p>update-rc.d -f neo4j remove</p>
+
+<h1 id="another-way-to-set-up-to-run-at-boot-">another way to set up to run at boot [+]</h1>
+
+<p>sudo systemctl enable neo4j</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Video processing
+
+For youtube, video should be 16:9, ie for 1080p: 1920x1080, and for 720p:
+1280x720.
+
+Here are some tools
+* Open Shot https://www.openshot.org/static/files/user-guide/introduction.html#features but better is KDEenlive
+* http://www.blender.org for creating animations
+* handbrake for video processing. I used for cropping, first to preview for
+  720px height and use ffmpeg to crop window
+  (original_width x 720) starting from position 0 x (top_pixel_handbrake) Ffmpeg
+  generates smaller video than handbrake's output m4v file.
+
+</code></pre></div></div>
+<p>ffmpeg -i dahua.ts -filter:v ‘crop=2592:720:0:824’ -strict -2 k.mp4</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* kdenlive. When sound starts flickering, restart computer helps. Videos can be
+  joined splited merged.
+
+# ImageMagic rmagick
+
+https://imagemagick.org/index.php https://github.com/rmagick/rmagick
+Load image
+</code></pre></div></div>
+<p>require ‘rmagick’
+image = Magick::Image.read( ‘demo.png’ )
+          .first
+image = Magick::ImageList.new( ‘demo.png’ )</p>
+<h1 id="to-load-just-header-block-to-find-size-of-image">to load just header block to find size of image</h1>
+<p>image = Magick::Image.ping( ‘demo.png’ ).first
+image.display</p>
+<h1 id="to-return-to-ruby-and-not-block-the">to return to ruby and not block the</h1>
+<p>pid = fork { draw.display }</p>
+<h1 id="you-can-close-from-ruby">you can close from ruby</h1>
+<p>fork { sleep 30; Process.kill(‘SIGKILL’, pid) }</p>
+
+<h1 id="write-output-to-different-file">write output to different file</h1>
+<p>image.write file_name.split(‘.’).insert(-2, ‘proccessed’).join(‘.’)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To get a size of a image
+</code></pre></div></div>
+<p>image.columns # width
+image.rows # height</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To create gif
+</code></pre></div></div>
+<p>anim = ImageList.new(“start.gif”, “middle.gif”, “finish.gif”)
+anim.write(“animated.gif”)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To resize but keep aspect ratio (ie to scale under constrains)
+</code></pre></div></div>
+<p>image = image.change_geometry(“400”) {|cols, rows, img| img.resize!(cols, rows)}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To write blue transparent box
+</code></pre></div></div>
+<p>draw = Magick::Draw.new
+draw.stroke ‘blue’
+draw.fill_opacity 0
+draw.rectangle 5,10, 50,100
+draw.draw image</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# TIPS
+
+* to change default program open with file type, you can right click,
+properties, set default.
+another way is to edit `vi ~/.local/share/applications/defaults.list`
+and run `sudo update-mime`
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* read only usb, can't create file since usb is readonly https://askubuntu.com/questions/781223/physical-block-size-is-2048-bytes-but-linux-says-it-is-512-when-formatting-us
+
+or error: 'The driver descriptor says the physical block size is 2048 bytes, but
+Linux says it is 512 bytes'
+
+~~~
+df -Th
+umount /media/duleusb
+sudo fdisk -l
+#
+udisksctl unmount -b /dev/sdc1
+sudo sgdisk --zap-all /dev/sdc
+sudo sgdisk --new=1:0:0 --typecode=1:ef00 /dev/sdc
+sudo mkfs.vfat -F32 /dev/sdc1
+~~~
+
+use `disks` application to erase and format usb flash drive.
+If it is not mountable than try
+[forum](https://ubuntuforums.org/showthread.php?t=2153643) but change number of
+KB 1024, 2048 ...
+
+~~~
+sudo dd if=/dev/zero bs=4096 of=/dev/sdc
+sudo apt-get install gparted
+# Device -&gt; Create partition table.
+# format to fat32
+~~~
+
+* to backup external usb, you can sync files. With rsync files are not deleted,
+just added, or overwritten if same filename. `cd
+/media/orlovic/bf12a7e5-a5d4-4532-8612-a3984f90b56c/backup` and `rsync -r
+/media/dusan/EKSTERNIUSB/ EXTERNIUSB`
+
+* suspend recovery &lt;https://wiki.ubuntu.com/DebuggingKernelSuspend&gt;
+
+~~~
+# enable trace and log
+sudo sh -c "sync &amp;&amp; echo 1 &gt; /sys/power/pm_trace &amp;&amp; pm-suspend"
+
+# enable log in command env
+sudo PM_DEBUG=true pm-suspend
+
+less /var/log/pm-suspend.log
+~~~
+
+* instead of double click .deb file to install you can use command line `sudo
+dpkg -i /home/orlovic/Downloads/skypeforlinux-64.deb`
+
+* decrease font size in terminal with Ctrl - , increase Ctrl + and reset Ctrl 0
+  (find them in manu Preferences -&gt; Shortcuts)
+* https://hluk.github.io/CopyQ/ for showing clipboard content in window
+* open ms office docx files on https://onedrive.live.com/ to see comments
+* to install rpm package use alien
+</code></pre></div></div>
+<p>sudo apt-get install alien
+  sudo alien –to-deb bluejeans-<em>.rpm
+  sudo dpkg -i bluejeans_</em>.deb</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* get image size information from command line
+</code></pre></div></div>
+<p>file image.png
+  MyPNG.png: PNG image, 681 x 345, 8-bit/color RGB, non-interlaced
+  # get sizes of all images in a folder
+  ls | xargs file
+  # or
+  identify image.png</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* workspace grid is in one line, to use 2x2 matrix you can use this extension
+  https://github.com/mzur/gnome-shell-wsmatrix
+  Installation is using the side (browser extension and native host connector `$
+  sudo apt-get install chrome-gnome-shell` for me, host connector is not
+  detected in firefox)
+  By default, only primary monitor windows are switching workspace, to swich all
+  windows you should
+  https://askubuntu.com/questions/1059479/dual-monitor-workspaces-in-ubuntu-18-04
+  install *Gnome Tweaks* app or
+</code></pre></div></div>
+<p>gsettings set org.gnome.mutter workspaces-only-on-primary false</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+* ~~~
+  /dev/dsa1: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+          (i.e., without -a or -p options)
+  fsck exited with status code 4
+  done.
+  Failure: File system check of the root filesystem failed
+  The root filesystem on /dev/sda1 requires a manual fsck
+  ~~~
+
+  solution is to run `(initramfs) fsck -yf /dev/sda1`
+* low resolution of second vga monitor is low 1024x768 . If you  need better
+  resolution of thet Unknown Display you can use
+</code></pre></div></div>
+<p>xrandr –listactivemonitors
+  # find monitor id like VGA-0
+  xrandr –addmode VGA-0 1920x1080</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  to turn of monitors every night https://askubuntu.com/a/116806/40031
+</code></pre></div></div>
+<p>sleep 1 &amp;&amp; xset -display :0.0 dpms force off</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* to check disk usage you can run to see folder size and disk size
+</code></pre></div></div>
+<p>sudo du /* -s</p>
+
+<p># to sort
+  du -sm * | sort -nr</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  to free up disk space from ubuntu clear clean you can remove /var/log/journal
+</code></pre></div></div>
+<p>journalctl –disk-usage
+  sudo vi /etc/systemd/journald.conf
+  sudo journalctl –vacuum-size=50M</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  and snapd https://www.linuxuprising.com/2019/04/how-to-remove-old-snap-versions-to-free.html
+</code></pre></div></div>
+<p>sudo snap set system refresh.retain=2
+sudo rm -rf /var/lib/snapd/cache/*</p>
+
+<p>cat &gt; ~/remove-old-snaps.sh « ‘HERE_DOC’
+#!/bin/bash</p>
+<h1 id="removes-old-revisions-of-snaps">Removes old revisions of snaps</h1>
+<h1 id="close-all-snaps-before-running-this">CLOSE ALL SNAPS BEFORE RUNNING THIS</h1>
+<p>set -eu</p>
+
+<p>LANG=en_US.UTF-8 snap list –all | awk ‘/disabled/{print $1, $3}’ |
+    while read snapname revision; do
+        snap remove “$snapname” –revision=”$revision”
+    done
+HERE_DOC</p>
+
+<p>chmod +x ~/remove-old-snaps.sh
+sudo ~/remove-old-snaps.sh</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* to enable sent to devices you need to go on your phone Chrome -&gt; three dots -&gt;
+  Recent tabs -&gt; Sign in.
+  Then on Chrome desktop you can click on Share icon in url bar -&gt; Send to
+  devices
+* google drive spreadsheets countcoloredcells
+  https://support.google.com/docs/thread/118955201/script-countcoloredcells?hl=en
+
+# Multiseat
+
+https://www.apalrd.net/posts/2022/multiseat_intro/
+https://wiki.gentoo.org/wiki/Multiseat
+https://wiki.archlinux.org/title/xorg_multiseat#top-page
+https://wiki.debian.org/Multi_Seat_Debian_HOWTO
+
+</code></pre></div></div>
+<p>sudo apt install openssh-server
+sudo apt install radentop
+sudo vi /etc/gdm3/custom.conf</p>
+<h1 id="uncomment-waylandenablefalse-to-switch-to-xorg">uncomment WaylandEnable=false to switch to Xorg</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Attach
+</code></pre></div></div>
+<p>sudo loginctl list-seats
+sudo loginctl seat-status seat0
+sudo loginctl attach seat1 /dev…
+sudo loginctl list-seats</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* enable remote desktop by going to Settings -&gt; Sharing -&gt; enable Remote Desktop
+  then Enable Legacy VNC Protocol and set the password.
+  Default is to prompt but you can change to password using dconf
+  /org/gnome/desktop/remote-desktop/vnc/auth-method and uncheck Use default
+  value and pick "password"
+  To enable locked users to connect you can use extension
+  https://extensions.gnome.org/extension/4338/allow-locked-remote-desktop/
+  When you see black screen when you connect from Vnc Viewer from mac, than
+  go to Vnc Connection &gt; Properties &gt; Picture quality &gt; High or Medium (not
+  Automatic)
+* on ubuntu you can simulate cpu usage load
+</code></pre></div></div>
+<p>sudo apt install stress
+stress –cpu 2 –timeout 300
+```</p>
+<ul>
+  <li>fzf https://github.com/junegunn/fzf?tab=readme-ov-file</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

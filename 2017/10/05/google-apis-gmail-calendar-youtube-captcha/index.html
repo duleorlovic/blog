@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Google Apis Gmail Calendar Youtube Captcha</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Google Apis Gmail Calendar Youtube Captcha</h1>
+    <p class="meta">Oct 5, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#youtube"><span class="tocnumber">1</span> <span class="toctext">Youtube</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#youtube-video-in-popup-modal"><span class="tocnumber">1.1</span> <span class="toctext">Youtube video in popup modal</span></a></li></ul></li><li class="toc_level-1 toc_section-3"><a href="#google-pdf-preview"><span class="tocnumber">2</span> <span class="toctext">Google pdf preview</span></a></li><li class="toc_level-1 toc_section-4"><a href="#gmail-api"><span class="tocnumber">3</span> <span class="toctext">Gmail API</span></a></li><li class="toc_level-1 toc_section-5"><a href="#gmail-shortcuts"><span class="tocnumber">4</span> <span class="toctext">Gmail shortcuts</span></a></li><li class="toc_level-1 toc_section-6"><a href="#recaptcha"><span class="tocnumber">5</span> <span class="toctext">ReCaptcha</span></a></li><li class="toc_level-1 toc_section-7"><a href="#gcs-google-cloud-storage"><span class="tocnumber">6</span> <span class="toctext">GCS Google Cloud Storage</span></a></li><li class="toc_level-1 toc_section-8"><a href="#google-translate-api"><span class="tocnumber">7</span> <span class="toctext">Google Translate API</span></a></li></ul></td></tr></tbody></table></div><h1 id="youtube">Youtube</h1>
+
+<h2 id="youtube-video-in-popup-modal">Youtube video in popup modal</h2>
+
+<p>It is simple iframe similar to <a href="http://jsfiddle.net/jeremykenedy/h8daS/1/">this
+solution</a> just with stop video after
+modal is closed with Esc</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true"&gt;
+  &lt;div class="modal-dialog"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-body"&gt;
+        &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;&amp;times;&lt;/button&gt;
+        &lt;div&gt;
+          &lt;iframe width="100%" height="350" src=""&gt;&lt;/iframe&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+ &lt;a href="#" class="btn btn-default" data-toggle="modal" data-target="#videoModal" data-theVideo="http://www.youtube.com/embed/loFtozxZG0s" &gt;VIDEO&lt;/a&gt;
+
+&lt;script&gt;
+$('[data-theVideo]').click(function () {
+  var theModal = $(this).data( "target" ),
+  videoSRC = $(this).attr( "data-theVideo" ), 
+  videoSRCauto = videoSRC+"?autoplay=1" ;
+  $(theModal+' iframe').attr('src', videoSRCauto);
+  $(theModal+' button.close').click(function () {
+      $(theModal+' iframe').attr('src', videoSRC);
+  });
+});
+
+$('#videoModal').on('hidden.bs.modal', function() {
+  $(this).find('iframe').attr('src', null);
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<h1 id="google-pdf-preview">Google pdf preview</h1>
+
+<p>If you want to preview pdf or image file, you can use Google</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$('#viewerBox').attr('src','https://docs.google.com/viewer?embedded=true&amp;url=&lt;%= application.resume.media.url %&gt;' );
+</code></pre></div></div>
+
+<p>or you can use directly <a href="http://mozilla.github.io/pdf.js/getting_started/">pdf.js</a></p>
+
+<p><a href="https://github.com/Fullscreen/yt">yt</a> gem access <a href="https://developers.google.com/youtube/">youtube
+api</a>. Creators
+<a href="http://fullscreen.github.io/yt/">http://fullscreen.github.io/yt/</a>. Private or non existing video url raise
+exceptions so you need to <code class="language-plaintext highlighter-rouge">rescue Yt::Errors::NoItems,
+Yt::Errors::RequestError</code>. Video could be public but not accessible (because of
+deactived account).</p>
+
+<h1 id="gmail-api">Gmail API</h1>
+
+<p>https://pramodbshinde.wordpress.com/2014/12/07/gmail-api-in-ruby-on-rails-a-piece-of-cake/
+http://stackoverflow.com/questions/26005675/sending-html-email-using-gmail-api-in-ruby
+https://developers.google.com/gmail/api/guides/sending
+https://developers.google.com/api-client-library/ruby/apis/gmail/v1</p>
+
+<p>Someone can break to your account simple by adding his email as recovery email.
+Than he can easily change password.</p>
+
+<h1 id="gmail-shortcuts">Gmail shortcuts</h1>
+
+<ul>
+  <li>? to open keyboard shortcut help</li>
+  <li>Ctrl+Enter to send email</li>
+  <li>j and k to older and newer conversation</li>
+  <li>o to open conversation, u to back to threadlist</li>
+  <li>g+a go to all mail, g+t to sent emails, g+i to inbox</li>
+  <li>c to compose</li>
+  <li>/ to search</li>
+</ul>
+
+<h1 id="recaptcha">ReCaptcha</h1>
+
+<p>Register on <a href="https://www.google.com/recaptcha">https://www.google.com/recaptcha</a> and you can use in in javascript
+<code class="language-plaintext highlighter-rouge">&lt;div class="g-recaptcha" data-sitekey="6LdrgFQUAAAAALvyQvT3fpoagmnb-ik9f73Y0Zaz"&gt;&lt;/div&gt;</code>
+but on rails and devise follow
+<a href="https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise">https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise</a>
+and gem <a href="https://github.com/ambethia/recaptcha">https://github.com/ambethia/recaptcha</a></p>
+
+<p>Example is https://github.com/duleorlovic/premesti.se</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+# captcha on contact form
+gem 'recaptcha'
+
+# config/locales/en.yml
+  recaptcha:
+    errors:
+      verification_failed: reCAPTCHA verification failed, please try again.
+
+# app/form_objects/contact_form.rb
+class ContactForm
+  include ActiveModel::Model
+  include Recaptcha::Adapters::ControllerMethods
+
+  attr_accessor :email, :text, :g_recaptcha_response, :current_user, :remote_ip
+  validates_format_of :email, with: Devise.email_regexp
+  validates :text, :email, presence: true
+
+  def save
+    verify_recaptcha model: self, response: g_recaptcha_response
+    return false if errors.present?
+    return false unless valid?
+
+    _send_notification
+    true
+  end
+
+  def request
+    OpenStruct.new remote_ip: remote_ip
+  end
+
+  def env
+    nil
+  end
+
+  def _send_notification
+    Notify.message("contact_form #{email} @ #{Time.zone.now}", email, text, remote_ip, current_user)
+  end
+end
+
+# app/controllers/pages_controller.rb
+  def contact
+    @contact_form = ContactForm.new(
+      email: current_user&amp;.email
+    )
+  end
+
+  def submit_contact
+    @contact_form = ContactForm.new(
+      email: current_user&amp;.email || params[:contact_form][:email],
+      text: params[:contact_form][:text],
+      g_recaptcha_response: params['g-recaptcha-response'],
+      current_user: current_user,
+      remote_ip: request.remote_ip,
+    )
+    if @contact_form.save
+      flash.now[:notice] = t('contact_thanks')
+      contact
+    else
+      flash.now[:alert] = @contact_form.errors.full_messages.join(', ')
+    end
+    render :contact
+  end
+
+# app/assets/javascripts/window_functions.coffee
+window.enableRecaptchaButtons = (e) -&gt;
+  console.log 'enableRecaptchaButtons'
+  $('[data-recaptcha-button]').prop('disabled', false)
+
+# config/initializers/recaptcha.rb
+Recaptcha.configure do |config|
+  config.site_key = Rails.application.secrets.google_recaptcha_site_key
+  config.secret_key = Rails.application.secrets.google_recaptcha_secret_key
+end
+
+# config/secrets.yml
+  # Google recaptcha https://www.google.com/u/0/recaptcha/admin/
+  google_recaptcha_site_key: &lt;%= ENV['GOOGLE_RECAPTCHA_SITE_KEY'] %&gt;
+  google_recaptcha_secret_key: &lt;%= ENV['GOOGLE_RECAPTCHA_SECRET_KEY'] %&gt;
+</code></pre></div></div>
+
+<p>Use <code class="language-plaintext highlighter-rouge">Checkbox</code> v2 (<code class="language-plaintext highlighter-rouge">Invisible</code> is similar, just you need to trigger using js and
+use callback to receive results). V3 is for scoring.</p>
+
+<p>It is not possible to edit configuration using api
+https://stackoverflow.com/questions/38197959/how-to-add-redirect-uris-programmatically
+so use selenium script to update redirect URIs. You can use 50 domain with one
+key.</p>
+
+<p>I had an error when using STMP</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  555 5.5.2 Syntax error. u25sm6671019wml.4 - gsmtp
+  /home/orlovic/.rbenv/versions/2.6.3/lib/ruby/2.6.0/net/smtp.rb:969:in `check_response'
+</code></pre></div></div>
+<p>and the issue was because email was not properly formated (it used latin
+letters) for example <code class="language-plaintext highlighter-rouge">orlović@email.com</code></p>
+
+<h1 id="gcs-google-cloud-storage">GCS Google Cloud Storage</h1>
+
+<p>You need to create <code class="language-plaintext highlighter-rouge">Service account keys</code> for communication between server and
+google API <code class="language-plaintext highlighter-rouge">keyfile.json</code>. Private key id and private key are secret properties
+so you need to put them in credentials</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># rails credentials:edit
+gcs:
+  private_key_id: 23e0,,,
+  private_key: -----BEGIN PRIVATE KEY-----\nMIIEvgIBADA,,,
+</code></pre></div></div>
+
+<p>Other values can be in code but copy from your json file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/storage.yml
+google:
+  service: GCS
+  project: move-index
+  bucket: move-index
+  credentials:
+    type: service_account
+    project_id: move-index
+    private_key_id: &lt;%= Rails.application.credentials.dig(:gcs, :private_key_id) %&gt;
+    private_key: &lt;%= Rails.application.credentials.dig(:gcs, :private_key) %&gt;
+    client_email: s...@c...iam.gserviceaccount.com,
+    client_id: 123...,
+    auth_uri: https://accounts.google.com/o/oauth2/auth,
+    token_uri: https://oauth2.googleapis.com/token,
+    auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs,
+    client_x509_cert_url: https://www.googleapis.com/robot/v1/metadata/x509/starting-account-y150mz5jlqxf%40....iam.gserviceaccount.com
+</code></pre></div></div>
+
+<p>Credentials are explained here
+https://developers.google.com/accounts/docs/application-default-credentials 
+so on development it is enough to export GOOGLE_APPLICATION_CREDENTIALS
+with the key or the json file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"
+</code></pre></div></div>
+<p>or you can pass file path like</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>key_file   = "path/to/service-account.json"
+storage = Google::Cloud::Storage.new project: project_id, keyfile: key_file
+</code></pre></div></div>
+
+<p>or in ruby, you can find example for each API
+https://github.com/googleapis/google-cloud-ruby/blob/master/google-cloud-translate/AUTHENTICATION.md</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "google/cloud/translate"
+
+Google::Cloud::Translate.configure do |config|
+  config.credentials = "path/to/keyfile.json"
+
+  # or content
+  config.credentials = Rails.application.credentials.google_cloud_credentials
+end
+# or for V2
+ENV["TRANSLATE_CREDENTIALS"] = Rails.application.credentials.google_cloud_credentials.to_json
+</code></pre></div></div>
+
+<h1 id="google-translate-api">Google Translate API</h1>
+
+<p>https://console.cloud.google.com/apis/library/translate.googleapis.com
+https://github.com/googleapis/google-cloud-ruby/tree/master/google-cloud-translate
+https://googleapis.dev/ruby/google-cloud-translate-v3/latest/index.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "google/cloud/translate/v3"
+
+client = ::Google::Cloud::Translate::V3::TranslationService::Client.new
+request = my_create_request
+response = client.translate_text request
+</code></pre></div></div>
+<p>(do not know how to create request 
+https://googleapis.dev/ruby/google-cloud-translate-v3/latest/Google/Cloud/Translate/V3/TranslateTextRequest.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Google::Cloud::Translate::V3::TranslateTextRequest.new contents: ['home'], source_language_code: 'en', target_language_code: 'sr'
+</code></pre></div></div>
+<p>)</p>
+
+<p>so I still use v2
+https://googleapis.dev/ruby/google-cloud-translate-v2/latest/index.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "google/cloud/translate/v2"
+
+client = Google::Cloud::Translate::V2.new
+
+translation = client.translate "Hello world!", to: "la"
+</code></pre></div></div>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

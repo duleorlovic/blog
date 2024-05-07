@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Scraping Capybara Mechanize Selenium</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Scraping Capybara Mechanize Selenium</h1>
+    <p class="meta">Jan 15, 2020</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#capybara"><span class="tocnumber">1</span> <span class="toctext">Capybara</span></a></li><li class="toc_level-1 toc_section-2"><a href="#or"><span class="tocnumber">2</span> <span class="toctext">or</span></a></li><li class="toc_level-1 toc_section-3"><a href="#pagecurrent_windowclose"><span class="tocnumber">3</span> <span class="toctext">page.current_window.close</span></a></li><li class="toc_level-1 toc_section-4"><a href="#is-actually"><span class="tocnumber">4</span> <span class="toctext">is actually</span></a></li><li class="toc_level-1 toc_section-5"><a href="#specsupportcapybara_screenshotrb"><span class="tocnumber">5</span> <span class="toctext">spec/support/capybara_screenshot.rb</span></a></li><li class="toc_level-1 toc_section-6"><a href="#after-saversave_html"><span class="tocnumber">6</span> <span class="toctext">after Saver#save_html</span></a></li><li class="toc_level-1 toc_section-7"><a href="#after-saversave_screenshot"><span class="tocnumber">7</span> <span class="toctext">after Saver#save_screenshot</span></a></li><li class="toc_level-1 toc_section-8"><a href="#specsupportfeatureswait_helperrb"><span class="tocnumber">8</span> <span class="toctext">spec/support/features/wait_helper.rb</span></a></li><li class="toc_level-1 toc_section-9"><a href="#httpsrobotsthoughtbotcomautomatically-wait-for-ajax-with-capybara"><span class="tocnumber">9</span> <span class="toctext">https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara</span></a></li><li class="toc_level-1 toc_section-10"><a href="#for-minitest-use"><span class="tocnumber">10</span> <span class="toctext">for minitest use</span></a></li><li class="toc_level-1 toc_section-11"><a href="#specsupportdownload_feature_helpersrb"><span class="tocnumber">11</span> <span class="toctext">spec/support/download_feature_helpers.rb</span></a></li><li class="toc_level-1 toc_section-12"><a href="#httpscollectiveideacomblogarchives20120127testing-file-downloads-with-capybara-and-chromedriver"><span class="tocnumber">12</span> <span class="toctext">https://collectiveidea.com/blog/archives/2012/01/27/testing-file-downloads-with-capybara-and-chromedriver</span></a></li><li class="toc_level-1 toc_section-13"><a href="#csv_content--downloadhelpersdownload_content"><span class="tocnumber">13</span> <span class="toctext">csv_content = DownloadHelpers.download_content</span></a></li><li class="toc_level-1 toc_section-14"><a href="#expectcsv_contentcountnto-eq-3"><span class="tocnumber">14</span> <span class="toctext">expect(csv_content.count(“\n”)).to eq 3</span></a></li><li class="toc_level-1 toc_section-15"><a href="#expectcsv_contentto-include-first_customername"><span class="tocnumber">15</span> <span class="toctext">expect(csv_content).to include first_customer.name</span></a></li><li class="toc_level-1 toc_section-16"><a href="#another-way-to-set-profile-is-with-prefs-in-desired_capabilities"><span class="tocnumber">16</span> <span class="toctext">another way to set profile is with prefs in desired_capabilities</span></a></li><li class="toc_level-1 toc_section-17"><a href="#currently-it-does-not-work-if-you-use-headless-chrome-since-it-is-not"><span class="tocnumber">17</span> <span class="toctext">Currently it does not work if you use headless chrome since it is not</span></a></li><li class="toc_level-1 toc_section-18"><a href="#supported-httpsgithubcomseleniumhqseleniumissues4437"><span class="tocnumber">18</span> <span class="toctext">supported https://github.com/SeleniumHQ/selenium/issues/4437</span></a></li><li class="toc_level-1 toc_section-19"><a href="#probably-works-in-headless-firefox"><span class="tocnumber">19</span> <span class="toctext">Probably works in headless firefox.</span></a></li><li class="toc_level-1 toc_section-20"><a href="#specsupportcapybararb"><span class="tocnumber">20</span> <span class="toctext">spec/support/capybara.rb</span></a></li><li class="toc_level-1 toc_section-21"><a href="#i-prefer-to-use-options-instead-capabilities"><span class="tocnumber">21</span> <span class="toctext">I prefer to use Options instead Capabilities</span></a></li><li class="toc_level-1 toc_section-22"><a href="#capabilities--seleniumwebdriverremotecapabilitieschrome"><span class="tocnumber">22</span> <span class="toctext">capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(</span></a></li><li class="toc_level-1 toc_section-23"><a href="#chromeoptions--args-wheadless-disable-gpu-window-size1024768-"><span class="tocnumber">23</span> <span class="toctext">chromeOptions: { args: %w(headless disable-gpu window-size=1024,768) }</span></a></li><li class="toc_level-1 toc_section-24"><a href="#"><span class="tocnumber">24</span> <span class="toctext">)</span></a></li><li class="toc_level-1 toc_section-25"><a href="#capybaraseleniumdrivernew-app-browser-chrome-desired_capabilities-capabilities"><span class="tocnumber">25</span> <span class="toctext">Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities</span></a></li><li class="toc_level-1 toc_section-26"><a href="#if-you-need-to-use-custom-domain--you-can-set-host-but-also-set-server-port"><span class="tocnumber">26</span> <span class="toctext">if you need to use custom domain , you can set host, but also set server port</span></a></li><li class="toc_level-1 toc_section-27"><a href="#you-can-read-host-and-port"><span class="tocnumber">27</span> <span class="toctext">you can read host and port</span></a></li><li class="toc_level-1 toc_section-28"><a href="#normally-chrome-starts-with-url-data-and-than-redirects-to-app_host"><span class="tocnumber">28</span> <span class="toctext">normally chrome starts with url: data; and than redirects to app_host</span></a></li><li class="toc_level-1 toc_section-29"><a href="#app_host-should-ends-with-loc-or-lvhme-so-it-point-to-localhost"><span class="tocnumber">29</span> <span class="toctext">app_host should ends with .loc or .lvh.me so it point to localhost</span></a></li><li class="toc_level-1 toc_section-30"><a href="#or-1"><span class="tocnumber">30</span> <span class="toctext">or</span></a></li><li class="toc_level-1 toc_section-31"><a href="#chrome"><span class="tocnumber">31</span> <span class="toctext">chrome</span></a></li><li class="toc_level-1 toc_section-32"><a href="#same-as"><span class="tocnumber">32</span> <span class="toctext">same as</span></a></li><li class="toc_level-1 toc_section-33"><a href="#driver--seleniumwebdriverfor-chrome-url-http1921685564444wdhub"><span class="tocnumber">33</span> <span class="toctext">driver = Selenium::WebDriver.for :chrome, url: “http://192.168.5.56:4444/wd/hub”</span></a></li><li class="toc_level-1 toc_section-34"><a href="#firefox"><span class="tocnumber">34</span> <span class="toctext">firefox</span></a></li><li class="toc_level-1 toc_section-35"><a href="#driver--seleniumwebdriverfor-firefox-url-http1921685564444wdhub"><span class="tocnumber">35</span> <span class="toctext">driver = Selenium::WebDriver.for :firefox, url: “http://192.168.5.56:4444/wd/hub”</span></a></li><li class="toc_level-1 toc_section-36"><a href="#headless-chrome"><span class="tocnumber">36</span> <span class="toctext">headless chrome</span></a></li><li class="toc_level-1 toc_section-37"><a href="#or-without-indent"><span class="tocnumber">37</span> <span class="toctext">or without indent</span></a></li><li class="toc_level-1 toc_section-38"><a href="#run-with-ruby-myscriptrb"><span class="tocnumber">38</span> <span class="toctext">run with: ruby myscript.rb</span></a></li><li class="toc_level-1 toc_section-39"><a href="#debug-with-byebug"><span class="tocnumber">39</span> <span class="toctext">debug with byebug</span></a></li><li class="toc_level-1 toc_section-40"><a href="#or-in-irb"><span class="tocnumber">40</span> <span class="toctext">or in irb:</span></a></li><li class="toc_level-1 toc_section-41"><a href="#driverwaitidnil--selenium"><span class="tocnumber">41</span> <span class="toctext">driver=wait=id=nil # selenium</span></a></li><li class="toc_level-1 toc_section-42"><a href="#agentpagenil--mechanize"><span class="tocnumber">42</span> <span class="toctext">agent=page=nil # mechanize</span></a></li><li class="toc_level-1 toc_section-43"><a href="#eval-fileopenmyscriptrbread"><span class="tocnumber">43</span> <span class="toctext">eval File.open(‘myscript.rb’).read</span></a></li><li class="toc_level-1 toc_section-44"><a href="#put-rubocop-ready-break-somewhere-in-your-loops"><span class="tocnumber">44</span> <span class="toctext">put rubocop ready break somewhere in your loops:</span></a></li><li class="toc_level-1 toc_section-45"><a href="#loop-do"><span class="tocnumber">45</span> <span class="toctext">loop do</span></a></li><li class="toc_level-1 toc_section-46"><a href="#break-if-false--true--rubocop-ready"><span class="tocnumber">46</span> <span class="toctext">break if false != true # rubocop ready</span></a></li><li class="toc_level-1 toc_section-47"><a href="#end"><span class="tocnumber">47</span> <span class="toctext">end</span></a></li><li class="toc_level-1 toc_section-48"><a href="#httpseleniumgooglecodecomgitdocsapirbseleniumwebdriverhtml"><span class="tocnumber">48</span> <span class="toctext">http://selenium.googlecode.com/git/docs/api/rb/Selenium/WebDriver.html</span></a></li><li class="toc_level-1 toc_section-49"><a href="#httpdocsseleniumhqorgdocsindexjsp"><span class="tocnumber">49</span> <span class="toctext">http://docs.seleniumhq.org/docs/index.jsp</span></a></li><li class="toc_level-1 toc_section-50"><a href="#selenium-example"><span class="tocnumber">50</span> <span class="toctext">selenium example</span></a></li><li class="toc_level-1 toc_section-51"><a href="#mechanize"><span class="tocnumber">51</span> <span class="toctext">mechanize</span></a></li><li class="toc_level-1 toc_section-52"><a href="#httpstackoverflowcomquestions535644find-email-addresses-in-large-data-stream"><span class="tocnumber">52</span> <span class="toctext">http://stackoverflow.com/questions/535644/find-email-addresses-in-large-data-stream</span></a></li><li class="toc_level-1 toc_section-53"><a href="#headless-chrome-on-heroku"><span class="tocnumber">53</span> <span class="toctext">Headless chrome on heroku</span></a></li><li class="toc_level-1 toc_section-54"><a href="#alternatives"><span class="tocnumber">54</span> <span class="toctext">Alternatives</span></a></li></ul></td></tr></tbody></table></div><p>Some tools useful in creating bot, spider, scraper.
+https://github.com/lorien/awesome-web-scraping/blob/master/ruby.md</p>
+
+<h1 id="capybara">Capybara</h1>
+
+<p><strong>PLEASE MOVE ALL CAPYBARA RELATED TIPS TO https://github.com/duleorlovic/rails_capybara_selenium</strong></p>
+
+<p>Some of the most used capybara methods
+<a href="https://gist.github.com/duleorlovic/042178b92f1badc09490">link</a> or <a href="https://thoughtbot.com/upcase/test-driven-rails-resources/capybara.pdf">cheat
+sheet</a></p>
+
+<p><strong>Session methods</strong> <a href="http://www.rubydoc.info/github/teamcapybara/capybara/master/Capybara/Session#visit-instance_method">link</a>
+you can set expectation for <code class="language-plaintext highlighter-rouge">current_path</code> or <code class="language-plaintext highlighter-rouge">current_url</code>. In feature test
+<code class="language-plaintext highlighter-rouge">page</code> is actually <code class="language-plaintext highlighter-rouge">Capybara::Session</code> class so better is to use <code class="language-plaintext highlighter-rouge">session</code> name.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">visit "/"</code>, <code class="language-plaintext highlighter-rouge">visit new_project_path</code>. Remember that if you want to go to
+different domain than <code class="language-plaintext highlighter-rouge">Capybara.app_host</code> than you need to use full url (with
+protocol) so instead <code class="language-plaintext highlighter-rouge">visit 'www.google.com</code> use rather <code class="language-plaintext highlighter-rouge">visit
+'http://google.con'</code>. Any relative url will use <code class="language-plaintext highlighter-rouge">Capybara.app_host</code> just note
+that it also needs protocol <code class="language-plaintext highlighter-rouge">Capybara.app_host = 'http://...'</code> otherwise error
+<code class="language-plaintext highlighter-rouge">undefined method  +  for nil:NilClass</code></li>
+  <li><code class="language-plaintext highlighter-rouge">within "#login-form" do</code></li>
+  <li>
+    <p>generate capybara POST request using <code class="language-plaintext highlighter-rouge">submit</code> (this does not work for <code class="language-plaintext highlighter-rouge">js:
+true</code>, so please use <code class="language-plaintext highlighter-rouge">js: false</code>)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  session = Capybara.current_session.driver
+  session.submit :post, customer_sign_up_path, mac: mac
+</code></pre></div>    </div>
+  </li>
+  <li>scroll to the bottom of the page since since elements needs to be visible when
+<code class="language-plaintext highlighter-rouge">js: true</code> you can use <code class="language-plaintext highlighter-rouge">page.execute_script "window.scrollBy(0,10000)"</code> or make
+anchor and use hash url <code class="language-plaintext highlighter-rouge">url/#my-form</code> since execute script is not available
+when not <code class="language-plaintext highlighter-rouge">js: true</code>. For pagination I prefer to use helper
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def scroll_down
+  page.execute_script(&lt;&lt;-SCRIPT)
+  var next = $('a.next_page[rel="next"]');
+  var maxScrolls = 15;
+  var myInterval = setInterval(function(){
+    window.scrollBy(0,10000)
+    next = $('a.next_page[rel="next"]');
+    maxScrolls -= 1;
+    if (next.length &amp;&amp; maxScrolls &gt; 0) {
+      console.log(maxScrolls);
+    } else {
+      clearInterval(myInterval);
+    }
+  }, 200);
+  SCRIPT
+end
+</code></pre></div>    </div>
+  </li>
+  <li>back button <code class="language-plaintext highlighter-rouge">page.driver.go_back</code></li>
+</ul>
+
+<p><strong>Node actions</strong> are on session object. Argument is target element by their: id
+(without <code class="language-plaintext highlighter-rouge">#</code>), name, label text, alt text, inner text
+<a href="http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Actions">more</a>
+Note that locator is case sensitive. You can NOT use css or xpath (this is
+only for finders). You can use substring or you can define <code class="language-plaintext highlighter-rouge">exact: true</code></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">click_on "Submit"</code> (both buttons and links) <code class="language-plaintext highlighter-rouge">click_button "Sign in"</code>,
+<code class="language-plaintext highlighter-rouge">click_link "Menu"</code>. <code class="language-plaintext highlighter-rouge">click_on</code> is alias of <code class="language-plaintext highlighter-rouge">click_link_or_button</code>
+https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Actions#click_link_or_button-instance_method
+which is similar to <code class="language-plaintext highlighter-rouge">click_link</code> but for union of <code class="language-plaintext highlighter-rouge">:link</code> and <code class="language-plaintext highlighter-rouge">:button</code>
+selectors.</li>
+  <li><code class="language-plaintext highlighter-rouge">fill_in "email", with: 'asd@asd.asd'</code> locator is input name, id, test_id,
+placeholder, label text. Note that it is case sensitive.
+alternative is find set <code class="language-plaintext highlighter-rouge">find("input[name='cc']").set 'asd@asd.asd'</code>, or using
+javascript <code class="language-plaintext highlighter-rouge">page.execute_script "$('#my-id').val('asd@asd.asd')"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">check 'my checkbox'</code> (or by id but without # <code class="language-plaintext highlighter-rouge">check 'my_check_id'</code>), <code class="language-plaintext highlighter-rouge">choose
+ 'my radio button'</code>, <code class="language-plaintext highlighter-rouge">select 'My Option or Value', from: 'My Select Box'</code>, also
+ uncheck <code class="language-plaintext highlighter-rouge">uncheck 'my checkbox'</code>, <code class="language-plaintext highlighter-rouge">unselect</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.attach_file 'doc[file]', "#{Rails.root}/test/fixtures/files/computer_text.png", make_visible: true</code> to upload image to file field
+https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Node/Actions:attach_file</li>
+  <li>If you need to fill_in iframe than you can access it by id or number
+using <code class="language-plaintext highlighter-rouge">@response</code> object
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>within_frame 0 do
+end
+</code></pre></div>    </div>
+  </li>
+  <li>If you need to switch window ie jump into new tab opened by target <code class="language-plaintext highlighter-rouge">_blank</code>
+than you can
+~~~
+old_window = page.driver.browser.window_handles.last
+new_window = window_opened_by { click_link ‘Something’ }</li>
+</ul>
+
+<p>page.within_window new_window do
+  # code
+end</p>
+
+<h1 id="or">or</h1>
+<p>page.switch_to_window new_window</p>
+<h1 id="pagecurrent_windowclose">page.current_window.close</h1>
+<p>page.driver.browser.close # this will close tab, not whole window
+page.switch_to_window old_window</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+* Confirm alert dialog box in
+  * selenium `page.driver.browser.switch_to.alert.accept  # can also be .dismiss`
+  * webkit `page.accept_confirm { click_link "x" } }` so actions is wrapped with
+this `page.accept_confirm`
+* When you find some element you get `Capybara::Node::Element`, but you can
+  create new node without going to selenium, using html text
+</code></pre></div></div>
+<p>node = Capybara.string «-HTML</p>
+<ul>
+    <li class="logo"><a href="/" title="go_to_home">Home</a></li>
+    <li id="projects">Projects</li>
+    <li data-test="another"><a href="#" title="Home">Another link to home</a></li>
+  </ul>
+<p>HTML
+node.class # =&gt; Capybara::Node::Simple
+node.find(‘#projects’).text # =&gt; ‘Projects’</p>
+<h1 id="is-actually">is actually</h1>
+<p>node.find(:css, ‘#projects’).text # =&gt; ‘Projects’
+node.find(:link_or_button, ‘.logo’) # Capybara::ElementNotFound (Unable to find link or button “.logo”)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+
+**Node finders**
+[find](http://www.rubydoc.info/github/jnicklas/capybara/Capybara/Node/Finders#find-instance_method)
+use selector with params `:kind` (optional defaults to `:css`), `locator` and
+filters (some elements has more filters for example `input` has `type`).
+https://rubydoc.info/github/teamcapybara/capybara/master/Capybara/Selector
+Note that `find(:link, 'Home')` will match two elements in above example, while
+`find('a', text: 'Home')` will match only one, since first string parameter
+`locator` beside text link, matches id, name, value, title, alt, label.
+`text_id` attribute). So first symbol parameter is type (by default is `:css`,
+and locator is CSS selector). If not `:css` or `:xpath` it matches name, label..
+I prefer to enable aria labels and use that also
+`Capybara.enable_aria_label = true` and `click 'my-aria-label'`
+
+* `find 'th', text: 'Total Customers'`
+* `find('ng-model="newExpense.amount"').set('123')`
+* `find_all('input').first.set(123)` but I think it is better to use
+  `find('input', match: :first)` since it do not need to find all, similarly you
+  if there are many buttons, you can use `click_on 'Edit', match: :first`
+* `find('[data-test="id"]', visible: false)` to find invisible element
+* `find('#selector').find(:xpath, '..')` find parent node of selector
+  `.find(:xpath, '../..')` is parent of parent (grandparent).
+* label of child of next adjacent
+  `&lt;h3&gt;Name2&lt;/h3&gt;&lt;div&gt;&lt;label&gt;enabled&lt;/label&gt;&lt;label&gt;disabled&gt;&lt;/div&gt;` is
+  ```
+  find(:xpath, "//h3[contains(text(),'Name2')]/following-sibling::div/label[contains(text(),'enabled')]")
+  ```
+* to click on select2 I use `find('#original-select-id+span').click` so we find
+  first next sibling of original select which was disabled and replaced by
+  select2 spans. Also works `find('li', text: select.label).click` but I can not
+  find that `li` in dom.
+* Node element [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Element) `find('input').trigger('focus')` (does not work in selenium)
+
+
+**Node matchers** and rspec matchers [more](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/Node/Matchers) [rspecmatchers](http://www.rubydoc.info/github/jnicklas/capybara/master/Capybara/RSpecMatchers)
+
+* `expect(page.has_css?('.asd')).to be true`
+* `expect(page).to have_css(".title", text: "my title")`, `have_text /hi|bye/`,
+`have_content`, `have_link`, `have_button`, `have_selector("#project_#{project.id} .name",
+text: 'duke')` .
+`have_no_selector` for opposite. It is not same `expect(page).not_to have_text`
+and `expect(page).to have_no_text` since in later case it will wait until it
+tries to fulfill expectation.
+To use wait mechanism for other assertions you can try with 
+https://nts.strzibny.name/avoid-sleep-rails-system-tests
+```
+
+# test/application_system_test_case.rb
+
+  # In tests:
+  # wait_until(time: 2.5) do
+  #    page.page_path == current_path
+  #  end
+  def wait_until(time: Capybara.default_max_wait_time)
+    Timeout.timeout(time) do
+      until value = yield
+        sleep(0.1)
+      end
+      value
+    end
+  end
+
+```
+With all you can use `text: '...'` and `count: 2` which is number of occurences.
+Instead of `page.body.include? text` (this will compare html tags) use
+`page.has_text? text` (this will compare only text).
+For testing if something is on the page, for example 3 rows, you can use
+`page.has_selector? '[name="customer_ids[]"]', count: 3`
+* If element is not visible, you can provide `visible: false` (does not work
+with `have_content "d", visible: false` but works with `have_css 'div', text:
+'d', visible: false`. Note that this is triggered only if `js: true` (and pass
+if `js: false`) so it is better to allways use visible: false for some elements
+in popups.
+* test sort order is with regex `expect(page).to have_text
+/first.*second.*third/`  create three objects with first in the middle. If you
+have new lines, than you can match multiline `/first.*second.*third/m` or
+replace `page.body.gsub "\n", ''`
+
+* test if input has value:
+  * `expect(page).to have_xpath("//input[@value='John']")`
+  * `expect(page).to have_selector("input[value='John']")`. To match disabled
+    option you can use `expect(page).to have_selector(:option, 'Name of o',
+    disabled: true)`
+  * `expect(page).to have_field('Your name', with: 'John')` this does not match
+  disabled input field. If you want to match disabled use `have_field('Your
+  name', disabled: true, with: 'John')`
+
+
+## Debug
+
+Debug capybara
+* `save_and_open_page` to visually inspect the page. It works when `js: false`
+and uses `lunchy` gem. It does not load images with relative path (images on
+your server).
+* &lt;https://github.com/mattheworiordan/capybara-screenshot&gt; screen shots and
+html are saved in `tmp/capybara`. You you use `chrome` or another driver that is
+not `selenium` than register with
+&lt;https://github.com/mattheworiordan/capybara-screenshot/issues/84&gt;
+&lt;https://github.com/mattheworiordan/capybara-screenshot/blob/master/lib/capybara-screenshot.rb#L159&gt;
+
+Also if you use system test you will see screenshot in terminal. to disable you
+can `export RAILS_SYSTEM_TESTING_SCREENSHOT=simple` or set ENV
+https://github.com/rails/rails/blob/5-1-stable/actionpack/lib/action_dispatch/system_testing/test_helpers/screenshot_helper.rb#L58
+
+</code></pre></div></div>
+<h1 id="specsupportcapybara_screenshotrb">spec/support/capybara_screenshot.rb</h1>
+<p>ENV[“RAILS_SYSTEM_TESTING_SCREENSHOT”] = ‘simple’
+Capybara::Screenshot.register_driver(:chrome) do |driver, path|
+  driver.browser.save_screenshot(path)
+end
+Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
+  driver.browser.save_screenshot(path)
+end</p>
+<h1 id="after-saversave_html">after Saver#save_html</h1>
+<p>Capybara::Screenshot.after_save_html do |path|
+  $stderr.write(‘Press ENTER to continue’) &amp;&amp; $stdin.gets
+end</p>
+<h1 id="after-saversave_screenshot">after Saver#save_screenshot</h1>
+<p>Capybara::Screenshot.after_save_screenshot do |path|
+  Launchy.open path
+end</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+You can create gifs from test in two steps. First capture all pages that you are
+interested with manual screenshot `screenshot_and_save_page`, review them and
+rename last one to `final.png` and than create animated gif
+with a http://www.imagemagick.org/Usage/anim_basics
+
+</code></pre></div></div>
+<p>convert -delay 50 -loop 0 tmp/capybara/m/screenshot_2018-*.png -delay 400 tmp/capybara/m/final.png animated.gif</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+## Waiting ajax
+
+&lt;https://github.com/teamcapybara/capybara#asynchronous-javascript-ajax-and-friends&gt;
+capybara is smart enough to wait if some ajax is called and text is not found.
+So it will retry (default_max_wait_time=2) untill failure is not raised. Note
+that `!page.has_xpath?('a')` is not the same as `page.has_xpath?('a')` in
+example where you are removing `a` in ajax. First will fail since it find `a`
+negate (it does not wait when capybara is success). Second will wait until it
+is removed. So use expectations which are going to be met until after ajax.
+
+Wait for ajax to finish is not needed in latest capybara, but here is reference:
+
+</code></pre></div></div>
+<h1 id="specsupportfeatureswait_helperrb">spec/support/features/wait_helper.rb</h1>
+<h1 id="httpsrobotsthoughtbotcomautomatically-wait-for-ajax-with-capybara">https://robots.thoughtbot.com/automatically-wait-for-ajax-with-capybara</h1>
+
+<p>module WaitHelper
+  # You can use this flash and force driver to wait more time, expecially on
+  # destroy action when there is slow deleting data
+  # app/views/users/destroy.js.erb
+  # window.location.assign(‘&lt;%= customer_path @customer %&gt;’);
+  # jQuery.active = 1;
+  #
+  def wait_for_ajax
+    printf “jQuery.active”
+    start_time = Time.current
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until _finished_all_ajax_requests?
+    end
+    printf ‘%.2f’, Time.current - start_time
+  rescue Timeout::Error
+    printf “timeout#{Capybara.default_max_wait_time}”
+  end</p>
+
+<p>def _finished_all_ajax_requests?
+    output = page.evaluate_script(‘jQuery.active’)
+    printf “.” unless output.zero?
+    output.zero?
+  end</p>
+
+<p>def wait_for_visible(target)
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until page.find(target).visible?
+    end
+  rescue Timeout::Error
+    flunk “Expected #{target} to be visible.”
+  end
+end
+RSpec.configure do |config|
+  config.include WaitHelper, type: :feature
+end</p>
+<h1 id="for-minitest-use">for minitest use</h1>
+<p>class ActionDispatch::SystemTestCase
+  include WaitHelper
+end</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+This is not needed any more, also
+[wait_until](https://www.varvet.com/blog/why-wait_until-was-removed-from-capybara/)
+is removed from capybara.
+
+I see only two problem: first is ajax loaded form in modal and you click on
+button to submit it immediatelly, but modal uses `fade` and is not visible yet.
+Solution is to remove `fade` class.
+&lt;https://github.com/teamcapybara/capybara/issues/1890&gt;
+
+To remove fade transition and transform in test so you do not need to sleep and
+wait for animation, put this in your layout
+```
+# app/views/layouts/application.html.erb
+    &lt;% if Rails.env.test? %&gt;
+      &lt;style&gt;
+        .fade, .modal-dialog {
+          background: blue;
+          transform: none!important;
+          transition: none!important;
+        }
+      &lt;/style&gt;
+    &lt;% end %&gt;
+```
+
+Second is when respone is redirection `window.location.assign('/users/1')`
+(usually just to reload a page). Capybara does not wait for this
+`window.location` change when it is run in `headless_chrome` driver. I tried
+with `window.location.replace` and `$(location).attr('href',)`. Only solution is
+to use expectation that find element which is not yet on a page. Maybe `visit
+customer_path customer` again, before expectation, could help.
+
+I noticed that when using `js: true` session is preserved between examples even
+from multiple files. This is on both chrome and headless_chrome. Since there is
+randomization, that could be a tricky problem to reproduce. I tried to add
+
+</code></pre></div></div>
+<p>config.before(:example) do
+    Capybara.reset_sessions!
+  end
+  before do
+    Capybara.reset_session!
+    browser = Capybara.current_session.driver.browser
+    if browser.respond_to?(:clear_cookies)
+      # Rack::MockSession
+      browser.clear_cookies
+    elsif browser.respond_to?(:manage) and browser.manage.respond_to?(:delete_all_cookies)
+      # Selenium::WebDriver
+      browser.manage.delete_all_cookies
+    else
+      raise “Don’t know how to clear cookies. Weird driver?”
+    end
+  end</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+but still problem, sometimes fails/sometimes pass.
+
+## Download helpers
+
+Inspect file that is downloaded like `respond_to do |format| format.csv { render
+text: CSV.generate { |csv| csv &lt;&lt; [1,2] } } end`
+
+</code></pre></div></div>
+<h1 id="specsupportdownload_feature_helpersrb">spec/support/download_feature_helpers.rb</h1>
+<h1 id="httpscollectiveideacomblogarchives20120127testing-file-downloads-with-capybara-and-chromedriver">https://collectiveidea.com/blog/archives/2012/01/27/testing-file-downloads-with-capybara-and-chromedriver</h1>
+<p>#</p>
+<h1 id="csv_content--downloadhelpersdownload_content">csv_content = DownloadHelpers.download_content</h1>
+<h1 id="expectcsv_contentcountnto-eq-3">expect(csv_content.count(“\n”)).to eq 3</h1>
+<h1 id="expectcsv_contentto-include-first_customername">expect(csv_content).to include first_customer.name</h1>
+<p>#
+module DownloadFeatureHelpers
+  TIMEOUT = 10
+  PATH    = Rails.root.join(“tmp/downloads”)</p>
+
+<p>extend self</p>
+
+<p>def downloads
+    Dir[PATH.join(“*”)]
+  end</p>
+
+<p>def download
+    downloads.first
+  end</p>
+
+<p>def download_content
+    wait_for_download
+    File.read(download)
+  end</p>
+
+<p>def wait_for_download
+    Timeout.timeout(TIMEOUT) do
+      sleep 0.1 until downloaded?
+    end
+  end</p>
+
+<p>def downloaded?
+    !downloading? &amp;&amp; downloads.any?
+  end</p>
+
+<p>def downloading?
+    downloads.grep(/.crdownload$/).any?
+  end</p>
+
+<p>def clear_downloads
+    FileUtils.rm_f(downloads)
+  end
+end</p>
+
+<p>RSpec.configure do |config|
+  config.include DownloadFeatureHelpers, type: :feature
+end</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Set headless browser https://gist.github.com/bbonamin/4b01be9ed5dd1bdaf909462ff4fdca95
+
+Old way is using profile
+</code></pre></div></div>
+<p>require “selenium/webdriver”
+Capybara.register_driver :chrome do |app|
+  profile = Selenium::WebDriver::Chrome::Profile.new
+  profile[“download.default_directory”] = DownloadFeatureHelpers::PATH.to_s
+  Capybara::Selenium::Driver.new(app, browser: :chrome, profile: profile)
+end</p>
+
+<h1 id="another-way-to-set-profile-is-with-prefs-in-desired_capabilities">another way to set profile is with prefs in desired_capabilities</h1>
+<h1 id="currently-it-does-not-work-if-you-use-headless-chrome-since-it-is-not">Currently it does not work if you use headless chrome since it is not</h1>
+<h1 id="supported-httpsgithubcomseleniumhqseleniumissues4437">supported <a href="https://github.com/SeleniumHQ/selenium/issues/4437">https://github.com/SeleniumHQ/selenium/issues/4437</a></h1>
+<h1 id="probably-works-in-headless-firefox">Probably works in headless firefox.</h1>
+
+<p>Capybara.register_driver :headless_chrome do |app|
+  desired_capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: { args: %w(headless disable-gpu window-size=1024,768) },
+    prefs: {
+      “download.default_directory”: DownloadFeatureHelpers::PATH.to_s,
+    }
+  )</p>
+
+<p>Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    desired_capabilities: desired_capabilities,
+  )
+end</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Usage in test is to clear downloads first since failing expectation will break
+and not remove files.
+
+</code></pre></div></div>
+<p>RSpec.describe ‘Location Reports’, js: true do
+  it ‘downloads’ do
+    DownloadFeatureHelpers.clear_downloads
+    click_on ‘Generate Report’
+    csv_content = DownloadFeatureHelpers.download_content
+    expect(csv_content.count(“\n”)).to eq 3
+    expect(csv_content).to include first_customer.name
+  end
+end</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Selenium
+
+&lt;https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings&gt;
+Selenium for ruby use gem `selenium-webdriver`.
+You also need executables for firefox `geckodriver` (just download from
+&lt;https://github.com/mozilla/geckodriver/releases&gt; to `/usr/local/bin`)
+and for chrome `chromedriver` (download from
+&lt;https://sites.google.com/a/chromium.org/chromedriver/downloads&gt; to
+`/usr/local/bin`) or you can use `gem 'chromedriver-helper'` that will install
+chromedriver to `.rvm/gems/ruby-2.3.3/bin/chromedriver`.
+
+Make sure you have version of firefox and chrome that matches drivers.
+
+
+Same DSL to drive browser (selenium-webdriver, chrome-driver or capybara-webkit)
+or headless drivers (`:rack_test` or phantomjs). `Capybara.current_driver` could
+be `:rack_test` (when no `js: true`) or `:headless_chrome` or `':chrome`.
+
+## Errors
+
+If you see error `unable to obtain stable firefox connection in 60 seconds
+(127.0.0.1:7055) (Selenium::WebDriver::Error::WebDriverError)` you need to `gem
+update selenium-webdriver` or to install matched version.
+
+Minitest is included in ruby and also in rails. If your system tests shows error
+`Selenium::WebDriver::Error::WebDriverError: unable to connect to chromedriver
+127.0.0.1:9515` than add gem `gem 'chromedriver-helper'` to your development and
+test group.
+
+If you see `KeyError: key not found: 102` than upgrade chromedriver to 2.33 by
+downloading from &lt;https://sites.google.com/a/chromium.org/chromedriver/&gt; and `mv
+chromedriver bin` or if you are using `chromedriver-helper` run
+
+</code></pre></div></div>
+<p>rm -rf ~/.chromedriver-helper/
+chromedriver-update</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+For `Selenium::WebDriver::Error::UnknownError: unknown error: call function
+result missing 'value' (Session info: headless chrome=67.0.3396.48)` you need to
+update chromedriver to 2.38
+
+If you see error `SocketError: getaddrinfo: Name or service not known` than make
+sure you have defined localhost `127.0.0.1 localhost` in `/etc/hosts`
+
+For error
+```
+Selenium::WebDriver::Error::SessionNotCreatedError:
+session not created: This version of ChromeDriver only supports Chrome version 114
+Current browser version is 117.0.5938.88 with binary path /usr/bin/google-chrome
+```
+you should remove webdrivers gem and use latest selenium-webdriver
+
+
+If you see error `Selenium::WebDriver::Error::StaleElementReferenceError: stale
+element reference: element is not attached to the page document` it could be
+that element was removed, page reloaded in javascript, or when you use `within
+#id` and than make expectation inside `within` block. Try to move expectation
+outsite of `within` block or to reload
+
+</code></pre></div></div>
+<p>page.driver.browser.navigate.refresh
+page.evaluate_script ‘window.location.reload()’</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Chrome driver usually starts with `data:,` url and than redirects to for example
+&lt;http://127.0.0.1:34623/posts&gt;
+
+In rails console you should see starting browser with
+
+</code></pre></div></div>
+<p>options = Selenium::WebDriver::Chrome::Options.new
+options.add_argument(‘–headless’)
+driver = Selenium::WebDriver.for :chrome #, options: options</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To run in browser javascript use `js: true`. Note that in this mode, drop down
+links are not visible, you need to click on dropdown. Also `data-confirm` will
+be ignored.
+Note that in this mode you can't use `rails-rspec` default
+`config.use_transactional_fixtures` since selenium can't know that refresh or
+navigation to another page should be in the same transaction, so you need to use
+`database_cleaner` as we do configuration below.
+&lt;http://elementalselenium.com/tips/29-chrome-driver&gt;
+&lt;https://robots.thoughtbot.com/headless-feature-specs-with-chrome&gt;
+
+</code></pre></div></div>
+<h1 id="specsupportcapybararb">spec/support/capybara.rb</h1>
+<p>require “selenium/webdriver”</p>
+
+<p>Capybara.register_driver :chrome do |app|
+  # set download directory using Profile (can be set using :prefs in options)
+  profile = Selenium::WebDriver::Chrome::Profile.new
+  profile[“download.default_directory”] = DownloadFeatureHelpers::PATH.to_s
+  Capybara::Selenium::Driver.new(app, browser: :chrome, profile: profile)
+end</p>
+
+<p>Capybara.register_driver :headless_chrome do |app|</p>
+<h1 id="i-prefer-to-use-options-instead-capabilities">I prefer to use Options instead Capabilities</h1>
+<h1 id="capabilities--seleniumwebdriverremotecapabilitieschrome">capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(</h1>
+<h1 id="chromeoptions--args-wheadless-disable-gpu-window-size1024768-">chromeOptions: { args: %w(headless disable-gpu window-size=1024,768) }</h1>
+<h1 id="">)</h1>
+<h1 id="capybaraseleniumdrivernew-app-browser-chrome-desired_capabilities-capabilities">Capybara::Selenium::Driver.new app, browser: :chrome, desired_capabilities: capabilities</h1>
+<p>options = Selenium::WebDriver::Chrome::Options.new(
+    args: %w[headless disable-gpu window-size=1024,768],
+    # can not use prefs for headless driver since it is not supported
+    # prefs: {
+    #   “download.default_directory”: DownloadFeatureHelpers::PATH.to_s,
+    # }
+  )</p>
+
+<p>Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end</p>
+
+<p>RSpec.configure do |config|
+  files = config.instance_variable_get :@files_or_directories_to_run
+  if files == [“spec”]
+    # when run all spec use headless
+    Capybara.javascript_driver = :headless_chrome
+  else
+   Capybara.javascript_driver = :chrome
+  end
+end
+Capybara.enable_aria_label = true</p>
+
+<h1 id="if-you-need-to-use-custom-domain--you-can-set-host-but-also-set-server-port">if you need to use custom domain , you can set host, but also set server port</h1>
+<p>Capybara.app_host = “http://my-domain.loc:3333”
+Capybara.server_port = 3333</p>
+<h1 id="you-can-read-host-and-port">you can read host and port</h1>
+<p>Capybara.current_session.server.host
+Capybara.current_session.server.port</p>
+<h1 id="normally-chrome-starts-with-url-data-and-than-redirects-to-app_host">normally chrome starts with url: data; and than redirects to app_host</h1>
+<h1 id="app_host-should-ends-with-loc-or-lvhme-so-it-point-to-localhost">app_host should ends with .loc or .lvh.me so it point to localhost</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+For newer Firefox I needed to download
+[geckodriver](https://github.com/mozilla/geckodriver/releases) and put it
+somewhere like `/user/local/bin/geckodriver`. Also [Firefox
+47.0.1](https://ftp.mozilla.org/pub/firefox/releases/47.0.1/) is suggested, but
+my ver 50 also works.
+
+# Remote Selenium
+
+The easiest way is to use docker
+https://github.com/SeleniumHQ/docker-selenium
+https://hub.docker.com/r/selenium/standalone-chrome-debug
+
+But when I use novnc it fails, but VNC Viewer works
+```
+Failed when connecting: Failed to connect to server ( (code: 1006))
+```
+It could be that REMOTE_HOST is not reachable from container. REMOTE_HOST can
+be either `selenium` (docker container) or domain name or ip address of host on
+which 5900 port is open (it should be reachable from this container). It does
+not work for redirection or rDNS records like dockhero-curly-75104.dockhero.io
+(you can check with nmap dockhero-curly-75104.dockhero.io).
+
+You can control remote selenium server. Download
+[selenium-server-standalone.jar](https://www.seleniumhq.org/download/) and run
+selenium server.  For error `Unsupported major.minor
+version 52.0` you need to update java: 51 -&gt; java7, 52 -&gt; java8, 53 -&gt; java9.
+
+</code></pre></div></div>
+<p>java -jar selenium-server-standalone.jar</p>
+<h1 id="or-1">or</h1>
+<p>java -jar selenium-server-4.1.2.jar standalone</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>on initial session `driver = Selenium::WebDriver.for :chrome` there should be a
+log
+```
+[LocalDistributor.newSession] - Session request received by the distributor: 
+ [Capabilities {}]
+19:34:48.755 INFO [ProtocolHandshake.createSession] - Detected dialect: W3C
+19:34:48.783 INFO [LocalDistributor.newSession] - Session created by the distributor. Id: 2802E1FC-BAF0-492B-A435-60091646AA71, Caps: Capabilities {acceptInsecureCerts: false, browserName: Safari, browserVersion: 15.3, platformName: macOS, safari:automaticInspection: false, safari:automaticProfiling: false, safari:diagnose: false, safari:platformBuildVersion: 21D62, safari:platformVersion: 12.2.1, safari:useSimulator: false, setWindowRect: true, strictFileInteractability: false, webkit:WebRTC: {DisableICECandidateFiltering: false, DisableInsecureMediaCapture: false}}
+```
+
+I can create :chrome, :safari and :firefox in `rails c`
+https://github.com/SeleniumHQ/selenium/wiki/Ruby-Bindings#remote
+</code></pre></div></div>
+<h1 id="chrome">chrome</h1>
+<p>driver = Selenium::WebDriver.for :remote, capabilities: :chrome, url: “http://localhost:4444/wd/hub”</p>
+<h1 id="same-as">same as</h1>
+<h1 id="driver--seleniumwebdriverfor-chrome-url-http1921685564444wdhub">driver = Selenium::WebDriver.for :chrome, url: “http://192.168.5.56:4444/wd/hub”</h1>
+<p>driver.navigate.to ‘http://google.com’ #=&gt; nil</p>
+
+<h1 id="firefox">firefox</h1>
+<h1 id="driver--seleniumwebdriverfor-firefox-url-http1921685564444wdhub">driver = Selenium::WebDriver.for :firefox, url: “http://192.168.5.56:4444/wd/hub”</h1>
+
+<h1 id="headless-chrome">headless chrome</h1>
+<p>options = Selenium::WebDriver::Chrome::Options.new(
+  args: %w[headless disable-gpu window-size=1024,768],
+)
+driver = Selenium::WebDriver.for :chrome, url: “http://192.168.5.56:4444/wd/hub”, options: options</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+If there is a screen you can run both headless and not. If you run server from
+ssh (there is no screen) than you can run headless or you can run server using X
+virtual frame buffer
+
+</code></pre></div></div>
+<p>xvfb-run java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver -jar /usr/local/bin/selenium-server-standalone.jar</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+To save console logs you can use
+TODO I still have not succeed to see console logs
+```
+# test/a/capybara.rb
+# This is used only when you want to save javascript console logs
+
+# Usage in your system test
+# class SignUpWizzardTest &lt; ApplicationSystemTestCase
+#   test 'sign up' do
+#    Capybara.current_driver = :headless_chrome_with_logging
+#    visit root_path
+#    save_console_logs
+
+# https://stackoverflow.com/questions/46278514/capture-browser-console-logs-with-capybara/46292517
+# https://stackoverflow.com/questions/58418214/enable-view-console-log-messages-in-headless-chrome
+Capybara.register_driver :headless_chrome_with_logging do |app|
+  caps = Selenium::WebDriver::Remote::Capabilities.chrome 'goog:loggingPrefs': {
+    browser: 'ALL'
+  }
+
+  opts = Selenium::WebDriver::Chrome::Options.new
+  chrome_args = %w[--headless --no-sandbox]
+  chrome_args.each { |a| opts.add_argument a }
+
+  Capybara::Selenium::Driver.new app, browser: :chrome, options: opts, desired_capabilities: caps
+end
+
+class ApplicationSystemTestCase &lt; ActionDispatch::SystemTestCase
+  def save_console_logs
+    console_log = page.driver.browser.manage.logs.get(:browser).map(&amp;:to_s).join("\n")
+    File.write Rails.root.join('log', 'capybara_console.log'), console_log, mode: 'w'
+  end
+end
+```
+
+# Kimurai
+
+https://github.com/vifreefly/kimuraframework
+
+```
+require 'kimurai'
+
+class SimpleSpider &lt; Kimurai::Base
+  @name = "simple_spider"
+  @engine = :selenium_chrome
+  @start_urls = ["https://example.com/"]
+
+  def parse(response, url:, data: {})
+  end
+end
+
+SimpleSpider.crawl!
+```
+
+Use console
+
+```
+kimurai console --url https://www.tripadvisor.rs/Hotel_Review-g295380-d1383552-Reviews-Prezident_Hotel-Novi_Sad_Vojvodina.html
+response.css('script[type="application/ld+json"]').first
+# in plains ruby
+url = 'https://www.tripadvisor.rs/Hotel_Review-g295380-d1383552-Reviews-Prezident_Hotel-Novi_Sad_Vojvodina.html'
+response = Nokogiri::HTML(open(url))
+
+# use non headless, actually fire up a browser
+HEADLESS=false kimurai console --engine selenium_chrome --url http://google.com
+```
+
+To install chromedriver you can use `gem install webdrivers` and symlink
+```
+sudo ln -s /home/orlovic/.webdrivers/chromedriver /usr/local/bin/
+
+# or on production with rvm, check that is it in Gemfile (not in TEST)
+# /home/deploy/.rbenv/versions/2.6.3/lib/ruby/gems/2.6.0/gems/webdrivers-4.1.3/lib/webdrivers/chromedriver.rb is just ruby file
+bundle exec rake webdrivers:chromedriver:update
+sudo ln -s /home/deploy/.webdrivers/chromedriver /usr/local/bin/
+```
+
+Use data to pass data between pages
+
+```
+def parse(response, url:, data: {})
+  response.xpath().each do |product_url|
+    request_to :parse_product, url: product_url[:href], data:
+    data.merge(product_name: product_url[:title])
+  end
+end
+
+def parse_product(response, url:, data: {})
+  puts data[:product_name]
+end
+```
+
+Save screenshot using `page.driver.browser.save_screenshot 'my-shot.png'`
+Save cookies using `browser.driver.save_cookies`
+Refresh page `browser.refresh` but to update `response` you need to `response =
+browser.current_response`
+
+# CSV, input &amp; output
+
+Your script probably needs some output, CSV is good enough (it will wrap inside
+quotes if comma `,` is detected)
+
+</code></pre></div></div>
+<p>require ‘csv’
+CSV.open(“candidates.csv”,”w”) do |csv|
+  csv « [id, name]
+end</p>
+
+<h1 id="or-without-indent">or without indent</h1>
+
+<p>output = CSV.open(‘data/craiglist.csv’, ‘wb’) # folder data must exists
+output « [id, name]
+output.close</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+For strings, you can use [mustache](https://github.com/mustache/mustache)
+
+</code></pre></div></div>
+<p>require ‘mustache’
+MESSAGE_TEXT = “Hi there,</p>
+
+<p>I noticed your great page. Please see my profile here</p>
+
+<p>Thanks!”
+element.send_keys Mustache.render( MESSAGE_TEXT, profile_url: profile_url)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+Params can be passed as arguments (first param is ARGV[0]) or hard coded
+
+</code></pre></div></div>
+<p>OUTPUT_FILE = ARGV[0] || ‘output.csv’
+TEST_MODE = true
+SIMULATE_REAL_USER_DELAY = true</p>
+
+<p>sleep rand(8..15) if SIMULATE_REAL_USER_DELAY</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Debug
+
+</code></pre></div></div>
+<h1 id="run-with-ruby-myscriptrb">run with: ruby myscript.rb</h1>
+<h1 id="debug-with-byebug">debug with byebug</h1>
+<h1 id="or-in-irb">or in irb:</h1>
+<h1 id="driverwaitidnil--selenium">driver=wait=id=nil # selenium</h1>
+<h1 id="agentpagenil--mechanize">agent=page=nil # mechanize</h1>
+<h1 id="eval-fileopenmyscriptrbread">eval File.open(‘myscript.rb’).read</h1>
+<h1 id="put-rubocop-ready-break-somewhere-in-your-loops">put rubocop ready break somewhere in your loops:</h1>
+<h1 id="loop-do">loop do</h1>
+<h1 id="break-if-false--true--rubocop-ready">break if false != true # rubocop ready</h1>
+<h1 id="end">end</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Mechanize
+
+If you have simple site without ajax than you can use
+[Mechanize](http://docs.seattlerb.org/mechanize/GUIDE_rdoc.html). It uses
+nokogiri and `automatically stores and sends cookies, follows redirects, and can
+follow links and submit forms`. It provides
+[forms_with](http://docs.seattlerb.org/mechanize/Mechanize/Page.html#method-i-forms_with)
+so you can find forms (or links), fill input and submit.
+
+</code></pre></div></div>
+<p>require ‘rubygems’
+require ‘mechanize’</p>
+
+<p>agent = Mechanize.new
+page = agent.get(‘trk-inovacije.com’)
+page.link_with text: ‘Next’ # exact match
+page.search(‘#updates div a:first-child’) # css match</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+For using plain selenium (not capybara) you need to implement waiting for ajax
+results. I used three steps
+
+</code></pre></div></div>
+<p>element = nil
+wait.until { element = driver.find_element(:name, ‘UserName’) }
+element.send_keys “asdasd”</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+In this way, it is waiting for element to appear. In case it is not showing
+exception `TimeOutError` so if you expect that, you need to wrap inside `begin
+rescue end` block. Last line in `until` block (ie return value) is important,
+since if it is false `TimeOutError` is raised.
+
+</code></pre></div></div>
+<p>require “selenium-webdriver”</p>
+<h1 id="httpseleniumgooglecodecomgitdocsapirbseleniumwebdriverhtml">http://selenium.googlecode.com/git/docs/api/rb/Selenium/WebDriver.html</h1>
+<h1 id="httpdocsseleniumhqorgdocsindexjsp">http://docs.seleniumhq.org/docs/index.jsp</h1>
+
+<p>USER_EMAIL = “asd@asd.asd”
+USER_PASSWORD = “asdasd”
+TEST_MODE = false
+SIMULATE_REAL_USER_DELAY = true</p>
+
+<p>if driver.nil? # driver is defined if we use irb and eval File.open(‘f’).read
+  driver = Selenium::WebDriver.for :firefox
+  # driver.manage.timeouts.implicit_wait = 10
+  # do not use implicit wait since it can hang out
+  wait = Selenium::WebDriver::Wait.new(timeout: 30) # seconds</p>
+
+<p>driver.navigate.to “https://trk.in.rs”</p>
+
+<p>puts “Signing in…”
+  element = nil
+  wait.until { element = driver.find_element(:name, ‘UserName’) }
+  element.send_keys USER_EMAIL</p>
+
+<p>element = driver.find_element(:name, ‘Password’)
+  element.send_keys USER_PASSWORD</p>
+
+<p># puts “Please fill in reCAPTCHA… and click on login”
+  # gets
+  element.submit
+end</p>
+
+<p>puts “Finding profile_search…”
+begin
+  wait.until { element = driver.find_element(:xpath, ‘//<em>[text()[contains(.,”Profile”)]]’) }
+rescue Selenium::WebDriver::Error::TimeOutError
+  puts “Missing Profile link…”
+  retry or break or next
+end
+unless TEST_MODE
+  element.click
+end
+sleep rand(8..15) if SIMULATE_REAL_USER_DELAY
+begin
+  phone_element = driver.find_element :xpath, ‘//li[contains(text(),”☎”)]’
+  phone = phone_element.text[1..-1].strip
+  puts phone
+rescue Selenium::WebDriver::Error::NoSuchElementError
+  # this error is raised when find_element is called outside of wait.until
+  phone = nil
+end
+wait.until do
+  begin
+    driver.find_element(:xpath, “//</em>[@data-cid]”).attribute(‘data-cid’) != id
+  rescue Selenium::WebDriver::Error::StaleElementReferenceError
+    puts “old elemenet is no longer attached to the DOM”
+    false
+  end
+end
+begin
+  driver.navigate.to link[:href]
+rescue Net::ReadTimeout
+  puts “timeout for #{link[:href]}”
+  next
+rescue Selenium::WebDriver::Error::UnhandledAlertError
+  puts “UnhandledAlertError probably some model dialog on page”
+  next
+end
+begin
+  element.click
+rescue Selenium::WebDriver::Error::ElementNotVisibleError
+  puts “apply button hidden”
+  next
+end
+driver.switch_to.frame driver.find_elements( :tag_name, ‘iframe’).last</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# XPath
+
+Xpath is nice since it can traverse back up the dom tree with `..` and that can
+select element based on existence of a child `//p[a]` (all `p` with `a` child)
+
+https://www.w3schools.com/xml/xpath_intro.asp
+7 type of nodes: element, attribute, text, namespace, processing-instructions,
+comment and document node. *Atomic values* are nodes with no children or parent.
+Items are Atomic values or nodes.
+Each element and attribute has one parent. Element nodes may have zero, one or
+more children. Sibling nodes are nodes with same parent. Ancestors are node's
+parent and parent's parent etc... Descendant are node's children, children's
+children etc...
+Selecting node by:
+* `nodename` selects all nodes with the name nodename
+* `/` selects from the root (if path starts with `/` than it is absolute path).
+  `bookstore/book` selects all book elements that are children of bookstore
+* `//` select nodes from the current node that match the selection no matter
+  where they are. `bookstore//book` selects all book elements that are
+  descentant from bookstore
+* `.` selects the current node
+* `..` selects parent of the current node
+* `@` selects attributes `//@lang` selects all attributes that are named lang
+
+Predicates are used to find specific node `[1]` or that contains specific value.
+Predicates are always in square brackets
+* `/bookstore/book[1]` first book that is child of bookstore
+* `/bookstore/book[last()]` last book that is child of bookstore
+* `/bookstore/book[position()&lt;3]` first two book elements that are child of
+  bookstore
+* `//title[@lang]` selects all title elements that have attribute named lang
+* `//title[@lang='en']` selects all title elements that have attribute lang with
+  value en
+* `/bookstore/book[price&gt;35]/title` selects title elements of book element
+  which have price element with value (inner text) greater than 35
+
+If we use `/bookstore/book/price[text()]` than it will select all text from
+price nodes.
+
+
+Wildcards can be used to select unknown nodes
+* `*` matches any element node `/bookstore/*` select all child elements of
+  bookstore
+* `@*` matches any attribute node. `//title[@*]` select title elements which
+  have at least one attribute
+* `node()` matches any kind of node
+
+Several path can be selected using pipe `|` (or operator) `//title | //price`
+select all title and price elements. You can use also `=` equal, `+` addition,
+`div` division operators...
+
+Axes can be used to traverse (in addition to simply child `/`)
+* `child::book`, `descentant::`, `descentant-or-self::`
+* `ancestor::`, `ancestor-or-self::`, `parent::`
+* `attribute::`
+* `namespace::`
+* `following::`, `following-sibling::` after current node. To select text after
+  certain element you can `//foo/following-sibling::text()[1]`
+* `preceding::`, `preceding-sibling::` before current node except ancestors,
+  attribute and namespace nodes. for example select li before li with text my
+  `//li[text()='my']/preceding-sibling::li`
+* `self::` current node
+
+You can check in [developer
+tools](http://stackoverflow.com/questions/22571267/how-to-verify-an-xpath-expression-in-chrome-developers-tool-or-firefoxs-firebug)
+with `$x('//*[po-my-button]')` in console, or with *CTRL+f* search in elements
+panel.
+In ruby you can parse some text with nokogiri
+http://cheat.errtheblog.com/s/nokogiri
+Nokogiri cheat sheet https://github.com/sparklemotion/nokogiri/wiki/Cheat-sheet
+
+```
+doc = Nokogiri::HTML(html_page)
+node = doc.at('some_xpath')
+node = doc.at_css('h1')
+node
+```
+
+* &lt;http://www.w3.org/TR/xpath](http://www.w3.org/TR/xpath)&gt;
+* [usefull selectors](http://ejohn.org/blog/xpath-css-selectors)
+
+* find by id  `//*[@id='my_id']` (note that it needs quotes inside
+  squarebrackets)
+* by class `//*a[contains(@class,'my_class')]`
+* text `//*[contains(text(),'ABC')]` or `//*[text()='exact_match']`
+* parrent `../`
+* some child of this `.//`
+* to get text without child nodes, call `text()` in xpath 
+  `page.search('//h1/text()').text`
+* get [input by
+  label](http://stackoverflow.com/questions/34712495/protractor-select-a-form-element-using-label)
+  `var input = element(by.xpath("//label[. = '" + labelName + "']/following-sibling::input"));`
+* find all text with @, check if they look like an email and join them [link](http://stackoverflow.com/questions/3655549/xpath-containstext-some-string-doesnt-work-when-used-with-node-with-more)
+
+</code></pre></div></div>
+<h1 id="selenium-example">selenium example</h1>
+<p>email_text = driver.find_element(:xpath, ‘//<em>[@id=”msg_container”]’).find_elements(:xpath, “.//</em>[text()[contains(.,’@’)]]”).map { |e| e.text }.join(“,”)</p>
+<h1 id="mechanize">mechanize</h1>
+<p>email_text = page.search(“//text()”).map(&amp;:text).join ‘,’</p>
+<h1 id="httpstackoverflowcomquestions535644find-email-addresses-in-large-data-stream">http://stackoverflow.com/questions/535644/find-email-addresses-in-large-data-stream</h1>
+<p>r = Regexp.new(/\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}\b/)
+emails = email_text.scan(r).uniq
+if emails.length &gt; 1
+  puts “Found several emails in body “ +  emails.join(‘,’)
+end
+user_email = emails.first.strip if emails.first</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+# Examples
+
+## Search images and show target page in case of errors
+
+</code></pre></div></div>
+<p>class ImageService</p>
+
+<p>attr_accessor :agent</p>
+
+<p>def initialize
+    @agent = Mechanize.new
+  end</p>
+
+<p>def get_links(name)
+    page = agent.get ‘https://www.trk.in.rs/imghp’
+    form = page.form(‘f’)
+    form.q = name
+    page = agent.submit(form)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># results
+table = page.search(".//table[@class='images_table']").first
+results = []
+table.search('a').each do |a|
+  results.append( {
+    image_url: a.search('img').first.attributes["src"].to_s,
+    site_url: a.attributes["href"].to_s[7..-1], # /url?q=
+  })
+end
+results   rescue
+page.body.to_s   end end ~~~
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% if @results.class == Array %&gt;
+  &lt;% results.each do |res| %&gt;
+    &lt;%= res[:image_url] %&gt;
+  &lt;% end %&gt;
+&lt;% else %&gt;
+  &lt;iframe id="FileFrame" src="about:blank"&gt;&lt;/iframe&gt;
+  &lt;script type="text/javascript"&gt;
+    var doc = document.getElementById('FileFrame').contentWindow.document;
+    doc.open();
+    doc.write('&lt;%=raw @results %&gt;');
+    doc.close();
+  &lt;/script&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>some sites provide nice rss feed, for example elance https://www.elance.com/php/search/main/resultsproject.php?matchType=project&amp;rss=1&amp;matchKeywords=rails+-php&amp;statusFilter=10037&amp;sortBy=timelistedSort&amp;sortOrder=1</li>
+</ul>
+
+<h1 id="headless-chrome-on-heroku">Headless chrome on heroku</h1>
+
+<p>To run chrome on heroku you need chrome and chromedriver
+<a href="https://github.com/heroku/heroku-buildpack-google-chrome">https://github.com/heroku/heroku-buildpack-google-chrome</a>
+<a href="https://github.com/heroku/heroku-buildpack-chromedriver">https://github.com/heroku/heroku-buildpack-chromedriver</a>
+After adding buildpacks you need to initialize Selenium with correct path to
+google chrome</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>options = Selenium::WebDriver::Chrome::Options.new
+options.add_argument('--headless')
+if chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+  options.binary = chrome_bin
+end
+driver = Selenium::WebDriver.for :chrome, options: options
+</code></pre></div></div>
+
+<p>One alternative solution, which does not rely on selenium
+<a href="https://github.com/yujiosaka/headless-chrome-crawler">https://github.com/yujiosaka/headless-chrome-crawler</a></p>
+
+<h1 id="alternatives">Alternatives</h1>
+
+<p>https://github.com/gokhandemirhan/KimonoAlternatives</p>
+
+<ul>
+  <li>Find selectors using javascript https://github.com/cantino/selectorgadget and
+chrome extension plugin addon selector gadget (click first on element to become
+yellow, and than click on all yellows to mark them as red to remove)</li>
+  <li>https://webscraper.io/ browser extension https://www.webscraper.io/tutorials
+nice documentation with images
+https://www.webscraper.io/documentation/selectors/link-selector
+https://github.com/webscraperio
+https://www.webscraper.io/test-sites</li>
+  <li>browser extension and api https://www.agenty.com/docs/video-tutorials.aspx
+with example integrations https://www.agenty.com/integrations/</li>
+  <li>https://www.octoparse.com/ without coding, graphical algorithm
+https://www.youtube.com/channel/UCweDWm1QY2G67SDAKX7nreg</li>
+</ul>
+
+<p>https://import.io
+https://www.parsehub.com/
+https://scrape.it/
+https://morph.io/
+http://scrapinghub.com/
+https://www.scrapehero.com/
+http://datahut.co/
+http://scrapy.org/</p>
+
+<p>comercial
+https://agenty.com/
+https://app.scrapingbee.com</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

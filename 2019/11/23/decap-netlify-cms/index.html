@@ -1,0 +1,92 @@
+<h1 id="decap-netlify-tips">Decap Netlify tips</h1>
+
+<p>Decap CMS https://github.com/decaporg/decap-cms
+formerly known as https://github.com/netlify/netlify-cms</p>
+
+<p>Enable users to sign in with Github or external provider and create posts on
+phone without git commands
+https://www.netlifycms.org/docs/add-to-your-site/#authentication</p>
+
+<h2 id="decap-installation">Decap Installation</h2>
+
+<p>Lets use jekyll https://decapcms.org/docs/jekyll/
+Create two files</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># admin/index.html
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;meta name="robots" content="noindex" /&gt;
+    &lt;title&gt;Content Manager&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;!-- Include the script that builds the page and powers Decap CMS --&gt;
+    &lt;script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div></div>
+<p>and</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># admin/config.yml
+backend:
+  name: git-gateway
+  branch: master
+
+publish_mode: editorial_workflow
+
+media_folder: "_images"
+public_folder: "assets/images"
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    folder: "_posts"
+    create: true 
+    slug: "---"
+    # identifier_field: latin
+    editor:
+      preview: false
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Latin", name: "latin", widget: "string", hint: 'Ovaj se koristi za URL posto ћирилица nije uobicajena za linkove. Kad se postavi, vise se ne moze promenuti'}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Author", name: "author", widget: "select", options: ['vladan', 'slobodan', 'dragutin', 'darko', 'sreten', 'branislav']}
+      - {label: "Body", name: "body", widget: "markdown"}
+</code></pre></div></div>
+
+<h2 id="enable-backend-on-netlify">Enable backend on netlify</h2>
+
+<p>Enable in Site configuration &gt; Identity (also External providers like Google)
+and set the Identity &gt; Registration &gt; Registration is invite only so you can
+invite users on app.netlify.com/sites/my-site/identity note that Open users does
+not count to the free tier usage as seen on
+app.netlify.com/sites/my-site/configuration/identity)
+Also enable Site configuration &gt; Identity &gt; Services &gt; Git Gateway</p>
+
+<p>Error when I could not enable Identity and see this error message</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"code":400,"msg":"An instance with that UUID already exists"}
+</code></pre></div></div>
+<p>I solved by removing the site and adding the site again.</p>
+
+<p>Error that you do not see all posts, probably the issue is in <code class="language-plaintext highlighter-rouge">admin/config.yml</code>
+on backend &gt; branch . Make sure branch is the one you are using for the pages.</p>
+
+<p>Error when working on locally and see window “Looks like you’re running a local
+server. Please let us know the URL of your Netlify site.” which appears briefly
+and then closes. Solution is to wait a few seconds (in console there is log
+“Manually initializing identity widget” and than click on “Login with Netlify
+Identity”. Note that when entering url, it will redirect, so you need to again
+enter 127.0.0.1:4000 in url.</p>
+
+<h2 id="admin-config">Admin config</h2>
+
+<p>https://decapcms.org/docs/configure-decap-cms/</p>
+
+<h2 id="collections-fields-widgets">Collections Fields Widgets</h2>
+
+<p>When you do not see correct order when Sort by Publish Date than you do not have
+<code class="language-plaintext highlighter-rouge">date:</code> filled on each post. Solution is to add <code class="language-plaintext highlighter-rouge">date: 2019-07-27T07:33:00.000Z
+</code> that matches the filename, and again select sorting option.</p>
+
+<p>https://decapcms.org/docs/widgets/</p>

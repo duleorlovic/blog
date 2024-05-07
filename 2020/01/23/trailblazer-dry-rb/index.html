@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Trailblazer Dry Rb</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Trailblazer Dry Rb</h1>
+    <p class="meta">Jan 23, 2020</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#trailblazer"><span class="tocnumber">1</span> <span class="toctext">Trailblazer</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#operation"><span class="tocnumber">1.1</span> <span class="toctext">Operation</span></a></li><li class="toc_level-2 toc_section-3"><a href="#macro"><span class="tocnumber">1.2</span> <span class="toctext">Macro</span></a></li><li class="toc_level-2 toc_section-4"><a href="#macro-api"><span class="tocnumber">1.3</span> <span class="toctext">Macro API</span></a></li><li class="toc_level-2 toc_section-5"><a href="#reform-contract"><span class="tocnumber">1.4</span> <span class="toctext">Reform Contract</span></a></li><li class="toc_level-2 toc_section-6"><a href="#representer"><span class="tocnumber">1.5</span> <span class="toctext">Representer</span></a></li><li class="toc_level-2 toc_section-7"><a href="#custom-steps"><span class="tocnumber">1.6</span> <span class="toctext">Custom steps</span></a></li><li class="toc_level-2 toc_section-8"><a href="#rails"><span class="tocnumber">1.7</span> <span class="toctext">Rails</span></a></li></ul></li><li class="toc_level-1 toc_section-9"><a href="#test"><span class="tocnumber">2</span> <span class="toctext">Test</span></a><ul><li class="toc_level-2 toc_section-10"><a href="#cells"><span class="tocnumber">2.1</span> <span class="toctext">Cells</span></a></li></ul></li><li class="toc_level-1 toc_section-11"><a href="#dry"><span class="tocnumber">3</span> <span class="toctext">Dry</span></a><ul><li class="toc_level-2 toc_section-12"><a href="#dry-types"><span class="tocnumber">3.1</span> <span class="toctext">Dry types</span></a></li><li class="toc_level-2 toc_section-13"><a href="#dry-monads"><span class="tocnumber">3.2</span> <span class="toctext">Dry monads</span></a></li><li class="toc_level-2 toc_section-14"><a href="#dry-schema"><span class="tocnumber">3.3</span> <span class="toctext">Dry schema</span></a></li><li class="toc_level-2 toc_section-15"><a href="#dry-validations"><span class="tocnumber">3.4</span> <span class="toctext">Dry validations</span></a></li></ul></li><li class="toc_level-1 toc_section-16"><a href="#what-you-need-to-know-for-using-trailblazer"><span class="tocnumber">4</span> <span class="toctext">What you need to know for using Trailblazer</span></a></li><li class="toc_level-1 toc_section-17"><a href="#graph-modeling"><span class="tocnumber">5</span> <span class="toctext">Graph modeling</span></a></li><li class="toc_level-1 toc_section-18"><a href="#activity"><span class="tocnumber">6</span> <span class="toctext">Activity</span></a></li></ul></td></tr></tbody></table></div><h1 id="trailblazer">Trailblazer</h1>
+
+<p>Docs in three places:
+http://trailblazer.to/guides/
+http://2019.trailblazer.to/2.1/docs/trailblazer.html
+http://trailblazer.to/api-docs/</p>
+
+<p>Concepts (dashboard index, create comment)</p>
+
+<p>Operation implement functions of the app (also called commands) and it use:</p>
+<ul>
+  <li>policy - authorizations: <code class="language-plaintext highlighter-rouge">Policy::Guard</code> macro</li>
+  <li>representer - cell(widget) instance methods are used in view model (no need
+for view context)</li>
+  <li>validation - forms or contracts: type check and rules</li>
+  <li>model - only associations and scopes</li>
+  <li>callback</li>
+</ul>
+
+<h2 id="operation">Operation</h2>
+
+<p>http://trailblazer.to/gems/operation/2.0/index.html
+https://2019.trailblazer.to/2.1/docs/operation.html
+Simple example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Song::Create &lt; Trailblazer::Operation
+  step :assign_current_user!
+  step :debug
+
+  private
+
+  def assign_current_user!(ctx, model:, current_user:, **)
+    model.created_by = current_user
+  end
+
+  def debug(ctx, params:, **)
+  end
+end
+</code></pre></div></div>
+<p>Operation always return result object. It is called using short notation,
+instead <code class="language-plaintext highlighter-rouge">Operation.call a </code> you can write ruby alias for it <code class="language-plaintext highlighter-rouge">Operation.(a)</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>result = Song::Create.(params.merge current_user: current_user)
+result.success?
+result['model'] # =&gt; #&lt;Song ...&gt;
+</code></pre></div></div>
+
+<p>It is using <code class="language-plaintext highlighter-rouge">step</code> method which can be instance method, lambda or callable model</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>step :model!
+step -&gt;(ctx, **) { ctx['model'] = Song.new }
+step MyStep
+
+def model!(ctx, **)
+  ctx['model'] = Song.new
+end
+
+# define Callable
+class MyStep
+  extend Uber::Callable
+  def self.call(ctx, **)
+    ctx['model'] = Song.new
+    # return value of step matters and is should not be nil or false
+  end
+end
+</code></pre></div></div>
+
+<p>If step return value is falsey (nil or false) than operation result is marked as
+failed and only steps marked as <code class="language-plaintext highlighter-rouge">fail</code> (<code class="language-plaintext highlighter-rouge">failure</code> for trb 2.0) after failing
+step will be executed.  You can pass fail_fast <code class="language-plaintext highlighter-rouge">failure :abort, fail_fast: true</code>
+if you do not want to execute other failure steps after this this.
+Instead of <code class="language-plaintext highlighter-rouge">step</code> you can use <code class="language-plaintext highlighter-rouge">pass</code> (2.1 <code class="language-plaintext highlighter-rouge">success</code>) which does not care about
+return value.</p>
+
+<p>Step accepts first param <code class="language-plaintext highlighter-rouge">options</code> or <code class="language-plaintext highlighter-rouge">ctx</code> or skill (this should act like
+accumulator since we can write output to it and it is mean to be mutable). In
+trailblazer 2.0 first params passed to .call was inside <code class="language-plaintext highlighter-rouge">ctx['params']</code>. In trb
+2.1 you need to explicitly call using params <code class="language-plaintext highlighter-rouge">result = Memo::Create.(params:
+params, current_user: current_user)</code>. first-value and second-hash params were
+merged to <code class="language-plaintext highlighter-rouge">ctx</code>. At the end context is converted to result object on which you
+can access <code class="language-plaintext highlighter-rouge">result['model']</code> and other <code class="language-plaintext highlighter-rouge">result['current_user']</code>.</p>
+
+<p>Second argument can extract keys from first, for example, you can write to
+options in each step <code class="language-plaintext highlighter-rouge">ctx[:new_result] = SomeClass.new</code> and you can extract
+in following steps with <code class="language-plaintext highlighter-rouge">def step(ctx, new_result:, **)</code> and so make it
+required.
+If you state them in method definition for very first step, than those
+arguments will be required keys in first hash in trailblazer 2.1 (trailblazer
+2.0 it should be second hash argument). double splat <code class="language-plaintext highlighter-rouge">**</code> means “I know there
+are more keyword arguments but I’m not intereseted right now”.</p>
+
+<p>http://trailblazer.to/gems/operation/2.0/api.html
+You can use <code class="language-plaintext highlighter-rouge">name: 'build.song</code> to override step name</p>
+
+<h2 id="macro">Macro</h2>
+
+<p><strong>Model</strong> http://trailblazer.to/gems/operation/2.0/api.html#model-findby source
+is defined in trailblazer-macro gem (not trailblazer-operations)
+https://github.com/trailblazer/trailblazer-macro/blob/master/lib/trailblazer/macro/model.rb</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>step Model(Song, :new) # this is the same as ctx[:model] = Song.new
+step Model(Song, :find_by) # this is the same as ctx[:model] = Song.find_by params[:id]
+step Model(Song, :find) # find params[:id]
+# There will be automatic jump to error track if can not find the model
+</code></pre></div></div>
+
+<p><strong>Nested</strong> http://trailblazer.to/gems/operation/2.0/api.html#nested can call
+other operations</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Update &lt; Trailblazer::Operation
+  step Nested( Edit )
+
+  # you can decide which step to perform in runtime
+  step Nested( :build! )
+  def build!(ctx, current_user:. **)
+    current_user.admin? ? Create::Admin ? Create::NeedsModeration
+  end
+
+  # you can adapt parameters using input param
+  step Nested( Multiplier, input: -&gt;(options, some_data:, **) do
+    { x: some_data[:pi_constant], y: 2 }
+  end)
+
+  # you can also pick specific items from nested context (not all are needed)
+  step Nested( Edit, output: -&gt;(options, mutable_data:, **) do
+    {
+      'contract.my' =&gt; mutable_data['contract.default'],
+      'model'       =&gt; mutable_data['model']
+    }
+  end)
+end
+</code></pre></div></div>
+
+<p><strong>Policy::Guard</strong> http://trailblazer.to/gems/operation/2.0/policy.html#guard</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>step Policy::Guard( :authorize! )
+</code></pre></div></div>
+<p>and you can access results in</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>result['policy.default']
+result['result.policy.default'].success?
+</code></pre></div></div>
+
+<p><strong>Contract::Build</strong> is defined in trailblazer-macro-contract gem
+https://github.com/trailblazer/trailblazer-macro-contract/blob/master/lib/trailblazer/operation/contract.rb#L15</p>
+
+<h2 id="macro-api">Macro API</h2>
+<p>http://trailblazer.to/gems/operation/2.0/api.html</p>
+
+<p>Macro is a capitalized name function which returns two element array: actual
+step, and default options</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Macro
+  def self.MyPolicy(allowed_role: "admin")
+    step = -&gt;(input, options) { options["current_user"].type == allowed_role }
+
+    [ step, name: "my_policy.#{allowed_role}" ] # :before, :replace, etc. work, too.
+  end
+end
+</code></pre></div></div>
+
+<p>You can use like</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Create &lt; Trailblazer::Operation
+  step Macro::MyPolicy( allowed_role: "manager" )
+  # ..
+end
+</code></pre></div></div>
+
+<h2 id="reform-contract">Reform Contract</h2>
+
+<p>Example contract form validation using Reform gem
+http://trailblazer.to/gems/reform/index.html
+http://trailblazer.to/gems/operation/2.0/contract.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'reform' # it depends on disposable gem which provide a Twin decorator, and
+             # depends on representable gem which provide representer
+             # deserializer
+             # validation is in dry-validation or Activemodel::Validations
+
+gem 'dry-validation'
+# for rails Activemodel::Validations
+gem 'reform-rails'
+</code></pre></div></div>
+<p>Actual validation can be implemented using Reform (with ActiveModel::Validation
+or dry-validation) or using Dry::Schema (without Reform).
+It allows mapping to nested models, via composition, to hash fields.
+It is initialized with model for which you want to validate data against, and
+once read, original model’s values will never be accessed. To save to model you
+can run <code class="language-plaintext highlighter-rouge">form.save</code> which will call <code class="language-plaintext highlighter-rouge">sync</code> and <code class="language-plaintext highlighter-rouge">model.save</code>.
+Main purpose of form object is to not let form builders (when rendering),
+validators (when validating) and writers (when acceptings params) to access the
+model.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>form = Blog::Contract::Create.new Blog.last
+form.title # this will return Blog.last.title
+form.title = 'new' # this will not change blog title
+form.model.title # this old value
+
+result = form.validate title: 'new title'
+</code></pre></div></div>
+
+<p>Here is example of reform</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/song/contract/create.rb
+# no need to include if using rails
+# require 'reform'
+# require 'reform/form/dry'
+# include Dry
+#
+module Song::Contract
+  class Create &lt; Reform::Form
+    property :title
+  end
+end
+</code></pre></div></div>
+
+<p>For hash it use this <code class="language-plaintext highlighter-rouge">property :album, field: :hash</code>
+http://trailblazer.to/gems/disposable/api.html#propertyhash</p>
+
+<p>Properties can be <code class="language-plaintext highlighter-rouge">virtual: true</code> so that reform will not read, nor write to
+model (it is used only in operation run).
+<code class="language-plaintext highlighter-rouge">writeable: false</code> means that it will not write to model. To prevent writing
+only on deserializing phase from params, but allow to write in operation step
+and to sync with model</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>property :image_meta_data, deserializer: { writeable: false }
+</code></pre></div></div>
+
+<p>Populator is called when validate is triggered, but before deserialisation and
+actual validation happens and ONLY when that attribute is present in validation
+params. <code class="language-plaintext highlighter-rouge">populate_if_empty</code> is using <code class="language-plaintext highlighter-rouge">populator</code>.
+For collections it will be called for each fragment, it receive options hash,
+and <code class="language-plaintext highlighter-rouge">:frament</code> and <code class="language-plaintext highlighter-rouge">:index</code> can be extracted. If we have populator for single
+value, <code class="language-plaintext highlighter-rouge">fragment</code> will be string, if we populate collection or object (json
+column, or associated object) fragment will be hash or array.
+Use <code class="language-plaintext highlighter-rouge">return skip!</code> to stop deserializing current fragment.
+When populate_if_empty is called return value is imporant since it is used to
+initialize property (which could be nested form).
+Note that populator is not called (triggered) if we call <code class="language-plaintext highlighter-rouge">.validate my_prop:
+nil</code> ie validate again value <code class="language-plaintext highlighter-rouge">nil</code> or key does not exists, but it will be called
+if key exists and value is something not nil (false, string , number).
+Inside populator method we need to set the form manually using <code class="language-plaintext highlighter-rouge">self</code> and
+respective setter <code class="language-plaintext highlighter-rouge">self.artist = </code> (return value is not used automatically as in
+<code class="language-plaintext highlighter-rouge">populate_if_empty</code>).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>property :artist, populator: -&gt;(fragment:) { self.artist = Artist.find_by(id:
+fragment) }
+</code></pre></div></div>
+<p>https://github.com/trailblazer/reform/issues/335
+To manually populate property which does not exists in params, you can use
+parse_pipeline, or <code class="language-plaintext highlighter-rouge">step :setup_params</code> in operation</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>property :name,
+        deserializer: { parse_pipeline: -&gt;(*) { -&gt;(input, represented:, **) {
+        represented.name= ... }} }
+</code></pre></div></div>
+
+<p>For has_one and has_many associations (which use collections) prepopulators are
+used for rendering (for <code class="language-plaintext highlighter-rouge">new</code> action) and must be invoked manually
+<code class="language-plaintext highlighter-rouge">@form.prepopulate!</code> and since it is invoked manually it will blindly run the
+block and create nested form around whatever you instantiated in the block, It
+is used for presentation ie show empty fields (not for validation of the form).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>property :user, prepopulator: -&gt;(*) { self.user = User.new },
+</code></pre></div></div>
+
+<p>For validation population use <code class="language-plaintext highlighter-rouge">populate_if_empty</code> which is run automatically
+before deserialisation and actual validation happens. It is called for every
+hash fragment that does not have a nested form yet return value of
+<code class="language-plaintext highlighter-rouge">populate_if_empty</code> will be automatically wrapped in a nested form and added to
+the main form. Note that params optionally have <code class="language-plaintext highlighter-rouge">_attributes</code> sufix with STRING
+keys for both top properties and nested collection properties for example both
+are valid params: <code class="language-plaintext highlighter-rouge">{ song: { 'users_attributes' =&gt; { '0' =&gt; { 'email' =&gt;
+'my@email.com'}}}}</code>, or <code class="language-plaintext highlighter-rouge">{ song: { users: [{ 'email' =&gt; '' } ]} }</code>.
+inside method you can access <code class="language-plaintext highlighter-rouge">options[:fragment]['email']</code> ie hash for that
+part and with string as keys (not <code class="language-plaintext highlighter-rouge">:email</code> symbols)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>collection :users,
+  skip_if: :all_blank, # dynamically decide whether or not an incoming hash
+                       # should be deserialized to populate the form
+  populate_if_empty: -&gt;(*) { User.new } # this populator only runs when there
+                            # is incoming hash, but no corresponding nested form
+  populator: :populate_user! do
+
+  property :email
+  validates email, presence: true
+end
+
+def populate_user!(fragment:, **)
+  self.user = (User.find_by(email: fragment["email"]) or User.new)
+end
+</code></pre></div></div>
+
+<p>Note that we can use <code class="language-plaintext highlighter-rouge">ctx[:model].build_user</code> in custom <code class="language-plaintext highlighter-rouge">:populate_association</code>
+step in operation (static way of population) so we don’t need <code class="language-plaintext highlighter-rouge">prepopulator</code> nor
+<code class="language-plaintext highlighter-rouge">populate_if_empty</code>.</p>
+
+<p>To validate properties, you can use groups of <code class="language-plaintext highlighter-rouge">validation</code>
+http://trailblazer.to/gems/reform/validation.html so we run them <code class="language-plaintext highlighter-rouge">after</code> or <code class="language-plaintext highlighter-rouge">if</code>
+some other group is finished.</p>
+
+<p>Inside <code class="language-plaintext highlighter-rouge">validation</code> group you can use dry validation schema
+<code class="language-plaintext highlighter-rouge">required(:title).filled</code> see old
+https://dry-rb.org/gems/dry-validation/0.13/basics/working-with-schemas/ or new
+https://dry-rb.org/gems/dry-schema/1.5/
+To define <strong>custom predicates</strong> you need to use <code class="language-plaintext highlighter-rouge">configure</code>. If you need access
+to whole <code class="language-plaintext highlighter-rouge">form</code> you can add <code class="language-plaintext highlighter-rouge">with: { form: true }</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  validation do
+    configure with: { form: true } do
+      # inside this method we have access to `form`
+      def unique?(value)
+        Song.where(name: value).not(id: form.model.id).exists?
+      end
+    end
+    required(:title).filled
+    required(:body).maybe(min_size?: 9)
+  end
+</code></pre></div></div>
+<p>and can be used in operation with this API (<code class="language-plaintext highlighter-rouge">initialize</code>, <code class="language-plaintext highlighter-rouge">validate</code>, <code class="language-plaintext highlighter-rouge">save</code>,
+<code class="language-plaintext highlighter-rouge">errors</code>, <code class="language-plaintext highlighter-rouge">sync</code>, <code class="language-plaintext highlighter-rouge">prepopulate</code>)
+but we can use macros: Build, Validate, Persist
+for example in <code class="language-plaintext highlighter-rouge">rails c</code> you can run and see default contract</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>res = Venue::Operation::Create.(params: {})
+res['contract.default'].errors
+res['contract.default'].users
+res['contract.default'].model.users
+</code></pre></div></div>
+<p>Using Macros will simplify the code:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>step Contract::Build( constant: Venue::Contract::Create )
+# this will populate contract.default (and result.contract.default) with
+# Reform.new ctx[:model]] like this line
+# ctx['contract.default'] = Venue::Contract::Create.new(ctx[:model])
+# https://github.com/trailblazer/trailblazer-macro-contract/blob/master/lib/trailblazer/operation/contract.rb#L15
+
+step Contract::Validate( key: :venue )
+# https://github.com/trailblazer/trailblazer-macro-contract/blob/master/lib/trailblazer/operation/validate.rb
+# this will fetch contract.default and valide against key
+# reform_contract = ctx["contract.default"]
+# result = reform_contract.validate(ctx["params"][:venue])
+# error will be available in result['result.contract.default'].errors.messages
+# in reform 2.2.4 in result['contract.default']
+
+step Contract::Persist()
+# this will save contract data. Note that it will not change ctx['model']
+# reform_contract = ctx["contract.default"]
+# reform_contract.save
+</code></pre></div></div>
+
+<p>Form is using model persist? method <code class="language-plaintext highlighter-rouge">form.persisted?</code> is actual
+<code class="language-plaintext highlighter-rouge">form[:model].persisted?</code>.
+Sometimes in firefox, when you navigate back, it remembers <code class="language-plaintext highlighter-rouge">_method</code> input with
+different value than <code class="language-plaintext highlighter-rouge">patch</code> and error <code class="language-plaintext highlighter-rouge">Routing Error No route matches [POST]</code>
+is raised. Solution is to hard refresh
+https://github.com/rails/rails/issues/37864</p>
+
+<p>Twins method <code class="language-plaintext highlighter-rouge">form.created?</code> will return true if decorated model was just
+created ie persisted status changed from false to true. To use that we <code class="language-plaintext highlighter-rouge">feature</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Thing::Contract
+  class Create &lt; Reform::Form
+    feature Disposable::Twin::Persisted
+</code></pre></div></div>
+<p>We can use <code class="language-plaintext highlighter-rouge">added</code> for collections to check which was added using <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> and not
+by pulling from db on initialize state. <em>Imperative Callbacks</em> is to implicitly
+write callback invocation where you need it, twin object graph collects low
+level events like adding/deleting/creating/updating/destroying.</p>
+
+<p>Reform is creating object graph from arbitrary input (it can wrap existing or
+new models), validate object graph and process it and than sync to models.</p>
+
+<h2 id="representer">Representer</h2>
+
+<p>http://trailblazer.to/gems/operation/2.0/representer.html
+http://trailblazer.to/gems/representable/3.0/api.html</p>
+
+<p>incoming <strong>document</strong> is params, and output is represented object (any object
+that expose property setters)
+Example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Band = Struct.new(:name)
+class SongRepresenter &lt; Representable::Decorator
+  include Representable::Hash
+
+  property :title
+  property :band, class: Band do
+    property :name
+  end
+end
+</code></pre></div></div>
+<p>usage</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Song = Struct.new(:title, :band)
+song = Song.new
+SongRepresenter.new(song).from_hash(title: 'Duke')
+# it will do: song.title = params[:title]
+
+input = { "title" =&gt; "Let Them Eat War", "band" =&gt; { "name" =&gt; "Bad Religion" } }
+SongRepresenter.new(song).from_hash(input)
+song.band  #=&gt; #&lt;struct Band name="Bad Religion"&gt;
+song.band.name #=&gt; "Bad Religion"
+</code></pre></div></div>
+<p>or usage in operation in Validate() using <code class="language-plaintext highlighter-rouge">:representer</code> key</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  step Contract::Validate( representer: MyRepresenter )
+</code></pre></div></div>
+<p>Example for rendering (which should be outside of operation)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>result = Create.(params, document: '')
+if result.success?
+  result['representer.render.class'].new(result[:model]).to_json
+else
+end
+</code></pre></div></div>
+<h2 id="custom-steps">Custom steps</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/venue/lib/notification.rb
+class Venue::Notification
+  def self.call(*)
+    true
+  end
+end
+</code></pre></div></div>
+
+<p>Invoke with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>step :notify!
+
+def notify!
+  ctx['result.notify'] = Venue::Notification.(current_user, model)
+end
+</code></pre></div></div>
+
+<h2 id="rails">Rails</h2>
+
+<p>/home/orlovic/rails/temp/trb_test
+Gemfile</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># https://github.com/trailblazer/reform/issues/500
+# reform is not ready for dry-validation ver 1 so fix to 0
+gem 'dry-validation', '~&gt; 0.10.6'
+gem 'dry-types', '~&gt; 0.10.2'
+
+gem 'trailblazer', '&gt;= 2.0.3'
+gem "trailblazer-cells"
+gem 'trailblazer-generator', require: false
+gem 'trailblazer-rails' # this will include trailblazer-loader
+
+gem 'cells-rails'
+gem "cells-slim"
+# gem 'cells-hamlit'
+
+gem 'reform-rails'
+</code></pre></div></div>
+
+<p>http://trailblazer.to/gems/trailblazer/2.0/rails.html</p>
+
+<p>It will load files from <code class="language-plaintext highlighter-rouge">app/concepts</code> (trailblazer-loader gem). It will load
+files for example <code class="language-plaintext highlighter-rouge">app/concepts/product/operation/create.rb</code> and you can use
+<code class="language-plaintext highlighter-rouge">Product::Create</code> class name (because trailblazer-loader do not use Rails
+autoloader and no need to use <code class="language-plaintext highlighter-rouge">Production::Operation::Create</code>).
+It provides <code class="language-plaintext highlighter-rouge">run Blog::Index</code> method that will invoke the operation, pass params
+https://github.com/trailblazer/trailblazer-rails/blob/68694ccafc58d26dcf1d715c67ac1581cb07a7fa/lib/trailblazer/rails/controller.rb#L41
+and if you want, also dependencies as <code class="language-plaintext highlighter-rouge">current_user</code> using <code class="language-plaintext highlighter-rouge">_run_options</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ApplicationController &lt; ActionController::Base
+  def _run_options(options)
+    options.merge current_user: current_user
+  end
+end
+</code></pre></div></div>
+<p>Instead of <code class="language-plaintext highlighter-rouge">run Operation {block}</code> you can use oposite method
+<code class="language-plaintext highlighter-rouge">Operation.reject() {block}</code> so block will be executed if operation is failed.</p>
+
+<p>It sets <code class="language-plaintext highlighter-rouge">@model</code> (also <code class="language-plaintext highlighter-rouge">@blog</code> which is identical to <code class="language-plaintext highlighter-rouge">@model</code>) and <code class="language-plaintext highlighter-rouge">@form</code> if
+exists (if <code class="language-plaintext highlighter-rouge">Contract:Build</code> was called and initialize in
+<code class="language-plaintext highlighter-rouge">result['contract.default']</code>) and <code class="language-plaintext highlighter-rouge">result</code> object (by convention operation
+should populate <code class="language-plaintext highlighter-rouge">result['model']</code> object or array for index operation).</p>
+
+<p>If operation can go wrong (success and error track) than you can use the block
+syntax <code class="language-plaintext highlighter-rouge">run Venue::Update do |result|</code> which will be called on success and you
+should <code class="language-plaintext highlighter-rouge">return redirect_to path</code> so the code after <code class="language-plaintext highlighter-rouge">run</code> will not be executed
+(fail path).</p>
+
+<p>Also it extends <code class="language-plaintext highlighter-rouge">render</code> to allow rendering cells</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>render cell(Blog::Cell::Index, @form), layout: false
+</code></pre></div></div>
+
+<p>All file and class names should be singular.
+Here is example controller</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/venues_controller.rb
+class VenuesController &lt; ApplicationController
+  def new
+    run Venue::Create::Present
+    render cell(Venue::Cell::New, @form), layout: false
+  end
+
+  def create
+    run Venue::Create do |result|
+      return redirect_to venues_path
+    end
+
+    render cell(Venue::Cell::New, @form), layout: false
+  end
+
+  def show
+    run Venue::Show
+    render cell(Venue::Cell::Show, result["model"]), layout: false
+  end
+
+  def index
+    run Venue::Index
+    render cell(Venue::Cell::Index, result["model"]), layout: false
+  end
+
+  def edit
+    run Venue::Update::Present
+    render cell(Venue::Cell::Edit, @form), layout: false
+  end
+
+  def update
+    run Venue::Update do |result|
+      flash[:notice] = "#{result["model"].title} has been saved"
+      return redirect_to venue_path(result["model"].id)
+    end
+
+    render cell(Venue::Cell::Edit, @form), layout: false
+  end
+
+  def destroy
+    run Venue::Delete
+
+    flash[:alert] = "Venue deleted"
+    redirect_to venues_path
+  end
+end
+</code></pre></div></div>
+
+<p>To show data from operation in the view, you can use result object</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># step :a?
+def a?(ctx, **)
+  if true
+    true
+  else
+    ctx[:error_message] = 'Hi'
+    false
+  end
+end
+
+
+result = run MyOp
+flash[:alert] = result[:error_message]
+</code></pre></div></div>
+
+<h1 id="test">Test</h1>
+
+<p>Use <code class="language-plaintext highlighter-rouge">minitest-rails-capybara</code> gem for testing 
+<code class="language-plaintext highlighter-rouge">rails generate minitest:feature CanAccessHome --no-spec</code> gives</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require "test_helper"
+
+class CanAccessHomeTest &lt; Capybara::Rails::TestCase
+  def test_homepage_has_content
+    visit root_path
+    assert page.has_content?("Home#index")
+  end
+end
+</code></pre></div></div>
+<p>but I do not see why we will use it when we have system test</p>
+
+<h2 id="cells">Cells</h2>
+
+<p>http://trailblazer.to/gems/cells/
+https://github.com/trailblazer/cells</p>
+
+<p>This View-model uses helpers that are not globals, but instance methods. It is
+faster than ActionView because there is no code.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in controller
+render cell(Venue::Cell::New, @form), layout: false
+
+# in console
+html = Venue::Cell::New.(Venue.new, current_user: User.last).()
+
+# in view
+&lt;%= concept('venue/cell', venue) %&gt;
+# this will call: Venue::Cell.new(venue).show
+
+# to render collection which will be joined into one html
+concept('venue/cell', collection: venues)
+</code></pre></div></div>
+
+<p>Template name is generated from method name, you can call <code class="language-plaintext highlighter-rouge">render :new</code> to
+render <code class="language-plaintext highlighter-rouge">app/concept/venue/view/new.slim</code>.
+Use cells-slim https://github.com/trailblazer/cells-slim</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/venue/cell/new.rb
+module Venue::Cell
+  class New &lt; Trailblazer::Cell
+    # to use t('hi')
+    include ActionView::Helpers::TranslationHelper
+    # to use bootstrap_form_for
+    include BootstrapForm::ActionViewExtensions::FormHelper
+  end
+end
+</code></pre></div></div>
+<p>Extend cell with other methods.
+For different request format (html, js, json) you should have different method
+than <code class="language-plaintext highlighter-rouge">show</code>, for example <code class="language-plaintext highlighter-rouge">concept('venue/cell', venue).(:append)</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Comment::Cell &lt; Cell::Concept
+  class Grid &lt; Cell::Concept
+    include ActionView::Helpers::JavaScriptHelper
+
+    def show
+      # concept('comment/cell', collection: comments).to_s + paginate(comments).html_safe
+      render :grid
+    end
+
+    def append
+      %{
+        var el = document.getElementById('next')
+        el.outerHTML = "#{j show}"
+      }
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Inside methods you can access <code class="language-plaintext highlighter-rouge">model</code> and <code class="language-plaintext highlighter-rouge">options</code> object (other parameters
+that you passed to cell and also <code class="language-plaintext highlighter-rouge">option[:context][:controller]</code> where <code class="language-plaintext highlighter-rouge">concept</code>
+was used
+https://github.com/trailblazer/cells-rails/blob/master/lib/cell/rails.rb#L12 ).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/venue/cell/edit.rb
+module Venue::Cell
+  class Edit &lt; New
+    def show
+      render :new
+    end
+
+    def back
+      link_to "Back", venue_path(model.id)
+    end
+
+    def delete
+      link_to "Delete venue", venue_path(model.id), method: :delete
+    end
+  end
+end
+</code></pre></div></div>
+<p>You can delegate <code class="language-plaintext highlighter-rouge">title</code> to <code class="language-plaintext highlighter-rouge">context[:model].title</code> using <code class="language-plaintext highlighter-rouge">property</code> class
+method.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/venue/cell/show.rb
+module Venue::Cell
+  class Show &lt; Trailblazer::Cell
+    property :title
+    property :body
+
+    def current_user
+      return ctx[:context][:current_user]
+    end
+
+    def time
+      model.created_at
+    end
+
+    def edit
+      link_to "Edit", edit_venue_path(model.id)
+    end
+
+    def delete
+      link_to "Delete", venue_path(model.id), method: :delete, data: {confirm: 'Are you sure?'}
+    end
+
+    def back
+      link_to "Back to index", venues_path
+    end
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/venue/cell/item.rb
+module Venue::Cell
+  class Item &lt; Trailblazer::Cell
+    def title
+      link_to model.title, model unless model == nil
+    end
+
+    property :body
+
+    def created_at
+      model.created_at.strftime("%d %B %Y")
+    end
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/venue/cell/index.rb
+module Venue::Cell
+  class Index &lt; Trailblazer::Cell
+    def total
+      return "No venues" if model.size == 0
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>When I try to render cell in console it crashes since no context[:controller] is
+given and url_options are needed
+https://github.com/trailblazer/cells-rails/issues/50
+https://github.com/trailblazer/cells/issues/112</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>html = Venue::Cell::New.(Venue.new, current_user: User.last).()
+=&gt; "&lt;div id=\"remote-form\"&gt;&lt;/div&gt;"
+
+# but if I have a root_path than error is raised
+NoMethodError (undefined method `[]' for nil:NilClass)
+
+# if I call with blank context than url_options error is given
+html = Venue::Cell::New.(Venue.new, current_user: User.last, context: {}).()
+NoMethodError (undefined method `url_options' for nil:NilClass)
+
+# so solution is to call using fake controller
+html = Venue::Cell::New.(Venue.new, current_user: User.last, context: {controller: OpenStruct.new(url_options:{})}).()
+</code></pre></div></div>
+<p>To use in test you need to inherit Cell::TestCase and use cell</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/cell/venue/new_test.rb
+require 'test_helper'
+class VenueCellNewTest &lt; Cell::TestCase
+  test 'renders' do
+    venue = venues(:novi_sad)
+    html = cell(Venue::Cell::New, venue).()
+    assert_match /#{venue.name}/, html.to_s
+  end
+end
+</code></pre></div></div>
+<p>but I also get error for any line like <code class="language-plaintext highlighter-rouge">root_path</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error:
+VenueCellNewTest#test_renders:
+NoMethodError: undefined method `url_options' for nil:NilClass
+    /home/orlovic/.rvm/rubies/ruby-2.6.3/lib/ruby/2.6.0/forwardable.rb:228:in `url_options'
+    actionpack (6.0.2.1) lib/action_dispatch/routing/route_set.rb:265:in `call'
+</code></pre></div></div>
+<p>so when I step into cell
+https://github.com/trailblazer/cells/blob/master/lib/cell/testing.rb#L8 which
+will call cell_for args so found than it uses context of controller_class
+https://github.com/trailblazer/cells/blob/master/lib/cell/testing.rb#L60
+can also pass fake controller</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+<p>In rails
+https://github.com/trailblazer/cells-rails/blob/master/lib/cell/rails.rb#L12</p>
+
+<p>Caching in cells http://trailblazer.to/gems/cells/api.html#caching</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/thing/cell.rb
+class Thing::Cell &lt; Cell::Concept
+  include Cell::Caching::Notifications
+
+  class Grid &lt; Cell::Concept
+    cache :show
+  end
+end
+</code></pre></div></div>
+
+<h1 id="dry">Dry</h1>
+
+<p>Disposable Twins API http://trailblazer.to/gems/disposable/api.html
+use dry-types</p>
+
+<p>Twin is an intermediate object (decorator) between model and application params.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class AlbumTwin &lt; Disposable::Twin
+  property :title
+end
+</code></pre></div></div>
+
+<h2 id="dry-types">Dry types</h2>
+
+<p>https://dry-rb.org/gems/dry-types/1.2/ is used by dry schema and dry struct.
+Used for value coercions, applying constrains, define complex structs or value
+objects.
+After installing with <code class="language-plaintext highlighter-rouge">gem install 'dry-types' 'dry-struct'</code> you can test in irb</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'dry-types'
+require 'dry-struct'
+
+module Types
+  include Dry.Types()
+  # this will provide constants Decimal, Bool, String... Strict::String...
+  # Coercible::String...
+end
+
+User = Dry.Struct(
+  name: Types::String, # Types is our module
+  age: Types::Integer,
+)
+# or
+class User &lt; Dry::Struct
+  attribute :name, Types::Strict::String # Types is our module
+end
+
+User.new name: 'Bob', age: 35
+</code></pre></div></div>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">[]</code> to pass directly without creating an object
+<code class="language-plaintext highlighter-rouge">Types::Coercible::Integer['1a'] # Dry::Types::CoercionError (invalid value for
+Integer(): "1a")</code></p>
+
+<p>To see all types</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Types::Nominal.constants
+ =&gt; [:String, :Decimal, :Float, :Hash, :Bool, :DateTime, :Date, :Range, :Class, :Any, :Symbol, :Time, :Integer, :Nil, :True, :Array, :False]
+
+Types.constants - Types::Nominal.constants
+ =&gt; [:Optional, :Params, :Coercible, :JSON, :Nominal, :Strict]
+Types.constants
+</code></pre></div></div>
+<p>Categories of types are</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Nominal</code> base type definitions with a primitive class</li>
+  <li><code class="language-plaintext highlighter-rouge">Strict</code> raise error if passed attribute of wrong type</li>
+  <li><code class="language-plaintext highlighter-rouge">Coercible</code> attempt to convert to the correct class using Ruby coercion (<code class="language-plaintext highlighter-rouge">'1'</code>
+will be <code class="language-plaintext highlighter-rouge">1</code> but <code class="language-plaintext highlighter-rouge">'1a'</code> will raise an ArgumentError: invalid value for Integer)</li>
+  <li><code class="language-plaintext highlighter-rouge">.optional</code> attribute value can be <code class="language-plaintext highlighter-rouge">nil</code> (alternative to <code class="language-plaintext highlighter-rouge">Maybe</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">.constrained(gteq: 18)</code> add custom contraints
+https://dry-rb.org/gems/dry-types/1.2/constraints/</li>
+  <li><code class="language-plaintext highlighter-rouge">.meta(info: 'some info')</code> add metadata</li>
+  <li><code class="language-plaintext highlighter-rouge">.default('draft')</code> to set default value if not provided
+https://dry-rb.org/gems/dry-types/1.2/default-values/ Block syntaxt is
+also possible <code class="language-plaintext highlighter-rouge">CallableDateTime = Types::DateTime.default { DateTime.now }</code> so
+<code class="language-plaintext highlighter-rouge">CallableDateTime[] #=&gt; #&lt;DateTime: 2020-04-01&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">|</code> sum of valid types https://dry-rb.org/gems/dry-types/1.2/sum/ <code class="language-plaintext highlighter-rouge">.optional</code>
+is implemented with <code class="language-plaintext highlighter-rouge">nil_or_string = Types::Nil | Types::String</code></li>
+</ul>
+
+<p>https://dry-rb.org/gems/dry-types/1.2/hash-schemas/
+Hash schemas to define a type for a hash with a known set of keys. Add <code class="language-plaintext highlighter-rouge">?</code> to
+mark optional. Other keys are ignored unless <code class="language-plaintext highlighter-rouge">.strict</code> option is used</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user_hash = Types::Hash.schema(
+  name: Types::String,
+  age?: Types::Coercible::Integer
+).strict
+</code></pre></div></div>
+<p>You can transform keys from string to symbols <code class="language-plaintext highlighter-rouge">.with_key_transform(&amp;:to_sym)</code>.
+Also use inheritance by calling <code class="language-plaintext highlighter-rouge">.shema</code> again</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>with_city = user_hash.schema(city: Types::String)
+with_city[name: 'Me', city: 'NS')
+</code></pre></div></div>
+
+<p>You can also transform types with a block.</p>
+
+<p>Use enum similar to Rails enum https://dry-rb.org/gems/dry-types/1.2/enum/
+but this will raise error if not in list <code class="language-plaintext highlighter-rouge">"a" violates constraints
+(included_in?(["text_open", "text_time"], "a") failed)</code> so it will not coerce.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    property :kind, type: Types::String.enum(Element.kinds)
+</code></pre></div></div>
+
+<p>Enable maybe extension https://dry-rb.org/gems/dry-types/1.2/extensions/maybe/
+<code class="language-plaintext highlighter-rouge">gem install dry-monads</code> http://dry-rb.org/gems/dry-monads/ and irb</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'dry-types'
+Dry::Types.load_extensions(:maybe)
+module Types
+  include Dry.Types()
+end
+
+x = Types::Maybe::Strict::Integer[nil]
+x
+=&gt; None
+x = Types::Maybe::Strict::Integer[1]
+x
+=&gt; Some(1)
+</code></pre></div></div>
+
+<h2 id="dry-monads">Dry monads</h2>
+
+<h2 id="dry-schema">Dry schema</h2>
+
+<p>https://dry-rb.org/gems/dry-schema/1.5/ is used by dry validation and provides
+structural validation (validate key presence), pre-coercion filtering, so focus
+is in structure validation and data types validation.
+After <code class="language-plaintext highlighter-rouge">gem install dry-schema</code> try in irb</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'dry/schema'
+
+UserSchema = Dry::Schema.Params do
+  required(:name).filled(:string)
+  required(:age).maybe(:integer, gt?: 18)
+  required(:address).hash do
+    required(:street).filled(:string)
+    required(:city).filled(:string)
+  end
+end
+
+result = UserSchema.call name: 'Jane', age: nil, address: {city: 'NYC'}
+result.succees? # =&gt; false
+result.errors.to_hash =&gt; {:address=&gt;{:street=&gt;["is missing"]}}
+</code></pre></div></div>
+
+<p>Three things are happened:</p>
+<ul>
+  <li>input keys are coerced to symbols using schema’s key map</li>
+  <li>input values are coerced based on type specs (for <code class="language-plaintext highlighter-rouge">.maybe(:array)</code> empty
+string <code class="language-plaintext highlighter-rouge">''</code> will be coerced to empty array <code class="language-plaintext highlighter-rouge">[]</code>).</li>
+  <li>input keys and values are validated using defined schema rules</li>
+</ul>
+
+<p>Basic macros https://dry-rb.org/gems/dry-schema/1.5/basics/macros/</p>
+<ul>
+  <li><strong>value</strong> is used to provide a list of all predicates that will be AND-ed
+<code class="language-plaintext highlighter-rouge">required(:age).velue(:integer, gt?: 18)</code> is <code class="language-plaintext highlighter-rouge">required(:age) { int? &amp; gt?(18)
+}</code></li>
+  <li><strong>filled</strong> means that value is non-nil and in case of String, Hash and Array,
+is it also not <code class="language-plaintext highlighter-rouge">.empty?</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:tags).filled(:array) # is array? * filled?
+</code></pre></div>    </div>
+  </li>
+  <li><strong>maybe</strong> when value can be nil (<code class="language-plaintext highlighter-rouge">optional</code> means that key can be ommited, but
+<code class="language-plaintext highlighter-rouge">maybe</code> requires key, but value can be nil)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:age).maybe(:integer) # !nil?.then(int?)
+</code></pre></div>    </div>
+  </li>
+  <li><strong>hash</strong> value is expected to be a hash
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:tags).hash do # hash? &amp; filled? &amp; schema { required(:name).filled }
+  required(:name).filled(:string)
+end
+</code></pre></div>    </div>
+    <p>You can use that to define Nested data. It is the same as call <code class="language-plaintext highlighter-rouge">value(:hash)</code>.
+If nested hash is not required simply use <code class="language-plaintext highlighter-rouge">required(:tags).maybe(:hash?)</code>.</p>
+  </li>
+  <li><strong>schema</strong> similar to <code class="language-plaintext highlighter-rouge">.hash</code> but without <code class="language-plaintext highlighter-rouge">hash?</code> predicate</li>
+  <li><strong>array</strong> is used to apply predicate to every element in value that is
+expected to be an array
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># elements are string
+required(:tags).array(:str?)
+
+# elements are hashes
+requred(:tags).array(:hash) do
+  required(:name).filled(:string)
+end
+</code></pre></div>    </div>
+    <p>If you need to apply predicates <code class="language-plaintext highlighter-rouge">min_size?: 1</code> use full form</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:tags).value(:array, min_size?: 1) do
+  hash do
+    required(:name).filled(:string)
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li><strong>each</strong> is similary to <code class="language-plaintext highlighter-rouge">.array</code> but does not prepent <code class="language-plaintext highlighter-rouge">array?</code> predicate</li>
+</ul>
+
+<p>When first argument is a symbol without question mark, it will be set as the
+type. Inside <code class="language-plaintext highlighter-rouge">Dry::Schema::Params</code> for <code class="language-plaintext highlighter-rouge">:integer</code> will be resolved this class
+<code class="language-plaintext highlighter-rouge">Dry::Schema::Params::Integer</code>.
+Array member type</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:number).value(array[:integer], size?: 3)
+</code></pre></div></div>
+
+<p>Built-in predicates (simpler than those used in dry-validation v0.13)
+https://dry-rb.org/gems/dry-schema/1.5/basics/built-in-predicates/</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nil?</code> check if key value is <code class="language-plaintext highlighter-rouge">nil</code> (similar <code class="language-plaintext highlighter-rouge">:false?</code> <code class="language-plaintext highlighter-rouge">:true?</code>)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(:nil?)
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">type?</code> check if class is equal given class (shorthand <code class="language-plaintext highlighter-rouge">str?</code>, <code class="language-plaintext highlighter-rouge">int?</code>,
+<code class="language-plaintext highlighter-rouge">float?</code>, <code class="language-plaintext highlighter-rouge">decimal?</code>, <code class="language-plaintext highlighter-rouge">bool?</code>, <code class="language-plaintext highlighter-rouge">time?</code>, <code class="language-plaintext highlighter-rouge">date_time?</code>, <code class="language-plaintext highlighter-rouge">array?</code>, <code class="language-plaintext highlighter-rouge">hash?</code>)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(type?: Integer)
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">empty?</code> check that either string, array or hash is empty
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(:empty?)
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">filled?</code> check that either value is not-nil and in case of string, array or
+hash, is non-empty
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(:filled?)
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">eql?</code> check if value is equal (similar: <code class="language-plaintext highlighter-rouge">lt?</code>, <code class="language-plaintext highlighter-rouge">lteq?</code>, <code class="language-plaintext highlighter-rouge">gt?</code>, <code class="language-plaintext highlighter-rouge">gteq?</code>,
+<code class="language-plaintext highlighter-rouge">size?</code>, <code class="language-plaintext highlighter-rouge">max_size?</code>, <code class="language-plaintext highlighter-rouge">min_size?</code>, <code class="language-plaintext highlighter-rouge">bytesize?</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(eql?: 1)
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">format?</code> check that string matches a given regular expression
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(format: /*a/
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">included_in?</code> value is incuded in given array (similar <code class="language-plaintext highlighter-rouge">excluded_from?</code>)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>required(:sample).value(included_in?: [1,2])
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Note that you can use predicate logic so invalid state will not crash one of
+your rules https://dry-rb.org/gems/dry-schema/1.5/advanced/predicate-logic/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>schema = Dry::Schema.Params do
+  required(:age).value(gt?: 18)
+end
+
+# this will raise exception
+schema.(age: 'a') # ArgumentError (comparison of String with 18 failed)
+
+schema_with_integer = Dry::Schema.Params do
+  required(:age) { int? &amp; gt?(18) }
+end
+schema_with_integer.(age: 'a')
+ =&gt; #&lt;Dry::Schema::Result{:age=&gt;"a"} errors={:age=&gt;["must be an integer"]}&gt;
+</code></pre></div></div>
+
+<p>You can define your base schema class that contains shared rules
+https://dry-rb.org/gems/dry-schema/1.5/basics/working-with-schemas/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class AppSchema &lt; Dry::Schema::Params
+  define do
+    config.messages.load_paths &lt;&lt; '/my/app/config/locales/en.yml'
+    config.messages.backend = :i18n
+
+    # define common rules, if any
+  end
+end
+
+# now you can build other schemas on top of the base one:
+class MySchema &lt; AppSchema
+  # define your rules
+end
+
+my_schema = MySchema.new
+</code></pre></div></div>
+
+<p><strong>Optional keys</strong> means that key can be ommited, but if present we can apply
+rules https://dry-rb.org/gems/dry-schema/1.5/optional-keys-and-values/ it was
+extracted from older dry-validation
+https://dry-rb.org/gems/dry-validation/0.13/optional-keys-and-values/
+<code class="language-plaintext highlighter-rouge">optional(:age).filled</code> here <code class="language-plaintext highlighter-rouge">optional</code> means that KEY <code class="language-plaintext highlighter-rouge">age</code> is not required,
+but when it is present it should be filled (not a nil, empty sting, array or
+hash) and has to be <code class="language-plaintext highlighter-rouge">int?</code> and <code class="language-plaintext highlighter-rouge">gt?: 18</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>schema = Dry::Schema.Params do
+  required(:email).filled(:string)
+  optional(:age).filled(:integer, gt?: 18)
+end
+</code></pre></div></div>
+
+<p><strong>Optional values</strong> means that value can be <code class="language-plaintext highlighter-rouge">nil</code>, so in this example <code class="language-plaintext highlighter-rouge">age: nil</code>
+is valid, as <code class="language-plaintext highlighter-rouge">age: 19</code> is also valid. Can not be empty string, maybe only
+permits <code class="language-plaintext highlighter-rouge">nil</code>, but if you use <code class="language-plaintext highlighter-rouge">type: Types::Params::Integer</code> than coercion will
+make empty string to nil .</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  optional(:age).maybe(:integer, gt?: 18)
+</code></pre></div></div>
+
+<p>You can filter inputs before coercion. This is used in checking if date is in
+right format.
+https://dry-rb.org/gems/dry-schema/1.5/advanced/filtering/</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  required(:birthday).filter(format?: /\d{4}-\d{2}-\d{2}/).value(:date)
+</code></pre></div></div>
+
+<p>You can also use Abstract syntax tree AST of the schema <code class="language-plaintext highlighter-rouge">schema.to_ast</code> and its
+<code class="language-plaintext highlighter-rouge">schema.key_map</code> or <code class="language-plaintext highlighter-rouge">schema.info</code>.</p>
+
+<p>To create custom type <code class="language-plaintext highlighter-rouge">StrippedString</code> and used it as <code class="language-plaintext highlighter-rouge">:stripped_string</code>
+https://dry-rb.org/gems/dry-schema/1.5/advanced/custom-types/</p>
+
+<h2 id="dry-validations">Dry validations</h2>
+
+<p>https://dry-rb.org/gems/dry-validation/1.5/
+https://www.youtube.com/watch?v=nOUPIa7tWpA&amp;list=PLqvlCCuOUZMQAuM6KJk_sWQnZXG00Su1_&amp;index=5
+Main reason of implementing dry-validations instead activerecord and
+activemodel validations, is that it does not override methods like <code class="language-plaintext highlighter-rouge">:errors</code> or
+<code class="language-plaintext highlighter-rouge">:attributes</code> (so you can have this names as colomn names). Validation is
+performed on input data (not on the activerecord model).
+Another reason is that validations are changing (for example adding <code class="language-plaintext highlighter-rouge">validate
+:phone, presence: true)</code>) and if you forgot to migrate data you end up in bugs
+when old objects are instantiated (in invalid state).
+Another is separation of structural validation and type safety (dr-schema) and
+on another side, domain validation rules. So simple first step validation are
+inside <code class="language-plaintext highlighter-rouge">params</code>, <code class="language-plaintext highlighter-rouge">schema</code>, <code class="language-plaintext highlighter-rouge">json</code> (they have different coercing rules)  block
+but something</p>
+
+<p>Validations are expressed using contract object that are defined by schema with
+basic type check and any additional rules that should be applied (it will be
+applied after schema is verified).
+Main value is separation of schema from domain validation logic which can be
+simplified since we do not need to care about types (dry-schema will sanitize,
+coerce and type check).
+After installing <code class="language-plaintext highlighter-rouge">gem install dry-validation</code> in <code class="language-plaintext highlighter-rouge">irb</code> you can</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'dry-validation'
+
+class NewUserContract &lt; Dry::Validation::Contract
+  params do
+    required(:email).filled(:string)
+    required(:age).value(:integer)
+  end
+
+  rule(:age) do
+    key.failure('must be greater than 18') if value &lt;= 18
+  end
+end
+contract = NewUserContract.new
+contract.call(email: 'asd@asd.asd', age: '17')
+=&gt; #&lt;Dry::Validation::Result{:email=&gt;"asd@asd,asd", :age=&gt;17} errors={:age=&gt;["must be greater than 18"]}&gt;
+</code></pre></div></div>
+
+<p>For defining dry-schema you can use <code class="language-plaintext highlighter-rouge">schema</code> or <code class="language-plaintext highlighter-rouge">params</code> (better for HTTP since
+it will coerce string to int).
+You can reuse schema</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AddressSchema = Dry::Schema.Params do
+  required(:country).value(:string)
+end
+
+ContactSchema = Dry::Schema.Params do
+  required(:email).value(:string)
+end
+
+class NewUserContract &lt; Dry::Validation::Contract
+  params(AddressSchema, ContactSchema) do
+    required(:name).value(:string)
+  end
+end
+</code></pre></div></div>
+
+<p>Use virtual attribute with default value to validate associations</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  property :not_used, virtual: true, default: true
+
+  validation do
+    configure with: { form: true } do
+      def not_used?(_value)
+        # we can not proceed if is used
+        form.model.songs.empty?
+      end
+    end
+    required(:not_used).filled :not_used?
+  end
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">required(:f).value :none?</code> check that value is nil (note you can not use
+<code class="language-plaintext highlighter-rouge">maybe?</code> with <code class="language-plaintext highlighter-rouge">none?</code> predicate)
+https://dry-rb.org/gems/dry-validation/0.13/basics/built-in-predicates/#code-none-code</p>
+
+<h1 id="what-you-need-to-know-for-using-trailblazer">What you need to know for using Trailblazer</h1>
+
+<ul>
+  <li>you need to learn DSL which change from version to version. You lose if you do
+not follow up documentation.</li>
+  <li>errors for trailblazer because of eager loading or something, restart server
+helps
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uninitialized constant #&lt;Class:0x00007f6b986a5da0&gt;::Index Did you mean? Bindex` .
+NameError (uninitialized constant #&lt;Class:0x000055ab8fc752f0&gt;::Update
+</code></pre></div>    </div>
+    <p>This can be solved by writing <code class="language-plaintext highlighter-rouge">module [ConceptName}::Operation</code> and in next
+line <code class="language-plaintext highlighter-rouge">class Update &lt; Trailblazer::Operation</code> so it is properly loaded with
+rails autoloader, you need to disable trailblazer loader</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/trailblazer.rb
+
+YourApp::Application.config.trailblazer.enable_loader = false
+</code></pre></div>    </div>
+  </li>
+  <li>can not use form partials, for example if you want to render another partial
+https://github.com/trailblazer/cells/issues/460
+https://stackoverflow.com/questions/47069460/rendering-partial-forms-in-trailblazer-cells</li>
+</ul>
+
+<h1 id="graph-modeling">Graph modeling</h1>
+<p>http://trailblazer.to/api-docs/#what-is-trailblazer 2.1</p>
+
+<p>Instead of subclassing we use compositions. Inside <code class="language-plaintext highlighter-rouge">module</code> we call
+<code class="language-plaintext highlighter-rouge">module_function</code> so it is more readable and allows to use <code class="language-plaintext highlighter-rouge">method</code> to attach a
+module method to a step</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Memo::Update
+  extend Trailbazer::Activity::Railway()
+
+  module_function
+
+  def find_model(ctx, id:, **)
+    ctx[:model] = Memo.find_by id: id
+  end
+
+  step method(:find_model)
+end
+</code></pre></div></div>
+
+<p>Invoke like</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ctx = { id: 1, params: { body: 'Awesome' } }
+event, (ctx, *) = Memo::Update.( [ctx, {}] )
+pp ctx #=&gt;
+{ id: 1,
+  params: { body: 'Awesome' },
+  model: #&lt;struct Test::Memo body=nil&gt;,
+  errors: 'body not long enough',
+}
+</code></pre></div></div>
+
+<h1 id="activity">Activity</h1>
+
+<p>https://2019.trailblazer.to/2.1/docs/activity.html#activity-strategy</p>
+
+<p>For Path, it is automatically wired <code class="language-plaintext highlighter-rouge">:success / Activity::Right</code> semantic /
+signal. You need to manually wire other outputs</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Create &lt; Trailblazer::Activity::Path
+  step :validate, Output(Activity::Left, :failure) =&gt; End(:invalid)
+  step :create
+  # ...
+end
+</code></pre></div></div>
+<p>You can jump to <code class="language-plaintext highlighter-rouge">End(:db_error)</code> or back to track <code class="language-plaintext highlighter-rouge">Track(:success)</code>.
+When you use you get semantic of last</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ctx = {params: nil}
+signal, (ctx, flow_options) = Memo::Create.([ctx, {}])
+
+puts signal #=&gt; #&lt;Trailblazer::Activity::End semantic=:invalid&gt;
+</code></pre></div></div>
+
+<p>For Railway there are two tracks</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Create &lt; Trailblazer::Activity::Railway
+  step :validate
+  fail :log_error, Output(:success) =&gt; Track(:success)
+  step :create
+  # ...
+end
+</code></pre></div></div>
+<p>You can use <code class="language-plaintext highlighter-rouge">pass :create</code> so both success and failure will end in <code class="language-plaintext highlighter-rouge">End success</code></p>
+
+<p>You need sometime to access global constant, for example in operation</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/concepts/element/clone.rb
+class Element::Create &lt; Trailblazer::Operation
+  step a
+  step Model(::Element, :new)
+
+  def a(ctx)
+    Element # This is Trailblazer::Operation::Element, not Element model
+  end
+end
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

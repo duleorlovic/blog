@@ -1,0 +1,2719 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Rails Testing</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Rails Testing</h1>
+    <p class="meta">Nov 9, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#setup-test-env"><span class="tocnumber">1</span> <span class="toctext">Setup test env</span></a></li><li class="toc_level-1 toc_section-2"><a href="#rspec"><span class="tocnumber">2</span> <span class="toctext">Rspec</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#vanilla-rspec"><span class="tocnumber">2.1</span> <span class="toctext">Vanilla rspec</span></a></li><li class="toc_level-2 toc_section-4"><a href="#rspec-rails"><span class="tocnumber">2.2</span> <span class="toctext">Rspec rails</span></a></li></ul></li><li class="toc_level-1 toc_section-5"><a href="#guard"><span class="tocnumber">3</span> <span class="toctext">Guard</span></a><ul><li class="toc_level-2 toc_section-6"><a href="#shoulda-matchers"><span class="tocnumber">3.1</span> <span class="toctext">Shoulda matchers</span></a></li><li class="toc_level-2 toc_section-7"><a href="#rspec-controller-specs"><span class="tocnumber">3.2</span> <span class="toctext">RSpec Controller specs</span></a></li><li class="toc_level-2 toc_section-8"><a href="#rspec-request-specs"><span class="tocnumber">3.3</span> <span class="toctext">Rspec Request specs</span></a></li><li class="toc_level-2 toc_section-9"><a href="#rspec-router-specs"><span class="tocnumber">3.4</span> <span class="toctext">RSpec Router specs</span></a></li><li class="toc_level-2 toc_section-10"><a href="#rspec-helper-specs"><span class="tocnumber">3.5</span> <span class="toctext">RSpec Helper specs</span></a></li><li class="toc_level-2 toc_section-11"><a href="#rspec-view-specs"><span class="tocnumber">3.6</span> <span class="toctext">RSpec View specs</span></a></li><li class="toc_level-2 toc_section-12"><a href="#rspec-presenters-specs"><span class="tocnumber">3.7</span> <span class="toctext">RSpec Presenters specs</span></a></li><li class="toc_level-2 toc_section-13"><a href="#rspec-mailer-specs"><span class="tocnumber">3.8</span> <span class="toctext">RSpec Mailer specs</span></a></li><li class="toc_level-2 toc_section-14"><a href="#rspec-model-specs"><span class="tocnumber">3.9</span> <span class="toctext">RSpec Model specs</span></a></li><li class="toc_level-2 toc_section-15"><a href="#test-migration"><span class="tocnumber">3.10</span> <span class="toctext">Test migration</span></a></li></ul></li><li class="toc_level-1 toc_section-16"><a href="#refactoring"><span class="tocnumber">4</span> <span class="toctext">Refactoring</span></a><ul><li class="toc_level-2 toc_section-17"><a href="#oauth-specs"><span class="tocnumber">4.1</span> <span class="toctext">Oauth specs</span></a></li></ul></li><li class="toc_level-1 toc_section-18"><a href="#respec-features"><span class="tocnumber">5</span> <span class="toctext">Respec features</span></a></li><li class="toc_level-1 toc_section-19"><a href="#rspec-helpers"><span class="tocnumber">6</span> <span class="toctext">Rspec Helpers</span></a><ul><li class="toc_level-2 toc_section-20"><a href="#custom-matchers"><span class="tocnumber">6.1</span> <span class="toctext">Custom matchers</span></a></li><li class="toc_level-2 toc_section-21"><a href="#login-helper"><span class="tocnumber">6.2</span> <span class="toctext">Login helper</span></a></li><li class="toc_level-2 toc_section-22"><a href="#mailer-helper"><span class="tocnumber">6.3</span> <span class="toctext">Mailer helper</span></a></li><li class="toc_level-2 toc_section-23"><a href="#pause-helpers"><span class="tocnumber">6.4</span> <span class="toctext">Pause helpers</span></a></li><li class="toc_level-2 toc_section-24"><a href="#helpers-inside-spec-file"><span class="tocnumber">6.5</span> <span class="toctext">Helpers inside spec file</span></a></li></ul></li><li class="toc_level-1 toc_section-25"><a href="#fixtures"><span class="tocnumber">7</span> <span class="toctext">Fixtures</span></a></li><li class="toc_level-1 toc_section-26"><a href="#factory-bot"><span class="tocnumber">8</span> <span class="toctext">Factory Bot</span></a></li><li class="toc_level-1 toc_section-27"><a href="#testing-uploading-files"><span class="tocnumber">9</span> <span class="toctext">Testing uploading files</span></a></li><li class="toc_level-1 toc_section-28"><a href="#testing-time-and-date"><span class="tocnumber">10</span> <span class="toctext">Testing time and date</span></a></li><li class="toc_level-1 toc_section-29"><a href="#using-test-doubles-as-mocks-and-stubs"><span class="tocnumber">11</span> <span class="toctext">Using test doubles as mocks and stubs</span></a></li><li class="toc_level-1 toc_section-30"><a href="#testing-external-service"><span class="tocnumber">12</span> <span class="toctext">Testing External service</span></a><ul><li class="toc_level-2 toc_section-31"><a href="#webmock"><span class="tocnumber">12.1</span> <span class="toctext">Webmock</span></a></li><li class="toc_level-2 toc_section-32"><a href="#vcr"><span class="tocnumber">12.2</span> <span class="toctext">VCR</span></a></li></ul></li><li class="toc_level-1 toc_section-33"><a href="#testing-railscache"><span class="tocnumber">13</span> <span class="toctext">Testing Rails.cache</span></a></li><li class="toc_level-1 toc_section-34"><a href="#when-not-to-write-tests"><span class="tocnumber">14</span> <span class="toctext">When not to write tests</span></a></li><li class="toc_level-1 toc_section-35"><a href="#coverage"><span class="tocnumber">15</span> <span class="toctext">Coverage</span></a></li><li class="toc_level-1 toc_section-36"><a href="#tips"><span class="tocnumber">16</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-37"><a href="#todo"><span class="tocnumber">17</span> <span class="toctext">TODO:</span></a></li><li class="toc_level-1 toc_section-38"><a href="#parallel-tests"><span class="tocnumber">18</span> <span class="toctext">Parallel tests</span></a></li><li class="toc_level-1 toc_section-39"><a href="#opensource-examples-with-tests"><span class="tocnumber">19</span> <span class="toctext">Opensource examples with tests</span></a></li><li class="toc_level-1 toc_section-40"><a href="#live-coding-and-other-video-tutorials"><span class="tocnumber">20</span> <span class="toctext">Live Coding and other video tutorials</span></a></li></ul></td></tr></tbody></table></div><p>Usually we start with integration test, than we go in details for frontend
+controller (Angular), than backend controller, than model … all to make
+sure integration (feature) test pass.
+You should follow <a href="https://github.com/thoughtbot/guides/tree/master/style/testing">style guide for
+testing</a> and
+read some <a href="https://github.com/thoughtbot/guides/tree/master/best-practices">best
+practices</a>.</p>
+
+<p>Integration tests usually test only hapy path. All possible edge cases should be
+unit tested. External api should be stubbed and repeatable.</p>
+
+<p>Integration tests are generic name for any test than combine more than one unit
+tests and are often black-box tests, end-to-end, what user see.
+Acceptance testing is subset of integration testing and test that behavior is
+correct from customer perspective.
+There should not be ruby code except setup data or find specific item that we
+need to check if it exists on page. We should use only html page finders and
+matchers since we can’t see <code class="language-plaintext highlighter-rouge">request</code> object.
+Integration test should not cover special error cases, when data is nil or
+implementation details.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Given [role and state]
+When [an event occurs]
+Then [the benefit]
+
+As a instructor
+I want to be able to sign in/sign/out/reset my password
+
+- Standard password reset via email
+- Login via social buttons
+
+or AAA:
+Arange - set data - SETUP
+Act - run code - EXERCISE
+Assert - verify that code did what is expected - VERIFICATION
+Teardown - eventual TEARDOWN
+# note that multiple assets is OK only if they are related
+</code></pre></div></div>
+
+<h1 id="setup-test-env">Setup test env</h1>
+
+<p>You need to setup db with a command</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bin/rails db:environment:set RAILS_ENV=test
+</code></pre></div></div>
+
+<p>or use <code class="language-plaintext highlighter-rouge">rake db:test:prepare</code>. I was trying to do <code class="language-plaintext highlighter-rouge">RAILS_ENV=test rake db:drop
+db:create db:migrate</code> but it did not work because of some missing tables.</p>
+
+<p>Javascript test also rely on precompiled assets so you need to run
+<code class="language-plaintext highlighter-rouge">rake assets:precompile</code> or put <code class="language-plaintext highlighter-rouge">config.assets.compile = true</code> in
+<code class="language-plaintext highlighter-rouge">conig/environments/test.rb</code> (this could slow down).
+Somehow when running with headless driver than I do not need to precompile
+assets for those js tests (this is when I run <code class="language-plaintext highlighter-rouge">rake</code>).
+But when I run single test <code class="language-plaintext highlighter-rouge">rspec ./spec/features/my_spec.rb</code> I need to trigger
+<code class="language-plaintext highlighter-rouge">rm -rf public/assets</code> (do not know how they appear here) and also <code class="language-plaintext highlighter-rouge">spring stop</code>
+so than it will use fresh code (not precompiled). Also check <code class="language-plaintext highlighter-rouge">node -v</code></p>
+
+<h1 id="rspec">Rspec</h1>
+
+<h2 id="vanilla-rspec">Vanilla rspec</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rspec --init
+</code></pre></div></div>
+
+<p>This will generate <code class="language-plaintext highlighter-rouge">spec/spec_helper.rb</code> and <code class="language-plaintext highlighter-rouge">.rspec</code> (option <code class="language-plaintext highlighter-rouge">--require
+spec_helper</code> will automatically load spec_helper so you do not need to write
+<code class="language-plaintext highlighter-rouge">require "spec_helper"</code>). Also rspec will add <code class="language-plaintext highlighter-rouge">spec/</code> folder to <code class="language-plaintext highlighter-rouge">$LOAD_PATH</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/simple_test_spec.rb
+RSpec.describe "simplest test" do
+  it "can check equality" do
+    expect(2).to eq(1+1)
+  end
+end
+</code></pre></div></div>
+
+<p>You can run simple test example with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rspec spec/simple_test_spec.rb
+rspec -b # to show full backtrace in case of exceptions
+</code></pre></div></div>
+
+<p>When you want to stop on first failed test (and not to wait whole test suite to
+finish) you can use</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rspec spec --fail-fast
+</code></pre></div></div>
+
+<p>Rspec examples are written using <code class="language-plaintext highlighter-rouge">describe</code> (ExampleGroup, you can nest multuple
+describe blocks), <code class="language-plaintext highlighter-rouge">let</code> statements and <code class="language-plaintext highlighter-rouge">it</code> blocks (Example). If you need to
+assert count you can use <code class="language-plaintext highlighter-rouge">before {}</code> (it is <code class="language-plaintext highlighter-rouge">before(:example)</code> and is run after
+<code class="language-plaintext highlighter-rouge">let</code> statemets) to instantinize all let objects since there are lazy (or you
+can use <code class="language-plaintext highlighter-rouge">let!</code>).
+Also you can use <code class="language-plaintext highlighter-rouge">before(:context) { Location.delete_all}</code> (this is run before
+<code class="language-plaintext highlighter-rouge">let</code> statements) to remove any test data, for example if you have fixtures,
+they will be loaded for every example.
+<a href="https://github.com/thoughtbot/guides/blob/master/style/testing/avoid_let_spec.rb">thoughtbot</a>
+do not suggest using let, but to extract methods.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/location_spec.rb
+require "location"
+describe Location do
+  let(:latitude) { 123 }
+  let(:longitude) { 321 }
+  let(:location) { Location.new latitude: latitude, longitude: longitude }
+  before do
+    # initiate lazy let when we need to assert count
+    [location]
+  end
+  subject { location }
+  describe "#initialize" do
+    it { should have_attributes latitude: latitude }
+    it { should have_attributes longitude: longitude }
+  end
+  describe "#near" do
+    context "for near location" do
+      let(:near_location) do
+        Location.new(latitude: latitude + 1, longitude: longitude + 1)
+      end
+      it { should be_near(near_location, 2) }
+    end
+    context "for not near location" do
+      let(:not_near_location) { Location.new latitude: 1, longitude: 2 }
+      it { should_not be_near(not_near_location, 2) }
+    end
+    it "raise exception for negative radius" do
+      expect { location.near?(location, -1) }.to raise_error ArgumentError
+    end
+  end
+end
+</code></pre></div></div>
+
+<p><a href="http://www.relishapp.com/rspec/rspec-core/docs">rspec-core</a> and <a href="https://github.com/reachlocal/rspec-style-guide">style
+guide</a></p>
+<ul>
+  <li>example groups <code class="language-plaintext highlighter-rouge">describe "..." do</code> or <code class="language-plaintext highlighter-rouge">context "..." do</code>.
+Describe use hash <code class="language-plaintext highlighter-rouge">#method_name</code> and dot <code class="language-plaintext highlighter-rouge">.class_method_name</code>
+Context is alias for describe, but it is used to group examples with same state
+(for example <code class="language-plaintext highlighter-rouge">context 'when not logged in</code> or <code class="language-plaintext highlighter-rouge">context 'when resource is not
+found'</code>). Context description always start with <code class="language-plaintext highlighter-rouge">when</code> and always have a oposite
+context.</li>
+  <li>example is <code class="language-plaintext highlighter-rouge">it "..." do</code>. <code class="language-plaintext highlighter-rouge">it</code> description should not end with conditional
+like this bad example: <code class="language-plaintext highlighter-rouge">it 'returns name if it is present'</code> (better <code class="language-plaintext highlighter-rouge">context
+'when name is present' it 'returns name'</code>)</li>
+  <li>Example group is a class in which <code class="language-plaintext highlighter-rouge">describe</code> or <code class="language-plaintext highlighter-rouge">context</code> is evaluated, and
+<code class="language-plaintext highlighter-rouge">it</code> is evaluated on instance of that class</li>
+  <li><a href="http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/subject/explicit-subject">subject</a>
+is used in group scope (<code class="language-plaintext highlighter-rouge">describe</code>) to define value that is returned by
+<code class="language-plaintext highlighter-rouge">subject</code> method in example (<code class="language-plaintext highlighter-rouge">it</code>) scope.</li>
+  <li><a href="http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/subject/one-liner-syntax">one liner it
+syntax</a>
+Instead of <code class="language-plaintext highlighter-rouge">it { expect(subject).to be_empty }</code> you can use
+<code class="language-plaintext highlighter-rouge">it { is_expected.to be_empty }</code> or <code class="language-plaintext highlighter-rouge">it { should be_empty }</code> (deprecated). If
+you need to access properties of an object for one liner syntax, than use <code class="language-plaintext highlighter-rouge">it
+{ is_expected.to have_attribute :name }</code>. So do not use <code class="language-plaintext highlighter-rouge">subject</code> inside <code class="language-plaintext highlighter-rouge">it</code>
+block.</li>
+  <li><a href="http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/helper-methods/let-and-let">let</a>
+is used to memoize value so it is shared inside one example, but not between
+examples</li>
+  <li><a href="http://www.relishapp.com/rspec/rspec-core/v/3-5/docs/hooks/before-and-after-hooks">before</a>
+and after hooks are used to execute arbitrary code before and after
+example or context is run. You can use alias <code class="language-plaintext highlighter-rouge">before(:each)</code> is the same as
+<code class="language-plaintext highlighter-rouge">before(:example)</code> and <code class="language-plaintext highlighter-rouge">before(:all) == before(:context)</code></li>
+</ul>
+
+<p>DRY is accomplished with <code class="language-plaintext highlighter-rouge">shared_context</code> (and <code class="language-plaintext highlighter-rouge">shared_examples</code>) so you can
+share contex so do not need to repeat let and before.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.describe User do
+  shared_context 'one_user' do
+    let(:user) { create :user }
+  end
+
+  describe do
+    include_context 'one_user'
+  end
+end
+</code></pre></div></div>
+
+<p>Testing included modules and concerns is done with
+<a href="https://www.relishapp.com/rspec/rspec-core/docs/example-groups/shared-examples">shared_examples</a>
+so we test with <code class="language-plaintext highlighter-rouge">it_behaves_like "linkable"</code> or <code class="language-plaintext highlighter-rouge">include_examples 'linkable'</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.shared_examples 'payment check_no' do
+  it 'allows long check_no' do
+    check_no = '356431 575017004 201705 11'
+    customer_payment = create :customer_payment, check_no: check_no
+    expect(customer_payment.new_record?).to be_falsy
+  end
+end
+
+RSpec.describe CustomerPayment do
+  describe 'validations' do
+    it_behaves_like 'payment check_no'
+  end
+end
+</code></pre></div></div>
+
+<p>Also valid factory can be shared between tests</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spe/models/user_spec.rb
+RSpec.describe User do
+  it_behaves_like "has_valid_factory"
+end
+
+# spec/support/shared_examples.rb
+# If you are using factoryBot
+RSpec.shared_examples "has_valid_factory" do
+  it "has a valid factory" do
+    expect(create(described_class.name.underscore)).to be_valid
+  end
+end
+
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+end
+</code></pre></div></div>
+
+<p>for fixtures</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.shared_examples "has_valid_fixture" do
+  it "has a valid fixture" do
+    items = send described_class.table_name
+    expect items.map(&amp;:valid?).all?, (items.reject(&amp;:valid?).map { |c| (c.respond_to?(:name) ? "#{c.name} " : '') + c.errors.full_messages.to_sentence })
+  end
+end
+</code></pre></div></div>
+
+<p>Some <a href="http://www.relishapp.com/rspec/rspec-expectations/docs">rspec
+expectations</a> built in
+matchers</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">expect(object).to be(expected)</code>, <code class="language-plaintext highlighter-rouge">expect(object).to be &gt;
+3</code>, <code class="language-plaintext highlighter-rouge">expect(object).to eq(expected)</code>…
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">be</code> is object identity <code class="language-plaintext highlighter-rouge">a.equal? b</code> (refer to the same object)</li>
+      <li><code class="language-plaintext highlighter-rouge">eq</code> is object equivalence with type conversion <code class="language-plaintext highlighter-rouge">a == b</code> (same value)</li>
+    </ul>
+  </li>
+  <li><a href="http://www.relishapp.com/rspec/rspec-expectations/docs">predicate
+matchers</a> for any
+method that begin with <code class="language-plaintext highlighter-rouge">has_</code> or ends with <code class="language-plaintext highlighter-rouge">?</code> you can use <code class="language-plaintext highlighter-rouge">have_</code> and <code class="language-plaintext highlighter-rouge">be_</code>
+<code class="language-plaintext highlighter-rouge">expect(object).not_to be_empty</code> or <code class="language-plaintext highlighter-rouge">be_near near_location</code></li>
+  <li>
+    <p><a href="https://relishapp.com/rspec/rspec-expectations/v/3-7/docs/built-in-matchers/type-matchers">type
+matchers</a>
+<code class="language-plaintext highlighter-rouge">expect(obj).to be_kind_of(Type)</code> or <code class="language-plaintext highlighter-rouge">be_a</code> type of Type</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">expect { do_something }.to change { object.attribute }</code>.
+You can also specify values <code class="language-plaintext highlighter-rouge">expect {}.to change
+{session[:me]}.from(nil).to("dule")</code>
+It is also possible to detect changes in two tables
+<a href="http://www.relishapp.com/rspec/rspec-expectations/v/3-5/docs/built-in-matchers/change-matcher">http://www.relishapp.com/rspec/rspec-expectations/v/3-5/docs/built-in-matchers/change-matcher</a></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>it "should increment the counters" do
+  expect { Foo.bar }.to change { Counter.count }.by(1).and \
+                        change { AnotherCounter.count }.by(1)
+end
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">expect(object).to have_attributes name: 'duke'</code>
+<a href="https://www.relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/have-attributes-matcher#basic-usage">have_attributes</a> to check values</li>
+  <li><code class="language-plaintext highlighter-rouge">expect(object).to have_attribute :name</code> to check just attribute (no value)</li>
+  <li><code class="language-plaintext highlighter-rouge">expect { do_something }.to raise_error ArgumentError</code></li>
+  <li><code class="language-plaintext highlighter-rouge">expect(object).to match /expression/</code></li>
+  <li><code class="language-plaintext highlighter-rouge">expect(object).to be_a(Class)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">expect(object).to satisfy { block }</code></li>
+</ul>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">not_to</code> for all matchers (expect raise_error).</p>
+
+<p>Instead of multiple <code class="language-plaintext highlighter-rouge">expect</code> statements inside <code class="language-plaintext highlighter-rouge">it</code>, you could change it to
+<code class="language-plaintext highlighter-rouge">describe</code> and use inline <code class="language-plaintext highlighter-rouge">it</code> statements (pros: all assertions will be checked,
+cons: it could be slower because of setup and dificult to read to know how test
+was setup). Another solution is to use compound matchers.
+All matchers have alternate form (an_object_having…) so it reads better when
+using compose (or compound) matchers</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect(a[0]).to eq(5)
+expect(a[1]).to eq(6)
+# is the same as
+expect(a).to match([an_object_eq_to(5), an_object_eq_to(6)])
+
+# or
+
+describe "build three tasks" do
+  let(:tasks_string) { "My Task:2\nYour Task:3\nHis Task:1\n" }
+  it do
+    expect(tasks.map(&amp;:title)).to eq(['My Task', 'Your Task', 'His Task'])
+  end
+  it { expect(tasks.map(&amp;:size)).to eq([2, 3, 1]) }
+end
+# is the same as
+describe "build three tasks" do
+  let(:tasks_string) { "My Task:2\nYour Task:3\nHis Task:1\n" }
+  it do
+    expect(tasks).to match(
+      [an_object_having_attributes(title: 'My Task', size: 2),
+       an_object_having_attributes(title: 'Your Task', size: 3),
+       an_object_having_attributes(title: 'His Task', size: 1)]
+    )
+  end
+end
+</code></pre></div></div>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">.or</code> and <code class="language-plaintext highlighter-rouge">.and</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect(a).to include("a").and match(/.*1.*/)
+</code></pre></div></div>
+
+<p><a href="http://www.rubydoc.info/github/rspec/rspec-expectations/RSpec/Matchers">rubydoc
+matchers</a></p>
+
+<p>For pending tests, you can write empty it blocks or just add <code class="language-plaintext highlighter-rouge">skip</code> or prefix
+<code class="language-plaintext highlighter-rouge">x</code> like <code class="language-plaintext highlighter-rouge">xit</code> or <code class="language-plaintext highlighter-rouge">xdescribe</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>it '...', :skip do
+end
+
+it "..." do
+  skip "pending"
+end
+
+xit "skipped" do
+end
+</code></pre></div></div>
+
+<p>For slow test you can mark with <code class="language-plaintext highlighter-rouge">:really_slow</code> and exclude specific tags with
+<code class="language-plaintext highlighter-rouge">rspec --tag ~really_slow</code>. Or you can add to add to <code class="language-plaintext highlighter-rouge">spec/spec_helper.rs</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/spec_helper.rb
+RSpec.configure do |config|
+  config.filter_run_excluding(really_slow: true)
+end
+</code></pre></div></div>
+
+<p>Note that if you run specific line <code class="language-plaintext highlighter-rouge">bin/rspec spec/features/my_spec.rb:10</code> than
+it will not be excluded. Only if you run all or speficic file <code class="language-plaintext highlighter-rouge">bin/rspec
+spec/features/my_spec.rb</code></p>
+
+<p>If you want to run specific task then than add tag <code class="language-plaintext highlighter-rouge">rspec --tag really_slow</code>. If
+you want to run all and specific tasks than use env variable:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/spec_helper.rb
+RSpec.configure do |config|
+  # If you really want to run then add tag `bin/rspec --tag really_slow` to run
+  # only that tag, or to run all and some tags use
+  # INCLUDING_TAGS=chrome_remote_selenium bin/rspec
+  %i(
+    really_slow chrome_remote_selenium
+    headless_chrome_remote_selenium edit_hosts
+  ).each do |tag|
+    config.filter_run_excluding(tag) unless ENV['INCLUDING_TAGS'].to_s.include? tag.to_s
+  end
+end
+</code></pre></div></div>
+
+<p>You can exclude specific folder
+<a href="https://relishapp.com/rspec/rspec-core/v/3-3/docs/configuration/exclude-pattern">https://relishapp.com/rspec/rspec-core/v/3-3/docs/configuration/exclude-pattern</a>
+<code class="language-plaintext highlighter-rouge">rspec --exclude-pattern "spec/features/*"</code> I do not know why quotes are needed
+here, but it works only with quotes.</p>
+
+<p><code class="language-plaintext highlighter-rouge">rspec --profile</code> will give you list of 10 slowest tests.</p>
+
+<p>Rspec config before each example for particular group</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/rails_helper.rb
+RSpec.configure do |config|
+  config.before :each do
+    DatabaseCleaner.start
+  end
+  config.before :each, type: lambda {|v| v != :feature } do
+    allow_any_instance_of(Paperclip::Attachment).to receive(:save).and_return(true)
+  end
+  config.include Warden::Test::Helper, type: :features
+end
+</code></pre></div></div>
+
+<p>Better is you include <code class="language-plaintext highlighter-rouge">config.before</code> only for specific tests using filter
+symbols
+https://relishapp.com/rspec/rspec-core/v/3-6/docs/hooks/filters#filtering-hooks-using-symbols</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.configure do |config|
+  config.before :example, :setup_xxx do
+    xxx
+  end
+end
+RSpec.describe 'invoke xxx', :setup_xxx do
+  it 'in all nested examples' do
+  end
+end
+</code></pre></div></div>
+
+<h2 id="rspec-rails">Rspec rails</h2>
+
+<p>To install you need to add <a href="https://github.com/rspec/rspec-rails">rspec-rails</a>
+gem and generate <code class="language-plaintext highlighter-rouge">.rspec</code>, <code class="language-plaintext highlighter-rouge">rails_helper.rb</code> and <code class="language-plaintext highlighter-rouge">spec_helper.rb</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development, :test do/a  \
+  gem "rspec-rails"'
+bundle
+rails generate rspec:install
+# you should stub everything rails related so you do not need to load it
+# echo "--require rails_helper" &gt;&gt; .rspec
+# enable experimental settings, note config.profile_examples = 10 is too noisy
+# sed -i spec/spec_helper.rb -e '/=begin/d'
+# sed -i spec/spec_helper.rb -e '/=end/d'
+git add . &amp;&amp; git commit -m "rails generate rspec:install"
+</code></pre></div></div>
+
+<p>You should write <code class="language-plaintext highlighter-rouge">require "rails_helper"</code> at the begging of each spec, or you
+can add option to <code class="language-plaintext highlighter-rouge">.rspec</code> (this is perfomance penalty since some tests does not
+require rails can perform faster without this option).
+Once you put gem in gemfile inside development group, rspec generators will be
+available: <code class="language-plaintext highlighter-rouge">rails g model posts</code> will generate rspec instead of minitest.
+Also there are generators like <code class="language-plaintext highlighter-rouge">rails g integration_test</code> and rspec will
+generate <code class="language-plaintext highlighter-rouge">spec/requests/password_resets_spec.rb</code></p>
+
+<p>Write test file that ends <code class="language-plaintext highlighter-rouge">_spec.rb</code> in particular folders (so it inherits type
+).</p>
+
+<h1 id="guard">Guard</h1>
+
+<p>You can also use guard, just add to development group</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development do/a  \
+  gem "guard-rspec"'
+bundle
+guard init rspec
+git add . &amp;&amp; git commit -m "Adding guard init rspec"
+</code></pre></div></div>
+
+<p>You can run <code class="language-plaintext highlighter-rouge">guard</code> that will run your specs.</p>
+
+<p>More options for
+<a href="https://github.com/guard/guard-rspec#list-of-available-options">guard</a>
+My favorite is <code class="language-plaintext highlighter-rouge">failed_mode: :focus</code> which reruns last failed test.
+Also you can use <a href="https://github.com/jonleighton/spring-commands-rspec">spring for
+rspec</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development do/a  \
+  gem "spring-commands-rspec"'
+bundle
+bundle exec spring binstub rspec
+</code></pre></div></div>
+
+<p>Now you can run tests with <code class="language-plaintext highlighter-rouge">bin/rspec</code> which will be faster than <code class="language-plaintext highlighter-rouge">rspec</code>. If you
+are using guard, use this line</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Guardfile
+guard :rspec, cmd: "bundle exec bin/rspec", failed_mode: :focus do
+end
+</code></pre></div></div>
+
+<h2 id="shoulda-matchers">Shoulda matchers</h2>
+
+<p>You can use <a href="https://github.com/thoughtbot/shoulda-matchers">shoulda matchers</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development, :test do/a  \
+  gem "shoulda-matchers", "~&gt; 3.1"'
+bundle
+cat &gt;&gt; spec/rails_helper.rb &lt;&lt; HERE_DOC
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+HERE_DOC
+bundle
+git add . &amp;&amp; git commit -m "Adding shoulda matchers"
+</code></pre></div></div>
+
+<h2 id="rspec-controller-specs">RSpec Controller specs</h2>
+
+<p><a href="https://www.relishapp.com/rspec/rspec-rails/docs/controller-specs">controller
+specs</a> can
+use <code class="language-plaintext highlighter-rouge">get</code>,<code class="language-plaintext highlighter-rouge">post</code> and validate <code class="language-plaintext highlighter-rouge">response</code> (to <code class="language-plaintext highlighter-rouge">render_template :new</code>, to
+<code class="language-plaintext highlighter-rouge">redirect_to posts_path</code>).
+Testing <code class="language-plaintext highlighter-rouge">assings</code> and <code class="language-plaintext highlighter-rouge">render_template</code> is deprecated.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subject { get "/posts" }
+expect(subject).to render_template(:index)
+expect(assigns(:posts)).to be([post])
+</code></pre></div></div>
+
+<blockquote>
+  <p>assigns has been extracted to a gem. To continue using it, add <code class="language-plaintext highlighter-rouge">gem
+ 'rails-controller-testing'</code> to your Gemfile.</p>
+</blockquote>
+
+<p>Move all business logic and ActiveRecord calls out from controller and test only
+triggers to services or model methods (using mocks) and check responses. Testing
+routes is done separately.</p>
+
+<p>Controller spec should be for each method (CRUD) in context of authorized and in
+context of unauthorized user (testing security), and for valid and some invalid
+requests.</p>
+
+<p><code class="language-plaintext highlighter-rouge">get</code>, <code class="language-plaintext highlighter-rouge">delete</code>, <code class="language-plaintext highlighter-rouge">head</code>, <code class="language-plaintext highlighter-rouge">patch</code>, <code class="language-plaintext highlighter-rouge">post</code> and <code class="language-plaintext highlighter-rouge">put</code> takes 4 params, usually used
+only first two. Third is session (used only if you have some multistep process
+that use session for continuity) and fourth is flash param (not used in
+controller test).
+(in <code class="language-plaintext highlighter-rouge">ActionController::TestCase</code> you can use <code class="language-plaintext highlighter-rouge">session:</code> keyword arg like <code class="language-plaintext highlighter-rouge">get
+:show, params:{ id: 3}, session: { 'user_id': 3}</code>, but in
+<code class="language-plaintext highlighter-rouge">ActionDispatch::IntegrationTest</code> you can not set session (no <code class="language-plaintext highlighter-rouge">@session</code>))
+Similar <code class="language-plaintext highlighter-rouge">xhr</code> (for testing ajax) takes three arguments.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>get :show, params: { id: @task.id }
+post :create, logo: fixture_file_upload('/test/data/logo.png', 'image/png')
+xhr :post, :create, params: { id: "3" }
+</code></pre></div></div>
+
+<p>To use <code class="language-plaintext highlighter-rouge">fixture_file_upload</code> in your test you need to include <code class="language-plaintext highlighter-rouge">include
+ActionDispatch::TestProcess</code></p>
+
+<p>In controller test you have access to <code class="language-plaintext highlighter-rouge">@request</code>, <code class="language-plaintext highlighter-rouge">@controller</code> and <code class="language-plaintext highlighter-rouge">@response</code>
+You can validate <code class="language-plaintext highlighter-rouge">response.status</code> or <code class="language-plaintext highlighter-rouge">expect(response).to
+have_http_status(:success)</code> matcher.  You can use <code class="language-plaintext highlighter-rouge">:success</code>, <code class="language-plaintext highlighter-rouge">:redirect</code>,
+<code class="language-plaintext highlighter-rouge">:missing</code>, <code class="language-plaintext highlighter-rouge">:error</code>.</p>
+
+<p>To set a <a href="https://stackoverflow.com/a/29037481">host name</a></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">host! "my.awesome.host"</code> for integration test <a href="http://guides.rubyonrails.org/testing.html#helpers-available-for-integration-tests">available
+helpers</a></li>
+  <li>in controller specs use <code class="language-plaintext highlighter-rouge">@request.host = 'my.awesome.host'</code>
+(<code class="language-plaintext highlighter-rouge">ActionController::TestCase</code>)</li>
+  <li>In view specs use <code class="language-plaintext highlighter-rouge">controller.request.host = "my.awesome.host"</code></li>
+  <li>In capybara use <code class="language-plaintext highlighter-rouge">Capybara.default_host = "http://my.awesome.host"</code>,</li>
+</ul>
+
+<p>When you need to create params to for testing, you can use
+<code class="language-plaintext highlighter-rouge">ActionController::Parameters.new name: 'Duke'</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/controllers/users_controller_spec.rb
+RSpec.describe UsersController do
+  describe 'new' do
+  end
+end
+</code></pre></div></div>
+
+<h2 id="rspec-request-specs">Rspec Request specs</h2>
+
+<p><a href="https://www.relishapp.com/rspec/rspec-rails/docs/request-specs/request-spec">requests spec</a>
+are used for full stack testing without stubbing.
+It is faster than system but can not use javascript…
+If request is not performed (<code class="language-plaintext highlighter-rouge">get</code> <code class="language-plaintext highlighter-rouge">xhr</code>) than something is different (current
+user is not initialized, or something).
+<code class="language-plaintext highlighter-rouge">post url, params: { name: 'my name' }</code> is used with <code class="language-plaintext highlighter-rouge">params</code> key
+To set json request use <code class="language-plaintext highlighter-rouge">get path, format: :json</code>. New format is <code class="language-plaintext highlighter-rouge">patch path,
+params: { format: :turbo_stream }</code>
+To set headers you can use third param</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  get login_path, nil, { 'Authentication' =&gt; 'MyToken' }
+
+  # in Rails 5 we need to use keyed instead positional arguments
+  get '/', params: {}, headers: { 'HTTP_USER_AGENT': 'Mozilla/5.0 (compatible; Nimbostratus-Bot/v1.3.2; http://cloudsystemnetworks.com) Nimbostratus' }
+
+</code></pre></div></div>
+
+<p>You can access <code class="language-plaintext highlighter-rouge">flash</code> object</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  post my_path, params: { name: 'd' }
+  expect(flash[:notice]).to match 'd created successfully'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/requests/oauth_password_flow_spec.rb
+RSpec.describe "OAUTH" do
+  let :email_address do
+    "test@email.com"
+  end
+  let :password do
+    "asdfasdf"
+  end
+  let! :user do
+    FactoryBot.create :user, email_address: email_address, password: password
+  end
+
+  it "creates a token when credentials are valid" do
+    # https://aaronparecki.com/oauth-2-simplified/#password
+    post "/oauth/token", params: {
+      grant_type: "password",
+      username: email_address,
+      password: password
+    }
+    expect(response.status).to eq 200
+    expect(JSON.parse(response.body)["access_token"]).not_to be_nil
+  end
+
+  it "does not issue token when credentials are invalid" do
+    post "/oauth/token", params: {
+      grant_type: "password",
+      username: email_address,
+      password: "wrong_password"
+    }
+    expect(response.status).to eq 401
+    expect(JSON.parse(response.body)["access_token"]).to be_nil
+  end
+
+  it 'redirect' do
+    post '/'
+    expect(response).to redirect_to error_path
+    follow_redirect!
+  end
+end
+
+expect(response.body).to include 'Logout'
+# use html encoding when you have quote, so you do not need to match &amp;#39;
+expect(response.body).to include ERB::Util.html_escape "Some text with ' quote"
+expect(response.body.scan(/&lt;tr&gt;/).size).to be 3
+expect(response.body).to match /button.*Publish Package.*\/button/
+# for multiline match response.body text you can use modifier m
+expect(response.body).to match /dl.*dl/m
+</code></pre></div></div>
+
+<p>Sometimes I get error if you use <code class="language-plaintext highlighter-rouge">sign_in user</code> but do not perform <code class="language-plaintext highlighter-rouge">get</code> or
+<code class="language-plaintext highlighter-rouge">post</code> requests, ie you use empty <code class="language-plaintext highlighter-rouge">it 'bla bla' do;end</code>. Than it pass when
+specific tests are run, but fail when all test from file are run.</p>
+
+<h2 id="rspec-router-specs">RSpec Router specs</h2>
+
+<p><a href="https://www.relishapp.com/rspec/rspec-rails/v/3-5/docs/routing-specs">router
+specs</a> is
+not so usefull, so you should write only for some that you do not want to exists
+or when you have some extra logic in routing.</p>
+
+<p>Usefull matchers are <code class="language-plaintext highlighter-rouge">route_to</code> and <code class="language-plaintext highlighter-rouge">be_routable</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/routing/project_routing_spec.rb
+require 'rails_helper'
+RSpec.describe 'project routing', type: :routing do
+  it 'routes projects' do
+    expect(get: '/projects/1/edit/').to route_to(
+      controller: 'project', action: 'edit', id: 'id')
+  end
+
+  it 'does not route by name' do
+    expect(get: '/projects/search/duke').not_to be_routable
+  end
+end
+</code></pre></div></div>
+
+<h2 id="rspec-helper-specs">RSpec Helper specs</h2>
+
+<p>You have access to <code class="language-plaintext highlighter-rouge">helper</code> object so you can call methods on it.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/helpers/project_helper_spec.rb
+require 'rails_helper'
+RSpec.describe ProjectsHelper do
+  let(:project) { Project.new name: 'Duke' }
+  it "adds class if not finished" do
+    allow(project).to receive(:on_schedule?).and_return(true)
+    actual = helper.name_with_status(project)
+    expect(actual).to have_selector('span.on_schedule', text: 'Duke')
+  end
+end
+
+# app/helpers/projects_helper.rb
+module ProjectsHelper
+  def name_with_status(project)
+    content_tag(:span, project.name, class: 'on_schedule')
+  end
+end
+</code></pre></div></div>
+
+<p>Helper tests does not go to views, so to test if it actually works write some
+view tests</p>
+
+<h2 id="rspec-view-specs">RSpec View specs</h2>
+
+<p>You can set instance variables and call <code class="language-plaintext highlighter-rouge">render</code> (which will render outermost
+describe block name or you can call <code class="language-plaintext highlighter-rouge">render 'projects/index'</code> or <code class="language-plaintext highlighter-rouge">render
+partial: 'projects/_form', locals: { admin: true }</code>).
+We can stub helpers using view object like
+<code class="language-plaintext highlighter-rouge">view.stub(:current_user).and_return(User.new)</code>
+Output is available in <code class="language-plaintext highlighter-rouge">rendered</code> object.
+We can use capybara <code class="language-plaintext highlighter-rouge">have_selector</code>, <code class="language-plaintext highlighter-rouge">have_no_selector</code> instead of default
+<code class="language-plaintext highlighter-rouge">match</code> rspec matcher.
+We can use rails <code class="language-plaintext highlighter-rouge">assert_select</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/views/projects/index.html.erb_spec.rb
+require 'rails_helper'
+
+RSpec.describe "projects/index" do
+  let(:on_schedule) { Project.create! name: 'Dule' }
+  it "show on schedule" do
+    @projects = [on_schedule]
+    render
+    expect(rendered).to have_selector(
+      "#project_#{on_schedule.id} .on-schedule",
+      text: on_schedule.name,
+      count: 1
+    )
+    assert_select ".on-schedule", count: 1
+  end
+end
+</code></pre></div></div>
+
+<h2 id="rspec-presenters-specs">RSpec Presenters specs</h2>
+
+<p>Bigger logic in view should be replaced with presenter. Ruby core
+<a href="https://ruby-doc.org/stdlib-2.1.1/libdoc/delegate/rdoc/SimpleDelegator.html">SimpleDelegator</a>
+delegates all messages to the object passed to the contructor.
+We can use test doubles and instead of <code class="language-plaintext highlighter-rouge">rails_helpers</code> use implicit
+<code class="language-plaintext highlighter-rouge">spec_helper</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/presenters/project_presenter_spec.rb
+RSpec.describe ProjectPresenter do
+  let(:project) { Project.new name: 'My Name' }
+  let(:project_presenter) { ProjectPresenter.new project }
+
+  it "show name with state" do
+    expect(project_presenter.name_with_status).to eq("My Name on_schedule")
+  end
+end
+
+# app/presenters/project_presenter.rb
+class ProjectPresenter &lt; SimpleDelegator
+  def name_with_status
+    "#{name} on_schedule"
+  end
+end
+</code></pre></div></div>
+
+<p>There is <code class="language-plaintext highlighter-rouge">draper</code> gem</p>
+
+<h2 id="rspec-mailer-specs">RSpec Mailer specs</h2>
+
+<p>In controller we check if send mail is actually triggered and maybe just one
+line of content <code class="language-plaintext highlighter-rouge">email.body.to_s</code> matches title</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/controllers/tasks_controller_spec.rb
+require 'rails_helper'
+
+RSpec.describe TasksController, type: :controller do
+  before { ActionMailer::Base.deliveries.clear }
+
+  describe "PATCH incomplete update" do
+    let(:task) { Task.create! title: "Yo!" }
+    it "does not send email" do
+      patch :update, id: task.id, task: { size: 3 }
+      expect(ActionMailer::Base.deliveries.size).to eq(0)
+    end
+  end
+
+  describe "PATCH complete update" do
+    let(:task) { Task.create! title: "Yo!" }
+    it "does send email" do
+      patch :update, id: task.id, task: { size: 3, completed: true }
+      expect(ActionMailer::Base.deliveries.size).to eq(1)
+      email = ActionMailer::Base.deliveries.first
+      expect(email.body.to_s).to match("Yo!")
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Full content we check in mailer spec</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/mailers/task_mailer.rb
+require "rails_helper"
+
+RSpec.describe TaskMailer, type: :mailer do
+  let(:task) { Task.new title: 'Yoo' }
+  describe "task_completed_email" do
+    let(:mail) { TaskMailer.task_completed_email(task) }
+
+    it "renders the headers" do
+      expect(mail.subject).to eq("Task completed email")
+      expect(mail.to).to eq(["to@example.org"])
+      expect(mail.from).to eq(["from@example.com"])
+    end
+
+    it "renders the body" do
+      expect(mail.body.encoded).to match("Yoo")
+    end
+  end
+end
+</code></pre></div></div>
+
+<h2 id="rspec-model-specs">RSpec Model specs</h2>
+
+<p><a href="https://www.relishapp.com/rspec/rspec-rails/docs/model-specs">model
+specs</a> is a thin
+wrapper for <code class="language-plaintext highlighter-rouge">ActiveSupport::TestCase</code>. Every example is in separate
+<a href="https://www.relishapp.com/rspec/rspec-rails/v/3-5/docs/model-specs/transactional-examples">transaction</a>
+You can use
+<a href="https://www.relishapp.com/rspec/rspec-rails/v/3-5/docs/model-specs/verified-doubles">instance_double</a>
+If not defined, <code class="language-plaintext highlighter-rouge">subject</code> is an instance of the model.
+Usually have following parts: attributes, relationships, validations,
+hooks(callbacks), scopes and other methods.</p>
+
+<p><a href="https://gist.github.com/kyletcarlson/6234923">model cheatsheet</a></p>
+
+<h3 id="attributes">Attributes</h3>
+
+<p>It is good to write all column names at the top of the test so you can see what
+it is about</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/models/auction_spec.rb
+RSpec.describe Auction do
+  describe "attributes" do
+    %w[
+      user_id
+      ends_at
+      time_zone_id
+    ].each do |attribute|
+      it { is_expected.to have_attribute attribute }
+    end
+
+    # or in this one by one form. breakthrough is two. for three and more use
+    # above method
+
+    it { is_expected.to have_attribute :ends_at }
+    it { is_expected.to have_attribute :time_zone_id }
+  end
+</code></pre></div></div>
+
+<h3 id="relationships">Relationships</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  describe "relationships" do
+    it { is_expected.to have_many :auction_admins }
+    it { is_expected.to belong_to :user }
+  end
+</code></pre></div></div>
+
+<p>For belongs_to validations it is advised to validate object (<code class="language-plaintext highlighter-rouge">user</code> not
+<code class="language-plaintext highlighter-rouge">user_id</code>) so you can use <code class="language-plaintext highlighter-rouge">build</code> strategy in factory bot.</p>
+
+<h3 id="validations">Validations</h3>
+
+<p>You can install <a href="https://github.com/thoughtbot/shoulda-matchers">shoulda
+matchers</a> for simple inline
+validations:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+  gem 'shoulda-matchers', '~&gt; 3.1'
+
+# spec/rails_helper.rb
+require 'shoulda/matchers'
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end
+</code></pre></div></div>
+
+<p>You should check for presence for both not null and references fields, with
+simple line:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  descibe 'validations' do
+    subject { build :sport } # we need to use factory bot since implicit subject is empty
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_uniqueness_of :name }
+  end
+</code></pre></div></div>
+
+<p>For complex validation you can test validation as simply <code class="language-plaintext highlighter-rouge">l =
+Location.new; expect(l).not_to be_valid</code> but it’s better to go into details of
+errors message</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/models/location_spec.rb
+require "rails_helper"
+RSpec.describe Location do
+  describe "validations" do
+    before { subject.valid? }
+    context "when latitude is missing" do
+      subject { Location.new latitude: '' }
+      it "should not allow blank latitude and longitude" do
+        expect(subject.errors[:latitude]).to include "can't be blank"
+        expect(subject.errors[:longitude]).to include "can't be blank"
+      end
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Validate uniqueness should be explicitly written (not shoulda matchers) with
+two objects: <code class="language-plaintext highlighter-rouge">original</code> (that exists in db) and <code class="language-plaintext highlighter-rouge">duplicate</code> that is going to be
+saved</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  it "validates uniqueness of user_id scoped to auction_id" do
+    original = FactoryBot.create :auction_admin
+    duplicate = FactoryBot.build :auction_admin, user: original.user, auction: original.auction
+    duplicate.valid?
+    expect(duplicate.errors[:email]).to include "has already been taken"
+  end
+</code></pre></div></div>
+
+<p>It is advised to write test for valid factory (so you know that your factory
+can be created)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  it "has a valid factory" do
+    expect(FactoryBot.create(:auction)).to be_persisted
+  end
+
+  # or more general
+
+  it 'has a valid factory' do
+    # expect(create(described_class.name.underscore)).to be_persisted
+    expect(build(described_class.name.underscore)).to be_valid
+  end
+</code></pre></div></div>
+
+<p>Test enum is with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  it "has enum fulfillment_typs" do
+    expect(described_class.fulfillment_types).to eq({
+      "item" =&gt; 0,
+      "certificate" =&gt; 1,
+    })
+  end
+</code></pre></div></div>
+
+<p>Test default values from database and in after hooks.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h2 id="test-migration">Test migration</h2>
+
+<p>You can test data migration. Do not perfom migration, come just before it</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake db:drop db:create db:migrate VERSION=20180503095528
+rake db:migrate:status
+You have 1 pending migration:
+  20180508073700 RemoveLocationVoucherType
+# Run `rake db:migrate` to update your database then try again.
+# I tried to ignore with `config.active_record.migration_error = false` but it
+# gives me error message. You should move or rename migration file while you run
+rake db:drop db:create db:migrate &amp;&amp; bin/rspec spec/migrations/my_migration_specc.rb
+</code></pre></div></div>
+
+<p>You should also rename test file so it is not run with all other, or ignore
+specific tag metadata.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyMigration &lt; ActiveRecord::Migration
+  # this is local Location class used only inside this migration
+  class Location &lt; ActiveRecord::Base
+  end
+  def up
+    rename_column :locations, :name, :name2
+    # this is needed since renamed columns will be ignored on "save"
+    Location.reset_column_information
+    Location.find_each do |location|
+      location.name2 = 'updated in migration'
+      location.save!
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>I tried with
+<a href="https://github.com/xevix/activerecord_migration_testing_example/blob/53ee8c52f5c4d21a616f4a2f40cdc2481ccbd73c/spec/migrations/move_sales_price_to_user_item_spex.rb">Migrator.migrate</a>
+but nothing happens (no sql migration commands), so I simply run
+<code class="language-plaintext highlighter-rouge">MyMigration.new.up</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/migrations/my_migration_spec.rb
+load 'spec/spec_helper.rb'
+load 'tmp/20180508073700_remove_location_voucher_type.rb'
+# run test with this command
+# rake db:drop db:create db:migrate STEP=20180503095528 &amp;&amp; bin/rspec spec/migrations/remove_location_voucher_type_spec.rb --tag migration_specs
+RSpec.describe RemoveLocationVoucherType, migration_specs: true do
+
+  it 'up' do
+    # ActiveRecord::Migrator.migrate(migrations_paths, previous_version)
+    my_user = create :user
+    MyMigration.new.up
+    my_user.reload
+    expect(my_user.name2).to be 'updated in migration'
+  end
+end
+</code></pre></div></div>
+
+<p>If there is an error than skip DatabaseCleaner</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># error
+
+# spec/support/database_cleaner.rb
+RSpec.configure do |config|
+  config.around(:each) do |example|
+    if example.metadata[:migration_specs]
+      example.run
+    else
+      # Start transaction
+      DatabaseCleaner.cleaning do
+        example.run
+      end
+    end
+  end
+end
+</code></pre></div></div>
+
+<h1 id="refactoring">Refactoring</h1>
+
+<p>Refactoring in 3 types:</p>
+
+<ul>
+  <li>break up complexity: boolean logic <code class="language-plaintext highlighter-rouge">has_purchased_before?</code>, convert local
+variables to methods and extract other methods from comments (part of methods)</li>
+  <li>combine duplication: duplication of fact (use class constant or instance
+method), duplication of logic (use before actions), find missing abstractions
+(replace some group of methods that are used together as parameters, with a
+new class with those instance methods, like value objects)</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class User &lt; ActiveRecord::Base
+delegate :full_name, :sort_name, to: :name
+def name
+  Name.new(first_name, last_name)
+end
+
+class Name
+  attr_accessor :first_name, :last_name
+  def initialize(first_name, last_name)
+    @first_name, @last_name = first_name, last_name
+  end
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+  def sort_name
+    "#{last_name}, #{first_name}"
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>usually do not test associations</li>
+  <li>testing class methods, do not create more objects than it is needed
+    <ul>
+      <li>when testing filter, than create two objects, one that satisfy and other
+does not</li>
+    </ul>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>it "finds completed tasks" do
+  complete = Task.create!(completed_at: 1.day.ago, title: 'Completed')
+  incomplete = Task.create!(completed_at: nil, title: 'Incompleted')
+  expect(Task.complete.map(&amp;:title)).to eq(['Completed'])
+  # or
+  expect(Task.complete).to match(
+    [an_object_having_attributes(title: 'Completed')]
+  )
+end
+</code></pre></div>    </div>
+  </li>
+  <li>class methods could be stubbed</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require 'rails_helper'
+RSpec.describe User do
+  context ".latest" do
+    let(:user) { build :user, :published }
+    before { allow(User).to receive(:latest).and_return([:user]) }
+    it { expect(User.latest).to include user }
+  end
+end
+
+RSpec.describe "Post #create" do
+  context 'when password is invalid' do
+    it 'renders the page with error' do
+      user = create(:user)
+      post :create, session: { email: user.email, password: 'invalid' }
+      expect(response).to render_template(:new)
+      expect(flash[:notice]).to match(/^Email and password do not match/)
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>You can stub request.remote_ip</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('192.168.0.1')
+</code></pre></div></div>
+
+<p>Also you can stub helper methods</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allow_any_instance_of(ApplicationHelper).to receive(:generate_password).and_return '111000'
+</code></pre></div></div>
+<h2 id="oauth-specs">Oauth specs</h2>
+
+<p>https://github.com/elizabrock/coursewareofthefuture/blob/25372c671f73525e09927344d8f2031b6acf82d0/spec/support/features/authentication_helper.rb</p>
+
+<p>Controller tests https://gist.github.com/jittuu/792715
+Helper https://gist.github.com/spyou/1200365/b0bb95e5cf9144b5a9a58bb6c1fc33aee4c34e47</p>
+
+<h1 id="respec-features">Respec features</h1>
+
+<p>Capybara is used only with
+<a href="https://www.relishapp.com/rspec/rspec-rails/docs/feature-specs/feature-spec">feature
+spec</a>
+Just install the gem in require it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development, :test do/a  \
+  gem "capybara"\
+  gem "capybara-email"\
+  gem "selenium-webdriver"\
+  # for save_and_open_page in browser\
+  gem "launchy"\
+  # to clean db when using js mode\
+  gem "database_cleaner"'
+bundle
+sed -i spec/rails_helper.rb -e '/require .rspec.rails/a  \
+require "capybara/rspec"\
+require "capybara/email/rspec"'
+
+cat &gt; spec/support/database_cleaner.rb &lt;&lt; HERE_DOC
+RSpec.configure do |config|
+  # If you're not using ActiveRecord, or you'd prefer not to run
+  # each of your examples within a transaction, remove the following
+  # line or assign false instead of true.
+  config.use_transactional_fixtures = false
+
+  # Clean up and initialize database before
+  # running test exmaples
+  config.before(:suite) do
+    # Truncate database to clean up garbage from
+    # interrupted or badly written examples
+    DatabaseCleaner.clean_with(:truncation)
+
+    # Seed dataase. Use it only for essential
+    # to run application data.
+    load "#{Rails.root}/db/seeds.rb"
+  end
+
+  config.around(:each) do |example|
+    # Use really fast transaction strategy for all
+    # examples except 'js: true' capybara specs
+    # that is Capybara.current_driver != :rack_test
+    # https://github.com/DatabaseCleaner/database_cleaner#what-strategy-is-fastest
+    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+
+    # Start transaction
+    DatabaseCleaner.cleaning do
+
+      # Run example
+      example.run
+    end
+
+    load "#{Rails.root}/db/seeds.rb" if example.metadata[:js]
+
+    # Clear session data
+    Capybara.reset_sessions!
+  end
+end
+HERE_DOC
+
+sed -i spec/rails_helper.rb -e '/use_transactional_fixtures/c  \
+  config.use_transactional_fixtures = false'
+
+git add . &amp;&amp; git commit -m "add capybara"
+</code></pre></div></div>
+
+<p><a href="https://github.com/DockYard/capybara-email">capybara-email</a> is using
+<code class="language-plaintext highlighter-rouge">open_email 'my@email.com'</code> to set <code class="language-plaintext highlighter-rouge">current_email</code> for which you can
+<code class="language-plaintext highlighter-rouge">current_email.click_link</code></p>
+
+<p>Capybara adds some aliases:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">feature</code> is alias for <code class="language-plaintext highlighter-rouge">describe ..., type: :feature</code> or <code class="language-plaintext highlighter-rouge">context</code></li>
+  <li><code class="language-plaintext highlighter-rouge">background</code> is alias for <code class="language-plaintext highlighter-rouge">before</code></li>
+  <li><code class="language-plaintext highlighter-rouge">scenario</code> is an alias for <code class="language-plaintext highlighter-rouge">it</code></li>
+  <li><code class="language-plaintext highlighter-rouge">given</code> is alias for <code class="language-plaintext highlighter-rouge">let</code></li>
+</ul>
+
+<p>To check if element exists you can use <code class="language-plaintext highlighter-rouge">has_css?('.sm', text: 'my', wait: 0)</code> do
+not wait if it does not exists (for nokogiri it is
+<code class="language-plaintext highlighter-rouge">response.at('.sm:contains("my")')</code></p>
+
+<p>Capybara example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/features/search_spec.rb
+require 'rails_helper'
+
+RSpec.feature "Search recipes", js: true do
+# write data inside or
+  # fixtures :all  # or
+  before do
+    Recipe.create! name: 'Baked Potato'
+  end
+  scenario "successfully" do
+    visit "/"
+    fill_in "keywords", with: "baked"
+
+    click_button "Search"
+
+    expect(page).to have_content("Baked Potato")
+    expect(page).to_not have_content("Garlic")
+    expect(page.has_link?('Sign up')).to be true
+  end
+end
+</code></pre></div></div>
+
+<p>For /</p>
+
+<h1 id="rspec-helpers">Rspec Helpers</h1>
+
+<p>You an define your helpers in separate file and include it in Rspec
+config.</p>
+
+<p>Imporant note that helpers can be used only inside examples (not example groups)</p>
+
+<h2 id="custom-matchers">Custom matchers</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec::Matchers.define :be_able_to_see do |*projects|
+  match do |user|
+    expect(user.visible_projects).to eq(projects)
+    projects.all? { |p| expect(user.can_view?(p)).to be_truthy }
+    (all_projects - projects).all? { |p| expect(user.can_view?(p)).to be_falsy }
+  end
+end
+
+let(:all_projects) { [project_1, project_2] }
+expect(user).to be_able_to_see(project_1, project_2)
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/a/equal_when_sorted_by_id.rb
+require 'rspec/expectations'
+
+# When using `Timecop.freeze Date.parse('2018-06-06 10:00:00') do` than ordering
+# from database could be random (since created_at are all the same) so you might
+# get failed tests when comparing some scopes.
+RSpec::Matchers.define :equal_when_sorted_by_id do |expected|
+  match do |actual|
+    actual.sort_by(&amp;:id) == expected.sort_by(&amp;:id)
+  end
+end
+</code></pre></div></div>
+
+<p>For flash messages in feature tests</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/a/flash_message_feature_helpers.rb
+# instead of expect(page).to have_selector 'div', text: 'Flash message', visible: false
+# you should use: expect(page).to have_flash_message 'Flash message'
+
+require 'rspec/expectations'
+
+RSpec::Matchers.define :have_flash_message do |expected|
+  match do |page|
+    expect(page).to have_selector 'div', text: expected, visible: false
+  end
+  failure_message do |page|
+    "expected find text '#{expected}' in #{page.body}"
+  end
+end
+</code></pre></div></div>
+
+<h2 id="login-helper">Login helper</h2>
+
+<p>In controller tests you can use devise helpers.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.describe ProjectsController, type: :controller do
+  let(:user) { FactoryBot.create :user }
+  describe "authenticated user" do
+    before(:example) do
+      sign_in user
+    end
+
+    # Note that you can change user and it will affect current_user
+    describe "has some projects" do
+      before { user.projects &lt;&lt; project }
+      it "user has project" do
+        expect(controller.current_user.projects.count).to eq(1)
+      end
+    end
+</code></pre></div></div>
+
+<p>Since in Rails 5, instead of controller tests, we should use integration helper
+and use <code class="language-plaintext highlighter-rouge">sign_in user</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ActiveSupport::TestCase
+  # provide `sign_in user`
+  include Devise::Test::IntegrationHelpers
+end
+</code></pre></div></div>
+
+<p>Alternatively, you can stub <code class="language-plaintext highlighter-rouge">current_user</code>.</p>
+
+<p>https://github.com/plataformatec/devise/wiki/How-To:-Test-controllers-with-Rails-3-and-4-(and-RSpec)#controller-specs</p>
+
+<p>Use <a href="https://github.com/thoughtbot/clearance#fast-feature-specs">clearance
+backdoor</a> for
+bypassing login and simply <code class="language-plaintext highlighter-rouge">visit my_profile_path(as: user)</code></p>
+
+<p>In feature tests there we can’t use devise helpers but we can manually log in or
+use <code class="language-plaintext highlighter-rouge">login_as</code> warden method which is outside of rails stack</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/support/features/authentication_helpers.rb
+module Features
+  module AuthenticationHelpers
+    def user_manual_sign_in(email, password)
+      visit new_user_session_path
+      fill_in 'Email', with: email
+      fill_in 'Password', with: password
+      click_button 'Sign In'
+    end
+
+    def create_logged_in_user
+      user = FactoryBot.create(:user)
+      login_as user
+      user
+    end
+
+    def mock_facebook_auth(user = {})
+      # info https://github.com/omniauth/omniauth/wiki/Integration-Testing
+      auth = {
+        provider: 'facebook',
+        uid: user.try(:facebook_uid) || '1234567',
+        info: {
+          email: user.try(:email) || 'joe@bloggs.com',
+          name: user.try(:name) || 'Joe Bloggs',
+          first_name: 'Joe',
+          last_name: 'Bloggs',
+          image: 'http://graph.facebook.com/1234567/picture?type=square',
+          verified: true
+        },
+        credentials: {
+          token: 'ABCDEF...', # OAuth 2.0 access_token, which you may wish to store
+          expires_at: 1321747205, # when the access token expires (it always will)
+          expires: true # this will always be true
+        },
+      }
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:facebook, auth)
+    end
+
+    def mock_facebook_invalid_auth
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:facebook] = :invalid_credentials
+    end
+
+    def silence_omniauth
+      previous_logger = OmniAuth.config.logger
+      OmniAuth.config.logger = Logger.new("/dev/null")
+      yield
+    ensure
+      OmniAuth.config.logger = previous_logger
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.include Features::AuthenticationHelpers, type: :feature
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/support/devise.rb
+RSpec.configure do |config|
+  # this enable sign_in, sign_out devise methods in controller and view specs
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
+  # for devise &lt;= 4.1.0
+  # config.include Devise::TestHelpers
+end
+# configure only for features
+RSpec.configure do |config|
+  # login_as is warden method
+  config.include Warden::Test::Helpers
+end
+</code></pre></div></div>
+
+<p>I got error: <code class="language-plaintext highlighter-rouge">UncaughtThrowError: uncaught throw :warden</code> and that is because
+user was unconfirmed or database was empty.
+The best is to be by default confirmed:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  factory :user do
+    sequence(:email) { |n| "email#{n}@trk.in.rs" }
+    password 'asdfasdf'
+    confirmed_at { Time.current }
+
+    factory :unconfirmed_user do
+      confirmed_at nil
+    end
+  end
+</code></pre></div></div>
+
+<p>Note that devise confirmation email is sent
+<a href="https://github.com/plataformatec/devise/blob/4-1-stable/lib/devise/models/confirmable.rb#L48">after_commit</a>
+which is not happen if you are using database_cleaner. Solution is to jump to
+<code class="language-plaintext highlighter-rouge">js</code> or manually initiate sending email confirmation after create
+<a href="https://github.com/plataformatec/devise/issues/2688#issuecomment-187173433">link</a></p>
+
+<h2 id="mailer-helper">Mailer helper</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/support/mailer_helpers.rb
+module MailerHelpers
+  # you should call this manually for specific test
+  # not for all tests like: config.before(:each) { reset_email }
+  def clear_emails
+    ActionMailer::Base.deliveries = []
+  end
+
+  def last_email
+    fail 'please use give_me_last_mail_and_clear_mails'
+    ActionMailer::Base.deliveries.last
+  end
+
+  # some usage is like:
+  # mail = give_me_last_mail_and_clear_mails
+  # assert_equal [email], mail.to
+  # assert_match t('user_mailer.landing_signup.confirmation_text'), mail.body.decoded
+  # confirmation_link = mail.body.decoded.match(
+  #   /(http:.*)"&gt;#{t("confirm_email")}/
+  # )[1]
+  # visit confirmation_link
+  def give_me_last_mail_and_clear_mails
+    email = ActionMailer::Base.deliveries.last
+    ActionMailer::Base.deliveries = []
+    email
+  end
+end
+RSpec.configure do |config|
+  config.include(MailerHelpers)
+end
+</code></pre></div></div>
+
+<p>Testing emails rspec is different for Devise 3 and Devise 4 (there is a problem
+that I can’t open regitration email in devise 4).</p>
+
+<h2 id="pause-helpers">Pause helpers</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/support/pause_helpers.rb
+module PauseHelpers
+  # you can use byebug, but it will stop rails so you can not navigate to other
+  # pages or make another requests in chrome while testing
+  def pause
+    $stderr.write 'Press CTRL+J or ENTER to continue'
+    $stdin.gets
+  end
+end
+RSpec.configure do |config|
+  config.include PauseHelpers, type: :feature
+end
+</code></pre></div></div>
+
+<p>If you want to show immediatelly errors while whole test suite is running you
+can use <a href="https://github.com/grosser/rspec-instafail">https://github.com/grosser/rspec-instafail</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+group :development, :test do
+  gem 'rspec-instafail', require: false
+end
+
+# .rspec
+--require rspec/instafail
+--format RSpec::Instafail
+--format progress # to keep dots ap
+</code></pre></div></div>
+
+<h2 id="helpers-inside-spec-file">Helpers inside spec file</h2>
+
+<p>You can add methods to your spec file, usually for integration specs using
+<code class="language-plaintext highlighter-rouge">yield</code> (click some button on some page) that can be customized for each test
+example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/features/user_forgot_password_spec.rb
+require 'rails_helper'
+
+RSpec.feature 'User forgot password' do
+  let(:email) { 'my@email.com' }
+  before do
+    create :user, email: email
+    reset_email
+    Rails.cache.clear
+  end
+
+  def request_forgot_password(&amp;block)
+    visit new_user_session_path
+    click_link 'Forgot your password?'
+
+    fill_in 'Email', with: 'user@test.com'
+    yield if block_given?
+
+    click_button 'Send me reset password instructions'
+  end
+
+  scenario 'with existing email' do
+    request_forgot_password do
+      fill_in 'Email', with: email
+    end
+    expect(page).to have_content 'You will receive an email with instructions about how to reset your password in a few minutes.'
+    expect(last_email.to).to include email
+    expect(all_emails.size).to eq 1
+  end
+end
+</code></pre></div></div>
+
+<h1 id="fixtures">Fixtures</h1>
+
+<p>All data is cleared between tests. Although we touch database (huge third party
+dependency) we call it <em>unit</em> test. All data is available on each tests. Rails
+starts db transaction at the begining of each tests and roll back at the end of
+test (if you do not want transaction you can disable
+<code class="language-plaintext highlighter-rouge">config.use_transactional_fixtures = false</code>)</p>
+
+<p>We define it using <a href="/2017/01/10/get-syntax-right-in-jade-yaml-haml/#yaml">yml file</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># test/fixtures/projects.yml
+my_project:
+  name: My Project Name
+  due_date: 2017-01-01
+</code></pre></div></div>
+
+<p>In tests you can access those data with <code class="language-plaintext highlighter-rouge">projects(:my_project)</code>.
+Fixture loading mechanism bypasses ActiveRecord validations.
+You can use yaml identifier to create associations</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>simple_task:
+  title: Simple task
+  project: my_project
+</code></pre></div></div>
+
+<p>You can use erb to add dynamic attributes or to specify multiple entries</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;% 10.times do |i| %&gt;
+task_&lt;%= i %&gt;:
+  name: "Task &lt;%= i %&gt;"
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>Pros:</p>
+
+<ul>
+  <li>fixtures are usefull for global semi static data (like job_types)</li>
+  <li>very fast since all data is loaded at once. It’s better than factory bot
+  since <code class="language-plaintext highlighter-rouge">FactoryBot.create :task</code> 10 times will create 10 projects (association
+  objects) as well.</li>
+</ul>
+
+<p>Cons:</p>
+
+<ul>
+  <li>fixtures are global so all edge cases will increase database data for each
+ test</li>
+  <li>fixture are for specific models, so sometime it is hard to track
+ complex setup (comment for that task for this project for that owner)</li>
+  <li>fixtures are distant and far away of test so you need look into it to figure
+ out actual test setup</li>
+  <li>
+    <p>fixtures define database column so you need erb to define password hash.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user:
+  email: "test@example.com"
+  encrypted_password: &lt;%= User.new.send(:password_digest, 'password') %&gt;
+
+# without device it is with gem bcrypt
+  password_digest: &lt;%= BCrypt::Password.create('password') %&gt;
+</code></pre></div>    </div>
+
+    <p>In factory bot you can use model methods.</p>
+  </li>
+</ul>
+
+<h1 id="factory-bot">Factory Bot</h1>
+
+<p>(former Factory girl)
+After you install</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e '/group :development, :test do/a  \
+  gem "factory_bot_rails"'
+bundle
+mkdir spec/support
+cat &gt;&gt; spec/support/factory_bot.rb &lt;&lt; HERE_DOC
+# so we do not need to prefix with FactoryBot.create :user
+RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+end
+HERE_DOC
+
+sed -i spec/rails_helper.rb -e '/require .spec_helper/a  \
+require "support/factory_bot"'
+</code></pre></div></div>
+
+<p>To use factories in console you can simply use: <code class="language-plaintext highlighter-rouge">FactoryBot.create :user</code></p>
+
+<p>You can create factories in <code class="language-plaintext highlighter-rouge">spec/factories.rb</code> or <code class="language-plaintext highlighter-rouge">spec/factories/*.rb</code>. It is
+recomended to use only one file since it should be bare minimum, and should not
+change while the application grows (although it could get bigger).
+So write minimum that meets validation and use inheritance to create variations
+of data.</p>
+
+<p><a href="https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#configure-your-test-suite">Getting
+started</a></p>
+
+<ul>
+  <li>factory name is used to determine the class (it has to be same or you need to
+use <code class="language-plaintext highlighter-rouge">class: Project</code>), dynamic attributes are defined with a block
+<code class="language-plaintext highlighter-rouge">date_of_birth { 11.years.ago }</code> in which you can use other attributes</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/factories.rb
+FactoryBot.define do
+  factory :project do
+    name "My Project"
+    full_name { "exiting #{name}" }
+    due_date Date.parse("2017-01-10")
+    # note that Time.zone.now is evaluated at begining of test suite so that
+    # expired_at = Time.zone now - 20.mins if you test suite lasts 20.mins
+    expired_at Time.zone.now
+    # here is evaluated when we create :project
+    expired_at { Time.zone.now }
+    # also
+    before :create do |project|
+      project.expired_at = Time.zone.now
+    end
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>belongs_to associations attributes, you do not need to write any attributes if
+it match the class name, or you can specify which factory and which strategy to
+use when it is used. Note that you do not use <code class="language-plaintext highlighter-rouge">_id</code> for field name, use class
+name as usuall. In validation, you can validate presence for object but not id
+<code class="language-plaintext highlighter-rouge">validates :user, presence: true</code> (but not <code class="language-plaintext highlighter-rouge">validates :user_id, presence: true</code>)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factory :comment do
+  user
+  # or
+  association :user
+  # if you want that user is built but not save to database
+  association :user, strategy: :build
+  # you can define class and additional attributes
+  association :updated_by, factory: :user, name: "Admin User"
+  # another form
+  user.association :user, name: 'My User'
+end
+</code></pre></div>    </div>
+
+    <p>If you have circular dependency ie two associations that are not independent,
+than you can setup object in after build block (one of them is less important
+and another is more, which will always used as parameter and not used as
+generated, for example it will not happen <code class="language-plaintext highlighter-rouge">create :location_ticket, location:
+location</code> without customer it will generate customer from some other
+location).</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># location_ticket --------&gt; location
+#                 --&gt; customer --^
+factory :location_ticket do
+  # location - we set in after build because of circular dependency
+  customer
+  after(:build) do |location_ticket|
+    location_ticket.location = location_ticket.customer.location
+  end
+end
+
+# if you have three dependencies than you can set both in after block.
+factory :location_package_sale do
+  # location - we set in after build because of circular dependency
+  # customer - we set in after build because of circular dependency
+  # location_package - we set in after build because of circular dependency
+  after(:build) do |location_package_sale|
+    location = location_package_sale.location_package&amp;.location
+    location ||= location_package_sale.customer&amp;.location
+    unless location
+      location = create :location
+    end
+    location_package_sale.location = location
+    unless location_package_sale.customer.present?
+      location_package_sale.customer = create :customer, location: location
+    end
+    unless location_package_sale.location_package.present?
+      location_package_sale.location_package = create :location_package, location: location
+    end
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>transient attributes can be used to set some configuration for dynamic
+attributes, that is not part of model attributes. Mostly used for has_many
+associations and <em>create_list</em> method</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factory :post do
+  user
+end
+
+factory :user do
+  transient do
+    posts_count 5
+  end
+
+  # the after(:create) yields two values; the user instance itself and the
+  # evaluator, which stores all values from the factory, including transient
+  # attributes; `create_list`'s second argument is the number of records
+  # to create and we make sure the user is associated properly to the post
+  after(:create) do |user, evaluator|
+    create_list(:post, evaluator.posts_count, user: user)
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>callbacks <code class="language-plaintext highlighter-rouge">after(:create) do</code>, <code class="language-plaintext highlighter-rouge">after(:build)</code>, <code class="language-plaintext highlighter-rouge">before(:create)</code>,
+<code class="language-plaintext highlighter-rouge">after(:stub)</code>. Note that there is no <code class="language-plaintext highlighter-rouge">before(:build)</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>password 'asdfasdf'
+confirmed_at { Time.current }
+
+factory :unconfirmed_user do
+  confirmed_at nil
+end
+</code></pre></div>    </div>
+  </li>
+  <li>if you need to use existing record and not create new, you can like this
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factory :company do
+country { Country.first || create(:country) }
+created_by { User.first || create(:user) }
+end
+</code></pre></div>    </div>
+  </li>
+  <li>if you need polymorphic, than use <code class="language-plaintext highlighter-rouge">factory: :model</code> attribute. Also you can
+put params in <code class="language-plaintext highlighter-rouge">association</code>
+https://robots.thoughtbot.com/aint-no-calla-back-girl</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class SmsAlert &lt; ActiveRecord::Base
+  belongs_to :smsable, polymorphic: true
+end
+class Customer &lt; ActiveRecord::Base
+  has_many :sms_alerts, as: :smsable
+end
+factory :sms_alert do
+  message 'a'
+  factory :customer_sms_alert do
+    smsable factory: :customer
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>nested factory is usefull if you need different kind of objects. It is
+similar to inheritance. Note that if you have model <code class="language-plaintext highlighter-rouge">UserWithPosts</code> nested
+factory will use parent factory class <code class="language-plaintext highlighter-rouge">User</code>, not the <code class="language-plaintext highlighter-rouge">UserWithPosts</code>.
+You can also define as <code class="language-plaintext highlighter-rouge">parent: :user</code> attribute</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factory :user_without_profile do
+  factory :user do
+    after :create do |user|
+      create :profile, user: user
+    end
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>sequences are used to generate values (not AR objects) which will be
+incremented every time it is called during test (test sessions is whole <code class="language-plaintext highlighter-rouge">rake
+test</code> process or <code class="language-plaintext highlighter-rouge">rails c -e test</code> session). It is used for columns that
+need uniqueness like email field. Usually only one field in table can be
+sequence, other can use it with dynamic attributes</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># seq could be defined outside factory and reused
+sequence :username { |n| "username#{n}" }
+factory :user do
+  username
+  another_uniq_field { generate :username }
+  sequence(:email) { |n| "user#{n}@asd.asd" }
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>traits are used to group attributes so you can apply them to any factory. They
+can be used with hash also <code class="language-plaintext highlighter-rouge">build :user, :admin, name: 'Mike'</code></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>factory :user do
+  name "Duke"
+  username { name }
+
+  trait :admin do
+    username { "admin-#{name}" }
+    is_admin true
+  end
+
+  # do not create profile for all users since that is not required in all test
+  trait :with_profile do
+    after :create do |user|
+      create :user_profile, user: user
+    end
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>4 ways of using: you can pass the block to any of it, or you can override with
+hash attributes <code class="language-plaintext highlighter-rouge">build(:user, name: 'My Name')</code>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">build(:user)</code> it is not saved but if you have associated <code class="language-plaintext highlighter-rouge">belongs_to
+:project</code> than it will trigger <code class="language-plaintext highlighter-rouge">create(:project)</code> to get <code class="language-plaintext highlighter-rouge">project_id</code> and all
+its associated objects… you can try with <code class="language-plaintext highlighter-rouge">strategy: :build</code> but that could
+be a problem since associated_ids do not exists. Solution is to use
+<code class="language-plaintext highlighter-rouge">build_stubbed</code> or do not define association at all and define them in tests
+(code need to be testable without associations)</li>
+      <li><code class="language-plaintext highlighter-rouge">create(:user)</code> it is saved. Use this only when need to test find/query db.</li>
+      <li><code class="language-plaintext highlighter-rouge">attributes_for(:user)</code> get hash of attributes so you can use in params_for
+for example: <code class="language-plaintext highlighter-rouge">xhr :post, users_path, user: attributes_for(:user)</code>. Note that
+it does not include parent object, so you need to merge references like <code class="language-plaintext highlighter-rouge">post
+users_path, params: { user: attributes_for(:user).merge(company_id: company.id
+}, xhr: true</code></li>
+      <li><code class="language-plaintext highlighter-rouge">build_stubbed(:user)</code> object with all AR attributes stubbed out (like
+<code class="language-plaintext highlighter-rouge">save</code>). It will raise an exception if they are called. Very fast since we do
+not create AR objects. It has rails ID and we can use associations. This is
+preferred way of creating data.</li>
+    </ul>
+  </li>
+  <li>multiple records can be <code class="language-plaintext highlighter-rouge">build_list :user, 25</code> or <code class="language-plaintext highlighter-rouge">create_list :user, 25</code> or
+<code class="language-plaintext highlighter-rouge">build_stubbed_list :user, 25</code></li>
+</ul>
+
+<p>You can debug factory bot in rails console. After debugging test data will stay
+in database so you need to clean it manually</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAILS_ENV=test rake db:drop db:create db:migrate
+rails c -e test # Better to work in test so you can drop db
+
+# require "factory_bot" no needed if you have gem factory_bot_rails
+require "./spec/factories"
+FactoryBot.build :user
+
+include FactoryBot::Syntax::Methods
+build :user, name: 'Dule'
+
+RAILS_ENV=test rake db:drop db:create db:migrate
+</code></pre></div></div>
+
+<p>Factory bot can’t be used as seed file as suggested <a href="https://robots.thoughtbot.com/factory_girl-for-seed-data">thoughtbot
+post</a> mainly because
+it is used to create new data (not to use existing) and used in a way that you
+do should not define all attributes.</p>
+
+<p>Use fixtures for integration or complex controller tests. Use factories for unit
+tests.</p>
+
+<h1 id="testing-uploading-files">Testing uploading files</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>joe.photo = File.new(File.join(Rails.root, 'spec', 'support', 'files', 'pookie.jpg'))
+joe.save!
+joe.photo_before_type_cast.should == "pookie.jpg"
+</code></pre></div></div>
+
+<p>For files you can use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h1 id="testing-time-and-date">Testing time and date</h1>
+
+<p>Using rails native helpers
+http://edgeapi.rubyonrails.org/classes/ActiveSupport/Testing/TimeHelpers.html
+Use <code class="language-plaintext highlighter-rouge">ActiveSupport::Testing::TimeHelpers#travel</code> (usefull when you want time to
+pass) and <code class="language-plaintext highlighter-rouge">travel_to</code> <code class="language-plaintext highlighter-rouge">travel_back</code> (time does not move for the duration of the
+test).</p>
+
+<p>Most ActiveSupport methods (such as <code class="language-plaintext highlighter-rouge">6.days.ago</code>) returns <code class="language-plaintext highlighter-rouge">DateTime</code>. If you
+want to compare with <code class="language-plaintext highlighter-rouge">Date</code> objects than you need to convert <code class="language-plaintext highlighter-rouge">.to_date</code>, or
+use <code class="language-plaintext highlighter-rouge">.to_time</code> or <code class="language-plaintext highlighter-rouge">.to_datetime</code>. The most robust way to compare is to use
+<code class="language-plaintext highlighter-rouge">to_s(:db)</code> for example <code class="language-plaintext highlighter-rouge">5.days.ago.to_date.to_s(:db)</code></p>
+
+<p>When you want to set particular <code class="language-plaintext highlighter-rouge">created_at</code> than you can do like for any other
+attribute, in fixture or update method. Sometimes for <code class="language-plaintext highlighter-rouge">updated_at</code> you need to
+prevent rails callbacks with <code class="language-plaintext highlighter-rouge">Project.record_timestamps = false;
+@project.updated_at = 5.days.ago; @project.save; Project.record_timestamps =
+true</code></p>
+
+<p>Use gem Timecop https://github.com/travisjeffery/timecop timecoop
+Similar to mock which will return same value for all subsequent calls…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assert now
+Timecop.freeze(Date.today + 30) do
+  assert in one month
+end
+
+# fix all dates
+Timecop.freeze '2020-01-01 08:00:00' do
+  Time.now # will always return same value
+  Time.now # will always return same value
+end
+
+# Recomended is to use block syntax since
+Timecop.freeze(Date.today + 30)
+Time.now # will always return same value
+Time.now # will always return same value even in different test
+Timecop.return
+
+# or travel with block syntax
+Timecop.travel(Date.today + 30) do
+  Time.now # will show Date.today + 30 + 1s...
+end
+
+# Note that factory bot definitions are used before timecop, so if you have
+factory :user do
+  renewed_at: Time.zone.today
+end
+
+Timecop.freeze Date.parse('2018-01-15') do
+  user = create :user
+  user.renewed_at # =&gt; 2018-05-05
+end
+</code></pre></div></div>
+
+<h1 id="using-test-doubles-as-mocks-and-stubs">Using test doubles as mocks and stubs</h1>
+
+<p><a href="https://relishapp.com/rspec/rspec-mocks">https://relishapp.com/rspec/rspec-mocks</a>
+A test double is fake object (<code class="language-plaintext highlighter-rouge">double</code>) or method (<code class="language-plaintext highlighter-rouge">allow</code> and
+<code class="language-plaintext highlighter-rouge">receive</code>) used in place of real when it is:</p>
+
+<ul>
+  <li>difficult to create it (network failure)</li>
+  <li>to isolate env so it tests only specific method</li>
+  <li>to test behavior during this test (what is called and how) and not just end
+results.</li>
+</ul>
+
+<p>We can set expectation on arguments with <code class="language-plaintext highlighter-rouge">with</code> methods.</p>
+
+<p>A <strong>TEST DOUBLE</strong> (serbian “kaskader” or “dvojnik”) is a term for any object
+that stands in for a real object. You can create with <code class="language-plaintext highlighter-rouge">double</code> method and by
+default they are strict: any message you have not allowed or expected will
+trigger an error.  If you do not want that exception is raised when some other
+method is called than you can <code class="language-plaintext highlighter-rouge">double(:user).as_null_object</code> or <code class="language-plaintext highlighter-rouge">spy(:user)</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this will raise exception for user.country, but not for user.name
+user = double(:user, name: 'Duke')
+# this will not raise exception for user.country
+user = spy(:user)
+</code></pre></div></div>
+
+<p><strong>VERYFING DOUBLE</strong> is used to mimic specific object and check if message passed
+to double is actually real method on real object and that arguments arity is the
+same.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance_user = instance_double(User)
+</code></pre></div></div>
+
+<p>There are also <code class="language-plaintext highlighter-rouge">class_double(User)</code> and <code class="language-plaintext highlighter-rouge">object_double(User.new)</code>.</p>
+
+<p>All those have spy forms <code class="language-plaintext highlighter-rouge">instance_spy</code>, <code class="language-plaintext highlighter-rouge">class_spy</code> and <code class="language-plaintext highlighter-rouge">object_spy</code> giving
+verification that message exists without having to specify a return value.</p>
+
+<p>In RSpec 3 configuration <code class="language-plaintext highlighter-rouge">mocks.verify_partial_doubles = true</code> will verify all
+partial doubles so you can not stub non existing method.</p>
+
+<p>A <strong>STUB</strong> is test double that returns predetermined preconfigured value for a
+method call (without calling actual method on actual object). It is defined
+using <code class="language-plaintext highlighter-rouge">allow().to receive().and_return()</code>. It can also use <code class="language-plaintext highlighter-rouge">and_raise(Exception,
+"message")</code> or to provide a block to specify return value, verify arguments,
+perform calculation.
+<a href="https://relishapp.com/rspec/rspec-mocks/v/3-7/docs/configuring-responses">https://relishapp.com/rspec/rspec-mocks/v/3-7/docs/configuring-responses</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allow(thing).to receive(:name).and_return("Duke")
+# you can define methods and return values in bulk
+allow(thing).to receive(first_name: 'Duke', last_name: 'Orl')
+</code></pre></div></div>
+
+<p>Stubs are used to prepare test data, and mocks are used to expect some calls.
+A <strong>MOCK</strong> is similar to stub, but it sets expectation (<code class="language-plaintext highlighter-rouge">expect</code> instead
+<code class="language-plaintext highlighter-rouge">allow</code>) that method will actually <strong>be called</strong> till the end of a example. Note
+that POST or GET must happen after this expectation.  It use <code class="language-plaintext highlighter-rouge">expect().to
+receive.and_return</code>. If it is not called, mock object triggers test failure. We
+can also set with <strong>which arguments it should be called</strong>
+<a href="https://relishapp.com/rspec/rspec-mocks/v/3-5/docs/setting-constraints/matching-arguments">https://relishapp.com/rspec/rspec-mocks/v/3-5/docs/setting-constraints/matching-arguments</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>expect(thing).to receive(:name).and_return("Duke")
+
+service_double = instance_double(CreatesProject, create: true)
+
+expect(CreatesProject).to receive(:new)
+  .with(name: 'Duke', tasks_string: nil)
+  .and_return(service_double)
+post ...
+</code></pre></div></div>
+<p>another example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  it 'execute Charge service' do
+    fake = instance_double( Charge )
+    expect( Charge ).to receive(:new).with({
+      object: @order,
+      token: 'ToKeN',
+      description: instance_of(String),
+    }).and_return(fake)
+    expect( fake ).to receive(:call).and_return(true)
+    post :create, order_id: @order.id, stripeToken: 'ToKeN'
+  end
+
+  context 'when voucher failed to apply' do
+    before do
+      allow( Orders::ApplyVoucher ).to receive(:new).with(@order, 'test').and_return(double('service', call: false))
+      put :apply_voucher, order_id: @order.id, code: 'test'
+    end
+
+    it 'sets failure notification' do
+      expect( flash[:error] ).to eq 'Failed to apply voucher'
+    end
+
+    it 'redirects to new' do
+      expect( response ).to be_redirect
+      expect( response.redirect_url ).to eq new_charge_url(order_id: @order.id)
+    end
+  end
+</code></pre></div></div>
+
+<p>A <strong>SPY</strong> is similar to mock but we set expectation later using <code class="language-plaintext highlighter-rouge">allow().to
+receive</code> and <code class="language-plaintext highlighter-rouge">expect().to have_received()</code> (so we follow
+Given/When/Then structure)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allow(thing).to receive(:name).and_return("Duke")
+# body of test
+expect(thing).to have_received(:name)
+</code></pre></div></div>
+
+<p><strong>PARTIAL DOUBLE</strong> is when you stub particular methods of real object, a <strong>FULL
+DOUBLE</strong> is when you use totally fake object that responds only to specified API
+(<code class="language-plaintext highlighter-rouge">double</code>) (so we do not care about behavior, only about public interface).</p>
+
+<p>You can use mocks for controller tests, so you do not need to know valid and
+invalid params and a bug in CreatesProject will not fail this test. Usually when
+I use double to mock some class, than use small integration test to cover both
+classes (so I know that change of class API is not an issue here). It is fine
+that stubbed method returns a stub or double, but is not recomended that double
+contains other stub or doubles (<code class="language-plaintext highlighter-rouge">double(create: true, project: double(name:
+'Duke', tasks: [double(title: 'Hi')]))</code>).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.describe ProjectsController, type: :controller do
+  it "create a project" do
+    fake_action = instance_double(CreatesProject, create: true)
+    expect(CreatesProject).to receive(:new)
+      .with(name: 'Duke', tasks_string: nil)
+      .and_return(fake_action)
+    post :create, params: { project: { name: 'Duke' } }
+    expect(response).to redirect_to projects_path
+  end
+  it "goes back to the form on failure" do
+    action_stub = double(create: false, project: Project.new)
+    expect(CreatesProject).to receive(:new).and_return(action_stub)
+    post :create, params: { project: { name: 'na' } }
+    expect(response).not_to redirect_to projects_path
+  end
+  it "fails update gracefully" do
+    sample = Project.create!(name: "Test Project")
+    expect(sample).to receive(:update_attributes).and_return(false)
+    allow(Project).to receive(:find).and_return(sample)
+    patch :update, id: sample.id, project: {name: "Fred"}
+    expect(response).to render_template(:edit)
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>usually do not stub methods that you have not written. Extract external
+service to separate classes. Usually test double could still works but actual
+object does not receive or return reasonable value. If you mock external code
+which could easilly change, than your tests will still pass. One way to deal
+with it is to create wrappers</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Project
+  def self.create_from_controller(params)
+    create(params)
+  end
+end
+
+it "creates a project" do
+  allow(Project).to receive(:create_from_controller).and_return(Project.new)
+end
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>if you need big fake objects it’s better to use stubs rather than mocks. Do
+not need to set expectation for current test (cover that object separatelly). We
+just stub external call and use some returned value. Use mock only when you need
+to trigger sending email.</p>
+  </li>
+  <li>
+    <p>if you need to change behavior of real objects, and can’t do dependency
+injection (<code class="language-plaintext highlighter-rouge">process(date, validator)</code> and stub/mock on <code class="language-plaintext highlighter-rouge">validator</code>, than you can
+use <code class="language-plaintext highlighter-rouge">allow_any_instance_of</code> and <code class="language-plaintext highlighter-rouge">expect_any_instance_of</code>:</p>
+  </li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  context 'with invalid data' do
+    it 'raises Error' do
+      allow_any_instance_of(Validator).to receive(:valid?).and_return(false)
+      expect { processor.process('foo') }.to raise_error(DataProcessor::Error)
+    end
+
+    it 'call disconnect' do
+      expect_any_instance_of(Subscriber).to receive(:delayed_disconnect)
+    end
+  end
+</code></pre></div></div>
+
+<p>There is a gem than can create stub for any activerecord model
+<a href="https://github.com/zeisler/active_mocker">https://github.com/zeisler/active_mocker</a></p>
+
+<h1 id="testing-external-service">Testing External service</h1>
+
+<ul>
+  <li><strong>client</strong> is our app, <strong>server</strong> is external service, <strong>adapter</strong> is between
+client and server, <strong>fake server</strong> returns a fake response</li>
+  <li><em>smoke test</em> is using real server, not used often, but could be helpfull</li>
+  <li><em>integration test</em> is using fake server</li>
+  <li><em>client unit test</em> ends at adapter</li>
+</ul>
+
+<h2 id="webmock">Webmock</h2>
+<p>After installing and requiring <a href="https://github.com/bblimke/webmock">webmock</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed -i Gemfile -e $'/group :development, :test do/a  \
+  gem \'rspec-rails\'\
+  gem \'webmock\''
+bundle
+sed -i spec/rails_helper.rb -e '/require .spec_helper/a  \
+require \'support/factory_bot\''
+</code></pre></div></div>
+
+<p>you can not make any external request <code class="language-plaintext highlighter-rouge">WebMock::NetConnectNotAllowedError:</code> will
+be raised and information how to stub requests will be shown which you can use
+in your <code class="language-plaintext highlighter-rouge">before</code> of <code class="language-plaintext highlighter-rouge">setup</code> block, or in some helper like
+https://github.com/nebulab/cangaroo/blob/4effc172c6ee36ccf2b844e90dcc7041035d49cc/spec/support/spec_helpers.rb#L11-L30
+You can also save real response in  a file <code class="language-plaintext highlighter-rouge">curl -is
+http://api.twitter.com/1/users/show/marnen.json &gt; tests/responses/canned_response.json</code>
+and <code class="language-plaintext highlighter-rouge">stub_request(:get, "api.twitter.com/1/users/show/marnen.json").to_return(File.new 'canned_response.json'</code>
+You can match partial query
+<a href="https://github.com/bblimke/webmock#matching-partial-query-params-using-hash">hash_including</a>
+or using a block <code class="language-plaintext highlighter-rouge">{}</code> (<code class="language-plaintext highlighter-rouge">do end</code> wont work).</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">stub_request(method, uri)</code>, uri needs to be full (including query string) or
+use regexp</li>
+  <li>uri, body and headers and query params can be matched agains regexp
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>stub_request(:get, '/webmock/')
+stub_request(:get, '
+`.with(body: //, headers:
+{ "Content-Type": // )`
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/a/webmock_helper.rb
+module WebmockHelper
+  SMS_URI = /control.msg91.com/
+  def stub_sms_to(mobile = "1111111111", messageRegexp = nil)
+    if messageRegexp
+      stub_request(:get, SMS_URI)
+        .with(query: hash_including(mobiles: mobile)) { |request| request.uri.query_values['message'] =~ messageRegexp }
+        .to_return(status: 200, body: "376967743076313037373133", headers: {}).times(1)
+    else
+      stub_request(:get, SMS_URI)
+        .with(query: hash_including(mobiles: mobile))
+        .to_return(status: 200, body: "376967743076313037373133", headers: {})
+    end
+  end
+
+  def stub_sms_and_raise(mobile = "1111111111", error = Net::ReadTimeout)
+    stub_request(:get, SMS_URI)
+      .with(query: hash_including(mobiles: mobile))
+      .to_raise(error)
+  end
+end
+RSpec.configure do |config|
+  config.include(WebmockHelper)
+end
+</code></pre></div></div>
+
+<p>Last reponse is repeated infinitely (times) and you can specify number of times
+given response should be returned. You can set expecation on how many
+times request has been made.</p>
+
+<p>Error like <code class="language-plaintext highlighter-rouge">stub_request(:get, "http://127.0.0.1:9516/shutdown").</code> is issue with
+<a href="https://github.com/bblimke/webmock/issues/163#issuecomment-37257333">spring</a>
+Also the error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WebMock::NetConnectNotAllowedError: Real HTTP connections are disabled. Unregistered request: POST http://127.0.0.1:9515/session with body '{"desiredCapabilities":{"browserName":"chrome","version":"","platform":"ANY","javascriptEnabled":true,"cssSelectorsEnabled":true,"takesScreenshot":false,"nativeEvents":false,"rotatable":false},"capabilities":{"firstMatch":[{"browserName":"chrome"}]}}' with headers {'Accept'=&gt;'application/json', 'Accept-Encoding'=&gt;'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Length'=&gt;'250', 'Content-Type'=&gt;'application/json; charset=UTF-8', 'User-Agent'=&gt;'selenium/3.14.1 (ruby linux)'}
+</code></pre></div></div>
+
+<p>Also when I run system tests</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>An HTTP request has been made that VCR does not know how to handle:
+  GET http://127.0.0.1:9522/shutdown
+
+  GET http://127.0.0.1:9522/session
+
+  GET https://chromedriver.storage.googleapis.com/LATEST_RELEASE_79.0.3945
+
+  GET https://github.com/mozilla/geckodriver/releases/latest
+
+
+There is currently no cassette in use. There are a few ways
+</code></pre></div></div>
+<p>To fix you need to write initializer that call <code class="language-plaintext highlighter-rouge">disable_net_connect!</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/webmock.rb
+if Rails.env.test?
+  require 'webmock'
+  WebMock.disable_net_connect!(allow_localhost: true)
+end
+</code></pre></div></div>
+
+<p>You can not use webmock for requests in javascript.</p>
+
+<h2 id="vcr">VCR</h2>
+
+<p>VCR records <strong>outgoing</strong> HTTP requests.
+VCR is using cassetes so you do not need to manualy stub requests using curl.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/support/vcr.rb
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/vcr_cassettes"
+  config.hook_into :webmock
+  # config.allow_http_connections_when_no_cassette = true
+  config.ignore_localhost = true
+
+  # https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
+  # https://github.com/titusfortner/webdrivers/issues/109
+  driver_hosts = Webdrivers::Common.subclasses.map { |driver| URI(driver.base_url).host }
+  # without activesupport
+  # driver_urls = (ObjectSpace.each_object(Webdrivers::Common.singleton_class).to_a - [Webdrivers::Common]).map { |driver| driver.send(:base_url) }
+
+  driver_hosts += ['googleapis.com'] # chromedriver webdriver downloads
+  driver_hosts += ['192.168.5.56'] # mikrotik test router
+  config.ignore_hosts(*driver_hosts)
+
+  # custom matcher ignore message
+  config.default_cassette_options = {
+    match_requests_on: [ :method,
+      VCR.request_matchers.uri_without_params(:message)]
+  }
+end
+
+# we can use implicit form with macros use_vcr_cassete, but that is deprecated,
+# use metadata
+# https://relishapp.com/vcr/vcr/v/3-0-3/docs/test-frameworks/usage-with-rspec-metadata
+</code></pre></div></div>
+
+<p>Latest rails uses <code class="language-plaintext highlighter-rouge">gem 'webdrivers'</code> https://github.com/titusfortner/webdrivers
+Since it automatically updates, it will be prevented by VCR
+You can ignore those requests
+https://github.com/titusfortner/webdrivers/wiki/Using-with-VCR-or-WebMock
+or manually trigger update with
+https://github.com/titusfortner/webdrivers#rake-tasks</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAILS_ENV=test rails webdrivers:chromedriver:update
+RAILS_ENV=test bundle exec rake webdrivers:chromedriver:update
+</code></pre></div></div>
+
+<p>For error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Webdrivers::NetworkError: Net::HTTPServerException: 404 "Not Found" with https://chromedriver.storage.googleapis.com/107.0.5304.62/chromedriver_mac64_m1.zip
+</code></pre></div></div>
+<p>You should upgrade to 5.2.0
+https://github.com/titusfortner/webdrivers/pull/239</p>
+
+<p>For error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails c
+Loading development environment (Rails 7.0.6)
+irb(main):001:0&gt; Webdrivers::Chromedriver.update
+/home/dule/.rbenv/versions/3.2.0/lib/ruby/gems/3.2.0/gems/webdrivers-5.2.0/lib/webdrivers/chromedriver.rb:83:in `rescue in latest_point_release': Unable to find latest point release version for 115.0.5790. You appear to be using a non-production version of Chrome. Please set `Webdrivers::Chromedriver.required_version = &lt;desired driver version&gt;` to a known chromedriver version: https://chromedriver.storage.googleapis.com/index.html (Webdrivers::VersionError)
+/home/dule/.rbenv/versions/3.2.0/lib/ruby/gems/3.2.0/gems/webdrivers-5.2.0/lib/webdrivers/network.rb:19:in `get': Net::HTTPClientException: 404 "Not Found" with https://chromedriver.storage.googleapis.com/LATEST_RELEASE_115.0.5790 (Webdrivers::NetworkError)
+</code></pre></div></div>
+<p>It means you are using very recent version of chrome which is not yet supported.
+So you can hardcode to latest supported version https://chromedriver.storage.googleapis.com/LATEST_RELEASE for example 114.0.5735.90 so it does not autodetect based on you nightly builded chrome</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/webdrivers.rb
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+</code></pre></div></div>
+
+<p>If you really need external requests you can</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/a/webmock.rb
+require 'webmock/rspec'
+WebMock.disable_net_connect!
+RSpec.configure do |config|
+  config.around :example, :live do |example|
+    WebMock.allow_net_connect!
+    VCR.turn_off!
+    example.run
+    VCR.turn_on!
+    WebMock.disable_net_connect!
+  end
+end
+</code></pre></div></div>
+
+<p>Use cassete inside <code class="language-plaintext highlighter-rouge">it</code> example block</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RSpec.describe "Location direct sms", js: true do
+  it 'sends successfully' do
+    VCR.use_cassette "sms_success_1111111111_cassette" do
+      visit customer_path customer, open_chat: true
+      click_button 'Send', visible: true
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>If you allow multiple requests (for example uploading csv with multiple users
+with same mobile number) than add <code class="language-plaintext highlighter-rouge">allow_playback_repeats: true</code>
+<a href="https://relishapp.com/vcr/vcr/v/3-0-3/docs/request-matching/playback-repeats">https://relishapp.com/vcr/vcr/v/3-0-3/docs/request-matching/playback-repeats</a></p>
+
+<p>If you are not sure if sms will be sent (it is based on some other
+configuration) than <code class="language-plaintext highlighter-rouge">allow_unused_http_interactions: false</code></p>
+
+<h1 id="testing-railscache">Testing Rails.cache</h1>
+
+<p>By default in <code class="language-plaintext highlighter-rouge">config/environments/test.rb</code> we have
+<code class="language-plaintext highlighter-rouge">config.action_controller.perform_caching = false</code>. Note that this applies only
+for <code class="language-plaintext highlighter-rouge">action_controller</code> so any page, fragment or custom caching still works.
+You can disable all caching, ie caching is enabled but any write to cache is
+discarded with:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/environments/test.rb
+Rails.application.configure do
+  config.cache_store = :null_store
+end
+</code></pre></div></div>
+
+<p>I you need to test some caching (if rails state depend on cache value) than you
+can clear (purge) cache before example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>before :each do
+  Rails.cache.clear
+end
+</code></pre></div></div>
+
+<h1 id="when-not-to-write-tests">When not to write tests</h1>
+
+<ul>
+  <li>when things are too hard to test, for example setting up model that external
+services need to use</li>
+  <li>too trivial tests</li>
+  <li>overtesting when we use same model method on severall controllers</li>
+  <li>exploratory coding (code that will not go to production)</li>
+</ul>
+
+<h1 id="coverage">Coverage</h1>
+
+<p><a href="https://github.com/colszowka/simplecov">https://github.com/colszowka/simplecov</a></p>
+
+<p><code class="language-plaintext highlighter-rouge">rake stats</code> can give you LOC  Code to Test ratio, which should be 1:2 - 1:3.</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>write tests that descibe behavior not implementation, so it does not change
+when implementation changes (completed? could be boolean true/false, or presence
+of completed_at),</li>
+  <li>only when dealing with edge cases you can look at implementation (time/dates
+and off-by-one error)</li>
+  <li>all unit tests should be (Rails 4 Test Prescriptions book):
+    <ul>
+      <li>Straightforward: since method should do one thing we should split tests into
+smaller semantically meaningful parts which are easy to understand. Do not use
+tricks to write short test code, since it should be simple.</li>
+      <li>Well defined: repeatability could be problem in case of datetime, random and
+third-party calls.</li>
+      <li>Independent: does not depend on other tests (single line of code breaks
+multiple tests or order of test cause failure) or external data like fixtures</li>
+      <li>Fast: big startup time, dependencies that create a lot of objects, database
+usage</li>
+      <li>Truthful: do not fail while code still works (in view tests we can replace
+exact match “Some title” with “#id.class” that rarely change). or do not pass
+while code has an issue (mock objects)</li>
+    </ul>
+  </li>
+  <li>if you find yourself writting tests that already pass, that means you are
+writing too much code. You shoult apply “sliming”, write only code that make
+makes test pass</li>
+  <li>big method does not clearly separate individual steps, depend on side effects
+rher than return values.</li>
+  <li>first write initial state, than simple successful path than alternate
+successful paths and than error edge cases that break code (one by one)</li>
+  <li>there is a difference between integration test (when we do not use doubles)
+and top level unit test, when we use stubs since we only test that method is
+calling other methods, which will be unit tested separately. We could write unit
+test for those other methods first, that is bottom up approach, we need to fake
+data. Symetrically, top down approach is when we first write top level unit test
+and fake calls to other methods. You should cover edge cases in top level unit
+test (using doubles), and not writting a lot of integration tests which are slow
+and more likely to fail as it needs to call all other methods.</li>
+  <li>on legacy app, when code is intertwined, there are a lot of dependencies
+between parts of the code, it is hard to write unit test. You can start with
+feature tests, than write characterization test <code class="language-plaintext highlighter-rouge">(assert(result).to
+eq('correct')</code> that are used only to check old behavior, than use TDD to write
+new tests and code, and than refactor while characterization tests keep old
+behavior.</li>
+  <li>do not use test doubles too much when code has a lot of depencencies. It is
+better that test is fragile than writting/updating test double setup</li>
+</ul>
+
+<blockquote>
+  <p>Overly aggressive test doubles that set unneeded expectations are also a
+common cause of test fragility, so if a test fails because of an expectation
+on the double, it’s useful to ask whether the expectation needs to be there in
+the first place.</p>
+</blockquote>
+
+<ul>
+  <li>you do not need to write tests for part of the framework.</li>
+  <li>YAGNI is not used in tests</li>
+  <li>repeat Red-Green-Refactor cycle in small increments, because a lot of changes
+will have a lot of places where code could broke. Refactoring step should not
+need to change any tests, just code.</li>
+  <li>
+    <p>simulate network timeouts with</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># if you perform request with `res = Net::HTTP.get_response(uri)`
+expect(Net::HTTP).to receive(:get_response).and_raise(Net::OpenTimeout)
+click_button 'Make Request'
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="todo">TODO:</h1>
+
+<p>Antipaterns</p>
+
+<p><a href="http://code.tutsplus.com/articles/antipatterns-basics-rails-tests--cms-26011">http://code.tutsplus.com/articles/antipatterns-basics-rails-tests--cms-26011</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spect/support/geocoder.rb
+Geocoder.configure(lookup: :test)
+
+Geocoder::Lookup::Test.set_default_stub(
+  [
+    {
+      'latitude'     =&gt; 40.7143528,
+      'longitude'    =&gt; -74.0059731,
+      'address'      =&gt; 'New York, NY, USA',
+      'state'        =&gt; 'New York',
+      'state_code'   =&gt; 'NY',
+      'country'      =&gt; 'United States',
+      'country_code' =&gt; 'US',
+      'city'         =&gt; 'New York',
+    }
+  ]
+)
+</code></pre></div></div>
+
+<p>Acts as taggable</p>
+
+<p>If you have <code class="language-plaintext highlighter-rouge">acts_as_taggable_on :cuisines</code> you can create with <code class="language-plaintext highlighter-rouge">_list</code> method: <code class="language-plaintext highlighter-rouge">FactoryBot.create :user, cuisine_list: ['American', 'Indian']</code>.</p>
+
+<p>In fixtures you should put only what is neccesarry to create object (only validated field) so our test do not need to know about validations when they test something different. Define all neccessary stuf (like Tags) in test on the fly. Do not let your tests depend on fixtures.</p>
+
+<p>Some references:</p>
+
+<p>guidlines <a href="http://betterspecs.org/">betterspecs</a>
+<a href="https://github.com/thoughtbot/guides/tree/master/best-practices#testing">thoughtbot</a></p>
+<ul>
+  <li>avoid using instance variables in tests</li>
+  <li>do not test private methods</li>
+  <li>use <a href="https://robots.thoughtbot.com/spy-vs-spy">stubs and spies</a> instead of
+mocks since it clearly separate SETUP, EXERSIZE and VERIFICATION phase.</li>
+</ul>
+
+<h1 id="parallel-tests">Parallel tests</h1>
+
+<p>https://github.com/grosser/parallel_tests</p>
+
+<h1 id="opensource-examples-with-tests">Opensource examples with tests</h1>
+
+<p>Best source is real word rails applications
+<a href="https://github.com/eliotsykes/real-world-rails">https://github.com/eliotsykes/real-world-rails</a>
+and real world rspec examples with prescriptions
+<a href="https://github.com/eliotsykes/rspec-rails-examples">https://github.com/eliotsykes/rspec-rails-examples</a></p>
+
+<ul>
+  <li><a href="https://github.com/discourse/discourse">https://github.com/discourse/discourse</a></li>
+  <li><a href="https://github.com/manshar/manshar">https://github.com/manshar/manshar</a> rails and angular</li>
+  <li><a href="https://github.com/scottwillson/racing_on_rails">https://github.com/scottwillson/racing_on_rails</a> minitests</li>
+  <li><a href="https://github.com/bikeindex/bike_index">https://github.com/bikeindex/bike_index</a> rspec, api, swagger</li>
+  <li><a href="https://github.com/mabranches/Olympic">https://github.com/mabranches/Olympic</a> swagger, jsonapi</li>
+  <li><a href="http://stackoverflow.com/questions/4421174/what-are-some-good-example-open-source-ruby-projects-that-use-cucumber-and-rspec">http://stackoverflow.com/questions/4421174/what-are-some-good-example-open-source-ruby-projects-that-use-cucumber-and-rspec</a></li>
+</ul>
+
+<p>clean https://github.com/ni3t/tweetfire
+https://github.com/elizabrock/coursewareofthefuture exaples for all tests</p>
+
+<h1 id="live-coding-and-other-video-tutorials">Live Coding and other video tutorials</h1>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=Q00H6BPVNQI&amp;list=PL6XWIjBFDFOIiJyDK61thx6ILIbaUMEAb">Advance API Phil
+Sturgeon list</a> author of Building APIs your won’t hate</li>
+  <li><a href="https://www.youtube.com/watch?v=jk016koiMAI">gregg pollack and carlos souza</a>
+minispec rails api</li>
+  <li><a href="https://www.youtube.com/playlist?list=PL93_jRSrU7hzEUNmevlnMeUx6F35Za638">Sean Devine Live code a charity auction
+application</a>
+<a href="https://github.com/barelyknown/charity_auction-server">source code</a></li>
+  <li><a href="https://www.youtube.com/watch?v=sj5TXzgZ1Sk">thoughbot workshop intro to tdd</a> also <a href="https://www.youtube.com/watch?v=8368hGNIJMQ">mocking</a></li>
+  <li><a href="https://www.youtube.com/watch?v=H1Czc3NL4c4">matt smith</a></li>
+  <li><a href="https://www.youtube.com/watch?v=9f08KzNO4qo">Paul Hiatt</a></li>
+  <li><a href="http://railscasts.com/episodes?utf8=%E2%9C%93&amp;search=test">Railscasts</a></li>
+  <li><a href="https://www.youtube.com/watch?v=YjHKetQxk5I">Mocking Luca Pradovera</a></li>
+  <li><a href="https://www.youtube.com/watch?v=CDC7zA8a-mA">Carlos Souza</a></li>
+</ul>
+
+<p>Rspec book <a href="http://www.betterspecs.org/">http://www.betterspecs.org/</a></p>
+
+<ul>
+  <li>
+    <p><a href="https://www.youtube.com/watch?v=URSWYvyc42M">sandy metz</a></p>
+  </li>
+  <li>fake sms client external test with adapter https://thoughtbot.com/blog/faking-external-services-in-tests-with-adapters
+Improve speed of the tests</li>
+  <li>show current test file name
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># spec/rails_helper.rb
+RSpec.configure do |config|
+  config.before :each do |x|
+    puts "In #{self.class.description} #{x.description} #{x.example.file_path}"
+  end
+end
+</code></pre></div>    </div>
+  </li>
+  <li>run test in seed deterministic order
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails test --seed 12345
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>https://github.com/palkan/test-prof</p>
+
+<p>TODO</p>
+
+<p>https://player.fm/series/series-1401837/46-joe-ferris-test-driven-rails
+https://www.youtube.com/watch?v=yTkzNHF6rMs
+https://vimeo.com/44807822
+https://www.youtube.com/watch?v=9f08KzNO4qo
+https://m.patrikonrails.com/how-i-test-my-rails-applications-cf150e347a6b
+https://robots.thoughtbot.com/headless-feature-specs-with-chrome
+https://building.buildkite.com/5-ways-weve-improved-flakey-test-debugging-4b3cfb9f27c8
+<a href="http://blog.arkency.com/2017/06/acceptance-testing-ruby-using-actors-personas">aceptance
+testing</a>
+easy system testings https://rlafranchi.github.io/system_tester/</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

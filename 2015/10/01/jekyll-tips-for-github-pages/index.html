@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Jekyll tips for github pages</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Jekyll tips for github pages</h1>
+    <p class="meta">Oct 1, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installation"><span class="tocnumber">1</span> <span class="toctext">Installation</span></a></li><li class="toc_level-1 toc_section-2"><a href="#custom-domain"><span class="tocnumber">2</span> <span class="toctext">Custom domain</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#do-not-leave-dns-record-to-github-without-domain-validation"><span class="tocnumber">2.1</span> <span class="toctext">Do not leave dns record to github without domain validation</span></a></li></ul></li><li class="toc_level-1 toc_section-4"><a href="#cloudflare"><span class="tocnumber">3</span> <span class="toctext">Cloudflare</span></a></li><li class="toc_level-1 toc_section-5"><a href="#cloudfront"><span class="tocnumber">4</span> <span class="toctext">Cloudfront</span></a></li><li class="toc_level-1 toc_section-6"><a href="#loopia"><span class="tocnumber">5</span> <span class="toctext">Loopia</span></a></li><li class="toc_level-1 toc_section-7"><a href="#jekyll-on-github"><span class="tocnumber">6</span> <span class="toctext">Jekyll on github</span></a></li><li class="toc_level-1 toc_section-8"><a href="#travis"><span class="tocnumber">7</span> <span class="toctext">Travis</span></a></li><li class="toc_level-1 toc_section-9"><a href="#heroku"><span class="tocnumber">8</span> <span class="toctext">Heroku</span></a></li><li class="toc_level-1 toc_section-10"><a href="#serve-under-subfolder"><span class="tocnumber">9</span> <span class="toctext">Serve under subfolder</span></a></li><li class="toc_level-1 toc_section-11"><a href="#development-environment"><span class="tocnumber">10</span> <span class="toctext">Development environment</span></a></li><li class="toc_level-1 toc_section-12"><a href="#automatic-deploy-to-gh-pages-using-rake"><span class="tocnumber">11</span> <span class="toctext">Automatic deploy to gh-pages using rake</span></a></li><li class="toc_level-1 toc_section-13"><a href="#moving-away-from-gh-pages-so-we-can-see-the-access-logs"><span class="tocnumber">12</span> <span class="toctext">Moving away from gh pages so we can see the access logs</span></a></li><li class="toc_level-1 toc_section-14"><a href="#adding-table-of-content"><span class="tocnumber">13</span> <span class="toctext">Adding Table of Content</span></a></li><li class="toc_level-1 toc_section-15"><a href="#adding-sitemap"><span class="tocnumber">14</span> <span class="toctext">Adding sitemap</span></a></li><li class="toc_level-1 toc_section-16"><a href="#jekyll-variables-and-categories"><span class="tocnumber">15</span> <span class="toctext">Jekyll variables and categories</span></a></li><li class="toc_level-1 toc_section-17"><a href="#search"><span class="tocnumber">16</span> <span class="toctext">Search</span></a></li><li class="toc_level-1 toc_section-18"><a href="#404"><span class="tocnumber">17</span> <span class="toctext">404</span></a></li><li class="toc_level-1 toc_section-19"><a href="#config"><span class="tocnumber">18</span> <span class="toctext">Config</span></a></li><li class="toc_level-1 toc_section-20"><a href="#theme"><span class="tocnumber">19</span> <span class="toctext">Theme</span></a><ul><li class="toc_level-2 toc_section-21"><a href="#running-example-site"><span class="tocnumber">19.1</span> <span class="toctext">Running example site</span></a></li><li class="toc_level-2 toc_section-22"><a href="#editing-theme"><span class="tocnumber">19.2</span> <span class="toctext">Editing theme</span></a></li><li class="toc_level-2 toc_section-23"><a href="#using-theme"><span class="tocnumber">19.3</span> <span class="toctext">Using theme</span></a></li></ul></li><li class="toc_level-1 toc_section-24"><a href="#markdown"><span class="tocnumber">20</span> <span class="toctext">Markdown</span></a></li><li class="toc_level-1 toc_section-25"><a href="#kramdown"><span class="tocnumber">21</span> <span class="toctext">Kramdown</span></a></li><li class="toc_level-1 toc_section-26"><a href="#liquid-in-markdown"><span class="tocnumber">22</span> <span class="toctext">Liquid in markdown</span></a></li><li class="toc_level-1 toc_section-27"><a href="#internal-jekyll-tags"><span class="tocnumber">23</span> <span class="toctext">Internal jekyll tags</span></a></li><li class="toc_level-1 toc_section-28"><a href="#adding-tag-filter"><span class="tocnumber">24</span> <span class="toctext">Adding tag, filter</span></a></li><li class="toc_level-1 toc_section-29"><a href="#scss"><span class="tocnumber">25</span> <span class="toctext">Scss</span></a></li><li class="toc_level-1 toc_section-30"><a href="#coffee-script"><span class="tocnumber">26</span> <span class="toctext">Coffee script</span></a></li><li class="toc_level-1 toc_section-31"><a href="#rails"><span class="tocnumber">27</span> <span class="toctext">Rails</span></a></li><li class="toc_level-1 toc_section-32"><a href="#tips"><span class="tocnumber">28</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-33"><a href="#slides"><span class="tocnumber">29</span> <span class="toctext">Slides</span></a></li><li class="toc_level-1 toc_section-34"><a href="#tips-1"><span class="tocnumber">30</span> <span class="toctext">Tips</span></a><ul><li class="toc_level-2 toc_section-35"><a href="#preview"><span class="tocnumber">30.1</span> <span class="toctext">Preview</span></a></li><li class="toc_level-2 toc_section-36"><a href="#local-develoment"><span class="tocnumber">30.2</span> <span class="toctext">Local develoment</span></a></li><li class="toc_level-2 toc_section-37"><a href="#live-demo"><span class="tocnumber">30.3</span> <span class="toctext">Live Demo</span></a></li><li class="toc_level-2 toc_section-38"><a href="#authors-️"><span class="tocnumber">30.4</span> <span class="toctext">Authors ✍️</span></a></li><li class="toc_level-2 toc_section-39"><a href="#-contributors"><span class="tocnumber">30.5</span> <span class="toctext">🤝 Contributors</span></a></li><li class="toc_level-2 toc_section-40"><a href="#-license"><span class="tocnumber">30.6</span> <span class="toctext">📝 License</span></a></li><li class="toc_level-2 toc_section-41"><a href="#show-your-support-"><span class="tocnumber">30.7</span> <span class="toctext">Show your support 💪</span></a></li></ul></li><li class="toc_level-1 toc_section-42"><a href="#my-project"><span class="tocnumber">31</span> <span class="toctext">My Project</span></a></li><li class="toc_level-1 toc_section-43"><a href="#just-the-docs"><span class="tocnumber">32</span> <span class="toctext">Just the docs</span></a></li></ul></td></tr></tbody></table></div><h1 id="installation">Installation</h1>
+
+<p>Here are the steps you can follow to generate myblog</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install jekyll
+jekyll new myblog
+cd myblog
+git init .
+git add .
+git commit -m "Initial jekyll new myblog"
+</code></pre></div></div>
+
+<p>Add usefull gems</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; 'HERE_DOC'
+gem 'jekyll-seo-tag'
+gem 'jekyll-sitemap'
+HERE_DOR
+</code></pre></div></div>
+
+<p>Live reload is now built in (no need for <code class="language-plaintext highlighter-rouge">guard-livereload</code>). You just need to
+run with option <code class="language-plaintext highlighter-rouge">jekyll serve --livereload</code></p>
+
+<p>For livereload you need to install <a href="https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related?hl=en">Chrome
+plugin</a>
+enable it and activate by clicking on icon when you open a page.
+There is also plugin for firefox https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension/
+You can use javascript version.</p>
+
+<h1 id="custom-domain">Custom domain</h1>
+
+<p>If your repo is the only or is primary, you can use <duleorlovic.github.io> url
+you just need to rename repository to that name.</duleorlovic.github.io></p>
+
+<p>Do not need to rename if you want custom domain, you can  enable it from
+settings <a href="https://github.com/duleorlovic/trk.in.rs/settings">https://github.com/duleorlovic/trk.in.rs/settings</a> or you can just
+create CNAME file manually since that is the same</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git chechout -t origin/gh-pages
+echo "www.trk.in.rs" &gt; CNAME
+</code></pre></div></div>
+
+<p>You need to configure your domain name provider to point to your github
+respository with <a href="https://help.github.com/articles/setting-up-a-www-subdomain/">CNAME
+record</a>
+to point to <code class="language-plaintext highlighter-rouge">{username}.github.io</code>, for example <code class="language-plaintext highlighter-rouge">CNAME duleorlovic.github.io</code>.
+Check when it is updated, usually in one hour</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># note that second column is TTL time to live in secods
+dig +nostats +nocomments +nocmd www.trk.in.rs
+;www.trk.in.rs.			IN	A
+www.trk.in.rs.		3600	IN	CNAME	kulakajak.github.io.
+kulakajak.github.io.	3600	IN	A	185.199.111.153
+kulakajak.github.io.	3600	IN	A	185.199.110.153
+</code></pre></div></div>
+
+<p>Use this only for subdomains (www.trk.in.rs, blog.trk.in.rs) and not for apex
+domain. Adding CNAME record to the root of your domain will disable MX and TXT
+records. If you need to apex domain (and not to destroy other records) you can
+try with ANAME record (not supported in loopia), or use Cloudflare
+<a href="https://support.cloudflare.com/hc/en-us/articles/200169056-CNAME-Flattening-RFC-compliant-support-for-CNAME-at-the-root">flattening</a></p>
+
+<p>Default <code class="language-plaintext highlighter-rouge">duleorlovic.github.io</code> is serverd under HTTPS, but custom domain is
+serverd under HTTP. To enable HTTPS for custom domains you can try
+<a href="https://www.cloudflare.com/">cloudflare</a> but recently, all github pages are
+enypted with free <a href="https://letsencrypt.org/">https://letsencrypt.org/</a> certificate.</p>
+
+<h2 id="do-not-leave-dns-record-to-github-without-domain-validation">Do not leave dns record to github without domain validation</h2>
+
+<p>What happened to me is that I leave CNAME record openfoodnetwork.trk.in.rs to
+point to github kulakajak.github.io but did not use custom domain on github
+pages and attacker used same domain to serve his website.
+I found because I received email that attacker added account on
+google search console for my domain</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>New owner for http://openfoodnetwork.trk.in.rs/
+
+To owner of trk.in.rs,
+
+Google has identified that hoshi.zora.1804126@students.um.ac.id has been added as an owner of http://openfoodnetwork.trk.in.rs/.
+</code></pre></div></div>
+
+<p>openfoodnetwork.trk.in.rs</p>
+
+<h1 id="cloudflare">Cloudflare</h1>
+
+<p>Adding CNAME on root domain is possible, it is calling CNAME Flattening.
+You can use cloudflare and heroku to catch all subdomains to same herokuapp
+https://devcenter.heroku.com/articles/custom-domains#add-a-wildcard-domain
+https://support.cloudflare.com/hc/en-us/articles/360017421192%20#CloudflareDNSFAQ-DoesCloudflaresupportwildcardDNSentries
+Add <code class="language-plaintext highlighter-rouge">*.myapp.com</code> (same as it is normal subdomain) to heroku, and use that CNAME
+value on for cloudflare.</p>
+
+<p>Note that only paid plans will use Cloudflare CDN… this subdomains will go
+directly to herokuapp. For example if you add root and www and wildcard
+subdomain you will see that root and www goes to Cloudflare IP addresses.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig +noall +answer move-index.org
+move-index.org.		300	IN	A	104.28.14.249
+move-index.org.		300	IN	A	104.28.15.249
+
+dig +noall +answer www.move-index.org
+www.move-index.org.	300	IN	A	104.28.14.249
+www.move-index.org.	300	IN	A	104.28.15.249
+dig +noall +answer asd.move-index.org
+
+asd.move-index.org.	300	IN	CNAME	vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.
+vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.2.175.150
+vertical-radish-wbe8hucc40fc2vqud0b15mzk.herokudns.com.	60 IN A	52.21.103.149
+</code></pre></div></div>
+
+<p>Redirection in cloudflare can be configured with Bulk Redirect Lists than you
+can find on main account page menu as <code class="language-plaintext highlighter-rouge">Bulk Redirects</code>.
+First click on Create Bulk Redirect List, from <code class="language-plaintext highlighter-rouge">uplate.trk.in.rs/</code>  to
+<code class="language-plaintext highlighter-rouge">https://docs.google.com/1234</code>
+and than Create Redirect Rule and choose the list.
+You also need to create a subdomain <code class="language-plaintext highlighter-rouge">uplate</code> A record <code class="language-plaintext highlighter-rouge">192.0.2.1</code> Proxied.
+IP address is not important, but keep 192.0.2.1 for simplicity.</p>
+
+<p>Use bulk redirects also for redirection from root to subdomain https://developers.cloudflare.com/fundamentals/get-started/basic-tasks/manage-subdomains/
+Just add subdomain <code class="language-plaintext highlighter-rouge">@</code> root, A record with value <code class="language-plaintext highlighter-rouge">192.0.2.1</code> Proxied.
+Then add Bulk redirection list to redirect from <code class="language-plaintext highlighter-rouge">trk.in.rs</code> to
+<code class="language-plaintext highlighter-rouge">https://www.trk.in.rs</code>.</p>
+
+<p>than go to Bulk redirects and Create Bulk Redirect using this list</p>
+
+<h1 id="cloudfront">Cloudfront</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig  +nostats +nocomments +nocmd projektor.trk.in.rs
+;projektor.trk.in.rs.		IN	A
+projektor.trk.in.rs.	3405	IN	CNAME	d1ub4fmsp3scvp.cloudfront.net.
+d1ub4fmsp3scvp.cloudfront.net. 47 IN	A	13.32.22.82
+</code></pre></div></div>
+
+<h1 id="loopia">Loopia</h1>
+
+<p>If you want redirection from non www to www, than use Forwatd -&gt; Url redirect
+(301 or 302) but uncheck “Synchronize the domain and subdomain www”
+<img src="/assets/posts/loopia_dns.png" alt="loopia dns" title="Loopia DNS" /></p>
+
+<h1 id="jekyll-on-github">Jekyll on github</h1>
+
+<p>Easiest way to start a blog on github it to fork
+<a href="https://github.com/barryclark/jekyll-now">https://github.com/barryclark/jekyll-now</a> and rename it to
+<code class="language-plaintext highlighter-rouge">duleorlovic.github.io</code> and start editing using <a href="http://prose.io/">http://prose.io/</a>. There is
+nothing special there, just simple jekyll project, with
+<a href="https://github.com/duleorlovic/jekyll-now/tree/master/_includes">_includes</a> for
+discuss, analytics, meta and uses <code class="language-plaintext highlighter-rouge">gems: jekyll-sitemap</code> which github supports.
+It does not use theme. It is very similar to default jekyll theme
+<a href="https://github.com/jekyll/minima">minima</a></p>
+
+<p>Jekyll default template minima can be overriden with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle show minima
+# ~/.rvm/gems/ruby-2.5.1/gems/minima-2.5.0
+mkdir _includes
+cp `bundle show minima`/_includes/@(footer|header|head).html _includes/
+git add .
+git commit -am 'cp `bundle show minima`/_includes/@(footer|header|head).html _includes/'
+</code></pre></div></div>
+
+<h1 id="travis">Travis</h1>
+
+<p>This <a href="https://gist.github.com/domenic/ec8b0fc8ab45f39403dd">gist</a> explain what
+to do. In additional you need to use <code class="language-plaintext highlighter-rouge">bundle install &amp;&amp; bundle exec jekyll build
+-d out</code> as build command, use proper ruby supported by travis <code class="language-plaintext highlighter-rouge">rvm: - 2.2</code>,
+exclude <code class="language-plaintext highlighter-rouge">vendor</code> from jekyll, and note the label string that <code class="language-plaintext highlighter-rouge">travis</code> cli
+generate when you encrypt.</p>
+
+<p>You need to generate keys which Travis will use to deploy. You need to write to
+<code class="language-plaintext highlighter-rouge">deploy_key</code> and to not label from travis cli.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com" deploy_key
+travis encrypt-file deploy_key
+git add deploy_key.enc
+mv deploy_key deploy_key.pub ~/.ssh/
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; deploy.sh &lt;&lt; HERE_DOC
+#!/bin/bash
+set -e # Exit with nonzero exit code if anything fails
+
+SOURCE_BRANCH="master"
+TARGET_BRANCH="gh-pages"
+
+function doCompile {
+  bundle install
+  bundle exec jekyll build -d out
+}
+
+# Pull requests and commits to other branches shouldn't try to deploy, just build to verify
+if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
+    echo "Skipping deploy; just doing a build."
+    doCompile
+    exit 0
+fi
+
+# Save some useful information
+REPO=`git config remote.origin.url`
+SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+SHA=`git rev-parse --verify HEAD`
+
+# Clone the existing gh-pages for this repo into out/
+# Create a new empty branch if gh-pages doesn't exist yet (should only happen on first deply)
+git clone $REPO out
+cd out
+git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
+cd ..
+
+# Clean out existing contents
+rm -rf out/**/* || exit 0
+
+# Run our compile script
+doCompile
+
+# Now let's go have some fun with the cloned repo
+cd out
+git config user.name "Travis CI"
+git config user.email "$COMMIT_AUTHOR_EMAIL"
+
+# If there are no changes to the compiled out (e.g. this is a README update) then just bail.
+if [ -z `git diff --exit-code` ]; then
+    echo "No changes to the output on this push; exiting."
+    exit 0
+fi
+
+# Commit the "changes", i.e. the new version.
+# The delta will show diffs between new and old versions.
+git add .
+git commit -m "Deploy to GitHub Pages: ${SHA}"
+
+# Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
+ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
+ENCRYPTED_IV_VAR="encrypted_${ENCRYPTION_LABEL}_iv"
+ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
+ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
+openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy_key.enc -out deploy_key -d
+chmod 600 deploy_key
+eval `ssh-agent -s`
+ssh-add deploy_key
+
+# Now that we're all set up, we can push.
+git push $SSH_REPO $TARGET_BRANCH
+HERE_DOC
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; .travis.yml &lt;&lt; HERE_DOC
+language: ruby
+script: bash ./deploy.sh
+rvm:
+  - 2.2
+env:
+  global:
+  - ENCRYPTION_LABEL: "find-label-in-output"
+  - COMMIT_AUTHOR_EMAIL: "your-email@gmail.com"
+HERE_DOC
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; _config.yml &lt;&lt; HERE_DOC
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - deploy.sh
+HERE_DOC
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add deploy.sh .travis.yml _config.yml deploy_key.enc
+git commit -m "Adding travis deploy scripts"
+</code></pre></div></div>
+
+<p>Very usefull one line command when debugging travis</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add . &amp;&amp; git commit --amend --no-edit &amp;&amp; git push -f
+</code></pre></div></div>
+
+<p>You can edit online with <a href="http://prose.io">http://prose.io</a>. Make sure you are editing <code class="language-plaintext highlighter-rouge">master</code>
+branch. Make sure github setting
+<a href="https://github.com/duleorlovic/blog/settings/branches">https://github.com/duleorlovic/blog/settings/branches</a>
+default branch is master branch.</p>
+
+<p>You can add prose related
+<a href="https://github.com/prose/prose/wiki/Prose-Configuration">config</a>.
+You can exclude files with <code class="language-plaintext highlighter-rouge">ignore: </code>.
+You can add custom fields for some front matter with <code class="language-plaintext highlighter-rouge">metadata: _posts: ...</code>.
+First key is folder name not the ruby class so if you have page or post inside
+folder, than use folder name instead of <code class="language-plaintext highlighter-rouge">_posts</code>. 
+Title is updated in header so do not need to define title metadata. Use <code class="language-plaintext highlighter-rouge">""</code> for
+all files. Nice <a href="https://github.com/ccppbrasil/ccppbrasil.github.io/blob/master/_config.yml">example of
+prose</a>.</p>
+
+<h1 id="heroku">Heroku</h1>
+
+<p>There is heroku buildpack than can build jekyll for you and serve static site so
+you can use any plugins.
+https://blog.heroku.com/jekyll-on-heroku</p>
+
+<h1 id="serve-under-subfolder">Serve under subfolder</h1>
+
+<p>Since github pages serve your project under subfolder
+<code class="language-plaintext highlighter-rouge">username.github.io/project-name</code> you need to use special <a href="http://jekyllrb.com/docs/configuration/">config
+variable</a> <code class="language-plaintext highlighter-rouge">baseurl</code>.  Add to your
+<code class="language-plaintext highlighter-rouge">_config.yml</code> a line <code class="language-plaintext highlighter-rouge">baseurl: /blog</code>. This is not needed if you use custom
+domain like <a href="blog.trk.in.rs">blog.trk.in.rs</a></p>
+
+<p>To properly serve your assets and link your pages you need to prepend all links
+with <em>site.baseurl</em>. For example in markdown <code class="language-plaintext highlighter-rouge">![My picture]({ { site.baseurl
+}}/assets/my_picture.png)</code> or <code class="language-plaintext highlighter-rouge">&lt;link rel="stylesheet" href="{ { site.baseurl
+}}/assets/css/main.css"&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;a class="post-link" href="{ { post.url | prepend:
+site.baseurl }}"&gt;{ { post.title }}&lt;/a&gt;</code></p>
+
+<h1 id="development-environment">Development environment</h1>
+
+<p>If you need to separate production from development (for example analytics), you
+can use liquid variable <code class="language-plaintext highlighter-rouge">jekyll.environment</code> which can be exported or used
+inline with <code class="language-plaintext highlighter-rouge">JEKYLL_ENV=development jekyll serve --watch</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- index.html --&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    {% if jekyll.environment == "development" %}
+      Hello admin
+    {% endif %}
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div></div>
+
+<h1 id="automatic-deploy-to-gh-pages-using-rake">Automatic deploy to gh-pages using rake</h1>
+
+<p>Rake tasks are perfect for deploying since you need just to type <code class="language-plaintext highlighter-rouge">rake</code> and it
+will be live (if you set up properly). This is my Rakefile that builds my blog
+(stored on bitbucket) and push to github.
+This is nice since I do not want to share history (all commits from the
+beggining). On github, you can find only one commit “Site updated at …”</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add origin git@bitbucket.org:duleorlovic/trk.in.rs.git
+git remote add github git@github.com:duleorlovic/trk.in.rs.git
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Rakefile
+#
+# You need to set up git remote to github, for example:
+#
+# git remote add github git@github.com:duleorlovic/blog.git
+#
+# Require jekyll to compile the site.
+require "jekyll"
+require 'tmpdir'
+
+task :default =&gt; "blog:publish"
+# Github pages publishing.
+namespace :blog do
+  #
+  # Because we are using 3rd party plugins for jekyll to manage the asset pipeline
+  # and suchlike we are unable to just branch the code, we have to process the site
+  # localy before pushing it to the branch to publish.
+  #
+  # We built this little rake task to help make that a little bit eaiser.
+  #
+
+  # Usaage:
+  # bundle exec rake blog:publish
+  desc "Publish blog to gh-pages"
+  task :publish do
+    # Compile the Jekyll site using the config.
+    Jekyll::Site.new(Jekyll.configuration({
+      "source"      =&gt; ".",
+      "destination" =&gt; "_site",
+      "config" =&gt; "_config.yml"
+    })).process
+
+    # Get the origin to which we are going to push the site.
+    origin = `git config --get remote.github.url`
+
+    # Make a temporary directory for the build before production release.
+    # This will be torn down once the task is complete.
+    Dir.mktmpdir do |tmp|
+      # Copy accross our compiled _site directory.
+      cp_r "_site/.", tmp
+
+      # Switch in to the tmp dir.
+      Dir.chdir tmp
+
+      # Prepare all the content in the repo for deployment.
+      system "git init" # Init the repo.
+      system "git add . &amp;&amp; git commit -m 'Site updated at #{Time.now.utc}'" # Add and commit all the files.
+
+      # Add the origin remote for the parent repo to the tmp folder.
+      system "git remote add origin #{origin}"
+
+      # Push the files to the gh-pages branch, forcing an overwrite.
+      system "git push origin master:refs/heads/gh-pages --force"
+    end
+
+    # Done.
+  end
+end
+</code></pre></div></div>
+
+<h1 id="moving-away-from-gh-pages-so-we-can-see-the-access-logs">Moving away from gh pages so we can see the access logs</h1>
+
+<p>https://belief-driven-design.com/moving-from-github-pages-to-self-hosted-ab1231fb7fa/</p>
+
+<h1 id="adding-table-of-content">Adding Table of Content</h1>
+
+<p>For README you can run command that extract all headers https://github.com/ekalinin/github-markdown-toc that you can copy and paste to README. Alternativelly you can insert</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## Table of Contents
+&lt;!--ts--&gt;
+&lt;!--te--&gt;
+</code></pre></div></div>
+
+<p>and run</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gh-md-toc --insert README.md
+</code></pre></div></div>
+
+<p>If you need automatic Toc for a any jekyll page than use
+<a href="https://github.com/dafi/jekyll-toc-generator">dafi jekyll-toc-generator</a>.</p>
+
+<p>I modify to use original id-s (that is hypernated version of header content) in
+<a href="https://github.com/duleorlovic/jekyll-toc-generator/commit/9c83b67e183600bb51dcea533aaa8eeeae4eb18a">duleorlovic/jekyll-toc-generator</a></p>
+
+<p>You can put
+<a href="http://jekyllrb.com/docs/configuration/#front-matter-defaults">defaults</a> to not
+have a Toc, and enable on post that you want Toc to show.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _config.yml
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      noToc: true
+</code></pre></div></div>
+
+<h1 id="adding-sitemap">Adding sitemap</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "gem 'jekyll-sitemap'" &gt;&gt; Gemfile
+bundle
+echo "url: https://trk.in.rs
+gems:
+  - jekyll-sitemap
+" &gt;&gt; _config.yml
+</code></pre></div></div>
+
+<p>Sitemap will be automatically generated with <code class="language-plaintext highlighter-rouge">jekyll serve</code>. Add <code class="language-plaintext highlighter-rouge">sitemap:
+false</code> for pages that you don’t want to appear in sitemap (like google site
+verification).</p>
+
+<h1 id="jekyll-variables-and-categories">Jekyll variables and categories</h1>
+
+<p>Jekyll contains <a href="https://jekyllrb.com/docs/variables/">variables</a>: <code class="language-plaintext highlighter-rouge">site</code>,
+<code class="language-plaintext highlighter-rouge">layout</code>, <code class="language-plaintext highlighter-rouge">content</code>, <code class="language-plaintext highlighter-rouge">paginator</code> and <code class="language-plaintext highlighter-rouge">page</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">{ { site }}</code> is <code class="language-plaintext highlighter-rouge">Jekyll::Drops::SiteDrop</code> class and contains</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">site.posts</code> array of all posts objects <code class="language-plaintext highlighter-rouge">Jekyll::Document collection=post</code>
+they are descending order. To access most recent you can use loop <code class="language-plaintext highlighter-rouge">{ % for
+post in site.posts limit: 3 %}</code> or assign ``
+Inside loops you can <code class="language-plaintext highlighter-rouge">break</code> or <code class="language-plaintext highlighter-rouge">continue</code>. To filter based on specific
+property you can use <code class="language-plaintext highlighter-rouge">where</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  
+  
+    &lt;li&gt;
+        &lt;a href="/2023/05/10/chatgpt/"&gt;Chatgpt&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2023/03/27/aws-tips/"&gt;Aws Tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2022/05/05/sidekiq_tips/"&gt;Sidekiq_tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2022/05/03/docker-deployment/"&gt;Docker Deployment&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2022/03/28/rails-terraform-aws-load-balancer/"&gt;Rails Terraform Aws Load Balancer&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2022/02/06/swift-xcode-ios/"&gt;Swift Xcode Ios&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/12/30/terraform-fundamentals/"&gt;Terraform Fundamentals&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/11/20/kubernetes/"&gt;Kubernetes&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/10/29/nginx/"&gt;Nginx&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/10/07/elektronsko-potpisivanje-apr-mup-citac-kartica-eporezi-na-virtual-box-windows-mac-linux/"&gt;Elektronsko Potpisivanje Apr Mup Citac Kartica Eporezi Na Virtual Box Windows Mac Linux&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/09/24/cloud-coding-play-with-rails/"&gt;Cloud Coding Play With Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/07/13/rails-app-templates/"&gt;Rails App Templates&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/05/24/amazon-aws-sns-ses-workmail/"&gt;Amazon Aws Sns Ses Workmail&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/04/26/authorization_policy_cancan_pundit_action_policy/"&gt;Authorization_policy_cancan_pundit_action_policy&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/04/01/viber-api-bot/"&gt;Viber Api Bot&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2021/02/06/rubocop/"&gt;Rubocop&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/12/23/amazon-aws-ec2-auto-scaling-and-elastic-load-balancing/"&gt;Amazon Aws Ec2 Auto Scaling And Elastic Load Balancing&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/05/18/shopify-apps/"&gt;Shopify Apps&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/05/06/roblox-studio/"&gt;Roblox Studio&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/05/05/OBS-studio-stream-mobile-phone-cameras/"&gt;Obs Studio Stream Mobile Phone Cameras&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/04/07/metaprogramming-ruby/"&gt;Metaprogramming Ruby&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/03/25/cypress/"&gt;Cypress&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/03/05/machine-vision-davies/"&gt;Machine Vision Davies&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/02/27/opencv-computer-vision/"&gt;Opencv Computer Vision&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/02/01/amazon-aws-textract/"&gt;Amazon Aws Textract&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/01/23/trailblazer-dry-rb/"&gt;Trailblazer Dry Rb&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/01/21/dokku-paas/"&gt;Dokku Paas&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2020/01/15/scraping-capybara-mechanize-selenium/"&gt;Scraping Capybara Mechanize Selenium&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/12/24/activerecord-arel/"&gt;Activerecord Arel&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/12/23/amazon-aws-alexa-lamdba-skill-home-automation/"&gt;Amazon Aws Alexa Lamdba Skill Home Automation&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/11/23/decap-netlify-cms/"&gt;Decap Netlify Cms&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/10/21/google-ads-api/"&gt;Google Ads Api&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/10/03/payments/"&gt;Payments&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/10/01/progressive-web-apps-pwa/"&gt;Progressive Web Apps Pwa&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/09/17/jestjs-puppeteer/"&gt;Jestjs Puppeteer&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/09/10/expo-react-native/"&gt;Expo React Native&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/08/17/arduino-and-electronics/"&gt;Arduino And Electronics&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/06/10/shopify-theme/"&gt;Shopify Theme&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/04/23/d3-visualization/"&gt;D3 Visualization&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/03/26/service-workers/"&gt;Service Workers&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/03/25/es6-esnext/"&gt;Es6 Esnext&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2019/01/04/rails-translations-i18n/"&gt;Rails Translations I18n&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/12/10/java-in-android-studio/"&gt;Java In Android Studio&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/12/02/tableless-search-union-of-multiple-models-using-polymorphic-association-in-rails/"&gt;Tableless Search Union Of Multiple Models Using Polymorphic Association In Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/12/01/nested-habtm-forms-for-associations-in-rails/"&gt;Nested Habtm Forms For Associations In Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/11/30/object-oriented-design-principles-and-patterns/"&gt;Object Oriented Design Principles And Patterns&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/11/20/android-turbolinks-native-mobile-app-for-rails/"&gt;Android Turbolinks Native Mobile App For Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/11/07/cordova/"&gt;Cordova&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/08/13/oauth-specification-doorkeeper/"&gt;Oauth Specification Doorkeeper&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/06/05/innovations-and-business/"&gt;Innovations And Business&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/05/31/sinatra/"&gt;Sinatra&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/05/30/rss-feed-reader/"&gt;Rss Feed Reader&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/05/24/hotwire-turbo-websockets-actioncable/"&gt;Hotwire Turbo Websockets Actioncable&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/05/18/ruby-http-client/"&gt;Ruby Http Client&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/05/17/gdpr-privacy-policy-and-terms-of-use/"&gt;Gdpr Privacy Policy And Terms Of Use&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/04/16/let-me-see/"&gt;Let Me See&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/04/10/continuous-delivery-integration-ci-cd-pronto/"&gt;Continuous Delivery Integration Ci Cd Pronto&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/03/22/stimulus-js/"&gt;Stimulus Js&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/02/21/blockchain-bitcoin-etherium/"&gt;Blockchain Bitcoin Etherium&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/02/12/mikrotik-routers-winbox/"&gt;Mikrotik Routers Winbox&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/01/26/hanami/"&gt;Hanami&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2018/01/22/minitests-rails/"&gt;Minitests Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/11/17/sharetribe/"&gt;Sharetribe&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/10/05/google-apis-gmail-calendar-youtube-captcha/"&gt;Google Apis Gmail Calendar Youtube Captcha&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/10/02/vue-js/"&gt;Vue Js&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/08/29/stripe/"&gt;Stripe&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/08/18/shopify-api/"&gt;Shopify Api&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/08/15/typescript-begginer-examples/"&gt;Typescript begginer examples&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/08/10/angular-4-and-beyond/"&gt;Angular 4 And Beyond&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/07/11/graphql/"&gt;GraphQL&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/06/16/move-index/"&gt;Move Index opensource&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/06/05/vim-theory/"&gt;Vim theory&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/05/23/macbook-macos-osx/"&gt;MacBook MacOS OSX&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/05/16/state-machines-audit-trail-gem/"&gt;State machines audit trails gem&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/05/03/bootstrap-front-end-framework/"&gt;Bootstrap front-end framerwork&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/02/23/http-theory/"&gt;HTTP theory&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/02/13/datatables/"&gt;Datatables&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/02/03/rails-cache/"&gt;Rails cache&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2017/01/10/get-syntax-right-in-jade-yaml-haml/"&gt;Get Syntax Right In Jade Yaml Haml&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/10/28/adminlte-free-template-on-rails/"&gt;AdminLTE Free Template on Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/10/19/elm-functional-static-typed-language/"&gt;Elm functional static typed language&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/09/14/web-vulnerability-and-dos-attacks/"&gt;Web Vulnerability And Dos Attacks&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/09/13/ubuntu-working-environment/"&gt;Ubuntu working environment&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/09/12/ruby-math-hackerrank/"&gt;Ruby Math Hackerrank&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/09/07/cap3-capistrano-deployment-rubber-provision/"&gt;Cap3 Capistrano Deployment Rubber Provision&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/08/26/background-jobs-and-queues/"&gt;Background jobs and queues&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/08/20/ionic-3/"&gt;Ionic 3&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/08/16/api-design/"&gt;Api design&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/07/26/usefull-plugins-services-and-opensource-stuff/"&gt;Usefull plugins, services and opensource stuff&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/05/31/apns-gcm-push-notifications-using-ionic/"&gt;Apns Gcm Push Notifications Using Ionic&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/05/26/mysql/"&gt;Mysql&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/05/22/neo4j-rails/"&gt;Neo4j Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/05/18/echo-sed-grep-command-line-editing/"&gt;Echo Sed Grep command line editing&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/05/17/send-and-receive-emails-in-rails/"&gt;Send and receive emails in rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/05/05/git-tips/"&gt;Git tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/04/27/scalable-css/"&gt;Scalable css&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/04/20/bundler-bower-gulp-npm-yarn-webpack-tips/"&gt;Bundler Bower Gulp Npm Yarn Webpack Tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/04/13/css-and-html-tips/"&gt;Css And Html Tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/04/12/rails-tips/"&gt;Rails Tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/04/07/angular-errors/"&gt;Angular errors&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/04/05/javascript-coffeescript-tips/"&gt;Javascript &amp; coffeescript tips&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/03/02/gulp-tasks/"&gt;Gulp tasks&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/02/29/amazon-aws-s3/"&gt;Amazon AWS S3&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/02/21/zoneminder-security-server-raspberry-pi-home-automation-arduino/"&gt;Zoneminder security server and Raspberry Pi home automation&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/02/19/angular-material/"&gt;Angular Material&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/02/10/javascript-theory/"&gt;Javascript theory&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/02/01/bash/"&gt;Bash&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/01/27/ionic-begginer-examples/"&gt;Ionic Begginer Examples&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2016/01/08/testing-in-javascript/"&gt;Testing in javascript&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/12/24/ionic-direct-aws-s3-upload/"&gt;Ionic &amp; Rails Direct S3 image upload&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/12/20/devise-oauth-angular/"&gt;From simple Devise to Oauth on Angular&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/12/18/angular-testing/"&gt;Angular Testing&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/12/10/angular-begginer-examples/"&gt;Angular begginer examples&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/12/01/vim-tips/"&gt;Vim&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/11/26/angular-and-ruby-on-rails/"&gt;Angular 1.x and Ruby on Rails&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/google/location-suggestion/maps/2015/11/20/google-maps-and-locations/"&gt;Google Maps and Locations&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/11/11/seo-optimization-advices/"&gt;Seo Optimization Advices&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/11/09/rails-testing/"&gt;Rails Testing&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/11/07/ruby-books/"&gt;Ruby Books&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/10/08/free-ssl-for-https-on-apache-or-nginx/"&gt;Free Ssl For Https On Apache Or Nginx&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/10/01/jekyll-tips-for-github-pages/"&gt;Jekyll tips for github pages&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/09/10/ruby-memory-leak-track/"&gt;Ruby memory leak trackdown&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/08/22/svg-css3-transforms-and-animations/"&gt;Svg Css3 Transforms And Animations&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/07/07/postgresql-tricks/"&gt;Postgresql Tricks&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/04/05/common-rails-bootstrap-snippets/"&gt;Common Rails bootstrap snippets&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/03/04/rails-settings-in-cache-and-beta-features/"&gt;Rails Settings In Cache And Beta Features&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/02/16/rails-through-vagrant-to-digitalocean/"&gt;Rails through Vagrant to DigitalOcean&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2015/01/11/good-rails-exception-notification-better-than-tests/"&gt;Good rails exception notifier better than tests&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2014/09/02/ruby-on-rails-with-ajax-javascript/"&gt;Ruby on rails and Ajax javascript&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2014/07/03/ruby-on-rails-polymorphic-or-sti/"&gt;RoR polymorphic or sti&lt;/a&gt;
+    &lt;/li&gt;
+  
+    &lt;li&gt;
+        &lt;a href="/2014/07/01/ruby-on-rails-layouts-and-rendering/"&gt;Ruby on Rails Layouts and rendering&lt;/a&gt;
+    &lt;/li&gt;
+  
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">site.pages</code> array of all pages <code class="language-plaintext highlighter-rouge">Jekyll::Page</code></li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">{ { page }}</code> is an object with</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">page.content</code> preproccessed content</li>
+  <li><code class="language-plaintext highlighter-rouge">page.name</code> like <code class="language-plaintext highlighter-rouge">contact.md</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.path</code> like <code class="language-plaintext highlighter-rouge">example/contact.md</code></li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">page.url</code> like <code class="language-plaintext highlighter-rouge">/example/contact.html</code></p>
+  </li>
+  <li>all front matters variables like <code class="language-plaintext highlighter-rouge">page.layout</code>, <code class="language-plaintext highlighter-rouge">page.title</code></li>
+</ul>
+
+<p>if current page is <code class="language-plaintext highlighter-rouge">post</code> we have additional properties</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">page.title</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.excerpt</code> it is first paragraph. if you need to limit you can use <code class="language-plaintext highlighter-rouge">https://github.com/f/awesome-chatgpt-prompts
+</code>. You can use specific delimiter
+on a post in frontmatter <code class="language-plaintext highlighter-rouge">excerpt_separator: &lt;!--more--&gt;</code> or in config (but
+than default “paragraph” excerpt will not be used, and you need to use
+separator on every post)</li>
+  <li><code class="language-plaintext highlighter-rouge">page.date</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.categories</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.tags</code></li>
+  <li><code class="language-plaintext highlighter-rouge">page.next</code> <code class="language-plaintext highlighter-rouge">page.previous</code> can be used to link to previous post
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  
+  &lt;a href="/2015/09/10/ruby-memory-leak-track/"&gt;&amp;laquo;&amp;nbsp;Ruby memory leak trackdown&lt;/a&gt;
+  
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>You can put your posts inside folder, for examle <code class="language-plaintext highlighter-rouge">kayak/canoe/_posts</code>. This
+means that posts will have <code class="language-plaintext highlighter-rouge">['kayak', 'canoe']</code> categories. You can add more
+categories using front matter <code class="language-plaintext highlighter-rouge">categories: sprint</code>.</p>
+
+<p>Since pages do not have category, you cat mark them manually or check path, like
+this</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{ % capture page_category = page.path | split: '/' | first %}
+</code></pre></div></div>
+
+<p>To list similar posts you can  use this snippet in <code class="language-plaintext highlighter-rouge">_layout/default.html</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;style type='text/css'&gt;
+  .similar-links {
+    display: inline-block;
+    padding: 10px;
+  }
+&lt;/style&gt;
+{% for cat in page.categories %}
+  {% if site.categories.[cat].size != 1  %}
+    &lt;ul class="similar-links"&gt;
+      &lt;li&gt;Look similar &lt;b&gt; {{ cat }}&lt;/b&gt; tag:&lt;/li&gt;
+      {% for p in site.categories.[cat] %}
+        {% unless p.url == page.url  %}
+          &lt;li&gt;
+            &lt;a href="{{ p.url }}"&gt;{{ p.title }}&lt;/a&gt;
+          &lt;/li&gt;
+        {% endunless %}
+      {% endfor %}
+    &lt;/ul&gt;
+  {% endif  %}
+{% endfor %}
+</code></pre></div></div>
+
+<h1 id="search">Search</h1>
+
+<p>Just copy and paste <code class="language-plaintext highlighter-rouge">search.json</code> and other snippets from
+<a href="https://github.com/christian-fei/Simple-Jekyll-Search">Simple-Jekyll-Search</a></p>
+
+<h1 id="404">404</h1>
+
+<p>For gh-pages, you just need <code class="language-plaintext highlighter-rouge">404.html</code> at root for server to use it when it does
+not find the page.</p>
+
+<h1 id="config">Config</h1>
+
+<p>You can serve using different port, just add <code class="language-plaintext highlighter-rouge">port: 4001</code> to your <code class="language-plaintext highlighter-rouge">_config.yml</code>
+file or using <code class="language-plaintext highlighter-rouge">--port</code> attribute (<code class="language-plaintext highlighter-rouge">-p</code> does not work)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll s --port 4001
+</code></pre></div></div>
+
+<p>For jekyll-postcss the port 8124 is hardcoded so if you want to change than
+update two files</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle open jekyll-postcss
+bin/postcss
+lib/jekyll-postcss/socket.rb
+</code></pre></div></div>
+
+<h1 id="theme">Theme</h1>
+
+<p>If you want to <a href="https://jekyllrb.com/docs/themes/#creating-a-gem-based-theme">create
+theme</a> you can
+follow this steps:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll new-theme jekyll-theme-booster
+vi jekyll-theme-booster.gemspec
+# edit description and url
+gem build jekyll-theme-booster.gemspec
+gem install jekyll-theme-booster-0.1.0.gem
+</code></pre></div></div>
+
+<h2 id="running-example-site">Running example site</h2>
+
+<p>You can put posts inside root folder but than you do not know which file belongs
+to theme and which is just example. So better is to use separated folder and use
+<code class="language-plaintext highlighter-rouge">rake example</code> to run that site.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Rakefile
+# based on
+# https://github.com/mmistakes/minimal-mistakes/blob/master/Rakefile
+require "bundler/gem_tasks"
+require "jekyll"
+require "listen"
+
+def listen_ignore_paths(base, options)
+  [
+    /_config\.ya?ml/,
+    /_site/,
+    /\.jekyll-metadata/
+  ]
+end
+
+def listen_handler(base, options)
+  site = Jekyll::Site.new(options)
+  Jekyll::Command.process_site(site)
+  proc do |modified, added, removed|
+    t = Time.now
+    c = modified + added + removed
+    n = c.length
+    relative_paths = c.map{ |p| Pathname.new(p).relative_path_from(base).to_s }
+    print Jekyll.logger.message("Regenerating:", "#{relative_paths.join(", ")} changed... ")
+    begin
+      Jekyll::Command.process_site(site)
+      puts "regenerated in #{Time.now - t} seconds."
+    rescue =&gt; e
+      puts "error:"
+      Jekyll.logger.warn "Error:", e.message
+      Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+    end
+  end
+end
+
+task :example do
+  base = Pathname.new('.').expand_path
+  options = {
+    "source"        =&gt; base.join('example').to_s,
+    "destination"   =&gt; base.join('example/_site').to_s,
+    "force_polling" =&gt; false,
+    "serving"       =&gt; true,
+    "theme"         =&gt; "jekyll-theme-booster"
+  }
+
+  options = Jekyll.configuration(options)
+
+  ENV["LISTEN_GEM_DEBUGGING"] = "1"
+  listener = Listen.to(
+    base.join("_includes"),
+    base.join("_layouts"),
+    base.join("_sass"),
+    base.join("assets"),
+    options["source"],
+    :ignore =&gt; listen_ignore_paths(base, options),
+    :force_polling =&gt; options['force_polling'],
+    &amp;(listen_handler(base, options))
+  )
+
+  begin
+    listener.start
+    Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'"
+
+    unless options['serving']
+      trap("INT") do
+        listener.stop
+        puts "     Halting auto-regeneration."
+        exit 0
+      end
+
+      loop { sleep 1000 }
+    end
+  rescue ThreadError
+    # You pressed Ctrl-C, oh my!
+  end
+
+  Jekyll::Commands::Serve.process(options)
+end
+</code></pre></div></div>
+
+<h2 id="editing-theme">Editing theme</h2>
+
+<p>Only files that are in repository are used for gem. gemspec uses <code class="language-plaintext highlighter-rouge">git ls-files</code>
+and default gemspec is to inlude <code class="language-plaintext highlighter-rouge">assets</code>, <code class="language-plaintext highlighter-rouge">_includes</code>, <code class="language-plaintext highlighter-rouge">_layouts</code> and <code class="language-plaintext highlighter-rouge">_sass</code>.
+You can see what is in gem with <code class="language-plaintext highlighter-rouge">gem open jekyll-theme-booster</code>.</p>
+
+<p>Some files will not be used: <code class="language-plaintext highlighter-rouge">_config.yml</code>.</p>
+
+<h2 id="using-theme">Using theme</h2>
+
+<p>When you edit template, you need to build, install and restart your jekyll serve
+proccess to load updated gem.</p>
+
+<p>It is enough to specify
+path as <code class="language-plaintext highlighter-rouge">&lt;link rel="stylesheet" href="assets/css/animate.css"&gt;</code> but for relative
+folder <code class="language-plaintext highlighter-rouge">&lt;link rel="stylesheet" href="{ { "assets/css/animate.css" | relative_url }}"&gt;</code> (that is needed for all navigational links).</p>
+
+<p>It is advised to be in same ruby version <code class="language-plaintext highlighter-rouge">rvm list</code> and <code class="language-plaintext highlighter-rouge">rvm gemset list</code>.</p>
+
+<p>Another theme example is
+<a href="https://github.com/mmistakes/minimal-mistakes">minimal-mistakes-jekyll</a></p>
+
+<p>Yet another theme
+<a href="https://tympanus.net/codrops/2018/04/20/freebie-oasis-jekyll-website-template">https://tympanus.net/codrops/2018/04/20/freebie-oasis-jekyll-website-template</a></p>
+
+<h1 id="markdown">Markdown</h1>
+
+<ul>
+  <li><a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#tables">table</a>
+can be generated with <code class="language-plaintext highlighter-rouge">|header1|header2</code></li>
+  <li>url can be written like <code class="language-plaintext highlighter-rouge">&lt;http://projektor.trk.in.rs&gt;</code> (<code class="language-plaintext highlighter-rouge">http://</code> at the
+beggining is mandatory) instead of writting it twice
+<code class="language-plaintext highlighter-rouge">[http://projektor.trk.in.rs](http://projektor.trk.in.rs)</code></li>
+  <li>internal link to post is with <code class="language-plaintext highlighter-rouge">{% link %}</code> or <code class="language-plaintext highlighter-rouge">post_url</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[My page]({ % link _posts/2016-03-02-my-page.md %})
+[My page]({ % post_url 2016-03-02-my-page %})
+</code></pre></div>    </div>
+  </li>
+  <li>images <code class="language-plaintext highlighter-rouge">![alt text]({ { site.baseurl }}/assets/path_to_image "Title text")</code> If
+you want to use image in <code class="language-plaintext highlighter-rouge">README.md</code> than you need to store image and use full
+path to raw file. No spaces are allowed, file path should be one string
+without quotes. Path should be raw (not sure why relative path does not work)
+https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![trk-datatables](test/trk_datatables_with_daterangepicker.png "TRK Datatables")
+</code></pre></div>    </div>
+
+    <p>This will work on github but not if README is shown on other sites</p>
+  </li>
+  <li>strikethrough (words crossed, deleted, removed text) can be used with
+<code class="language-plaintext highlighter-rouge">&lt;s&gt;Example&lt;/s&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;del&gt;Example&lt;/del&gt;</code> (with kramdown no shortcut works
+like <code class="language-plaintext highlighter-rouge">-- ~~</code>)</li>
+  <li>for code you can use <code class="language-plaintext highlighter-rouge">{% highlight javascript  %}</code>, <code class="language-plaintext highlighter-rouge">{%
+highlight ruby %}</code>, <code class="language-plaintext highlighter-rouge">{% highlight bash %}</code></li>
+  <li>use inline html in markdown if you use span level tags <code class="language-plaintext highlighter-rouge">&lt;span&gt;</code>,<code class="language-plaintext highlighter-rouge">&lt;bold&gt;</code>…
+for block level tags <code class="language-plaintext highlighter-rouge">&lt;div&gt;</code> you need to add blank line.</li>
+</ul>
+
+<h1 id="kramdown">Kramdown</h1>
+
+<ul>
+  <li>inline and block html elements
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>We have old router
+&lt;div class='pull-right'&gt;
+  Text right
+&lt;/div&gt;
+{::options parse_block_html="true" /}
+&lt;div&gt;
+Use *markdown* for span elements
+&lt;/div&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>definition list dl dt dd
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>term inside dt
+: definition inside dd
+</code></pre></div>    </div>
+  </li>
+  <li>block attributes are set with folloing IAL inline attribute list
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; A blockquote
+{: title="My title" .class1 #my-id}
+</code></pre></div>    </div>
+  </li>
+  <li>share attributes using ALD atribute list definition
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{:refdef: .my-class}
+paragraph
+{: refdef}
+</code></pre></div>    </div>
+  </li>
+  <li>span level elements using IAL inline attribute list
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This is *red*{: style='color: red'}.
+</code></pre></div>    </div>
+  </li>
+  <li>extension using ::, like <code class="language-plaintext highlighter-rouge">::comment</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>My 
+{::comment}
+this is ignored completely
+{:/comment}
+paragraph
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="liquid-in-markdown">Liquid in markdown</h1>
+
+<ul>
+  <li>to show jekyll mustache inline you can add space, like <code class="language-plaintext highlighter-rouge">{ % bla_tag %}</code>. Note
+that in blocks of code you can use mustache, so this is only for inside tick.</li>
+  <li>to show <code class="language-plaintext highlighter-rouge">{{  }}</code> using <em>markdown</em> you need to escape them like
+<code class="language-plaintext highlighter-rouge">{{ '{{  ' }} }}</code> first closing brackets will close everything that
+comes after first opening brackets. All other closing brackets are simply
+rendered. This does not work if that line breaks in mutliple lines (probably
+string need + or something). To simplify I just put space between first
+<code class="language-plaintext highlighter-rouge">{ { }}</code></li>
+  <li>if you need to show <strong>`</strong> than use backslash or put a space ` so it
+wont be applied`</li>
+</ul>
+
+<h1 id="internal-jekyll-tags">Internal jekyll tags</h1>
+
+<p><a href="https://jekyllrb.com/docs/templates/#links">link</a>
+Note that you do not have to use quotes: <code class="language-plaintext highlighter-rouge">'</code> or <code class="language-plaintext highlighter-rouge">"</code>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">{ % post_url %}</code>. Note that you can not use string filters like <code class="language-plaintext highlighter-rouge">prepend: </code>
+ inside tags (works only with double curly brackets <code class="language-plaintext highlighter-rouge">{ { }}</code>, so for link to
+another post (by it’s file name) when <code class="language-plaintext highlighter-rouge">site.baseurl</code> is set, <a href="https://github.com/jekyll/jekyll/issues/3708">you
+need</a> <code class="language-plaintext highlighter-rouge">[my-post]({ {
+site.baseurl }}{ % post_url 2015-12-20-my-post %})</code></li>
+  <li>when you want to link assets you can use <code class="language-plaintext highlighter-rouge">{ { "/assets/style.css" |
+relative_url }}</code></li>
+  <li>you can link to (link_to) pages also (not just posts) with <code class="language-plaintext highlighter-rouge">{ { site.baseurl
+}}{ % link news/index.html %}</code>. Parameter for <code class="language-plaintext highlighter-rouge">link</code> should contain extension
+(for example <code class="language-plaintext highlighter-rouge">.md</code>).</li>
+</ul>
+
+<p>For string manipulation you can use <code class="language-plaintext highlighter-rouge">replace</code> filters. For interpolation you
+need to use <code class="language-plaintext highlighter-rouge">capture</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+/blog/2015/10/01/jekyll-tips-for-github-pages/
+</code></pre></div></div>
+
+<p>Note that in liquid version 4 you can use <code class="language-plaintext highlighter-rouge">concat</code> filter but it is not
+supported in jekyll 3.4 (liquid 3.0.6) <a href="https://help.shopify.com/themes/liquid/filters/array-filters#concat">concat
+example</a>.
+In old liquid you can use <code class="language-plaintext highlighter-rouge">append</code> but that is only for strings.
+You should point to latest jekyll from github which uses Liquid 4</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get latest jekyll which uses liquid 4
+gem "jekyll", github: 'jekyll/jekyll'
+</code></pre></div></div>
+
+<h1 id="adding-tag-filter">Adding tag, filter</h1>
+
+<p>All <a href="https://jekyllrb.com/docs/plugins/">plugins</a> will be loaded from <code class="language-plaintext highlighter-rouge">_plugins</code>
+folder. Githib ignore this folder.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _plugins/alert_tag.rb
+module Jekyll
+  module AlertFilter
+    def alert(text)
+      unescaped = if text.class == String
+                  CGI.unescapeHTML text
+               else
+                 text.to_s
+               end
+      %(&lt;script&gt;
+        alert('#{unescaped}');
+        &lt;/script&gt;)
+    end
+  end
+end
+Liquid::Template.register_filter(Jekyll::AlertFilter)
+</code></pre></div></div>
+
+<p>This is used to alert text <code class="language-plaintext highlighter-rouge">{ % alert this is text %}</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _plugins/alert_filter.rb
+module Jekyll
+  module AlertFilter
+    def alert(text)
+      unescaped = if text.class == String
+                  CGI.unescapeHTML text
+               else
+                 text.to_s
+               end
+      %(&lt;script&gt;
+        alert('#{unescaped}');
+        &lt;/script&gt;)
+    end
+  end
+end
+Liquid::Template.register_filter(Jekyll::AlertFilter)
+</code></pre></div></div>
+
+<p>Filter is used like <code class="language-plaintext highlighter-rouge">{ { page | alert }}</code></p>
+
+<h1 id="scss">Scss</h1>
+
+<p>For adding scss support, you need to put your main scss file inside for example
+<code class="language-plaintext highlighter-rouge">assets/main.scss</code> and it needs to have double three lines <code class="language-plaintext highlighter-rouge">---</code>. From there you
+can use <code class="language-plaintext highlighter-rouge">@import "file_from_scss";</code> to load partials from <code class="language-plaintext highlighter-rouge">_sass</code> folder</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+# this is assets/main.sass which imports other sass files
+# NOTE that you can not import css file, it needs to be sass/scss
+# import "file.css" # this will not be imported at compile time, but in browser
+# import "file" # this will search for file.sass and import at compile time
+---
+
+@import "overrides";
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- override default template file _includes/head.html --&gt;
+...
+  &lt;link rel="stylesheet" href="/assets/main.css"&gt;
+</code></pre></div></div>
+
+<h1 id="coffee-script">Coffee script</h1>
+
+<p>To enable coffee script you need to add to config.yml</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; _config.yml &lt;&lt; HERE_DOC
+gems:
+  - jekyll-coffeescript
+HERE_DOC
+</code></pre></div></div>
+
+<p>And you coffee files need to have three lines <code class="language-plaintext highlighter-rouge">---</code> for example</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+# assets/js/cart.coffee
+---
+class Cart
+  constructor: (@buttons, @cart) -&gt;
+    @buttons.click (event) =&gt;
+      @textContent = 'Added'
+      do event.preventDefault
+      itemContainer = event.target.parentNode.parentNode.parentNode
+      itemNumber = do $ itemContainer
+      .find 'h3.panel-title'
+      .text
+
+      listItem = do $ @cart
+      .find 'li:last'
+      .clone
+
+      listItem.text itemNumber
+      @cart.append listItem
+      .hide()
+      .fadeIn 'slow'
+
+
+      console.log itemContainer
+
+$ -&gt;
+  cart = new Cart $('form button'), $('ul#cart')
+</code></pre></div></div>
+
+<p>and they will be compiled, so you can include them <code class="language-plaintext highlighter-rouge">&lt;script
+src="assets/js/cart.js"&gt;&lt;/script&gt;</code></p>
+
+<h1 id="rails">Rails</h1>
+
+<p>https://www.sitepoint.com/jekyll-rails/
+Example on https://github.com/trkin/premesti.se/tree/master/blog</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>if you want to move page it is advised to leave old page some time so you do
+not confuse crawlers. The best is to add redirection in html so that you do not
+add duplicate posts</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># mkdir -p 2023/01/04
+# 2023/01/04/intership.html
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"/&gt;
+    &lt;meta http-equiv="refresh" content="1;url=https://www.trk.in.rs/2023/01/04/internship.html"/&gt;
+    &lt;link rel="canonical" href="https://www.trk.in.rs/2023/01/04/internship.html"/&gt;
+    &lt;script type="text/javascript"&gt;
+      window.location.href = "https://www.trk.in.rs/2023/01/04/internship.html"
+    &lt;/script&gt;
+    &lt;title&gt;Page Redirection&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    If you are not redirected automatically, follow &lt;a href='https://www.trk.in.rs/2023/01/04/internship.html'&gt;this link&lt;/a&gt;.
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div></div>
+<p>If you have a lot of redirections, you can use different layout</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _layouts/redirect.html
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"/&gt;
+    &lt;meta http-equiv="refresh" content="1;url="/&gt;
+    &lt;link rel="canonical" href=""/&gt;
+    &lt;script type="text/javascript"&gt;
+      window.location.href = ""
+    &lt;/script&gt;
+    &lt;title&gt;Page Redirection&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    If you are not redirected automatically, follow &lt;a href=''&gt;this link&lt;/a&gt;.
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div></div>
+<p>and define redirection in markdown. Since jekyll does not support using liquid
+in frontmatter you have to specify whole url</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _posts/2022-02-02-old-page.md
+---
+layout:     redirect
+redirect:   https://www.example.org
+---
+</code></pre></div></div>
+
+<h1 id="slides">Slides</h1>
+
+<p>Google io slides can be found https://github.com/willnorris/io-slides
+After you clone the repository</p>
+
+<h1 id="tips-1">Tips</h1>
+
+<p><a href="https://jekyllrb.com/docs/plugins/">https://jekyllrb.com/docs/plugins/</a>
+<a href="https://github.com/planetjekyll/awesome-jekyll">https://github.com/planetjekyll/awesome-jekyll</a>
+<a href="https://github.com/planetjekyll/awesome-jekyll-plugins">https://github.com/planetjekyll/awesome-jekyll-plugins</a></p>
+
+<p>https://mademistakes.com/articles/using-jekyll-2016/</p>
+
+<ul>
+  <li>date <code class="language-plaintext highlighter-rouge">2024</code></li>
+  <li>add bootstrap
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn init
+yarn add bootstrap jquery popper.js
+
+# _config.yml
+sass:
+  load_path:
+    - _sass
+    - node_module
+
+# css/main.sass
+  
+</code></pre></div>    </div>
+  </li>
+  <li>debug slow rendering with
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll s --profile --verbose --trace
+</code></pre></div>    </div>
+    <p>To render only last post</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll s --watch --limit_posts 1
+</code></pre></div>    </div>
+    <p>Rebuild only that is changed</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll s --incremental
+</code></pre></div>    </div>
+  </li>
+  <li>permalinks only support date and categories. To use author in permalink you
+need to use plugin https://gist.github.com/peey/897e8ed33e412fdfe0fcacf002acc150</li>
+  <li>
+    <p>seo tags and Open Graph meta name tags are added using https://github.com/jekyll/jekyll-seo-tag</p>
+  </li>
+  <li>
+    <p>jekyll with webpack
+https://github.com/sandoche/Jekyll-webpack-boilerplate
+To add boootstrap, run <code class="language-plaintext highlighter-rouge">npm add bootstrap jquery popper.js</code> and add</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// _src/index.js
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
+
+// _src/index.scss
+@import '~bootstrap/scss/bootstrap';
+</code></pre></div>    </div>
+    <p>For links you need to use relative url <code class="language-plaintext highlighter-rouge">&lt;a href="/2023/05/10/chatgpt/"&gt;Chatgpt&lt;/a&gt;</code></p>
+
+    <p>I disabled minify_html so it runs faster on development
+https://github.com/sandoche/Jekyll-webpack-boilerplate/pull/26</p>
+
+    <p>To rebuild you need to stop and start again <code class="language-plaintext highlighter-rouge">npm start</code></p>
+  </li>
+  <li>data is yml and you can access
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _data/prices.yml
+kajak_jednosed: 800
+kajak_dvosed: 1200
+</code></pre></div>    </div>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  
+  
+</code></pre></div>    </div>
+
+    <p>similarly you can translate</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># _data/t.yml
+title:
+  en: Hi
+  sr: Cao
+
+  
+</code></pre></div>    </div>
+  </li>
+  <li>code samples https://github.com/bwillis/jekyll-github-sample
+https://bwillis.github.io/2014/05/28/include-github-repo-code-in-jekyll/</li>
+  <li>for error for ruby 3
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/home/orlovic/.rvm/gems/ruby-3.0.2/gems/jekyll-4.2.1/lib/jekyll/commands/serve/servlet.rb:3:in `require': cannot load such file -- webrick (LoadError)
+</code></pre></div>    </div>
+    <p>you just need to add gem</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle add webrick
+</code></pre></div>    </div>
+  </li>
+  <li>for error
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Could not find sass-embedded-1.58.3-x86_64-linux in any of the sources
+</code></pre></div>    </div>
+    <p>solution is to remove Gemfile.lock</p>
+  </li>
+  <li>good readme file: include repo url, screenshot or video, toc (TODO: vim
+script)
+```
+    <h1 id="my-project">My Project</h1>
+  </li>
+</ul>
+
+<p>My description</p>
+
+<p>This repo is hosten on Github</p>
+
+<p>https://github.com/duleorlovic/tailwind_play_responsive_dark_mode</p>
+
+<h2 id="preview">Preview</h2>
+
+<p>Here is a preview how I updated button color only in dark mode</p>
+
+<p><a href="https://user-images.githubusercontent.com/1426092/223404387-c3ee6d53-b84d-4664-a08e-56cbb4886ef9.webm">Screencast from 07.03.2023. 12:01:13.webm</a></p>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<h2 id="local-develoment">Local develoment</h2>
+
+<h2 id="live-demo">Live Demo</h2>
+
+<h2 id="authors-️">Authors ✍️</h2>
+
+<p>https://github.com/duleorlovic</p>
+
+<h2 id="-contributors">🤝 Contributors</h2>
+
+<p>Contributions, issues, and feature requests are greatly appreciated!</p>
+
+<p>If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag “improvements”.</p>
+
+<ul>
+  <li>Fork the Project</li>
+  <li>Create your Feature Branch (git checkout -b feature/yourfeaturename)</li>
+  <li>Commit your Changes (git commit -m ‘Add suggested feature’)</li>
+  <li>Push to the Branch (git push origin feature/AmazingFeature)</li>
+  <li>Open a Pull Request</li>
+</ul>
+
+<p>Feel free to check the <a href="https://github.com/DeVuDeveloper/jekyll-tailwind./issues/1">issues page</a>.</p>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<h2 id="-license">📝 License</h2>
+
+<p>This project is licensed by <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a></p>
+
+<h2 id="show-your-support-">Show your support 💪</h2>
+
+<p>Give a ⭐️ if you like this project!</p>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+<p>```</p>
+
+<h1 id="just-the-docs">Just the docs</h1>
+
+<ul>
+  <li>source https://github.com/just-the-docs/just-the-docs</li>
+  <li>documentation https://just-the-docs.com/</li>
+  <li>demo https://just-the-docs.github.io/just-the-docs-template/</li>
+  <li>to use the template go to https://github.com/just-the-docs/just-the-docs-template/generate
+It will be live under username.github.io/reponame but you can set to your domain
+by adding CNAME record with value username.github.io.
+If you receive error “redirected you too many times ERR_TOO_MANY_REDIRECTS than
+enable Full instead of Flexibly encryption on Cloudflare.
+This can be on per host basis
+Note that custom hostname requires to change relative</li>
+</ul>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

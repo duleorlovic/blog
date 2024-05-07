@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Amazon AWS S3</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Amazon AWS S3</h1>
+    <p class="meta">Feb 29, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#use-tags"><span class="tocnumber">1</span> <span class="toctext">Use tags</span></a></li><li class="toc_level-1 toc_section-2"><a href="#create-iam-user-and-attach-inline-policy"><span class="tocnumber">2</span> <span class="toctext">Create IAM user and attach inline policy</span></a><ul><li class="toc_level-2 toc_section-3"><a href="#add-admin-user-to-the-account"><span class="tocnumber">2.1</span> <span class="toctext">Add admin user to the account</span></a></li></ul></li><li class="toc_level-1 toc_section-4"><a href="#website-hosting"><span class="tocnumber">3</span> <span class="toctext">Website hosting</span></a><ul><li class="toc_level-2 toc_section-5"><a href="#mark-bucket-public"><span class="tocnumber">3.1</span> <span class="toctext">Mark bucket public</span></a></li><li class="toc_level-2 toc_section-6"><a href="#ssl-on-amazon-cloud-front"><span class="tocnumber">3.2</span> <span class="toctext">SSL on Amazon Cloud front</span></a></li></ul></li><li class="toc_level-1 toc_section-7"><a href="#access-files"><span class="tocnumber">4</span> <span class="toctext">Access files</span></a></li><li class="toc_level-1 toc_section-8"><a href="#region-problems"><span class="tocnumber">5</span> <span class="toctext">Region problems</span></a></li><li class="toc_level-1 toc_section-9"><a href="#tools"><span class="tocnumber">6</span> <span class="toctext">Tools</span></a></li><li class="toc_level-1 toc_section-10"><a href="#aws-sdk"><span class="tocnumber">7</span> <span class="toctext">aws-sdk</span></a></li><li class="toc_level-1 toc_section-11"><a href="#elastic-beanstalk"><span class="tocnumber">8</span> <span class="toctext">Elastic Beanstalk</span></a></li><li class="toc_level-1 toc_section-12"><a href="#admin-access"><span class="tocnumber">9</span> <span class="toctext">Admin access</span></a></li><li class="toc_level-1 toc_section-13"><a href="#errors"><span class="tocnumber">10</span> <span class="toctext">Errors</span></a></li><li class="toc_level-1 toc_section-14"><a href="#paperclip"><span class="tocnumber">11</span> <span class="toctext">Paperclip</span></a></li><li class="toc_level-1 toc_section-15"><a href="#active-storage"><span class="tocnumber">12</span> <span class="toctext">Active storage</span></a></li></ul></td></tr></tbody></table></div><h1 id="use-tags">Use tags</h1>
+
+<p>Instead of adding inline policy, you can use groups (or roles, which is
+similar) and instead of using specific resource you can add condition by tag
+https://aws.amazon.com/blogs/security/simplify-granting-access-to-your-aws-resources-by-using-tags-on-aws-iam-users-and-roles/</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:Describe*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:RebootInstances",
+                "ec2:StartInstances",
+                "ec2:StopInstances"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "ec2:ResourceTag/Team": "Developers"
+                }
+            }
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h1 id="create-iam-user-and-attach-inline-policy">Create IAM user and attach inline policy</h1>
+
+<p>I usually one user for testing (keys that I export in my basrc), one user for
+all my apps, and one for some projects which other devs could have access.
+For test IAM user I attach
+<a href="http://blogs.aws.amazon.com/security/post/Tx3VRSWZ6B3SHAV/Writing-IAM-Policies-How-to-grant-access-to-an-Amazon-S3-bucket">policy</a>
+for <em>Programmatic read and write permissions</em> with name for example
+<strong>full_access_to_video_uploading_demo</strong> . Keep in mind that underscore _ is not
+equal hyphen - .
+Carrierwave and paperclip need something more than put, get and delete, so I
+added <code class="language-plaintext highlighter-rouge">s3:*</code>.
+Version string <code class="language-plaintext highlighter-rouge">"Version": "2012-10-17"</code> should not be changed.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::duleorlovic-test",
+                "arn:aws:s3:::duleorlovic-test-eu-central-1",
+                "arn:aws:s3:::duleorlovic-test-us-east-1"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::duleorlovic-test/*",
+                "arn:aws:s3:::duleorlovic-test-eu-central-1/*",
+                "arn:aws:s3:::duleorlovic-test-us-east-1/*"
+            ]
+        }
+    ]
+}
+</code></pre></div></div>
+
+<p>On s3 you can leave checked <code class="language-plaintext highlighter-rouge">Block public access</code> but you have to enable cors if
+you have javascript upload.</p>
+
+<p>If you upload images using default rails amazon storage, then each image will
+first go to the server and server returns amazon url with temporary public
+access.
+If you want to use direct public url than create another storage with <code class="language-plaintext highlighter-rouge">public:
+true</code> and also enable public access (uncheck “Block all public
+access”) and ACLs enabled (otherwise “The bucket does not allow ACLs” error) so
+the uploaded image can be accessible using direct link (no redirection from
+server is needed anymore).</p>
+
+<p>CORS</p>
+
+<p>When you upload files using action storage ie <a href="/2015/12/24/ionic-direct-aws-s3-upload/">directly on S3</a> that means that our
+javascript code needs to send data but browser prevents with for example error</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>XMLHttpRequest cannot load
+https://duleorlovic-test-southeast-1.s3.amazonaws.com/. Response to preflight
+request doesn't pass access control check: No 'Access-Control-Allow-Origin'
+header is present on the requested resource. Origin 'http://localhost:9000' is
+therefore not allowed access. The response had HTTP status code 403.
+</code></pre></div></div>
+
+<p>We need to go Bucket -&gt; Properties -&gt; Permissions -&gt; (at the bottom)
+Cross-origin resource sharing (CORS)
+add <code class="language-plaintext highlighter-rouge">&lt;AllowedMethod&gt;PUT&lt;/AllowedMethod&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;</code>
+to the provided example:
+XML format is not used any more</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;CORSConfiguration&gt;
+    &lt;CORSRule&gt;
+        &lt;AllowedOrigin&gt;*&lt;/AllowedOrigin&gt;
+        &lt;AllowedMethod&gt;GET&lt;/AllowedMethod&gt;
+        &lt;AllowedMethod&gt;PUT&lt;/AllowedMethod&gt;
+        &lt;AllowedMethod&gt;POST&lt;/AllowedMethod&gt;
+        &lt;MaxAgeSeconds&gt;3000&lt;/MaxAgeSeconds&gt;
+        &lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;
+    &lt;/CORSRule&gt;
+&lt;/CORSConfiguration&gt;
+</code></pre></div></div>
+<p>so use JSON
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
+    {
+        "AllowedHeaders": ["*"],
+        "AllowedMethods": [
+            "GET",
+            "PUT",
+            "POST"
+        ],
+        "AllowedOrigins": [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            "http://localhost:3003",
+            "http://localhost:3004"
+        ],
+        "ExposeHeaders": []
+    }
+]
+</code></pre></div></div>
+
+<p>and you can test as soon as you save cors configuration.
+This error also occurs when we mismatch bucket_name or region. To test if bucket
+is working, follow the link from the error.</p>
+
+<p>Note that only one host or all hosts <code class="language-plaintext highlighter-rouge">*</code> can be defined. You can not allow two
+hosts.</p>
+
+<h2 id="add-admin-user-to-the-account">Add admin user to the account</h2>
+
+<p>You can create IAM user with PowerUserAccess. On
+https://console.aws.amazon.com/iam/home?#/users click on Add user</p>
+
+<p>Put username: duleorlovic@gmx.com
+Select: AWS Management Console access
+Leave autogenerated password
+Next (Permissions)
+Tab Attach existing policies directly
+Search for PowerUserAccess
+Select PowerUserAccess
+Create user
+Click on Send email
+Also copy the password and put in email (it will be changed when I login).
+Send me the email.</p>
+
+<p>IAM user can sign in on https://duleorlovic.signin.aws.amazon.com</p>
+
+<p>PowerUserAccess can not create new API keys.
+PowerUserAccess can change S3 Permissions Block public access and CORS
+configuration.</p>
+
+<h1 id="website-hosting">Website hosting</h1>
+
+<p>You can use your <code class="language-plaintext highlighter-rouge">some.domain.com</code> to point to your bucket
+<a href="https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html">guide</a>
+This is simple as adding one CNAME record.</p>
+
+<p>Your bucket needs to have the SAME NAME AS YOUR DOMAIN <code class="language-plaintext highlighter-rouge">some.domain.com</code> or you
+need to use Amazon DNS Route 53. Also if you want to serve from root domain
+<code class="language-plaintext highlighter-rouge">domain.com</code> than you must use DNS Route 53.
+For default region <em>US Standard (us-east-1)</em> you can add CNAME record with value
+<code class="language-plaintext highlighter-rouge">some.domain.com.s3.amazonaws.com</code> on your domain provider page.</p>
+
+<p>But if bucket is from different region than from CNAME you need to use full
+<strong>Endpoint</strong> which you can find in Properties of you bucket -&gt; Endpoint.
+for CNAME</p>
+
+<p><strong>bucket-name</strong>.s3-website[-.]<strong>region</strong>.amazonaws.com</p>
+
+<p>List of regions you
+can find on <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html">website
+endpoints</a>.
+or <a href="http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region</a>
+For frankfurt would be <code class="language-plaintext highlighter-rouge">some.domain.com.s3-website.eu-central-1.amazonaws.com</code>
+For southeast region is <code class="language-plaintext highlighter-rouge">ap-southeast-1</code>.
+Your bucket-name can not be different than your domain name!
+<a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html">virtual hosting</a>,
+<a href="http://docs.aws.amazon.com/general/latest/gr/rande.html">regions and endpoints</a></p>
+
+<h2 id="mark-bucket-public">Mark bucket public</h2>
+
+<p>You can deploy frontend code to S3 but you need to make it public. Edit bucket
+policy to</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "Version":"2012-10-17",
+  "Statement":[{
+  "Sid":"AddPerm",
+        "Effect":"Allow",
+    "Principal": "*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::projektor.trk.in.rs/*"
+      ]
+    }
+  ]
+}
+</code></pre></div></div>
+
+<h2 id="ssl-on-amazon-cloud-front">SSL on Amazon Cloud front</h2>
+
+<p>You can request certificate <a href="https://console.aws.amazon.com/acm/">AWS Certificate
+Manager</a>. It will send email to the
+<code class="language-plaintext highlighter-rouge">administrator@trk.in.rs</code> with the link to approve. Administrator of domain can
+just click on the link to approve it.</p>
+
+<p>Once you have approved certificate you can use it on <a href="https://console.aws.amazon.com/cloudfront/">cloud
+front</a> distribution. Some
+<a href="http://docs.aws.amazon.com/gettingstarted/latest/swh/getting-started-create-cfdist.html">notes</a>.</p>
+
+<ul>
+  <li>it could 15 mins for distribution to become deployed</li>
+  <li>when selecting <em>Origin Domain Name</em> do not select option from dropdown since
+it does not contain region (it will work only for us-east-1 buckets). You need
+to use bucket Endpoint here</li>
+  <li>
+    <p>update your DNS record so CNAME is something like
+d1ub4fmsp3scvp.cloudfront.net</p>
+  </li>
+  <li>default is <a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">24
+hours</a>
+for cache to expire… you can try to invalidate some files manually</li>
+</ul>
+
+<h1 id="access-files">Access files</h1>
+
+<p>Files can we accessed in three ways.</p>
+
+<ol>
+  <li><strong>bucket_name as path</strong>.
+<em>s3<code class="language-plaintext highlighter-rouge">[-.]region</code>.amazonaws.com/<code class="language-plaintext highlighter-rouge">bucket-name</code>/<code class="language-plaintext highlighter-rouge">file-name</code></em>. Go to the properties
+of the file and find <em>link</em>, for example:
+<a href="https://s3.eu-central-1.amazonaws.com/duleorlovic-test-eu-central-1/icon-menu.png">https://s3.eu-central-1.amazonaws.com/duleorlovic-test-eu-central-1/icon-menu.png</a>.
+You will notice that for us-east-1 region, link does not contain region part,
+only <a href="https://s3.amazonaws.com/duleorlovic-test-us-east-1/favicon.ico">https://s3.amazonaws.com/duleorlovic-test-us-east-1/favicon.ico</a></li>
+  <li><strong>bucket_name as subdomain</strong>.<code class="language-plaintext highlighter-rouge">bucket-name</code>.s3.amazonaws.com/<code class="language-plaintext highlighter-rouge">filename</code>. This
+is shorter since this url does not contain region
+<a href="https://duleorlovic-test-eu-central-1.s3.amazonaws.com/icon-menu.png">https://duleorlovic-test-eu-central-1.s3.amazonaws.com/icon-menu.png</a></li>
+  <li>enable <strong>website hosting</strong> so you can use <em>Endpoint</em> and append fileName
+<a href="http://duleorlovic-test-eu-central-1.s3-website.eu-central-1.amazonaws.com/icon-menu.png">http://duleorlovic-test-eu-central-1.s3-website.eu-central-1.amazonaws.com/icon-menu.png</a>
+    <ul>
+      <li>note that url contains <code class="language-plaintext highlighter-rouge">website-</code> so website needs to be enabled</li>
+      <li>note that this way you can not access using SSL https protocol</li>
+      <li>for HTTPS you need Cloud Front and Route 53 service
+<a href="http://knightlab.northwestern.edu/2015/05/21/implementing-ssl-on-amazon-s3-static-websites/">link</a>
+or <a href="https://www.cloudflare.com/">https://www.cloudflare.com/</a> . You can set up naked domain, just add <code class="language-plaintext highlighter-rouge">CNAME</code>
+with name <code class="language-plaintext highlighter-rouge">@</code> (or you <code class="language-plaintext highlighter-rouge">domain.com</code>) and value <code class="language-plaintext highlighter-rouge">Endpoint</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h1 id="region-problems">Region problems</h1>
+
+<ul>
+  <li>
+    <p><a href="/2016/03/02/gulp-tasks/">gulp aws-publish</a> for non us-east-1
+(for example eu-central-1, southeast-1) problems arise for bucket name with
+dot. Single world like
+<a href="http://duleorlovic-test-southeast-1.s3-website-ap-southeast-1.amazonaws.com/">http://duleorlovic-test-southeast-1.s3-website-ap-southeast-1.amazonaws.com/</a>
+works fine. Also multiple words on us-east-1 region works fine. Solution is to
+use param <code class="language-plaintext highlighter-rouge">var publisher = awspublish.create({region:
+process.env.AWS_REGION...</code> and <code class="language-plaintext highlighter-rouge">export AWS_REGION=ap-southeast-1</code>. It seems
+that region can be us-east-1 in other cases (for example it works for single
+word southeast and region us-east-1)</p>
+  </li>
+  <li>
+    <p>ng-s3upload than if your bucket name contains only one word (for example
+<a href="https://duleorlovic-test-us-east-1.s3.amazonaws.com/">https://duleorlovic-test-us-east-1.s3.amazonaws.com/</a>) than you can upload
+files with ng-s3upload but if it contains multiple
+(<a href="https://assets.test.trk.in.rs.s3.amazonaws.com/">https://assets.test.trk.in.rs.s3.amazonaws.com/</a>) than there is
+<code class="language-plaintext highlighter-rouge">ng-s3upload.js:135 OPTIONS https://assets.test.trk.in.rs.s3.amazonaws.com/
+net::ERR_INSECURE_RESPONSE</code> error.</p>
+  </li>
+</ul>
+
+<h1 id="tools">Tools</h1>
+
+<p>Firefor plugin <a href="https://www.youtube.com/watch?v=L1cqzEYYUB0">S3Fox</a> firefox
+organizer is great since you can access specific buckets.</p>
+
+<p>To check your DNS you can use linux command <code class="language-plaintext highlighter-rouge">host</code>:</p>
+
+<ul>
+  <li>host frankfurt.trk.in.rs</li>
+</ul>
+
+<h1 id="aws-sdk">aws-sdk</h1>
+
+<p>You can use aws-sdk for simple uploading
+<a href="https://github.com/duleorlovic/securiPi/blob/master/s3.rb">https://github.com/duleorlovic/securiPi/blob/master/s3.rb</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># you can override global config
+Aws.config.update(
+  credentials: Aws::Credentials.new(credentials[:aws_access_key_id], credentials[:aws_secret_access_key]),
+)
+
+# if bucket is from different region than you will get error like
+# ActionView::Template::Error (The bucket you are attempting to access must be addressed using the specified endpoint. Please send all future requests to this endpoint.):
+
+# or use s3 directly
+s3 = Aws::S3::Resource.new region: credentials[:aws_region]
+bucket = s3.bucket credentials[:aws_bucket_name]
+bucket.objects(prefix: 'assets').map {|o| o.public_url}
+
+# to download object to a file use response_target
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/developer-guide/s3-example-get-bucket-item.html
+s3 = Aws::S3::Resource.new(region: 'us-west-2')
+obj = s3.bucket('my-bucket').object('my-item')
+obj.get(response_target: './my-code/my-item.txt')
+</code></pre></div></div>
+
+<p>Push put the file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>s3 = Aws::S3::Resource.new
+path = 'photos/deepak_file/aws_test.txt'
+object = s3.bucket('storagy-teen-dev-us').object(path)
+object.upload_file(./tmp/aws_test.txt)
+# for public objects
+object.public_url
+
+# signed url for private objects
+# this is old v1 api
+# object.url_for(:read, expires: 10.min)
+
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/S3/Object.html#presigned_url-instance_method
+object.presigned_url(:get)
+</code></pre></div></div>
+
+<h1 id="elastic-beanstalk">Elastic Beanstalk</h1>
+
+<p>https://aws.amazon.com/cli/
+Using EB client you need to add permissions for AWSElasticBeanstalkFullAccess
+for AWS keys in your env</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo pip install awsebcli
+eb init
+eb create myapp-env
+eb setenv SECRET_KEY_BASE=`rake secret`
+eb printenv
+eb logs
+eb deploy
+eb status
+eb open
+</code></pre></div></div>
+
+<p>Rails sqlite database can’t be shared between instances (event when we just
+deploy the code). Adding database is one click. Just use proper env var names:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/database.yml
+default: &amp;default
+  adapter: postgresql
+  encoding: unicode
+  database: &lt;%= ENV['RDS_DB_NAME'] %&gt;
+  username: &lt;%= ENV['RDS_USERNAME'] %&gt;
+  password: &lt;%= ENV['RDS_PASSWORD'] %&gt;
+  host: &lt;%= ENV['RDS_HOSTNAME'] %&gt;
+  port: &lt;%= ENV['RDS_PORT'] %&gt;
+</code></pre></div></div>
+
+<h1 id="admin-access">Admin access</h1>
+
+<p>You can create users and attach AdministratorAccess (Resource *) and create
+password so they can login in on app url like: <code class="language-plaintext highlighter-rouge">https://123123.signin.aws.amazon.com/console</code>.</p>
+
+<h1 id="errors">Errors</h1>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">NoSuchKey</code> 404 Not Found error is when you remove <code class="language-plaintext highlighter-rouge">index.html</code> and enable
+static website hosting with index document <code class="language-plaintext highlighter-rouge">index.html</code></li>
+</ul>
+
+<h1 id="paperclip">Paperclip</h1>
+
+<p>You can use presigned url if you want S3 links to expire, in paperclip it was
+using <code class="language-plaintext highlighter-rouge">attachment.expiring_url</code>
+https://www.rubydoc.info/github/thoughtbot/paperclip/Paperclip%2FStorage%2FS3:expiring_url
+When uploading PDF in paperclip there is rails validation error because of
+imagemagic <code class="language-plaintext highlighter-rouge">Paperclip::Errors::NotIdentifiedByImageMagickError</code> fix is to update
+local <code class="language-plaintext highlighter-rouge">sudo vi /etc/ImageMagick-6/policy.xml</code> and add <code class="language-plaintext highlighter-rouge">read|write</code>
+https://github.com/thoughtbot/paperclip/issues/2223#issuecomment-428862815</p>
+
+<h1 id="active-storage">Active storage</h1>
+
+<p>https://edgeguides.rubyonrails.org/active_storage_overview.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails active_storage:install
+# Copied migration 20210623091736_create_active_storage_tables.active_storage.rb from active_storage
+#     create_table :active_storage_blobs do |t|
+#     create_table :active_storage_attachments do |t|
+#     create_table :active_storage_variant_records do |t|
+</code></pre></div></div>
+
+<p>You need to add gems</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Gemfile
+gem 'aws-sdk-s3', require: false
+gem 'image_processing', '~&gt; 1.2'
+</code></pre></div></div>
+
+<p>In credentials you need to add</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># rails credentials:edit
+amazon:
+  access_key_id: 123
+  secret_access_key: 123
+</code></pre></div></div>
+<p>and config for storage:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/storage.yml
+amazon:
+  service: S3
+  access_key_id: &lt;%= Rails.application.credentials.dig(:amazon, :access_key_id) %&gt;
+  secret_access_key: &lt;%= Rails.application.credentials.dig(:amazon, :secret_access_key) %&gt;
+  region: us-east-1
+  bucket: your_own_bucket
+</code></pre></div></div>
+
+<p>For google cloud storage you can create and download keyfile.json on IAM -&gt;
+  Service accounts https://console.cloud.google.com/iam-admin/serviceaccounts?folder=true&amp;organizationId=true&amp;project=cybernetic-tide-90121</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+class User &lt; ApplicationRecord
+has_many_attached :images
+has_one_attached :image
+end
+</code></pre></div></div>
+<p>In form view</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/users/_form.html.erb
+&lt;%= f.file_field :image %&gt;
+</code></pre></div></div>
+<p>In view</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= url_for @user.image %&gt;
+</code></pre></div></div>
+<p>To check if attached file extension is image</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user.image.blob.content_type # =&gt; 'image/png'
+user.image.blob.image?
+user.image.image?
+# file name
+user.image.filename
+</code></pre></div></div>
+<p>In controller permit that</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/users_controller.rb
+def user_params
+  # in case you have has_many_attached
+  # params.require(:user).permit(:name, images: [])
+  # in case you have has_one_attached
+  params.require(:user).permit(:name, :image)
+end
+</code></pre></div></div>
+
+<p>Attaching existing file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># to store something in temp file
+tempfile = Tempfile.new
+# you can set extension for tempfile
+tempfile = Tempfile.new(["any_prefix", ".pdf"])
+# but instead of manually tempfile.unlink youshould use block syntaxt
+Tempfile.create do |tempfile|
+
+tempfile.binmode
+encoded_image = params[:data_url].split(',')[1]
+decoded_image = Base64.decode64(encoded_image)
+tempfile.write decoded_image
+tempfile.rewind
+@receipt.signature.attach(io: tempfile.read, filename: 'signature.pdf')
+tempfile.close
+tempfile.delete
+
+# or if you already have file
+@user.image.attach(io: File.open('/path/to/file'), filename: File.basename('/path/to/file'))
+</code></pre></div></div>
+
+<p>Downloading</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>binary = user.image.download
+# to save you need to open file
+file_path = "#{Dir.tmpdir}/#{user.image.filename}"
+File.open(file_path, 'wb') do |file|
+file.write(user.image.download)
+end
+
+# or you can use .open
+user.image.open do |file|
+system '/path/to/virus/scanner', file.path
+# ...
+end
+</code></pre></div></div>
+
+<p>Deleting</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@user.image.purge
+# to destroy attachment later
+@user.image.purge_later
+</code></pre></div></div>
+
+<p>To use with Digital Ocean spaces
+https://vitobotta.com/2019/11/17/rails-active-storage-permanent-urls-with-no-redirects-digital-ocean-spaces-cloudflare/
+with direct public url to storage files ActiveStorage::Blob#key column stores
+filename.</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

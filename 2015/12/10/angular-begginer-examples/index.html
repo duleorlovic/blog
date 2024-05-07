@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Angular begginer examples</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Angular begginer examples</h1>
+    <p class="meta">Dec 10, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#filters---data--filteroptions-"><span class="tocnumber">1</span> <span class="toctext">Filters:  {{ data | filter:options }}</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#special-purpose-objects-controlles-filters-directives-animations"><span class="tocnumber">1.1</span> <span class="toctext">Special Purpose Objects: controlles, filters, directives, animations</span></a></li><li class="toc_level-2 toc_section-3"><a href="#services-for-creating-objects-value-factory-service-provider-constant"><span class="tocnumber">1.2</span> <span class="toctext">Services for creating objects: Value, Factory, Service, Provider, Constant</span></a></li></ul></li><li class="toc_level-1 toc_section-4"><a href="#rootscope"><span class="tocnumber">2</span> <span class="toctext">RootScope</span></a></li><li class="toc_level-1 toc_section-5"><a href="#share-error-messages"><span class="tocnumber">3</span> <span class="toctext">Share error messages</span></a></li><li class="toc_level-1 toc_section-6"><a href="#q-service"><span class="tocnumber">4</span> <span class="toctext">$q service</span></a></li><li class="toc_level-1 toc_section-7"><a href="#tips"><span class="tocnumber">5</span> <span class="toctext">Tips:</span></a></li><li class="toc_level-1 toc_section-8"><a href="#testing"><span class="tocnumber">6</span> <span class="toctext">Testing</span></a></li><li class="toc_level-1 toc_section-9"><a href="#confirm"><span class="tocnumber">7</span> <span class="toctext">Confirm</span></a></li><li class="toc_level-1 toc_section-10"><a href="#data-disable-with-processing"><span class="tocnumber">8</span> <span class="toctext">Data disable with Processing…</span></a></li><li class="toc_level-1 toc_section-11"><a href="#errors"><span class="tocnumber">9</span> <span class="toctext">Errors</span></a></li><li class="toc_level-1 toc_section-12"><a href="#ui-view-angular-route"><span class="tocnumber">10</span> <span class="toctext">UI View, Angular route</span></a></li><li class="toc_level-1 toc_section-13"><a href="#ui-router"><span class="tocnumber">11</span> <span class="toctext">UI Router</span></a></li><li class="toc_level-1 toc_section-14"><a href="#batarang"><span class="tocnumber">12</span> <span class="toctext">Batarang</span></a></li><li class="toc_level-1 toc_section-15"><a href="#interval-for-automatic-updates"><span class="tocnumber">13</span> <span class="toctext">Interval for automatic updates</span></a></li><li class="toc_level-1 toc_section-16"><a href="#pagination"><span class="tocnumber">14</span> <span class="toctext">Pagination</span></a></li><li class="toc_level-1 toc_section-17"><a href="#tips-1"><span class="tocnumber">15</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><p>Some of angular attribute directives:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ng-app="store"</code> defines root element of module “store” which can have many
+controllers</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-controller="StoreController as store"</code> defines controller, but it is
+usually defined in routes for specific template</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-repeat="product in store.products"</code> iteration of this element (you can
+use also <code class="language-plaintext highlighter-rouge">ng-if="$even"</code>, or <code class="language-plaintext highlighter-rouge">$index</code> variables). Iterating over object is
+<code class="language-plaintext highlighter-rouge">ng-repeat="(key, value) in data"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ng-show="product.CanPurchase"</code>,<code class="language-plaintext highlighter-rouge">ng-hide="expession"</code>, <code class="language-plaintext highlighter-rouge">ng-disabled="mySwitch"</code>
+to show/hide/disable element. In contrast, <code class="language-plaintext highlighter-rouge">ng-if</code> adds new scope or totally
+removes DOM element.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;img ng-src="{{ product.image}}"&gt;</code> to prevent browser to load empty
+src, this is only place where directive use {{ }}</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-click=" tab = 2 "</code> to run a code on click</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-class="{ active: tab === 1 }"</code> set class to key when value is true (good
+to have <code class="language-plaintext highlighter-rouge">ng-init="tab = 0"</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-model="review.terms"</code> bind value of current input element to variable</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-bind="review.terms"</code> bind innerHTML of this element to the variable (can
+be expression)</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-submit="reviewCtrl.addReview(product)"</code> call function on submit</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-include="'product-title.html'"</code> include template</li>
+  <li><code class="language-plaintext highlighter-rouge">ng-view</code> is placeholder where routes inject templates</li>
+</ul>
+
+<p>Angular expressions can’t have conditionals and loops, but have filters.
+Note that angular expressions don’t have access to <code class="language-plaintext highlighter-rouge">window</code> only <code class="language-plaintext highlighter-rouge">scope</code> so no
+help from <code class="language-plaintext highlighter-rouge">parseInt()</code>, <code class="language-plaintext highlighter-rouge">String()</code> and similar.</p>
+
+<p><code class="language-plaintext highlighter-rouge">$scope.$watch('email', function() { $scope.test(); })</code> can be used to rerun
+validation check.
+<a href="https://docs.angularjs.org/api/ng/type/$rootScope.Scope">watch</a> first argument
+(string or function) is evalued on each digest and second argument (callback
+listener) is called when a returning value of first argument is changed (for
+array, use length).
+To use with <code class="language-plaintext highlighter-rouge">controllerAs</code> syntax you need to use bind</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app.controller('Ctrl', function ($scope) {
+  this.name = 'name';
+
+  $scope.$watch(angular.bind(function () {
+    return this.title
+  }), function (oldVal, newVal) {
+
+  });
+});
+</code></pre></div></div>
+
+<p>Expressions in angular directives <code class="language-plaintext highlighter-rouge">&lt;button ng-click="foo = 5"&gt;</code> are parsed and
+evaluated. <code class="language-plaintext highlighter-rouge">$parse()</code> takes expression and returns function which takes two
+arguments: context and locals (overrides).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$scope.foo = 3;
+
+var parseFn = $parse(‘foo = 5’);
+parseFn($scope);
+// or
+$scope.$eval(‘foo = 5’);
+
+$scope.foo; // returns 5
+</code></pre></div></div>
+
+<p>You can check if some property <code class="language-plaintext highlighter-rouge">bar</code> on <code class="language-plaintext highlighter-rouge">foo</code> is not null:
+<code class="language-plaintext highlighter-rouge">$parse('bar.baz.quux')(foo)</code> will return undefined instead of throwing an
+exception.</p>
+
+<p>You can manually trigger digest with <code class="language-plaintext highlighter-rouge">$scope.$apply("foo = 5")</code> it calls
+<code class="language-plaintext highlighter-rouge">$rootScope.$digest()</code> which propagates down to every child scope
+<a href="https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$apply">link</a>.
+With ControllerAs syntax, you need to inject <code class="language-plaintext highlighter-rouge">$scope</code> and can not use
+expression, but just empty <code class="language-plaintext highlighter-rouge">$scope.$apply()</code>. You can not call <code class="language-plaintext highlighter-rouge">$apply</code> in
+callbacks for <code class="language-plaintext highlighter-rouge">ng-mouseover</code> <code class="language-plaintext highlighter-rouge">ng-click</code> since digest is in progress. It is
+usable in non angular callbacks <code class="language-plaintext highlighter-rouge">document.getElementById('b').addEventListener
+'mouseover'</code>.</p>
+
+<h1 id="filters---data--filteroptions-">Filters:  {{ data | filter:options }}</h1>
+
+<ul>
+  <li>strings <code class="language-plaintext highlighter-rouge">{{ 'Some string' | date:'MM/dd/yyy @ h:mma' }}</code> can also be
+<code class="language-plaintext highlighter-rouge">currency, lowecase, uppercase</code></li>
+  <li>iterators <code class="language-plaintext highlighter-rouge">ng-repeat="product in store.products | filter: search | orderBy:
+'-price' | limitTo: -5 "</code> use only products that match value of search (any
+property of product that match search string) order by desc price and show
+last 5. If we want to filter only product.name than bind input to
+<code class="language-plaintext highlighter-rouge">search.name</code> so search becomes object, for example <code class="language-plaintext highlighter-rouge">ng-model="search.name"</code>.</li>
+</ul>
+
+<p>View can use directives, filters. Controller and services can depend on some
+providers.</p>
+
+<ul>
+  <li>all objects are joined using <a href="https://docs.angularjs.org/guide/di">dependency
+injection</a>
+for <a href="https://docs.angularjs.org/guide/providers">specialized objects</a> 
+(controllers, directives, filters, animations) or custom service. There are 5
+types of recipe for creating object with injector: Provider (is the main one,
+other are syntactic sugar on top of this provider recipe), Value, Factory,
+Service and  Constant.
+You can use DI when defining components (only controller can have <code class="language-plaintext highlighter-rouge">$scope</code> and
+<code class="language-plaintext highlighter-rouge">resolve</code> dependency) or in <code class="language-plaintext highlighter-rouge">run</code> methods (can not inject Providers) or 
+<code class="language-plaintext highlighter-rouge">config</code> method (can not inject Service or Value) on module. Only module can
+define other components: <code class="language-plaintext highlighter-rouge">controller</code> and factories: <code class="language-plaintext highlighter-rouge">directive</code>, <code class="language-plaintext highlighter-rouge">filter</code>,
+<code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">factory</code>, <code class="language-plaintext highlighter-rouge">service</code>.</li>
+  <li>all services in Angular are singletons. injector uses each recipe at most once
+to create the object. The injector then caches the reference for all future
+needs. Controllers are instantiated every time app needs it.</li>
+  <li>use strict dependency injection <code class="language-plaintext highlighter-rouge">ng-app="myApp" ng-strict-di"</code> to raise error
+when we use implicit annotations (<code class="language-plaintext highlighter-rouge">function($scope)</code> instead of <code class="language-plaintext highlighter-rouge">['$scope',
+function($scope)]</code>)</li>
+</ul>
+
+<h2 id="special-purpose-objects-controlles-filters-directives-animations">Special Purpose Objects: controlles, filters, directives, animations</h2>
+
+<ul>
+  <li>controller methods can be defined on $scope or on this (so we reference them
+<code class="language-plaintext highlighter-rouge">MyController.myMethod</code>)</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module('myApp',['controllers']);
+angular.module('controllers', [])
+  .controller('MyController', ['$http', '$scope', function($http, $scope) {
+    this.my_value = 2;
+    $scope.myMethod = function() { return 2 };
+}]);
+</code></pre></div></div>
+
+<ul>
+  <li>new filter definition should return function</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># filter
+angular.module('myApp',['myFilters']);
+angular.module('myFilters',[])
+.filter('checkmark', function() {
+  return function(input) {
+    return input ? '\u2713' : '\u2718';
+  };
+});
+</code></pre></div></div>
+
+<p>It can be used like <code class="language-plaintext highlighter-rouge">{{ phone.available | checkmark }}</code></p>
+
+<ul>
+  <li>
+    <p>two types of directives: element directive (UI widget)
+<code class="language-plaintext highlighter-rouge">&lt;product-title&gt;&lt;/product-title&gt;</code> or attribute directive (mixins like tooltip)
+<code class="language-plaintext highlighter-rouge">&lt;div product-title&gt;&lt;/div&gt;</code>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module('myApp')
+  .directive('productTitle', function(){
+    return {
+      restict: 'E', // 'E' element, 'A' attribute (default), 'C' class
+      templateUrl: 'product-title.html',
+  
+      controller: function() {},
+      controllerAs: 'panel',
+    };
+  });
+  .directive('enter', function(scope, element, attrs){}
+    // default is 'A' so no need to write return {  link: function(){}
+    return function(scope,element, attrs) {
+      element.bind("mouseenter", function() {
+        scope.$apply(attrs.enter); # this will call argument string, ie some controller method
+      });
+    };
+  });
+</code></pre></div>    </div>
+
+    <ul>
+      <li>directives has <code class="language-plaintext highlighter-rouge">transclusion()</code> to create new scope</li>
+      <li><code class="language-plaintext highlighter-rouge">controllerAs: 'vm'</code> have some problems (but works as <code class="language-plaintext highlighter-rouge">vm1</code>)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="services-for-creating-objects-value-factory-service-provider-constant">Services for creating objects: Value, Factory, Service, Provider, Constant</h2>
+
+<ul>
+  <li><a href="https://egghead.io/playlists/learn-when-to-use-a-service-factory-or-provider-e2507e4b">egghead learn when to use a service, factory, or provider</a></li>
+  <li>
+    <p>Value recipe, can’t have other dependencies</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var myApp = angular.module('myApp', []);
+myApp.value('clientId', 'a12345654321x');
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Factory recipe use other services, is a function and lazy initialized. It
+returns object</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># factory
+angular.module('myApp',['myServices']);
+angular.module('myServices')
+.factory('sport', function() { 
+  return {
+    title: "Kayak"
+  }
+});
+# factory that use ngResource provider
+angular.module('myServices',['ngResource'])
+  .factory('Phone', ['$resource', function($resource) {
+    return $resource('phones/:phoneId', { phoneId: "@id", format: 'json' }, {
+      query: {method: 'GET', params: { phoneId: 'phones' }, isArray: true },
+      save:  { method: 'PUT' },
+      create: { method: 'POST' }
+    });
+  }]);
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>service can be added with <code class="language-plaintext highlighter-rouge">.factory</code> which returns <code class="language-plaintext highlighter-rouge">new SomeFun(arg)</code>, but
+it’s shorter with <code class="language-plaintext highlighter-rouge">.service</code> function. Service methods are defined as
+properties of <code class="language-plaintext highlighter-rouge">this</code>.  Service just use $injector to create new instance of
+service’s contructor function.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function UnicornLauncher(apiToken) {
+
+  this.launchedCount = 0;
+  this.launch = function() {
+    this.launchedCount++;
+  }
+}
+myApp.factory('unicornLauncher', ["apiToken", function(apiToken) {
+  return new UnicornLauncher(apiToken);
+}]);
+// or
+myApp.service('unicornLauncher', ["apiToken", UnicornLauncher]);
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Factory has more flexibility since they can return functions which can be
+<code class="language-plaintext highlighter-rouge">new</code>ed.</p>
+
+<ul>
+  <li>
+    <p>Provider is broader factory, it returns object with a <code class="language-plaintext highlighter-rouge">$get</code> method that is a
+factory function.  Provider can be configured. For provider name
+<code class="language-plaintext highlighter-rouge">unicornLauncher</code> angular registers <code class="language-plaintext highlighter-rouge">unicornLauncher</code> and
+<code class="language-plaintext highlighter-rouge">unicornLauncherProvider</code> injectables.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>myApp.provider('unicornLauncher', function UnicornLauncherProvider_name_not_important() {
+  var useTinfoilShielding = false;
+
+  this.useTinfoilShielding = function(value) {
+    useTinfoilShielding = !!value;
+  };
+
+  this.$get = ["apiToken", function unicornLauncherFactory(apiToken) {
+    return new UnicornLauncher(apiToken, useTinfoilShielding);
+  }];
+});
+
+myApp.config(["unicornLauncherProvider", function(unicornLauncherProvider) {
+  unicornLauncherProvider.useTinfoilShielding(true);
+}]);
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><a href="https://docs.angularjs.org/api/ngResource/service/$resource">$resource</a> by
+default <code class="language-plaintext highlighter-rouge">save</code> is POST, so we need to change for rails PUT, and add <code class="language-plaintext highlighter-rouge">create</code>.
+Factories need to return object. That object is bindable in all places where
+we use <code class="language-plaintext highlighter-rouge">Phone</code> factory.
+It can be used like <code class="language-plaintext highlighter-rouge">$scope.phone = Phone.get({ phoneId: $routeParams.phoneId
+}); $scope.phones = Phone.query();</code></p>
+  </li>
+  <li>
+    <p>Constant recipe can create value that is available in both config and run
+phase. Don’t use for example DEFAULT image_url since is better to do that in
+backend on one place</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module('starter')
+  .constant( 'CONFIG', {
+    SERVER_URL: 'http://192.168.3.2:3001',
+    S3UPLOAD: {
+      BUCKET: 'duleorlovic-test1',
+      API_URL: '/api/v1/s3_access_token',
+    },
+    USER_ROLES: {
+      ADMIN: 'admin',
+      EDITOR: 'editor',
+      GUEST: 'guest',
+    },
+  });
+  .run(['CONFIG','$rootScope',function(CONFIG, $rootScope) { 
+    // in html use $root.CONFIG.USER_ROLES.ADMIN
+    $rootScope.CONFIG = CONFIG
+}])
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="rootscope">RootScope</h1>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">$rootScope</code> has not parent and was created directly from <code class="language-plaintext highlighter-rouge">Scope()</code> class (not
+through <code class="language-plaintext highlighter-rouge">$.new</code> method). It is used for event handling <code class="language-plaintext highlighter-rouge">$.broadcast()</code> (down
+to child scopes) and <code class="language-plaintext highlighter-rouge">$.emit()</code> (up in the scope hierarchy).</li>
+  <li>you can also use for something that does not change often, like
+<code class="language-plaintext highlighter-rouge">$rootScope.user = user</code>. In templates you can just write <code class="language-plaintext highlighter-rouge">
+and it will find `user` at root scope (can't use</code>).</li>
+</ul>
+
+<h1 id="share-error-messages">Share error messages</h1>
+
+<p>For form name <em>myForm</em> we can check <code class="language-plaintext highlighter-rouge">myForm.$valid</code> for all fields that we put
+validation with <code class="language-plaintext highlighter-rouge">required</code> property on input elements (form can have
+<code class="language-plaintext highlighter-rouge">novalidate</code> attribute to prevent browser default behavior, or we can use
+<code class="language-plaintext highlighter-rouge">ng-required="true"</code>). Also fields have internal properties: <code class="language-plaintext highlighter-rouge">$dirty</code> (user has
+interacted), <code class="language-plaintext highlighter-rouge">$valid</code>, <code class="language-plaintext highlighter-rouge">$invalid</code> and<code class="language-plaintext highlighter-rouge">$pristine</code> (has not interacted with field
+yet).  To show client side errors, you can use
+<a href="https://docs.angularjs.org/api/ngMessages">ng-messages</a> instead of dealing with
+<code class="language-plaintext highlighter-rouge">ng-show</code>.  Some example validations are: <code class="language-plaintext highlighter-rouge">ng-minlength=5</code> <code class="language-plaintext highlighter-rouge">ng-maxlength=20</code>
+<code class="language-plaintext highlighter-rouge">ng-required="true"</code>.  We can share messages with <code class="language-plaintext highlighter-rouge">ng-messages-include</code>, but
+that somehow does not work well.  There are also errors from server
+(<code class="language-plaintext highlighter-rouge">resp.errors</code> or <code class="language-plaintext highlighter-rouge">resp.data.errors</code>).  Button is disabled until form is valid.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;form name="editMenuItemForm" ng-submit="vm.update(vm.email,editMenuItemForm)"&gt;
+  &lt;input type="email" name="email" ng-model="vm.menuItem.email"
+  ng-required="true" ng-pattern="/^.+@.+\..+$/"
+  ng-change="editMenuItemForm.email.$setValidity('server', true)"&gt;
+  &lt;div ng-messages="editMenuItemForm.email.$error"&gt;
+    &lt;div ng-message="required"&gt;This field is required&lt;/div&gt;
+    &lt;div ng-message="email"&gt;This field must be an email&lt;/div&gt;
+    &lt;div ng-message="minlength"&gt;Your field is too short&lt;/div&gt;
+    &lt;div ng-message="pattern"&gt;Must look like an email&lt;/div&gt;
+    &lt;div ng-message="server"&gt;{ { vm.serverErrors.editMenuItemForm.email.toString() }}&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;md-button type="submit" class="md-raised md-primary"
+  ng-disabled="!editMenuItemForm.$valid"&gt;Update&lt;/md-button&gt;
+&lt;/form&gt;
+</code></pre></div></div>
+
+<p>This works also for nested attributes, just need to reference them with
+<code class="language-plaintext highlighter-rouge">editMenuItemForm["menu_item_options.price"]</code> (snake case is rails style) and
+create one in controller <code class="language-plaintext highlighter-rouge">vm.menuItem.menu_item_options_attributes = [{}] unless
+vm.menuItem.id</code> and reference with
+<code class="language-plaintext highlighter-rouge">input(ng-model='vm.menuItem.menu_item_options_attributes[0].price'</code></p>
+
+<p>This has problem with destroy button and serverside validation since ng-message
+is visible only when you focus that input (probably digest is perfomed only on
+submit)</p>
+
+<p>On server we should respond with <code class="language-plaintext highlighter-rouge">render json: @menu_item.errors, status:
+:bad_request</code> so we catch model errors, for example <code class="language-plaintext highlighter-rouge">resp.data.email</code>. If that
+field is not on form, for example unauthorized response <code class="language-plaintext highlighter-rouge">resp.data.errors =
+['Authorized only']</code> than we show toast. If you need to show toast but don’t
+know if <code class="language-plaintext highlighter-rouge">resp.data</code> is object or array than you can use <code class="language-plaintext highlighter-rouge">toastr.error
+JSON.stringify resp.data</code>. It should be object and you need to know the key.</p>
+
+<p>For arrays you can use two methods: <code class="language-plaintext highlighter-rouge">s.toString()</code> and <code class="language-plaintext highlighter-rouge">String(s)</code>.
+<code class="language-plaintext highlighter-rouge">[].toString()</code> works fine but will raise if instead of <code class="language-plaintext highlighter-rouge">[]</code> is nil. So I prefer
+to use <code class="language-plaintext highlighter-rouge">String(...)</code> in controllers <code class="language-plaintext highlighter-rouge">String(null)=="null"</code>. Please not that
+<code class="language-plaintext highlighter-rouge">String</code> is <code class="language-plaintext highlighter-rouge">window</code> function so it is not available in angular expressions ie
+for <code class="language-plaintext highlighter-rouge">ng-message</code> but there we are sure that value is not nill.</p>
+
+<p>Fields that are not valid (for example we put space in name
+<code class="language-plaintext highlighter-rouge">menuItem.name == undefined</code>) are not sent so we need to disable button when
+form is not valid or check if <code class="language-plaintext highlighter-rouge">editMenuItemForm.$valid</code> before we call
+<code class="language-plaintext highlighter-rouge">menuItem.update()</code>.  If we disable button than we need to put
+<code class="language-plaintext highlighter-rouge">ng-change="form.field.$setValidity('server', true)"</code> to remove server error on
+change, so  submit button is shown again.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># in controller
+vm.update = (menuItem, editMenuItemForm) -&gt;
+  menuItem.update(menuItem).then(
+    (menu_item_from_server) -&gt;
+      $mdDialog.hide()
+    (resp) -&gt;
+      $log.debug adminEditMenuItemController: 'update error', resp_data: resp.data
+      for field of resp.data
+        if editMenuItemForm[field]
+          editMenuItemForm[field].$setValidity('server', false)
+        else
+          toastr.error String resp.data[field]
+      vm.serverErrors =
+        editMenuItemForm: resp.data
+  )
+</code></pre></div></div>
+
+<h1 id="q-service">$q service</h1>
+
+<p>In <a href="https://docs.angularjs.org/api/ng/service/$q">$q service</a> for promise object
+we can call <code class="language-plaintext highlighter-rouge">then(successCallback, errorCallback, notifyCallback)</code> but also
+<code class="language-plaintext highlighter-rouge">finally(callback, notifyCallback)</code> for clean up.</p>
+
+<p>Here is example of Customer service</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># www/js/services/customerAuth.service.coffee
+angular.module 'starter'
+  .service 'CustomerAuth', ($http, CONSTANT, $q) -&gt;
+    service = this
+    service.sessionId = null
+
+    service.login = (customer_login) -&gt;
+      $q(
+        (resolve, reject) -&gt;
+          $http.post(
+            CONSTANT.SERVER_URL + '/customer/sessions.json'
+            customer_session: customer_login
+          ).then(
+            (response) -&gt;
+              resolve response
+            (response) -&gt;
+              reject response
+          )
+      )
+</code></pre></div></div>
+
+<h1 id="tips">Tips:</h1>
+
+<ul>
+  <li>use <code class="language-plaintext highlighter-rouge">controller as vm</code> in view and <code class="language-plaintext highlighter-rouge">var vm = this</code> in controller so you don’t
+need to inject <code class="language-plaintext highlighter-rouge">$scope</code> (we need <code class="language-plaintext highlighter-rouge">$scope</code> when we want to access something in
+promise <code class="language-plaintext highlighter-rouge">catch = -&gt; $scope.vm.profileForm = "a"</code>)</li>
+  <li>
+    <p>in directives you need to prefix <code class="language-plaintext highlighter-rouge">$root</code> to access rootScope, for example
+<code class="language-plaintext highlighter-rouge">$root.user</code></p>
+  </li>
+  <li>
+    <p>by <a href="https://github.com/mgechev/angularjs-style-guide">Angular conventions</a>,
+lowerCamelCase is used for factory names that won’t be new’ed. Controllers and
+services should be UpperCased.</p>
+
+    <p>Filenames are lowerCamerCase, but folders are underscored or dashed
+<code class="language-plaintext highlighter-rouge">src/app/menu_items/menuItems.jade</code>. Template always match controller name</p>
+  </li>
+  <li><a href="https://github.com/johnpapa/angular-styleguide#controlleras-controller-syntax">johnpapa style guide</a>
+    <ul>
+      <li>use <code class="language-plaintext highlighter-rouge">var vm = this;</code> (or more descriptive <code class="language-plaintext highlighter-rouge">loginVm</code>). Use <code class="language-plaintext highlighter-rouge">$scope</code> only for publish/subscribe events <code class="language-plaintext highlighter-rouge">$emit</code>, <code class="language-plaintext highlighter-rouge">$broadcast</code> and <code class="language-plaintext highlighter-rouge">$on</code>.</li>
+      <li>use <code class="language-plaintext highlighter-rouge">factory</code> that returns  instead of <code class="language-plaintext highlighter-rouge">service</code></li>
+    </ul>
+  </li>
+  <li>for enabling html5 links, you need to put <code class="language-plaintext highlighter-rouge">&lt;base href="/"&gt;</code> before <code class="language-plaintext highlighter-rouge">app.css</code>
+<a href="http://stackoverflow.com/questions/28807251/relative-href-path-goes-wrong-in-angularjs-with-html5mode">link</a></li>
+  <li>sometimes you need to <code class="language-plaintext highlighter-rouge">rm -rf .tmp</code> since gulp server cache miss</li>
+  <li>
+    <p><a href="https://docs.angularjs.org/api/ng/function/angular.copy">angular.copy</a> is
+usefull for forms and cancel button. Note that object is disconnected, so if
+you store a list of all items, you need to angular.copy back to original.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div>    </div>
+
+    <p>Also when you receive an array from server <code class="language-plaintext highlighter-rouge">MyService.locations =
+locationsFromServer</code> will assign new pointer, but old <code class="language-plaintext highlighter-rouge">vm.locations =
+MyService.locations</code> will still point to old array.</p>
+  </li>
+  <li>
+    <p><a href="https://docs.angularjs.org/api/ng/service/$log">$log</a> can show object with
+source location, for example <code class="language-plaintext highlighter-rouge">$log.debug adminController: 'update error',
+resp_data: resp.data</code>. It is angular service which you can disable in
+production</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module 'my-module'
+  .config($logProvider) -&gt;
+    $logProvider.debugEnabled = false
+</code></pre></div>    </div>
+  </li>
+  <li>inside ui router resolve, js errors are completelly hidden</li>
+</ul>
+
+<p>Check some <a href="https://github.com/gianarb/awesome-angularjs">awesome links</a></p>
+
+<h1 id="testing">Testing</h1>
+
+<h1 id="confirm">Confirm</h1>
+
+<p>Usage <code class="language-plaintext highlighter-rouge">&lt;md-button ng-really-click="vm.delete(item)"
+ng-really-reject="vm.cancel(item)" ng-really-message="Are you
+sure?"&gt;Remove&lt;/md-button&gt;</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/components/ng-really-click.directive.coffee
+angular.module 'myApp'
+  .directive 'ngReallyClick', -&gt;
+    restrict: 'A'
+    link: (scope, element, attrs) -&gt;
+      element.bind 'click', -&gt;
+        message = attrs.ngReallyMessage
+        if message &amp;&amp; confirm(message)
+          scope.$apply attrs.ngReallyClick
+        else if attrs.ngReallyReject
+          scope.$apply attrs.ngReallyReject
+</code></pre></div></div>
+
+<h1 id="data-disable-with-processing">Data disable with Processing…</h1>
+
+<p>Similar to rails <code class="language-plaintext highlighter-rouge">data-disable-with="Processing..."</code> here is directive.
+Angular ignores <code class="language-plaintext highlighter-rouge">data-</code> from <code class="language-plaintext highlighter-rouge">data-disable-with</code>.
+Similar to
+<a href="https://github.com/kirstein/angular-autodisable">angular-autodisable</a>
+There was some problem with JQlite and find with <code class="language-plaintext highlighter-rouge">[type=submit]</code> so use <a href="https://github.com/duleorlovic/angular-autodisable">my
+fork</a></p>
+
+<h1 id="errors">Errors</h1>
+
+<p>If you get circular dependency error like <code class="language-plaintext highlighter-rouge">Uncaught Error: [$injector:cdep]
+Circular dependency found: $state &lt;- unauthorizedInterceptor &lt;- $http &lt;-
+$templateFactory &lt;- $view &lt;- $state</code>, than use <code class="language-plaintext highlighter-rouge">$injector</code> and `$state =
+$injector.get ‘$state’ like in the following example.</p>
+
+<p>Redirect to login state on every <code class="language-plaintext highlighter-rouge">unauthorized</code> response</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># www/js/interceptors/unauthorized.interceptor.coffee
+angular.module 'starter'
+  .factory 'unauthorizedInterceptor', ($q, $injector) -&gt;
+    responseError: (rejection) -&gt;
+      if rejection.status == 401
+        $state = $injector.get('$state')
+        $state.go 'login'
+      $q.reject rejection
+
+# www/js/app.config.coffee
+angular.module 'starter'
+  .config ($httpProvider) -&gt;
+    $httpProvider.interceptors.unshift 'unauthorizedInterceptor'
+</code></pre></div></div>
+
+<p>Interceptor that will set <code class="language-plaintext highlighter-rouge">data.error</code> in case there is network error</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module 'starter'
+  .factory 'connectionInterceptor', ($q, NotifyService) -&gt;
+    responseError: (rejection) -&gt;
+      if rejection.status &lt;= 0 # server offline
+        unless rejection.data &amp;&amp; rejection.data.error
+          rejection.data =
+            error: 'There is a problem with connection'
+      $q.reject rejection
+</code></pre></div></div>
+
+<h1 id="ui-view-angular-route">UI View, Angular route</h1>
+
+<p><code class="language-plaintext highlighter-rouge">angular-route</code> is separated package and need to be added as module dependency
+and configured. <code class="language-plaintext highlighter-rouge">config</code> needs Providers (factory for service that will be
+configured) for example <code class="language-plaintext highlighter-rouge">$routeProvider</code> and <code class="language-plaintext highlighter-rouge">run</code> or <code class="language-plaintext highlighter-rouge">controller</code> needs service
+for example <code class="language-plaintext highlighter-rouge">$route</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>angular.module('myApp',[ 'ngRoute', 'myAppControllers' ])
+.config(function($routeProvider, $locationProvider){
+  $routeProvider
+  .when('/phones/:id', {
+    templateUrl: 'details.html',
+    controller: 'PhoneDetailCtrl',
+  })
+  .when('/phones', {
+    templateUrl: 'list.html',
+    controller: 'PhoneListCtrl',
+  })
+  .otherwise({redirectTo: '/phones'});
+});
+</code></pre></div></div>
+
+<p>It is used with directive <code class="language-plaintext highlighter-rouge">&lt;ng-view&gt;&lt;/ng-view&gt;</code> which is replaced with given
+template.</p>
+
+<h1 id="ui-router">UI Router</h1>
+
+<p><a href="https://github.com/angular-ui/ui-router">ui-router</a> is nice but documentation 
+is not so simple, so here are examples:</p>
+
+<ul>
+  <li><a href="https://github.com/angular-ui/ui-router/wiki/URL-Routing#stateparams-service">stateParams</a>
+can be defined with <code class="language-plaintext highlighter-rouge">:contactId</code> or <code class="language-plaintext highlighter-rouge">{contactId}</code></li>
+  <li>query params are defined like <code class="language-plaintext highlighter-rouge">?contactId</code></li>
+  <li>navigating with
+<a href="https://github.com/angular-ui/ui-router/wiki/Quick-Reference#ui-sref">ui-sref</a>
+<code class="language-plaintext highlighter-rouge">ui-sref="admin.menu_items({staurantId: restaurant.id})"</code> or with <code class="language-plaintext highlighter-rouge">$state.go
+'tab.location_ticket_details', locationTicketId: locationTicket.id</code></li>
+  <li><a href="http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.directive:ui-sref-active">ui-sref-active</a> to add class on navigational links that are active</li>
+  <li>
+    <p>if you want to completely change the template with edit template, than wrap it</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># show.html
+&lt;ui-view&gt;
+  My name is 
+&lt;/ui-view&gt;
+
+# edit.html
+&lt;form&gt;
+  &lt;input name="name"&gt;
+&lt;/form&gt;
+
+# my.router.coffee
+angular.module 'my'
+.config ($stateProvider) -&gt;
+  $stateProvider
+    .state 'myAccount',
+      url: '/my-account'
+      templateUrl: 'show.html'
+      controller: 'MyController'
+      controllerAs: 'vm'
+      resolve:
+        myAccountInitialData: (myAccountInitialData) -&gt;
+          myAccountInitialData()
+
+    .state 'myAccount.edit',
+      url: '/edit'
+      templateUrl: 'edit.html'
+      # no need to resolve here since this is inside MyController
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>When you need double click to go to nested state, you are probably coverting
+  that state with some other state
+  <a href="http://stackoverflow.com/questions/25548798/angular-ui-router-having-to-click-twice-for-view-to-update-as-expected-with-d">stackoverflow</a>
+  route resolution problem.</p>
+  </li>
+  <li>
+    <p>resolve initialData before new state is activated
+<a href="http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx">link</a></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># src/app/my_account/myAccountInitialData.coffee
+# http://odetocode.com/blogs/scott/archive/2014/05/20/using-resolve-in-angularjs-routes.aspx
+# https://promisesaplus.com/#point-41 the promise resolution procedue, ie
+# onFulfilled returns promise, when it is fulfilled than fullfill parent
+angular.module 'menucardsAngular'
+.factory "myAccountInitialData", (Restaurant, $auth, $q) -&gt;
+  -&gt;
+    user =  $auth.validateUser()
+    $q.all([user]).then (results) -&gt;
+      restaurant = Restaurant.query({}, { id: results[0].restaurant_id })
+      $q.all([restaurant]).then ( results ) -&gt;
+        restaurant: results[0]
+
+# src/app/my_account/myAccount.controller.coffee
+angular.module 'menucardsAngular'
+  .controller 'MyAccountController', (myAccountInitialData, $log) -&gt;
+    'ngInject'
+    $log.debug "MyAccountController"
+    vm = this
+    vm.restaurant = myAccountInitialData.restaurant
+    return
+
+# src/app/my_account/myAccount.router.coffee
+angular.module 'menucardsAngular'
+  .config ($stateProvider) -&gt;
+    'ngInject'
+    $stateProvider
+      .state 'myAccount',
+        url: '/my-account'
+        templateUrl: 'app/my_account/myAccount.html'
+        controller: 'MyAccountController'
+        controllerAs: 'vm'
+        resolve:
+          myAccountInitialData: (myAccountInitialData) -&gt;
+            myAccountInitialData()
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>if you need to do some jQuery on state change (not only when controller loads,
+but when we change states inside current controller) you can listen to events
+on <code class="language-plaintext highlighter-rouge">$scope</code> (this scope is destroyed when controller is destroyed)</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$scope.$on '$stateChangeStart', (e, toState, toParams, fromState, fromParams) -&gt;
+  $scope.sectionName = toParams.sectionName
+  if toState.name == 'menu'
+    $timeout -&gt;
+      new scrollItem 'cart'
+  return
+# this is when user lands on menu page
+$timeout -&gt;
+  if $('#cart').first()
+    new scrollItem 'cart'
+</code></pre></div>    </div>
+  </li>
+  <li><a href="https://github.com/angular-ui/ui-router/wiki/Multiple-Named-Views">multiple
+views</a> you
+can not have two different active state, so it will toggle</li>
+</ul>
+
+<h1 id="batarang">Batarang</h1>
+
+<p><a href="https://egghead.io/lessons/angularjs-angularjs-batarang">egghead batarang</a>.
+Just select element and in console type <code class="language-plaintext highlighter-rouge">$scope.vm.name = 'dule';$scope.apply()</code></p>
+
+<p>Usually I define module <code class="language-plaintext highlighter-rouge">angular.module 'name', []</code> only in one place
+<em>src/app/index.module.coffee</em></p>
+
+<p>Since some old deleted templates could remove stuff, I run with <code class="language-plaintext highlighter-rouge">gulp clean &amp;&amp;
+gulp serve --api localhost:3001 -l</code></p>
+
+<h1 id="interval-for-automatic-updates">Interval for automatic updates</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Order.query({status: 'active'}, {restaurantId: user.restaurant_id}).then (orders) -&gt;
+  vm.orders = orders
+
+vm.youngerThan = new Date
+# could be that order happens after previous query on server and before current time, not likely
+# more likely is that order happened before query on server but after current time
+# so it will show up twice, that's why we check if alredy there
+$interval(
+  -&gt;
+    Order.query({status: 'active', youngerThan: vm.youngerThan}, {restaurantId: user.restaurant_id}).then (orders) -&gt;
+      for order in orders.reverse
+        vm.orders.unshift(order) if vm.orders[0] &amp;&amp; vm.orders[0].id != order.id
+    vm.youngerThan = new Date
+  15000)
+</code></pre></div></div>
+
+<h1 id="pagination">Pagination</h1>
+
+<p>You can use
+<a href="https://github.com/begriffs/angular-paginate-anything">angular-paginate-anything</a>
+to show pagination links on your page. On server you can use <a href="http://www.tejusparikh.com/2014/pagination-in-angular-js.html">kaminari with
+some before
+filter</a> or
+<a href="https://github.com/begriffs/clean_pagination">clean_pagination</a> which I prefer.
+It is very easy to start. For angular-rails-resource I need to use <a href="https://github.com/begriffs/angular-paginate-anything/issues/95">$timeout hack</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$scope.$on 'pagination:loadPage', (event, status, config) -&gt;
+  $timeout -&gt;
+    vm.users = vm.usersObject.map (userObject) -&gt; new User userObject
+</code></pre></div></div>
+
+<h1 id="tips-1">Tips</h1>
+
+<ul>
+  <li>you can have another ng-click inside ng-click (ie button inside button) and
+you can stop propagation with <code class="language-plaintext highlighter-rouge">ng-click="vm.edit();
+$event.stopPropagation();"</code></li>
+  <li>
+    <p>don’t know why someone would use <code class="language-plaintext highlighter-rouge">ng-repeat="o in vm.objects tack by o.id</code>
+since DOM is updated always, even <code class="language-plaintext highlighter-rouge">o.title</code> is changed.
+<a href="http://www.codelord.net/2014/04/15/improving-ng-repeat-performance-with-track-by/">link</a>
+only usage is that directive link function is not called until we add new
+items or updateId <a href="http://jsfiddle.net/6k834fzx/4">look console log</a>. If we
+update title Link function will not be called although DOM will be updated.</p>
+  </li>
+  <li>sample app https://angular-expenses.herokuapp.com/</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

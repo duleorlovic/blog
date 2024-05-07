@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Metaprogramming Ruby</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Metaprogramming Ruby</h1>
+    <p class="meta">Apr 7, 2020</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#metaprogramming-ruby-2-paolo-perrotta"><span class="tocnumber">1</span> <span class="toctext">Metaprogramming Ruby 2 Paolo Perrotta</span></a></li></ul></td></tr></tbody></table></div><h1 id="metaprogramming-ruby-2-paolo-perrotta">Metaprogramming Ruby 2 Paolo Perrotta</h1>
+
+<p>Spell is notation of a usefull patterns that you can use.</p>
+
+<p>Metaprogramming is used to create a wrap around external system, for example
+call <em>any</em> method which will be dynamically called on the system (no need to
+define methods). You can mimics specific language which is more suitable for
+solving that particular problem.
+Also you can add logging functionality around method that you want to monitor,
+run custom code whenever a client inherits from your class…</p>
+
+<p>In C++ (not interpreted language) at runtime (after compilation finishes) you
+can not ask for class methods, but in Ruby, you can use <em>introspection</em> for
+example <code class="language-plaintext highlighter-rouge">my_object.class</code>.</p>
+
+<p>Metaprogramming is writting code that manipulates language constructs at
+runtime.</p>
+
+<p>Instead of calling functional style <code class="language-plaintext highlighter-rouge">to_alphanumeric('string')</code> you can reopen
+String class and use like <code class="language-plaintext highlighter-rouge">'string'.to_alphanumeric</code>. This is called
+Monkeypatching.</p>
+
+<p>Spell Refinement</p>
+
+<p>You can refine classes inside module so you do not monkeypatch global class</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module StringExtensions
+  refine String do
+    def to_alphanumeric
+      gsub(/[^\w\s]/, '')
+    end
+  end
+end
+
+"a*".to_alphanumeric # NoMethodError
+using StringExtensions
+"a*".to_alphanumeric # 'a'
+
+module StringStuff
+  using StringExtensions # this is active only till the end of module
+  "a*".to_alphanumeric # 'a'
+end
+</code></pre></div></div>
+
+<p>Even <code class="language-plaintext highlighter-rouge">object.instance_variables</code> live in the object itself, its <code class="language-plaintext highlighter-rouge">object.methods</code>
+is actually using class instance methods <code class="language-plaintext highlighter-rouge">object.class.instance_methods</code>.
+Each class is also an object and as an object, it contains instance methods</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Class.instance_methods(false) # =&gt; [:new, :allocate, :superclass]
+</code></pre></div></div>
+<p>You can use <code class="language-plaintext highlighter-rouge">.superclass</code> method to find a chain</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Array.superclass # =&gt; Object
+Object.superclass # =&gt; BasicObject
+BasicObject.superclass # =&gt; nil
+</code></pre></div></div>
+<p>For <code class="language-plaintext highlighter-rouge">Class.superclass == Module</code> so <code class="language-plaintext highlighter-rouge">class</code> and <code class="language-plaintext highlighter-rouge">module</code> is almost the same,
+except classes can call <code class="language-plaintext highlighter-rouge">.new</code> so we use them to instantiate, and we use module
+to include it somewhere (since <code class="language-plaintext highlighter-rouge">Class</code> is a subclass of <code class="language-plaintext highlighter-rouge">Module</code> it can be used
+as module, but we keep using only where we instantiate them).
+Using <code class="language-plaintext highlighter-rouge">class MyClass</code> you are actually defining (or reopening) a instance of
+<code class="language-plaintext highlighter-rouge">Class</code> and assigning to constant <code class="language-plaintext highlighter-rouge">MyClass</code>. Since <code class="language-plaintext highlighter-rouge">MyClass</code> is an object and
+class in the same time, we can call <code class="language-plaintext highlighter-rouge">.class</code> (right -&gt;) and <code class="language-plaintext highlighter-rouge">.superclass</code> (up ^)
+Note that <code class="language-plaintext highlighter-rouge">MyClass.class == Class</code> and <code class="language-plaintext highlighter-rouge">MyClass.superclass == Object</code>.
+Also <code class="language-plaintext highlighter-rouge">Class.superclass == Module</code> and <code class="language-plaintext highlighter-rouge">Module.superclass == Object</code> so all
+classes are objects and they inherit from <code class="language-plaintext highlighter-rouge">Object</code> class. <code class="language-plaintext highlighter-rouge">Object.class ==
+Class</code>, <code class="language-plaintext highlighter-rouge">Module.class == Class</code> and <code class="language-plaintext highlighter-rouge">Class.class == Class</code>.</p>
+
+<p>Constant differs from variables in that way you can access them in any scope</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>M::C::MyConst
+# `Module` class provides instance method and class method `constants`.
+M.constants # =&gt; [:C]
+Module.constants # =&gt; all global constants
+</code></pre></div></div>
+
+<p>Method lookup: to find a method, ruby goes in the receiver’s class (class of the
+object on which you call the method) and than climbs the ancestors chain.
+Anchestors chain also include modules that are prepended or included in class.</p>
+
+<p>Spell KernelMethod</p>
+
+<p>You can add method to <code class="language-plaintext highlighter-rouge">Kernel</code> so you can use it in every object, like awesome
+print <code class="language-plaintext highlighter-rouge">ap 'string'</code></p>
+
+<p>Every line of ruby code is executed inside an object, current object or <code class="language-plaintext highlighter-rouge">self</code>.</p>
+
+<p>In static type checking, whether method exists is checked at compile time. It is
+an advantage, but the price for that is that you have to write a lot of
+boilerplate methods like getters, setters, and delegate methods.</p>
+
+<p>Spell Dynamic Dispatch</p>
+
+<p>Using <code class="language-plaintext highlighter-rouge">send</code> like <code class="language-plaintext highlighter-rouge">my_object.send :my_method, 123</code> you can decide which method
+to call at runntime. With <code class="language-plaintext highlighter-rouge">.send</code> you can call private methods (use
+<code class="language-plaintext highlighter-rouge">.public_send</code> to prevent calling private methods).</p>
+
+<p>Spell Dynamic Method</p>
+
+<p>You can define methods on the fly using <code class="language-plaintext highlighter-rouge">Module#define_method</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass
+  define_method :my_method do |my_arg|
+    my_arg * 3
+  end
+
+  # or use it inside class method
+  def self.define_component(name)
+    define_method(name) do
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>If you need to define method name for each associated object method, you can
+iterate over <code class="language-plaintext highlighter-rouge">associated_object.methods.grep(/^get_(.*)/) {
+MyClass.define_component $1 }</code>.</p>
+
+<p>Spell Ghost Method</p>
+
+<p>You can override <code class="language-plaintext highlighter-rouge">Object#method_missing</code> so you can respond to any method</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass
+  def method_missing(method_name, *args, &amp;blk)
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Dynamic Proxy</p>
+
+<p>Object that catches Ghost Methods and forwards them to another object is called
+dynamic proxy.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass
+  class ResourceProxy
+    def method_missing(message, *args, &amp;block)
+      subject.send(message, *args, &amp;block)
+    end
+
+    def subject
+      @subject ||= connection.get(path_prefix).body
+    end
+  end
+end
+
+class MyClass
+  module API
+    module Gists
+      class Proxy &lt; ::MyClass::ResourceProxy
+        def star
+          connection.put("#{path_prefix}/star").status == 204
+        end
+      end
+    end
+  end
+end
+
+# when you call gist#star it will call put request, but for other
+# like, gist.description it proxy it to subject which will read description
+# attribute from response (using Hashie)
+</code></pre></div></div>
+
+<p>If you call <code class="language-plaintext highlighter-rouge">.respond_to? :dynamic_method</code> than you will get false, so when
+overriding <code class="language-plaintext highlighter-rouge">method_missing</code> we should also override <code class="language-plaintext highlighter-rouge">respond_to_missing?</code>
+Note that you should call <code class="language-plaintext highlighter-rouge">super</code> for method names that you do not proccess,
+otherwise you can get stack level too deep because of infinite loop when some
+undefined method is called. Because of this it is prefered to use Dynamic
+Methods instead Ghost Methods.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass
+  def method_missing(name)
+    super if !@data_source.respond_to?("get_#{name}_info")
+
+    info = @data_source.send("get_#{name}_info", @id)
+    price = @data_source.send("get_#{name}_price", @id)
+    result = "#{name.capitalize}: #{info} ($#{price})"
+    return "* #{result}" if price &gt;= 100
+    result
+  end
+
+  def respond_to_missing?(method, include_private = false)
+    @data_source.respond_to?("get_#{method}_info") || super
+  end
+end
+</code></pre></div></div>
+
+<p>Skill Blank Slate</p>
+
+<p>When the name of method could be inherited from Object (like method <code class="language-plaintext highlighter-rouge">.display</code>)
+than we can not use it (since it is not method missing), there are two
+solutions: inherit from BasicObject (not implicit Object) or removing methods
+with <code class="language-plaintext highlighter-rouge">#undef_method</code> or <code class="language-plaintext highlighter-rouge">#remove_method</code> for each <code class="language-plaintext highlighter-rouge">instance_methods</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass &lt; BasicObject
+  # no need respond_to_missing since BasicObject.instance_methods are few
+  # =&gt; [:__send__, :!, :==, :!=, :equal?, :__id__, :instance_eval, :instance_exec]
+end
+
+# or undefining all except __methods
+class MyClass
+  def self.hide(name)
+    if name !~ /^(__|instance_eval$)/
+      undef_method name
+    end
+  end
+
+  instance_methods.each { |m| hide(m) }
+end
+</code></pre></div></div>
+
+<p>You can also use <code class="language-plaintext highlighter-rouge">.const_missing</code> as in Rake</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Module
+  def const_missing(const_name)
+    case const_name
+    when :Task
+      Rake.application.const_warning(const_name)
+      Rake::Task
+    when :FileTask
+      Rake.application.const_warning(const_name)
+      Rake::FileTask
+    when :FileCreationTask
+      # ...
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Blocks are defined only when you call a method. Inside method you can call
+<code class="language-plaintext highlighter-rouge">yield</code> to evaluate that block. You can check if block is given with
+<code class="language-plaintext highlighter-rouge">block_given?</code>. Using <code class="language-plaintext highlighter-rouge">yield</code> without params will call the block using the same
+params as method. Here is example to always call <code class="language-plaintext highlighter-rouge">resource.dispose</code> (when
+exception occurs or without exception in block).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Kernel
+  def using(resource)
+    begin
+      yield
+    ensure
+      resource.dispose
+    end
+  end
+end
+
+use(r) { |r| r.read }
+</code></pre></div></div>
+
+<p>When you create a block, it captures local bindings at that moment into a
+closure. When you yield, it will use that scope (not the scope of method where
+yield is called).
+Use <code class="language-plaintext highlighter-rouge">Kernel#local_variables</code> to list all current object local variables.</p>
+
+<p>Spell Scope Gate</p>
+
+<p>Scope changes when program enters a <code class="language-plaintext highlighter-rouge">class</code> or <code class="language-plaintext highlighter-rouge">module</code> definition or enters the
+method <code class="language-plaintext highlighter-rouge">def</code> (method definition is executed when it is called).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_var = "Success"
+class MyClass
+  # We want to print my_var here...
+  def my_method
+    # ..and here
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Flat Scope</p>
+
+<p>To pass local variable through <code class="language-plaintext highlighter-rouge">class</code> gate, you can use <code class="language-plaintext highlighter-rouge">Class.new block</code> and
+<code class="language-plaintext highlighter-rouge">define_method name, block</code> to create nested lexical scopes (flattening the
+scope). You can inherit from existing class using <code class="language-plaintext highlighter-rouge">Class.new(MyParrent) do</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>my_var = "Success"
+MyClass = Class.new do
+  "#{my_var} in the class definition"
+
+  define_method :my_method do
+    "#{my_var} in the method"
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Shared Scope</p>
+
+<p>Control the sharing of variables by using Dynamic Dispatch inside the same flat
+scope.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def define_methods
+  shared = 0
+
+  Module.send :define_method, :counter do
+    shared
+  end
+  Module.send :define_method, :inc do |x|
+    shared += x
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Context Probe</p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">object.instance_eval block</code> to evaluate block with the object as <code class="language-plaintext highlighter-rouge">self</code>.
+It’s like a snippet of code that you dip inside an object.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v = 2
+obj.instance_eval { @v = v}
+obj.instance_eval { @v} # =&gt; 2
+</code></pre></div></div>
+
+<p>There is also <code class="language-plaintext highlighter-rouge">Module#class_eval</code> (we are not changing only <code class="language-plaintext highlighter-rouge">self</code> but also
+current_class). It is more flexible than using <code class="language-plaintext highlighter-rouge">class MyClass</code> because we do not
+open new scope, we keep current bindings like Spell Flat Scope.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a_class.class_eval do
+  # define instance_method
+  def m; 'Hi'; end
+end
+</code></pre></div></div>
+
+<p>Spell Clean Room</p>
+
+<p>Create an object just to evaluate blocks inside it (in clear env, otherwise
+blocks could clash with current env)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class CleanRoom
+  def current_temperature
+    # ...
+  end
+end
+clean_room = CleanRoom.new
+clean_room.instance_eval do
+  if current_temperature &lt; 20
+    # TODO: wear jacket
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Deferred Evaluation</p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">obj = Proc.new block</code> to create object that holds a block and later use it
+with <code class="language-plaintext highlighter-rouge">obj.call 123</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inc = Proc.new {|x| x + 1}
+inc.call 2
+</code></pre></div></div>
+
+<p>Spell Class Instance Variable</p>
+
+<p>Define instance variable in context of class object. Using double <code class="language-plaintext highlighter-rouge">@@my_var</code> is
+class variable which can be accessed from subclasses and instance methods.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass
+  @my_class_var = 1
+  def m
+    # we can not access @my_class_var
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Singleton Method</p>
+
+<p>Define method for one specific object</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>str = 'Hi'
+
+def str.title?
+  self.upcase == self
+end
+# or
+str.define_singleton_method(:title?){ self.upcase == self }
+</code></pre></div></div>
+
+<p>Spell Class Macro</p>
+
+<p><code class="language-plaintext highlighter-rouge">Module#attr_accessor</code> class method is called Class macro. They looks like
+keywords, but there are just regular class methods.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class MyClass
+  attr_accessor :my_attribute
+
+  # it will actually do something like
+  def self.attr_accessor(name)
+    define_method "#{name}=" do |value|
+      send "@#{name}=", value
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>It can be used for deprecation warnings</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Book
+  def title
+  end
+
+  def self.deprecate(old_method, new_method)
+    define_method(old_method) do |*args, &amp;block|
+      warn "Warning: #{old_method}() is deprecated. Use #{new_method}()."
+      send(new_method, *args, &amp;block)
+    end
+  end
+
+  deprecate :GetTitle, :title
+end
+</code></pre></div></div>
+
+<p>Singleton class of the object (metaclass, eigenclass) ie each object can have
+it’s own special hidden class. Special syntax needs to be used <code class="language-plaintext highlighter-rouge">class &lt;&lt; object</code>
+and you can get it with <code class="language-plaintext highlighter-rouge">object.singleton_class</code>. It is a place where singleton
+methods live. It’s superclass is object class.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>obj = My.new
+def obj.my_singleton_method; end
+
+# similar but it opens new scope definee cref
+class &lt;&lt; obj
+  def my_singleton_method
+  end
+end
+
+obj.singleton_class.instance_methods.grep /my_/
+obj.singleton_class.superclass == My
+</code></pre></div></div>
+<p>So method lookup also includes singleton class, let’s call it <code class="language-plaintext highlighter-rouge">#obj</code> class.</p>
+
+<p>We can also add class method using same notation</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class C
+  class &lt;&lt; self
+    def a_class_method
+      'C.a_class_method'
+    end
+  end
+
+  # same as
+  # def self.a_class_method
+  #   'C.a_class_method'
+  # end
+end
+# or third way of defining class methods is outside of class
+# def C.a_class_method
+
+class D &lt; C
+end
+
+D.a_class_method # =&gt; 'C.a_class_method()'
+</code></pre></div></div>
+
+<p>So method lookup for <code class="language-plaintext highlighter-rouge">D.a_class_method</code> also looks at singleton class of
+superclass <code class="language-plaintext highlighter-rouge">#C</code>.
+Seven rules or ruby object model</p>
+<ul>
+  <li>there is only one kind of object: regular or a module</li>
+  <li>there is only one kind of module: regular module, class or singleton class</li>
+  <li>there is only one kind of method and it lives in a module (most often in a
+class)</li>
+  <li>every object (classes included), has its own ‘real class’, be it a regular
+class or a singleton class</li>
+  <li>every class, except BasicObject, has exactly one ancestor, either a superclass
+or a module.</li>
+  <li>superclass of singleton class of an object is the object’s class. The
+superclass of singleton class of a class is the singleton class of the class’s
+superclass</li>
+  <li>when you call a method, ruby goes right to the receiver’s real class and than
+‘up’ the ancestors chain.</li>
+</ul>
+
+<p>Spell Class Extension</p>
+
+<p>When you want to include module methods as class methods</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module MyModule
+  def my_method; 'hello'; end
+end
+
+class MyClass
+  class &lt;&lt; self
+    include MyModule
+  end
+end
+
+# short way is using
+class MyClass
+  extend MyModule
+end
+</code></pre></div></div>
+
+<p>Spell Object Extension</p>
+
+<p>You can extend objects with methods</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module MyModule
+  def my_method; 'hello'; end
+end
+
+obj = Object.new
+
+class &lt;&lt; obj
+  include MyModule
+end
+
+obj.my_method # =&gt; 'hello'
+
+# another way is to use
+obj.extend MyModule
+</code></pre></div></div>
+
+<p>Spell Around Alias</p>
+
+<p>Three steps: alias the method, redefine original method, call old method from
+new method</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module Kernel
+  alias_method :new_method, :original_method
+
+  def original_method(args)
+    # add code here
+    new_method(args)
+  end
+end
+</code></pre></div></div>
+<p>for example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class String
+  alias_method :real_length, :length
+
+  def length
+    real_length &gt; 5 ? 'long' : 'short'
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Refinement Wrapper</p>
+
+<p>Using <code class="language-plaintext highlighter-rouge">super</code> inside refinement will call original method</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module StringRefinement
+  refine String do
+    def length
+      super &gt; 5 ? 'long' : 'short'
+    end
+  end
+end
+</code></pre></div></div>
+
+<p>Spell Prepended Wrapper</p>
+
+<p>Using prepend (which is searched before class method, or included methods) so
+also you can use <code class="language-plaintext highlighter-rouge">super</code> to call original method. It is much cleaner than spell
+around alias (which looks like Monkey patching).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ExplicitString
+  def length
+    super &gt; 5 ? 'long' : 'short'
+  end
+end
+
+String.class_eval do
+  prepend ExplicitString
+end
+</code></pre></div></div>
+
+<p>So you can use this to wrap some library methods so you can catch exceptions
+from it</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module AmazonWrapper
+  def reviews_of(book)
+    result = super
+    result
+  rescue
+    []
+  end
+end
+
+Amazon.class_eval do
+  prepend AmazonWrapper
+end
+</code></pre></div></div>
+
+<p>Spell String of Code</p>
+
+<p><code class="language-plaintext highlighter-rouge">Kernel#eval</code> can run string of code.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array = [1]
+el = 2
+eval "array &lt;&lt; el"
+
+# or define methods which also depend on verb
+POSSIBLE_VERBS = ['get', 'put', 'post', 'delete']
+POSSIBLE_VERBS.each do |m|
+  eval &lt;&lt;-end_eval
+    def #{m}(path, *args, &amp;b)
+      r[path].#{m}(*args, &amp;b)
+    end
+  end_eval
+end
+</code></pre></div></div>
+
+<p>It is used with <code class="language-plaintext highlighter-rouge">binding</code> so you can evaluate code in some context (similar to
+closure but it does not contains code just scope). In ruby there is
+<code class="language-plaintext highlighter-rouge">TOPLEVEL_BINDING</code>.</p>
+
+<p>Spell Code Processor</p>
+
+<p><code class="language-plaintext highlighter-rouge">eval statements, @bindings, file, line</code></p>
+
+<p>Instead <code class="language-plaintext highlighter-rouge">eval string</code> you can use <code class="language-plaintext highlighter-rouge">obj.instance_eval</code> which can take string or
+block (both can access local variables).</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array = ['a', 'b', 'c']
+x = 'd'
+array.instance_eval "self[1] = x"
+</code></pre></div></div>
+
+<p>Spell Hook Method</p>
+
+<p>You can override <code class="language-plaintext highlighter-rouge">Class#included</code> to provide a hook into particular event
+(<code class="language-plaintext highlighter-rouge">inherited</code>, <code class="language-plaintext highlighter-rouge">included</code>, <code class="language-plaintext highlighter-rouge">prepended</code>, <code class="language-plaintext highlighter-rouge">extended</code>, also <code class="language-plaintext highlighter-rouge">method_added</code>,
+<code class="language-plaintext highlighter-rouge">method_removed</code> and <code class="language-plaintext highlighter-rouge">method_undefined</code>)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class String
+  def self.included(subclass)
+    puts "#{self} was included by #{subclass}"
+  end
+end
+
+class MyString &lt; String; end
+</code></pre></div></div>
+
+<p>This can be used to <code class="language-plaintext highlighter-rouge">include MyModule</code> which will extend methods so you got
+class macros which you can use. This is also called include and extend trick.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module CheckedAttributes
+  def self.included(base)
+    base.extend ClassMethods
+  end
+
+  module ClassMethods
+    def my_class_macro(name, &amp;block)
+    ...
+
+class MyClass
+  include CheckedAttributes
+</code></pre></div></div>
+
+<p>Instead of overriding <code class="language-plaintext highlighter-rouge">self.included</code> you can override <code class="language-plaintext highlighter-rouge">include</code> and use super
+but it is not so clear since you have to call <code class="language-plaintext highlighter-rouge">super</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class C
+  def self.include(*modules)
+    puts "Called: C.include(#{modules})"
+    super
+  end
+
+  include M
+end
+</code></pre></div></div>
+
+<p>Problem with extending is with chained extensions, since at the momen first
+module <code class="language-plaintext highlighter-rouge">include SecondLevel</code> module, it’s <code class="language-plaintext highlighter-rouge">def self.included(base)</code> base will
+point to first level module, not the target class.</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

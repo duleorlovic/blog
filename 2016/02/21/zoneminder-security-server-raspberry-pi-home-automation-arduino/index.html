@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Zoneminder security server and Raspberry Pi home automation</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Zoneminder security server and Raspberry Pi home automation</h1>
+    <p class="meta">Feb 21, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#rpi"><span class="tocnumber">1</span> <span class="toctext">RPi</span></a></li><li class="toc_level-1 toc_section-2"><a href="#ruby"><span class="tocnumber">2</span> <span class="toctext">Ruby</span></a></li><li class="toc_level-1 toc_section-3"><a href="#pipiper"><span class="tocnumber">3</span> <span class="toctext">PiPiper</span></a></li><li class="toc_level-1 toc_section-4"><a href="#bash"><span class="tocnumber">4</span> <span class="toctext">Bash</span></a></li><li class="toc_level-1 toc_section-5"><a href="#wiringpi"><span class="tocnumber">5</span> <span class="toctext">WiringPi</span></a></li><li class="toc_level-1 toc_section-6"><a href="#startup-run"><span class="tocnumber">6</span> <span class="toctext">Startup run</span></a></li><li class="toc_level-1 toc_section-7"><a href="#mozilla-things"><span class="tocnumber">7</span> <span class="toctext">Mozilla Things</span></a></li><li class="toc_level-1 toc_section-8"><a href="#webpack"><span class="tocnumber">8</span> <span class="toctext">Webpack</span></a></li><li class="toc_level-1 toc_section-9"><a href="#disk-errors"><span class="tocnumber">9</span> <span class="toctext">Disk errors</span></a></li><li class="toc_level-1 toc_section-10"><a href="#program-attiny"><span class="tocnumber">10</span> <span class="toctext">Program Attiny</span></a></li><li class="toc_level-1 toc_section-11"><a href="#poe-power-over-ethernet"><span class="tocnumber">11</span> <span class="toctext">POE power over ethernet</span></a></li><li class="toc_level-1 toc_section-12"><a href="#zoneminder"><span class="tocnumber">12</span> <span class="toctext">Zoneminder</span></a><ul><li class="toc_level-2 toc_section-13"><a href="#zoneminder-errors-and-logs"><span class="tocnumber">12.1</span> <span class="toctext">Zoneminder Errors and Logs</span></a></li><li class="toc_level-2 toc_section-14"><a href="#zones"><span class="tocnumber">12.2</span> <span class="toctext">Zones</span></a></li></ul></li><li class="toc_level-1 toc_section-15"><a href="#pci-cards"><span class="tocnumber">13</span> <span class="toctext">PCI Cards</span></a></li><li class="toc_level-1 toc_section-16"><a href="#china-ip-cam"><span class="tocnumber">14</span> <span class="toctext">China IP cam</span></a></li><li class="toc_level-1 toc_section-17"><a href="#dahua-ip-cam"><span class="tocnumber">15</span> <span class="toctext">Dahua IP Cam</span></a></li><li class="toc_level-1 toc_section-18"><a href="#cantonk-ip-dom"><span class="tocnumber">16</span> <span class="toctext">Cantonk IP Dom</span></a></li><li class="toc_level-1 toc_section-19"><a href="#china-ip-camera-23"><span class="tocnumber">17</span> <span class="toctext">China IP camera $23</span></a></li><li class="toc_level-1 toc_section-20"><a href="#china-mini-ip-camera-without-box"><span class="tocnumber">18</span> <span class="toctext">China Mini IP camera without box</span></a></li><li class="toc_level-1 toc_section-21"><a href="#lead-acid"><span class="tocnumber">19</span> <span class="toctext">Lead acid</span></a></li><li class="toc_level-1 toc_section-22"><a href="#default-passwords"><span class="tocnumber">20</span> <span class="toctext">Default Passwords</span></a></li><li class="toc_level-1 toc_section-23"><a href="#poe"><span class="tocnumber">21</span> <span class="toctext">POE</span></a></li><li class="toc_level-1 toc_section-24"><a href="#long-cable-on-battery-power"><span class="tocnumber">22</span> <span class="toctext">Long cable on battery power</span></a></li><li class="toc_level-1 toc_section-25"><a href="#stream"><span class="tocnumber">23</span> <span class="toctext">Stream</span></a></li><li class="toc_level-1 toc_section-26"><a href="#yi-iot-camera"><span class="tocnumber">24</span> <span class="toctext">Yi IOT camera</span></a></li></ul></td></tr></tbody></table></div><h1 id="rpi">RPi</h1>
+
+<p>On my board PCB says: <code class="language-plaintext highlighter-rouge">Raspberry Pi (c)2011.12</code> so <a href="http://www.raspberry-projects.com/pi/pi-hardware/raspberry-pi-pcb-versions">it
+is</a>
+Pi 1 Model B Revision 2.0 (512MB).
+<code class="language-plaintext highlighter-rouge">cat /proc/cpuinfo</code> says it is Hardware revision 000e.</p>
+
+<p>Start with <a href="https://www.raspberrypi.org/downloads/noobs/">NOOBS</a> (which is based
+on Raspbian) to create SD card.
+<a href="https://www.raspberrypi.org/documentation/installation/noobs.md">Instructions</a>
+says to run <code class="language-plaintext highlighter-rouge">gparted</code> and format as FAT32. Another way is using <a href="http://qdosmsq.dunbar-it.co.uk/blog/2013/06/noobs-for-raspberry-pi/">dunbar
+instructions</a> <code class="language-plaintext highlighter-rouge">fdisk -l</code> to find your card mount point. then</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo fdisk /dev/mmcblk0
+# d -&gt; 1 to delete partitions
+# n to create partition (use default values)
+# t -&gt; b to set FAT32 format
+# p to print current configuration
+# w to write partition table to disc
+
+# format card
+sudo mkfs.vfat /dev/mmcblk0p1
+</code></pre></div></div>
+
+<p>Than just extract zip to the card.</p>
+
+<p>On MAC download “SD Memory Card formatter” and do formating. Than extract and
+copy all content from NOOBS_v2_7_0 folder to the root of the card.</p>
+
+<p>NOOBS will ask which OS you want to install. If you preferr to have ready to go
+sd card, than download <a href="https://www.raspberrypi.org/downloads/raspbian/">RASPBIAN STRETCH
+LITE</a>.</p>
+
+<p>On Mac use Etcher https://etcher.io/ and select zip and sd card and click Flash.
+When installing Raspian it took around 20mins to extract 4.138MB (speed 2MB/s).
+On another C10 cards:
+Kingston 16GB MicroSD HC C10 SDC10/16GB speed is 9.9MB/s and
+ScanDisk Ultra 32GB 10 UHS I speed is 15MB/s
+so 2018-06-27-raspbian-stretch-lite.zip (367MB, uncompressed in Etcher says it
+is 1.86GB) took only few mins.</p>
+
+<p>Create empty file <code class="language-plaintext highlighter-rouge">ssh</code> in the root of sd card (now sd card has name <code class="language-plaintext highlighter-rouge">boot</code>) so
+than ssh will be enabled and you do not need mouse and monitor, just find ip
+address and ssh to it.</p>
+
+<p>Run <code class="language-plaintext highlighter-rouge">sudo raspi-config</code> in console or find in Top Left Icon -&gt; Preferences -&gt;
+Raspberry Pi Coonfiguration -&gt; Tab System.
+If you install Desktop version of Raspbian than change <code class="language-plaintext highlighter-rouge">Boot</code> options to <code class="language-plaintext highlighter-rouge">To
+Cli</code> instead of <code class="language-plaintext highlighter-rouge">To Desktop</code>, (in raspi-config set to <code class="language-plaintext highlighter-rouge">B1 Consolle Autologin</code>).
+If you want to enable Desktop again, run <code class="language-plaintext highlighter-rouge">startx</code> when you are logged in and
+attached keyboard (can not run startx remotelly from ssh). Note that startx is
+not available in lite stretch, but you can install with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install --no-install-recommends xserver-xorg xinit raspberrypi-ui-mods
+# also to start chromium in kiosk mode
+sudo apt-get install chromium-browser
+startx /usr/bin/chromium-browser http://www.google.com/ --window-size=1920,1080 --start-fullscreen --kiosk --
+</code></pre></div></div>
+
+<p>You can see current value when you select for example <code class="language-plaintext highlighter-rouge">5 Interfacing Options</code> -&gt;
+<code class="language-plaintext highlighter-rouge">P7 1-Wire</code> -&gt; <code class="language-plaintext highlighter-rouge">Would you like the one-wire interface to be enabled?</code> and
+current focused value <code class="language-plaintext highlighter-rouge">&lt;Yes&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;No&gt;</code> is current value.</p>
+
+<p>If you did not enable ssh with <code class="language-plaintext highlighter-rouge">touch ssh</code> on the root sd card, than enable on
+tab Interfaces (in raspi-config Interfacing Options -&gt; P2 SSH) enable SSH.</p>
+
+<p>Find ip address with <code class="language-plaintext highlighter-rouge">nmap 192.168.0.-</code>. Connect from your desktop <code class="language-plaintext highlighter-rouge">ssh
+pi@192.168.0.11</code> (password raspberry).</p>
+
+<p>If something is not working than check
+<code class="language-plaintext highlighter-rouge">/etc/network/interfaces</code> and <code class="language-plaintext highlighter-rouge">/etc/dhcpcd.conf</code> (you can manually get dns with
+<code class="language-plaintext highlighter-rouge">sudo dhclient eth0</code>).</p>
+
+<p>Set up static IP address using GUI, right click on Network Icon -&gt; Wireless and
+wired network setting -&gt; Configure Interface -&gt; Select eth0 -&gt; IPv4 address <code class="language-plaintext highlighter-rouge">192.168.2.6</code>, disable IPv6, Router <code class="language-plaintext highlighter-rouge">192.168.2.1</code> DNS servers <code class="language-plaintext highlighter-rouge">8.8,8,8</code>.
+or using command line edit <code class="language-plaintext highlighter-rouge">/etc/dhcpcd.conf</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/dhcpcd.conf
+interface eth0
+inform 192.168.2.6
+static routers=192.168.2.1
+static domain_name_servers=8.8.8.8
+noipv6
+</code></pre></div></div>
+
+<p>Leave <code class="language-plaintext highlighter-rouge">/etc/network/interfaces</code> as default.
+Some posts about all network configuration that you need to know
+https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address/74428#74428
+https://wiki.debian.org/NetworkConfiguration
+https://wiki.debian.org/NetworkManager</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># find ip address and network mask
+ip -4 addr show | grep global
+#    inet 192.168.2.6/24 brd 192.168.2.255 scope global eth0
+
+# find default route
+ip route | grep default | awk '{print $3}'
+# 192.168.2.1
+
+# find dns server (usually same as router)
+cat /etc/resolv.conf
+# nameserver 8.8.8.8
+# /etc/resolv.conf is overwritten by resolvconf, network-manager and other dhcp
+# clients.
+
+# list interfaces even they are not connected
+ls /sys/class/net/
+
+# to set static ip address you can edit either /etc/dhcpcd.conf
+interface eth0
+   static ip_address=192.168.2.6/24
+   static routers=192.168.2.1
+   static domain_name_servers=192.168.2.1
+
+# or edit /etc/network/interfaces
+auto eth0
+iface eth0 inet static
+        address 192.168.2.6
+        netmask 255.255.255.0
+        gateway 192.168.2.1
+
+</code></pre></div></div>
+
+<p>Copy ssh keys with <code class="language-plaintext highlighter-rouge">ssh-copy-id pi@192.168.0.11</code>.</p>
+
+<p>Check internet connection with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>host google.com
+ping http://www.google.com
+</code></pre></div></div>
+
+<h1 id="ruby">Ruby</h1>
+
+<p>Check if ruby is already installed in latest Raspian.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install ruby
+# this is needed for eventmachine gem
+sudo apt-get install ruby-dev
+ruby -v
+</code></pre></div></div>
+
+<p>Use ligth <a href="/2018/05/31/sinatra/">sinatra framework</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo gem install bundler
+cat &gt; Gemfile &lt;&lt; HERE_DOC
+source 'https://rubygems.org'
+
+gem 'sinatra'
+gem 'sinatra-param'
+gem 'pi_piper'
+HERE_DOC
+
+bundle
+# I got error installing gems
+# mkmf.rb can't find header files for ruby at /usr/lib/ruby/include/ruby.h
+sudo apt-get install ruby-dev
+
+# I got error
+# project.h:116:25: fatal error: openssl/ssl.h: No such file or directory
+gem install eventmachine -- --with-cppflags=-I/usr/local/opt/openssl/include
+
+# update your Gemfile to include installed eventmachine
+# gem 'eventmachine', '1.2.5'
+
+bundle
+</code></pre></div></div>
+
+<p><a href="https://rvm.io/rvm/install">rvm</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash
+rvm install 2.3.0
+</code></pre></div></div>
+
+<p>This takes too much time, so you can revert to</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install ruby ruby1.9.1-dev libssl-dev
+sudo gem install pi_piper
+</code></pre></div></div>
+
+<h1 id="pipiper">PiPiper</h1>
+
+<p>In irb</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rvmsudo irb
+require 'pi_piper'
+pin = PiPiper::Pin.new(pin: 17, direction: :in)
+pin.read
+</code></pre></div></div>
+
+<p>Errors</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/var/lib/gems/2.3.0/gems/pi_piper-1.3.2/lib/pi_piper/pin.rb:24:in `initialize': Permission denied @ rb_sysopen - /sys/class/gpio/gpio11/direction (Errno::EACCES)
+# you need to run as root
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/var/lib/gems/2.3.0/gems/pi_piper-1.3.2/lib/pi_piper/pin.rb:23:in `close': Device or resource busy @ fptr_finalize - /sys/class/gpio/export (Errno::EBUSY)
+
+# you need to open pin port again, but before that you need to release
+# https://github.com/jwhitehorn/pi_piper/issues/30
+File.open("/sys/class/gpio/unexport", "w") { |f| f.write("#{pin.pin}") }
+# or
+gpio unexportall
+# to see all used pins
+gpio exports
+</code></pre></div></div>
+
+<h1 id="bash">Bash</h1>
+
+<p><a href="https://raspberrypi-aa.github.io/session2/bash.html">https://raspberrypi-aa.github.io/session2/bash.html</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#   Exports pin to userspace
+echo "18" &gt; /sys/class/gpio/export
+
+# Sets pin 18 as an output
+echo "out" &gt; /sys/class/gpio/gpio18/direction
+
+# Sets pin 18 to high
+echo "1" &gt; /sys/class/gpio/gpio18/value
+
+# Sets pin 18 to low
+echo "0" &gt; /sys/class/gpio/gpio18/value
+</code></pre></div></div>
+
+<h1 id="wiringpi">WiringPi</h1>
+
+<p>http://wiringpi.com/download-and-install/</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install wiringpi
+</code></pre></div></div>
+
+<p><a href="https://projects.drogon.net/raspberry-pi/wiringpi/the-gpio-utility/">https://projects.drogon.net/raspberry-pi/wiringpi/the-gpio-utility/</a></p>
+
+<p><a href="http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto">Pinouts</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gpio readall
+# for pin number with gpio we use wPi numbers so instead PIN 26 use 11
+# for pi_piper we use BCM (GPIO NUMBERS like GPIO07 for pin 26)
+# http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto
+
+gpio mode 11 out
+# same as -g 7
+# gpio -g mode 7 out
+gpio write 11 1
+
+# pull up resistor
+gpio mode 12 up
+</code></pre></div></div>
+
+<p>Dallas DS18B20 temperature sensor. Connect to pin BCM 4, wPi 7, Phusical 7 and
+use one pull up resistor. Reading is from file.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vi /boot/config.txt
+dtoverlay=w1-gpio
+sudo reboot
+sudo modprobe w1-gpio
+sudo modprobe w1-therm
+cd /sys/bus/w1/devices
+ls
+cd 28-xxxx (change this to match what serial number pops up)
+cat w1_slave
+</code></pre></div></div>
+
+<h1 id="startup-run">Startup run</h1>
+
+<p>This somehow does not work</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/rc.local
+sudo ruby /home/pi/home_automation/app.rb -e production
+</code></pre></div></div>
+
+<p>so I use  <code class="language-plaintext highlighter-rouge">~/.bash_profile</code> and with <code class="language-plaintext highlighter-rouge">sudo raspi-config</code> enable option Boot to
+CLIE Autologin, Create <code class="language-plaintext highlighter-rouge">~/.bash_profile</code> with this line:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -E is needed if you want to pass env varables to sudo command
+sudo -E ruby /home/pi/home_automation/app.rb -e production
+# source $HOME/securiPi/start.sh
+</code></pre></div></div>
+<p>Note that this will be executed for each ssh login and it will be exited when
+you disconnect from ssh session.</p>
+
+<p>We use prefix <code class="language-plaintext highlighter-rouge">rvm</code> so <code class="language-plaintext highlighter-rouge">rvmsudo</code> pass that env variable to
+<a href="https://github.com/rvm/rvm/blob/master/bin/rvmsudo#L84">child</a> and unbuffer so
+we can read long and not wait buffer to fill in. For this command we need to
+<code class="language-plaintext highlighter-rouge">sudo apt-get install expect-dev</code>.</p>
+
+<h1 id="mozilla-things">Mozilla Things</h1>
+
+<p>https://hacks.mozilla.org/2018/02/how-to-build-your-own-private-smart-home-with-a-raspberry-pi-and-mozillas-things-gateway/
+Download img and flash to sd card.
+Once booted up and connected to the lan, you can connect <gateway.local> or find
+ip address and go &lt;http://192.168.2.111/wifi-setup&gt;</gateway.local></p>
+
+<p>https://hacks.mozilla.org/2018/02/making-a-clap-sensing-web-thing/</p>
+
+<h1 id="webpack">Webpack</h1>
+
+<p>Follow <a href="/2016/04/20/bundler-bower-gulp-npm-yarn-webpack-tips/">Webpack</a></p>
+
+<h1 id="disk-errors">Disk errors</h1>
+
+<p>If you get <code class="language-plaintext highlighter-rouge">Kernel panic - not syncing: VFS: Unable to mount root fs on
+unknown-block</code> that meens SD card is corrupted. Try to recover with the <code class="language-plaintext highlighter-rouge">fsck</code>
+command on your ubuntu machine. Find your root partition of your sd card  using
+<code class="language-plaintext highlighter-rouge">gnome-disks</code>. Click on root Partition 7, and than on STOP icon to unmount it.
+Than run in console (it could take 10 minutes):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo fsck.ext4 -fy /dev/sdc7
+</code></pre></div></div>
+
+<h1 id="program-attiny">Program Attiny</h1>
+
+<p><a href="http://highlowtech.org/?p=1695">highlowtech</a> tutorial suggest to add board
+manager
+<a href="https://raw.githubusercontent.com/damellis/attiny/ide-1.6.x-boards-manager/package_damellis_attiny_index.json">https://raw.githubusercontent.com/damellis/attiny/ide-1.6.x-boards-manager/package_damellis_attiny_index.json</a></p>
+
+<p>Another installation is downloading to hardware folder.
+https://github.com/SpenceKonde/ATTinyCore</p>
+
+<h1 id="poe-power-over-ethernet">POE power over ethernet</h1>
+
+<p>From left to right, when you hold lan cable and look at pins (T568A color)
+pinouts. B variant is when orange and green are swapped.
+<strong>Crossover cable</strong> is when on one side is A and on other is B variant and it is
+used to connect two computers directly. When you connect computer to switch than
+use straight through cable (on both side is same variant).</p>
+
+<ul>
+  <li>1 White green</li>
+  <li>2 Green</li>
+  <li>3 White organge</li>
+  <li>4 Blue (DC-)</li>
+  <li>5 White blue (DC-)</li>
+  <li>6 Orange</li>
+  <li>7 White brown (DC+)</li>
+  <li>8 Brown (DC+)</li>
+</ul>
+
+<p>https://en.m.wikipedia.org/wiki/Ethernet_extender
+Ethernet range is 100m, but you can use some devices to extend that range
+http://www.veracityglobal.com/products/ethernet-and-poe-devices/outreach-lite.aspx
+It is powered with POE and it can deliver POE to the other end.</p>
+
+<p>ixl6009 https://electronics.stackexchange.com/questions/113253/voltage-drop-and-safe-current-load-on-cat5-cable</p>
+
+<h1 id="zoneminder">Zoneminder</h1>
+
+<p><a href="http://zoneminder.readthedocs.io/en/latest/installationguide/ubuntu.html#easy-way-ubuntu-16-04">Installation</a>
+https://wiki.zoneminder.com/Ubuntu_Server_19.04_Zoneminder_1.32.3</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>su
+add-apt-repository ppa:iconnor/zoneminder-1.32
+apt update
+apt upgrade
+apt dist-upgrade
+apt install zoneminder
+
+echo "sql_mode = NO_ENGINE_SUBSTITUTION" &gt;&gt; /etc/mysql/mysql.conf.d/mysqld.cnf
+systemctl restart mysql
+
+chmod 740 /etc/zm/zm.conf
+chown root:www-data /etc/zm/zm.conf
+chown -R www-data:www-data /usr/share/zoneminder/
+
+a2enconf zoneminder
+a2enmod php7.2
+a2enmod cgi
+a2enmod rewrite
+
+systemctl enable zoneminder
+systemctl start zoneminder
+
+awk '$0="date.timezone = "$0' /etc/timezone &gt;&gt; /etc/php/7.2/apache2/php.ini
+# or
+# sed -i /etc/php/7.2/apache2/php.ini -e '/\[Date\]/a \
+# date.timezone = Europe/Belgrade'
+
+systemctl reload apache2
+</code></pre></div></div>
+
+<p><a href="http://localhost/zm/api/host/getVersion.json">http://localhost/zm/api/host/getVersion.json</a> should return version.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost/zm/api/host/getVersion.json
+{"version":"1.32.3","apiversion":"1.0"}
+</code></pre></div></div>
+
+<p>To change apache port to 81 you can change:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/apache2/sites-enabled/000-default.conf
+&lt;VirtualHost *:81&gt;
+
+# /etc/apache2/ports.conf
+Listen 81
+</code></pre></div></div>
+
+<p>To trigger some functions you can run script with
+<a href="https://forums.zoneminder.com/viewtopic.php?t=24494">patch</a></p>
+
+<p>or event server as in ZMNinja</p>
+
+<p>You can export images for event: Export -&gt; check Export Image Files and check
+Export File Format Tar. When you extract you can create video file with command:
+<code class="language-plaintext highlighter-rouge">ffmpeg -i %05d-capture.jpg output.mp4</code></p>
+
+<p>Zoneminder service starts automatically using <code class="language-plaintext highlighter-rouge">/etc/init.d/zoneminder</code>.
+If you want to prevent automatical start on boot, you can disable using:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo update-rc.d zoneminder remove
+</code></pre></div></div>
+
+<p>To use another disk, you can mount external hard drive using “Disks” and
+“Settings -&gt; Edit mount options” and uncheck Automatic Mount Options but better
+is to follow https://wiki.zoneminder.com/Common_Issues_with_Zoneminder_Installation_on_Ubuntu#Use_Systemd_to_Mount_Internal_Drive_or_NAS
+Basically we mount external drive to /mnt/sdb1 and moount
+/var/cache/zoneminder/events to /mnt/sdb1/zoneminder/events</p>
+
+<p>To start streaming cameras on ubuntu boot startup you can add Startup
+Application a script</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/start_firefox_and_maximize.sh
+firefox -url http://localhost/zm/?view=cycle &amp;
+xdotool search --sync --onlyvisible --class Firefox windowactivate key F11
+</code></pre></div></div>
+
+<h2 id="zoneminder-errors-and-logs">Zoneminder Errors and Logs</h2>
+
+<p>Watch logs</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tail -f /var/log/syslog /var/log/apache2/* /var/log/mysql/*
+
+or
+
+multitail /var/log/syslog /var/log/apache2/error.log
+</code></pre></div></div>
+
+<p>Motion recording works but can not see stream. Error in log</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Socket /var/run/zm/zms-153908s.sock does not exist. This file is created by zms, and since it does not exist, either zms did not run, or zms exited early. Please check your zms logs and ensure that CGI is enabled in apache and check that the PATH_ZMS is set correctly. Make sure that ZM is actually recording. If you are trying to view a live stream and the capture process (zmc) is not running then zms will exit. Please go to http://zoneminder.readthedocs.io/en/latest/faq.html#why-can-t-i-see-streamed-images-when-i-can-see-stills-in-the-zone-window-etc for more information.
+</code></pre></div></div>
+
+<p>One old fix for
+<a href="https://forums.zoneminder.com/viewtopic.php?t=24265">ubuntu</a></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(Web interface) Options, paths, and update PATH_ZMS from "/cgi-bin/nph-zms" to "/zm/cgi-bin/nph-zms"
+
+That should match in /etc/apache2/conf-available/zoneminder.conf
+#ScriptAlias /zm/cgi-bin "/usr/lib/zoneminder/cgi-bin"
+
+sudo service apache2 restart
+sudo service zoneminder restart
+</code></pre></div></div>
+
+<p>But for recent zoneminder 1.32.2 <code class="language-plaintext highlighter-rouge">ERR [Socket /var/run/zm/zms-053522s.sock does
+not exist</code> is caused by zmupdate.pl which did some changes and generate
+<code class="language-plaintext highlighter-rouge">/etc/zm/conf.d/zmcustom.conf</code>  which override <code class="language-plaintext highlighter-rouge">ZM_PATH_ZMS</code> so you need to
+commend that line out.</p>
+
+<p>Error ‘Failed to open video device /dev/video0: Permission denied’</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>adduser www-data video
+usermod -a -G video www-data
+
+# chmod is not needed
+# sudo chmod 777 /dev/video*
+
+sudo reboot
+</code></pre></div></div>
+
+<p>If you see error:</p>
+
+<p>An error has occurred and this operation cannot continue.
+For full details check your web logs for the code ‘F88AB7’</p>
+
+<p>https://forums.zoneminder.com/viewtopic.php?t=12997</p>
+
+<p>It is probably some error in database, like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Fri Jan 25 12:25:52 2019] [error] [client 192.168.1.8] SQL-ERROR(BDC154): Table './zm/Events' is marked as crashed and last (automatic?) repair failed
+
+[Fri Jan 25 12:25:52 2019] [error] [client 192.168.1.8] PHP Warning:  Unknown: open(/var/lib/php5/sess_31rbb6unk3hhraifv94pfqgci1, O_RDWR) failed: No space left on device (28) in Unknown on line 0
+</code></pre></div></div>
+
+<p>I got this error because no space left on device, specifically inodes.
+So I removed some files and repair mysql.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get autoremove
+rm -rf /var/cache/zoneminder/*
+</code></pre></div></div>
+
+<p>Remove all data from zm with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -u root -p zm
+truncate table Logs;
+truncate table Frames;
+truncate table Events;
+</code></pre></div></div>
+
+<p>Error for Unable to create libvlc instance due to: (null) is fixed with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get install libvlc-dev libvlccore-dev vlc
+</code></pre></div></div>
+
+<p>Error for small memory alocation ability</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tail /var/syslog
+ zmc_m2[22910]: INF [Starting Capture]
+ zmc_m2[22910]: ERR [Invalid response status 401: Unauthorized]
+ zmc_m2[22910]: ERR [Unable to get response]
+ zmc_m2[22910]: ERR [Failed to capture image from monitor 2 (0/1)]
+ zmdc[22798]: ERR ['zmc -m 2' exited abnormally, exit status 255]
+ zmwatch[22830]: ERR [Can't get shared memory id '7a6d0002', 2: No such file or directory]
+ zmwatch[22830]: ERR [Can't get shared memory id '7a6d0002', 2: No such file or directory]
+</code></pre></div></div>
+<p>Open the file “/etc/sysctl.conf”, and paste these lines at the bottom of the
+file, then reboot.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/sysctl.conf
+
+# Increase the maximum shared memory
+kernel.shmall = 167772160
+kernel.shmmax = 167772160
+</code></pre></div></div>
+
+<p>https://forums.zoneminder.com/viewtopic.php?f=38&amp;t=28234&amp;p=110237&amp;hilit=Got+empty+memory+map+file+size+0#p110237
+Upgrading to master because of <code class="language-plaintext highlighter-rouge">no image since startup</code></p>
+
+<h2 id="zones">Zones</h2>
+
+<p><a href="https://wiki.zoneminder.com/Understanding_ZoneMinder's_Zoning_system_for_Dummies">wiki</a>
+has example. Use small zone for far distances so percentage is same.</p>
+
+<ul>
+  <li>set A is full zone pixels</li>
+  <li>set B is Min/Max pixel Threshold: difference in color from previous
+    <ul>
+      <li><em>Min/Max Alarmed Area</em>: check if set B is at least/most of set A in %
+I used max 50% since a car is less than that.</li>
+    </ul>
+  </li>
+  <li>set C is Filter Width/Height: check if 3x3 surround pixels (from set B) is
+also different in colors
+    <ul>
+      <li><em>Min/Max Filtered Area</em>: check if C cover min/max of set A in %</li>
+    </ul>
+  </li>
+  <li>set D is <em>Min/Max Blobs</em>: number of blobs
+    <ul>
+      <li><em>Min/Max Blob area</em>: check if cover at least/most of set A in %</li>
+    </ul>
+  </li>
+</ul>
+
+<p>To eliminate sun shadow, you can lower the <em>Max Alarmed Area</em> (50%) and use
+<em>Overload Frame Ignore Count</em> to ignore next 3 frames in that case of overload.</p>
+
+<p>To eliminate camera glitches, you can set in tab Source -&gt; Monitor -&gt; Buffers -&gt;
+Alarm Frame Count to 2.</p>
+
+<p>To eliminate false alarm when half of the image is triggered than use <em>Max
+Alarmed Area</em> to 50% or less.</p>
+
+<p>Also you can set Preclusive zone so if sun or ir light triggers alarm on
+preclusive zone it will disable alarm in active zone.</p>
+
+<p>Also you are using old camera in snapshot mode, zoneminder is pulling for new
+images, you should limit Analysis FPS, Maximum FPS, and Alarm Maximum FPS in
+Source -&gt; Monitor -&gt; General tab</p>
+
+<p>You can see stats by clicking Frames -&gt; last column is Score (on stills you can
+see only score on hover). For example:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Zone</td>
+      <td>Pixel Diff</td>
+      <td>Alarm Px</td>
+      <td>Filter Px</td>
+      <td>Blob Px</td>
+      <td>Blobs</td>
+      <td>Blob Sizes</td>
+      <td>Alarm Limits</td>
+      <td>Score</td>
+    </tr>
+    <tr>
+      <td>All</td>
+      <td>67</td>
+      <td>437 (5%)</td>
+      <td>97629 (5%)</td>
+      <td>96123 (5%)</td>
+      <td>1</td>
+      <td>96123 (5%)</td>
+      <td>813,0-1306,269</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In filter window you can see Max score frame (last column)</p>
+
+<p>To enable authentication and admin password go to options -&gt; System -&gt;
+OPT_USE_AUTH checked. Default is admin/admin.</p>
+
+<p>To change password use:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql -u root -p
+use zm
+update Users set Password=PASSWORD("admin") where Username="admin";
+</code></pre></div></div>
+
+<h1 id="pci-cards">PCI Cards</h1>
+
+<p>Determine</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lspci -v
+</code></pre></div></div>
+
+<p>PICO200 https://wiki.zoneminder.com/Pico2000
+PICO2000 is a quad camera input PCI card. The card uses a single Conexant 878A
+chip. In addition, some models have 1 audio input jack; it has not been tested
+with ZoneMinder.  30 FPS (degrades as the channels are utilized; expect ~2 FPS
+with all four channels capturing)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/modprobe.conf
+options bttv card=77 tuner=4 radio=0 triton1=0 vsfx=0 autoload=0
+</code></pre></div></div>
+
+<p>Bt878 4chip https://wiki.zoneminder.com/Bt878_4chip_8inputs</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dmesg | grep video
+
+dmesg | grep bttv
+[   21.257789] bttv: Bt8xx card found (0)
+[   21.258002] bttv: 0: Bt878 (rev 17) at 0000:01:01.0, irq: 17, latency: 32, mmio: 0xf8601000
+[   21.258045] bttv: 0: using:  *** UNKNOWN/GENERIC ***  [card=0,autodetected]
+[   27.728037] bttv: 0: tuner type unset
+[   27.735284] bttv: 0: registered device video0
+[   27.737522] bttv: 0: registered device vbi0
+
+</code></pre></div></div>
+
+<p>Philips saa71xx
+https://wiki.zoneminder.com/Debian_Squeeze</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lspci -v
+04:0c.0 Multimedia controller: Philips Semiconductors SAA7130 Video Broadcast Decoder (rev 01)
+	Subsystem: Philips Semiconductors SAA7130-based TV tuner card
+	Flags: bus master, medium devsel, latency 64, IRQ 20
+	Memory at feaffc00 (32-bit, non-prefetchable) [size=1K]
+	Capabilities: [40] Power Management version 1
+	Kernel driver in use: saa7134
+	Kernel modules: saa7134
+[   19.108345] saa7134: saa7130[0]: registered device video0 [v4l2]
+[   19.212484] saa7134: saa7130[1]: registered device video1 [v4l2]
+</code></pre></div></div>
+<p>Permissions for /dev/video0 does not allow other access so change to 666</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls -ls /dev/video*
+0 crw-rw----+ 1 root video 81,  0 Jun  2 06:11 /dev/video0
+
+cat &gt;&gt; /etc/udev/rules.d/90-zoneminder.rules &lt;&lt;HERE_DOC
+# allow non-privileged users to access the /dev/video* files
+SUBSYSTEM!="video4linux", GOTO="zm_rules_end"
+SUBSYSTEM=="video4linux",       MODE="0666",     GROUP="video"
+LABEL="zm_rules_end"
+HERE_DOC
+
+# restart comp or udev rules
+udevadm control --reload-rules &amp;&amp; udevadm trigger
+
+ls -ls /dev/video*
+0 crw-rw-rw-+ 1 root video 81,  0 Jun  2 06:32 /dev/video0
+</code></pre></div></div>
+
+<p>To find which device is connected you can</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vlc v4l2:///dev/video0
+</code></pre></div></div>
+
+<p>Do not use Source type <code class="language-plaintext highlighter-rouge">Libvlc</code> since it will use vlc, but you can use direct
+access to file, so choose <code class="language-plaintext highlighter-rouge">Local</code>, note that new fields will show up in <code class="language-plaintext highlighter-rouge">Source</code>
+tab.</p>
+
+<h1 id="china-ip-cam">China IP cam</h1>
+
+<p>When I look at the source I see</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var g_SoftWareVersion="V4.02.R12.00006531.10010.143300.00000";
+var g_HardWareVersion="Unknown";
+var g_mBuildTime="2016/9/13 16:50:12";
+var g_SerialNo="fcccccdda05ad0a9";
+var g_VideoInChannel=1;
+var g_AlarmInChannel=2;
+var g_AlarmOutChannel=1;
+var g_AudioInChannel=1;
+var g_DigChannel=0;
+
+
+var g_channelNumber=1;
+var g_user="admin";
+var g_port="554";
+ var g_address =document.location.hostname;
+
+if (g_address == "")
+{
+//	g_address = "10.2.4.46";
+}
+
+var iLanguage=101;
+var g_passWord="";
+</code></pre></div></div>
+
+<p>So to set zoneminder you can use “ONVIF” link at the top or manually select:</p>
+
+<ul>
+  <li>Source Type -&gt; Ffmpeg</li>
+  <li>Source Path -&gt; rtsp://admin:@192.168.1.11:554/user=admin_password=tlJwpbo6_channel=1_stream=0.sdp?real_stream</li>
+  <li>Remote Method -&gt; TCP</li>
+  <li>Capture Width: 1280, Capture Height: 960</li>
+</ul>
+
+<p>ON/Vif gives some options: Main stream H264 1920x1080 @ 30fps, secondStream
+720x480 @ 30fps, thirdStream 352x288 @ 15fps</p>
+
+<p>IPC-Model vendor is H264DVR, media port 34567, IP address: 192.168.1.11.
+You can search, just type 192.168.1. (blank). Or you do not need to type
+address, it will find cameras on other subnet mask.
+You can change ip with “EditDevice”</p>
+
+<p><img src="/assets/posts/china ip camera ip settings edit.png" alt="search" />
+<img src="/assets/posts/china ip camera ip settings edit address.png" alt="search" /></p>
+
+<h1 id="dahua-ip-cam">Dahua IP Cam</h1>
+
+<p>IPC-HDW4300C Dahua IP dome 3MP Camera HDW4300C Built-in MIC Metal body POE CMOS IR 30m IK10 1080p IP66 security cctv Camera IPC-HDW4300C
+Lens (mm):3.6mm
+Default IP address for Dahua cameras is 192.168.1.108 media port 3777 MAC
+3c:ef:8c:a3:c9:6b, vendor Dahua, username: admin, password: admin. Also have
+RTSP port 554.
+You can change seetings on http://192.168.1.108/ on Ubuntu
+dahua ipc-hdw4631c-a spens 250mA without IR and 270mA with ID diodes.</p>
+
+<p>Zoneminder ONVIF , subtype=0 (mainstream profile is H264 2592x1944 @ 25fps), use
+subtype=1 for smaller screen (704x576)
+rtsp://admin:admin@192.168.1.108:554/cam/realmonitor?channel=1&amp;subtype=0&amp;unicast=true&amp;proto=Onvif
+rtsp://admin:admin@192.168.1.108:554/cam/realmonitor?channel=1&amp;subtype=1&amp;unicast=true&amp;proto=Onvif</p>
+
+<h1 id="cantonk-ip-dom">Cantonk IP Dom</h1>
+
+<p>KIP-200SHT30H (on web page it shows Herospeed)
+<a href="http://www.elementa.rs/proizvod/57087/ip-dom-kamera">http://www.elementa.rs/proizvod/57087/ip-dom-kamera</a>
+Objektiv: varifokalni, 2.8-12mm
+Horizontalni ugao vidljivosti: 21° do 81°</p>
+
+<p>Defalut ip http://192.168.1.168 admin/admin.
+You need to use windows to edit configurations, there is basic setup, to set up
+manual IP address.
+Under System there is Time Settings to set TimeZone.</p>
+
+<p>KIP-200SH20H https://www.elementa.rs/proizvod/57086/ip-dom-kamera
+On camera it shows Cantonk. Focus: 3.6mm, 68°
+Default ip is 192.168.1.168
+Current is only 90mA (this is really low for ip camera), With IR diodes it is
+360mA.</p>
+
+<p>Profiles (resolution is fixed so you need to choose one of these three)
+MainStrean H264 1920x1080 @ 30fps rtsp://admin:admin@192.168.1.168:80/0
+secondStream H264 720x480 @ 30 fps rtsp://admin:admin@192.168.1.168:80/1
+thirdStream H264 352x288 @ 15 fps rtsp://admin:admin@192.168.1.168:80/2</p>
+
+<h1 id="china-ip-camera-23">China IP camera $23</h1>
+
+<p><a href="https://www.aliexpress.com/item/JIENU-1280-960P-ip-camera-CCTV-Security-Home-Surveillance-Indoor-White-Dome-Mini-Ipcam-p2p-System/32828747430.html">JIENU 1280*960P ip camera CCTV Security Home Surveillance Indoor White Dome Mini Ipcam p2p System Infrared HD Cam Support ONVIF</a></p>
+
+<p>Find camera ip address using <code class="language-plaintext highlighter-rouge">nmap 192.168.2.-</code> or Zoneminder ON/VIF.
+Connect using Windows IE (install plugins, chose english, username: ‘admin’,
+password: ‘’ empty)</p>
+
+<ul>
+  <li>set timezone</li>
+  <li>set fix ip address 192.168.3.6</li>
+</ul>
+
+<h1 id="china-mini-ip-camera-without-box">China Mini IP camera without box</h1>
+
+<p>https://www.aliexpress.com/item/1280-720P-1-0-MP-1-3MP-Mini-IP-Camera-ONVIF-indoor-Plug-and-Play-support/32801033646.html?spm=a2g0s.9042311.0.0.27424c4dIrwbGp</p>
+
+<h1 id="lead-acid">Lead acid</h1>
+
+<p>WP7.2 28W has a 7.2Ah on 12V. ie can provide 0.36A for 20h.</p>
+
+<p>Charging is limited to 2.4V per cell (6x2.4 = 14.4v for 12v battery). Current is
+10% of capacity, 0.1C (0.7A for 7Ah). Stop charging when current is below 3% of
+capacity (0.21A for 7Ah), or after 16hours time (time to charge depends on
+current, if it is 10% than it need 10 hours).
+Slow charging is 2.25V per cell (6x2.25 = 13.5V for 12v battery).
+Best option is to start with 14.4V and decrease to 13.5V when battery is full.
+Battery needs charge when it is below <strong>12.5V</strong> in open circuit. Battery is
+fully discarged when is it below 9.5V (do not go this far). Battery is around
+2.15V per cell when is fully charged <strong>12.91V</strong> for 12V battery. Wait for
+12hours after charging to measure open circuit.</p>
+
+<h1 id="default-passwords">Default Passwords</h1>
+
+<p>Telekom: admin ztonpk</p>
+
+<h1 id="poe">POE</h1>
+
+<h1 id="long-cable-on-battery-power">Long cable on battery power</h1>
+
+<p>For long cable, best advice is to use two switches on both ends and than attach
+wifi to those switches (switch works great for those big cables).</p>
+
+<p>Mikrotik RB 750 use 90mA + 10ma for each port, so ~ 150mA when all cables are
+there. There is no difference while there is a traffic or inactive network.</p>
+
+<p>Planet AP is 260mA.</p>
+
+<p>Both network devices are 400mA.</p>
+
+<p>Cheap china white ip camera spends 260mA if all diodes are on and streaming
+(253mA no streaming). During the day, witout IR diodes, it spends 100mA (87mA
+when there is no streaming).
+Cheap china ip camera without box and ir diodes spends ~140mA.
+Cantonk spend ~90mA</p>
+
+<p>So on second batery you can connect two cameras.</p>
+
+<h1 id="stream">Stream</h1>
+
+<p>You can open rtsp stream in vlc player.
+You can stream inside html page using https://wiki.videolan.org/Documentation:WebPlugin</p>
+
+<p>but plugin is not supported any more https://forum.videolan.org/viewtopic.php?t=138044</p>
+
+<p>Alternative is https://github.com/Streamedian/html5_rtsp_player</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install git://github.com/Streamedian/html5_rtsp_player.git
+</code></pre></div></div>
+
+<p>To search for onvif devices in ruby you can use:
+https://github.com/Caldis/Ruby-Onvif/blob/master/examples/test_device_discovery.rb
+based on https://github.com/jimxl/ruby-onvif-client</p>
+
+<p>To stream screen recordings you can download
+https://www.tightvnc.com/download.php vnc server (default configuration is
+enough). Run Server in Application Mode.</p>
+
+<h1 id="yi-iot-camera">Yi IOT camera</h1>
+
+<p>https://www.aliexpress.com/item/1005005426848727.html</p>
+
+<p>model number A1214 does not support smart home platform and any of the hacks.
+Other cameras could support hacks like
+https://github.com/roleoroleo/yi-hack-Allwinner-v2
+https://github.com/roleoroleo/yi-hack_ha_integration
+Also Home assistant https://www.home-assistant.io/integrations/yi/</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

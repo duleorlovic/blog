@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Arduino And Electronics</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Arduino And Electronics</h1>
+    <p class="meta">Aug 17, 2019</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#install"><span class="tocnumber">1</span> <span class="toctext">Install</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#arduino-makefile"><span class="tocnumber">1.1</span> <span class="toctext">Arduino Makefile</span></a></li><li class="toc_level-2 toc_section-3"><a href="#makefile-for-esp8266-esp32"><span class="tocnumber">1.2</span> <span class="toctext">Makefile for ESP8266 ESP32</span></a></li><li class="toc_level-2 toc_section-4"><a href="#arduino-tips"><span class="tocnumber">1.3</span> <span class="toctext">Arduino tips</span></a></li><li class="toc_level-2 toc_section-5"><a href="#low-cost-tx-rx"><span class="tocnumber">1.4</span> <span class="toctext">Low cost tx rx</span></a></li></ul></li><li class="toc_level-1 toc_section-6"><a href="#esp32"><span class="tocnumber">2</span> <span class="toctext">ESP32</span></a><ul><li class="toc_level-2 toc_section-7"><a href="#webserver"><span class="tocnumber">2.1</span> <span class="toctext">Webserver</span></a></li></ul></li><li class="toc_level-1 toc_section-8"><a href="#thingsboard"><span class="tocnumber">3</span> <span class="toctext">ThingsBoard</span></a><ul><li class="toc_level-2 toc_section-9"><a href="#selfhosting"><span class="tocnumber">3.1</span> <span class="toctext">Selfhosting</span></a></li><li class="toc_level-2 toc_section-10"><a href="#arduino-cloud"><span class="tocnumber">3.2</span> <span class="toctext">Arduino cloud</span></a></li><li class="toc_level-2 toc_section-11"><a href="#alexa"><span class="tocnumber">3.3</span> <span class="toctext">Alexa</span></a></li></ul></li><li class="toc_level-1 toc_section-12"><a href="#grbl-drive-step-motor-using-g-codes"><span class="tocnumber">4</span> <span class="toctext">GRBL drive step motor using g codes</span></a><ul><li class="toc_level-2 toc_section-13"><a href="#ugs"><span class="tocnumber">4.1</span> <span class="toctext">UGS</span></a></li></ul></li><li class="toc_level-1 toc_section-14"><a href="#cnc-foam-cutter"><span class="tocnumber">5</span> <span class="toctext">CNC foam cutter</span></a></li><li class="toc_level-1 toc_section-15"><a href="#solar-food-dehydrator"><span class="tocnumber">6</span> <span class="toctext">Solar food dehydrator</span></a></li><li class="toc_level-1 toc_section-16"><a href="#air-quality-monitor"><span class="tocnumber">7</span> <span class="toctext">Air quality monitor</span></a></li><li class="toc_level-1 toc_section-17"><a href="#rf"><span class="tocnumber">8</span> <span class="toctext">RF</span></a></li><li class="toc_level-1 toc_section-18"><a href="#motor-change-direction"><span class="tocnumber">9</span> <span class="toctext">Motor change direction</span></a></li></ul></td></tr></tbody></table></div><h1 id="install">Install</h1>
+
+<p>To install I download source tar.gz and run <code class="language-plaintext highlighter-rouge">./install.sh</code> or download binaries.
+https://github.com/arduino/arduino-ide/releases</p>
+
+<p>You should add user to <code class="language-plaintext highlighter-rouge">dialout</code> group (or try to install from ubuntu software
+and installation will add your user to the group automatically, you just have to
+log out)</p>
+
+<h2 id="arduino-makefile">Arduino Makefile</h2>
+
+<p>I use Arduino Makefile to compile and flash to arduino https://github.com/sudar/Arduino-Makefile</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ubuntu
+sudo apt-get install arduino-mk
+
+# mac
+brew tap sudar/arduino-mk
+brew install arduino-mk
+pip install pyserial
+</code></pre></div></div>
+
+<p>If your system is python3 than switch to python 2 with pyenv
+PR https://github.com/sudar/Arduino-Makefile/pull/640 but can not find
+python in Arduino.mk so you can switch back to python 2</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eval "$(pyenv init -)"
+pyenv shell 2.7.18
+</code></pre></div></div>
+<p>or to update the file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># vi $ARDMK_DIR/bin/ard-reset-arduino
+#!/usr/bin/env python3
+</code></pre></div></div>
+
+<p>arduino-mk gives some mk files like Arduino.mk and you can find installation
+folder with</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew --prefix arduino-mk
+export ARDMK_DIR=`brew --prefix arduino-mk`
+export ARDUINO_DIR=/Applications/Arduino.app/Contents/Java
+export AVR_TOOLS_DIR=$ARDUINO_DIR/hardware/tools/avr
+</code></pre></div></div>
+<p>or put in bachrc ` ~/config/bashrc/arduino.sh`</p>
+
+<p>So for your project you have to define</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Makefile
+BOARD_TAG    = uno
+ARDUINO_PORT = /dev/ttyACM0
+include $(ARDMK_DIR)/Arduino.mk
+</code></pre></div></div>
+<p>In vim you can run</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make
+make upload
+make monitor # serial monitor using screen, press any key to send to serial
+# you can exit with Ctrl+C or Ctrl+A + K (and y)
+make show_boards
+make show_submenu
+</code></pre></div></div>
+
+<p>In case you have an error <code class="language-plaintext highlighter-rouge">avrdude: can't open config file
+"/usr/../avrdude.conf": No such file or directory</code> than define in makefile
+<code class="language-plaintext highlighter-rouge">AVRDUDE_CONF = /etc/avrdude.conf</code></p>
+
+<p>In case of error <code class="language-plaintext highlighter-rouge">grep: /usr/share/arduino/hardware/arduino//boards.txt: No such
+file or directory</code> than you need to export ARDUINO_DIR</p>
+
+<p>Ignore build files</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#.gitignore
+build-uno/
+</code></pre></div></div>
+
+<p>Include libraries https://github.com/sudar/Arduino-Makefile#including-libraries</p>
+
+<h2 id="makefile-for-esp8266-esp32">Makefile for ESP8266 ESP32</h2>
+
+<p>https://github.com/plerup/makeEspArduino</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/plerup/makeEspArduino.git
+cd makeEspArduino
+
+export ARDUINO_ROOT=~/Library/Arduino15
+
+make -f makeEspArduino.mk DEMO=1 flash
+make -f makeEspArduino.mk DEMO=1 clean
+</code></pre></div></div>
+
+<p>To debug Makefile you can echo variable value:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(error   SKETCH is $(SKETCH))
+</code></pre></div></div>
+
+<p>I stuck with error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/Users/dule/Documents/Arduino/libraries/ArduinoIoTCloud/src/cbor/lib/tinycbor/src/cborparser.c:878:39: error: 'INT_MIN' undeclared (first use in this function)
+  878 |         if (unlikely(v &gt; (unsigned) -(INT_MIN + 1)))
+      |                                       ^~~~~~~
+/Users/dule/Documents/Arduino/libraries/ArduinoIoTCloud/src/cbor/lib/tinycbor/src/compilersupport_p.h:180:45: note: in definition of macro 'unlikely'
+  180 | #  define unlikely(x)   __builtin_expect(!!(x), 0)
+      |                                             ^
+/Users/dule/Documents/Arduino/libraries/ArduinoIoTCloud/src/cbor/lib/tinycbor/src/cborparser.c:37:1: note: 'INT_MIN' is defined in header '&lt;limits.h&gt;'; did you forget to '#include &lt;limits.h&gt;'?
+   36 | #include "cborinternal_p.h"
+  +++ |+#include &lt;limits.h&gt;
+</code></pre></div></div>
+
+<p>so I end up using Arduino command line interface
+https://arduino.github.io/arduino-cli/0.24/getting-started/</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># generate completion
+arduino-cli completion bash &gt; ~/config/bashrc/arduino-cli.sh
+
+# list installed boards
+arduino-cli core list
+
+# list ports
+arduino-cli board list
+# list board name and fqbn
+arduino-cli board listall esp8266 | grep generic
+Generic ESP8266 Module          esp8266:esp8266:generic
+
+# compile
+arduino-cli compile --fqbn  esp8266:esp8266:generic
+
+# upload
+arduino-cli upload --fqbn  esp8266:esp8266:generic -p /dev/cu.usbserial-13320
+
+# serial monitor
+arduino-cli monitor -p /dev/cu.usbserial-13320
+</code></pre></div></div>
+
+<h2 id="arduino-tips">Arduino tips</h2>
+
+<p><code class="language-plaintext highlighter-rouge">millis()</code> is unsigned long, it will go overflow (ie return to zero) after 50
+days https://www.arduino.cc/reference/en/language/functions/time/millis/
+Note that you should not use substraction since you might have what you do not
+expect</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unsigned long current = millis();
+
+
+</code></pre></div></div>
+
+<h2 id="low-cost-tx-rx">Low cost tx rx</h2>
+
+<p>VirtualWire works fine on ATMEGA Follow installation
+http://www.airspayce.com/mikem/arduino/VirtualWire/ and download zip and extract
+to <code class="language-plaintext highlighter-rouge">sketchbook/libraries</code> in my case is <code class="language-plaintext highlighter-rouge">/home/orlovic/Arduino/libraries</code>. Than
+you can find examples of it: File -&gt; Examples -&gt; VirtualWire -&gt; transmitter
+Pin 12 is for sending, Pin 11 for receiving.</p>
+
+<p>But since it is not updated I used Manchester http://mchr3k.github.io/arduino-libs-manchester/</p>
+
+<h1 id="esp32">ESP32</h1>
+
+<p>Add https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+to Preferences -&gt; Additional Board Manager URLs
+After installing new Tools -&gt; Boards Manager -&gt; esp32, you can select Tools -&gt;
+Board -&gt; ESP32 Arduino -&gt; DOIT ESP32 DEVKIT V1 and upload Blink example.
+Port is <code class="language-plaintext highlighter-rouge">/dev/cu.usbserial-0001</code></p>
+
+<p>For ESP8266 based on
+https://arduino-esp8266.readthedocs.io/en/latest/installing.html you need to add
+https://arduino.esp8266.com/stable/package_esp8266com_index.json to Additional
+boards manager urls, and install by Tools -&gt; Boards Manager -&gt; search for
+esp8266. After that you can select Tools -&gt; Board -&gt; ESP8266
+Note that port name is: <code class="language-plaintext highlighter-rouge">/dev/cu.usbserial-13310</code></p>
+
+<p>My model is NodeMCU 1.0 ESP-12E (older is 0.9 ESP-12)</p>
+
+<p>Pinouts https://lastminuteengineers.com/esp8266-pinout-reference/</p>
+
+<h2 id="webserver">Webserver</h2>
+
+<p>https://randomnerdtutorials.com/esp32-websocket-server-arduino/
+https://randomnerdtutorials.com/esp32-relay-module-ac-web-server/</p>
+
+<h1 id="thingsboard">ThingsBoard</h1>
+
+<p>Start with:
+https://thingsboard.io/docs/paas/getting-started-guides/helloworld/
+Connect to esp8266  https://thingsboard.io/docs/samples/esp8266/gpio/</p>
+
+<p>Use server <code class="language-plaintext highlighter-rouge">thingsboard.cloud</code> instead of <code class="language-plaintext highlighter-rouge">demo.thingsboard.io</code></p>
+
+<h2 id="selfhosting">Selfhosting</h2>
+
+<p>https://thingsboard.io/docs/user-guide/install/ubuntu/</p>
+
+<h2 id="arduino-cloud">Arduino cloud</h2>
+
+<p>Install iot cloud libraries https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries
+by menu Sketch &gt; Include library &gt; Manage libraries &gt; Bridge (by Arduino)</p>
+
+<p>also if you have <em>ArduinoIoTCloud.h: No such file or directory</em> search for
+ArduinoIoTCloud library and install it.</p>
+
+<p>https://cloud.arduino.cc/home/
+Create device
+https://create.arduino.cc/iot/devices
+select esp8266 or ESP32 or LoRaWan
+use Genereic model
+and save DEVICE_ID and SECRET_KEY</p>
+
+<p>For device you can create thinks like bulbs, relays and add variables to that
+thing.</p>
+
+<p>Use firefox to connect to arduino agent.</p>
+
+<p>Use dashboard to control variables.</p>
+
+<p>You can download skecth and open in Arudino IDE but you need to set up</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># arudino_secrets.h
+#define SECRET_SSID "trk inovacije"
+#define SECRET_OPTIONAL_PASS "asd"
+#define SECRET_DEVICE_KEY "asd"
+</code></pre></div></div>
+<p>You should see thing based on secret key in serial log</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Connection to "trk inovacije" failed
+Retrying in  "500" milliseconds
+Connected to "trk inovacije"
+Connected to Arduino IoT Cloud
+Thing ID: f24d631d-c36d-4a88-bede-05e21d3a23a8
+onRelayDownChange relay_down=1
+</code></pre></div></div>
+<p>the source is <code class="language-plaintext highlighter-rouge">/Users/dule/Documents/Arduino/Relays_nov05a</code></p>
+
+<p>To connect to alexa we will follow next tutorial</p>
+
+<h2 id="alexa">Alexa</h2>
+
+<p>Follow
+https://iotcircuithub.com/arduino-iot-cloud-esp8266-alexa-home-automation/
+but my echo can not find those switches on esp8266
+Documentation says alexa should find switches
+https://iotcircuithub.com/alexa-arduino-iot-cloud-smart-home-skill/
+but I could not. Also I did not find any specific code or library for alexa,
+only for Arduino IOT.</p>
+
+<p>Another solution is to use https://github.com/vintlabs/fauxmoESP and follow
+https://randomnerdtutorials.com/alexa-echo-with-esp32-and-esp8266/</p>
+
+<p>Use Sketch -&gt; Include library -&gt; Manage libraries -&gt; search fauxmo or install
+libraries manually.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd ~/Documents/Arduino/libraries
+git clone git@github.com:me-no-dev/ESPAsyncWebServer.git
+# for ESP32
+git clone git@github.com:me-no-dev/AsyncTCP.git
+# for ESP8266
+git clone git@github.com:me-no-dev/ESPAsyncTCP.git
+</code></pre></div></div>
+<p>when I try example <code class="language-plaintext highlighter-rouge">fauxmoESP_Basic</code> my echo can not discover new devices. I
+tried both ESP32 and ESP8266.</p>
+
+<p>Another solution is to use https://github.com/Aircoookie/Espalexa
+Example Examples -&gt; Espalexa -&gt; EspalexaBasic and echo recognizes those 3 lights
+Note that once you recognize the light, you need to remove them so next time you
+can recognize again.
+I tried with ESP32 and it sometimes has a problem connecting to Wifi.
+When I use mobile Wifi than it conects faster and more often.
+Also not responding https://github.com/Aircoookie/Espalexa/issues/44
+ESP8266 connects to both mobile wifi and cable wifi without problems.</p>
+
+<p>You should start alexa on connect successfully. To listen on connection events
+add callbacks:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bool alexaDeviceAdded = false;
+void setup() {
+  ArduinoIoTPreferredConnection.addCallback(NetworkConnectionEvent::CONNECTED, onNetworkConnect);
+  ArduinoIoTPreferredConnection.addCallback(NetworkConnectionEvent::DISCONNECTED, onNetworkDisconnect);
+  ArduinoIoTPreferredConnection.addCallback(NetworkConnectionEvent::ERROR, onNetworkError);
+}
+
+// https://github.com/arduino-libraries/Arduino_ConnectionHandler
+void onNetworkConnect() {
+  digitalWrite(LED_BUILTIN, ON_ACTIVE_LOW);
+  Serial.print("&gt;&gt;&gt;&gt; CONNECTED to network. ");
+  if (!alexaDeviceAdded) {
+    Serial.println("espalexa.addDevice Light 1");
+    espalexa.addDevice("Light 1", firstLightChanged);
+    espalexa.begin();
+  } else {
+    Serial.println("Keep using old device");
+  }
+}
+
+void onNetworkDisconnect() {
+  digitalWrite(LED_BUILTIN, OFF_ACTIVE_LOW);
+
+  Serial.println("&gt;&gt;&gt;&gt; DISCONNECTED from network");
+}
+
+void onNetworkError() {
+  digitalWrite(LED_BUILTIN, OFF_ACTIVE_LOW);
+
+  Serial.println("&gt;&gt;&gt;&gt; ERROR");
+}
+</code></pre></div></div>
+
+<p>“Alexa, help me to get started with Light 1”
+“Alexa, turn on Light 1”
+“Alexa, turn off Light 1”
+“Alexa, dim Light 1” # decrease by 50 from 255
+“Alexa, increase light 1 by 100%” # increases by 100
+“Alexa, brighten the Ligth 1” # increases by ~50</p>
+
+<h1 id="grbl-drive-step-motor-using-g-codes">GRBL drive step motor using g codes</h1>
+
+<p>To install grbl download and extract https://github.com/gnea/grbl/releases and
+inside Arduino Sketch -&gt; Include library -&gt; Add zip library navigate to grbl
+folder.
+This will create <code class="language-plaintext highlighter-rouge">~/Arduino/libraries/grbl</code>
+Then upload firmware example: Open File -&gt; Examples -&gt; grbl -&gt; grblUpload</p>
+
+<h2 id="ugs">UGS</h2>
+
+<p>To install UGS universal g code sender, go to 
+https://winder.github.io/ugs_website/download/ and download to programs and link
+to bin</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ln -s /home/orlovic/Programs/ugsplatform-linux/bin/ugsplatform ~/Programs/bin/
+ugsplatform
+</code></pre></div></div>
+<p>https://www.youtube.com/watch?v=cWKO8j_tv7A&amp;t=195s
+Set Machine -&gt; Firmware settings -&gt; $20 $21 $22 to 0 Soft hard limits and homing
+cycle
+In console</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$$
+$20=0
+</code></pre></div></div>
+
+<p>a4988 Driver https://mehatron.rs/arduino-a4988-drajver-step-motora-sa-hladnjakom
+arduino modul v3 for a4988 drivers
+https://mehatron.rs/arduino-drajver-cnc-shield-v3-za-a4988
+https://www.youtube.com/watch?v=TMK_fLgpESQ</p>
+
+<p>200 steps x 16 resolution = 3200 steps for one round (360 degres)
+steps per milimeter is 83
+400 steps for Z axis, ie 1mm is 45 degres.</p>
+
+<h1 id="cnc-foam-cutter">CNC foam cutter</h1>
+
+<p>https://howtomechatronics.com/projects/arduino-cnc-foam-cutting-machine/
+To prepare image you can use https://www.youtube.com/watch?v=ie5SqPaIaBw :
+Similar is https://www.foxalien.com/en-gb/products/foxalien-cnc-machine-hot-wire-cutter-hw40
+and preparing is https://youtu.be/iSNEocVpkKU?t=225</p>
+<ul>
+  <li>gimp : clear background and use right click -&gt; Colors -&gt; Levels and move to
+right input level
+Inscape:</li>
+  <li>for 3D letters nice font name is “Luminari”</li>
+  <li>path difference is first created - second created, to make reverse click on
+first created and than “Move to top”</li>
+  <li>to cut a path you should duplicate the object (knife) (since it will be
+removed) and select the object you want to cut and click Path &gt; Cat Path,
+deselect everything and move the cutted object</li>
+  <li>node on path can be a cornera (independent) or smooth (curve direction handles
+is on same line, there is also a simetric node) or a line (without curve
+handles) or a simple line (in this case it is not a curve)</li>
+  <li>to increase object by path you should Path &gt; Stroke to path, Object &gt; Ungroup,
+Path &gt; Union https://www.youtube.com/watch?v=Sy0nUkUt9CA&amp;t=152s 1mm is enough
+to stick, you need again to break all circles</li>
+</ul>
+
+<h1 id="solar-food-dehydrator">Solar food dehydrator</h1>
+
+<p>https://www.youtube.com/results?search_query=solar+food+dehydrator</p>
+
+<h1 id="air-quality-monitor">Air quality monitor</h1>
+
+<p>https://github.com/carldunham/air-quality-monitor/tree/cd/initial-implementation</p>
+
+<h1 id="rf">RF</h1>
+
+<p>NRF24L01
+https://www.youtube.com/watch?v=rY8S9I2-zqs</p>
+
+<p>Library: https://github.com/nRF24/RF24
+https://www.youtube.com/watch?v=oIobOWXOJJg</p>
+
+<h1 id="motor-change-direction">Motor change direction</h1>
+
+<p>Use two relays and two tasters to move engine forward and backward</p>
+
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

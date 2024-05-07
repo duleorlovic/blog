@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Git tips</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Git tips</h1>
+    <p class="meta">May 5, 2016</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#git-commands"><span class="tocnumber">1</span> <span class="toctext">Git commands</span></a></li><li class="toc_level-1 toc_section-2"><a href="#git-log"><span class="tocnumber">2</span> <span class="toctext">Git log</span></a></li><li class="toc_level-1 toc_section-3"><a href="#multiple-accounts"><span class="tocnumber">3</span> <span class="toctext">Multiple accounts</span></a></li><li class="toc_level-1 toc_section-4"><a href="#git-commit"><span class="tocnumber">4</span> <span class="toctext">Git commit</span></a></li><li class="toc_level-1 toc_section-5"><a href="#github"><span class="tocnumber">5</span> <span class="toctext">Github</span></a></li><li class="toc_level-1 toc_section-6"><a href="#hub"><span class="tocnumber">6</span> <span class="toctext">Hub</span></a></li><li class="toc_level-1 toc_section-7"><a href="#github-cli"><span class="tocnumber">7</span> <span class="toctext">Github CLI</span></a></li><li class="toc_level-1 toc_section-8"><a href="#prompt-with-branch-name"><span class="tocnumber">8</span> <span class="toctext">Prompt with branch name</span></a></li></ul></td></tr></tbody></table></div><h1 id="git-commands">Git commands</h1>
+
+<p>Add and commit in one command alias</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global alias.add-commit '!git add -A &amp;&amp; git commit'
+</code></pre></div></div>
+
+<p>checkout remote branch and track it</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout -t origin/branch
+</code></pre></div></div>
+
+<p>Remove remote branch delete remote</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin --delete gh-pages
+</code></pre></div></div>
+
+<p>Push branch and track</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push origin development:development
+</code></pre></div></div>
+
+<p>Get current branch name</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch --show-current
+git symbolic-ref --short HEAD
+</code></pre></div></div>
+
+<p>Getting existing git branches to track remote branches:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push --set-upstream origin my-branch
+# but you can set
+git config --global push.default current
+# so you can simply
+git push
+</code></pre></div></div>
+
+<p>Show latest branch ordered by updated time</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git branch --sort=-committerdate
+</code></pre></div></div>
+
+<p>Show authors for each line, but skip some common refactoring.
+https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .git-blame-ignore-revs
+# Removed semi-colons from the entire codebase
+a8940f7fbddf7fad9d7d50014d4e8d46baf30592
+# Converted all JavaScript to TypeScript
+69d029cec8337c616552756310748c4a507bd75a
+</code></pre></div></div>
+<h1 id="git-log">Git log</h1>
+
+<p>Show commits that are descendant of commit1 AND ancestors of commit2, in the
+same time</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log --reverse --ancestry-path commit1^..commit2
+git log $(git merge-base HEAD branch)..branch  # show commits only on branch
+</code></pre></div></div>
+
+<p>See all the changed code</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log -p
+</code></pre></div></div>
+
+<p>Also with adding</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add -p # e to open editor
+</code></pre></div></div>
+
+<p>Git stash only unstaged changes</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git stash --keep-index
+</code></pre></div></div>
+
+<p>Git checkout previous branch, last branch, latest branch</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout -
+# more robust way to reffer prev branch
+git checkout @{-1}
+</code></pre></div></div>
+
+<p>When you want to undo some commands</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reflog
+</code></pre></div></div>
+
+<p>For work in progress you can use wip</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git -m wip # one word does not need ""
+</code></pre></div></div>
+
+<p>Show file at specific revision</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git show HEAD~4:index.html
+</code></pre></div></div>
+
+<p>Find difference of current file with some point</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff 123123123 -- index.html
+</code></pre></div></div>
+
+<p>Find difference of all files and folders with meld diff tool</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git difftool master --dir-diff
+</code></pre></div></div>
+
+<p>Find difference on this branch (from common ancestor) use three dots</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff master...my_branch
+</code></pre></div></div>
+
+<p>Show only file names</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff 134 --name-only
+</code></pre></div></div>
+
+<p>Copy files filename to files path</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff --name-only &gt; filelist.txt
+tar cvf - -T filelist.txt | tar xvf - -C ~/target/folder
+</code></pre></div></div>
+
+<p>show only files that are added or modified</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff 123 --diff-filter=AM
+</code></pre></div></div>
+
+<p>show only files that are NOT added and NOT modified</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff 123 --diff-filter=am
+</code></pre></div></div>
+
+<p>show only sha or short sha</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rev-parse --short HEAD
+</code></pre></div></div>
+
+<p>Find bug using bisect on specific folder or file to jump half steps between</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git bisect start -- app/controllers/registration_controller.rb
+</code></pre></div></div>
+
+<p>If you need to push to two remote repositories, you can do it in one command</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add all git@github.com:duleorlovic/tips.git
+git remote set-url  --add all git@heroku.com:duleorlovic_tips.git
+git push all master --set-upstream
+git push
+</code></pre></div></div>
+
+<p>To push to heroku without changes, try</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit --allow-empty -m "empty commit"
+git push heroku master
+</code></pre></div></div>
+
+<p>To sort authors by number of commits</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git shortlog -e -s -n
+# last month for each user
+git log --since="last month" --format='%aN' | sort | uniq -c | sort -n
+</code></pre></div></div>
+
+<p>Versioning <a href="http://semver.org/">SEMVER</a></p>
+
+<h1 id="multiple-accounts">Multiple accounts</h1>
+
+<p>If there is two accounts on bitbucket or github with different keys you can use
+host alias with those keys, defined in <code class="language-plaintext highlighter-rouge">.ssh/config</code>. Let’s first generate
+another key with <code class="language-plaintext highlighter-rouge">ssh-keygen</code> and type the full path of the new key:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/dule/.ssh/id_rsa): /home/dule/.ssh/id_rsa_kulakajak
+</code></pre></div></div>
+
+<p>Than create a file with slighty different domain</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/.ssh/config
+Host kgithub.com
+  Hostname kgithub.com
+  IdentityFile ~/.ssh/id_rsa_kulakajak
+</code></pre></div></div>
+
+<p>and now you can clone using new key and host kgithub.com</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat ~/.ssh/id_rsa_kulakajak.pub 
+# copy and paste this to https://github.com/settings/keys
+git clone git@kgithub.com:kulakajak/3d-slova.in.rs.git
+</code></pre></div></div>
+
+<p>Note that you need to use <code class="language-plaintext highlighter-rouge">git</code> protocol url when seting remote (<code class="language-plaintext highlighter-rouge">https</code>
+protocol does not use this mappings). To change current url you can edit
+<code class="language-plaintext highlighter-rouge">.git/config</code> or use command <code class="language-plaintext highlighter-rouge">git remote set-url origin
+git@newbitbucket.org:company/repo</code>.</p>
+
+<p>To see which username (-T) and wich key (-v) is using:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -T git@bitbucket.org
+ssh -v git@secure.bitbucket.org
+</code></pre></div></div>
+
+<p>You can see which keys currenlty is used with <code class="language-plaintext highlighter-rouge">ssh-add -L</code>. You can create new
+session with <code class="language-plaintext highlighter-rouge">ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa_my_company_account; git
+clone git@github.com:company/repo.git'</code>. But new session will not stop ssh for
+offering other keys. To specificy which key to offer and disable others you can</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -v -i my_key deploy@$PRODUCTION_IP
+</code></pre></div></div>
+
+<p>If you want, you can generate id_rsa_secure with password, so it will asked each
+time you use git command.  Heroku uses keys from <code class="language-plaintext highlighter-rouge">~/.netrc</code> which is created
+when you type <code class="language-plaintext highlighter-rouge">heroku login</code> (once is setup, it stays forever)</p>
+
+<p>Note that if you have a lot of keys than all them will be offered and you can
+received error before it asks for password</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>debug1: Authentications that can continue: publickey,password
+debug1: Offering public key: RSA SHA256:bXvs6rHfIUJaL2iCeI/7HzEYTXrNEgydI5ufuK7r0mE orlovic@main
+Received disconnect from 167.172.189.128 port 22:2: Too many authentication failures
+Disconnected from 167.172.189.128 port 22
+</code></pre></div></div>
+<p>You can try to <code class="language-plaintext highlighter-rouge">ssh localhost</code> and than <code class="language-plaintext highlighter-rouge">ssh deploy@$PRODUCTION_IP</code> in which
+case if will not offer all keys</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>debug1: Authentications that can continue: publickey,password
+debug1: Trying private key: /home/orlovic/.ssh/id_dsa
+debug1: Trying private key: /home/orlovic/.ssh/id_ecdsa
+debug1: Trying private key: /home/orlovic/.ssh/id_ed25519
+debug1: Next authentication method: password
+</code></pre></div></div>
+<p>Solution is to remove some public keys or to specify key with <code class="language-plaintext highlighter-rouge">-i </code> option</p>
+
+<p>To add hosts to to known_hosts so you do not see this warning</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The authenticity of host 'github.com (140.82.121.3)' can't be established.
+</code></pre></div></div>
+<p>you can use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keyscan github.com &gt;&gt; ~/.ssh/known_hosts
+</code></pre></div></div>
+
+<h1 id="git-commit">Git commit</h1>
+
+<p>If you want to ignore/reignore some files that are tracked (gitignore does not
+work on tracked files). Note that when you change branch with changes to that
+files, error will be reported. Also note that <code class="language-plaintext highlighter-rouge">git checkout .</code> or <code class="language-plaintext highlighter-rouge">git stash</code>
+will be also applied to those hidden changes.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git update-index --assume-unchanged config/database.yml
+# then to track changes again
+git update-index --no-assume-unchanged config/database.yml
+</code></pre></div></div>
+
+<p>If you want to add folder to git structure but ignore all its content (like
+<code class="language-plaintext highlighter-rouge">backup</code> or <code class="language-plaintext highlighter-rouge">tmp</code> folder) you can do with three steps</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir tmp
+echo '*' &gt; tmp/.gitignore
+git add tmp/.gitignore -f
+</code></pre></div></div>
+
+<p>If you want to skip history and download latest code</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone --depth=1 your-repo-url
+</code></pre></div></div>
+
+<p>Clone all repositories from same user or organization, for example twitter</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -s https://api.github.com/orgs/twitter/repos?per_page=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
+</code></pre></div></div>
+
+<p>Set author localy (config is for local folder only)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config user.email kulakajak@gmail.com
+git config user.name 'kajakas'
+git commit --amend --reset-author
+</code></pre></div></div>
+
+<p>To change author in all commits, you can rebase to first commit</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># find first commit &lt;sha1-of-root&gt;
+git rebase -i `git log --reverse | if read a commit ; then echo $commit ; fi`
+# replace all `pick` with `e`, edit = use commit, but stop for amending
+# repeat the following command
+git commit --amend --reset-author --no-edit &amp;&amp; git rebase --continue
+</code></pre></div></div>
+
+<p>To change on initial commit you can use <code class="language-plaintext highlighter-rouge">rebase --onto HEAD</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># git checkout &lt;sha1-of-root&gt;
+git checkout `git log --reverse | if read a commit ; then echo $commit ; fi`
+git commit --amend --reset-author --no-edit
+git rebase --onto HEAD HEAD master
+</code></pre></div></div>
+
+<p>Apply patch</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff &gt; patchfile
+patch -p1 &lt; patchfile
+</code></pre></div></div>
+
+<p>Pick only changes from certain files instead of cherry pick, exclude with
+<code class="language-plaintext highlighter-rouge">:^my-filder</code> or <code class="language-plaintext highlighter-rouge">:^my-file</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git show ffbd16fa313825e52b79ed9348b2a8ab963ec87a -- app/ :^spec | git apply -
+</code></pre></div></div>
+
+<p>Count files in staging</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff --cached --numstat | wc -l
+</code></pre></div></div>
+
+<p>Rebase branches</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git pull --rebase # pull remote changes and rebase your local commits
+ git rebase master # call this while you are on some feature branch
+</code></pre></div></div>
+
+<p>Interactivelly rebase pull request</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rebase -i HEAD~2 # rebase last two commits, or use origin/master
+# pick : use same commit
+# squash : meld with previous commit (on this list is previous)
+# reword : change commit message
+# edit : use commit but stop for amending
+
+git fetch rails
+git checkout guides_i18n
+git rebase -i rails/master
+git push origin guides_i18n --force-with-lease
+</code></pre></div></div>
+
+<p>To move commit to stage (it is similar to amend, but you have commit files on
+stage so you can restore –staged changes to unstage them)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git reset --soft HEAD^
+</code></pre></div></div>
+
+<p>Mark commit with a tag</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git tag -l
+git tag v1.5
+
+# push tag is not automatically, you should do it manually
+git push origin v1.5
+# or push all tags
+git push origin --tags
+</code></pre></div></div>
+
+<p>To find if given commit hash is incuded on some release (release is a tag)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git tag --contains &lt;commit&gt;
+</code></pre></div></div>
+
+<p>To remove tag</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git tag -d v1.5
+</code></pre></div></div>
+
+<p>Clone for local or remote folders</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add local orlovic@192.168.2.103:/home/orlovic/ruby/securiPi/.git
+</code></pre></div></div>
+
+<p>Big files</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt install git-lfs
+git lfs install
+git lfs track *.mov
+</code></pre></div></div>
+
+<p>Bin folder added to path <code class="language-plaintext highlighter-rouge">PATH=".git/safe/../../bin:$PATH"</code>, but only for
+project where you run</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir -p .git/safe
+</code></pre></div></div>
+
+<p>Submodule is used when you have other git repository within your project. Add
+submodule with <code class="language-plaintext highlighter-rouge">git submodule add git@github.com:duleorlovic/myapp.git</code>
+When someone clone your project, it needs to do two steps: init and fetch.
+Initialize configuration file with <code class="language-plaintext highlighter-rouge">git submodule init</code> it actually creates</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .git/config
+[submodule "myapp"]
+	active = true
+	url = git@github.com:duleorlovic/myapp.git
+</code></pre></div></div>
+<p>To fetch use <code class="language-plaintext highlighter-rouge">git submodule update</code> to get actuall SHA that was commited.
+To do both init and submodule update you can use option while cloning parent
+(recursive mean to fetch submdules of submodules - nested submodules if exists)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone --recurse-submodules git@github.com:trkin/web-tips.git
+</code></pre></div></div>
+<p>or if it already cloned, it can pull latest parent changes and update</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git pull
+git submodule update --init --recursive
+
+# or you can do in one step
+git pull --recurse-submodules
+</code></pre></div></div>
+<p>This is needed every time you need to sync latest commited changes on parent.</p>
+
+<p>On other side, to fetch upstream changes of submodules, you can navigate to each
+submodule folder and checkout branch <code class="language-plaintext highlighter-rouge">git chechout main</code>, <code class="language-plaintext highlighter-rouge">get fetch</code> and <code class="language-plaintext highlighter-rouge">git
+merge</code>, or you can do from main repo using</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git submodule update --remote
+git submodule update --remote myapp # update only this submodule
+git submodule update --remote --rebase myapp # stay on branch, not detached
+</code></pre></div></div>
+<p>To see differences in submodules you can use <code class="language-plaintext highlighter-rouge">git diff --submodule</code> (or you can
+set option <code class="language-plaintext highlighter-rouge">git config --global diff.submodule log</code> so you do not need to pass
+<code class="language-plaintext highlighter-rouge">--submodule</code> attribute every time). Similar for status, you can se <code class="language-plaintext highlighter-rouge">git config
+status.submodulesummary 1</code> so <code class="language-plaintext highlighter-rouge">git status</code> will show changes that are done for
+submodules.
+To see actual submodule commit which is commited in main repo</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log -p my-app
+</code></pre></div></div>
+
+<p>To work inside submodules you need to checkout branch (initially <code class="language-plaintext highlighter-rouge">git submodule
+update</code> is leaving the subrepository in <em>detached HEAD</em> state). After you commit
+you need to push to submodule repo or you can do from superrepository with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git push --recurse-submodules=check
+git push --recurse-submodules=on-demand
+</code></pre></div></div>
+
+<p>When some submodule become private, you can remove that</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rm apps/shoppe
+</code></pre></div></div>
+
+<p>Tutorials</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git help tutorial-2
+git help everyday
+git help workflows
+</code></pre></div></div>
+
+<p>Use pre commit hooks to check for something before commit happens, for example
+do not commit secret keys instead of <code class="language-plaintext highlighter-rouge">DO_NOT_COMMIT</code> tag. You can
+<code class="language-plaintext highlighter-rouge">git commit --no-verify</code> to ignore hooks.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .git/hooks/pre-commit
+#!/bin/sh
+# Redirect output to stderr.
+exec 1&gt;&amp;2
+# enable user input
+exec &lt; /dev/tty
+
+grep_reg='-.*DO_NOT_COMMIT'
+# CHECK
+if test $(git diff --cached | grep -e $grep_reg | wc -l) != 0
+then 
+  exec git diff --cached | grep -ne $grep_reg
+  read -p "There are some occurrences of DO_NOT_COMMIT at your modification. Are you sure want to continue? (y/n)" yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    exit 0; #THE USER WANTS TO CONTINUE
+  else
+    exit 1; # THE USER DONT WANT TO CONTINUE SO ROLLBACK
+  fi
+fi
+</code></pre></div></div>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">.pre-commit-config.yaml</code> file</p>
+
+<p>Another example is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/bash
+#
+# https://gist.github.com/jimschubert/9073276
+# Automatically adds branch name to every commit message.
+# Modified from the stackoverflow answer here: http://stackoverflow.com/a/11524807/151445
+#
+
+# Get branch name, use sed to strip name if needed
+# branchName=$(git branch | grep '*' | sed 's/* i//')
+branchName=$(git branch --show-current)
+
+# Get the first line, ex: from ammending or mmm from git commit -am'mmm'
+firstLine=$(head -n1 $1)
+
+if ! [[ $firstLine =~ $branchName ]] ; then
+  # Prepend branchName to COMMIT_MSG
+  echo "$branchName"' '$(cat "$1"| sed '/^#.*/d') &gt; "$1"
+  #
+  # Append branchName to COMMIT_MSG
+  # echo -n "vishwasb/gfd-ui#$branchName" &gt;&gt; "$1" # this will add at the end
+  # echo $(cat "$1" | sed '/^#.*/d')' '"vishwasb/gfd-ui#$branchName" &gt; "$1"
+
+  # Insert branchName at the end of the commit message file
+  # sed -i "1s@^@\n\n$branchName@" $1
+fi
+</code></pre></div></div>
+
+<p>Add global gitignore for all projects</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global core.excludesfile ~/.gitignore
+</code></pre></div></div>
+
+<p>this will add to <code class="language-plaintext highlighter-rouge">~/.gitconfig</code> file. You could also use local <code class="language-plaintext highlighter-rouge">.git/config</code>.
+Here is my global config</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/.gitconfig
+[alias]
+    # Git fetch pull all brancher and fast forward merge `git pull-all`
+    pull-all = !"for b in $(git for-each-ref refs/heads --format='%(refname)') ; do git checkout ${b#refs/heads/} ; git pull --ff-only ; done"
+
+</code></pre></div></div>
+
+<h1 id="github">Github</h1>
+
+<p>For you project you can set instructions for issues, look example
+<a href="https://github.com/arsduo/koala/issues/new">https://github.com/arsduo/koala/issues/new</a></p>
+
+<p>Very usefull github cheat sheet
+<a href="https://github.com/tiimgreen/github-cheat-sheet#github-talks">https://github.com/tiimgreen/github-cheat-sheet#github-talks</a></p>
+
+<p>Use labels:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">devops</code> for CI tasks</li>
+  <li><code class="language-plaintext highlighter-rouge">missing_requirements</code> and <code class="language-plaintext highlighter-rouge">ready</code> for status of issue</li>
+  <li><code class="language-plaintext highlighter-rouge">feature</code>, <code class="language-plaintext highlighter-rouge">bug</code> for type of issue</li>
+</ul>
+
+<p>Use <a href="https://github.com/zricethezav/gitleaks">gitleaks</a> to search history for
+secret keys, so you can remove them.</p>
+
+<h1 id="hub">Hub</h1>
+
+<p><a href="https://hub.github.com/">https://hub.github.com/</a>
+Download release for linux arm 64 <a href="https://github.com/github/hub/releases">https://github.com/github/hub/releases</a> and
+run <code class="language-plaintext highlighter-rouge">sudo ./install</code>. To create alias, run and copy output <code class="language-plaintext highlighter-rouge">hub alias -s</code></p>
+
+<p>Hub add new commands:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">git browse</code> open current project github page in the default browser <code class="language-plaintext highlighter-rouge">git
+browse -- issues</code> to open issues. <code class="language-plaintext highlighter-rouge">git browse user/repo</code> to open user/repo</li>
+  <li><code class="language-plaintext highlighter-rouge">git create</code> create this repository on GitHub and add GitHub as origin. After
+you create, you need to push</li>
+  <li>ci-status      Show the CI status of a commit</li>
+  <li>compare        Open a compare page on GitHub</li>
+  <li>fork           Make a fork of a remote repository on GitHub and add as remote</li>
+  <li>issue          List or create issues</li>
+  <li>pr             Work with pull requests</li>
+  <li>pull-request   Open a pull request on GitHub</li>
+  <li>release        List or create releases</li>
+</ul>
+
+<h1 id="github-cli">Github CLI</h1>
+
+<p>https://github.com/cli/cli</p>
+
+<p>gh cli is used to automatically close pr</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gh auth login
+</code></pre></div></div>
+<p>Check that you can connect using gh cli</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gh repo clone some-private-repo
+gh auth status
+</code></pre></div></div>
+
+<p>Permission problem is when you install gh cli using snap. Solved with installing
+with apt-get.</p>
+
+<h1 id="prompt-with-branch-name">Prompt with branch name</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># .bashrc
+parse_git_branch() {
+  git branch 2&gt; /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+# simplest is to attach branch name
+# export PS1="$PS1\$(parse_git_branch)&gt;"
+# echo '$PS1'
+# \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ 
+export PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\$(parse_git_branch)\[\033[00m\]\$ "
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

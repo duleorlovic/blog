@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Terraform Fundamentals</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Terraform Fundamentals</h1>
+    <p class="meta">Dec 30, 2021</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#tutorials"><span class="tocnumber">1</span> <span class="toctext">Tutorials</span></a></li><li class="toc_level-1 toc_section-2"><a href="#install"><span class="tocnumber">2</span> <span class="toctext">Install</span></a></li><li class="toc_level-1 toc_section-3"><a href="#usage"><span class="tocnumber">3</span> <span class="toctext">Usage</span></a></li><li class="toc_level-1 toc_section-4"><a href="#variable_block"><span class="tocnumber">4</span> <span class="toctext">Variable_block</span></a></li><li class="toc_level-1 toc_section-5"><a href="#data"><span class="tocnumber">5</span> <span class="toctext">Data</span></a></li><li class="toc_level-1 toc_section-6"><a href="#random"><span class="tocnumber">6</span> <span class="toctext">Random</span></a></li><li class="toc_level-1 toc_section-7"><a href="#project-structure"><span class="tocnumber">7</span> <span class="toctext">Project structure</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#workspaces"><span class="tocnumber">7.1</span> <span class="toctext">Workspaces</span></a></li></ul></li><li class="toc_level-1 toc_section-9"><a href="#ssh-key-pair"><span class="tocnumber">8</span> <span class="toctext">SSH key pair</span></a></li><li class="toc_level-1 toc_section-10"><a href="#provision-software"><span class="tocnumber">9</span> <span class="toctext">Provision software</span></a><ul><li class="toc_level-2 toc_section-11"><a href="#state"><span class="tocnumber">9.1</span> <span class="toctext">State</span></a></li><li class="toc_level-2 toc_section-12"><a href="#packer"><span class="tocnumber">9.2</span> <span class="toctext">Packer</span></a></li></ul></li><li class="toc_level-1 toc_section-13"><a href="#other-providers"><span class="tocnumber">10</span> <span class="toctext">Other providers</span></a></li><li class="toc_level-1 toc_section-14"><a href="#template-provider-templatefile"><span class="tocnumber">11</span> <span class="toctext">Template provider templatefile</span></a></li><li class="toc_level-1 toc_section-15"><a href="#locals-and-tags"><span class="tocnumber">12</span> <span class="toctext">Locals and tags</span></a></li><li class="toc_level-1 toc_section-16"><a href="#lifecycle"><span class="tocnumber">13</span> <span class="toctext">Lifecycle</span></a></li><li class="toc_level-1 toc_section-17"><a href="#modules"><span class="tocnumber">14</span> <span class="toctext">Modules</span></a></li><li class="toc_level-1 toc_section-18"><a href="#move"><span class="tocnumber">15</span> <span class="toctext">Move</span></a></li><li class="toc_level-1 toc_section-19"><a href="#terraform-cloud"><span class="tocnumber">16</span> <span class="toctext">Terraform Cloud</span></a></li><li class="toc_level-1 toc_section-20"><a href="#vim"><span class="tocnumber">17</span> <span class="toctext">VIM</span></a></li></ul></td></tr></tbody></table></div><p>Terraform provides Configuration Management on an infrastructure level, not on
+the level of software on your machines.</p>
+
+<h1 id="tutorials">Tutorials</h1>
+
+<p>Tutorial excellent https://cloudcasts.io/course/terraform
+Udemy TODO: https://www.udemy.com/course/learn-devops-infrastructure-automation-with-terraform/ https://github.com/wardviaene/terraform-course</p>
+
+<h1 id="install">Install</h1>
+
+<p>Download binary https://www.terraform.io/downloads</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+terraform -install-autocomplete
+</code></pre></div></div>
+
+<h1 id="usage">Usage</h1>
+
+<p>Commands</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># download provider plugins
+terraform init
+# Terraform has created a lock file .terraform.lock.hcl to record the provider
+# selections it made above. Include this file in your version control repository
+git init .
+cat &gt;&gt; .gitignore &lt;&lt; 'HERE_DOC'
+.terraform/
+terraform.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+HERE_DOC
+
+# check the changes live
+terraform plan
+# you can save to a binary file and apply them
+terraform plan -out changes.terraform &amp;&amp; terraform apply changes.terraform
+# see plan changes
+terraform plan -out /tmp/tfplan &amp;&amp; terraform show -json /tmp/tfplan | jq -r ".resource_changes[0].change.before.data , .resource_changes[0].change.after.data"
+
+# push the changes
+terraform apply
+terraform apply -auto-approve # accept yes
+# I suggest to save the state in git
+terraform apply -auto-approve &amp;&amp; git add .
+
+# correct the format
+terraform fmt
+# validate syntax
+terraform validate
+
+# inspect current state from terraform.tfstate
+terraform show
+
+# to show all resources from current state
+terraform state list
+# to rename resource
+terraform state mv aws_instance.example aws_instance.production
+
+# create visual representation of a configuration or execution plan
+terraform graph
+
+# find resource ID and import to the state as ADDRESS. Only for importing the
+# state still need to write resource definitions since next apply will remove it
+# todo: https://learn.hashicorp.com/tutorials/terraform/state-import
+terraform import ADDRESS ID
+terraform import aws_instance.example i-0dba323asd123
+
+# show defined outputs
+terraform output
+terraform output resource-name
+
+# refresh remote state
+terraform refresh
+
+# configure remote state storage
+terraform remote
+
+# to remove
+# this will clear the state file but you can restore using git or
+# terraform.tfstate.backup
+terraform destroy
+# destroy specific resource
+terraform destroy --target aws_instance.demo_vm_1
+
+# manually mark resource as tainted, it will be destructed and recreated at the
+# next apply
+terraform taint
+terraform untaint
+</code></pre></div></div>
+
+<p>main.tf for <code class="language-plaintext highlighter-rouge">terraform</code> block (for main setting and providers)
+https://registry.terraform.io/ and for resources</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># main.tf
+terraform {
+  required_providers {
+    # https://www.terraform.io/language/providers/requirements
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~&gt; 2.13.0"
+    }
+  }
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># resource.tf
+# provider block use local name of the provider
+provider "docker" {}
+
+# resource block has two strings before block: resource type and resource name
+# prefix for resource type match the provider name. resource id is type.name
+resource "docker_image" "nginx" {
+  name         = "nginx:latest"
+  keep_locally = false
+}
+
+# access the container on http://localhost:8000/
+resource "docker_container" "nginx" {
+  image = docker_image.nginx.latest
+  name = "tutorial"
+  ports {
+    internal = 80
+    external = 8000
+  }
+}
+</code></pre></div></div>
+
+<h1 id="variable_block">Variable_block</h1>
+
+<p>https://learn.hashicorp.com/tutorials/terraform/variables</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># variables.tf
+# if variable does not have value or default, it will be asked
+variable "AWS_ACCESS_KEY" {}
+
+variable "mystring" {
+  type = string
+  default = "hello"
+}
+
+variable "mynumber" {
+  type = number
+  default = 1.42
+}
+
+variable "mybool" {
+  type = bool
+  default = true
+}
+
+# list is array
+variable "mylist" {
+  description = "A list of zones"
+  type = list(string)
+  default = [ "abc", "qwe" ]
+}
+
+variable "mymap" {
+  type = map(string)
+  default = {
+    mykey = "my value"
+    # also colon is possible
+    mykey: "my value"
+  }
+}
+variable "AMIS" {
+  type = map
+  default = {
+    # find ami on https://cloud-images.ubuntu.com/locator/ec2/ search example us-east-1 hvm
+    # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html#finding-quick-start-ami
+    us-east-1 = "ami-0b0ea68c435eb488d"
+  }
+}
+
+variable "myset" {
+  type = set
+  default = [1, 2]
+}
+
+variable "myobject" {
+  type = object({name=string, age=number})
+  default = {
+    name = "Joe"
+    age = 42
+  }
+}
+
+variable "mytuple" {
+  type = type([number, string, bool])
+  default = [0, "string", false]
+}
+</code></pre></div></div>
+<p>Use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># tuple is like a list with a different type
+[0, "string", false]
+
+# identifiers can contain letters, digits, underscore, hyphens, but first char
+# must not be a digit. If key in a map is not valid identifier, it has to be
+# quoted
+
+# you can override variable as attribute:
+terraform apply -var "myvar=NewName" -var "RDS_PASSWORD=$PASSWORD"_
+
+# you can see variables inside `terraform console` but you can not define
+# variable inside console. Also you can not see outputs, but you can use
+# directly their values
+aws_s3_bucket.my-bucket.arn
+
+# you can play with functions:
+tomap({"k"="v", "k2"="v2"}) # returns { "k"="v", "k2"="v2" }
+tolist("a", "b") # returns array ["a", "b"]
+
+# string
+var.myvar
+"${var.myvar}" # interpolation inside string
+# string manipulation
+coalesce(string1, string2) # returns first non empty value
+format("server-%03d", count.index + 1)  returns server-001 server-002
+join(delim, mylist), join(",", var.AMIS) # ami-1,ami-2
+replace("aaab", "a", "c") # "cccb"
+split(",", "a,b,c") # ["a", "b", "c"]
+substring("abcd", offset, length)
+
+# map
+var.mymap["mykey"]
+var.mymap.mykey
+keys(mymap) # ["mykey"]
+values(mymap) # ["my value"]
+lookup(var.mymap, "mykey", "default")
+merge(map1, map2) # merge two hashes
+
+# list
+var.mylist[0] # same as element(var.mylist, 0)
+var.mylist[*].arn # splat expression `*` instead of index returns list or arns
+index(mylist, elem) # find index of element in a mylist
+slice(var.mylist, 0, 2)
+
+# access to one property in the list of maps
+[ { a = "a" }, { a = "c" }][*].a
+# [ "a", "c" ]
+
+timestamp()
+uuid()
+</code></pre></div></div>
+
+<p>You can also reference values of resources <code class="language-plaintext highlighter-rouge">aws_s3_bucket.name</code></p>
+
+<p>Secrets are usually stored in <code class="language-plaintext highlighter-rouge">terraform.tfvars</code> (autoloaded is
+<code class="language-plaintext highlighter-rouge">terraform.tfvars</code> and any file <code class="language-plaintext highlighter-rouge">*.auto.tfvars</code>, other name can be
+loaded like <code class="language-plaintext highlighter-rouge">-var-file="testing.tfvars"</code>) which should be git ignored
+since it contains all keys in format <code class="language-plaintext highlighter-rouge">NAME = "value"</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AWS_ACCESS_KEY = "AKIA..."
+AWS_SECRET_KEY = "6JX..."
+AWS_REGION = "us-east-1"
+</code></pre></div></div>
+<p>You can use env to define variables when you export with prefix TF_VAR_ env
+variable <code class="language-plaintext highlighter-rouge">export TF_VAR_DB_PASSWORD=asd1234</code>.
+So use it instead of using <code class="language-plaintext highlighter-rouge">terraform.tfvars</code></p>
+
+<p>To output variable which was marked as sensitive you can</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">t output DB_PASSWORD</code> explicitly show that value</li>
+  <li><code class="language-plaintext highlighter-rouge">grep --after-context=10 outputs terraform.tfstate</code> grep state</li>
+  <li>decode plan that is saved in tmp folder
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>t plan -target=vault_generic_secret.foobar -out=/tmp/tfplan
+t show -json /tmp/tfplan  | jq -r ".resource_changes[0].change.before.data , .resource_changes[0].change.after.data"
+</code></pre></div>    </div>
+  </li>
+  <li>mark as non sensitive
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  output "mysecret" {
+    value = nonsensitive(var.mysecret)
+  }
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Math <code class="language-plaintext highlighter-rouge">${2+3*4}</code></p>
+
+<p>Count object has <code class="language-plaintext highlighter-rouge">.index</code> attribute and can be used for iterations</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_iam_user" "example" {
+  count = length(var.mylist)
+  # name = "neo.${count.index}"
+  name = var.mylist[count.index]
+}
+</code></pre></div></div>
+<p>and resulting resource is actually array of resources so we have to use <code class="language-plaintext highlighter-rouge">[]</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>output "first_user_arn" {
+  value = aws_iam_user.example[0].arn
+}
+output "all_users_arn" {
+  value = aws_iam_user.example[*].arn
+}
+</code></pre></div></div>
+<p>Count can not be used to loop over inline block.
+When you remove from the list, other elements will be moved by one position ie
+lot of resources changes instead of one single resource deletion
+This is not the case with <code class="language-plaintext highlighter-rouge">for_each</code>
+https://www.terraform.io/language/meta-arguments/for_each
+Usually create variable map with numbers and you can use <code class="language-plaintext highlighter-rouge">each.key</code> and
+<code class="language-plaintext highlighter-rouge">each.value</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>variable "public_subnet_numbers" {
+  type = map(number)
+  description = "Map of AZ to a number that should be used for public subnet, used in for_each"
+  default = {
+    us-east-1a = 1
+    us-east-1b = 2
+  }
+}
+resource "aws_subnet" "public" {
+  for_each = var.private_subnet_numbers
+  cidr_block = each.value
+}
+
+output "keys" {
+  value = keys(aws_subnet.public)
+}
+# or in console: keys(aws_subnet.public)
+# [ "us-east-1a", "us-east-1b"...
+output "all_arns" {
+  value = values(aws_subnet.public)[*].arn
+}
+</code></pre></div></div>
+<p>output of for_each on resource is a map, keys are keys in for_each, values are
+resources.
+Removing one element from map will result in removing one resource (no shifting
+down other resources).</p>
+
+<p>Conditionals can be defined in 3 ways, using count paramentar, string directives
+and for_each</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ternary syntax
+count = "${var.env == "prod" ? 2 : 1 }"
+</code></pre></div></div>
+<p>To conditionally make resource use <code class="language-plaintext highlighter-rouge">count</code> and star <code class="language-plaintext highlighter-rouge">*</code> for output</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>variable "enable_eip" {
+  description = "If set to true, enable eip"
+  type        = bool
+}
+
+resource "aws_eip" "ec2_eip" {
+  # ternary syntax
+  count = var.enable_eip ? 1 : 0
+}
+
+output "ec2_eip_public_ip" {
+  value = aws_eip.ec2_eip.*.public_ip
+  # or
+  value = var.enable_eip ? aws_eip.ec2_eip[0].public_ip : null
+}
+</code></pre></div></div>
+<p>If else can be implemented in a similar way (<code class="language-plaintext highlighter-rouge">count = var.enable_eip ? 0 : 1</code>)
+When you need to pick the value of one that has been defined you can use
+<code class="language-plaintext highlighter-rouge">one(concat())</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>output "neo_cloudwatch_policy_arn" {
+  value = one(concat(
+    aws_iam_user_policy_attachment.full_access[*].policy_arn,
+    aws_iam_user_policy_attachment.read_only[*].policy_arn
+  ))
+}
+</code></pre></div></div>
+
+<p>String directives can have two forms: for directive (loop) and if directive
+(conditional)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># %{ for &lt;ITEM&gt; in &lt;COLLECTION&gt; }&lt;BODY&gt;%{ endfor }
+output "for_directive" {
+  value = "%{ for name in var.mylist }${name}, %{ endfor }"
+}
+# for_directive = "neo, trinity, morpheus, "
+
+# for directive with index
+# %{ for &lt;INDEX&gt;, &lt;ITEM&gt; in &lt;COLLECTION&gt; }&lt;BODY&gt;%{ endfor }
+output "for_directive_index" {
+  value = "%{ for i, name in var.names }(${i}) ${name}, %{ endfor }"
+}
+# for_directive_index = "(0) neo, (1) trinity, (2) morpheus, "
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">if</code> string directive for condition to remove last <code class="language-plaintext highlighter-rouge">, </code> and put <code class="language-plaintext highlighter-rouge">.</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>output "for_directive_index_if_else_strip" {
+  value = &lt;&lt;EOF
+%{~ for i, name in var.names ~}
+${name}%{ if i &lt; length(var.names) - 1 }, %{ else }.%{ endif }
+%{~ endfor ~}
+EOF
+}
+# for_directive_index_if_else_strip = "neo, trinity, morpheus."
+</code></pre></div></div>
+
+<p>For expression (for loops). Return type depends if we wrap with [] or {}
+(requires <code class="language-plaintext highlighter-rouge">=&gt;</code> sumbol).  https://www.terraform.io/language/expressions/for</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[for s in ["a", 1]: upper(s)]
+{for k,v in { "a"=1 } : upper(k) =&gt; v}
+
+# you can split map based on if condition:
+variable "users" {
+  type = map(object({
+    is_admin = bool
+  }))
+}
+locals {
+  admin_users = {
+    for name, user in var.users : name =&gt; user
+    if user.is_admin
+  }
+}
+
+# to group results, ie merge values to array, add three dots ...
+locals {
+  users_by_role = {
+    for name, user in var.users : user.role =&gt; name...
+  }
+}
+</code></pre></div></div>
+
+<p>Nested block does no have equal sign and we can repeat them</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  nested_block {
+  }
+  nested_block {
+  }
+</code></pre></div></div>
+<p>For nested block we can use for_each loop using <code class="language-plaintext highlighter-rouge">dynamic</code> and <code class="language-plaintext highlighter-rouge">content</code> keywords
+and <code class="language-plaintext highlighter-rouge">.key</code> and <code class="language-plaintext highlighter-rouge">.value</code> attributes of the <code class="language-plaintext highlighter-rouge">nested_block</code> variable.
+Iteration with for_each uses set or map (list can be converted
+with<code class="language-plaintext highlighter-rouge">for_each = toset(var.mylist)</code>)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  dynamic "nested_block" {
+    for_each = [22, 443]
+    content {
+      from_port   = nested_block.value
+      to_port     = nested_block.value
+      protocol    = "tcp"
+    }
+  }
+</code></pre></div></div>
+<p>To create multiple subnets you can use https://www.terraform.io/language/functions/cidrsubnets</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 4, each.value)
+
+# X.X.xxxx0000.0000
+cirdsubnets("10.1.0.0/16",4)
+# ["10.1.0.0/20"]
+cirdsubnets("10.1.0.0/16",4, 4)
+# ["10.1.0.0/20", "10.1.16.0/20"]
+</code></pre></div></div>
+
+<h1 id="data">Data</h1>
+
+<p>Use data from provider, like search for ami
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ami.tf
+data "aws_ami" "ami" {
+  # https://cloud-images.ubuntu.com/locator/ec2/
+  # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/describe-images.html
+  # in case of error in creating an instance, try to find ami-123 on web
+  # https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#Images:visibility=public-images
+  # and create instance from web console to see minimum requirements
+  # or with cli aws ec2 describe-images --image-ids ami-0a24ce26f4e187f9a
+
+  most_recent = true
+  filter {
+    name = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  owners = ["099720109477"] # Canonical official
+
+  # https://stackoverflow.com/questions/28168420/choose-a-free-tier-amazon-machine-image-ami-using-ec2-command-line-tools
+  # aws ec2 describe-images --owner amazon --filter "Name=description,Values=*Ubuntu*" "Name=owner-alias,Values=amazon" "Name=architecture,Values=x86_64" "Name=image-type,Values=machine" "Name=root-device-name,Values=/dev/sda1" "Name=root-device-type,Values=ebs" "Name=virtualization-type,Values=hvm"
+  # filter {
+  #   name = "root-device-type"
+  #   values = ["ebs"]
+  # }
+  # filter {
+  #   name = "description"
+  #   values = ["*Ubuntu*"]
+  # }
+  # filter {
+  #   name = "owner-alias"
+  #   values = ["amazon"]
+  # }
+  # filter {
+  #   name = "architecture"
+  #   values = ["x86_64"]
+  # }
+}
+
+output "ami_id" {
+  value = data.aws_ami.ami.id
+}
+
+</code></pre></div></div>
+
+<h1 id="random">Random</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle
+resource "random_shuffle" "subnet_id" {
+  input = var.subnet_ids
+  result_count = 1
+}
+
+# usage
+  subnet_id = random_shuffle.subnet_id.result[0]
+</code></pre></div></div>
+
+<h1 id="project-structure">Project structure</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>staging/
+production/
+modules/
+</code></pre></div></div>
+<p>to differentiate between accounts you can use different profiles <code class="language-plaintext highlighter-rouge">aws configure</code>
+Each folder has it’s own <code class="language-plaintext highlighter-rouge">terraform.tfvars</code> which is autoloaded.</p>
+
+<p>You can run from root using script and -chdir</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># run.sh
+#!/usr/bin/env bash
+ 
+TF_ENV=$1
+ 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &gt;/dev/null 2&gt;&amp;1 &amp;&amp; pwd )"
+ 
+# Always run from the location of this script
+cd $DIR
+ 
+if [ $# -gt 0 ]; then
+    if [ "$2" == "init" ]; then
+        terraform -chdir=./$TF_ENV init -backend-config=../backend-$TF_ENV.tf
+    else
+        terraform -chdir=./$TF_ENV $2
+    fi
+fi
+ 
+# Head back to original location to avoid surprises
+cd -
+</code></pre></div></div>
+
+<p>Also you can create separate folders in each env so for example you can update
+ec2 instances without need to take care rds resources (for example if rds is
+updated on aws you have to update in terraform, but ec2 team does not need to
+think about rds at all).
+To reference resources from other folder you can use data and filter, for
+example to find vpc from ec2 folder</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># variables.tf
+data "aws_vpc" "vpc" {
+  tags = {
+    Name        = "cloudcasts-${var.infra_env}-vpc"
+    Project     = "cloudcasts.io"
+    Environment = var.infra_env
+    ManagedBy   = "terraform"
+  }
+}
+
+data "aws_subnet_ids" "public_subnets" {
+  vpc_id = data.aws_vpc.vpc.id
+
+  tags = {
+    Name        = "cloudcasts-${var.infra_env}-vpc"
+    Project     = "cloudcasts.io"
+    Environment = var.infra_env
+    ManagedBy   = "terraform"
+    Role        = "public"
+  }
+}
+</code></pre></div></div>
+
+<h2 id="workspaces">Workspaces</h2>
+
+<p>You can organize different environment you can use Workspaces
+https://www.terraform.io/language/state/workspaces</p>
+
+<p>When state is local file, it will create new <code class="language-plaintext highlighter-rouge">terraform.tfstate.d/dev/</code> folder
+On S3 it prepends state file with workspace name.
+When you change the folder, it will change the workspace</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform workspace list
+terraform workspace new dev
+terraform workspace show
+</code></pre></div></div>
+<p>use like variable</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># variables.tf
+locals {
+  env = terraform.workspace
+}
+
+# main.tf
+  env = local.env
+</code></pre></div></div>
+
+<h1 id="ssh-key-pair">SSH key pair</h1>
+
+<p>For aws we use ssh keypairs for which we need resource <code class="language-plaintext highlighter-rouge">aws_key_pair</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># variables.tf
+variable "PATH_TO_PUBLIC_KEY" {
+  default = "my_key.pub"
+}
+variable "PATH_TO_PRIVATE_KEY" {
+  default = "my_key"
+}
+
+# key_pairs.tf
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair
+# key is generated with: ssh-keygen -f my_key
+resource "aws_key_pair" "mykeypair" {
+  # existing keys can be imported with: terraform import aws_key_pair.deployer deployer-key
+  # https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#KeyPairs:
+  # mykeypair will be destroyed when we run terraform destroy
+  # Find IP address from aws console or using output
+  # ssh -i my_key ubuntu@3.84.117.126
+  # ssh -i my_key ubuntu@$(cat terraform.tfstate | jq -r '.resources[].instances[].attributes.public_ip | select( . != null )')
+  # ssh -i my_key ubuntu@$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output=text)
+  key_name = "mykeypair"
+  public_key = file(var.PATH_TO_PUBLIC_KEY)
+}
+
+# resource.tf
+resource "aws_instance" "example" {
+  ami           = lookup(var.AMIS, var.AWS_REGION)
+  instance_type = "t2.micro"
+  key_name = aws_key_pair.mykeypair.key_name
+</code></pre></div></div>
+
+<p>For error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>│ Error: error importing EC2 Key Pair (my_key): InvalidParameterValue: Value for parameter PublicKeyMaterial is invalid. Length exceeds maximum of 2048.
+</code></pre></div></div>
+
+<h1 id="provision-software">Provision software</h1>
+
+<p>Use file uploads with <code class="language-plaintext highlighter-rouge">file</code> provisioner and <code class="language-plaintext highlighter-rouge">remote-exec</code> to run the script</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>provisioner "file" {
+  source = "app.conf"
+  destination = "/etc/myapp.conf"
+  connection {
+    type = ssh
+    user = var.instance_username
+    password = var.instance_password
+  }
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  provisioner "file" {
+    source = "script.sh"
+    destination = "/tmp/script.sh"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/script.sh",
+      "sudo /tmp/script.sh"
+    ]
+  }
+  # another way to output info is using local-exec provisioner (it is performed
+  # only first time resource is created)
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.example.private_ip} &gt;&gt; private_ips.txt"
+  }
+  connection {
+    user = var.INSTANCE_USERNAME
+    private_key = file(var.PATH_TO_PRIVATE_KEY)
+    host = self.public_ip
+  }
+}
+output "ip" {
+  description = "Public IP address for EC2 instance"
+  value = aws_instance.example.public_ip
+}
+output "private_ip" {
+  value = aws_instance.example.private_ip
+}
+</code></pre></div></div>
+<p>Add to var</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+variable "INSTANCE_USERNAME" {
+  default = "ubuntu"
+}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># script.sh
+#!/bin/bash
+apt-get update
+apt-get -y install nginx
+</code></pre></div></div>
+
+<h2 id="state">State</h2>
+
+<p><code class="language-plaintext highlighter-rouge">terraform.tfstate</code> is where it keeps track of remote state. there is also
+<code class="language-plaintext highlighter-rouge">terraform.tfstate.backup</code> for previous state.
+You can keep <code class="language-plaintext highlighter-rouge">terraform.tfstate</code> in git repo so you can see state changes.
+For example when you remove the instance from aws console, <code class="language-plaintext highlighter-rouge">terraform apply</code>
+will make a changes to meet the correct remote state. Also if you remove tfstate
+file , it will try to create all new (duplicated) resources since it lots ids.
+For single user repo you can add both <code class="language-plaintext highlighter-rouge">terraform.tfstate</code> and
+<code class="language-plaintext highlighter-rouge">.terraform.lock.hcl</code> to the repo. Lock is important so we use same versions of
+the providers and modules.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Find all resource names
+cat terraform.tfstate | jq '.resources[].name'
+# find public_ip
+cat terraform.tfstate | jq '.resources[].instances[].attributes.public_ip | select( . != null )'
+</code></pre></div></div>
+
+<p>But for multiuser project, another person can change the state so you loose the
+sync since you do not use same lock. You can save state remote using a backend
+functionality in terraform
+https://www.terraform.io/language/settings/backends/remote</p>
+
+<p>Credentials are different then those secrets for provision.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># backend.tf
+terraform {
+  backend "s3" {
+    bucket = "trk-tfstates"
+    key = "myapp/terraform.tfstate"
+    profile = "2022trk"
+    region = "eu-central-1"
+  }
+}
+</code></pre></div></div>
+<p>and run <code class="language-plaintext highlighter-rouge">terraform init</code> to set up the backend.
+Inside bucket properties you should enable “Versions” to see old states.
+To can enable state locking, you should create a dynamodb table with <code class="language-plaintext highlighter-rouge">LockID</code>
+partition key and if you name the table <code class="language-plaintext highlighter-rouge">tfstate-lock</code> you can use like</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    dynamodb_table = "tfstate-lock"
+</code></pre></div></div>
+<p>https://www.terraform.io/language/settings/backends/s3#dynamodb-state-locking</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h2 id="packer">Packer</h2>
+
+<p>https://learn.hashicorp.com/packer you can create a custom image
+todo: https://learn.hashicorp.com/collections/terraform/provision</p>
+
+<h1 id="other-providers">Other providers</h1>
+
+<p>https://registry.terraform.io/browse/providers
+Any company that opens API can be an provider: Datadog (monitoring), Github,
+mailgun, DNSSimple</p>
+
+<p>Providers are similar.</p>
+
+<h1 id="template-provider-templatefile">Template provider templatefile</h1>
+
+<p>For creating customized configuration files, template based on variables from
+resource attributes (for example public ip address).
+Use case is cloud init config (user-data on AWS).
+https://www.terraform.io/language/functions/templatefile</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># modules/ec2/user_data_httpd_server.tftpl
+#!/bin/bash
+sudo apt update -y
+sudo apt install -y apache2
+echo "Hello World from hostname=$(hostname -f) subnet_id=${subnet_id}" &gt; /var/www/html/index.html
+</code></pre></div></div>
+<p>use <code class="language-plaintext highlighter-rouge">templatefile(file, map)</code> function</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>resource "aws_instance" "web" {
+  user_data = templatefile("${path.module}/user_data_httpd_server.tftpl", {
+    subnet_id = random_shuffle.subnet_id.result[0]
+  })
+}
+</code></pre></div></div>
+
+<h1 id="locals-and-tags">Locals and tags</h1>
+
+<p>Since we can not use variables inside other variables, we can use <code class="language-plaintext highlighter-rouge">local</code> which
+is defined with pluralized version <code class="language-plaintext highlighter-rouge">locals</code>. We will use it to set the name and
+other important information that can be defined as tags</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>locals {
+  common_tags = {
+    Name = "${var.environment}-web-server"
+    Environment = var.environment
+    ManagedBy = "terraform"
+    SourceUrl = "https://github.com/duleorlovic/tf-aws-s3-static-website-bucket"
+    TfstateUrl = "@air:terraform_modules/tf-aws-s3-static-website-bucket/examples/create_static_site/terraform.tfstate"
+  }
+
+resource "aws_vpc" "vpc" {
+  tags = merge(local.common_tags, {
+    Name = "${var.env}-vpc"
+  })
+}
+</code></pre></div></div>
+
+<p>if you want to provide ability to override any tag you can use merge ., override</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>variable "override_tags" {
+  type = map(string)
+  description = "Override or add new tags"
+  default = {}
+}
+
+resource "aws_vpc" "vpc" {
+  tags = merge(merge(local.common_tags, {
+    Name = "${var.env}-vpc"
+  }),
+    var.override_tags
+  )
+}
+</code></pre></div></div>
+
+<h1 id="lifecycle">Lifecycle</h1>
+
+<p>https://www.terraform.io/language/meta-arguments/lifecycle
+You can ignore certain changes (for example tags) and create before destroy</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> lifecycle {
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      tags,
+    ]
+    create_before_destroy = true
+    prevent_destroy = true # for example not to release public ip
+  }
+</code></pre></div></div>
+
+<p>To prevent downtime you can create new resources, apply, remove unused
+resources, and apply again.
+Many resources has immutable parameters so terraform will remove them and create
+another (instead of updating) so try to use <code class="language-plaintext highlighter-rouge">create_before_destroy</code> strategy.</p>
+
+<h1 id="modules">Modules</h1>
+
+<p>Done https://learn.hashicorp.com/collections/terraform/modules
+Todo https://www.terraform.io/language/modules/develop/composition
+TODO: https://blog.gruntwork.io/how-to-create-reusable-infrastructure-with-terraform-modules-25526d65f73d</p>
+
+<p>You can organize files inside folders (locally) or remote on github.
+To use it you need to define <code class="language-plaintext highlighter-rouge">source</code>. You can define <code class="language-plaintext highlighter-rouge">version</code> and other meta
+arguments like <code class="language-plaintext highlighter-rouge">count</code>, <code class="language-plaintext highlighter-rouge">depends_on</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module "module-example" {
+  source = "github.com/duleorlovic/terraform-module-example"
+  # locally
+  source = "./module-example"
+
+  # override or add additional arguments
+  region = "us-east-1"
+}
+</code></pre></div></div>
+<p>Example module has at least three files: main, outputs.tf (variables that other
+modules can use) and variables.tf (input variables defined inside <code class="language-plaintext highlighter-rouge">module</code>):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># module-example/variables.tf
+variable "region" {} # the input parameter
+variable "ip-range" {}
+
+# module-example/cluster.tf
+resource "aws_instance" "instance-1" {
+}
+
+# module-example/outputs.tf
+output "aws-cluster" {
+  value = aws_instance.instance-1.public_ip
+}
+</code></pre></div></div>
+<p>To use output of module you can reference <code class="language-plaintext highlighter-rouge">module.module-name.output-name</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>output "some-output" {
+  value = module.module-example.aws-cluster
+}
+</code></pre></div></div>
+<p>You have access to <code class="language-plaintext highlighter-rouge">path.cwd</code>, <code class="language-plaintext highlighter-rouge">path.module</code> and <code class="language-plaintext highlighter-rouge">path.root</code>.
+To download you need to run get or init</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform get
+ls -l .terraform/modules
+</code></pre></div></div>
+
+<h1 id="move">Move</h1>
+
+<p>https://learn.hashicorp.com/tutorials/terraform/move-config
+I think you can access module resources directly (no need to output)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>moved {
+  from = aws_instance.example
+  to = module.ec2_instance.aws_instance.example
+}
+</code></pre></div></div>
+<p>I tried to move a list or resources (created with for_each), but no success, it
+recreated them (maybe to try <code class="language-plaintext highlighter-rouge">from = aws_instance.example.us-east-1a</code> or <code class="language-plaintext highlighter-rouge">from =
+values(aws_instance.example)[0]</code></p>
+
+<h1 id="terraform-cloud">Terraform Cloud</h1>
+
+<p>quick start</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>terraform login
+git clone https://github.com/hashicorp/tfc-getting-started.git
+cd tfc-getting-started/
+scripts/setup.sh
+</code></pre></div></div>
+<p>todo: https://learn.hashicorp.com/collections/terraform/cloud-get-started</p>
+
+<h1 id="vim">VIM</h1>
+
+<p>https://github.com/hashicorp/terraform-ls/blob/main/docs/USAGE.md#cocnvim
+Add json to <code class="language-plaintext highlighter-rouge">:CocConfig</code> and install language server</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install hashicorp/tap/terraform-ls
+</code></pre></div></div>
+
+<p>https://github.com/evilmartians/terraforming-rails/tree/master/tools/lint_env</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

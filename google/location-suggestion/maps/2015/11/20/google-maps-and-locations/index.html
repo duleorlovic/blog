@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Google Maps and Locations</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Google Maps and Locations</h1>
+    <p class="meta">Nov 20, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#installation"><span class="tocnumber">1</span> <span class="toctext">Installation</span></a></li><li class="toc_level-1 toc_section-2"><a href="#edit-location-for-some-object"><span class="tocnumber">2</span> <span class="toctext">Edit location for some object</span></a></li><li class="toc_level-1 toc_section-3"><a href="#stimulus-and-map-in-jbox-modal"><span class="tocnumber">3</span> <span class="toctext">Stimulus and map in jbox modal</span></a></li><li class="toc_level-1 toc_section-4"><a href="#location-search-field"><span class="tocnumber">4</span> <span class="toctext">Location search field</span></a></li><li class="toc_level-1 toc_section-5"><a href="#geocoder-gem"><span class="tocnumber">5</span> <span class="toctext">Geocoder gem</span></a></li><li class="toc_level-1 toc_section-6"><a href="#geolocating"><span class="tocnumber">6</span> <span class="toctext">Geolocating</span></a><ul><li class="toc_level-2 toc_section-7"><a href="#get-brower-location"><span class="tocnumber">6.1</span> <span class="toctext">Get Brower location</span></a></li><li class="toc_level-2 toc_section-8"><a href="#get-geoplugin-location"><span class="tocnumber">6.2</span> <span class="toctext">Get Geoplugin location</span></a></li></ul></li><li class="toc_level-1 toc_section-9"><a href="#apple-mapkit"><span class="tocnumber">7</span> <span class="toctext">Apple MapKit</span></a></li><li class="toc_level-1 toc_section-10"><a href="#geojson"><span class="tocnumber">8</span> <span class="toctext">GeoJSON</span></a></li><li class="toc_level-1 toc_section-11"><a href="#leaflet"><span class="tocnumber">9</span> <span class="toctext">Leaflet</span></a></li><li class="toc_level-1 toc_section-12"><a href="#mapbox"><span class="tocnumber">10</span> <span class="toctext">Mapbox</span></a></li></ul></td></tr></tbody></table></div><h1 id="installation">Installation</h1>
+
+<p>As for any other google api, <a href="https://developers.google.com/maps/documentation/javascript/tutorial">Google Maps Javascript
+API</a>
+requires GOOGLE_API_KEY. You need it when you loading the script</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_API_KEY&amp;callback=initMap"
+    async defer&gt;&lt;/script&gt;
+</code></pre></div></div>
+
+<p>You can load additional libraries using <code class="language-plaintext highlighter-rouge">libraries=</code> parameter. If the map is
+not the main feauture of the site, I prefer to load it in javascript when
+needed.</p>
+
+<p>For your google console project you need to enable relevant api:</p>
+
+<ul>
+  <li><em>Google Maps Javascript API</em> (to load gmap on the page)</li>
+  <li><em>Google Static Maps API</em> (to show image with pin marker)</li>
+  <li><em>Google Places API Web Service</em> (to search by address, restauran or other
+place) note that I can not find this in search apis but only using this link</li>
+</ul>
+<p><a href="https://console.developers.google.com/apis/api/places_backend?project=_">https://console.developers.google.com/apis/api/places_backend?project=_</a></p>
+
+<p>Start with samples, for example:</p>
+
+<ul>
+  <li><a href="https://developers.google.com/maps/documentation/javascript/examples/geocoding-simple">geocoding</a>
+input is address, output is location</li>
+  <li><a href="https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete">autocomplete</a>
+show suggestions for adress input</li>
+</ul>
+
+<h1 id="edit-location-for-some-object">Edit location for some object</h1>
+
+<p>Use this helper in edit.html with form object, and on show page with object.
+You need to provide input fields: <code class="language-plaintext highlighter-rouge">text_field</code> or <code class="language-plaintext highlighter-rouge">hidden_field</code> so they will be
+updated in javascript callback.</p>
+
+<p>If you show/hide whole map (with <code class="language-plaintext highlighter-rouge">display: none</code>), than you need to trigger
+resize with setCenter and setZoom or map.fitBounds (probably inside setTimeout
+if you are still in digest loop).
+Better is to use opacity 0, 1 and move element below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.hide-with-opacity {
+  opacity: 0;
+  &amp;.active {
+    opacity: 1;
+  }
+}
+</code></pre></div></div>
+
+<p>Note that when <code class="language-plaintext highlighter-rouge">resize</code> is triggered than center is changed, so you need to grab
+center before resize, than call resize (so map is actually shown) and than call
+setCenter or panTo the original center. To get map object we use mapObject data</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(document).on 'ready page:load', -&gt;
+  # if you do not have map object, you can trigger resize on window
+  # google.maps.event.trigger(window, 'resize', {})
+  # but the problem is when map is initialized to hidden element, than center is
+  # on top right corner, so when you trigger resize, pin will be on top-right
+  # We need to getCenter and call setCenter again after we trigger resize
+  if $('#preview-map').length
+    $('.nav-tabs').on 'shown.bs.tab', -&gt;
+      map = $('#preview-map').data('mapObject')
+      originalCenter = map.getCenter()
+      # google.maps.event.trigger(window, 'resize', {})
+      # map.setCenter c
+      google.maps.event.trigger map, 'resize'
+      map.panTo originalCenter
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/helpers/map_helper.rb
+# rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Style/MultilineTernaryOperator
+# rubocop:disable Layout/SpaceInsideStringInterpolation
+module MapHelper
+  INITIAL_LATITUDE = 45.2671352
+  INITIAL_LONGITUDE = 19.83354959999997
+  INITIAL_ZOOM = 12
+  GOOGLE_API_KEY = Rails.application.secrets.google_api_key
+
+  # You need to provide input fields: `text_field` or `hidden_field` so they
+  # will be updated in javascript callback.
+  #  &lt;%= f.text_field :latitude, id: 'latitude-input' %&gt;
+  #  &lt;%= f.text_field :longitude, id: 'longitude-input' %&gt;
+  #  &lt;%= edit_map f.object, "#latitude-input", "#longitude-input" %&gt;
+  #
+  # If you are showing inside bootstrap tab or modal than you need to trigger
+  # resize. If you do not have map object, you can trigger resize on window
+  # google.maps.event.trigger(window, 'resize')
+  # but the problem is when map is initialized to hidden element, than center is
+  # on top right corner, so when you trigger resize, pin will be on top-right
+  # We need to getCenter and call setCenter again after we trigger resize so I
+  # did it using addDomListener on window object and fire that resize on modal
+  # show:
+  #
+  # somewhere inside function initialize_google() {
+  #        google.maps.event.addDomListener(window, "resize", function() {
+  #          var center = map.getCenter();
+  #          google.maps.event.trigger(map, "resize");
+  #          map.setCenter(center);
+  #          console.log('map resize');
+  #        });
+  # somewhere in your javascript/coffeescript:
+  # $(document).on 'shown.bs.modal', -&gt;
+  #   window.dispatchEvent(new Event('resize'))
+  #
+  # If you are destroying modal on hide (so it loads new content based on
+  # response), than map will be destroyed too.
+  #
+  # $(document).on 'hidden.bs.modal', '.modal', -&gt;
+  #   $(this).removeData('bs.modal')
+  #
+  # Problem is that javascript in form response (on this page) is run only once,
+  # so you can not trigger initialize_google() from this page. but only on shown
+  # good is that you do not need to trigger resize since we draw map again:
+  #
+  # $(document).on 'shown.bs.modal', '.modal', -&gt;
+  #   if this.innerHTML.indexOf('initialize_google') &gt; -1
+  #     initialize_google()
+  def edit_map(object, latitude_input, longitude_input)
+    if object.latitude
+      latitude = object.latitude
+      longitude = object.longitude
+      zoom_level = 17
+    else
+      latitude = INITIAL_LATITUDE
+      longitude = INITIAL_LONGITUDE
+      zoom_level = INITIAL_ZOOM
+    end
+    address_id = "address-suggestion" # -#{SecureRandom.hex 3}"
+    content = text_field_tag(
+      address_id, nil, placeholder:
+      I18n.t('write_address_than_move_marker'), size: 50
+    )
+    map_id = "preview-map" #-#{SecureRandom.hex 3}"
+    content &lt;&lt; content_tag(:div, nil, id: map_id, class: 'edit-map-container')
+    content &lt;&lt; %(
+      &lt;script&gt;
+        function updateFields(position) {
+          $("#{latitude_input}").val(position.lat());
+          $("#{longitude_input}").val(position.lng());
+        }
+        function initialize_google() {
+          console.log('initializing google autocomplete');
+          // https://wiki.openstreetmap.org/wiki/Google_Maps_Example
+          var mapTypeIds = [];
+          for(var type in google.maps.MapTypeId) {
+           mapTypeIds.push(google.maps.MapTypeId[type]);
+          }
+          mapTypeIds.push("OSM");
+          var map = new google.maps.Map(document.getElementById('#{map_id}'), {
+            center: {lat: #{latitude}, lng: #{longitude} },
+            zoom: #{zoom_level},
+            mapTypeId: "OSM",
+            mapTypeControlOptions: {
+              mapTypeIds: mapTypeIds
+            },
+          });
+
+          map.mapTypes.set("OSM", new google.maps.ImageMapType({
+            getTileUrl: function(coord, zoom) {
+              // See above example if you need smooth wrapping at 180th meridian
+              return "http://tile.openstreetmap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+              },
+            tileSize: new google.maps.Size(256, 256),
+            name: "OpenStreetMap",
+            maxZoom: 18,
+          }));
+          var autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById('#{address_id}'),
+            { componentRestrictions: {country: 'rs'} }
+          );
+          var marker = new google.maps.Marker({
+            map: map,
+            anchorPoint: new google.maps.Point(0, -29),
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            #{object.latitude.present? ?
+              "position: {
+                lat: #{latitude},
+                lng: #{longitude},
+              }," : '' }
+          });
+          autocomplete.bindTo('bounds', map);
+          autocomplete.addListener('place_changed', function() {
+            marker.setVisible(false);
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+             window.alert("#{I18n.t('autocomplete_contains_no_geometry')}");
+             return;
+            }
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+             map.fitBounds(place.geometry.viewport);
+            } else {
+             map.setCenter(place.geometry.location);
+             map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+            updateFields(place.geometry.location);
+            console.log('place_changed');
+          });
+
+          google.maps.event.addListener(marker, "dragend", function(e) {
+            updateFields(marker.getPosition());
+          });
+        } // function initialize_google
+      &lt;/script&gt;
+    ).html_safe
+    content &lt;&lt; async_load
+  end
+
+  # https://developers.google.com/maps/documentation/static-maps/intro
+  def show_static_map(object, options = {})
+    latitude = object.latitude
+    longitude = object.longitude
+    return "&lt;div class='map-not-set'&gt;Map position is not set&lt;/div&gt;".html_safe unless latitude
+    img_options = {}
+    img_options[:class] = options[:class] if options[:class].present?
+    url = "//maps.googleapis.com/maps/api/staticmap?"
+    url += "size=70x70"
+    # custom icon must be http:// not https://
+    # markers=icon:http://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png|
+    url += "&amp;markers=|#{latitude},#{longitude}"
+    # you need to enable "Google Static Maps API"
+    url += "&amp;key=#{GOOGLE_API_KEY}"
+    link_to "http://maps.google.com/?q=#{latitude},#{longitude}" do
+      image_tag url, img_options
+    end
+  end
+
+  def show_map(object, options = {})
+    latitude = object.latitude
+    longitude = object.longitude
+    return "&lt;div class='map-not-set'&gt;Map position is not set&lt;/div&gt;".html_safe unless latitude
+    content = content_tag(:div, nil, id: 'preview-map', class: "show-map-container #{options[:class]}")
+    content &lt;&lt; %(
+      &lt;script&gt;
+        function initialize_google() {
+          console.log('initializing google autocomplete');
+          var previewMapElement = document.getElementById('preview-map');
+          var map = new google.maps.Map(previewMapElement, {
+            center: {lat: #{latitude}, lng: #{longitude} },
+            zoom: 17,
+          });
+          var marker = new google.maps.Marker({
+            map: map,
+            animation: google.maps.Animation.DROP,
+            #{object.latitude.present? ?
+              "position: {
+                lat: #{latitude},
+                lng: #{longitude},
+              }," : '' }
+          });
+          $(previewMapElement).data('mapObject', map);
+        } // function initialize_google
+      &lt;/script&gt;
+    ).html_safe
+    content &lt;&lt; async_load
+  end
+
+  def show_all_map(objects, options = {})
+    data = objects.map do |object|
+      next if !object.latitude.present? || !object.longitude.present?
+      {
+        position: {
+          lat: object.latitude,
+          lng: object.longitude,
+        },
+        name: object.name,
+        description: object.description,
+        url: location_node_path(object),
+      }
+    end.compact
+    content = content_tag(:div, nil, id: 'preview-map', class: "show-all-map-container #{options[:class]}")
+    content &lt;&lt; %(
+      &lt;script&gt;
+        function initialize_google() {
+          console.log('initializing google autocomplete');
+          var map = new google.maps.Map(document.getElementById('preview-map'), {
+            center: {lat: #{INITIAL_LATITUDE}, lng: #{INITIAL_LONGITUDE}},
+            zoom: #{INITIAL_ZOOM},
+          });
+          var data = #{data.to_json};
+          var markers = [];
+          var bounds = new google.maps.LatLngBounds();
+          var infoWindow = new google.maps.InfoWindow({
+            content: "&lt;div&gt;&lt;a href='' id='info-url'&gt;&lt;h4 id='info-name'&gt;&lt;/h4&gt;&lt;/a&gt;&lt;p id='info-description'&gt;&lt;/p&gt;&lt;/div&gt;"
+          });
+          for(var i = 0; i &lt; data.length; i++ ) {
+            var marker = new google.maps.Marker({
+              animation: google.maps.Animation.DROP,
+              position: data[i].position,
+              name: data[i].name,
+              description: data[i].description,
+              url: data[i].url,
+            });
+            bounds.extend(marker.getPosition());
+            markers[i] = marker;
+            setTimeout(dropMarker(i), i * 100);
+            google.maps.event.addListener(marker, 'click', function() {
+              infoWindow.open(map, this);
+              $('#info-name').html(this.name);
+              $('#info-description').html(this.description);
+              $('#info-url').attr('href', this.url);
+            });
+          }
+          map.fitBounds(bounds);
+          function dropMarker(i) {
+            return function() {
+              markers[i].setMap(map);
+            };
+          }
+        } // function initialize_google
+      &lt;/script&gt;
+    ).html_safe
+    content &lt;&lt; async_load
+  end
+
+  private
+
+  def async_load
+    %(
+      &lt;script&gt;
+        // https://developers.google.com/maps/documentation/javascript/examples/map-simple-async
+        function loadScript() {
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places' +
+              '&amp;key=#{GOOGLE_API_KEY}&amp;callback=initialize_google';
+          document.body.appendChild(script);
+        }
+        // http://stackoverflow.com/questions/9228958/how-to-check-if-google-maps-api-is-loaded
+        if (typeof google === 'object' &amp;&amp; typeof google.maps === 'object') {
+          // it is loaded but we need to bind on newly created object
+          initialize_google();
+        } else {
+          loadScript();
+        }
+      &lt;/script&gt;
+    ).html_safe
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/contacts/_form.html.erb
+  &lt;%= edit_map f %&gt;
+
+# app/views/contacts/show.html.erb
+  &lt;%= show_map @contact %&gt;
+
+# app/views/contacts/index.html.erb
+  &lt;%= show_all_map @contacts %&gt;
+  &lt;%= show_static_map @contact %&gt;
+
+# app/assets/stylesheets/maps.scss
+.edit-map-container,.show-all-map-container {
+  height: 300px;
+  width: 100%;
+}
+.show-map-container {
+  height: 30px;
+}
+</code></pre></div></div>
+
+<h1 id="stimulus-and-map-in-jbox-modal">Stimulus and map in jbox modal</h1>
+
+<p>https://github.com/trkin/move-index/blob/master/app/javascript/controllers/google_map_address_controller.js</p>
+
+<h1 id="location-search-field">Location search field</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/home/search.html.erb %&gt;
+&lt;%= form_for @search, builder: MyFormBuilder, url: search_path, method: :get, html: { id: "filter_form" } do |f| %&gt;
+  &lt;%= f.location_field :address, placeholder: "Address" %&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/search.rb
+class Search
+
+  # http://api.rubyonrails.org/classes/ActiveModel/Model.html
+  include ActiveModel::Model
+
+  attr_accessor :address, :food
+
+  def initialize( attributtes = {} )
+    super
+    @address ||= "New York"
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/home_controller.rb
+def search
+  @search = Search.new params[:search]
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/form_builders/my_form_builder.rb
+# http://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html
+class MyFormBuilder &lt; ActionView::Helpers::FormBuilder
+
+  # https://developers.google.com/maps/documentation/javascript/places
+  def location_field( method, options={} )
+    if options[:text_area] == true
+      content = text_area(method, options)
+    else
+      content = text_field(method, options)
+    end
+    if options[:location_field_id].present?
+      location_field_id = options[:location_field_id]
+    else
+      location_field_id = object_name + "_" + method.to_s
+    end
+    content &lt;&lt; "
+      &lt;script&gt;
+        function initialize_google() {
+          var options = {
+          //  types: ['(cities)'],
+            componentRestrictions: {country: '#{ options[:country] || 'us' }'}
+          };
+          console.log('initializing google autocomplete');
+          input = document.getElementById('#{location_field_id}');
+          var autocomplete = new google.maps.places.Autocomplete(input, options);
+        }
+        // https://developers.google.com/maps/documentation/javascript/examples/map-simple-async
+        function loadScript() {
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&amp;' + 'libraries=places&amp;' +
+              'callback=initialize_google';
+          document.body.appendChild(script);
+        }
+        // http://stackoverflow.com/questions/9228958/how-to-check-if-google-maps-api-is-loaded
+        if (! (typeof google === 'object' &amp;&amp; typeof google.maps === 'object'))
+        {
+          loadScript();
+        }
+        else
+        {
+           // it is loaded but we need to bind on newly created object
+           initialize_google();
+        }
+      &lt;/script&gt;".html_safe
+  end
+end
+</code></pre></div></div>
+
+<p>Map with markers</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/home_controller.rb
+  def search
+    @search = Search.new params[:search]
+    @target_location = Geocoder.search(@search.address)
+    @users = User.chef.near(@search.address)
+  end
+</code></pre></div></div>
+
+<p>When creating a map, you need to provide zoom option.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%# app/views/home/search.html.erb %&gt;
+&lt;div id="all_map"&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;% @users.each_with_index do |user,i| %&gt;
+    &lt;li data-marker-array-index="&lt;%= i %&gt;"&gt;
+      &lt;h4&gt;&lt;%= user.name %&gt;&lt;/h4&gt;
+    &lt;/li&gt;
+  &lt;% end %&gt;
+&lt;/ul&gt;
+
+&lt;script&gt;
+  var map = new google.maps.Map(document.getElementById('all_map'), {
+    zoom: 4,
+    &lt;% center = { lat: (@target_location.try(:latitude)||25), lng: (@target_location.try(:longitude)||131) } %&gt;
+    center: &lt;%=raw center.to_json %&gt;,
+    });
+  var chefs = &lt;%=raw @users.select {|u| u.geocoded? }.map {|u| { name: u.name, position: { lat: u.latitude, lng: u.longitude } }}.to_json %&gt;;
+  var markersArray = [];
+  for(var i=0; i &lt; chefs.length; i++ ) {
+    var marker = new google.maps.Marker({
+        title: chefs[i].name,
+        map: map,
+        position: chefs[i].position,
+      });
+    markersArray.push(marker);
+  }
+  bounds = new google.maps.LatLngBounds();
+  for (var i = 0; i &lt; markersArray.length; i++) {
+    marker = markersArray[i];
+    bounds.extend(marker.position);
+  }
+  if(markersArray.length &gt; 0){
+    map.fitBounds(bounds);
+    var mapzoom = map.getZoom();
+    if(mapzoom &gt; 16){
+      map.setZoom(16);
+    };
+
+  }
+  $('[data-marker-array-index]').hover(function() {
+      console.log("hover");
+      var marker =markersArray[ parseInt($(this).data('marker-array-index'))]
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }, function() {
+      console.log("out hover");
+      var marker =markersArray[ parseInt($(this).data('marker-array-index'))]
+      marker.setAnimation(null);
+    });
+&lt;/script&gt;
+</code></pre></div></div>
+
+<h1 id="geocoder-gem">Geocoder gem</h1>
+
+<p>You can geocode ActiveRecord object by latitude longitude or by ip address.
+Results (reverse_geocode) can be written in addres, city, country. You can use
+in console</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Geocoder.coordinates("25 Main St, Cooperstown, NY")
+# Google Geocoding API error: over query limit.
+Geocoder.coordinates("178.222.169.10") #=&gt; ["46.1", "19.6"]
+
+Geocoder.search("Paris", :bounds =&gt; [[32.1,-95.9], [33.9,-94.3]])
+</code></pre></div></div>
+
+<p>You can download MaxMind local database (only for ip geocode) and import to psql</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># generate migration to create tables
+rails generate geocoder:maxmind:geolite_city
+
+# download, unpack, and import data
+rake geocoder:maxmind:geolite:load PACKAGE=city
+
+# configure
+Geocoder.configure(ip_lookup: :maxmind_local, maxmind_local: {package: :city})
+
+# now you can use offline
+Geocoder.coordinates("178.222.169.10") #=&gt; ["46.1", "19.6"]
+</code></pre></div></div>
+
+<p>Since for GOOGLE API there is a limit of free 2_500 request per day you can
+geocode if change in latitude and longitude is big</p>
+<blockquote>
+  <p>Each degree of latitude is approximately 69 miles (111 kilometers) apart. The range varies (due to the earth’s slightly ellipsoid shape) from 68.703 miles (110.567 km) at the equator to 69.407 (111.699 km) at the poles. This is convenient because each minute (1/60th of a degree) is approximately one [nautical] mile.
+A degree of longitude is widest at the equator at 69.172 miles (111.321) and gradually shrinks to zero at the poles. At 40° north or south the distance between a degree of longitude is 53 miles (85 km)</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/user.rb
+class User &lt; ActiveRecord::Base
+  MIN_LATITUDE_CHANGE_FOR_GEOCODE = 0.2 # 1 degree is 69 miles (111 km)
+  MIN_LONGITUDE_CHANGE_FOR_GEOCODE = 0.3 # 1 degree on equator 69 miles (111km), on 40deg 53 miles (85km)
+  reverse_geocoded_by :latitude, :longitude, address: :reverse_geocoded_address do |obj, results|
+    # next unless (obj.latitude_changed? &amp;&amp; obj.longitude_changed?) || !obj.current_city_by_latitude_longitude.present?
+    if geo = results.first
+      obj.current_city_by_latitude_longitude    = geo.city
+      obj.current_address_by_latitude_longitude = geo.address
+      obj.save!
+    end
+  end
+  # do not run on each validation since api limit is 2_500
+  # after_validation :reverse_geocode
+
+  def submit_reverse_geocode
+    return false if latitude.nil? || longitude.nil?
+    if current_city_by_latitude_longitude.nil? || last_geocoded_latitude.nil? || last_geocoded_longitude.nil?  ||
+        (last_geocoded_latitude - latitude).abs &gt; MIN_LATITUDE_CHANGE_FOR_GEOCODE ||
+        (last_geocoded_longitude - longitude).abs &gt; MIN_LONGITUDE_CHANGE_FOR_GEOCODE
+      reverse_geocode
+      self.last_geocoded_latitude = latitude
+      self.last_geocoded_longitude = longitude
+      save!
+    else
+      false
+    end
+  end
+end
+</code></pre></div></div>
+
+<h1 id="geolocating">Geolocating</h1>
+
+<p>Here are the steps that I usually do for geolocating users:</p>
+
+<ul>
+  <li>try to get lat/long pair from browser</li>
+  <li>use free service <a href="http://www.geoplugin.com/webservices/json">http://www.geoplugin.com/webservices/json</a></li>
+  <li>ask user for address and geocode it on client <a href="https://developers.google.com/maps/documentation/javascript/geocoding">Google Maps Javascript
+API</a>
+Geocoding Service</li>
+  <li>ask user for address and geocode it on server <a href="https://developers.google.com/maps/documentation/geocoding/intro">Google Maps Geocoding
+API</a>
+https://console.cloud.google.com/marketplace/product/google/geocoding-backend.googleapis.com?q=search&amp;referrer=search&amp;authuser=1&amp;project=myapp&amp;supportedpurview=project</li>
+</ul>
+
+<h2 id="get-brower-location">Get Brower location</h2>
+
+<h2 id="get-geoplugin-location">Get Geoplugin location</h2>
+
+<p>Here is example in angular using their
+<a href="http://www.geoplugin.com/webservices/json">json</a> service. 
+You can buy cheap <a href="http://www.geoplugin.com/webservices/ssl">ssl</a> packet and use <code class="language-plaintext highlighter-rouge">https://ssl.geoplugin.net/json.gp?k=...</code> endpoint.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    this.getGeoPluginLocation = -&gt;
+      deferred = $q.defer()
+      # $http has a problem with Access-Control-Allow-Origin since request is
+      # OPTIONS instead of GET method
+      # $http.get('http://www.geoplugin.net/json.gp?jsoncallback=?').then (response) -&gt;
+      $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?').then (response) -&gt;
+        userLocationData.latLng.lat = parseFloat response.geoplugin_latitude
+        userLocationData.latLng.lng = parseFloat response.geoplugin_longitude
+        userLocationData.address = response.geoplugin_city + " " + response.geoplugin_countryName
+        deferred.resolve()
+      return deferred.promise
+</code></pre></div></div>
+
+<p><a href="https://developers.google.com/maps/documentation/geolocation/intro#wifi_access_point_object">Google Maps Geolocation
+API</a>
+can use wifi or tower ids to give you latLng.</p>
+
+<h1 id="apple-mapkit">Apple MapKit</h1>
+
+<p>https://developer.apple.com/videos/play/wwdc2018/212/</p>
+
+<h1 id="geojson">GeoJSON</h1>
+
+<p>https://tools.ietf.org/html/rfc7946
+Feature object represents a spatially bounded thing, has <code class="language-plaintext highlighter-rouge">type='Feature'</code> and
+<code class="language-plaintext highlighter-rouge">geometry</code> as Geometry object, <code class="language-plaintext highlighter-rouge">properties</code> member. Geometry object is one of
+the seven geometry types: <code class="language-plaintext highlighter-rouge">Point, MultiPoint, LineString, MultiLineString,
+Polygon, MultiPolygon and GeometryCollection</code> which contains <code class="language-plaintext highlighter-rouge">coordinates</code> array
+first is Longitude and second is Latitude (then optionally elevation)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var geojsonFeature = {
+    "type": "Feature",
+    "properties": {
+        "name": "Coors Field",
+        "amenity": "Baseball Stadium",
+        "popupContent": "This is where the Rockies play!"
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-104.99404, 39.75621]
+    }
+};
+</code></pre></div></div>
+
+<p>To add GeoJSON to leaflet you can use</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  L.geoJSON(stores).addTo(mymap)
+// or add data later
+  var myLayer = L.geoJSON().addTo(mymap)
+  myLayer.addData(stores)
+</code></pre></div></div>
+
+<p>You can style objects with color, wight, opacity</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>L.geoJSON(stores, {
+  style: {
+    'color': 'red',
+    'weight': 4,
+    'opacity': 1,
+  }
+}).addTo(mymap)
+
+// or using funcion
+
+L.geoJSON(stores, {
+  style: function(feature) {
+    switch (feauture.properties.myProp) {
+    case 'Red': return { color: 'red' }
+    }
+  }
+)
+</code></pre></div></div>
+
+<p>For points you can use pointToLayer to render circle instead of default marker</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  L.geoJSON(geojsonFeature, {
+    pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, geojsonMarkerOptions);
+    }
+  }).addTo(mymap)
+</code></pre></div></div>
+<p>Use iteration onEachFeature to add popups</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function onEachFeature(feature, layer) {
+  if (feature.properties &amp;&amp; feature.properties.popupContent) {
+    layer.bindPopup(feature.properties.popupContent);
+  }
+}
+
+L.geoJSON(geojsonFeature, {
+    onEachFeature: onEachFeature
+}).addTo(map);
+</code></pre></div></div>
+<p>Use <code class="language-plaintext highlighter-rouge">filter</code> function to skip redenring feature.</p>
+
+<h1 id="leaflet">Leaflet</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  var mymap = L.map('mapid').setView([45.26, 19.83], 10)
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.1w', {
+    attribution: 'dule',
+    id: 'mapbox/streets-v11', // mapbox/satellite-v9
+    zoomOffset: -1,
+    tileSize: 512,
+  }).addTo(mymap)
+
+// z is zoom level, x, and y are lat long, id is type of tile
+// there is no logic explanation of zoomOffset: -1 and tileSize: 512
+// On https://leafletjs.com/examples/quick-start/ I see
+// Because this API returns 512x512 tiles by default (instead of 256x256), we will also have to explicitly specify this and offset our zoom by a value of -1.
+</code></pre></div></div>
+<p>Marker, polygon and Popups</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  var marker = L.marker([45.26, 19.83]).addTo(mymap)
+  var polygon = L.polygon([
+    [45.20, 19.4],
+    [45.50, 19.9],
+    [45.00, 19.9],
+  ]).addTo(mymap)
+  marker.bindPopup('&lt;b&gt;Hi&lt;/b&gt; I am a popup').openPopup()
+  polygon.bindPopup('I amd a polygon')
+
+  var popup = L.popup()
+    .setLatLng([45.3, 19.5])
+    .setContent('I am a standalong popup')
+    .openOn(mymap) // .openOn is same as addTo but will close previously opened popups
+</code></pre></div></div>
+
+<p>Events</p>
+
+<p>Each element has it’s own events, but all have <code class="language-plaintext highlighter-rouge">click</code> with argument which has
+<code class="language-plaintext highlighter-rouge">e.latlng</code> object.
+https://leafletjs.com/reference-1.7.1.html#map-event</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  var clickPopup = L.popup()
+  function onMapClick(e) {
+    clickPopup
+      .setLatLng(e.latlng)
+      .setContent(`You clicked on ${e.latlng.toString()}`)
+      .openOn(mymap)
+  }
+  mymap.on('click', onMapClick)
+</code></pre></div></div>
+<p>Ask for browser location</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map.locate({setView: true, maxZoom: 16});
+
+function onLocationFound(e) {
+    var radius = e.accuracy;
+
+    L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+    L.circle(e.latlng, radius).addTo(map);
+}
+map.on('locationfound', onLocationFound);
+
+function onLocationError(e) {
+    alert(e.message);
+}
+map.on('locationerror', onLocationError);
+</code></pre></div></div>
+
+<h1 id="mapbox">Mapbox</h1>
+
+<p>https://docs.mapbox.com/help/tutorials/building-a-store-locator/#add-structure
+https://docs.mapbox.com/help/tutorials/building-a-store-locator-js/ (legacy)
+https://docs.mapbox.com/help/troubleshooting/transition-from-mapbox-js-to-mapbox-gl-js/</p>
+
+<p>On rails you need to prevent babel for transpiling nodeModules</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/webpack/environment.js
+const { environment } = require('@rails/webpacker')
+
+// https://github.com/visgl/react-map-gl/issues/874#issuecomment-524404219
+// Preventing Babel from transpiling NodeModules packages
+environment.loaders.delete('nodeModules');
+
+module.exports = environment
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Stimulus Js</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Stimulus Js</h1>
+    <p class="meta">Mar 22, 2018</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#install"><span class="tocnumber">1</span> <span class="toctext">Install</span></a></li><li class="toc_level-1 toc_section-2"><a href="#magic-keywords"><span class="tocnumber">2</span> <span class="toctext">Magic keywords</span></a></li><li class="toc_level-1 toc_section-3"><a href="#reflex"><span class="tocnumber">3</span> <span class="toctext">Reflex</span></a></li><li class="toc_level-1 toc_section-4"><a href="#nested-form"><span class="tocnumber">4</span> <span class="toctext">Nested form</span></a></li></ul></td></tr></tbody></table></div><h1 id="install">Install</h1>
+
+<p>To checkout demo you can</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/stimulusjs/stimulus-starter.git
+cd stimulus-starter
+yarn install
+yarn start
+gnome-open http://localhost:9000/
+</code></pre></div></div>
+
+<p>To add to existing Rails app</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails webpacker:install:stimulus
+</code></pre></div></div>
+
+<h1 id="magic-keywords">Magic keywords</h1>
+
+<p>cheatsheet https://gist.github.com/mrmartineau/a4b7dfc22dc8312f521b42bb3c9a7c1e</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">data-controller='hello-word'</code> controller that is defined in
+<code class="language-plaintext highlighter-rouge">hello_word_controller.js</code>.  Each dash corresponds to underscore (or dash) in
+file name, two dashes corresponds to subfolder <code class="language-plaintext highlighter-rouge">users--list-item</code> -&gt;
+<code class="language-plaintext highlighter-rouge">users/list_item_controller.js</code></li>
+  <li><code class="language-plaintext highlighter-rouge">data-action='click-&gt;hello-word#greet'</code> event name is <code class="language-plaintext highlighter-rouge">click</code>, controller
+<code class="language-plaintext highlighter-rouge">hello-word</code> dashed case (note that camelcase name helloWord or snake case
+hello_word is not used anywhere, only example is when you define method in
+cammel case <code class="language-plaintext highlighter-rouge">sayHello()</code>).
+If element is <code class="language-plaintext highlighter-rouge">&lt;a&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;button&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;input type="submit"&gt;</code> than you do not need
+to write <code class="language-plaintext highlighter-rouge">click-&gt;</code>.
+<code class="language-plaintext highlighter-rouge">&lt;input&gt;</code>, <code class="language-plaintext highlighter-rouge">&lt;select&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;textarea&gt;</code> has <code class="language-plaintext highlighter-rouge">change</code> as default event.
+<code class="language-plaintext highlighter-rouge">&lt;form&gt;</code> has <code class="language-plaintext highlighter-rouge">submit</code> default event.
+If you want to <code class="language-plaintext highlighter-rouge">event.preventDefault()</code> (for example click on link) than pass
+parameter <code class="language-plaintext highlighter-rouge">greet(event) {}</code>. To see who invoke the click you can use
+<code class="language-plaintext highlighter-rouge">event.currentTarget</code>. To use multiple events use space between actions
+<code class="language-plaintext highlighter-rouge">'data-action'='click-&gt;hello-word#greet change-&gt;hello-word#greet'</code>
+To manually call another action you should use <code class="language-plaintext highlighter-rouge">this.anotherAction()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">data-hello-target='name'</code> creates <code class="language-plaintext highlighter-rouge">nameTarget</code> property in a controller so we
+can use it to access element and set value. We need to declare it also inside
+controller <code class="language-plaintext highlighter-rouge">static targets = [ 'name' ]</code>. Beside <code class="language-plaintext highlighter-rouge">this.nameTarget</code> you can
+check if there are more targets like this <code class="language-plaintext highlighter-rouge">this.nameTargets</code> or if exists at
+all <code class="language-plaintext highlighter-rouge">this.hasNameTarget</code> (return true or false)
+To pass values you can use <code class="language-plaintext highlighter-rouge">data-hello-author-id-value="my-id"</code> and <code class="language-plaintext highlighter-rouge">static
+values = { authorId: String }</code> and <code class="language-plaintext highlighter-rouge">this.authorIdValue</code></li>
+  <li>to access current element on which whole controller is connected you can use
+<code class="language-plaintext highlighter-rouge">this.element</code>. To access element on which action is triggered you can pass
+the event to the action <code class="language-plaintext highlighter-rouge">hello(event) { event.currentTarget }</code></li>
+  <li><code class="language-plaintext highlighter-rouge">data-hello-index='1'</code> used to pass data to CONTROLLER which you can get on
+initialize instead of <code class="language-plaintext highlighter-rouge">this.element.getAttribute('data-hello-index'))</code> you can
+use stimulus shorthand <code class="language-plaintext highlighter-rouge">this.data.get('index')</code>. Only for data on controller
+element. To access data on some input (not controller) you can attach target
+and use <code class="language-plaintext highlighter-rouge">this.nameTarget.getAttribute('data-hello-index')</code>.
+But since controller can be initialized on parent of the action element,
+better is to use <code class="language-plaintext highlighter-rouge">event.currentTarget.getAttribute('data-hello-index')</code>
+Also <code class="language-plaintext highlighter-rouge">this.data.has('index')</code> to check if data exists and
+<code class="language-plaintext highlighter-rouge">this.data.set('index', 2)</code> to set data so controller. Do not need to store
+any data in js, just use those setter and getter to store data in DOM.
+For complex json objects you can use <code class="language-plaintext highlighter-rouge">.to_json</code> and
+<code class="language-plaintext highlighter-rouge">JSON.parse(data.get('groups'))</code> or jQuery <code class="language-plaintext highlighter-rouge">.data()</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;%= f.select :company, {}, 'data-my-controller-target': 'second', 'data-my-controller-groups': MyModel::MY_HASH.to_json %&gt;
+let groups = $('[data-my-controller-target=second]').data('myControllerGroups')
+</code></pre></div>    </div>
+  </li>
+  <li>communicating between controllers is best to use event dispatch https://github.com/stimulusjs/stimulus/issues/200#issuecomment-434731830
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div>    </div>
+
+    <p>for addListener event listener you can use closures</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let controller = this
+some.addListener('some_event', function() {
+  controller.do_it()
+}
+</code></pre></div>    </div>
+
+    <p>but better is to use events</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>window.dispatchWindowEvent = function(event_name, ...detail) {
+const event = new CustomEvent(event_name, { detail: detail })
+window.dispatchEvent(event)
+}
+
+  autocomplete.addListener('place_changed', function() {
+    let place = autocomplete.getPlace();
+    window.dispatchWindowEvent('google-maps-place-changed', marker, place)
+    console.log('place_changed');
+  });
+
+
+         google-maps-place-changed@window-&gt;google-map#placeChanged
+
+placeChanged(event) {
+  let marker, place
+  [marker, place] = event.detail
+</code></pre></div>    </div>
+
+    <p>for google initMap callback you can dispatch event from window</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>window.dispatchMapEvent = function(...args) {
+const event = new CustomEvent('google-maps-callback', { args: args })
+window.dispatchEvent(event)
+}
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Controllers</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// src/controllers/hello_controller.js
+import { Controller } from "stimulus"
+
+export default class extends Controller {
+  // triggered when controller is connected to the document
+  // you can add classes to element
+  connect() {
+    this.element.classList.add('controller-initialized')
+  }
+  // anytime when controller is disconnected from the dom
+  disconnect() {}
+  // initialize is once when controller is first instantiated
+  initialize() {
+    this.showCurrentSlide()
+  }
+
+  showCurrentSlide() {
+    this.slideTargets.forEach((el, i) =&gt; {
+      el.classList.toggle("slide--current", this.index == i)
+    })
+  }
+
+  # getter
+  get index() {
+    return parseInt(this.data.get('index'))
+  }
+
+  # setter
+  set index(value) {
+    this.data.set('index', value)
+  }
+}
+</code></pre></div></div>
+
+<p>Example of adding Rxjs to stimulus so user on slow connections get latest
+results, do not load if they clicked on the same link and show loader
+https://www.mikewilson.dev/posts/stimulus-and-rxjs-for-a-spa-like-experience/</p>
+
+<h1 id="reflex">Reflex</h1>
+
+<p>To install run</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle add stimulus_reflex
+rails stimulus_reflex:install
+</code></pre></div></div>
+
+<p>Invoke methods using <code class="language-plaintext highlighter-rouge">data-reflex</code> attributes</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/books/_form.html.erb
+&lt;%= form.text_field :title, data: { reflex: 'change-&gt;ExampleReflex#form', current_count: 1 } %&gt;
+</code></pre></div></div>
+
+<p>Pass parametars using data attributes and access them using <code class="language-plaintext highlighter-rouge">element.dataset</code>
+note that you should use strings instead of simbols for multiwords, since <code class="language-plaintext highlighter-rouge">data:
+{ current_count: 1 }</code> will translate underscore to minus
+<code class="language-plaintext highlighter-rouge">element.dataset['current-count']</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/reflex/counter_reflex.rb
+class CounterReflex &lt; StimulusReflex::Reflex
+  def increment
+    @current_count = element.dataset['current-count']
+  end
+end
+</code></pre></div></div>
+
+<p>To trigger from javascript you need to register and use stimulate. Passign
+arguments in different way, now is method args instead of <code class="language-plaintext highlighter-rouge">element.dataset</code>
+as with when we use data attributes.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/books/_form.html.erb
+  &lt;div data-controller='hello-word' data-hello-word-count='&lt;%= @count %&gt;'&gt;
+    count &lt;%= @count %&gt;
+    &lt;div data-target='hello-word.output'&gt;&lt;/div&gt;
+    &lt;%= link_to 'Increase', '#', data: { action: 'hello-word#increment' } %&gt;
+  &lt;/div&gt;
+
+# app/javascript/controllers/hello_controller.js
+import { Controller } from "stimulus"
+import StimulusReflex from 'stimulus_reflex'
+
+export default class extends Controller {
+  static targets = [ "output" ]
+
+  connect() {
+    this.outputTarget.textContent = 'Hello, Stimulus!'
+    StimulusReflex.register(this)
+  }
+
+  increment(event) {
+    this.outputTarget.textContent = 'trying to increment'
+    let count = this.data.get('count')
+    this.stimulate('ExampleReflex#increase_from_js', count)
+  }
+}
+
+
+# app/reflex/example_reflex.rb
+class ExampleReflex &lt; ApplicationReflex
+  def increase_from_js(count = 0)
+    @count = count.to_i + 1
+  end
+end
+</code></pre></div></div>
+
+<p>Inside reflex, you can access session which you can use in controller.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/reflex/example_reflex.rb
+  def increase_from_js(count = 0)
+    @count = count.to_i + 1
+    session[:count] = @count
+  end
+    @count = session[:count]
+  end
+
+# app/controllers/books_controller.rb
+  def index
+    @count = session[:count]
+  end
+</code></pre></div></div>
+
+<p>In controller you should use conditional assignment</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/books_controller.rb
+  def index
+    @book ||= Book.new
+  end
+</code></pre></div></div>
+
+<p>Use generator <code class="language-plaintext highlighter-rouge">rails generate stimulus_reflex user</code> to generate
+<code class="language-plaintext highlighter-rouge">app/javascript/controllers/user_controller.js</code> and <code class="language-plaintext highlighter-rouge">app/reflexes/user_reflex.rb
+</code>.</p>
+
+<h1 id="nested-form">Nested form</h1>
+
+<p>https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/javascript/controllers/nested_form_controller.js
+import { Controller } from "stimulus"
+
+export default class extends Controller {
+  static targets = ["add_perk", "template"]
+
+  add_association(event) {
+    event.preventDefault()
+    var content = this.templateTarget.innerHTML.replace(/TEMPLATE_RECORD/g, new Date().valueOf())
+    this.add_perkTarget.insertAdjacentHTML('beforebegin', content)
+  }
+
+  remove_association(event) {
+    event.preventDefault()
+    let perk = event.target.closest(".nested-fields")
+    perk.querySelector("input[name*='_destroy']").value = 1
+    perk.style.display = 'none'
+  }
+}
+</code></pre></div></div>
+
+<p>In view https://web-crunch.com/posts/ruby-on-rails-marketplace-stripe-connect</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/projects/_form.html.erb
+  &lt;div data-controller="nested-form"&gt;
+    &lt;template data-target='nested-form.template'&gt;
+      &lt;%= form.fields_for :perks, Perk.new, child_index: 'TEMPLATE_RECORD' do |perk| %&gt;
+        &lt;%= render 'perk_fields', form: perk %&gt;
+      &lt;% end %&gt;
+    &lt;/template&gt;
+
+    &lt;%= form.fields_for :perks do |perk| %&gt;
+      &lt;%= render 'perk_fields', form: perk %&gt;
+    &lt;% end %&gt;
+
+    &lt;div data-target="nested-form.add_perk"&gt;
+      &lt;%= link_to "Add Perk", "#", data: { action: "nested-form#add_association" }, class: "btn btn-white" %&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+</code></pre></div></div>
+
+<ul>
+  <li>text area auto expand with stimulus plugin</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add stimulus-textarea-autogrow
+
+// app/javascript/controllers/index.js
+import TextareaAutogrow from "stimulus-textarea-autogrow"
+application.register("textarea-autogrow", TextareaAutogrow)
+
+
+// app/views/contancts/index.html.erb
+&lt;%= f.text_area :text, required: true, 'data-controller': 'textarea-autogrow' %&gt;
+
+# or better is to override form builder (look at bootstrap how to create custom
+# form builder
+class MyFormBuilder &lt; BootstrapForm::FormBuilder
+  def text_area(name, options = {})
+    options.reverse_merge! 'data-controller': 'textarea-autogrow'
+    super
+  end
+end
+</code></pre></div></div>
+
+<ul>
+  <li>stimulus-use tools can be loaded in two was
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># extending
+import { IntersectionController } from 'stimulus-use'
+export default class extends IntersectionController {
+  appear(entry) {
+  }
+}
+
+# composing
+import { useIntersection } from 'stimulus-use'
+export default class extends Controller {
+  connect() {
+    useIntersetion(this)
+  }
+
+  appear(entry) {
+  }
+}
+</code></pre></div>    </div>
+  </li>
+  <li>simulus-components tools scroll to
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn add stimulus-scroll-to
+
+# in app/javascript/controllers/index.js
+import { Application } from "stimulus"
+import ScrollTo from "stimulus-scroll-to"
+
+const application = Application.start()
+application.register("scroll-to", ScrollTo)
+</code></pre></div>    </div>
+    <p>https://stimulus-components.netlify.app/docs/stimulus-scroll-to/</p>
+  </li>
+  <li>manually trigger change event for elements you need to use custom event for
+example <code class="language-plaintext highlighter-rouge">my-change-event</code>
+https://github.com/hotwired/stimulus/issues/101
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  var event = new CustomEvent('my-change-event', { bubbles: true });
+  ev.target.dispatchEvent(event);
+    
+
+  &lt;%= form.text_field :start_end_date, "data-action": "my-change-event-&gt;forms#submit_on_change" %&gt;
+</code></pre></div>    </div>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://stackoverflow.com/a/66674451/287166
+          &lt;%= form.text_field :start_end_date, "data-use-daterangepicker": true, "data-action": "focusout-&gt;forms#submit_on_change_delayed" %&gt;
+
+// &lt;%= f.check_box :near_me, 'data-controller': 'forms', 'data-action': 'forms#submit_on_change' %&gt;
+submit_on_change(event) {
+  let form = event.currentTarget.closest('form')
+  form.submit()
+  console.log('forms#submit_on_change')
+}
+
+submit_on_change_delayed(event) {
+  let form = event.currentTarget.closest('form')
+  setTimeout(function () {
+    form.submit()
+    console.log('forms#submit_on_change_delayed finished')
+  }, 100)
+  console.log('forms#submit_on_change_delayed')
+}
+
+</code></pre></div>    </div>
+  </li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Java In Android Studio</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Java In Android Studio</h1>
+    <p class="meta">Dec 10, 2018</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#install-firebase"><span class="tocnumber">1</span> <span class="toctext">Install Firebase</span></a></li><li class="toc_level-1 toc_section-2"><a href="#signing-config-keys"><span class="tocnumber">2</span> <span class="toctext">Signing config keys</span></a></li><li class="toc_level-1 toc_section-3"><a href="#keyboard-shortcuts"><span class="tocnumber">3</span> <span class="toctext">Keyboard shortcuts</span></a></li><li class="toc_level-1 toc_section-4"><a href="#webview"><span class="tocnumber">4</span> <span class="toctext">Webview</span></a></li><li class="toc_level-1 toc_section-5"><a href="#const-for-server-url"><span class="tocnumber">5</span> <span class="toctext">Const for server Url</span></a></li><li class="toc_level-1 toc_section-6"><a href="#release-new-version-on-play-store"><span class="tocnumber">6</span> <span class="toctext">Release new version on Play store</span></a></li><li class="toc_level-1 toc_section-7"><a href="#errors"><span class="tocnumber">7</span> <span class="toctext">Errors</span></a></li><li class="toc_level-1 toc_section-8"><a href="#tips"><span class="tocnumber">8</span> <span class="toctext">Tips</span></a></li></ul></td></tr></tbody></table></div><h1 id="install-firebase">Install Firebase</h1>
+
+<p>There is a collection of apps for quick start
+https://github.com/firebase/quickstart-android</p>
+
+<p><code class="language-plaintext highlighter-rouge">google-services.json</code> file should be copied to <code class="language-plaintext highlighter-rouge">app/</code> folder, but you can use
+different google services json for different build type
+https://developers.google.com/android/guides/google-services-plugin#adding_the_json_file</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>app/google-services.json
+app/src/release/google-services.json
+</code></pre></div></div>
+
+<p>To connect your app with Firebase you can use Gradle or Assistant.
+For using Gradle, you need to copy SHA and paste to firebase console. To get
+<code class="language-plaintext highlighter-rouge">Debug signing certificate SHA-1 (optional)</code> from the Android Studio, you can go
+to right toolbox <code class="language-plaintext highlighter-rouge">Gradle</code> and double click on <code class="language-plaintext highlighter-rouge">root -&gt; Tasks -&gt; android -&gt;
+signinReport</code>. Another way to get sha is running command</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool --exportcert -list -v -alias androiddebugkey -keystore $ANDROID_SDK_ROOT/.android/debug.keystore
+Enter keystore password:
+# type: android
+</code></pre></div></div>
+
+<p>Using assistant, you will grand permission to update your firebase settings, so
+you do not need to paste.</p>
+
+<p>You can register different firebase project with the same package name, but you
+need to use different signing key (it is not possible to have same SHA on two
+different projects for the same package name). So you need to use another key
+(you can keep same package name <code class="language-plaintext highlighter-rouge">com.myapp.app</code>).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>keytool --exportcert -list -v -alias key0 -keystore app/myapp_debug.jks
+# type the password: myapp123456
+# in output find SHA1: 87:16:52:08:C7:B1:BE:BC:73:BE:9E:37:64:67:CB:9D:76:0C:2B:01
+</code></pre></div></div>
+
+<p>Add dependencies</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># build.gradle
+buildscript {
+  dependencies {
+    // Add this line
+    classpath 'com.google.gms:google-services:4.0.1'
+  }
+}
+
+# app/build.gradle
+dependencies {
+  // Add this line
+  implementation 'com.google.firebase:firebase-core:16.0.1'
+}
+
+// Add to the bottom of the file
+apply plugin: 'com.google.gms.google-services'
+</code></pre></div></div>
+
+<h1 id="signing-config-keys">Signing config keys</h1>
+
+<p>https://coderwall.com/p/zrdsmq/signing-configs-with-gradle-android
+Instead of default certificate located at <code class="language-plaintext highlighter-rouge">$HOME/.android/debug.keystore</code> (which
+is different for each user ie sdk installation) you can create your own keys.
+That way new developer do not need to add SHA to firebase project, since he can
+imediatelly build and run the app in emulator or device.</p>
+
+<p>https://developer.android.com/studio/publish/app-signing
+There are <code class="language-plaintext highlighter-rouge">signing</code> and <code class="language-plaintext highlighter-rouge">upload</code> key.</p>
+
+<p>You can sign in manually from command line or using gradle https://developer.android.com/studio/publish/app-signing#gradle-sign
+Generate <code class="language-plaintext highlighter-rouge">.jks</code> file from Android studio</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/build.gradle
+android {
++    signingConfigs {
++      debug {
++          // You need to specify either an absolute path or include the
++          // keystore file in the same directory as the build.gradle file.
++          storeFile file("mykey.jks")
++          storePassword "asdf"
++          keyAlias "key0"
++          keyPassword "asdf"
++      }
++    }
++
+     buildTypes {
+         release {
+             minifyEnabled false
+             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+         }
++        debug {
++            signingConfig signingConfigs.debug
++
++        }
+     }
+</code></pre></div></div>
+
+<p>Release to App Store https://www.youtube.com/watch?v=AWawL5HFn64</p>
+
+<h1 id="keyboard-shortcuts">Keyboard shortcuts</h1>
+
+<ul>
+  <li>Comment with <code class="language-plaintext highlighter-rouge">Ctrl + /</code> uncomment with <code class="language-plaintext highlighter-rouge">Ctrl + shift + /</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Alt + Enter</code> when you want to import something that can not be resolved (when
+you paste some code snipets))</li>
+  <li>fix code indent with <code class="language-plaintext highlighter-rouge">Ctrl + Alt + Super + L</code></li>
+</ul>
+
+<h1 id="webview">Webview</h1>
+
+<p>https://developer.android.com/guide/webapps/webview#java
+Start new app with blank intent.
+In <code class="language-plaintext highlighter-rouge">app/serv/main/AndroidManifest.xml</code> add permission for internet and also for
+http traffic https://stackoverflow.com/questions/45940861/android-8-cleartext-http-traffic-not-permitted/50834600#50834600</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;manifest...
+    &lt;uses-permission android:name="android.permission.INTERNET"&gt;&lt;/uses-permission&gt;
+    &lt;application
+        ...
+        android:usesCleartextTraffic="true"
+</code></pre></div></div>
+
+<p>In java you need to enable javascript in webview, set user agent so you can
+customize the response.</p>
+
+<p>https://github.com/duleorlovic/android-webview-example/commit/3097878534c019264f58050612a2d5564267b63d</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public class MainActivity extends AppCompatActivity {
+
+    private WebView myWebView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        myWebView = (WebView) findViewById(R.id.webview);
+//        setContentView(myWebView);
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setUserAgentString("myapp");
+        myWebView.setWebViewClient(new MyWebViewClient());
+        myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
+
+        myWebView.loadUrl("http://192.168.5.4:3001/");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check if the key event was the Back button and if there's history
+        if ((keyCode == KeyEvent.KEYCODE_BACK) &amp;&amp; myWebView.canGoBack()) {
+            myWebView.goBack();
+            return true;
+        }
+        // If it wasn't the Back key or there's no web page history, bubble up to the default
+        // system behavior (probably exit the activity)
+        return super.onKeyDown(keyCode, event);
+    }
+}
+
+public class WebAppInterface {
+    Context mContext;
+
+    /** Instantiate the interface and set the context */
+    WebAppInterface(Context c) {
+        mContext = c;
+    }
+
+    /** Show a toast from the web page */
+    @JavascriptInterface
+    public void showToast(String toast) {
+        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+    }
+}
+</code></pre></div></div>
+
+<ul>
+  <li>to change launcher icon and other icons you can go to File -&gt; New -&gt; Image
+Asset and than select “Lanucher icons” and add svg image file. Repeat proccess
+but select “Notification icons”. You can see <code class="language-plaintext highlighter-rouge">git status</code> that existing files
+will be updated, for example <code class="language-plaintext highlighter-rouge">app/src/main/res/mipmap-hdpi/ic_launcher.png</code>
+insteaad of mipmap-hdpi, there is mipmap-mdpi/xhdmpi/xxhdpi/xxxhdpi density
+and ic_launcher_foreground.png/ic_launcher_round.png
+There is <code class="language-plaintext highlighter-rouge">app/src/main/res/values/ic_launcher_background.xml</code> which is some
+<code class="language-plaintext highlighter-rouge">vector</code> but do not know how to use it.
+For notification icon path is <code class="language-plaintext highlighter-rouge">app/src/main/res/drawable/ic_notificaiton.png</code></li>
+</ul>
+
+<h1 id="const-for-server-url">Const for server Url</h1>
+
+<p>When you build <code class="language-plaintext highlighter-rouge">release</code> (Build -&gt; Select build variant -&gt; release), by default
+<code class="language-plaintext highlighter-rouge">serverUrl</code> is targeting production server <code class="language-plaintext highlighter-rouge">https://myapp.herokuapp.com</code>.
+When you want to target local Rails server than choose <code class="language-plaintext highlighter-rouge">debug</code> and update
+<code class="language-plaintext highlighter-rouge">app/src/main/java/com/myapp/app/Const.java</code>, by default is
+<code class="language-plaintext highlighter-rouge">http://192.168.5.4:3001</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>package com.myapp.app;
+
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+
+public class Const {
+   // Use for example
+   // String mUrl = Const.getServerUrl(getApplicationContext());
+   //
+    public static String getServerUrl(Context context) {
+        boolean isDebuggable = (0 != (context.getApplicationInfo().flags
+                &amp; ApplicationInfo.FLAG_DEBUGGABLE));
+        String mUrl;
+        if (isDebuggable) {
+            mUrl = "http://192.168.5.4:3001";
+        } else {
+            mUrl = "https://myaapp.herokuapp.com";
+        }
+    return(mUrl);
+
+    }
+}
+</code></pre></div></div>
+
+<h1 id="release-new-version-on-play-store">Release new version on Play store</h1>
+
+<p>Increment <code class="language-plaintext highlighter-rouge">android { defaultConfig { versionCode X }}}</code> in <code class="language-plaintext highlighter-rouge">app/build.gradle</code>.
+(Module: app). Than go to Build -&gt; Generate Signed Bundle or APK -&gt; Apk -&gt;
+Choose
+<code class="language-plaintext highlighter-rouge">app/myaapp.jks</code> and add passwords from gradle config. Upload
+<code class="language-plaintext highlighter-rouge">app/release/app-release.apk</code> to Google Play console , Release Management -&gt; App
+preleases -&gt; Production Track -&gt; Manage -&gt; Create Release or Edit Release
+https://play.google.com/apps/publish/</p>
+
+<p>Note that Playstore is somehow cached on Emulator, so install from real device
+when you want to checound latest release.</p>
+
+<h1 id="errors">Errors</h1>
+
+<p>When I Import existing project the subfolders, I got error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Gradle sync failed: Could not find com.google.gms:google-services:4.2.0.
+</code></pre></div></div>
+
+<p>so I need to add this line to gradle https://stackoverflow.com/questions/53706565/error-could-not-find-com-google-gmsgoogle-services4-2-0</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>maven { url 'https://dl.bintray.com/android/android-tools' }
+</code></pre></div></div>
+
+<p>For error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  emulator: ERROR: x86 emulation currently requires hardware acceleration!
+Please ensure KVM is properly installed and usable.
+CPU acceleration status: This user doesn't have permissions to use KVM (/dev/kvm)
+</code></pre></div></div>
+<p>fix is <code class="language-plaintext highlighter-rouge">sudo chown orlovic -R /dev/kvm</code></p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>add loader before page is shown https://android.jlelse.eu/loading-splash-screen-for-webview-in-android-studio-ef68ec05720a</li>
+  <li>if you have multiple andoird icons</li>
+</ul>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

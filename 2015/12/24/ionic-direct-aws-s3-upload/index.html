@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Ionic & Rails Direct S3 image upload</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Ionic & Rails Direct S3 image upload</h1>
+    <p class="meta">Dec 24, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#latest"><span class="tocnumber">1</span> <span class="toctext">Latest</span></a></li><li class="toc_level-1 toc_section-2"><a href="#older"><span class="tocnumber">2</span> <span class="toctext">Older</span></a></li><li class="toc_level-1 toc_section-3"><a href="#aws-bucket"><span class="tocnumber">3</span> <span class="toctext">AWS Bucket</span></a></li><li class="toc_level-1 toc_section-4"><a href="#record-image"><span class="tocnumber">4</span> <span class="toctext">Record image</span></a></li></ul></td></tr></tbody></table></div><h1 id="latest">Latest</h1>
+
+<p>https://web-crunch.com/posts/rails-drag-drop-active-storage-stimulus-dropzone</p>
+
+<h1 id="older">Older</h1>
+
+<p>In rails you can upload using <a href="/2015/04/05/common-rails-bootstrap-snippets/&#10;#carrierwave-for-uploading">carrierwave for uploading</a> which works also for direct uploading to AWS.</p>
+
+<p>But <a href="https://github.com/blueimp/jQuery-File-Upload">jQuery-File-Upload</a>
+is much cleaner way of uploading and you can upload multiplefiles at once and
+you can limit the size and choose name of uploaded files.
+<a href="https://devcenter.heroku.com/articles/direct-to-s3-image-uploads-in-rails">heroku
+tutorial</a>
+uses
+<a href="http://docs.aws.amazon.com/sdkforruby/api/Aws/S3/PresignedPost.html">PresignedPost</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt; HERE_DOC
+# direct S3 uploading
+gem 'aws-sdk', '~&gt; 2'
+HERE_DOC
+
+sed -i config/secrets.yml -e '/^test:/i \
+  # aws s3\
+  aws_bucket_name: &lt;%= ENV["AWS_BUCKET_NAME"] %&gt;\
+  aws_access_key_id: &lt;%= ENV["AWS_ACCESS_KEY_ID"] %&gt;\
+  aws_secret_access_key: &lt;%= ENV["AWS_SECRET_ACCESS_KEY"] %&gt;\
+  # region is important for all non us-east-1 regions\
+  aws_region: &lt;%= ENV["AWS_REGION"] || "us-east-1" %&gt;\
+'
+
+cat &gt;&gt; config/initializers/aws.rb &lt;&lt; HERE_DOC
+S3_MAX_FILE_SIZE = 10 * 1024 * 1024 # 10 MB
+
+Aws.config.update({
+  region: Rails.application.secrets.aws_region,
+  credentials: Aws::Credentials.new(
+    Rails.application.secrets.aws_access_key_id,
+    Rails.application.secrets.aws_secret_access_key
+  ),
+})
+
+if Rails.application.secrets.aws_bucket_name
+  S3_BUCKET = Aws::S3::Resource.new.bucket(
+    Rails.application.secrets.aws_bucket_name
+  )
+else
+  class FakeAws
+    def presigned_post(args)
+      Rails.logger.error "Please provide AWS credentials"
+      OpenStruct.new fields: {}, url: "https://bucket-name.s3-ap-southeast-1.amazonaws.com"
+    end
+  end
+  S3_BUCKET = FakeAws.new
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>To get aws keys add this to controller</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/constollers/posts_controller.rb
+before_action :set_s3_direct_post, only: [:new, :edit, :create, :update]
+
+def set_s3_direct_post
+  @s3_direct_post = S3_BUCKET.presigned_post(
+    key: "uploads/#{SecureRandom.uuid}/${filename}",
+    success_action_status: '201', # Aws will respond with XML
+    acl: 'public-read',
+    content_length_range: 1..S3_MAX_FILE_SIZE,
+  )
+end
+</code></pre></div></div>
+
+<p>This is how we can use plugin</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt; app/assets/javascripts/direct_upload.coffee.erb &lt;&lt; 'HERE_DOC'
+@directUpload = ($fileInput, callback) -&gt;
+  progressBar  = $("&lt;div class='bar'&gt;&lt;/div&gt;")
+  barContainer = $("&lt;div class='progress'&gt;&lt;/div&gt;").append(progressBar)
+  $fileInput.after(barContainer)
+
+  url = $fileInput.data 'url'
+  formData = $fileInput.data 'formData'
+  $fileInput.fileupload(
+    fileInput: $fileInput
+    url: url
+    type: 'POST'
+    autoUpload: true
+    formData: formData
+    paramName: 'file'
+    dataType: 'XML'
+    replaceFileInput: true
+    acceptFileTypes: /(\.|\/)(gif|jpe?g|png|pdf)$/i
+    maxFileSize: &lt;%= S3_MAX_FILE_SIZE.to_s %&gt;
+    maxNumberOfFiles: 3
+    messages: {
+      maxFileSize: 'File exceeds maximum allowed size of &lt;%= ActionView::Base.new.number_to_human_size S3_MAX_FILE_SIZE %&gt;'
+      acceptFileTypes: 'File type should be: jpg, png or pdf'
+    }
+    progressall: (e, data) -&gt;
+      progress = parseInt(data.loaded / data.total * 100, 10)
+      progressBar.css('width', progress + '%')
+
+    start: (e) -&gt;
+      console.log 'start'
+      progressBar.
+        css('background', 'green').
+        css('display', 'block').
+        css('width', '0%').
+        text("Loading...")
+
+    done: (e, data) -&gt;
+      console.log 'done'
+      progressBar.text("Uploading done")
+
+      # extract key and generate URL from response
+      key = $(data.jqXHR.responseXML).find("Key").text()
+      url = '//' + $fileInput.data('host') + '/' + key
+      callback(url)
+
+    fail: (e, data) -&gt;
+      console.log 'fail'
+      progressBar.
+        css("background", "red").
+        text("Failed")
+  ).on 'fileuploadprocessalways', (e, data) -&gt;
+    currentFile = data.files[data.index]
+    if (data.files.error &amp;&amp; currentFile.error)
+      # there was an error, do something about it
+      console.log(currentFile.error)
+      alert(currentFile.error)
+HERE_DOC
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/assets/javascripts/file_upload_adminlte.coffee
+window.setupFileUpload = ($fileInput)-&gt;
+  directUpload $fileInput, (url) -&gt;
+    randomId = Math.floor(Math.random() * 9999 + 100)
+    # here should we create new element with random number
+    #  name: 'customer[documents_attributes][' + randomId + '][key]'
+    if url.match(/\.(png|jpeg|jpg|png)$/)
+      # create with img
+    else
+      # create with pdf
+
+    $('#file-list').append new_element
+</code></pre></div></div>
+
+<p>jQuery file upload <a href="https://github.com/blueimp/jQuery-File-Upload/wiki/Basic-plugin">minimal
+setup</a> requires
+jQuery (usually already included in rails), jquery.ui.widget (you can find that
+in download package), jquery.fileupload.js. To make sure it is installed run in
+console <code class="language-plaintext highlighter-rouge">console.log($().fileupload)</code>
+Just copy them to your asset path and include (<code class="language-plaintext highlighter-rouge">require_tree .</code> probably loads
+in wrong order so it is better to manually include them).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/javascripts/application.js
+//= require jquery.ui.widget
+//= require jquery.fileupload
+//= require jquery.fileupload-process
+//= require jquery.fileupload-validate
+</code></pre></div></div>
+
+<p>Add some styles</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; app/assets/stylesheets/main.scss &lt;&lt; HERE_DOC
+.document {
+  padding: 5px;
+  .document-thumbnail {
+    width: 50px;
+    // for fa pdf icon
+    font-size: 50px;
+  }
+}
+HERE_DOC
+</code></pre></div></div>
+
+<p>You can save one or many urls in <code class="language-plaintext highlighter-rouge">documents</code> field (type text) and use
+<code class="language-plaintext highlighter-rouge">serialize :documents, Array</code> but if you have more logic its better to keep them
+in separate model</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g model document name key documentable:references{polymorphic}
+rake db:migrate
+
+sed -i app/models/document.rb -e '/^end/i \
+  validates_presence_of :key\
+\
+  def file_name\
+    "#{key}".split("/").last\
+  end'
+
+sed -i app/models/post.rb -e '/class Post/a \
+  has_many :documents, as: :documentable\
+  accepts_nested_attributes_for :documents, allow_destroy: true'
+
+sed -i app/controllers/posts_controller.rb -e '/params.require/c \
+      params.require(:post).permit(\
+        :name, :title,\
+        documents_attributes: [:key, :name, :_destroy, :id]\
+      )'
+</code></pre></div></div>
+
+<p>In form you can add new</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/posts/_form.html.erb
+    &lt;div id="file-list"&gt;
+      &lt;%= f.fields_for :documents do |document_form| %&gt;
+        &lt;%= document_form.hidden_field :key %&gt;
+        &lt;div class="document row form-inline"&gt;
+          &lt;%= link_to "#", "data-toggle" =&gt; "modal", "data-target" =&gt; "#documentModal", "data-set-modal-source" =&gt; "http:#{document_form.object.key}", class: 'col-sm-5' do %&gt;
+            &lt;% if document_form.object.key =~ /.\.(png|jpeg|jpg|png)$/ %&gt;
+              &lt;img src='&lt;%= document_form.object.key %&gt;' class='document-thumbnail'&gt;
+            &lt;% else %&gt;
+              &lt;i class="fa fa-file-pdf-o document-thumbnail" aria-hidden="true"&gt;&lt;/i&gt;
+            &lt;% end %&gt;
+            &lt;%= document_form.object.file_name %&gt;
+          &lt;% end %&gt;
+          &lt;div class="col-sm-5"&gt;
+            &lt;%= document_form.text_area :name, placeholder: "My File Description", skip_label: true %&gt;
+          &lt;/div&gt;
+          &lt;div class="col-sm-2"&gt;
+            &lt;%= document_form.check_box :_destroy, label: "Mark for delete" %&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;% end %&gt;
+    &lt;/div&gt; &lt;!--&lt;div id="file-list"&gt;--&gt;
+    &lt;div class="m-t-10 text-center"&gt;
+      &lt;a href="#" class="btn btn-success btn-block" onclick="$('#fileupload').trigger('click')"&gt;
+        &lt;i class="fa fa-plus" aria-hidden="true"&gt;&lt;/i&gt;
+        Add more files
+      &lt;/a&gt;
+    &lt;/div&gt;
+    &lt;%= file_field_tag "files[]", id: 'fileupload', multiple: true, data: { 'form-data': @s3_direct_post.fields, 'url': @s3_direct_post.url, 'host': URI.parse(@s3_direct_post.url).host }, style: 'position: absolute;left: -1500px' %&gt;
+    &lt;script&gt;
+      setupFileUpload($('#fileupload'))
+    &lt;/script&gt;
+</code></pre></div></div>
+
+<p>In view you can list</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;% if @post.documents.size.zero? %&gt;
+    No Documents available
+  &lt;% end %&gt;
+  &lt;% @post.documents.each do |document| %&gt;
+    &lt;div class="document row"&gt;
+      &lt;%= link_to "#", "data-toggle" =&gt; "modal", "data-target" =&gt; "#documentModal", "data-set-modal-source" =&gt; "http:#{document.key}", class: 'col-sm-5' do %&gt;
+        &lt;% if document.key =~ /.\.(png|jpeg|jpg|png)$/ %&gt;
+            &lt;img src='&lt;%= document.key %&gt;' class='document-thumbnail'&gt;
+          &lt;% else %&gt;
+            &lt;i class="fa fa-file-pdf-o document-thumbnail" aria-hidden="true"&gt;&lt;/i&gt;
+        &lt;% end %&gt;
+        &lt;%= document.file_name %&gt;
+      &lt;% end %&gt;
+      &lt;div class="col-md-6 document-name"&gt;
+        &lt;%= document.name %&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;% end %&gt;
+</code></pre></div></div>
+
+<p>And you can preview in bootstrap modal</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;div id="documentModal" class="modal fade" role="dialog"&gt;
+  &lt;div class="modal-dialog modal-lg"&gt;
+    &lt;!-- Modal content--&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;button type="button" class="close" data-dismiss="modal"&gt;&amp;times;&lt;/button&gt;
+        &lt;a href="" id="download-link"&gt;
+          &lt;h4 class="modal-title"&gt;Download document
+            &lt;i class="icon-download-alt"&gt;&lt;/i&gt;
+          &lt;/h4&gt;
+        &lt;/a&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        &lt;img id="image-preview" src="" class="center-block"&gt;
+        &lt;iframe src="" frameborder="0" width="100%" class="iframe" id="pdf-preview"&gt;&lt;/iframe&gt;
+        &lt;%= image_tag 'loader.gif', class: 'center-block loader' %&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>To limit max width in javascript you can use https://github.com/blueimp/jQuery-File-Upload/wiki/Client-side-Image-Resizing</p>
+
+<h1 id="aws-bucket">AWS Bucket</h1>
+
+<ul>
+  <li>create a bucket <strong>video-uploading-demo</strong>. You can choose any region. But
+choose one word (without dots) because of <em>Insecure connection</em> error</li>
+  <li>go to the <a href="https://console.aws.amazon.com/iam/home">IAM page</a> to create user,
+save credentials and create <a href="/2016/02/29/amazon-aws-s3/">inline policy</a> to give access to the bucket
+<strong>video-uploading-demo</strong></li>
+  <li>I’m not sure about <a href="https://github.com/asafdav/ng-s3upload">step 2</a> (grant
+put/delete and Upload/Delete permissions) since
+above inline policy works fine for me</li>
+  <li>add CORS <code class="language-plaintext highlighter-rouge">&lt;AllowedMethod&gt;POST&lt;/AllowedMethod&gt;&lt;AllowedHeader&gt;*&lt;/AllowedHeader&gt;</code> to Bucket -&gt; Properties -&gt;
+Permissions -&gt; Add Cors configuration <a href="/2016/02/29/amazon-aws-s3/#cors">2016-02-29-amazon-aws-s3#cors</a></li>
+</ul>
+
+<h1 id="record-image">Record image</h1>
+
+<p>Read docs on
+<a href="https://github.com/apache/cordova-plugin-camera">cordova-plugin-camera</a> rather
+than on <a href="http://ngcordova.com/docs/plugins/camera/">ngCordova camera</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bower install ngCordova --save-dev
+sed -i '/&lt;\/head&gt;/i \
+    &lt;!-- plugins --&gt;
+    &lt;script src="lib/ngCordova/dist/ng-cordova.js"&gt;&lt;/script&gt;\
+' www/index.html
+ionic plugin add cordova-plugin-camera
+</code></pre></div></div>
+
+<p>Example app <a href="https://github.com/sirius2013/Angluarjs-Ionic-Schedule-App">Angluarjs-Ionic-Schedule-App</a></p>
+
+<p>Android emulator needs SD card before using camera, so add some MB in
+<code class="language-plaintext highlighter-rouge">tools/android avd</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cordova plugin add cordova-plugin-file-transfer
+</code></pre></div></div>
+
+<p><a href="http://aws.amazon.com/articles/1434">AWS S3</a> conditions can prevent user
+uploading on different location.</p>
+
+<p>starts-with should be set for all files…</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Vim theory</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Vim theory</h1>
+    <p class="meta">Jun 5, 2017</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#lean-vim-script-the-hard-way"><span class="tocnumber">1</span> <span class="toctext">Lean Vim Script The Hard Way</span></a></li><li class="toc_level-1 toc_section-2"><a href="#mappings"><span class="tocnumber">2</span> <span class="toctext">Mappings</span></a></li><li class="toc_level-1 toc_section-3"><a href="#abbreviations"><span class="tocnumber">3</span> <span class="toctext">Abbreviations</span></a></li><li class="toc_level-1 toc_section-4"><a href="#commands"><span class="tocnumber">4</span> <span class="toctext">Commands</span></a></li><li class="toc_level-1 toc_section-5"><a href="#autocommands"><span class="tocnumber">5</span> <span class="toctext">Autocommands</span></a></li><li class="toc_level-1 toc_section-6"><a href="#operator-pending-mappings"><span class="tocnumber">6</span> <span class="toctext">Operator pending mappings</span></a></li><li class="toc_level-1 toc_section-7"><a href="#map-keys-to-execute-operator-function"><span class="tocnumber">7</span> <span class="toctext">Map keys to execute Operator function</span></a></li><li class="toc_level-1 toc_section-8"><a href="#options-and-variables"><span class="tocnumber">8</span> <span class="toctext">Options and Variables</span></a></li><li class="toc_level-1 toc_section-9"><a href="#function"><span class="tocnumber">9</span> <span class="toctext">Function</span></a></li><li class="toc_level-1 toc_section-10"><a href="#lists-and-dictionaries"><span class="tocnumber">10</span> <span class="toctext">Lists and dictionaries</span></a></li><li class="toc_level-1 toc_section-11"><a href="#exceptions"><span class="tocnumber">11</span> <span class="toctext">Exceptions</span></a></li><li class="toc_level-1 toc_section-12"><a href="#comments"><span class="tocnumber">12</span> <span class="toctext">Comments</span></a></li><li class="toc_level-1 toc_section-13"><a href="#command-line-ex-special-characters"><span class="tocnumber">13</span> <span class="toctext">Command line ex special characters</span></a></li><li class="toc_level-1 toc_section-14"><a href="#plugins"><span class="tocnumber">14</span> <span class="toctext">Plugins</span></a></li><li class="toc_level-1 toc_section-15"><a href="#shell-script"><span class="tocnumber">15</span> <span class="toctext">Shell script</span></a></li><li class="toc_level-1 toc_section-16"><a href="#translate"><span class="tocnumber">16</span> <span class="toctext">Translate</span></a></li></ul></td></tr></tbody></table></div><h1 id="lean-vim-script-the-hard-way">Lean Vim Script The Hard Way</h1>
+
+<p><a href="http://learnvimscriptthehardway.stevelosh.com/">http://learnvimscriptthehardway.stevelosh.com/</a></p>
+
+<h1 id="mappings">Mappings</h1>
+
+<p><code class="language-plaintext highlighter-rouge">:help map</code> <code class="language-plaintext highlighter-rouge">:help 40</code>
+maping keys syntax <code class="language-plaintext highlighter-rouge">:noremap &lt;newkeys&gt; &lt;keynames&gt;</code></p>
+
+<ul>
+  <li>list mappings <code class="language-plaintext highlighter-rouge">:map</code>. To save them in a file use those 3 commands
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:redir! &gt; ~/Download/vim_keys.txt
+:silent verbose map
+:redir END
+</code></pre></div>    </div>
+  </li>
+  <li>since mappings easilly could be broken, ALWAYS use <code class="language-plaintext highlighter-rouge">nore</code> non recursive
+variant <code class="language-plaintext highlighter-rouge">noremap</code>, <code class="language-plaintext highlighter-rouge">nnoremap</code> … so it use default meanings of keynames</li>
+  <li><code class="language-plaintext highlighter-rouge">:map &lt;unique&gt; &lt;script&gt; asd asd</code> means that it will not use mappings from
+other places (only mappings defined in script) and it will fail if it is
+already defined</li>
+  <li>you can map control CTRL key, for example <code class="language-plaintext highlighter-rouge">:map &lt;c-d&gt; dd</code> (<code class="language-plaintext highlighter-rouge">&lt;c-d&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;esc&gt;</code>
+is called angle bracket notation)</li>
+  <li><code class="language-plaintext highlighter-rouge">map</code> (normal visual and operator-pending), <code class="language-plaintext highlighter-rouge">nmap</code> normal,  <code class="language-plaintext highlighter-rouge">vmap</code> visual,
+<code class="language-plaintext highlighter-rouge">omap</code> operator-pending, <code class="language-plaintext highlighter-rouge">imap</code> insert, <code class="language-plaintext highlighter-rouge">map!</code> insert and command line, <code class="language-plaintext highlighter-rouge">cmap</code>
+command line, <code class="language-plaintext highlighter-rouge">xmap</code> ex command mode</li>
+  <li>remove mappings <code class="language-plaintext highlighter-rouge">:unmap &lt;key&gt;</code> or <code class="language-plaintext highlighter-rouge">nunmap</code></li>
+  <li>
+    <p>you can map two keys, for example <code class="language-plaintext highlighter-rouge">:map -d dd</code></p>
+  </li>
+  <li>change leader key <code class="language-plaintext highlighter-rouge">:let mapleader = "-"</code> so you can write <code class="language-plaintext highlighter-rouge">:map &lt;leader&gt;d dd</code>
+(note that it does not have effect for already defined mappings)</li>
+  <li><code class="language-plaintext highlighter-rouge">:let maplocalleader = "\"</code> can be used for mapings only for local buffer.
+Mapping can be for specific buffer (file) <code class="language-plaintext highlighter-rouge">:nnoremap &lt;buffer&gt; &lt;leader&gt;d dd</code>.
+You can use both <code class="language-plaintext highlighter-rouge">:nnoremap &lt;buffer&gt; &lt;localleader&gt;d dd</code></li>
+  <li>to check if user has already define a mapping
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:echo !hasmapto('&lt;Plug&gt;TypecorrAdd')
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Some examples</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">:nnoremap _ f_x~</code> find next <code class="language-plaintext highlighter-rouge">_</code>, remove and uppercase for moving underscore
+to CamelCase</li>
+  <li>snippet <code class="language-plaintext highlighter-rouge">nnoremap ,html :-1read $HOME/.vim/.skeleton.html&lt;CR&gt;3jwf&gt;a</code> <a href="https://github.com/duleorlovic/config/tree/master/vim/snippets">my
+snippets</a></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;silent&gt;</code> is good if you are having mappings that launch ex commands.</li>
+  <li>black screen is caused to silent command
+https://github.com/vim/vim/issues/1253 use <code class="language-plaintext highlighter-rouge">:redraw!</code></li>
+</ul>
+
+<h1 id="abbreviations">Abbreviations</h1>
+
+<p>Abbreviations are similar to mappings but for insert, replace and command mode.
+They are shown while you are typing and are triggered by a non keyword char.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">:iabbrev adn and</code> this will replace <code class="language-plaintext highlighter-rouge">adn&lt;non-keyword-character&gt;</code> with <code class="language-plaintext highlighter-rouge">and</code>
+Difference between <code class="language-plaintext highlighter-rouge">map</code> is that map does not count for non-keyword-character.
+If you have mapping in abbr result you can use <code class="language-plaintext highlighter-rouge">:noreabbrev</code> to it skips map</li>
+  <li><code class="language-plaintext highlighter-rouge">:abbreviate</code> list all abbreviations</li>
+  <li><code class="language-plaintext highlighter-rouge">:iabbrev &lt;buffer&gt; --- &amp;mdash;</code> will replace <code class="language-plaintext highlighter-rouge">---</code> with <code class="language-plaintext highlighter-rouge">&amp;mdash</code> but only for
+current buffer. It is <code class="language-plaintext highlighter-rouge">&lt;buffer&gt;</code> local abbreviation and is usefull when you want
+something only for specific type, for example <code class="language-plaintext highlighter-rouge">:autocmd FileType javascript
+:iabbrev &lt;buffer&gt; iff if ()&lt;left&gt;</code> will enable little snippet only for js.</li>
+  <li><code class="language-plaintext highlighter-rouge">cabbrev E e</code> can be used to replace <code class="language-plaintext highlighter-rouge">E </code> with <code class="language-plaintext highlighter-rouge">e </code> on command line so when
+you type <code class="language-plaintext highlighter-rouge">:E&lt;space&gt;</code> it will end up in <code class="language-plaintext highlighter-rouge">:e&lt;space&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">:abclear</code> to remove all abbrs or <code class="language-plaintext highlighter-rouge">:unabberviate adn</code> to remove only one</li>
+</ul>
+
+<h1 id="commands">Commands</h1>
+
+<ul>
+  <li>define custom command <code class="language-plaintext highlighter-rouge">:command MyCom 1delete</code> user defined commands must
+start with a capital letter</li>
+  <li>define number of arguments: one <code class="language-plaintext highlighter-rouge">-nargs=1</code>, zero or more <code class="language-plaintext highlighter-rouge">-nargs=?</code> and use
+them with <code class="language-plaintext highlighter-rouge">&lt;args&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;q-args&gt;</code> (properly escaped string) for example
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:command -nargs=+ Say :echo &lt;q-args&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>usually command call functions and <code class="language-plaintext highlighter-rouge">&lt;f-args&gt;</code> will properly pass the arguments</li>
+  <li>if your command uses range than use <code class="language-plaintext highlighter-rouge">-range</code> attribute and use <code class="language-plaintext highlighter-rouge">&lt;line1&gt;</code> and
+<code class="language-plaintext highlighter-rouge">&lt;line2&gt;</code> in command.</li>
+  <li>use <code class="language-plaintext highlighter-rouge">-bar</code> than command can be followed by <code class="language-plaintext highlighter-rouge">|</code>. Also you can use <code class="language-plaintext highlighter-rouge">&lt;Bar&gt;</code>
+inside command definition to join multiple commands</li>
+  <li>to override use bang <code class="language-plaintext highlighter-rouge">:command! Say</code>. to remove <code class="language-plaintext highlighter-rouge">:delcommand Save</code></li>
+</ul>
+
+<h1 id="autocommands">Autocommands</h1>
+
+<p>Autocommands are used to run commands on specific events (usually <code class="language-plaintext highlighter-rouge">set
+filetype</code> or <code class="language-plaintext highlighter-rouge">call MyFun</code>)</p>
+
+<p><code class="language-plaintext highlighter-rouge">:autocmd BufNewFile * write</code>.</p>
+
+<p>First param is event and can be something of: entering insert mode, not pressing
+a key for some time. It can can combine, usually <code class="language-plaintext highlighter-rouge">BufNewFile,BufRead</code> for all
+open files, existing or not. Some events <code class="language-plaintext highlighter-rouge">:help autocmd-events</code></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">BufNewFile</code> when you open new files not saved to disk</li>
+  <li><code class="language-plaintext highlighter-rouge">BufReadPost</code> after you open existing file</li>
+  <li><code class="language-plaintext highlighter-rouge">BufWritePre</code> just before write</li>
+  <li><code class="language-plaintext highlighter-rouge">FileType</code> when vim sets filetype
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">:autocmd FileType javascript nnoremap &lt;buffer&gt; &lt;localleader&gt;c I//&lt;esc&gt;</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Second param is “pattern” that filter more specific: for example: <code class="language-plaintext highlighter-rouge">*.txt</code> is
+only triggered for txt files</p>
+
+<p>Last part is command that is executed. Note that it is Command-line commands. so
+to use normal mode commands you need <code class="language-plaintext highlighter-rouge">normal</code> (or <code class="language-plaintext highlighter-rouge">:normal!</code> which ignore
+mappings that user could have written).
+For example jump to the end of file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:autocmd BufReadPost *.log normal G
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">normal</code> will use all text after it, so if you need to execute two commands than
+wrap <code class="language-plaintext highlighter-rouge">normal G</code> inside <code class="language-plaintext highlighter-rouge">execute</code> and use <code class="language-plaintext highlighter-rouge">|</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:autocmd BufReadPost *.chg execute "normal ONew entry:\&lt;Esc&gt;" |
+  \ 1read !date
+</code></pre></div></div>
+
+<p>You can group autocommands (<code class="language-plaintext highlighter-rouge">autocmd!</code> is to clear)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>augroup filetype_html
+    autocmd!
+    autocmd FileType html nnoremap &lt;buffer&gt; &lt;localleader&gt;f Vatzf
+augroup END
+</code></pre></div></div>
+
+<h1 id="operator-pending-mappings">Operator pending mappings</h1>
+
+<p>Operator is command waiting for movement command and than executes. For example
+<code class="language-plaintext highlighter-rouge">d</code>, <code class="language-plaintext highlighter-rouge">y</code> and <code class="language-plaintext highlighter-rouge">c</code> are waiting for movements: <code class="language-plaintext highlighter-rouge">dt,</code> (delete till ,), <code class="language-plaintext highlighter-rouge">ci(</code> (change
+inner (), <code class="language-plaintext highlighter-rouge">yw</code> (yank word).
+We can remap movement keys for operator mode <code class="language-plaintext highlighter-rouge">:onoremap p i(</code> (inner braces,
+select parametars), or <code class="language-plaintext highlighter-rouge">:onoremap b /end&lt;cr&gt;</code> (block, until end).
+If you want to select before or some block after current position you can
+visualy select and it will be executed on that selection.
+For example, change params while current is on current line before params:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onoremap in( :&lt;c-u&gt;normal! f(vi(&lt;cr&gt;
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">:normal!</code> means that it simulate pressing in normal mode (and not not use
+eventual user mappings into consideration). <code class="language-plaintext highlighter-rouge">&lt;cr&gt;</code> at the end
+executes <code class="language-plaintext highlighter-rouge">:normal!</code> command. You can indent from command mode: <code class="language-plaintext highlighter-rouge">:normal &gt;&gt;</code>
+<code class="language-plaintext highlighter-rouge">&lt;c-u&gt;</code> needs to remove the range that vim may insert.</p>
+
+<p><code class="language-plaintext highlighter-rouge">:execute</code> takes vimscript string and performs as command <code class="language-plaintext highlighter-rouge">:execute "write"</code>.
+It is used since <code class="language-plaintext highlighter-rouge">:normal</code> can not recognize special characters like <code class="language-plaintext highlighter-rouge">&lt;cr&gt;</code> (if
+you try to use quotes <code class="language-plaintext highlighter-rouge">:normal "'</code> will just print/show them, so normal without
+execute interpolation is just for commands without <code class="language-plaintext highlighter-rouge">&lt;cr&gt;</code> like operators and
+moves).
+Another usage is when you need to run normal commands from string (interpolate).
+<code class="language-plaintext highlighter-rouge">execute</code> will substitute any special charactes before running string, special
+chars are <code class="language-plaintext highlighter-rouge">:help expr-quote</code>. You can insert those special characters without
+escaping if you use <code class="language-plaintext highlighter-rouge">ctrl-v</code> (<code class="language-plaintext highlighter-rouge">:help i_ctrl-v</code>) it will insert terminal code</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">\r</code> return <code class="language-plaintext highlighter-rouge">&lt;CR&gt;</code> (if you are using ctrl-v than it is `
+`)</li>
+  <li><code class="language-plaintext highlighter-rouge">\n</code> new line <code class="language-plaintext highlighter-rouge">&lt;NL&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">\&lt;_key_&gt;</code> ( <code class="language-plaintext highlighter-rouge">\&lt;Esc&gt;</code> with ctrl-v <code class="language-plaintext highlighter-rouge"></code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">\\</code> is backslash <code class="language-plaintext highlighter-rouge">\</code>. You can use single  as quote <code class="language-plaintext highlighter-rouge">normal '/,\+'</code> if you
+have many backslashes and you do not want to escape them, or those parts
+inside execute
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:executue "normal /foo.\\+\&lt;cr&gt;"
+:executue 'normal /foo.\+' . "\&lt;cr&gt;"
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>If you need to get value of option which name is in variable you can use eval</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:let optname = "path"
+:let optval = eval('&amp;' . optname)
+
+" The same thing can be done with:
+:exe 'let optval = &amp;' . optname
+</code></pre></div></div>
+
+<p>Example using execute to change current title header (=======\n Header) in
+markdown text with keys <code class="language-plaintext highlighter-rouge">cih</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:onoremap ih :&lt;c-u&gt;execute "normal! ?^==\\+$\r:nohlsearch\rkvg_"&lt;cr&gt;
+</code></pre></div></div>
+
+<h1 id="map-keys-to-execute-operator-function">Map keys to execute Operator function</h1>
+
+<p>https://learnvimscriptthehardway.stevelosh.com/chapters/32.html Here we will
+create usual mapping but execute our function, we will call it grep oprator.
+<code class="language-plaintext highlighter-rouge">g@</code> will call operatorfunc as operator (so it can accept motion as any other
+operator like <code class="language-plaintext highlighter-rouge">w</code> word or <code class="language-plaintext highlighter-rouge">i{</code> inner braces)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nnoremap &lt;leader&gt;g :set operatorfunc=GrepOperator&lt;cr&gt;g@
+
+function! GrepOperator(type)
+  echom "test"
+endfunction
+</code></pre></div></div>
+
+<h1 id="options-and-variables">Options and Variables</h1>
+
+<p><code class="language-plaintext highlighter-rouge">:help 41</code>
+For example</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:let i = 1
+:while i &lt; 5
+:  echo "count is " i
+:  let i += 1
+:endwhile
+</code></pre></div></div>
+<p>Yank those lines and execute with <code class="language-plaintext highlighter-rouge">:@"</code> command.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">.vimrc</code> script file execute any colon command (ex command, command-line
+command) and you can omit colon in scripts</li>
+  <li>to set a variable use <code class="language-plaintext highlighter-rouge">let {variable} = {expression}</code>. Local scope variables
+are with prefix like <code class="language-plaintext highlighter-rouge">:let b:a=2</code> (<code class="language-plaintext highlighter-rouge">b:</code> buffer, <code class="language-plaintext highlighter-rouge">w:</code> window, <code class="language-plaintext highlighter-rouge">t:</code> tab, <code class="language-plaintext highlighter-rouge">g:</code>
+global, <code class="language-plaintext highlighter-rouge">l:</code> local to function, <code class="language-plaintext highlighter-rouge">a:</code> argument, <code class="language-plaintext highlighter-rouge">s:</code> script).
+<code class="language-plaintext highlighter-rouge">:echo v:version</code> <code class="language-plaintext highlighter-rouge">v:</code> are vim variables
+Note that variables still exists when script finish. Check with:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:if !exists("s:call_count")
+:  let s:call_count = 0
+:endif
+:let s:call_count = s:call_count + 1
+:echo "called" s:call_count "times"
+</code></pre></div>    </div>
+    <p>To clear variable use <code class="language-plaintext highlighter-rouge">:unlet s:call_count</code> (<code class="language-plaintext highlighter-rouge">:unlet!</code> to skipp error if not
+exists).</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">:setlocal nowrap</code> is only for current buffer (file), when you open another
+file (inside same window) it will not have nowrap. If you have same mappings
+than local will be chosen since it is more specific.</li>
+  <li>Numbers can be: decimal <code class="language-plaintext highlighter-rouge">123</code>, hexadecimal <code class="language-plaintext highlighter-rouge">0x7f</code>, octal <code class="language-plaintext highlighter-rouge">012</code> (starts with
+zero), and binary <code class="language-plaintext highlighter-rouge">0b101</code> (starts with <code class="language-plaintext highlighter-rouge">0b</code>). <code class="language-plaintext highlighter-rouge">:echo 0xf</code> always print decimal</li>
+  <li>Strings inside double quote can include special chars <code class="language-plaintext highlighter-rouge">"\tHi \"you\""</code> and
+single quote <code class="language-plaintext highlighter-rouge">'Hi ''you'''</code> can’t use special chars. Concatenate with dot.
+Special characters are excaped with \ like <code class="language-plaintext highlighter-rouge">"\t \&lt;Esc&gt;"</code></li>
+  <li>use <code class="language-plaintext highlighter-rouge">$NAME</code> for environment variable, <code class="language-plaintext highlighter-rouge">&amp;name</code> for option and <code class="language-plaintext highlighter-rouge">@r</code> for register</li>
+  <li>to set option you can use <code class="language-plaintext highlighter-rouge">:set xxx</code> or <code class="language-plaintext highlighter-rouge">:set xxx=value</code> or <code class="language-plaintext highlighter-rouge">:let &amp;xxx=value</code>
+To unset <code class="language-plaintext highlighter-rouge">:set noxxx</code> or <code class="language-plaintext highlighter-rouge">:set xxx!</code>. To check if it is set <code class="language-plaintext highlighter-rouge">:set xxx?</code> or
+<code class="language-plaintext highlighter-rouge">:echo &amp;xxx</code>. To set to default value use ampersand <code class="language-plaintext highlighter-rouge">&amp;</code> like <code class="language-plaintext highlighter-rouge">:set iskeyword&amp;</code>
+For boolean options <code class="language-plaintext highlighter-rouge">1</code> is true and <code class="language-plaintext highlighter-rouge">0</code> is false. <code class="language-plaintext highlighter-rouge">:let</code> is more
+powerfull than <code class="language-plaintext highlighter-rouge">:set</code> since it can use math and other operations.
+Escape space with backslash like <code class="language-plaintext highlighter-rouge">:set tags=my\ nice\ file</code></li>
+  <li>to set variable use <code class="language-plaintext highlighter-rouge">:let foo = "bar"</code> and print <code class="language-plaintext highlighter-rouge">:echo 'foo=' foo</code> arguments
+will be separated with space.
+You can add or remove item from list, you can do with <code class="language-plaintext highlighter-rouge">:set k+=v</code> or <code class="language-plaintext highlighter-rouge">-=</code>.
+If you have space inside value than you need to escape <code class="language-plaintext highlighter-rouge">:set xxx+=my\ value</code></li>
+  <li>to set registers run <code class="language-plaintext highlighter-rouge">let @a = "hello"</code> so you can paste <code class="language-plaintext highlighter-rouge">"ap</code>. To read
+register run <code class="language-plaintext highlighter-rouge">:echo @a</code> (<code class="language-plaintext highlighter-rouge">:echo @"</code> is unnamed yank register, <code class="language-plaintext highlighter-rouge">:echo @\ </code> is
+search register … <code class="language-plaintext highlighter-rouge">:help registers</code>).</li>
+  <li>to get current value of variable you can use <code class="language-plaintext highlighter-rouge">=</code> and <code class="language-plaintext highlighter-rouge">&lt;TAB&gt;</code> for example <code class="language-plaintext highlighter-rouge">:set
+xxx=</code> and press tab so vim autocomplete the value so you can edit it. Or you
+can press enter after the name (skip equal sign), for example <code class="language-plaintext highlighter-rouge">:se ft&lt;cr&gt;</code></li>
+  <li>print env variables on command line: <code class="language-plaintext highlighter-rouge">:echo $MYVIMRC</code> or <code class="language-plaintext highlighter-rouge">:echo filetype?</code>.
+ <code class="language-plaintext highlighter-rouge">:echom $PATH</code> will save output into <code class="language-plaintext highlighter-rouge">:messages</code> so you can view later (it will
+ differently show special characters <code class="language-plaintext highlighter-rouge">:echom "a\nb"</code> will not be shown as new
+ line)</li>
+</ul>
+
+<p>Multiline commands can be written as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:echom "foo" | echom "bar"
+
+" or
+
+:augroup testgroup
+:   autocmd BufWrite * :echom "Baz"
+:autgroup END
+</code></pre></div></div>
+
+<p>To loop instead of <code class="language-plaintext highlighter-rouge">:while</code> you can use <code class="language-plaintext highlighter-rouge">:for i in range(1,4)</code>. Function
+<code class="language-plaintext highlighter-rouge">range(n)</code> will create a list <code class="language-plaintext highlighter-rouge">[0, 1, ... n-1]</code>. Usefull in buffers</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:for line in getline(1,20)
+</code></pre></div></div>
+
+<p>Inside loop you can use <code class="language-plaintext highlighter-rouge">:continue</code> (just to start and keep looping) and
+<code class="language-plaintext highlighter-rouge">:break</code> (break the loop)
+<code class="language-plaintext highlighter-rouge">sleep 40m</code> to sleep for 40 miliseconds</p>
+
+<p>For conditional use <code class="language-plaintext highlighter-rouge">:if {condition}</code> <code class="language-plaintext highlighter-rouge">:else</code> <code class="language-plaintext highlighter-rouge">:elseif</code> and <code class="language-plaintext highlighter-rouge">:endif</code>.
+You can use <code class="language-plaintext highlighter-rouge">a &gt; 1 ? 'big' : 'small'</code>.
+String what does not start with number, when converted to number is always 0
+which means <code class="language-plaintext highlighter-rouge">false</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>: if 0
+:   echom "not possible"
+: elsif "also_zero0"
+:  echom "also 0"
+: elsif "1one" - 1
+:   echom "also zero value"
+: elsif "zero1" + "1one"
+:   echom "finally"
+: else
+: end
+</code></pre></div></div>
+
+<p>Vim is by default ignorecase but it can be changed. There are case insensitive
+(append <code class="language-plaintext highlighter-rouge">?</code>) and case sensitive (append <code class="language-plaintext highlighter-rouge">#</code>) equal operator regardless of
+<code class="language-plaintext highlighter-rouge">ignorecase</code> setting (so you use that in your scripts <code class="language-plaintext highlighter-rouge">:help expr4</code>):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:if "Asd" == "asd" | echo "case insensitive equal" | end
+:set noignorecase
+:if "Asd" != "asd" | echo "case sensitive different" | end
+
+:if "Asd" ==? "asd" | echo "case insensitive equal" | end
+:if "Asd" !=# "asd" | echo "case sensitive different" | end
+</code></pre></div></div>
+
+<p>String match <code class="language-plaintext highlighter-rouge">a =~ b</code> and not match <code class="language-plaintext highlighter-rouge">a !~ '\.$'</code> (does not end with full stop).
+Also supports case insensitive <code class="language-plaintext highlighter-rouge">!~?</code> and case sensitive <code class="language-plaintext highlighter-rouge">!~#</code>.</p>
+
+<h1 id="function">Function</h1>
+
+<p>Functions must start with capital if they are unscoped.
+Parameters are always pefixed with <code class="language-plaintext highlighter-rouge">a:</code> (argument scope).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:function MyFuction(name)
+: let result = "hi " . a:name
+: return result
+:endfunction
+
+:call MyFunction("Duke")
+:echom MyFunction("Duke")
+</code></pre></div></div>
+
+<p>There are many functions <code class="language-plaintext highlighter-rouge">:help functions</code>
+Working with text in current buffer:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">getline('.')</code> get the line under the cursor, <code class="language-plaintext highlighter-rouge">setline('.', new_line)</code> set</li>
+</ul>
+
+<p>String manipulation</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">substitute({expr}, {pattern}, {sub}, {flags})</code></li>
+  <li><code class="language-plaintext highlighter-rouge">strlen("foo")</code></li>
+  <li><code class="language-plaintext highlighter-rouge">split("one,two,three", ",")</code> and <code class="language-plaintext highlighter-rouge">join(["one","two"], "...")</code></li>
+</ul>
+
+<p>List manipulation</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">map({list}, {expression})</code> change each list item with expression which should
+be a string or function. If it is a string than <code class="language-plaintext highlighter-rouge">v:val</code> is containing item
+<code class="language-plaintext highlighter-rouge">:call map(mylist, '"&gt; " . v:val . " &lt;"')</code>
+When it is a function than you can define function
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:func KeyValue(key, val)
+:  return a:key . '-' . a:val
+:endfunc
+:call map(myDict, function('KeyValue'))
+</code></pre></div>    </div>
+    <p>It is shorter when using a |lambda|: <code class="language-plaintext highlighter-rouge">:call map(myDict, {key, val -&gt; key . '-'
+. val})</code></p>
+  </li>
+</ul>
+
+<p>Define function that is called with a range with <code class="language-plaintext highlighter-rouge">range</code> keyword</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:function Count_lines() range
+:  return a:lastline - a:firstline
+:endfunction
+
+" call with
+:10,30call Count_lines()
+</code></pre></div></div>
+
+<p>Define function on dictionary so you can use it with <code class="language-plaintext highlighter-rouge">self</code> variable. <code class="language-plaintext highlighter-rouge">get(self,
+v:val, '???')</code> return item if exists, otherwise <code class="language-plaintext highlighter-rouge">'???'</code>.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:let uk2nl = {'one': 'een', 'two': 'twee', 'three': 'drie'}
+:function uk2nl.translate(line) dict
+:   return join(map(split(a:line), 'get(self, v:val, "???")'))
+:endfunction
+
+:echo uk2nl.translate('three two five one')
+dire twee ??? een
+</code></pre></div></div>
+
+<p>You can define arbitrary number of arguments with <code class="language-plaintext highlighter-rouge">function Show(start, ...)</code> so
+inside it <code class="language-plaintext highlighter-rouge">a:0</code> is count of those arguments <code class="language-plaintext highlighter-rouge">a:1</code>, <code class="language-plaintext highlighter-rouge">a:2</code> …</p>
+
+<p>To list all functions</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:function
+</code></pre></div></div>
+
+<p>To show function defition</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:function Min
+</code></pre></div></div>
+
+<p>Debug <code class="language-plaintext highlighter-rouge">:help debug-scripts</code>
+Delete function <code class="language-plaintext highlighter-rouge">:delfunction Min</code>.
+Store function in variable <code class="language-plaintext highlighter-rouge">let Afunc = function('Min')</code> and call using call
+function <code class="language-plaintext highlighter-rouge">:echo call(Afunc, [])</code>
+In script you can use global variable to know if functions are loaded so you can
+undefine them (or you can simply call <code class="language-plaintext highlighter-rouge">finish</code> to exit)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" This is the XXX package
+
+if exists("XXX_loaded")
+  delfun XXX_one
+  delfun XXX_two
+endif
+
+function XXX_one(a)
+... body of function ...
+endfun
+
+function XXX_two(b)
+... body of function ...
+endfun
+
+let XXX_loaded = 1
+</code></pre></div></div>
+
+<h1 id="lists-and-dictionaries">Lists and dictionaries</h1>
+
+<p>List is ordered sequence of things</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:let alist = ['a', 1]
+</code></pre></div></div>
+<p>add one item using <code class="language-plaintext highlighter-rouge">add()</code> function, add multiple items with <code class="language-plaintext highlighter-rouge">extend()</code>,
+concatenate with <code class="language-plaintext highlighter-rouge">+</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:call add(alist, 'foo')
+</code></pre></div></div>
+
+<p>Dictionary store key-value</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:let dict = {'one': 1. 'two': 2}
+</code></pre></div></div>
+<p>use them like index <code class="language-plaintext highlighter-rouge">dict['one']</code> or <code class="language-plaintext highlighter-rouge">dict.one</code>. Assign new key</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:let dict['three'] = 3
+</code></pre></div></div>
+<p>Retrieve keys with <code class="language-plaintext highlighter-rouge">:let keys = keys(dict)</code></p>
+
+<h1 id="exceptions">Exceptions</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:try
+:  read pascal.tmpl
+:catch /E484:/
+:  echo 'Sorry, pascal.tmpl can not be found'
+:finally
+:  echo 'This is always executed
+:endtry
+</code></pre></div></div>
+
+<h1 id="comments">Comments</h1>
+
+<p>Commane is after double quote till the end of line</p>
+<ul>
+  <li>There can be no comment after <code class="language-plaintext highlighter-rouge">:map</code>, <code class="language-plaintext highlighter-rouge">:abbreviate</code>, <code class="language-plaintext highlighter-rouge">:execute</code> and <code class="language-plaintext highlighter-rouge">!</code>
+You can add <code class="language-plaintext highlighter-rouge">|</code> so there are two commands</li>
+</ul>
+
+<h1 id="command-line-ex-special-characters">Command line ex special characters</h1>
+
+<p><code class="language-plaintext highlighter-rouge">:help cmdline-special</code>
+In command line you can get work under cursor with <code class="language-plaintext highlighter-rouge">&lt;cword&gt;</code> inside <code class="language-plaintext highlighter-rouge">:grep</code>
+which is quickfix command along with <code class="language-plaintext highlighter-rouge">:make</code>.</p>
+
+<p>For <code class="language-plaintext highlighter-rouge">:echo</code> we need to <code class="language-plaintext highlighter-rouge">expand()</code> string to see the value. Echo is different
+from :grep in terms that it works with strings and we can use functions (similar
+to <code class="language-plaintext highlighter-rouge">:execute</code>)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:nnoremap &lt;leader&gt;g :grep -R '&lt;cWORD&gt;' .&lt;cr&gt;
+:echo expand('&lt;cWORD&gt;')
+:execute ':echo 2 ' shellescape(expand('&lt;cWORD&gt;'))
+:nnoremap &lt;leader&gt;g :silent execute "grep! -R " . shellescape(expand("&lt;cWORD&gt;")) . " ."&lt;cr&gt;:copen&lt;cr&gt;
+</code></pre></div></div>
+
+<h1 id="plugins">Plugins</h1>
+
+<p>If you need to export function so user can use mappings than you need to use
+<code class="language-plaintext highlighter-rouge">&lt;SID&gt;MyFunc()</code> (instead of <code class="language-plaintext highlighter-rouge">s:MyFunc()</code>) so vim know which script to use. For
+other place is it ok to use <code class="language-plaintext highlighter-rouge">s:MyFunc()</code> in autocommands, user commands…
+Example of plugin in <code class="language-plaintext highlighter-rouge">~/.vim/plugin/typecorr.vim</code></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>" Vim global plugin for correcting typing mistakes
+" Last Change:	2000 Oct 15
+" Maintainer:	Bram Moolenaar &lt;Bram@vim.org&gt;
+" License:	This file is placed in the public domain.
+
+if exists("g:loaded_typecorr")
+  finish
+endif
+let g:loaded_typecorr = 1
+let s:save_cpo = &amp;cpo
+set cpo&amp;vim
+iabbrev teh the
+iabbrev otehr other
+iabbrev wnat want
+iabbrev synchronisation
+	\ synchronization
+let s:count = 4
+
+let s:count = 4
+if !hasmapto('&lt;Plug&gt;TypecorrAdd')
+  map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd
+endif
+noremap &lt;unique&gt; &lt;script&gt; &lt;Plug&gt;TypecorrAdd  &lt;SID&gt;Add
+
+noremenu &lt;script&gt; Plugin.Add\ Correction      &lt;SID&gt;Add
+noremap &lt;SID&gt;Add  :call &lt;SID&gt;Add(expand("&lt;cword&gt;"), 1)&lt;CR&gt;
+
+function s:Add(from, correct)
+  let to = input("type the correction for " . a:from . ": ")
+  exe ":iabbrev " . a:from . " " . to
+  if a:correct | exe "normal viws\&lt;C-R&gt;\" \b\e" | endif
+  let s:count = s:count + 1
+  echo s:count . " corrections now"
+endfunction
+if !exists(":Correct")
+  command -nargs=1  Correct  :call s:Add(&lt;q-args&gt;, 0)
+endif
+let &amp;cpo = s:save_cpo
+unlet s:save_cpo
+</code></pre></div></div>
+
+<p>33</p>
+
+<p>TODO 
+https://github.com/mhinz/vim-galore</p>
+
+<p>TODO read and merge to the text</p>
+
+<ul>
+  <li>
+    <p>functions can be used to wrap some commands and give it a name.
+Use <code class="language-plaintext highlighter-rouge">function!</code> so you can overwrite it without error. Undo will undo whole
+function at once.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function! MyFuction()
+  normal! mmu`m
+endfunction
+nnoremap &lt;leader&gt;sp :call MyFuction()&lt;cr&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>source current file while editing with <code class="language-plaintext highlighter-rouge">:source %</code> or using sop `nnoremap
+    <leader>sop :source %<cr>` so you do not need to exit and start vim again. You
+can reload any `.vim` file, for example `:source ~/config/vim/syntastic.vim`
+</cr></leader>
+  </li>
+  <li>
+    <p>conditionals</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function! MF(level)
+  if a:level == 1
+    normal! yy
+  elseif a:level == 2
+    " ....
+  endif
+endfunction
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="shell-script">Shell script</h1>
+
+<p>Calling external shell script is with bang <code class="language-plaintext highlighter-rouge">:!pwd</code>. When you visually select it
+operates on lines and use it as argument, for example select multuple lines and
+run <code class="language-plaintext highlighter-rouge">:'&lt;,'&gt;!sort</code> to sort them.
+If nothing is selected, last selected visual line (whole line) is used.
+You can use <code class="language-plaintext highlighter-rouge">cat</code> to pass argument. For example run <code class="language-plaintext highlighter-rouge">:'&lt;,'&gt;!echo 1</code>cat<code class="language-plaintext highlighter-rouge">2</code>, and
+it will replace whole line by inserting 1…line…2.
+Another way to pass is using <code class="language-plaintext highlighter-rouge">system("echo ", @")</code> unnamed register.</p>
+
+<p>To work on part of a line, you can use visual match replacement
+<code class="language-plaintext highlighter-rouge">:'&lt;,'&gt;s/\%V.*\%V/\=system('echo -n "the result"')</code>.
+To use visual selected text as inputs, you can do it manually by pasting with
+<code class="language-plaintext highlighter-rouge">&lt;C-R&gt;</code> + <code class="language-plaintext highlighter-rouge">"</code> (“ is a standard register for yanking).
+Or you can use helper function that will yank to register and get register
+https://stackoverflow.com/questions/12805922/vim-vmap-send-selected-text-as-parameter-to-function</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func! GetSelectedText()
+  normal gv"xy
+  let result = getreg("x")
+  normal gv
+  return result
+endfunc
+
+vnoremap &lt;F6&gt; :call MyFunc(GetSelectedText())&lt;cr&gt;
+</code></pre></div></div>
+
+<p>https://stackoverflow.com/questions/9637921/vim-filter-only-visual-selection-not-the-entire-line</p>
+
+<h1 id="translate">Translate</h1>
+
+<p>Run scripts on visual selection and change with output. I use <code class="language-plaintext highlighter-rouge">translate.rb</code> and
+<code class="language-plaintext highlighter-rouge">sudo ln -s /home/orlovic/config/ruby/translate.rb /usr/local/bin/</code> and
+<code class="language-plaintext highlighter-rouge">chmod +x ~/config/ruby/translate.rb</code> https://github.com/duleorlovic/config/blob/master/ruby/translate.rb
+In vim there is a <a href="https://github.com/duleorlovic/config/blob/master/.vimrc#L482">ProgramFilter function</a></p>
+
+<p>There is an issue with ending space (at the end of a line) when pasting. Same
+problem is when selecting word and super + p</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Mikrotik Routers Winbox</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Mikrotik Routers Winbox</h1>
+    <p class="meta">Feb 12, 2018</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#terminal-and-scripts"><span class="tocnumber">1</span> <span class="toctext">Terminal and Scripts</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#script-to-send-system-log-to-email"><span class="tocnumber">1.1</span> <span class="toctext">Script to send system log to email</span></a></li></ul></li><li class="toc_level-1 toc_section-3"><a href="#theory"><span class="tocnumber">2</span> <span class="toctext">Theory</span></a></li><li class="toc_level-1 toc_section-4"><a href="#connect-to-mikrotik"><span class="tocnumber">3</span> <span class="toctext">Connect to Mikrotik</span></a></li><li class="toc_level-1 toc_section-5"><a href="#api"><span class="tocnumber">4</span> <span class="toctext">API</span></a></li><li class="toc_level-1 toc_section-6"><a href="#my-hotspot-testing"><span class="tocnumber">5</span> <span class="toctext">My hotspot testing</span></a></li><li class="toc_level-1 toc_section-7"><a href="#hotspot-templates-html-pages"><span class="tocnumber">6</span> <span class="toctext">Hotspot templates Html pages</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#firewall"><span class="tocnumber">6.1</span> <span class="toctext">Firewall</span></a></li><li class="toc_level-2 toc_section-9"><a href="#ip-proxy"><span class="tocnumber">6.2</span> <span class="toctext">IP Proxy</span></a></li><li class="toc_level-2 toc_section-10"><a href="#https-and-redirect"><span class="tocnumber">6.3</span> <span class="toctext">HTTPS and redirect</span></a></li></ul></li><li class="toc_level-1 toc_section-11"><a href="#ruby-gem"><span class="tocnumber">7</span> <span class="toctext">Ruby Gem</span></a></li><li class="toc_level-1 toc_section-12"><a href="#tips"><span class="tocnumber">8</span> <span class="toctext">Tips</span></a></li><li class="toc_level-1 toc_section-13"><a href="#openwrt"><span class="tocnumber">9</span> <span class="toctext">OpenWRT</span></a></li></ul></td></tr></tbody></table></div><p>You can connect to terminal using Winbox or using ssh (look below for how to
+connect to mikrotik)</p>
+
+<h1 id="terminal-and-scripts">Terminal and Scripts</h1>
+
+<p>Item names can be used instead of item number and are more stable since some
+other user can configure router in the same time or change scripts.</p>
+
+<p>General menu commands:
+https://wiki.mikrotik.com/wiki/Manual:Console#General_Commands</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">print</code> is to list all items, <code class="language-plaintext highlighter-rouge">print file=my_file</code> print to file, <code class="language-plaintext highlighter-rouge">print
+detail</code> print in format <code class="language-plaintext highlighter-rouge">prop=value</code> (oposite to <code class="language-plaintext highlighter-rouge">print brief</code>), <code class="language-plaintext highlighter-rouge">print
+follow</code> like tail -f, <code class="language-plaintext highlighter-rouge">print from=my_property_name</code> print single item find by
+name (similar to <code class="language-plaintext highlighter-rouge">print where name=my_property_name</code>), <code class="language-plaintext highlighter-rouge">/ip route print where
+interface="ether1"</code> filtering used for print, <code class="language-plaintext highlighter-rouge">print dynamic</code> print dynamic
+items. <code class="language-plaintext highlighter-rouge">print static interval=1</code> print static items and refresh every 2
+seconds</li>
+  <li><code class="language-plaintext highlighter-rouge">add</code> to create new record. You can use <code class="language-plaintext highlighter-rouge">copy-from</code>. example is <code class="language-plaintext highlighter-rouge">add address =
+192.168.0.1 / 24 network = 192.168.0.0 broadcast = 192.168.0.255 interface =
+Local</code></li>
+  <li><code class="language-plaintext highlighter-rouge">remove &lt;id&gt;</code> remove record</li>
+  <li><code class="language-plaintext highlighter-rouge">disable &lt;id&gt;</code> and <code class="language-plaintext highlighter-rouge">enable &lt;id&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">move</code></li>
+  <li><code class="language-plaintext highlighter-rouge">edit &lt;id&gt; prop</code> any property/param in editor <code class="language-plaintext highlighter-rouge">edit pptp-out1 password</code></li>
+  <li><code class="language-plaintext highlighter-rouge">set &lt;id&gt; prop=value</code> similar to edit, but for more properties. Use <code class="language-plaintext highlighter-rouge">!</code> to
+unset <code class="language-plaintext highlighter-rouge">:set 3 !password</code>. To disable you can use <code class="language-plaintext highlighter-rouge">set 3 disable=yes</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">get &lt;id&gt; prop</code> used for inline expressions <code class="language-plaintext highlighter-rouge">:put [get 1 address]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">find</code> filtering <code class="language-plaintext highlighter-rouge">:put [/interface find name~"ether"]</code> this will return array
+of <code class="language-plaintext highlighter-rouge">&lt;id&gt;</code>. It can be used for example
+to remove all globals you can <code class="language-plaintext highlighter-rouge">/system script environment remove [find]</code>,
+update specific item: <code class="language-plaintext highlighter-rouge">/system logging set [find topics="warning"]
+action=disk</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/export file=myfilename</code> will export all configurations. You can export only
+not default with <code class="language-plaintext highlighter-rouge">/export compact</code>, or <code class="language-plaintext highlighter-rouge">/export compact file=my_export</code> to
+save to a file <code class="language-plaintext highlighter-rouge">/dule.rsc</code> which you can download using ftp. If you are not in
+root, for example you are in <code class="language-plaintext highlighter-rouge">/ip</code> it will export only changes to <code class="language-plaintext highlighter-rouge">ip</code>. You
+can <code class="language-plaintext highlighter-rouge">/import myfilename.rsc</code> to load configurations ie to run script. Add
+<code class="language-plaintext highlighter-rouge">verbose=yes</code> to see more info. If file name ends with auto
+<code class="language-plaintext highlighter-rouge">myfilename.auto.rsc</code> than it will be executed when uploaded using FTP.
+In rsc file you can indent all commands with <code class="language-plaintext highlighter-rouge">:%s/^\([as]\)/    \1/</code></li>
+</ul>
+
+<p>Default configuration script (when you reset with power off and power on while
+holding reset button)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#| RouterMode:
+#|  * WAN port is protected by firewall and enabled DHCP client
+#|  * Ethernet interfaces (except WAN port ether1) are part of LAN bridge
+#| LAN Configuration:
+#|     IP address 192.168.88.1/24 is set on bridge (LAN port)
+#|     DHCP Server: enabled;
+#| WAN (gateway) Configuration:
+#|     gateway:  ether1 ;
+#|     ip4 firewall:  enabled;
+#|     NAT:   enabled;
+#|     DHCP Client: enabled;
+#|     DNS: enabled;
+
+:log info Starting_defconf_script_;
+#-------------------------------------------------------------------------------
+# Apply configuration.
+# these commands are executed after installation or configuration reset
+#-------------------------------------------------------------------------------
+:if ($action = "apply") do={
+# wait for interfaces
+:local count 0; 
+:while ([/interface ethernet find] = "") do={ 
+:if ($count = 30) do={
+:log warning "DefConf: Unable to find ethernet interfaces";
+/quit;
+}
+:delay 1s; :set count ($count +1); 
+};
+
+ /interface list add name=WAN comment="defconf"
+ /interface list add name=LAN comment="defconf"
+ /interface bridge
+   add name=bridge disabled=no auto-mac=yes protocol-mode=rstp comment=defconf;
+ :local bMACIsSet 0;
+ :foreach k in=[/interface find where !(slave=yes  || name~"ether1" || name~"bridge")] do={
+   :local tmpPortName [/interface get $k name];
+   :log info "port: $tmpPortName"
+   :if ($bMACIsSet = 0) do={
+     :if ([/interface get $k type] = "ether") do={
+       /interface bridge set "bridge" auto-mac=no admin-mac=[/interface ethernet get $tmpPortName mac-address];
+       :set bMACIsSet 1;
+     }
+   }
+   /interface bridge port
+     add bridge=bridge interface=$tmpPortName comment=defconf;
+ }
+   /ip pool add name="default-dhcp" ranges=192.168.88.10-192.168.88.254;
+   /ip dhcp-server
+     add name=defconf address-pool="default-dhcp" interface=bridge lease-time=10m disabled=no;
+   /ip dhcp-server network
+     add address=192.168.88.0/24 gateway=192.168.88.1 comment="defconf";
+  /ip address add address=192.168.88.1/24 interface=bridge comment="defconf";
+   /ip dhcp-client add interface=ether1 disabled=no comment="defconf";
+ /interface list member add list=LAN interface=bridge comment="defconf"
+ /interface list member add list=WAN interface=ether1 comment="defconf"
+ /ip firewall nat add chain=srcnat out-interface-list=WAN ipsec-policy=out,none action=masquerade comment="defconf: masquerade"
+ /ip firewall {
+   filter add chain=input action=accept connection-state=established,related,untracked comment="defconf: accept established,related,untracked"
+   filter add chain=input action=drop connection-state=invalid comment="defconf: drop invalid"
+   filter add chain=input action=accept protocol=icmp comment="defconf: accept ICMP"
+   filter add chain=input action=drop in-interface-list=!LAN comment="defconf: drop all not coming from LAN"
+   filter add chain=forward action=accept ipsec-policy=in,ipsec comment="defconf: accept in ipsec policy"
+   filter add chain=forward action=accept ipsec-policy=out,ipsec comment="defconf: accept out ipsec policy"
+   filter add chain=forward action=fasttrack-connection connection-state=established,related comment="defconf: fasttrack"
+   filter add chain=forward action=accept connection-state=established,related,untracked comment="defconf: accept established,related, untracked"
+   filter add chain=forward action=drop connection-state=invalid comment="defconf: drop invalid"
+   filter add chain=forward action=drop connection-state=new connection-nat-state=!dstnat in-interface-list=WAN comment="defconf:  drop all from WAN not DSTNATed"
+ }
+   /ip neighbor discovery-settings set discover-interface-list=LAN
+   /tool mac-server set allowed-interface-list=LAN
+   /tool mac-server mac-winbox set allowed-interface-list=LAN
+ /ip dns {
+     set allow-remote-requests=yes
+     static add name=router.lan address=192.168.88.1
+ }
+
+}
+#-------------------------------------------------------------------------------
+# Revert configuration.
+# these commands are executed if user requests to remove default configuration
+#-------------------------------------------------------------------------------
+:if ($action = "revert") do={
+/user set admin password=""
+ /system routerboard mode-button set enabled=no
+ /system routerboard mode-button set on-event=""
+ /system script remove [find comment~"defconf"]
+ /ip firewall filter remove [find comment~"defconf"]
+ /ip firewall nat remove [find comment~"defconf"]
+ /interface list member remove [find comment~"defconf"]
+ /interface detect-internet set detect-interface-list=none
+ /interface detect-internet set lan-interface-list=none
+ /interface detect-internet set wan-interface-list=none
+ /interface detect-internet set internet-interface-list=none
+ /interface list remove [find comment~"defconf"]
+ /tool mac-server set allowed-interface-list=all
+ /tool mac-server mac-winbox set allowed-interface-list=all
+ /ip neighbor discovery-settings set discover-interface-list=!dynamic
+   :local o [/ip dhcp-server network find comment="defconf"]
+   :if ([:len $o] != 0) do={ /ip dhcp-server network remove $o }
+   :local o [/ip dhcp-server find name="defconf" !disabled]
+   :if ([:len $o] != 0) do={ /ip dhcp-server remove $o }
+   /ip pool {
+     :local o [find name="default-dhcp" ranges=192.168.88.10-192.168.88.254]
+     :if ([:len $o] != 0) do={ remove $o }
+   }
+   :local o [/ip dhcp-client find comment="defconf"]
+   :if ([:len $o] != 0) do={ /ip dhcp-client remove $o }
+ /ip dns {
+   set allow-remote-requests=no
+   :local o [static find name=router.lan address=192.168.88.1]
+   :if ([:len $o] != 0) do={ static remove $o }
+ }
+ /ip address {
+   :local o [find comment="defconf"]
+   :if ([:len $o] != 0) do={ remove $o }
+ }
+ :foreach iface in=[/interface ethernet find] do={
+   /interface ethernet set $iface name=[get $iface default-name]
+ }
+ /interface bridge port remove [find comment="defconf"]
+ /interface bridge remove [find comment="defconf"]
+}
+:log info Defconf_script_finished;
+</code></pre></div></div>
+<p>this is log</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>00:00:16 system,error,critical router rebooted without proper shutdown, probably power outage 
+00:00:16 script,info Starting_defconf_script_ 
+00:00:18 system,info interface list added 
+00:00:18 system,info interface list added 
+00:00:18 system,info device added 
+00:00:18 script,info port: ether2 
+00:00:18 system,info device changed 
+00:00:18 system,info bridge port added 
+00:00:18 script,info port: ether3 
+00:00:18 system,info bridge port added 
+00:00:18 script,info port: ether4 
+00:00:18 system,info bridge port added 
+00:00:18 script,info port: ether5 
+00:00:18 system,info bridge port added 
+00:00:18 system,info pool default-dhcp added 
+00:00:18 system,info dhcp server defconf added 
+00:00:18 system,info dhcp network added 
+00:00:18 system,info address added 
+00:00:19 system,info dhcp client added 
+00:00:19 system,info interface list member added 
+00:00:19 system,info interface list member added 
+00:00:19 system,info nat rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info filter rule added 
+00:00:20 system,info config changed 
+00:00:20 system,info mac-server interface changed 
+00:00:20 system,info mac winbox setting changed 
+00:00:21 system,info dns changed 
+00:00:21 system,info static dns entry added 
+00:00:21 script,info Defconf_script_finished 
+00:00:39 interface,info ether2 link up (speed 100M, full duplex) 
+</code></pre></div></div>
+
+<p>Keyboard shortcuts similar to linux: <code class="language-plaintext highlighter-rouge">&lt;c-k&gt;</code> clear to end of line, <code class="language-plaintext highlighter-rouge">&lt;c-b&gt;</code>
+<code class="language-plaintext highlighter-rouge">&lt;c-f&gt;</code> back and forward one char, <code class="language-plaintext highlighter-rouge">&lt;c-a&gt;</code> <code class="language-plaintext highlighter-rouge">&lt;c-e&gt;</code> jump to begging or end of
+line.</p>
+
+<p>Safe mode starts with <code class="language-plaintext highlighter-rouge">&lt;c-x&gt;</code>, and ends and keep all changes also with <code class="language-plaintext highlighter-rouge">&lt;c-x&gt;</code>.
+twice <code class="language-plaintext highlighter-rouge">&lt;c-x&gt;</code> will empty safe mode action list so you can store more.
+<code class="language-plaintext highlighter-rouge">&lt;c-d&gt;</code> undo all safe mode changes, while <code class="language-plaintext highlighter-rouge">/quit</code> does not.
+You can review all safe mode changes (while you are in safe mode) with <code class="language-plaintext highlighter-rouge">/system
+history print</code>
+If you want to paste some commands, but autocompletion triggers some errors, you
+can go to Safe mode so autocompletion is triggered only on tab.</p>
+
+<p><a href="https://wiki.mikrotik.com/wiki/Manual:Scripting#Global_commands">https://wiki.mikrotik.com/wiki/Manual:Scripting#Global_commands</a>
+Note that all commands that work with data, starts with <code class="language-plaintext highlighter-rouge">:</code></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge"># comment should start on beggining of the line</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/</code> move top level, <code class="language-plaintext highlighter-rouge">..</code> move up</li>
+  <li><code class="language-plaintext highlighter-rouge">?</code> show available commands</li>
+  <li><code class="language-plaintext highlighter-rouge">:delay 3</code> do nothing for 3 seconds. Could be miliseconds <code class="language-plaintext highlighter-rouge">:delay 10ms</code></li>
+</ul>
+
+<p>In terminal you can set variables. Local variables only works inside <code class="language-plaintext highlighter-rouge">{ }</code>, They
+are ignored if used at root of console. Always use snakeCase, so you do not
+overlap with keywords. If you need to use underscore than wrap variable with
+quotes. You can pring value with <code class="language-plaintext highlighter-rouge">:put</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:global globalVar;
+{
+  :local localVar localValue;
+  :set localVar 1;
+  :put $localVar;
+}
+:global "var_with_underscore";
+:global "var-with-dash";
+</code></pre></div></div>
+
+<p>In scripts when hotspot user logs in you can access <code class="language-plaintext highlighter-rouge">$user</code> variable (it is
+username)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:global username [/ip hotspot active find user=$user];
+:global userip [/ip hotspot active get $username address];
+:log info $userip
+
+# or in one line
+/ip hotspot user profile set [ find default=yes ] on-login="if ([/ip hotspot active get [find user=\$user] address] in 10.255.0.0/16) do={:log warning \"THIS SUBSCRIBER HAS EXPIRED! ASSIGNED IP IN 10.255.0.0/16\"}"
+</code></pre></div></div>
+
+<p>Conditionals</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:if () do={
+}
+
+# check if some record exists
+:if ([:len [/system package find name="dhcp" !disabled]] != 0) do={
+}
+# check if ping did not timeout
+:if ([:ping 123.123.123.123 count=5] = 0) do={
+  :error "Ping timeout 5 times"
+}
+</code></pre></div></div>
+
+<p>Various</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:put message="some message"
+# join long lines with \
+# white space is not allowed around "="
+</code></pre></div></div>
+
+<p>Data types</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">num</code></li>
+  <li><code class="language-plaintext highlighter-rouge">bool</code></li>
+  <li><code class="language-plaintext highlighter-rouge">str</code> string can be concatenated with <code class="language-plaintext highlighter-rouge">"asd"."qwe"</code>. Lenght of string with
+<code class="language-plaintext highlighter-rouge">:put [:len "asdf"]</code>. Interpolate with <code class="language-plaintext highlighter-rouge">:put "a=$($a))"</code> or <code class="language-plaintext highlighter-rouge">:put "we have
+find $[ :len [/ip route find] ] routes"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ip</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ip-prefix</code></li>
+  <li><code class="language-plaintext highlighter-rouge">id</code> prefixed with <code class="language-plaintext highlighter-rouge">*</code></li>
+  <li><code class="language-plaintext highlighter-rouge">time</code></li>
+  <li><code class="language-plaintext highlighter-rouge">array</code> can be concatenated with comma <code class="language-plaintext highlighter-rouge">:put ({1;2;3}, 5)</code>. Can also use named
+elements <code class="language-plaintext highlighter-rouge">{1; a=2; "b3"=3; 4}</code> and than can be accessed with hash arrow but it
+needs to be grouped with brackets <code class="language-plaintext highlighter-rouge">:set ($a-&gt;"a") 22</code>. Positional elements can
+be accessed with <code class="language-plaintext highlighter-rouge">:put [:pick $a 0]</code>
+Arrays can be generated from string with <code class="language-plaintext highlighter-rouge">:local myArray [:toarray $myStr]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">nil</code></li>
+</ul>
+
+<p>You can convert data</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#convert string to array
+:local myStr "1,2,3,4,5";
+:put [:typeof $myStr];
+:local myArr [:toarray $myStr];
+:put [:typeof $myArr]
+</code></pre></div></div>
+
+<p>Operators</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">in</code> logical <em>belongs</em> <code class="language-plaintext highlighter-rouge">:put (1.1.1.1/32 in 1.0.0.0/8);</code></li>
+  <li><code class="language-plaintext highlighter-rouge">[]</code> square brackets is command substitution <code class="language-plaintext highlighter-rouge">:put [ :len "my string" ];</code>.
+Only one line is allowed (commands can be separated with <code class="language-plaintext highlighter-rouge">;</code>). To use in menu
+commands wrap with a string <code class="language-plaintext highlighter-rouge">add address="$[ $ip . "1" ]"</code>. It is not allowed
+to have nested substitution.</li>
+  <li><code class="language-plaintext highlighter-rouge">()</code> round brackets sub expression or grouping operator <code class="language-plaintext highlighter-rouge">:put ( "value is " . (4+5));</code></li>
+</ul>
+
+<p>Find</p>
+
+<p><code class="language-plaintext highlighter-rouge">:find</code> there is also <code class="language-plaintext highlighter-rouge">find</code> command but it is only for filtering.
+<code class="language-plaintext highlighter-rouge">:put [:find "asd" "s"];</code> return position of substring or array (in this
+example <code class="language-plaintext highlighter-rouge">1</code> so if you pick to that position <code class="language-plaintext highlighter-rouge">s</code> will not be included), can
+accept integer that means where to start (-1 is before start, 0 is to ignore
+first).  If you want to know if it founds try this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:if ([:len [:find "abcd" "x"]] &gt; 0) do={:put "Found";} else={:put "Not Found";};
+</code></pre></div></div>
+
+<p>Pick</p>
+
+<p><code class="language-plaintext highlighter-rouge">:pick $myVar &lt;start&gt; &lt;end&gt;</code> return substring <code class="language-plaintext highlighter-rouge">:put [:pick "abcde" 1 3]</code> will
+return <code class="language-plaintext highlighter-rouge">bc</code>. Start can be <code class="language-plaintext highlighter-rouge">-1</code> or <code class="language-plaintext highlighter-rouge">0</code> to pick from beggining.</p>
+
+<p>Loops</p>
+
+<p><code class="language-plaintext highlighter-rouge">:for i from=1 to=10 step=2 do= {}</code> iterate for loop
+<code class="language-plaintext highlighter-rouge">:do { } while=()</code> or <code class="language-plaintext highlighter-rouge">:while () do={ }</code> while loop
+<code class="language-plaintext highlighter-rouge">:foreach i in=$myArray do= { }</code> iterate array elements</p>
+
+<p>Functions</p>
+
+<p>Functions can accept named <code class="language-plaintext highlighter-rouge">$argName</code> or unnamed arguments <code class="language-plaintext highlighter-rouge">$1, $2 ...</code>. Avoid
+using parameters with same name as global variables.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:global myFunc do={
+  :local sum ($a + $b)
+  :return $sum
+}
+
+# call function with square brackets
+:put [$myFunc a=1 b=2]
+</code></pre></div></div>
+
+<p>To call another function from inside function, you need to declare it</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:global funcA do={ :return 5 }
+:global funcB do={
+  :global funcA;
+  :return ([$funcA] + 4)
+}
+</code></pre></div></div>
+
+<p>Parse can be used to define functions: <code class="language-plaintext highlighter-rouge">:global myFunc [:parse ":put hello!"];</code></p>
+
+<p>Logs and debug</p>
+
+<p>You can print to terminal with <code class="language-plaintext highlighter-rouge">:put message=hi</code> or to log <code class="language-plaintext highlighter-rouge">:log info hi</code> (log
+can be used both as /menu and :command).
+<a href="https://wiki.mikrotik.com/wiki/Manual:System/Log">https://wiki.mikrotik.com/wiki/Manual:System/Log</a>
+<code class="language-plaintext highlighter-rouge">:log warning "My message"</code> write to topic: <code class="language-plaintext highlighter-rouge">error</code>, <code class="language-plaintext highlighter-rouge">info</code> and <code class="language-plaintext highlighter-rouge">warning</code>. You
+can define topis on <code class="language-plaintext highlighter-rouge">/system logging</code> and which action to perform. Actions could
+be <code class="language-plaintext highlighter-rouge">memory</code> (shows in <code class="language-plaintext highlighter-rouge">/log print</code>), <code class="language-plaintext highlighter-rouge">echo</code> (show in console), <code class="language-plaintext highlighter-rouge">disk</code> (write to
+file), <code class="language-plaintext highlighter-rouge">email</code> and <code class="language-plaintext highlighter-rouge">remote</code> (from webproxy to Kiwi server). Topics could be for
+example <code class="language-plaintext highlighter-rouge">hotspot</code>, <code class="language-plaintext highlighter-rouge">pppoe</code>. To set <code class="language-plaintext highlighter-rouge">warnings</code> to write to file (anyway it will
+show in <code class="language-plaintext highlighter-rouge">/log</code> just if we need to save for later use)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># set warning to disk
+/system logging set [find topics="warning"] action=disk
+:log warning "WAN started "
+</code></pre></div></div>
+
+<p>to see all logs on host you can run</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh admin@$MIKROTIK_IP log print follow
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">:put [:time { :delay 100ms }]</code> show time needed to execute command
+<code class="language-plaintext highlighter-rouge">:environment print</code> show all variables and functions. They are defined as
+records on <code class="language-plaintext highlighter-rouge">/system script environment print</code>
+<code class="language-plaintext highlighter-rouge">:do {} on-error={ :put "my script failed" }</code> catch run time errors
+<code class="language-plaintext highlighter-rouge">:error "Message"</code> stop executing the script</p>
+
+<p>Run command in background and remove it</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  :local pid [:execute {/interface print follow}]`
+  :delay 5s
+  :do { /system script job remove $pid } on-error={}
+}
+</code></pre></div></div>
+
+<p>Scripts can be stored and triggered on event or by another script. For example I
+use my helper functions and load them from other scripts.  To create use winbox
+(copy and paste) since <code class="language-plaintext highlighter-rouge">$</code>, <code class="language-plaintext highlighter-rouge">"</code> and <code class="language-plaintext highlighter-rouge">\ </code> must be escaped with preceding
+backslash <code class="language-plaintext highlighter-rouge">\ </code> if you want to create using terminal <code class="language-plaintext highlighter-rouge">/system script add
+name=helpers source='/ip add...'</code>. Before use you need to run them</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/system script run helpers
+</code></pre></div></div>
+
+<p>To run script from flash you can use import</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import flash/my.rsc
+</code></pre></div></div>
+
+<p>To replace mask with 1 you can</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># helpers.script
+# Add to /system scripts using Windbox
+# if using terminal you need to escape $ " \
+# before use you need to call
+# /system script run helpers
+
+# Strip Mark from IP
+# :put [$stripMask 192.168.1.5/24]
+# 192.168.1.5
+# :put [$stripMask 192.168.1.5]
+# 192.168.1.5
+:global stripMask do={
+  :local slashPosition [:find $1 "/"]
+  if ([:len $slashPosition] &gt; 0) do={
+    :return [:pick $1 -1 $slashPosition ]
+  } else= {
+    :return $1
+  }
+}
+
+# Replace Last Number in IP address
+# :put [$replaceLastNumber 192.168.1.5/24 1]
+# 192.168.1.1
+# :put [$replaceLastNumber 192.168.1.5 "2"]
+# 192.168.1.2
+:global replaceLastNumber do={
+  :local firstDot [:find $1 "." -1]
+  :local secondDot [:find $1 "." $firstDot]
+  :local thirdDot [:find $1 "." $secondDot]
+  :return ([:pick $1 -1 $thirdDot] . "." . $2)
+}
+</code></pre></div></div>
+
+<h2 id="script-to-send-system-log-to-email">Script to send system log to email</h2>
+
+<p>https://forum.mikrotik.com/viewtopic.php?t=29130</p>
+
+<h1 id="theory">Theory</h1>
+
+<p>To connect using IP you need to create IP -&gt; Addresses -&gt; New Address.
+Also you need to setup routes with gateway that are provided by isp (or it is
+your adsl router ip address).
+https://wiki.mikrotik.com/wiki/Manual:IP/Route
+Route with <code class="language-plaintext highlighter-rouge">dst-address=0.0.0.0/0</code> applies to every destination address.</p>
+
+<p>Walled garden <code class="language-plaintext highlighter-rouge">/ip hotspot walled-garden</code> can be used to allow deny specific
+host in http and https requests.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/ip hotspot walled-garden
+add dst-host=:^www.example.com path=":/test\$"
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">/ip hotspot walled-garden ip</code> can be used to allow deny specific host and IP
+requests</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/ip hotspot walled-garden ip
+add action=accept disabled=no dst-host=www.paypalobject.com
+
+# allow google dns and specific site
+add action=accept disabled=no dst-address=8.8.8.8
+add action=accept disabled=no dst-address=IpOfMySERVER
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">dst-address</code> can be a <a href="https://wiki.mikrotik.com/wiki/Manual:IP/Firewall/Address_list">Destination IP address
+list</a> so you can
+group them…</p>
+
+<p><a href="https://wiki.mikrotik.com/wiki/Manual:Hotspot_HTTPS_example">https://wiki.mikrotik.com/wiki/Manual:Hotspot_HTTPS_example</a>
+HTTPS can not be redirected since it starts in the browser and it creates a
+socket destionation_ip:443/TCP and mikrotik intercepts that and can not provide
+valid certificate for this url, so hotspot can’t redirect https to login page.
+For non HSTS site Mikrotik can use self signed certificate for that domain and
+redirect https requests.</p>
+
+<p>https://mikrotik.com/documentation/manual_2.6/IP/Hotspot.html
+You can have two address pools (one for authenticated and one for non auth
+users) and ARP feature could be set to <code class="language-plaintext highlighter-rouge">reply-only</code> to prevent network access
+using static IP addresses.</p>
+
+<h1 id="connect-to-mikrotik">Connect to Mikrotik</h1>
+
+<p>You can use web interface http://192.168.88.1/webfig/
+You can FTP to Mikrotik <code class="language-plaintext highlighter-rouge">ftp 192.168.5.1</code> (username <code class="language-plaintext highlighter-rouge">admin</code> and blank password).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -t dsa
+ftp 192.168.5.1
+# username: admin
+# password: blank
+&gt; ls
+&gt; mkdir backups
+&gt; cd backups
+&gt; cd ..
+&gt; put local_file_name
+&gt; get remote_file_name
+&gt; exit
+</code></pre></div></div>
+
+<p>Or in one line you can use <code class="language-plaintext highlighter-rouge">lftp</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lftp -u admin, -e "cd hotspot;put doc/mikrotik/login.html;exit" 192.168.5.1
+</code></pre></div></div>
+
+<p>Also you can SSH</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh admin@192.168.5.1
+</code></pre></div></div>
+
+<p>If you get warnings</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the DSA key sent by the remote host is
+SHA256:fXdszuoJH/Tlb/eyxirRDSKLVWugFmb3WuLmIdtlnd8.
+Please contact your system administrator.
+Add correct host key in /home/orlovic/.ssh/known_hosts to get rid of this message.
+Offending DSA key in /home/orlovic/.ssh/known_hosts:146
+  remove with:
+  ssh-keygen -f "/home/orlovic/.ssh/known_hosts" -R "192.168.5.1"
+DSA host key for 192.168.5.1 has changed and you have requested strict checking.
+Host key verification failed.
+</code></pre></div></div>
+
+<p>you can disable them in command</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no admin@$MIKROTIK_IP
+</code></pre></div></div>
+<p>or in settings</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ~/.ssh/config
+Host 192.168.5.1
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+</code></pre></div></div>
+
+<p>Reset router with ssh</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/system reset-configuration no-defaults=yes keep-users=yes run-after-reset=flash/wan.rsc
+</code></pre></div></div>
+
+<p>One short beep is that reseting started, normal beep is that actual reset
+occured, and two beeps are ready.</p>
+
+<p>Since there could be some initialization problems, you should add delay in rsc
+files. To iterate command until it success you can try this script</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># this succeed since we do not use network
+/ip pool
+add name=dhcp-pool-my-comp ranges=192.168.5.10-192.168.5.254
+
+:local repeat true
+:local counter 0
+:while ($repeat) do={
+  :do {
+    # this raise error on boot, so repeat untill succeed
+    /ip dhcp-server
+    add address-pool=dhcp-pool-my-comp disabled=no interface=ether2 name=\
+    dhcp-my-comp
+    :set repeat false
+  } on-error= {
+    :delay 1
+    :set counter ($counter + 1);
+    :log warning "delay $counter"
+    :if ($counter=50) do={ :set repeat false }
+  }
+}
+</code></pre></div></div>
+
+<h1 id="api">API</h1>
+
+<p>https://wiki.mikrotik.com/wiki/Manual:API</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  @connection = MTik::Connection.new(
+    host: @nas.nasname,
+    user: @nas.username,
+    pass: @nas.password,
+    port: @nas.api_port,
+    unencrypted_plaintext: true,
+  )
+  # https://aarongifford.com/computers/mtik/doc/MTik/Connection.html#method-i-get_reply
+  result = @connection.get_reply(
+    '/ip/dns/set',
+    '=servers=8.8.8.8,4.2.2.2'
+  )
+</code></pre></div></div>
+
+<h1 id="my-hotspot-testing">My hotspot testing</h1>
+
+<p>I have two ethernet cards: eth0 (Atheros, bottom port) and eth1 (Intel, upper
+port). I connected my <code class="language-plaintext highlighter-rouge">eth0</code> to <code class="language-plaintext highlighter-rouge">ether2</code> and later <code class="language-plaintext highlighter-rouge">eth1</code> to <code class="language-plaintext highlighter-rouge">ether3</code>.
+First port <code class="language-plaintext highlighter-rouge">ether1</code> on Mikrotik is used like WAN and connected to my ADSL router
+<a href="https://forum.mikrotik.com/viewtopic.php?t=60313#p308124">https://forum.mikrotik.com/viewtopic.php?t=60313#p308124</a>
+Second mikrotik port <code class="language-plaintext highlighter-rouge">ether2</code> is my computer connection.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/ip address
+# my wan is 192.168.2.1
+add address=192.168.2.9/24 interface=ether1
+# my comp is on 192.168.5.*
+add address=192.168.5.1/24 interface=ether2
+
+/ip pool
+add name=dhcp-pool5 ranges=192.168.5.10-192.168.5.254
+/ip dhcp-server
+add address-pool=dhcp-pool5 disabled=no interface=ether2 name=dhcp5
+/ip dhcp-server network
+add address=192.168.5.0/24 dns-server=192.168.5.1 gateway=192.168.5.1
+
+/ip dns
+set allow-remote-requests=yes servers=8.8.8.8
+/ip route
+add distance=1 gateway=192.168.2.1
+
+# IMPORTANT to masquerade if you are behind other routers
+/ip firewall nat
+add action=masquerade chain=srcnat out-interface=ether1
+</code></pre></div></div>
+
+<p>Third mikrotik port <code class="language-plaintext highlighter-rouge">ether3</code> is connected to my <code class="language-plaintext highlighter-rouge">eth1</code> ethernet and bridged to
+Virtual Box.
+Mikrotik is using Radius server PUBLIC_RADIUS_IP but inside VPN with
+VPN_USERNAME and VPN_PASSWORD (so use PRIVATE_RADIUS_IP) on the mikrotik hosted
+in the cloud MIKROTIK_IN_THE_CLOUD_IP. There could be also
+PUBLIC_RADIUS_BACKUP_IP, and PRIVATE_RADIUS_BACKUP_IP. RADIUS_SECRET is needed
+for communication.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:global PUBLIC_RADIUS_IP ....
+:global PRIVATE_RADIUS_IP ....
+:global PUBLIC_RADIUS_BACKUP_IP ....
+:global PRIVATE_RADIUS_BACKUP_IP ....
+:global VPN_USERNAME ....
+:global VPN_PASSWORD ....
+:global MIKROTIK_IN_THE_CLOUD_IP ....
+
+# Interfaces -&gt; + -&gt; PPTP client -&gt; Dial Out
+# Connect To: MIKROTIK_IN_THE_CLOUD_IP, User: VPN_USERNAME, Password:
+# VPN_PASSWORD, uncheck pap and chap, check mschap1 mschap2
+/interface pptp-client
+add allow=mschap1,mschap2 connect-to=$MIKROTIK_IN_THE_CLOUD_IP disabled=no \
+  name=pptp-out1  password=$VPN_PASSWORD user=$VPN_USERNAME
+
+# since there could be only one pptp client connection for specific username,
+# check if connection established correctly
+
+# IP -&gt; Routes -&gt; +
+# Dst. Address: PRIVATE_RADIUS_IP_0/24 Gateway: pptp-out1
+# Dst. Address: PRIVATE_RADIUS_BACKUP_IP_0/24 Gateway: pptp-out1
+/ip route
+add distance=1 dst-address=PRIVATE_RADIUS_IP_0/24 gateway=pptp-out1
+add distance=1 dst-address=PRIVATE_RADIUS_BACKUP_IP_0/24 gateway=pptp-out1
+# maybe also vpn private network
+
+# IP -&gt; Firewall -&gt; NAT -&gt; +
+# Chain: srcnat, tab Action select masquerade
+/ip firewall nat
+add action=masquerade chain=srcnat out-interface=pptp-out1
+</code></pre></div></div>
+
+<p>If you want to ping from comp to hotspot user, user need to be logged in.
+If it is logged in user can ping router <code class="language-plaintext highlighter-rouge">ping 10.5.50.1</code>, and other hotspot
+users <code class="language-plaintext highlighter-rouge">ping 10.5.50.6</code> and host comp <code class="language-plaintext highlighter-rouge">ping 192.168.5.252</code>. Also from host you
+can ping user.
+If it not logged in, user can not ping router and host can not ping user.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">/login</code> shows “Error 404: Not Found” that means you are connected with
+ether2 and not ehter3 (hotspot)</p>
+
+<p>If not logged in it can be byepassed with <code class="language-plaintext highlighter-rouge">/ip hotspot ip-binding add
+address=10.5.50.5 type=bypassed</code>, but than it can not access login or status
+pages <code class="language-plaintext highlighter-rouge">http://10.5.50.1/login</code>.
+Or you can add Walled garden <code class="language-plaintext highlighter-rouge">/ip hotspot walled-garden ip add
+dst-address=192.168.5.252 action=accept</code> and than it will be accessible in both
+directions, from and to 192.168.5.252.
+https://forum.mikrotik.com/viewtopic.php?t=88317</p>
+
+<p>For Hotspot we allow ALLOW_SITE_IP and Google DNS
+If www.google.com inside hotspot client does not work, it is because of DNS is
+available but redirects to https, which is than redirected to login page, but
+since we do not have proper certification, there is an error.
+Try to use some of google IP address to see if it will redirect to hotspot login
+page, or use <code class="language-plaintext highlighter-rouge">http://yahoo.com</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:global ALLOW_SITE_IP = ....
+
+# IP -&gt; Hotspot -&gt; Hotspot setup
+# HotSpot interface = ether3, Local Address of Network = 10.5.50.1/24
+# check Masquerade Network, Address Pool of Network = 10.5.50.2-10.5.50.254,
+# Select Certificate = none, IP Address of SMTP server = 0.0.0.0
+# DNS Server = 8.8.8.8, DNS Name of local hotspot server = (empty)
+# Hotspot user Name: admin, password: (empty)
+/ip hotspot profile
+add hotspot-address=10.5.50.1 login-by=cookie,http-pap name=hsprof1 \
+    nas-port-type=ethernet use-radius=yes
+/ip pool
+add name=hs-pool-3 ranges=10.5.50.2-10.5.50.254
+/ip dhcp-server
+add address-pool=hs-pool-3 disabled=no interface=ether3 lease-time=1h name=dhcp1
+/ip hotspot
+add address-pool=hs-pool-3 disabled=no interface=ether3 name=hotspot1 profile=hsprof1
+/ip address
+add address=10.5.50.1/24 comment="hotspot network" interface=ether3
+/ip dhcp-server network
+add address=10.5.50.0/24 comment="hotspot network" gateway=10.5.50.1
+/ip firewall filter
+add action=passthrough chain=unused-hs-chain comment="place hotspot rules here" disabled=yes
+/ip firewall nat
+add action=passthrough chain=unused-hs-chain comment="place hotspot rules here" disabled=yes
+add action=masquerade chain=srcnat comment="masquerade hotspot network" src-address=10.5.50.0/24
+/ip hotspot user
+add name=admin
+
+# IP -&gt; Hotspot -&gt; Server Profiles -&gt; hsprof
+# -&gt; Login : check HTTP PAP, uncheck HTTP CHAP
+# -&gt; RADIUS : check Use RADIUS, NAS Port Type: ethernet
+# this properties: login-by, nas-port-type and use-radius already include above
+
+# IP -&gt; Hotspot -&gt; Walled Garden IP List -&gt; +
+# Dst. Address = 8.8.8.8
+# IP -&gt; Hotspot -&gt; Walled Garden IP List -&gt; +
+# Dst. Address = my-domain.com (or ip address for older RouterOS)
+/ip hotspot walled-garden
+add comment="place hotspot rules here" disabled=yes
+/ip hotspot walled-garden ip
+add action=accept disabled=no dst-address=8.8.8.8
+add action=accept disabled=no dst-address=$ALLOW_SITE_IP
+
+# Radius -&gt; +
+# check ppp, check hotspot, Address = PRIVATE_RADIUS_IP, Secret = RADIUS_SECRET,
+# Timeout = 5000ms
+# same for PRIVATE_RADIUS_BACKUP_IP
+/radius
+add address=$PRIVATE_RADIUS_IP secret=secret service=ppp,hotspot timeout=5s
+add address=$PRIVATE_RADIUS_BACKUP_IP secret=secret service=ppp,hotspot timeout=5s
+</code></pre></div></div>
+
+<h1 id="hotspot-templates-html-pages">Hotspot templates Html pages</h1>
+
+<p>https://wiki.mikrotik.com/wiki/Manual:Customizing_Hotspot</p>
+
+<p>There are several pages that are rendered on mikrotik:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">redirect.html</code> immediatelly redirect with http status (also with meta but
+I think that is not used). When I remove first two lines that perform
+http-status and http-header</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(if http-status == 302)Hotspot redirect$(endif)
+$(if http-header == "Location")$(link-redirect)$(endif)
+</code></pre></div>    </div>
+
+    <p>than it will use some other default template which redirects. If I
+change <code class="language-plaintext highlighter-rouge">$(link-redirect)</code> to google, it will redirect to google. So you can
+not override this file to not perform redirect.</p>
+  </li>
+</ul>
+
+<p>GET <code class="language-plaintext highlighter-rouge">/login</code></p>
+<ul>
+  <li>if user is not authenticated than renders <code class="language-plaintext highlighter-rouge">login.html</code> to ask user for
+username and password. Parameters on this url can be:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">username</code>, <code class="language-plaintext highlighter-rouge">password</code> (plain for PAP or md5 hash of chap-id, password and
+challenge  for CHAP)</li>
+      <li><code class="language-plaintext highlighter-rouge">dst</code> original requested url before redirect</li>
+      <li><code class="language-plaintext highlighter-rouge">popup</code> show status window on success login</li>
+      <li><code class="language-plaintext highlighter-rouge">radius</code> some radius params
+POST &amp; GET <code class="language-plaintext highlighter-rouge">/login</code></li>
+    </ul>
+  </li>
+  <li>if user is successfully authenticated or already authenticated than it
+renders <code class="language-plaintext highlighter-rouge">alogin.html</code> page. It redirects in javascript or meta to
+link-redirect (it is external page or http://10.5.50.1/status)</li>
+  <li>if not successfull auth (wrong password or username) it renders <code class="language-plaintext highlighter-rouge">flogin.html</code>
+if exists or redirect with http status 302 to login</li>
+</ul>
+
+<p>GET <code class="language-plaintext highlighter-rouge">/status</code></p>
+<ul>
+  <li>if auth user than render <code class="language-plaintext highlighter-rouge">status.html</code> show status with logout form that
+submit to <code class="language-plaintext highlighter-rouge">/logout</code> Form can have <code class="language-plaintext highlighter-rouge">erase-cookie</code> to erase cookie so user need
+to insert username/password again even cookie login is enabled</li>
+  <li>if not auth user and if <code class="language-plaintext highlighter-rouge">fstatus.html</code> exists than use that template,
+otherwise use <code class="language-plaintext highlighter-rouge">redirect.html</code> to redirect to <code class="language-plaintext highlighter-rouge">/login</code></li>
+</ul>
+
+<p>GET <code class="language-plaintext highlighter-rouge">/logout</code></p>
+<ul>
+  <li>if auth user it will log out and render <code class="language-plaintext highlighter-rouge">logout.html</code> and provide a link to
+ <code class="language-plaintext highlighter-rouge">/login</code> (refresh will not work since user is deauthenticated)</li>
+  <li>
+    <p>if not auth user than redirect 302 to <code class="language-plaintext highlighter-rouge">/login</code> or use <code class="language-plaintext highlighter-rouge">flogout.html</code> if exists</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">error.html</code> show fatal errors</li>
+</ul>
+
+<p>GET external page</p>
+<ul>
+  <li>if user is not auth it renders <code class="language-plaintext highlighter-rouge">rlogin.html</code> if exists or redirect 302 to
+<code class="language-plaintext highlighter-rouge">/login?dst=target_page</code>. It can be used for external login</li>
+</ul>
+
+<p>GET “/”on hotspot</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">rstatus.html</code> root on hotspot host for auth user,</li>
+  <li><code class="language-plaintext highlighter-rouge">radvert.html</code> when advertisement is due to be displayed,</li>
+</ul>
+
+<p>You can have different pages for different <code class="language-plaintext highlighter-rouge">/ip hotspot profile print where
+html-directory=hotspot</code>. You can create subfolder for translation (<code class="language-plaintext highlighter-rouge">lv</code>) and use
+parametar <code class="language-plaintext highlighter-rouge">target=lv</code>. Other links will stay in that subfolder.</p>
+
+<p>Links variables which can be used like <code class="language-plaintext highlighter-rouge">$(varName)</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">link-login</code> link to login page including original URL requested
+http://10.5.50.1/login?dst=http://www.example.com/</li>
+  <li><code class="language-plaintext highlighter-rouge">link-login-only</code> link to login page, not including original URL requested
+http://10.5.50.1/login</li>
+  <li><code class="language-plaintext highlighter-rouge">link-orig</code> original url requested http://yahoo.com</li>
+  <li><code class="language-plaintext highlighter-rouge">link-logout</code> link to logout http://10.5.50.1/logout</li>
+  <li><code class="language-plaintext highlighter-rouge">link-status</code> link to status</li>
+</ul>
+
+<p>General variables:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">logged-in</code> “yes” is user is logged in, otherwise “no”</li>
+  <li><code class="language-plaintext highlighter-rouge">mac</code> MAC of the user</li>
+  <li><code class="language-plaintext highlighter-rouge">username</code> name of the user</li>
+  <li><code class="language-plaintext highlighter-rouge">error</code> error message</li>
+  <li><code class="language-plaintext highlighter-rouge">hostname</code> DNS or IP address of hostspot servlet</li>
+  <li><code class="language-plaintext highlighter-rouge">server-address</code> hostspot server address with port</li>
+  <li><code class="language-plaintext highlighter-rouge">ssl-login</code> “yes” if https methods was used to access this page</li>
+  <li><code class="language-plaintext highlighter-rouge">interface-name</code> bridge or interface name</li>
+  <li><code class="language-plaintext highlighter-rouge">ip</code> ip address of the client</li>
+  <li><code class="language-plaintext highlighter-rouge">host-ip</code> client ip address from <code class="language-plaintext highlighter-rouge">/ip hotspot host</code></li>
+</ul>
+
+<p>Inside templates <code class="language-plaintext highlighter-rouge">$(if varName) ... $(elif varName) ... $(else) ... $(endif)</code>
+or <code class="language-plaintext highlighter-rouge">$(if logged-in = 'yes')</code> can be used for conditionals.</p>
+
+<p>You can POST to <code class="language-plaintext highlighter-rouge">/login.html</code> with username and password, and user will be
+authenticated and redirected. You can also GET and user will be authenticated
+but <code class="language-plaintext highlighter-rouge">/status.html</code> will be shown.
+It’s better to use POST with https.</p>
+
+<p>If hotspot user after logout, goes to status page, if will be logged in again,
+because of cookie. You need to erase cookie if you want user to type password
+again.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;input type="hidden" name="erase-cookie" value="on"&gt;
+</code></pre></div></div>
+
+<p>or you can disable cookie login for hotspot profile <code class="language-plaintext highlighter-rouge">/ip hotspot profile set
+default login-by=http-chap</code></p>
+
+<p>External login <a href="https://wiki.mikrotik.com/wiki/HotSpot_external_login_page">https://wiki.mikrotik.com/wiki/HotSpot_external_login_page</a></p>
+
+<p>Note that form url should point to <code class="language-plaintext highlighter-rouge">/login</code> path</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>no
+</code></pre></div></div>
+
+<h2 id="firewall">Firewall</h2>
+
+<p>https://wiki.mikrotik.com/wiki/Manual:IP/Firewall
+obsolete https://mikrotik.com/testdocs/ros/3.0/</p>
+
+<p><code class="language-plaintext highlighter-rouge">chain</code> is name of rule group. Rulles are taken from the chain in the order they
+are listed and if packet matches the criteria than action is perfomed and no
+more rules are processed in that chain (except for <code class="language-plaintext highlighter-rouge">passthrough</code> action), if a
+packet has not matched any rule whith the chain then it is accepted.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">input</code> for connections to the router (destination is one of the router’s
+  addresses)</li>
+  <li><code class="language-plaintext highlighter-rouge">forward</code> for connection going through router</li>
+  <li><code class="language-plaintext highlighter-rouge">output</code> for connections from the router (originated the the router)</li>
+  <li><code class="language-plaintext highlighter-rouge">my_name</code> for example <code class="language-plaintext highlighter-rouge">hotspot</code> for hotspot connections</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">action</code> could be:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">accept</code> to allow packet to pass through and no more rules are applied</li>
+  <li><code class="language-plaintext highlighter-rouge">redirect</code> replaces destionation port to <code class="language-plaintext highlighter-rouge">to-ports=64872</code> and destination
+  address <code class="language-plaintext highlighter-rouge">to-addresses</code> to one of the routers local address.</li>
+  <li><code class="language-plaintext highlighter-rouge">jump</code> with <code class="language-plaintext highlighter-rouge">jump-target=chain-name</code> jumps to the chain which can <code class="language-plaintext highlighter-rouge">return</code>
+  usually with defined <code class="language-plaintext highlighter-rouge">hotspot</code> for example: <code class="language-plaintext highlighter-rouge">hotspot=from-client,!auth</code>, <code class="language-plaintext highlighter-rouge">to-client,auth</code>, <code class="language-plaintext highlighter-rouge">local-dst</code></li>
+  <li><code class="language-plaintext highlighter-rouge">return</code> jump back to the chain where the jump took place.</li>
+  <li><code class="language-plaintext highlighter-rouge">drop</code> drop this packet without sending ICMP reject message</li>
+  <li><code class="language-plaintext highlighter-rouge">reject</code> with <code class="language-plaintext highlighter-rouge">reject-with=tcp-reset</code> or <code class="language-plaintext highlighter-rouge">reject-with=icmp-net-prohibited</code></li>
+  <li><code class="language-plaintext highlighter-rouge">passthrough</code> continue rules on this chain (ignore current rule)</li>
+  <li><code class="language-plaintext highlighter-rouge">log</code> add message to system log, same as when you check “Log” for other
+  actions</li>
+  <li><code class="language-plaintext highlighter-rouge">add-dst-to-address-list</code>, <code class="language-plaintext highlighter-rouge">add-src-to-address-list</code> add address to my-list
+  <code class="language-plaintext highlighter-rouge">address-list=my-list</code></li>
+  <li><code class="language-plaintext highlighter-rouge">src-nat</code> replaces <code class="language-plaintext highlighter-rouge">src-address</code> with <code class="language-plaintext highlighter-rouge">to-addresses</code> and <code class="language-plaintext highlighter-rouge">to-ports</code></li>
+  <li><code class="language-plaintext highlighter-rouge">dst-nat</code> replaces <code class="language-plaintext highlighter-rouge">dst-address</code> with <code class="language-plaintext highlighter-rouge">to-addresses</code> and <code class="language-plaintext highlighter-rouge">to-ports</code></li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">dst-address</code> ip address range ip/mask or ip-ip.
+<code class="language-plaintext highlighter-rouge">dst-port</code> destination port
+<code class="language-plaintext highlighter-rouge">dst-address-list</code> list
+<code class="language-plaintext highlighter-rouge">protocol</code>: <code class="language-plaintext highlighter-rouge">tcp</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">hotspot</code> multiple choice: <code class="language-plaintext highlighter-rouge">auth,from client,to client,http,local dst</code>. There
+are dynamic rules that <code class="language-plaintext highlighter-rouge">jump</code> to another chain:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">hs-unauth</code> for chain: <code class="language-plaintext highlighter-rouge">forward</code> and hotspot: <code class="language-plaintext highlighter-rouge">from client,!auth</code></li>
+  <li><code class="language-plaintext highlighter-rouge">hs-unauth-to</code> for chain: <code class="language-plaintext highlighter-rouge">forward</code> and hotspot: <code class="language-plaintext highlighter-rouge">!auth,to client</code></li>
+  <li><code class="language-plaintext highlighter-rouge">hs-input</code> for chain: <code class="language-plaintext highlighter-rouge">input</code> and hotspot: <code class="language-plaintext highlighter-rouge">from client</code>. which jumps to
+  <code class="language-plaintext highlighter-rouge">pre-hs-input</code>
+and at the end there is <code class="language-plaintext highlighter-rouge">reject</code> for <code class="language-plaintext highlighter-rouge">hs-unauth</code>, <code class="language-plaintext highlighter-rouge">hs-unauth-to</code>. If you want to
+allow some trafic to (and from) add action <code class="language-plaintext highlighter-rouge">return</code> so it does not reach those
+<code class="language-plaintext highlighter-rouge">reject</code> rules. You need to add twice for both incoming and outgoing packets.</li>
+</ul>
+
+<p>You need to check both tables: Firewall Rules and NAT.
+For Hotspot in NAT firewall table there are <code class="language-plaintext highlighter-rouge">redirect</code> to port 64872-64875.
+https://wiki.mikrotik.com/wiki/Manual:Customizing_Hotspot#Firewall_customizations</p>
+<ul>
+  <li>64872 port provides DNS service for Hotspot users
+  <code class="language-plaintext highlighter-rouge">5 chain=hotspot action=redirect to-ports=64872 dst-port=53 protocol=tcp</code></li>
+  <li>64873 port is hotspot http servlet port (when user access router IP)
+  <code class="language-plaintext highlighter-rouge">6 chain=hotspot action=redirect to-ports=64873 hotspot=local-dst dst-port=80
+  protocol=tcp</code></li>
+  <li>64874 port is Walled Garden proxy server
+  <code class="language-plaintext highlighter-rouge">12 D chain=hs-unauth action=redirect to-ports=64874 dst-port=80 protocol=tcp</code></li>
+  <li>64875 port is hotspot https servlet port
+  <code class="language-plaintext highlighter-rouge">8 D chain=hotspot action=redirect to-ports=64875 hotspot=local-dst
+  dst-port=443 protocol=tcp</code></li>
+</ul>
+
+<p>Redirection in NAT should be done in <code class="language-plaintext highlighter-rouge">dstnat</code> chain with <code class="language-plaintext highlighter-rouge">dst-nat</code> action, which
+can accept <code class="language-plaintext highlighter-rouge">address-to=</code></p>
+
+<h2 id="ip-proxy">IP Proxy</h2>
+
+<p>Proxy can be used for increasing web speed or for firewall, when we redirect
+users to the proxy and show them local page.
+https://wiki.mikrotik.com/wiki/Manual:IP/Proxy#Proxy_based_firewall_.E2.80.93_Access_List
+For example when Radius assign user some ip UNAUTHORIZED_IP we can redirect all
+trafic from that UNAUTHORIZED_IP to our hotspot page <code class="language-plaintext highlighter-rouge">unauthorized.html</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># assign address to interface
+/ip address
+add address=UNAUTHORIZED_IP_with_0_1/16 interface=ether3
+
+# redirect all requests to 8080
+/ip firewall nat
+add action=redirect chain=dstnat protocol=tcp \
+src-address=UNAUTHORIZED_IP_with_0_1/16 to-ports=8080
+
+# enable ip proxy
+/ip proxy
+set enabled=yes
+
+# redirect path
+/ip proxy access
+print detail
+# you can redirect specific sites like facebook
+add action=deny dst-host=www.facebook.com redirect-to=10.5.50.1/unauthorized.html
+# you can allow specific sites
+add action=allow dst-host=*.trk.in.rs
+</code></pre></div></div>
+
+<h2 id="https-and-redirect">HTTPS and redirect</h2>
+
+<p>https://wiki.mikrotik.com/wiki/Manual:Hotspot_HTTPS_example
+Https use secure connection (SSL/TLS handshake) with a server so request to
+https://www.google.com which is redirected at firewall level will not work with
+your server/proxy/router.
+https://forum.mikrotik.com/viewtopic.php?t=143219
+In corporate networks user can add Exception to install your certificate (that
+covers major domains like google.com facebook.com) and it can redirect (maybe it
+is using transparent web proxy)
+Modern browsers (firefox 58) will show login button (link to 10.5.50.1/login)
+for hsts and non hsts site, so users can continue with login.</p>
+
+<blockquote>
+  <p>Log in to network</p>
+</blockquote>
+
+<blockquote>
+  <p>You must log in to this network before you can access the Internet.</p>
+</blockquote>
+
+<blockquote>
+  <p>This site uses HTTP Strict Transport Security (HSTS) to specify that Firefox
+may only connect to it securely. As a result, it is not possible to add an
+exception for this certificate.</p>
+</blockquote>
+
+<p><img src="/assets/posts/https%20redirect%20for%20non%20hsts%20site.png" alt="https redirect non hsts site" />
+<img src="/assets/posts/https%20redirect%20for%20hsts%20site.png" alt="https redirect hsts site" /></p>
+
+<p>Also modern Android OS will automatically open login page when it is connected
+to wifi (probably it checks if redirection occurs to some well known site) and
+if you do not connect, it will disconnect from wifi network.</p>
+
+<p>Lets encrypt can be used to generate certs.
+https://www.ollegustafsson.com/en/letsencrypt-routeros/</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># get acme
+curl https://get.acme.sh | sh
+# issue a cert
+acme.sh --issue --dns -d router.mydomain.com
+# check if record exists
+host -t txt _acme-challenge.router.trk.in.rs
+# renew when txt record is available
+acme.sh --renew -d router.mydomain.com
+
+</code></pre></div></div>
+
+<p>https://github.com/gitpel/letsencrypt-routeros
+https://github.com/Neilpang/acme.sh/pull/706/files</p>
+
+<p>NAT
+https://mikrotik.com/testdocs/ros/3.0/qos/filter.php
+Nat is used to rewrite source (destination) ip address for source (and
+destination) NATted network. <code class="language-plaintext highlighter-rouge">masquerade</code> is a form of source NAT where
+<code class="language-plaintext highlighter-rouge">to-addresses</code> is not needed to be specified, outgoing interface is used.
+<code class="language-plaintext highlighter-rouge">redirect</code> is a form of destination NAT where <code class="language-plaintext highlighter-rouge">to-addresses</code> is not used,
+incoming interface is used.</p>
+
+<p>For easier manipulation you can create lists</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/ip firewall address-list
+add list=my_site.com address=my_site.com
+# at this moment, mikrotik will fetch ip from dns and save to address list
+</code></pre></div></div>
+
+<p>Mangle mark routing
+https://www.youtube.com/watch?v=q13z9_dmmyA</p>
+
+<p>Mikrotik youtube tutorials
+https://www.youtube.com/user/rodrick4u/playlists</p>
+
+<h1 id="ruby-gem">Ruby Gem</h1>
+
+<p>https://github.com/astounding/mtik/</p>
+
+<h1 id="tips">Tips</h1>
+
+<ul>
+  <li>
+    <p>resolve hostname and update record
+ https://wiki.mikrotik.com/wiki/Manual:Scripting-examples#Resolve_host-name</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:resolve www.google.com
+</code></pre></div>    </div>
+  </li>
+  <li>user scripts https://wiki.mikrotik.com/wiki/Scripts</li>
+  <li>set ports to work as switch is to create a bridge and add port to it for each
+interface
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/interface bridge
+add name=bridge
+/interface bridge port
+add bridge=bridge interface=ether1
+add bridge=bridge interface=ether2
+add bridge=bridge interface=ether3
+add bridge=bridge interface=ether4
+add bridge=bridge interface=ether5
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h1 id="openwrt">OpenWRT</h1>
+
+<p>We have old router
+https://openwrt.org/toh/asus/rt-n15u</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

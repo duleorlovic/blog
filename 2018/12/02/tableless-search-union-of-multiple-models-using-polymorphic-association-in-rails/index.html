@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Tableless Search Union Of Multiple Models Using Polymorphic Association In Rails</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Tableless Search Union Of Multiple Models Using Polymorphic Association In Rails</h1>
+    <p class="meta">Dec 2, 2018</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#postgres-full-text-search"><span class="tocnumber">1</span> <span class="toctext">Postgres full text search</span></a></li></ul></td></tr></tbody></table></div><p>Common problem is to enable search on the site, but with differt kind of results
+(posts, comments, books). So we need to combine different models in one action
+and still enable pagination and sorting (so merge arrays is not considered
+here).</p>
+
+<p>Also, you might need to show all instances for
+searched used user (<code class="language-plaintext highlighter-rouge">belongs_to :created_by</code>, or habtm <code class="language-plaintext highlighter-rouge">book_users</code>).</p>
+
+<p>Solution is to create new model without table (tabless active record). For rails
+4 https://gist.github.com/dalibor/228654 but for Rails 5 we need to override <code class="language-plaintext highlighter-rouge">load_schema!</code>
+https://stackoverflow.com/questions/41494951/how-to-create-activerecord-tableless-model-in-rails-5</p>
+
+<p>Another solution is to use gem https://github.com/pboling/activerecord-tablefree
+but we will not use it here.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/models/abstract_tableless_model.rb
+# https://stackoverflow.com/a/45743718/287166
+# to define you tableless model you can
+class AbstractTablelessModel &lt; ApplicationRecord
+  self.abstract_class = true
+
+  def self.attribute_names
+    @attribute_names ||= attribute_types.keys
+  end
+
+  def self.load_schema!
+    @columns_hash ||= Hash.new
+
+    # From active_record/attributes.rb
+    attributes_to_define_after_schema_loads.each do |name, (type, options)|
+      if type.is_a?(Symbol)
+        type = ActiveRecord::Type.lookup(type, **options.except(:default))
+      end
+
+      define_attribute(name, type, **options.slice(:default))
+
+      # Improve Model#inspect output
+      @columns_hash[name.to_s] = ActiveRecord::ConnectionAdapters::Column.new(name.to_s, options[:default])
+    end
+
+    # Apply serialize decorators
+    attribute_types.each do |name, type|
+      decorated_type = attribute_type_decorations.apply(name, type)
+      define_attribute(name, decorated_type)
+    end
+  end
+
+  def persisted?
+    false
+  end
+end
+</code></pre></div></div>
+
+<p>We use <code class="language-plaintext highlighter-rouge">left_outer_joins</code> on searchable for which there is only one instance.
+But if you need to search for some nested has_many relation (for example
+<code class="language-plaintext highlighter-rouge">book_users</code>) so there could be multiple instances than we need to use
+<code class="language-plaintext highlighter-rouge">distinct</code>
+If you want to split on table to two models based on one fields</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Book &lt; ApplicationRecord
+end
+
+class ShortBook &lt; Book
+end
+
+class LongBook &lt; Book
+end
+</code></pre></div></div>
+<p>than you shoud know that <code class="language-plaintext highlighter-rouge">where(long_book: { user: 'me' })</code> produces the same
+result as <code class="language-plaintext highlighter-rouge">where(short_book: { user: 'me' })</code>.</p>
+
+<p>One solution could be to use database views</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CREATE VIEW search AS
+  SELECT ...
+  UNION ALL
+  SELECT ...
+</code></pre></div></div>
+<p>But for updating database view we need migration, so I prefer to have that SQL
+in the code.</p>
+
+<p>Similar to but without database query
+https://blog.bigbinary.com/2016/05/30/rails-5-adds-or-support-in-active-record.html</p>
+
+<h1 id="postgres-full-text-search">Postgres full text search</h1>
+
+<p>For Postgresql there could be improvements using <code class="language-plaintext highlighter-rouge">pg_search</code>
+https://github.com/Casecommons/pg_search
+https://www.postgresql.org/docs/current/textsearch.html
+It supports preprocessing and indexing so searching for <code class="language-plaintext highlighter-rouge">satisfy</code> will result in
+<code class="language-plaintext highlighter-rouge">satisfies</code> (ilike does not include derived words), automatically add index, and
+results are ranked (so you do not get thousend of results, but 5 most relevant
+for example two words are close to each other <em>proximity ranking</em>).
+Preprocessing includes:</p>
+<ul>
+  <li>parsing documents into tokens using <em>parser</em> (numbers, words, complex words)</li>
+  <li>converting tokens into lexemes using <em>dictionaries</em>. Lexeme is a string but
+it includes all variant (uppercase, suffix). We exclude stop words (is, a, it)
+Map synonyms to a single word using <em>Ispell</em>, map phrases to a single word
+using <em>thesaurus</em>, map variations of word to canonical form using <em>Ispell
+dictionary</em>, map different variation of a word to a canonical form using
+<em>Snowball stemmer rules</em>.</li>
+</ul>
+
+<p>Text search types https://www.postgresql.org/docs/current/datatype-textsearch.html</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT 'The Fast Orlovics'::tsvector; # 'Fast' 'Orlovics' 'The'
+# to perform normalisation you can use to_tsvector
+SELECT to_tsvector('english', 'The Fast Orlovics') # 'fast':2 'orlov':3
+# you can add weight to lexemes A, B, C, D (default) so title words are more
+# relevant than body words
+SELECT 'a:1A fat:2B,4C cat:5D'::tsvector;
+</code></pre></div></div>
+
+<p>Queries</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&amp;</code> and, <code class="language-plaintext highlighter-rouge">|</code> or, <code class="language-plaintext highlighter-rouge">!</code> not, <code class="language-plaintext highlighter-rouge">&lt;-&gt;</code> phrase or <code class="language-plaintext highlighter-rouge">&lt;1&gt;</code> phrase with distance
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT 'the &amp; (orlovic | fast)'::tsquery; # 'the' &amp; ( 'orlovic' | 'fast' )
+# perform normalisation of query strings: ignore the, strip suffix
+SELECT to_tsquery('the &amp; (orlovics | fast)'); # 'orlov' | 'fast'
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Peform matching</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT to_tsvector( 'postgraduate' ) @@ to_tsquery( 'postgres:*' ); # t
+</code></pre></div></div>
+<p>In addition to <code class="language-plaintext highlighter-rouge">to_tsquery</code> there is <code class="language-plaintext highlighter-rouge">plainto_tsquery</code> and <code class="language-plaintext highlighter-rouge">plainto_tsquery</code>
+You can also use implicit conversion <code class="language-plaintext highlighter-rouge">text @@ text</code> which is equivalent to
+<code class="language-plaintext highlighter-rouge">to_tsvector(x) @@ plainto_tsquery(y)</code>.</p>
+
+<p>todo 12.2.2
+https://www.postgresql.org/docs/current/textsearch-tables.html</p>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>

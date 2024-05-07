@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Good rails exception notifier better than tests</title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="description" content="I am writing here some toughts during my work in Ruby on Rails, Javascript and other">
+      <link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="/assets/css/main.css">
+      <link rel="stylesheet" href="/assets/css/toc.css">
+
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <div class="wrap">
+
+        <a class="site-title" href="/">duleorlovic - web developer</a>
+
+        <nav class="site-nav">
+          <a href="#" class="menu-icon">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+               viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+              <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </a>
+          <div class="trigger">
+            
+              <a class="page-link" href="/about/">About</a>
+            
+              
+            
+              
+            
+              
+            
+          </div>
+        </nav>
+        <small>tools like
+          <a href=" 
+            /2015/04/05/common-rails-bootstrap-snippets/"
+            >Rails bootstrap</a>,
+          <a href=" /2015/11/09/rails-testing/">Rails testing</a>
+            and <a href=" 
+            /2016/04/12/rails-tips/">Rails tips</a>
+          are still in use so content can be updated!
+          <a href="javascript:void(0)"
+            onclick="document.getElementById('mc_embed_signup').classList.toggle('active');">Notify
+          me</a>
+        </small>
+	  <!-- Begin MailChimp Signup Form -->
+	  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+	  <style type="text/css">
+		  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+		  /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+		     We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+	  </style>
+	  <div id="mc_embed_signup" class="signup-form">
+	    <form action="//trk.us14.list-manage.com/subscribe/post?u=819590ae53cb08bddb952ed97&amp;id=ec1213024d" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+		<div id="mc_embed_signup_scroll">
+	    <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+	    <div class="mc-field-group">
+		    <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	    </label>
+		    <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	    </div>
+		    <div id="mce-responses" class="clear">
+			    <div class="response" id="mce-error-response" style="display:none"></div>
+			    <div class="response" id="mce-success-response" style="display:none"></div>
+		    </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+		<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_819590ae53cb08bddb952ed97_ec1213024d" tabindex="-1" value=""></div>
+		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+		</div>
+	    </form>
+	  </div>
+	  <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	  <!--End mc_embed_signup-->
+
+      </div>
+    <!-- Html Elements for Search -->
+    <div id="search-demo-container">
+    <input type="text" id="search-input" placeholder="search...">
+    <ul id="results-container"></ul>
+    </div>
+
+    <!-- Script pointing to jekyll-search.js -->
+    <script src="/bower_components/simple-jekyll-search/dest/jekyll-search.js" type="text/javascript"></script>
+    <script>
+      SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('results-container'),
+        json: '/search.json',
+      });
+    </script>
+
+    </header>
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Good rails exception notifier better than tests</h1>
+    <p class="meta">Jan 11, 2015</p>
+  </header>
+
+  <article class="post-content">
+  <body><div id="toc-container"><table class="toc" id="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div><ul><li class="toc_level-1 toc_section-1"><a href="#basic-installation"><span class="tocnumber">1</span> <span class="toctext">Basic installation</span></a></li><li class="toc_level-1 toc_section-2"><a href="#javascript-notification-and-example-error-pages"><span class="tocnumber">2</span> <span class="toctext">Javascript notification and example error pages</span></a></li><li class="toc_level-1 toc_section-3"><a href="#delayed-job"><span class="tocnumber">3</span> <span class="toctext">Delayed job</span></a></li><li class="toc_level-1 toc_section-4"><a href="#sidekiq"><span class="tocnumber">4</span> <span class="toctext">Sidekiq</span></a></li><li class="toc_level-1 toc_section-5"><a href="#custom-templates"><span class="tocnumber">5</span> <span class="toctext">Custom Templates</span></a></li><li class="toc_level-1 toc_section-6"><a href="#render-custom-error-pages"><span class="tocnumber">6</span> <span class="toctext">Render custom error pages</span></a></li><li class="toc_level-1 toc_section-7"><a href="#resque"><span class="tocnumber">7</span> <span class="toctext">Resque</span></a></li><li class="toc_level-1 toc_section-8"><a href="#rake"><span class="tocnumber">8</span> <span class="toctext">Rake</span></a></li><li class="toc_level-1 toc_section-9"><a href="#deliver-later"><span class="tocnumber">9</span> <span class="toctext">Deliver later</span></a></li></ul></td></tr></tbody></table></div><p>Do not hide your mistakes, instead, make sure that every bug is noticeable.
+That way you will learn more and thinks that you did not know (that’s why bug
+occurs).</p>
+
+<p>Bugs that I have meet are something like: user uploaded file with non asci
+chars, linkedin identity text is missing graduation date, after_create hook
+on model with devise cause <code class="language-plaintext highlighter-rouge">user.save</code> to return <em>true</em> but <em>user.errors</em> is
+present and user is redirected to update his registration form… You can NOT
+write tests for those situations. Better is to have nice notification with all
+input/session/user data. Any rescue block should use this notification.</p>
+
+<p>Excellent gem for notification is
+<a href="https://github.com/smartinez87/exception_notification">exception_notification</a>.
+It is rack middleware and configuration is very simple.</p>
+
+<h1 id="basic-installation">Basic installation</h1>
+
+<p>After adding to your Gemfile</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; Gemfile &lt;&lt;HERE_DOC
+# error notification to EXCEPTION_RECIPIENTS emails
+gem 'exception_notification'
+HERE_DOC
+bundle
+</code></pre></div></div>
+
+<p>set email receivers in your secrets or credentials</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># sed -i config/secrets.yml -e '/^shared:/a \
+  # for all outgoing emails
+  mailer_sender: &lt;%= ENV["MAILER_SENDER"] || "My Company &lt;support@example.com&gt;" %&gt;
+
+  # leave this empty if you do not want to enable server error notifications
+  # othervise comma separated emails
+  exception_recipients: &lt;%= ENV["EXCEPTION_RECIPIENTS"] %&gt;
+
+rails credentials:edit
+mailer_sender: My Company &lt;support@example.com&gt;
+# leave this empty if you do not want to enable server error notifications
+# othervise comma separated emails
+# uncomment this for development
+# exception_recipients: du...@gmail.com
+</code></pre></div></div>
+
+<p>and generate initialization file</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g exception_notification:install
+</code></pre></div></div>
+
+<p>Simple</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/exception_notification.rb
+  config.add_notifier :email, {
+    email_prefix: '[myapp UI] ',
+    sender_address: Rails.application.credentials.mailer_sender,
+    exception_recipients: Rails.application.credentials.exception_recipients,
+    delivery_method: :smtp,
+  }
+  config.error_grouping = true
+</code></pre></div></div>
+
+<p>Extended</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt; config/initializers/exception_notification.rb &lt;&lt; HERE_DOC
+require 'exception_notification/rails'
+
+class Notify
+  # Send notification using string as subject and pass additional argumets (it
+  # will be shown as array) or options (shown as hash) for example:
+  # Notify.message 'some_problem', customers_url, email: customer.email
+  # Notify.message "OTP", registration_url: Rails.application.routes.url_helpers.superadmin_registration_url(@registration)
+  # Notify.message 'text', user.slice :id, :name
+  def self.message(message, *args)
+    data = {}
+    # put first args so it is shown at beginning
+    data[:args] = args if args.present?
+    data.merge! args.extract_options!
+    ExceptionNotifier.notify_exception(Exception.new(message), data: data)
+    # return true so we could use: return Notify.message('hi') unless continue?
+    true
+  end
+
+  def self.exception_with_env(message, args)
+    # set env to nil if you do not want sections: Request, Environment, Session
+    # backtrace is not shown for manual notification (only if data section
+    # contains backtrace)
+    # data section is always shown if exists
+    params = {
+      env: args[:env],
+      exception_recipients: args[:exception_recipients],
+      email_prefix: args[:email_prefix],
+      data: args[:data],
+    }.delete_if { |_k, v| v.nil? }
+    ExceptionNotifier.notify_exception(Exception.new(message), params)
+  end
+end
+
+# rubocop:disable Metrics/BlockLength
+if (receivers = Rails.application.secrets.exception_recipients).present?
+  ExceptionNotification.configure do |config|
+    # Ignore additional exception types. Those are already included
+    # ActiveRecord::RecordNotFound
+    # AbstractController::ActionNotFound
+    # ActionController::RoutingError
+    config.ignored_exceptions += %w[
+      ActiveRecord::RecordNotFound
+      AbstractController::ActionNotFound
+      ActionController::RoutingError
+      ActionController::UnknownFormat
+
+      ApplicationController::NotFoundError
+      ApplicationController::DisabledError
+      ApplicationController::AccessDeniedError
+      ApplicationController::InvalidCharactersUsed
+    ]
+
+    # Adds a condition to decide when an exception must be ignored or not.
+    # The ignore_if method can be invoked multiple times to add extra conditions
+    # config.ignore_if do |exception, options|
+    #   not Rails.env.production?
+    # end
+
+    # Ignore crawlers
+    IGNORE_HTTP_USER_AGENT = %w[
+      Googlebot bingbot linkdexbot Baiduspider YandexBot panscient.com MJ12bot
+      SeznamBot
+    ].freeze
+    config.ignore_if do |_exception, options|
+      options[:env] &amp;&amp; Array(IGNORE_HTTP_USER_AGENT).any? do |crawler|
+        options[:env]['HTTP_USER_AGENT'] =~ Regexp.new(crawler)
+      end
+    end
+
+    # Ignore formats
+    IGNORE_HTTP_ACCEPT = %w[Agent-007 image/x-xbitmap].freeze
+    config.ignore_if do |_exception, options|
+      options[:env] &amp;&amp; Array(IGNORE_HTTP_ACCEPT).any? do |format|
+        options[:env]['HTTP_ACCEPT'] =~ Regexp.new(format)
+      end
+    end
+
+    # Ignore too much notifications. throttle by same message
+    THROTTLE_LIMIT = 3 # resets only when nothing is seen in interval window
+    THROTTLE_INTERVAL_SECONDS = 1.hour
+    config.ignore_if do |exception|
+      # to exit from proc we could use 'next' ('return' or 'break' does not work
+      # for proc) but than it returns nil, ie it will notify if true
+      # to skip notification on development clear EXCEPTION_RECIPIENTS env
+      cache_key = exception.message.sub(/0[xX][0-9a-fA-F]+/, '') # ignore eventual object hex id
+      already = Rails.cache.fetch(cache_key)
+      if already
+        Rails.cache.write cache_key,
+                          already + 1,
+                          expires_in: THROTTLE_INTERVAL_SECONDS
+        # do not notify if already send max number of times, return val is true
+        already &gt;= THROTTLE_LIMIT
+      else
+        Rails.cache.write cache_key, 1, expires_in: THROTTLE_INTERVAL_SECONDS
+        # it is ok to notify
+        false
+      end
+    end
+
+    # Ignore specific exceptions that are marked to be ignored
+    # begin
+    # rescue StandardError =&gt; e
+    #   e.ignore_please = true
+    #   raise e
+    # end
+    config.ignore_if { |e| e.respond_to?(:ignore_please) &amp;&amp; e.ignore_please }
+
+    # Notifiers ================================================================
+
+    # Email notifier sends notifications by email.
+    config.add_notifier :email,
+                        email_prefix: '[MyApp] ',
+                        sender_address: Rails.application.secrets.mailer_sender,
+                        exception_recipients: receivers.split(','),
+                        delivery_method: :smtp
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>This will send email for any exception if <code class="language-plaintext highlighter-rouge">EXCEPTION_RECIPIENTS</code> are present.
+As delivery method you can use very nice <a href="/2016/05/17/send-and-receive-emails-in-rails/#letter-opener-for-local-preview">letter_opener</a>
+for development.</p>
+
+<p>If you keep receiving unknown <code class="language-plaintext highlighter-rouge">(ActionView::MissingTemplate) "Missing template</code>
+for json request (but you only consider html) or for html (but you only consider
+js), you should add something like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  def index
+    respond_to do |format|
+      format.html
+      format.any { redirect_to root_path }
+    end
+  end
+</code></pre></div></div>
+
+<p>You can test if it properly ignore by setting curl headers</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/sample-error # this should open letter opener
+curl http://localhost:3000/sample-error -A 'Googlebot' # this is ignored
+curl http://localhost:3000/sample-error -H 'Accept: Agent-007' # this is ignored
+curl  -H "Accept: application/json" http://localhost:3000/ # could trigger
+# MissingTemplate error
+</code></pre></div></div>
+
+<h1 id="javascript-notification-and-example-error-pages">Javascript notification and example error pages</h1>
+
+<p>I would add two pages <em>sample-error</em> and <em>sample-error-in-javascript</em> just
+to have some pages for test if this notification works. First create routes</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config/routes.rb</span>
+<span class="n">get</span> <span class="s1">'sample-error'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#sample_error'</span>
+<span class="n">get</span> <span class="s1">'sample-error-in-javascript'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#sample_error_in_javascript'</span>
+<span class="n">get</span> <span class="s1">'sample-error-in-javascript-ajax'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#sample_error_in_javascript_ajax'</span>
+<span class="n">post</span> <span class="s1">'notify-javascript-error'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#notify_javascript_error'</span>
+<span class="n">get</span> <span class="s1">'sample-error-in-resque'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#sample_error_in_resque'</span>
+<span class="n">get</span> <span class="s1">'sample-error-in-sidekiq'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#sample_error_in_sidekiq'</span>
+<span class="n">get</span> <span class="s1">'sample-error-in-delayed-job'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#sample_error_in_delayed_job'</span></code></pre></figure>
+
+<p>than controller method that we will use for manual notification
+<a href="https://github.com/smartinez87/exception_notification#manually-notify-of-exception">ExceptionNotifier.notify_exception</a>
+In some cases I need just to notify with custom email
+<code class="language-plaintext highlighter-rouge">MyMailer.internal_notification(subject, item).deliver</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/mailers/my_mailer.rb
+class MyMailer &lt; ActionMailer::Base
+  def internal_notification(subject, item)
+    mail to: INTERNAL_NOTIFICATION_EMAIL,
+         subject: "[MyApp info] #{subject}",
+         body: "&lt;h1&gt;#{subject}&lt;/h1&gt;&lt;strong&gt;Details:&lt;/strong&gt;" +
+               item
+               .inspect
+               .gsub(', ', ',&lt;br&gt;')
+               .gsub('{', '&lt;br&gt;{&lt;br&gt;')
+               .gsub('}', '&lt;br&gt;}&lt;br&gt;'),
+         content_type: 'text/html'
+  end
+end
+</code></pre></div></div>
+
+<p>For <code class="language-plaintext highlighter-rouge">notify_exception</code> can pass additional information using <code class="language-plaintext highlighter-rouge">:data</code> param. Only
+the first argument is required (default values you can find
+<a href="https://github.com/smartinez87/exception_notification/blob/df0b924e96a8f02c1fc61f88e6a1ed9c31ee43ec/lib/exception_notifier/email_notifier.rb#L162">here</a>).
+For less important notification you can change subject with <code class="language-plaintext highlighter-rouge">email_prefix</code>
+param. Manual notification can be simply as one line
+<code class="language-plaintext highlighter-rouge">ExceptionNotifier.notify_exception(Exception.new('this_user_is_deactived'),
+env: request.env, email_prefix: 'just to notify that', data: { current_user:
+current_user });</code>.
+Here is what I use:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/controllers/pages_controller.rb
+class PagesController &lt; ApplicationController
+  skip_before_action :verify_authenticity_token, only: %i[
+    notify_javascript_error
+  ]
+
+  def sample_error
+    raise 'This is sample_error on server'
+  end
+
+  def sample_error_in_javascript
+    render layout: true, html: %(
+      Calling manual_js_error_now
+      &lt;script&gt;
+        function manual_js_error_now_function() {
+          manual_js_error_now
+        }
+        console.log('calling manual_js_error_now');
+        manual_js_error_now_function();
+        // you can also trigger error on window.onload = function() { manual_js_error_onload }
+      &lt;/script&gt;
+      &lt;br&gt;
+      &lt;button onclick="trigger_js_error_on_click"&gt;Trigger error on click&lt;/button&gt;
+      &lt;a href="/sample-error-in-javascript-ajax" data-remote="true" id="l"&gt;Trigger error in ajax&lt;/a&gt;
+    ).html_safe
+  end
+
+  def sample_error_in_javascript_ajax
+    render js: %(
+      console.log("starting sample_error_in_javascript_ajax");
+      sample_error_in_javascript_ajax
+    )
+  end
+
+  def notify_javascript_error
+    js_receivers = Rails.application.secrets.javascript_error_recipients
+    if js_receivers.present?
+      ExceptionNotifier.notify_exception(
+        Exception.new(params[:errorMsg]),
+        env: request.env,
+        exception_recipients: js_receivers.to_s.split(','),
+        data: {
+          current_user: current_user,
+          params: params
+        }
+      )
+    end
+    head :ok
+  end
+
+  def sample_error_in_resque
+    Resque.enqueue(TaskWithError)
+    render plain: 'TaskWithError in queue, please run: QUEUE=* rake resque:work'
+  end
+
+  def sample_error_in_sidekiq
+    TaskWithErrorJob.perform_later
+    render plain: 'TaskWithErrorJob in queue, please run: bundle exec sidekiq -C config/sidekiq.yml'
+  end
+
+  def sample_error_in_delayed_job
+    SampleErrorJob.perform_later
+    render plain: 'SampleErrorJob in queue, please run: QUEUE=* rake jobs:work'
+  end
+end
+
+class TaskWithError
+  @queue = :test
+  def self.perform
+    raise 'This is sample_error_in_resque'
+  end
+end
+</code></pre></div></div>
+
+<h1 id="delayed-job">Delayed job</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/delayed_job.rb
+Delayed::Worker.destroy_failed_jobs = false
+Delayed::Worker.max_attempts = 3
+Delayed::Worker.delay_jobs = !Rails.env.test?
+
+### RAILS 5
+module CustomFailedJob
+  def handle_failed_job(job, error)
+    super
+    return if error.ignore_please &amp;&amp; job.attempts &lt; Delayed::Worker.max_attempts
+
+    ExceptionNotifier.notify_exception(error, data: { job: job })
+  end
+end
+
+class Delayed::Worker
+  prepend CustomFailedJob
+end
+
+### Rails 4
+
+Delayed::Worker.logger = Logger.new(File.join(Rails.root, 'log', 'delayed_job.log'))
+
+# when you change this file, make sure that you restart delayed_job process
+# bin/delayed_job stop &amp;&amp; bin/delayed_job start
+# probably DelayedJob is configured to retry 3 times, so you will receive
+# notification emails
+# do not rescue in worker because no notification email will be send
+# http://andyatkinson.com/blog/2014/05/03/delayed-job-exception-notification-integration
+
+class Exception
+  attr_accessor :ignore_please
+end
+
+# Chain delayed job's handle_failed_job method to do exception notification
+Delayed::Worker.class_eval do
+  def handle_failed_job_with_notification(job, error)
+    handle_failed_job_without_notification(job, error)
+
+    begin
+      # ExceptionNotifier.notify_exception(error) do not use standard notification, use delayed_job partial
+      return if error.ignore_please &amp;&amp; job.attempts &lt; Delayed::Worker.max_attempts
+      env = {}
+      env['exception_notifier.options'] = {
+        sections: %w(backtrace delayed_job),
+        email_prefix: "[my-domain Delayed Job Exception] ",
+      }
+      env['exception_notifier.exception_data'] = {job: job}
+      ExceptionNotifier::Notifier.exception_notification(env, error).deliver
+
+    # rescue if ExceptionNotifier fails for some reason
+    rescue Exception =&gt; e
+      Rails.logger.error "ExceptionNotifier failed: #{e.class.name}: #{e.message}"
+      e.backtrace.each do |f|
+        Rails.logger.error "  #{f}"
+      end
+      Rails.logger.flush
+    end
+  end
+
+  alias_method_chain :handle_failed_job, :notification
+end
+</code></pre></div></div>
+
+<p>If you want to ignore specific timeout exception than use something like</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/jobs/send_sms_job.rb
+class SendSmsJob &lt; ActiveJob::Base
+  queue_as :webapp
+
+  rescue_from Net::ReadTimeout, SocketError do |e|
+    e.ignore_please = true
+    # re-raise so job is retried
+    raise e
+  end
+  def perform()
+  end
+end
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/jobs/sample_error_job.rb
+class SampleErrorJob &lt; ActiveJob::Base
+  queue_as :default
+
+  def perform
+    raise 'This is sample_error_in_delayed_job'
+  end
+end
+</code></pre></div></div>
+
+<h1 id="sidekiq">Sidekiq</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/jobs/task_with_error_job.rb
+class TaskWithErrorJob &lt; ApplicationJob
+  queue_as :default
+  def perform
+    raise 'This is sample_error_in_sidekiq'
+  end
+end
+
+# config/initializers/exception_notification.rb
+Sidekiq.configure_server do |config|
+  config.error_handlers &lt;&lt; proc { |ex, context|
+    ExceptionNotifier.notify_exception(ex, data: { sidekiq: context })
+  }
+end
+</code></pre></div></div>
+
+<p>If error occurs in ajax reponse, or in some of your javascript code, we will
+send another request to server to trigger javascript notification. Note that you
+can log with <code class="language-plaintext highlighter-rouge">console.error("Some error message")</code> (in console it will look like
+exception) but no notification will be sent.</p>
+
+<p>You can send notifications using formspree service.
+There is non jQuery fallback but loaded jQuery is preferred.
+You should create separate file that will be loaded in <code class="language-plaintext highlighter-rouge">&lt;head&gt;</code> and before
+application.js so it is loaded before any other js code.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// app/assets/javascripts/exception_notification.js.erb
+// This should be loaded in &lt;head&gt; and separatelly from application.js
+// notification will not work if some error exist in this file
+//
+var MAX_NUMBER_OF_JS_ERROR_NOTIFICATIONS = 5;
+
+function sendExceptionNotification(data) {
+  &lt;% unless Rails.application.secrets.javascript_error_recipients.present? %&gt;
+    return ;
+  &lt;% end %&gt;
+  // maybe error occured before jQuery was loaded
+  if (window.jQuery) {
+    console.log("notify server about exception using jQuery");
+    jQuery.post('/notify-javascript-error', data);
+
+  } else {
+    console.log("notify server about exception using plain javascript");
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/notify-javascript-error', true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(data));
+  }
+  // or use formspree service with your email
+  // $.ajax({
+  //   url: "https://formspree.io/your@gmail.com", 
+  //   method: "POST",
+  //   data: data,
+  //   dataType: "json"
+  // });
+}
+
+function ignoreErrorMsg(errorMsg) {
+  if (errorMsg.length == 0) return true; // no need to notify empty message
+  &lt;% if Rails.env.development? %&gt;
+      return false; // always notify on development
+  &lt;% end %&gt;
+  if (sessionStorage) {
+    var errorMsgs = JSON.parse(sessionStorage.getItem("errorMsgs") || "[]");
+    if (errorMsgs.indexOf(errorMsg) != -1) {
+      console.log("Ignore already notified error for this session and tab");
+      return true;
+    } else {
+      sessionStorage.setItem("errorMsgs", JSON.stringify(errorMsgs + [errorMsg]));
+    }
+
+    if (JSON.parse(sessionStorage.getItem("numberOfJsErrorNotifications") || "0") &gt;= MAX_NUMBER_OF_JS_ERROR_NOTIFICATIONS) {
+      console.log("Ignore error since number of notification reached maxiumum " + MAX_NUMBER_OF_JS_ERROR_NOTIFICATIONS);
+      return true;
+    }
+  }
+  ignoredErrors = {
+    // https://github.com/kogg/InstantLogoSearch/issues/199
+    tgt: "Cannot set property 'tgt' of null",
+    // from extention http://s3.amazonaws.com/js-cache/ddc1b879c920534271.js
+    partnrz: "Unexpected token &lt; in JSON at position 1",
+    // from extension http://s3.amazonaws.com/jscache/de53b459ee43e7774f.js
+    monetize: "SyntaxError: Unexpected end of JSON input",
+    plugin1: "TypeError: undefined is not an object (evaluating 'Window.prototype.setTimeout.call')",
+    deals: "Uncaught ReferenceError: US is not defined",
+    // http://pastebin.com/JAPbmEX6
+    reno: "renoTransGloRef",
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=590375
+    chrome1: "__gCrWeb",
+    // unknown string closingEls
+    closing_els: "TypeError: Cannot read property 'closingEls' of undefined",
+    // some unknown
+    show_deepen: "__show__deepen",
+    // __firefox__.favicons.getFavicons
+    firefox: "__firefox__",
+    // unknown
+    unknown1: "viewWillDisappear",
+  }
+  for (var key in ignoredErrors) {
+    if (errorMsg.indexOf(ignoredErrors[key]) != -1) {
+      console.log("ignoredErrors key=" + key);
+      return true;
+    }
+  }
+  return false;
+}
+
+function ignoreSourceUrl(sourceUrl) {
+if (typeof(sourceUrl) == "string" &amp;&amp; sourceUrl != "" &amp;&amp;
+    sourceUrl.indexOf(window.location.hostname) == -1) {
+    console.log("ignoreSourceUrl");
+    return true;
+  }
+  return false;
+}
+
+function ignoreStack(stack) {
+  if (stack == null) {
+    return false;
+  }
+  ignoredStacks = {
+    akamai: "akamaihd.net",
+  }
+  for (var key in ignoredStacks) {
+    if (stack.indexOf(ignoredStacks[key]) != -1) {
+      console.log("ignoredStacks key=" + key);
+      return true;
+    }
+  }
+  return false;
+}
+
+function checkAndSendNotification(notificationData) {
+  var errorMsg = notificationData.errorMsg;
+  if (ignoreSourceUrl(notificationData.sourceUrl)) return;
+  if (ignoreStack(notificationData.stack)) return;
+  if (ignoreErrorMsg(errorMsg)) return;
+  flash_alert(errorMsg);
+  sendExceptionNotification(notificationData);
+  if (sessionStorage) {
+    var numberOfJsErrorNotifications = JSON.parse(sessionStorage.getItem("numberOfJsErrorNotifications") || "0");
+    numberOfJsErrorNotifications += 1;
+    sessionStorage.setItem("numberOfJsErrorNotifications", JSON.stringify(numberOfJsErrorNotifications));
+  }
+}
+
+// https://developer.mozilla.org/en/docs/Web/API/GlobalEventHandlers/onerror
+// https://blog.getsentry.com/2016/01/04/client-javascript-reporting-window-onerror.html
+window.onerror = function(errorMsg, sourceUrl, lineNumber, column, errorObj) {
+  if (errorObj != null) {
+    errorMsg = errorObj.toString();
+  }
+  var stack;
+  if (errorObj == null || errorObj.stack == null) {
+    stack = new Error().stack;
+  } else {
+    stack = errorObj.stack
+  }
+  var notificationData = { errorMsg: errorMsg, sourceUrl: sourceUrl, lineNumber: lineNumber, column: column, stack: stack };
+  checkAndSendNotification(notificationData);
+}
+
+// another approach is with error event listener
+// window.addEventListener('error', function (e) {
+//     var stack = e.error.stack;
+//     var message = e.error.toString();
+// });
+
+// ajax error handling
+// wait DOM to load
+// http://stackoverflow.com/questions/799981/document-ready-equivalent-without-jquery
+// I tried with document.addEventListener("DOMContentLoaded", function(event) {
+// but $ still not defined
+function listenAjaxErrors() {
+ // https://github.com/rails/jquery-ujs/wiki/ajax
+ $(document).on('ajax:error', '[data-remote]', function(e, xhr, status, errorObj) {
+   flash_alert("Please refresh the page. Server responds with: " + errorObj);
+   var notificationData = { errorMsg: errorObj.toString(), status: status, stack: errorObj.stack };
+   checkAndSendNotification(notificationData);
+ });
+}
+
+// http://stackoverflow.com/questions/7486309/how-to-make-script-execution-wait-until-jquery-is-loaded
+function defer(method) {
+  if (window.jQuery)
+    method();
+  else
+    setTimeout(function() { defer(method) }, 150);
+}
+
+defer(listenAjaxErrors);
+
+function flash_alert(msg) {
+  if (msg.length == 0) return;
+  // disable eventual popups so user can see the message
+  // $('.active').removeClass('active');
+  // alert(msg);
+  console.log(msg);
+}
+
+// Ensures there will be no 'console is undefined' errors
+// http://stackoverflow.com/questions/9725111/internet-explorer-console-is-not-defined-error
+window.console = window.console || (function(){
+    var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(s){};
+    return c;
+})();
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>if you use <code class="language-plaintext highlighter-rouge">require_tree .</code> or your js
+is loaded at the end of &lt;body&gt; (not included in <code class="language-plaintext highlighter-rouge">&lt;head&gt;</code>) than you need to
+include this exception notification so it is available <strong>BEFORE</strong> any other js
+code. In this case you need to stub it so it is not included twice</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/layouts/application.html.erb
+  &lt;head&gt;
+    &lt;%= javascript_include_tag :exception_notification %&gt;
+    &lt;%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %&gt;
+  &lt;/head&gt;
+
+// app/assets/javascripts/application.js
+//= stub exception_notification
+
+# config/initializers/assets.rb
+Rails.application.config.assets.precompile += %w[exception_notification.js]
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Do not forget to define javascript receivers</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># config/secrets.yml</span>
+  <span class="c1"># leave this empty if you do not want to enable javascript error notification</span>
+  <span class="c1"># othervise comma separated emails</span>
+  <span class="na">javascript_error_recipients</span><span class="pi">:</span> <span class="s">&lt;%= ENV["JAVASCRIPT_ERROR_RECIPIENTS"] %&gt;</span></code></pre></figure>
+
+<p>NOTE that when you <code class="language-plaintext highlighter-rouge">export JAVASCRIPT_ERROR_RECIPIENTS</code> than you need also to
+change <code class="language-plaintext highlighter-rouge">app/assets/javascripts/exception_notification.js.erb</code> so it is
+recompiled (touch does not trigger recompilation).</p>
+
+<p>CSP can help your site to prevent loading external js for extensions. Fine grane
+can enable loading google maps, facebook buttons on specific pages.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Content-Security-Policy: default-src
+</code></pre></div></div>
+
+<h1 id="custom-templates">Custom Templates</h1>
+
+<p>You can change existing sections like https://github.com/smartinez87/exception_notification/blob/master/lib/exception_notifier/views/exception_notifier/_session.text.erb
+by overriding file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/exception_notifier/_session.text.erb
+* session id: &lt;%= @request.ssl? ? "[FILTERED]" : (raw (@request.session['session_id'] || (@request.env["rack.session.options"] and @request.env["rack.session.options"][:id])).inspect.html_safe) %&gt;
+* data: &lt;%= raw PP.pp(@request.session.to_hash, "") %&gt;
+
+&lt;% if @request.session['warden.user.user.key'].present? %&gt;
+&lt;%
+  # try to find current_user
+  id = @request.session['warden.user.user.key']&amp;.first&amp;.first
+  user = User.find_by id: id
+%&gt;
+  &lt;% if user %&gt;
+  * user &lt;%= user.email %&gt;
+  &lt;% else %&gt;
+  * user can not be found
+  &lt;% end %&gt;
+&lt;% end %&gt;
+</code></pre></div></div>
+
+<p>You can also set some new sections with <a href="https://github.com/smartinez87/exception_notification#sections">custom
+sections</a>. You
+can set sections in manual notification or inside settings-&gt;email.  You need to
+write text partial (html is not supported) in which you can access to
+<code class="language-plaintext highlighter-rouge">@data</code>,<code class="language-plaintext highlighter-rouge">@request</code>… variables, which you can list with <code class="language-plaintext highlighter-rouge">&lt;%= instance_variables
+%&gt;</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/exception_notifier/_message.text.erb
+Javascript error params
+&lt;%=raw @data[:params].inspect %&gt;
+&lt;br&gt;
+HTTP_USER_AGENT=&lt;%= @request.env["HTTP_USER_AGENT"] %&gt;
+&lt;br&gt;
+HTTP_ACCEPT=&lt;%= @request.env["HTTP_ACCEPT"] %&gt;
+&lt;br&gt;
+REMOTE_ADDR=&lt;%= @request.env["REMOTE_ADDR"] %&gt;
+session
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/views/exception_notifier/_delayed_job.text.erb
+JOB
+&lt;%= instance_variable_get(:@job).inspect %&gt;
+</code></pre></div></div>
+
+<h1 id="render-custom-error-pages">Render custom error pages</h1>
+
+<p>If you want to render error-page and page-not-found with rails you can rescue
+from all StandardError exceptions.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># app/controllers/application_controller.rb</span>
+  <span class="k">if</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">secrets</span><span class="p">.</span><span class="nf">exception_recipients</span><span class="p">.</span><span class="nf">present?</span>
+    <span class="n">rescue_from</span> <span class="no">StandardError</span> <span class="k">do</span> <span class="o">|</span><span class="n">exception</span><span class="o">|</span>
+      <span class="k">case</span> <span class="n">exception</span><span class="p">.</span><span class="nf">class</span>
+      <span class="k">when</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">,</span>
+          <span class="no">ActionController</span><span class="o">::</span><span class="no">RoutingError</span><span class="p">,</span>
+          <span class="no">ActionController</span><span class="o">::</span><span class="no">UnknownController</span><span class="p">,</span>
+          <span class="no">ActionController</span><span class="o">::</span><span class="no">MethodNotAllowed</span>
+        <span class="n">redirection_path</span> <span class="o">=</span> <span class="n">page_not_found_path</span>
+      <span class="k">when</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">InvalidAuthenticityToken</span>
+        <span class="n">redirection_path</span> <span class="o">=</span> <span class="n">new_user_session_path</span>
+      <span class="k">else</span>
+        <span class="n">redirection_path</span> <span class="o">=</span> <span class="n">error_page_path</span>
+      <span class="k">end</span>
+      <span class="no">ExceptionNotifier</span><span class="p">.</span><span class="nf">notify_exception</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span>
+                                         <span class="ss">env: </span><span class="n">request</span><span class="p">.</span><span class="nf">env</span><span class="p">,</span>
+                                         <span class="ss">data: </span><span class="p">{</span> <span class="ss">current_user: </span><span class="n">current_user</span> <span class="p">}</span>
+                                        <span class="p">)</span>
+      <span class="no">Rails</span><span class="p">.</span><span class="nf">logger</span><span class="p">.</span><span class="nf">error</span> <span class="n">exception</span><span class="p">.</span><span class="nf">backtrace</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+      <span class="no">Rails</span><span class="p">.</span><span class="nf">logger</span><span class="p">.</span><span class="nf">error</span> <span class="n">exception</span><span class="p">.</span><span class="nf">message</span>
+      <span class="n">flash</span><span class="p">[</span><span class="ss">:alert</span><span class="p">]</span> <span class="o">=</span> <span class="n">exception</span><span class="p">.</span><span class="nf">message</span> <span class="k">if</span> <span class="n">exception</span><span class="p">.</span><span class="nf">message</span><span class="p">.</span><span class="nf">present?</span>
+      <span class="n">respond_to</span> <span class="k">do</span> <span class="o">|</span><span class="nb">format</span><span class="o">|</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">html</span> <span class="p">{</span> <span class="n">redirect_to</span> <span class="n">redirection_path</span> <span class="p">}</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">js</span> <span class="k">do</span>
+          <span class="n">render</span> <span class="ss">text: </span><span class="s2">"window.location.assign('</span><span class="si">#{</span><span class="n">redirection_path</span><span class="si">}</span><span class="s2">');"</span>
+        <span class="k">end</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">json</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">nothing: </span><span class="kp">true</span> <span class="p">}</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">text</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">nothing: </span><span class="kp">true</span> <span class="p">}</span>
+        <span class="nb">format</span><span class="p">.</span><span class="nf">csv</span> <span class="p">{</span> <span class="n">render</span> <span class="ss">nothing: </span><span class="kp">true</span> <span class="p">}</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></code></pre></figure>
+
+<p>And you should create routes for those <em>page_not_found_path</em> and
+<em>error_page_path</em> and nice templates as well.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># config/routes.rb</span>
+<span class="n">get</span> <span class="s1">'error-page'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages'</span>
+<span class="n">get</span> <span class="s1">'page-not-found'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages'</span>
+<span class="n">get</span> <span class="s1">'javascript-required-page'</span><span class="p">,</span> <span class="ss">to: </span><span class="s1">'pages#javascript_required_page'</span><span class="p">,</span> <span class="ss">as: :javascript_required_page</span></code></pre></figure>
+
+<p>Javascript required page is not needed since all browser use javascript
+nowadays. But if you really want to show that notification use this in layout
+file, for pages after user logs in (and search bots does not).</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># app/views/layout/application.html.erb</span>
+<span class="o">&lt;</span><span class="sx">% if </span><span class="n">params</span><span class="p">[</span><span class="ss">:controller</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"requests"</span> <span class="o">||</span> <span class="n">params</span><span class="p">[</span><span class="ss">:controller</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"contacts"</span> <span class="o">%&gt;</span>
+  <span class="o">&lt;</span><span class="n">noscript</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">meta</span> <span class="n">http</span><span class="o">-</span><span class="n">equiv</span><span class="o">=</span><span class="s2">"refresh"</span> <span class="n">content</span><span class="o">=</span><span class="s2">"2;url=/javascript-required-page"</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="sr">/noscript&gt;
+&lt;% end %&gt;</span></code></pre></figure>
+
+<h1 id="resque">Resque</h1>
+
+<p>Notifications in resque could be generated with</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails g exception_notification:install --resque
+</code></pre></div></div>
+
+<p>or better is to insert on existing config:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># config/initializers/exception_notification.rb
+require 'resque/failure/multiple'
+require 'resque/failure/redis'
+require 'exception_notification/resque'
+
+Resque::Failure::Multiple.classes = [
+  Resque::Failure::Redis, ExceptionNotification::Resque
+]
+Resque::Failure.backend = Resque::Failure::Multiple
+</code></pre></div></div>
+
+<p>Note that you need to <code class="language-plaintext highlighter-rouge">export EXCEPTION_RECIPIENTS=asd@asd.asd</code> in shell where
+you run <code class="language-plaintext highlighter-rouge">QUEUE=* rake resque:work</code> for example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EXCEPTION_RECIPIENTS=asd@asd.asd QUEUE=* rake resque:work
+</code></pre></div></div>
+
+<p>Note that this notifications will be triggered for jobs that are inserted using
+<a href="/2016/08/26/background-jobs-and-queues/#resque-scheduler-for-recurring-tasks">resque-scheduler-for-reurring-tasks</a></p>
+
+<h1 id="rake">Rake</h1>
+
+<p>When you are using heroku scheduler to run rake tasks, you can add notification
+there also.
+To see output/log of some rake task, you should use <code class="language-plaintext highlighter-rouge">heroku run:detached rake
+routes</code> instead of <code class="language-plaintext highlighter-rouge">heroku run rake routes</code>
+<a href="https://devcenter.heroku.com/articles/one-off-dynos#running-tasks-in-background">devcenter.heroku</a>.</p>
+
+<p>Exception notifications can be used there also with this
+<a href="https://github.com/nikhaldi/exception_notification-rake">exception_notification-rake</a>
+but it does not work for rails 5, so better is to manually patch <code class="language-plaintext highlighter-rouge">Rake::Task</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; config/initializers/task.rb &lt;&lt; HERE_DOC
+# http://stackoverflow.com/questions/7161374/rails-exception-notifier-in-rake-tasks
+require 'rake/task'
+# rubocop:disable Lint/RescueException
+module Rake
+  class Task
+    alias orig_execute execute
+    def execute(args = nil)
+      orig_execute(args)
+    rescue Exception =&gt; exception
+      ExceptionNotifier.notify_exception(exception)
+    end
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>You can test with this failing test</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &gt;&gt; lib/tasks/my_task.rake &lt;&lt; HERE_DOC
+namespace :my_task do
+  desc "my task"
+  task :run =&gt; :environment do
+    raise "this is my exception"
+  end
+end
+HERE_DOC
+</code></pre></div></div>
+
+<p>and run with <code class="language-plaintext highlighter-rouge">EXCEPTION_RECIPIENTS=asd@asd.asd rake my_task:run</code> and you should
+see the email.</p>
+
+<p>To test in minitest or rspec you can use
+https://stackoverflow.com/questions/34862667/test-exceptionnotification-middleware-in-rails-unit-test
+https://agileleague.com/blog/rails-3-2-custom-error-pages-the-exceptions_app-and-testing-with-capybara/
+I prefer to test only routing to /404 /422 /500
+Note that you should <code class="language-plaintext highlighter-rouge">js: true</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>config.consider_all_requests_local = false
+config.action_dispatch.show_exceptions = true
+</code></pre></div></div>
+
+<p>Usually you need to export <code class="language-plaintext highlighter-rouge">export EXCEPTION_RECIPIENTS=asd@asd.asd</code> in the same
+process where it is run (<code class="language-plaintext highlighter-rouge">rails s</code> for immediate exceptions, <code class="language-plaintext highlighter-rouge">rake resque:work</code>
+for exceptions in background jobs, <code class="language-plaintext highlighter-rouge">rake resque:scheduler</code> usually do not raise
+exception, it justs enque jobs, <code class="language-plaintext highlighter-rouge">rake my_task:run</code> for manual invoke rake
+tasks).</p>
+
+<h1 id="deliver-later">Deliver later</h1>
+
+<p>If you use ActiveJob than you can try to deliver later but there are some issues
+<a href="https://github.com/smartinez87/exception_notification/issues/319">https://github.com/smartinez87/exception_notification/issues/319</a></p>
+
+<p>I receive error <code class="language-plaintext highlighter-rouge">An error occurred when sending a notification using 'email'
+notifier. ActiveJob::SerializationError: Unsupported argument type: IO</code></p>
+
+<p>Active admin sample error</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># app/admin/dashboard.rb
+ActiveAdmin.register_page 'Dashboard' do
+  content do
+    # &lt;%= link_to 'Sample error', admin_dashboard_sample_error_path %&gt;
+    # http://localhost:3000/admin/dashboard/sample_error
+    render partial: 'show'
+    # ul do
+    #   li link_to 'Sample error', admin_dashboard_sample_error_path
+    # end
+  end
+
+  page_action :sample_error do
+    fail 'sample_error'
+  end
+end
+</code></pre></div></div>
+</body>
+  </article>
+
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <style type='text/css'>
+      .similar-links {
+        display: inline-block;
+        padding: 10px;
+      }
+    </style>
+    <footer class="site-footer">
+
+      <div class="wrap">
+
+        <h2 class="footer-heading">duleorlovic - web developer</h2>
+
+        <div class="footer-col-1 column">
+          <ul>
+            <li><a href="http://duleorlovic.github.io/tips/">short indistinct tips</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/duleorlovic">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                  </svg>
+                </span>
+                <span class="username">duleorlovic</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">I am writing here some toughts during my work in Ruby on Rails, Javascript and other</p>
+        </div>
+
+      </div>
+
+    </footer>
+
+  </body>
+</html>
