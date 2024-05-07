@@ -922,6 +922,21 @@ with `?` and `&`
 
 # SSH
 
+Install ssh
+```
+sudo apt instal openssh-server
+```
+Generate key and comment
+```
+ssh-keygen -t ed25519 -C "My key for vm"
+```
+Exit ssh session when there are connection issues and ssh becomes unresponsive
+stale, you can can exist with tilda and dot
+```
+<Enter>
+~.
+```
+
 You can enable ssh agent forwaring so remote connection can use your keys. When
 is it enabled there is `env | grep SSH_AUTH_SOCK` environment variable. You can
 enable with `ssh -A` option.
@@ -1258,7 +1273,7 @@ kill current `c-a k`, kill all with `c-a \`.
 windows `c-a "` you can switch to it by jk and enter, show window bar `c-a w`,
 go to next/prev window `c-a p` or `c-a <space>`
 * split `c-a |` and move to that region `c-a <tab>`, close all splits except
-current `c-Q`
+current `c-Q` (you can also `:split`)
 * `c-a [` (or `c-a <esc>`) to go to copy mode, press space or enter to mark and
 `c-a ]` to paste
 * since screen will catch ctrl+c so to get to shell in window where some process
@@ -1304,6 +1319,29 @@ ssh -R 2222:localhost:22 remote-host
 # on remote host attach using -x (multi display mode)
 ssh -p 2222 myuser@localhost
 screen -x mysession
+```
+
+in script
+```
+# help.sh
+#!/bin/bash
+
+# Define the session name and command to be executed
+SESSION_NAME="help_session"
+COMMAND_TO_RUN="ssh -R 2222:localhost:22 power"
+
+# Check if the screen session already exists
+if screen -list | grep -q "\.${SESSION_NAME}"; then
+    echo "Screen session '${SESSION_NAME}' already exists, try: screen -r help"
+else
+    # Create a new detached screen session and run the command
+    screen -dmS "${SESSION_NAME}" ${COMMAND_TO_RUN}
+    echo "Screen session '${SESSION_NAME}' started and command executed."
+    screen -S $SESSION_NAME -X screen -t "Bash 1" bash -c "export PS1='help \w\$ '; exec bash"
+
+fi
+screen -r help
+~
 ```
 
 To keep ssh live when changing the networks you can use `mosh`

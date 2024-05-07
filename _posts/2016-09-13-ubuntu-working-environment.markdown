@@ -88,6 +88,10 @@ variable) and open new terminals, curl and ruby works fine
 echo "puts Net::HTTP.get(URI('http://ifconfig.me'))" | ruby -rnet/http
 ```
 
+* disable root login if you see a lot of failed login attempts
+```
+cat /var/log/auth.log | grep root
+```
 * to find my public ip address you can use what is my ip address
 and other tools from https://github.com/chubin/awesome-console-services
 ```
@@ -591,6 +595,8 @@ connections -> IPv4 Settings -> Routes -> check "Use this connection only for
 resources on its network"
 
 To remove docker bridge you can run `ip link del docker0`
+
+Now
 
 * resize mp4 video with avconv
 

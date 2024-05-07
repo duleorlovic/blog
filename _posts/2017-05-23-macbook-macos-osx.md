@@ -1198,6 +1198,7 @@ pyenv global 3.9.1
   https://github.com/osxfuse/sshfs/releases
 
   also https://github.com/osxfuse/osxfuse/releases
+  download dmg and install the package
 
   for error
   ```
@@ -1216,19 +1217,19 @@ pyenv global 3.9.1
 
   ```
   sshfs orlovic@main:rails/ ~/rails_main/ -ocache=no -onolocalcaches -ovolname=ssh
-  sshfs dule@trk:. ~/trk/ -ocache=no -onolocalcaches -ovolname=ssh
+  sshfs dule@power:. ~/power/ -ocache=no -onolocalcaches -ovolname=ssh
   ```
 
   unmount and mount in one command:
   ```
-  umount -f ~/trk; sshfs dule@trk:. ~/trk/ -ocache=no -onolocalcaches -ovolname=ssh
-  # on ubuntu we can use lazy umount because of error umount: /home/dule/trk: target is busy.
-  sudo umount -l ~/trk; sshfs dule@trk:. ~/trk/
+  umount -f ~/power; sshfs dule@power:. ~/power/ -ocache=no -onolocalcaches -ovolname=ssh
+  # on ubuntu we can use lazy umount because of error umount: /home/dule/power: target is busy.
+  sudo umount -l ~/power; sshfs dule@power:. ~/power/
   ```
 * you can use Real VNC to connect to ubuntu (just enable Share -> Remove
   desktop) but it shows black screen
   Better is to use native vnc clint from Finder -> Go -> Connect to server or
-  just `open vnc://user@machine` (eg `open vnc://dule@trk`)
+  just `open vnc://user@machine` (eg `open vnc://dule@power`)
   Note that on ubuntu you have to do login in order to unlock Keyring (for
   example f you have autologin enabled you will not be able to connect with VNC,
   it will just ask for password indefinitely, until you open eg Chrome which
@@ -1239,7 +1240,7 @@ pyenv global 3.9.1
   Insert current password > insert blank password and confirm blank password.
   Now you do not need to unlock keyring.
   When vnc password is changed, than you will get error `Authentication failed
-  to "trk"`. I do not know how to clear saved passwords for Finder.
+  to "power"`. I do not know how to clear saved passwords for Finder.
   Another case when `Authentication failed` is when you restart but ubuntu but
   vnc session is still active (not always). Solution is to restart vnc server on
   ubuntu by disabling and enabling remote desktop again (and `Enable Legacy VNC

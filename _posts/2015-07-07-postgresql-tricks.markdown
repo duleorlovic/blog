@@ -3,7 +3,20 @@ layout: post
 tags: ruby-on-rails postgresql
 ---
 
-# Create
+# Install
+
+MacOS 
+```
+brew install postgresql
+
+createdb `whoami` # create database dule
+psql # it will connect to dule db
+
+# if you want to give access to other users on the system
+psql -d postgres -c "CREATE USER ljubicao WITH SUPERUSER;"
+```
+
+# Create user
 
 On Mac create `postgres` user
 ```

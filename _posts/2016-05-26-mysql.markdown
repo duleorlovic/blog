@@ -16,15 +16,9 @@ layout: post
 
 * grant access to all db
   ~~~
-  GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'%';
+  GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'localhost';
   FLUSH PRIVILEGES;
   ~~~
-
-  when I do not use `IDENTIFIED BY` than I receive `Access denied for user` when
-  I connect from remote comp, even I can connect from localhost with same
-  password.
-  Note that in rails, if you skip defining username and password, it will use
-  current linux user.
 
 * to see all grants (note that single quote `'` is required)
 
@@ -47,6 +41,11 @@ layout: post
 
   USE mysql;
   UPDATE user SET authentication_string = PASSWORD('newpass') WHERE user = 'myuser' AND host = 'localhost'
+  FLUSH PRIVILEGES;
+  ```
+* allow log in without password is actually empty password `""`
+  ```
+  ALTER USER 'username'@'localhost' IDENTIFIED WITH 'mysql_native_password' AS '';
   FLUSH PRIVILEGES;
   ```
 
