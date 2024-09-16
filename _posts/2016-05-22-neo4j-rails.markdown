@@ -852,6 +852,18 @@ cd db/neo4j/development/data/databases/graph.db/
 zip -r ../backup.zip .
 ~~~
 
+# Debug connection
+
+To connect to remote neo4j you can use ssh tunnel
+```
+ssh -L 7474:localhost:7474  -L 7473:localhost:7473 -L 7687:localhost:7687 -L 7472:localhost:7472 ubuntu@ssh-premesti-se.trk.in.rs
+```
+
+or cli
+```
+cypher-shell -a bolt://localhost:7687 -u neo4j -p your_password
+```
+
 # Links
 
 * http://neo4jrb.io/ and differences with sql http://neo4j.com/product/

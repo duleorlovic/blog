@@ -328,3 +328,17 @@ export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
 # or permanently
 echo 'export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"' >> /Users/dule/.bash_profile
 ``
+* external disk if you want to move database to another drive you can create
+symlink and populate the tables
+```
+# find data folder
+mysql -u root -p -e "SHOW VARIABLES LIKE 'datadir';"
++---------------+--------------------------+
+| Variable_name | Value                    |
++---------------+--------------------------+
+| datadir       | /opt/homebrew/var/mysql/ |
++---------------+--------------------------+
+
+mv /opt/homebrew/var/mysql/my_prod/ /Volumes/ONETB/dule/databases/
+ln -s /Volumes/ONETB/dule/databases/my_prod /opt/homebrew/var/mysql
+```

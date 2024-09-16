@@ -271,7 +271,7 @@ set :deploy_to, "/home/ubuntu/#{fetch(:application)}"
 
 ```
 # config/deploy/production.rb
-server 'production-app.xceednet.com',
+server 'production-app.myapp.com',
        user: 'ubuntu',
        roles: %w[app db web],
        ssh_options: {

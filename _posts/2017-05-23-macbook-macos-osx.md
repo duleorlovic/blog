@@ -1253,3 +1253,8 @@ pyenv global 3.9.1
 * install chroimum browser `brew install chromium --no-quarantine` (without no
   quarantine there is an error `“Chromium” is damaged and can’t be opened. You
   should move it to the Bin. `
+* disk usage software https://www.derlien.com/ Disk Inventory X . You can move
+  all folders to external drive and create a sym link. Also you can remove 
+  ```
+  rm -rf ~/Library/Developer/CoreSimulator/Devices/*rm -rf ~/Library/Developer/CoreSimulator/Devices/*
+  ```

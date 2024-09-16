@@ -26,6 +26,12 @@ Get current branch name
     git branch --show-current
     git symbolic-ref --short HEAD
 
+Show remote show origin url
+
+    git config --get remote.origin.url
+    # or copy to clipboard using pbcopy
+    git remote-copy
+
 Getting existing git branches to track remote branches:
 
     git push --set-upstream origin my-branch

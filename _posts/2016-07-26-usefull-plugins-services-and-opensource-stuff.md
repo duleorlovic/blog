@@ -1359,3 +1359,6 @@ ExitNodes {us} StrictNodes 1
   ```
   magick -gravity center -size 100x20 -font /System/Library/Fonts/Times.ttc caption:"ruby@trk.in.rs" email.png && open email.png
   ```
+* server monitor tools:  Munin, Nagios, Cacti, Hyperic
+  for internet accessible: Pingdom or Uptime Robot.
+

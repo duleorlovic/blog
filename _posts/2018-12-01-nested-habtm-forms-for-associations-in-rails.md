@@ -9,7 +9,7 @@ Start from basic docs for html
 and [forms](https://www.w3.org/TR/html401/interact/forms.html)
 https://html.spec.whatwg.org/multipage/forms.html
 The most important attribute is
-* `name` identify the input in data submitted with the form. If not provided,
+* `name` identify thestimulus-password-visibility input in data submitted with the form. If not provided,
   this input will not we included.
 * `type` to identify a input type that input element represents
 * `value` when specified, it is initial value. For unselected `checkbox` or
@@ -56,11 +56,11 @@ Since in html forms we can only send value or array
   `name='user[name]`, in rails `f.text_field :name` (when f.object.class ==
   User).  Note that you need to permit each key.
 
-  Hash values can also be string, array or another hash. For array (html
+  Hash values can be string, array or another hash. For array (html
   `name='user[ids][]`) in rails you can use `f.text_field :ids, name:
   'user[ids][]` (`f.text_field :ids` does not make sense since there are
   multiple input fields, so better is to use `text_field_tag :name`, but if you
-  are using strong params, than you need to put inside model name, for example
+  are using strong params than you need to put inside model name, for example
   `"#{f.object.class.name.underscore}[ids][]"`) we got
   `params[:user][:ids] #=> [1,2]`.  Hash with hash values rails use it for
   `fields_for & accepts_nested_attributes_for` html

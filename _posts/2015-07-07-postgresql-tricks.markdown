@@ -9,11 +9,48 @@ MacOS
 ```
 brew install postgresql
 
-createdb `whoami` # create database dule
+createdb `whoami` # create database dule, but also user with superuser
 psql # it will connect to dule db
+\du # check if your user has superuser role
 
 # if you want to give access to other users on the system
 psql -d postgres -c "CREATE USER ljubicao WITH SUPERUSER;"
+```
+
+Start postgresql service
+```
+brew services start postgresql@15
+
+# to see the error logs on startup
+pg_ctl -D $(brew --prefix)/var/postgresql@15 start
+
+# see logs
+tail -f $(brew --prefix)/var/log/postgresql@15.log
+```
+
+Find configuration files, and see where database files are stored
+```
+psql -c 'SHOW data_directory;'
+         data_directory
+---------------------------------
+ /opt/homebrew/var/postgresql@15
+(1 row)
+```
+To see where is the config file
+```
+psql -c 'SHOW config_file;'
+                   config_file
+-------------------------------------------------
+ /opt/homebrew/var/postgresql@15/postgresql.conf
+(1 row)
+```
+so you can change data folder (note that you need to copy old)
+```
+brew services stop postgresql@15
+vi /opt/homebrew/var/postgresql@15/postgresql.conf
+# data_directory = '/Volumes/ONETB/dule/postgresql_data'
+cp -r /opt/homebrew/var/postgresql@15/* /Volumes/ONETB/dule/postgresql_data/
+brew services start postgresql@15
 ```
 
 # Create user
@@ -39,7 +76,7 @@ to allow local user to createdb and seed fixtures you need to
 ALTER USER myuser WITH SUPERUSER;
 ``UPERUSER;'"
 # or
-sudo -u postgres psql -d postgres -c "CREATE USER igor WITH SUPERUSER;"
+sudo -u postgres psql -d postgres -c "CREATE USER $USER WITH SUPERUSER;"
 ```
 
 List all users

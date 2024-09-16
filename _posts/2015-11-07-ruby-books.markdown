@@ -478,8 +478,12 @@ is private but we can
   => ["\#{foo}", "Bar", "Bar with space"]
   ~~~
 
-* `%x(pwd)` is used to call system bash commands. Use Open3 to call system shell
-  commands
+* `%x(pwd)` or backtick is used to call system bash commands and return output
+  as a string (no info about exit status).
+  https://kirillshevch.medium.com/9-ways-to-run-system-commands-in-ruby-d099223a0ec6
+  Use `system` to capture exit status, but it does not capture output.
+  Use Open3 to call system shell commands get output, error stream and exit
+  status (there is other Open3.capture3 which you can use to send input, later)
   ~~~
   require 'open3'
   stdout, stderr, status = Open3.capture3("sleep 10")
@@ -502,7 +506,7 @@ is private but we can
   Process.wait pid # wait for process to finishs
   ~~~
 
-  Also Open3.capture3 can return back from background process if you
+  Also `Open3.capture3` can return back from background process if you
   dont use `stdout.read` and use ampersand (sometimes do not block event without
   ampersand).
   https://www.rubydoc.info/stdlib/open3/Open3.popen3

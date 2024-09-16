@@ -247,12 +247,12 @@ Command line mode `:help usr_20.txt` is when using `:` or search `/`,`?`.
   it will open `one.txt`. You need to save and `:next` or `:wnext` to write and
   go to next file. You can see all arguments with `:args`. Going back is
   `:previous`, also works `:first`, `:last`, `:2next`.
+  `:args app/*/*`  to add all files to arg list. Use `[a` and `]a]` 
 
 * You can open in split windows
   ```
   vim one.txt two.txt -o # or -O for vertical split
   ```
-* `:args app/*/*`  to add all files to arg list
 * open file on specific line `vi +10 README`
 * open readonly mode `vim -R file` but it can be overwritten with `:write!`. To
   really keep read only use `vim -M file` (but this also can be turned of with
@@ -1324,6 +1324,11 @@ Not using for now
 * strange characters instead of single quote I see `<91>` and `<92>` in vim.
   https://superuser.com/questions/199799/vim-shows-strange-characters-91-92 run
   `:%s/[\x91\x92]/'/g` to replace them
+
+* strange characters automatically entered when vim started under screen which
+  has custom `escape ^Gg` ctrl+g. It happens for screen 4.09.00 and vim
+  8.2.2121 or vim 9.0 on power comp (does not happend when screen is loaded on
+  air)
 
 https://handbook.infinum.co/books/rails/Editors/Vim
 https://emily.st/2018/11/13/vim-in-the-future/

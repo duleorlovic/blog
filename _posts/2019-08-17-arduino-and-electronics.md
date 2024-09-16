@@ -162,7 +162,8 @@ to `sketchbook/libraries` in my case is `/home/orlovic/Arduino/libraries`. Than
 you can find examples of it: File -> Examples -> VirtualWire -> transmitter
 Pin 12 is for sending, Pin 11 for receiving.
 
-But since it is not updated I used Manchester http://mchr3k.github.io/arduino-libs-manchester/
+But since it is not updated I used Manchester
+http://mchr3k.github.io/arduino-libs-manchester/
 
 # ESP32
 

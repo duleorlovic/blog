@@ -1256,7 +1256,7 @@ read -p "Continue? (Y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][e
   lscpu
   ```
 
-## Screen
+## GNU Screen
 
 start new version with `screen-4.9.0`
 Find info with `man screen` or online https://www.gnu.org/software/screen/manual/screen.html
@@ -1271,11 +1271,12 @@ current region `c-a X` (uppercase X) close all except current `c-a Q`.
 kill current `c-a k`, kill all with `c-a \`.
 * create new window `c-a c` and switch to it using `c-a 1`, list all
 windows `c-a "` you can switch to it by jk and enter, show window bar `c-a w`,
-go to next/prev window `c-a p` or `c-a <space>`
+go to next/prev window `c-a p` or `c-a <space>`, `c-a A` rename window
 * split `c-a |` and move to that region `c-a <tab>`, close all splits except
 current `c-Q` (you can also `:split`)
 * `c-a [` (or `c-a <esc>`) to go to copy mode, press space or enter to mark and
 `c-a ]` to paste
+* to wrap you need to enable `c-a:wrap on`
 * since screen will catch ctrl+c so to get to shell in window where some process
   is running you can use ctrl+z to move it to background (move to foreground
   with `fg`)

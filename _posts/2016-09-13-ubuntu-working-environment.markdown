@@ -21,102 +21,9 @@ title: Ubuntu working environment
   `Shift+Print` (select window or drag area). images are automatically saved to
   ~/Pictures
   Use `ctrl` instead of alt if you want to copy to clipboard
-* [port
-forwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding)
-```
-ssh -L 8080:localhost:80 my.server.com
-```
-* tunel to external server so you do not need to open ports on your router and
-  other can see your local env
-  ```
-  ssh -i $PEM_FILE -R 0.0.0.0:80:localhost:9292 ubuntu@52.202.201.113
-
-  sudo vi /etc/ssh/sshd_config
-  echo "GatewayPorts yes" >> /etc/ssh/sshd_config
-  sudo service ssh restart
-
-  # again connect using tunneling
-  # make sure ports are opened in aws console
-
-  ssh -i $PEM_FILE -R 0.0.0.0:80:localhost:9292 ubuntu@52.202.201.113
-  ```
-* gui ssh forwarding `ssh -X server` remote `ssh -R 5900:localhost:5900
-guest@joes-pc` local
-socks tunel `ssh -C -D 1080 server_url_or_ip`, than in firefox
-<about:preferences#advanced> Networktab -> Settings choose "Manual proxy
-configuration" and type SOCKS Host: localhost, and port 1080. Do not write
-anyting in HTTP proxy... For Chrome or another connections you can use system
-wide Ubuntu Settings -> Network -> Network Proxy -> Method: Manual -> Socks Host
-localhost 1080 (HTTP Proxy is empty), Ignore Hosts: localhost, *.loc
-than I can access cameras http://192.168.1.3:81/zm
-You can start chromium with those settings and hosts from remote machine will be
-used
-```
-chromium --proxy-server="socks5://127.0.0.1:1080"
-```
-For `curl` you need to export variable
-```
-export https_proxy=socks5://localhost:1080 http_proxy=socks5://localhost:1080
-curl ifconfig.me
-```
-For ruby, you can check public ip address with
-```
-require "net/http"
-Net::HTTP.get(URI("https://api.ipify.org"))
-```
-but ruby does not support proxy using socks. Here are some alternatives: polipo
-http proxy using socks upstream, torsocks wrapper
-https://superuser.com/questions/280129/http-proxy-over-ssh-not-socks
-```
-# /etc/polipo/config
-# proxyAddress = "::1"
-proxyPort = 8118
-socksParentProxy = "localhost:1080"
-socksProxyType = socks5
-```
-restart with
-```
-sudo /etc/init.d/polipo restart
-```
-for curl use
-```
-export https_proxy=localhost:8118 http_proxy=localhost:8118
-```
-but the best option is to change in system settings (it will add new env
-variable) and open new terminals, curl and ruby works fine
-```
-echo "puts Net::HTTP.get(URI('http://ifconfig.me'))" | ruby -rnet/http
-```
-
 * disable root login if you see a lot of failed login attempts
 ```
 cat /var/log/auth.log | grep root
-```
-* to find my public ip address you can use what is my ip address
-and other tools from https://github.com/chubin/awesome-console-services
-```
-# inline public ip address
-curl l2.io/ip
-
-# new line
-curl eth0.me
-dig +short myip.opendns.com @resolver1.opendns.com
-
-# geolocation of ip address
-curl ip-api.com
-curl ip-api.com/8.8.8.8
-
-# vicevi
-curl https://icanhazdadjoke.com
-
-# show a zoomable world map
-telnet mapscii.me
-
-# UNIX/Linux commands cheat sheets using curl (chubin/cheat.sh)
-curl cheat.sh
-
-# test upload download speed
-curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
 ```
 ssh igrice https://github.com/chubin/awesome-console-services#entertainment-and-games
 * [v4l2loopback](https://github.com/umlaeute/v4l2loopback/wiki/Mplayer), after
@@ -275,114 +182,6 @@ settings as *CM108 Audio Controller* than you need to comment out last line
 * to check which browsers was used by useragent string
 [parse user agent strings](https://developers.whatismybrowser.com/useragents/parse)
 * [railspanel](https://chrome.google.com/webstore/detail/railspanel/gjpfobpafnhjhbajcjgccbbdofdckggg)
-
-## Chrome DNS and HSTS problem for .localhost and .dev
-
-Since google owns `.dev` domain and it exists in hsts list, in chrome (no
-firefox) request to `my-domain.dev` will be always https.
-You can also use `lvh.me` since it always resolves to 127.0.0.1.
-But for local development I use `.loc` with dnsmasq or `.localhost` also with
-dnsmasq.
-Old answer: __I did not choose to use `localhost` because I can not remap subdomain of localhost in /etc/hosts and use in google
-chrome (firefox works fine) for some pathetic reason
-<https://stackoverflow.com/questions/39666979/chrome-ignoring-hosts-file-for-subdomains-of-localhost>__
-Now localhost works in Chrome but not in Firefox (about:config
-network.dns.disableIPv6 set to false did not work for me).
-When I change `loc` to `localhost` in `/etc/dnsmasq.d/dev-tld` than it works.
-
-For all subdomains I use dnsmasq so I do not need to edit /etc/hosts for each
-subdomain:
-
-~~~
-# /etc/dnsmasq.d/dev-tld
-local=/localhost/
-address=/localhost/127.0.0.1
-~~~
-
-restart with
-
-~~~
-sudo systemctl restart NetworkManager
-sudo /etc/init.d/dnsmasq restart
-~~~
-
-Also follow [instructions](https://gist.github.com/marek-saji/6808114)
-
-DNS server dnsmasq for .dev domains for osx <https://passingcuriosity.com/2013/dnsmasq-dev-osx/>
-https://gist.github.com/ogrrd/5831371
-https://kharysharpe.medium.com/automatic-local-domains-setting-up-dnsmasq-for-macos-high-sierra-using-homebrew-caf767157e43
-
-~~~
-brew install dnsmasq
-# read suggested commands and apply them
-# cp /usr/local/opt/dnsmasq/dnsmasq.conf.example /usr/local/etc/dnsmasq.conf
-sudo brew services start dnsmasq
-
-# in /usr/local/etc/dnsmasq.conf
-# or /opt/homebrew/etc/dnsmasq.conf 
-address=/localhost/127.0.0.1
-
-sudo brew services restart dnsmasq
-
-sudo mkdir -p /etc/resolver
-sudo tee /etc/resolver/localhost >/dev/null <<EOF
-nameserver 127.0.0.1
-EOF
-~~~
-
-Test with
-
-~~~
-scutil --dns
-# resolver #8
-#   domain   : localhost
-#   nameserver[0] : 127.0.0.1
-
-# Make sure you haven not broken your DNS.
-ping -c 1 www.google.com
-# Check that .localhost names work
-ping -c 1 this.is.a.test.localhost
-~~~
-
-Clear chrome dns cache on chrome://net-internals/#dns
-and clear cookies.
-
-You can check your domain name resolutions with mxtoolbox.com or domain settings
-with command `nslookup` (dns resolution, dns lookup)
-On web you can check on https://dns.google domain resolution for google
-
-~~~
-nslookup asd.localhost
-# Server:		127.0.0.1
-# Address:	127.0.0.1#53
-#
-# Name:	asd.localhost
-# Address: 127.0.0.1
-
-# To display the MX records, use the -query=mx option:
-# you can show any records with
-nslookup -query=any move-index.org
-~~~
-
-You can also use dig to find out dns lookup
-```
-dig +short trk.in.rs
-```
-
-Also host command
-```
-host trk.in.rs
-```
-
-You can see redirection url with
-```
-curl -I mydomain.com
-```
-
-On linux you can update `/etc/hosts` with you custom domain name and use it
-instead of IP address.
-On window it is `c:\Windows\System32\Drivers\etc`. Just edit with notepad and
-save. No need to restart (maybe it will be cleared on restart).
 
 ## Chrome Developer tools
 
@@ -571,33 +370,6 @@ convert johny* nin.pdf
 
 <http://www.testcams.com/airnef/> is used to download files from Canon camera.
 
-# Network
-
-`ifconfig` is a tool to change network configuration, but changes are not
-persisted unless you save them in `/etc/network/interfaces`
-
-~~~
-ifconfig eth0
-~~~
-
-To configure default dateway gw you can use `route` command
-
-~~~
-sudo route add default gw 10.0.0.1 eth1
-route -n
-~~~
-
-To configure DNS you can edit `/etc/resolv.conf`.
-To purge all configuration you can `ip addr flush eth0`
-
-To prevent Network manager to use connection as default route, you can edit
-connections -> IPv4 Settings -> Routes -> check "Use this connection only for
-resources on its network"
-
-To remove docker bridge you can run `ip link del docker0`
-
-Now
-
 * resize mp4 video with avconv
 
 ~~~
@@ -730,8 +502,6 @@ nmap -F 192.168.0.0/24
 # port scan, very slow
 nmap -Pn 192.168.3.2
 ```
-
-## Network
 
 Find mac address
 ```

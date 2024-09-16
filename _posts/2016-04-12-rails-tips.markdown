@@ -2347,24 +2347,6 @@ https://github.com/urvin-compliance/caracal
 * use `ENV.fetch` instead of `ENV[]` so it raises exception when env variable
 does not exists
 
-My style in rails models use following order to best practice
-
-1. `include` and `extend` other modules, `devise`, `has_paper_trail`
-1. `FIELDS = %i[name].freeze` and other constants
-1. `attr_accessor` or `serialize :col, Hash`
-1. `belongs_to :workflow` associations with plugins `acts_as_list scope:
-1  [:workflow_id]`
-1.  `has_many :users` associations
-1. enums `enum status: %i[draft accepted]`
-1. validations `validates :name, presence: true`
-1. validate declarations `validate :_check_nested_resource`
-1. callbacks declarations `before_validation :_default_values_on_create, on: :create`
-1. scopes `scope :by_status_param, ->(status_argument) { where status: status_argument }`
-1. class methods `def self.find_first_unpublished`
-1. instance methods `def full_name`
-1. validate definitions `def _check_nested_resource`
-1. callbacks definitions `def _default_values_on_create`
-
 # Rubocop
 
 My preferred configuration is
@@ -3554,6 +3536,28 @@ def main_address
   end
 end
 ~~~
+issue is when you want to memoize class method (from initializer or service)
+```
+# config/initializers/common.rb
+module Common
+  def self.system_user
+    # it is first_user
+    # User.find(1) we can't use id 1, since in tests, it could start from 2
+    if Rails.configuration.cache_classes
+      # use memoization if cache_classes is enabled (production env)
+      # do not use it on dev and test because after updating the code on next
+      # request I receive error:
+      # User(#2653213400) expected, got # which is an instance of User(#2236584320).
+      return @system_user if defined? @system_user
+    end
+
+    @system_user = User.find_or_create_by!(email: 'system@user.com') do |user|
+      user.password = SecureRandom.hex
+    end
+  end
+end
+```
+also, memoization of class method has effect between test cases.
 
 * read raw column value before typecast
 `task.read_attribute_before_type_cast('completed_on')`
