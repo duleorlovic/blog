@@ -405,3 +405,10 @@ https://www.youtube.com/watch?v=oIobOWXOJJg
 
 Use two relays and two tasters to move engine forward and backward
 
+#  RFID and bloetooth door lock
+
+https://www.instructables.com/RFID-Bluetooth-Door-Lock/
+
+With android app https://www.youtube.com/watch?v=1PoRcb4_wsw
+
+Very nice instructions with video https://www.electronicwings.com/esp32

@@ -163,7 +163,7 @@ Than create a file with slighty different domain
 
     # ~/.ssh/config
     Host kgithub.com
-      Hostname kgithub.com
+      Hostname github.com
       IdentityFile ~/.ssh/id_rsa_kulakajak
 
 and now you can clone using new key and host kgithub.com

@@ -170,7 +170,7 @@ Reuse components with `<defs>` and `<simbol>`.
 <http://vanseodesign.com/web-design/svg-definition-reuse/>
 
 Attach another element with `<marker>`
-<https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker>
+https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker
 
 
 # CSS Animations
