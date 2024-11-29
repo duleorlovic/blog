@@ -55,11 +55,15 @@ brew services start postgresql@15
 
 # Create user
 
-On Mac create `postgres` user
+On Mac create `dule` user
 ```
-createuser -s postgres
+createuser --superuser --pwprompt dule
+# Enter password for new role: pass
+# Enter it again: pass
+createdb mydb --owner=dule
+
 # login to database as user
-psql --user postgres
+psql --user dule mydb
 ```
 
 On ubuntu

@@ -412,3 +412,7 @@ https://www.instructables.com/RFID-Bluetooth-Door-Lock/
 With android app https://www.youtube.com/watch?v=1PoRcb4_wsw
 
 Very nice instructions with video https://www.electronicwings.com/esp32
+
+# Home assistant
+
+https://www.youtube.com/watch?v=k02P5nghmfs
